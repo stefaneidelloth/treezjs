@@ -1,2 +1,2 @@
-import getName from 'treezAtom.js'
-document.getElementById("demo").innerHTML = getName();
+import {addTextToBody} from './lib/utils.js';
+addTextToBody('Modules are pretty cool.');
