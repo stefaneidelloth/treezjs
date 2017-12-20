@@ -1,13 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+In order for this to work, the files need to be accessed using an http server, see for example
+https://stackoverflow.com/questions/16333790/node-js-quick-file-server-static-files-over-http
+-->
 <html>
 <body>
-
-<p id="demo"></p>
-
-<script type="module">
-  import {addTextToBody} from 'https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/utils.js';
-  addTextToBody('Modules are pretty cool.');
-</script>
- 
+<script type=module src=treez.js></script> 
 </body>
 </html>
