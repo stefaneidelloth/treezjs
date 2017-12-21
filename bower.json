@@ -1,0 +1,23 @@
+{
+  "name": "treezjs",
+  "homepage": "https://github.com/stefaneidelloth/treezjs",
+  "authors": [
+    "stefaneidelloth <matameko@posteo.de>"
+  ],
+  "description": "",
+  "main": "treez.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "^4.12.0",
+    "ace": "^1.2.9",
+    "requirejs": "^2.3.5"
+  }
+}
