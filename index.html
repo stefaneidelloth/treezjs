@@ -1,0 +1,30 @@
+<!doctype html>
+<!--
+In order for this to work, the files need to be accessed using an http server, e.g.
+http://localhost:8080/treez.html
+Also see https://stackoverflow.com/questions/16333790/node-js-quick-file-server-static-files-over-http
+-->
+<html>
+
+	<head>
+
+		<!-- require.js -->
+		<script src="./bower_components/requirejs/require.js"></script>
+
+		<!-- golden-layout for dockable & resizable panels -->
+		<link type="text/css" rel="stylesheet"
+			href="./bower_components/golden-layout/src/css/goldenlayout-base.css" />
+		<link type="text/css" rel="stylesheet"
+			href="./bower_components/golden-layout/src/css/goldenlayout-light-theme.css" />
+
+		<!-- orion code editor -->
+		<link rel="stylesheet" type="text/css" href="./lib/orion/code_edit/built-codeEdit.css" />
+
+	</head>
+
+	<body>	
+			<script type="module" src="./main.js"></script>
+
+			
+	</body>
+</html>
