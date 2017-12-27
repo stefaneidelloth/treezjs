@@ -1,11 +1,11 @@
-import * as treeView from "./treeView.js";
+import TreeView from "./views/treeView.js";
 
 var self = {
 	editorViewer: undefined
 }
 
 requirejs.config({
-			baseUrl : '.',
+			baseUrl : '..',
 			paths : {
 				'd3' : 'bower_components/d3/d3.min',				
 				'jquery' : 'bower_components/jquery/dist/jquery.min',
@@ -23,8 +23,7 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 			type : 'row',
 			content : [ {
 				type : 'component',
-				componentName : 'Tree',
-				width : '20'
+				componentName : 'Tree'
 			}, {
 				type : 'column',
 				content : [ {
@@ -52,7 +51,7 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
 		element.attr("id","tree");
-		treeView.build(element[0], getEditorViewer);
+		new TreeView().buildView(element[0], getEditorViewer);
 	});
 
 	myLayout.registerComponent('Properties', function(container) {
@@ -74,20 +73,26 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 			
 		require(["orion/codeEdit", "orion/Deferred"], function(CodeEdit, Deferred) {
 
-		var content = "//import Root from './root.js';\n"+
-		"\n"+
-		"window.createModel = function(){\n"+
-		"\n"+
-		"	//var root = new Root('root');\n"+
-		"	return {id:'root'};//root;\n"+
-		"};\n"
+		var content = "import Atom from './src/core/atom.js';\n"+		
+			"\n"+
+			"window.createModel = function(){\n"+
+			"\n"+
+			"	var root = new Atom('root');\n"+
+			"	var firstChild = new Atom('firstChild');\n"+
+			"	root.addChild(firstChild);\n"+
+			"	var secondChild = new Atom('secondChild');\n"+
+			"	root.addChild(secondChild);\n"+
+			"	var grandChild = new Atom('grandChild');\n"+
+			"	secondChild.addChild(grandChild);\n"+
+			"	return root;\n"+
+			"};\n";
 			
-			var codeEdit = new CodeEdit();			
-			codeEdit.create({parent: "editor"}).then(function(editorViewer) {
+		var codeEdit = new CodeEdit();			
+		codeEdit.create({parent: "editor"}).then(function(editorViewer) {
 				editorViewer.setContents(content, "application/javascript");
 				self.editorViewer = editorViewer;
 			});
-		});
+		});       
 
 	});
 
