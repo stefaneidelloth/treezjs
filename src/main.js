@@ -1,4 +1,4 @@
-import TreeView from "./views/treeView.js";
+import TreeView from './views/treeView.js';
 
 var self = {
 	editorViewer: undefined
@@ -12,7 +12,7 @@ requirejs.config({
 				'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min'
 			},
 			bundles : {
-				"lib/orion/code_edit/built-codeEdit-amd" : ["orion/codeEdit", "orion/Deferred"]
+				'lib/orion/code_edit/built-codeEdit-amd' : ['orion/codeEdit', 'orion/Deferred']
 			}
 });
 
@@ -50,12 +50,14 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
-		element.attr("id","tree");
+		element.attr('id','tree');
+		
 		new TreeView().buildView(element[0], getEditorViewer);
 	});
 
 	myLayout.registerComponent('Properties', function(container) {
 		var element = container.getElement();
+		element.attr('id','properties')
 	});
 
 	myLayout.registerComponent('Monitor', function(container) {
@@ -69,15 +71,16 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 	myLayout.registerComponent('Editor', function(container) {
 
 		var element = container.getElement();
-		element.attr("id", "editor");	
+		element.attr('id', 'editor');	
 			
-		require(["orion/codeEdit", "orion/Deferred"], function(CodeEdit, Deferred) {
+		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
 
-		var content = "import Atom from './src/core/atom.js';\n"+		
+		var content = "import Atom from './src/core/atom/atom.js';\n"+		
+			"import AdjustableAtom from './src/core/adjustable/adjustableAtom.js';\n"+
 			"\n"+
 			"window.createModel = function(){\n"+
 			"\n"+
-			"	var root = new Atom('root');\n"+
+			"	var root = new AdjustableAtom('root');\n"+
 			"	var firstChild = new Atom('firstChild');\n"+
 			"	root.addChild(firstChild);\n"+
 			"	var secondChild = new Atom('secondChild');\n"+
@@ -88,8 +91,8 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 			"};\n";
 			
 		var codeEdit = new CodeEdit();			
-		codeEdit.create({parent: "editor"}).then(function(editorViewer) {
-				editorViewer.setContents(content, "application/javascript");
+		codeEdit.create({parent: 'editor'}).then(function(editorViewer) {
+				editorViewer.setContents(content, 'application/javascript');
 				self.editorViewer = editorViewer;
 			});
 		});       

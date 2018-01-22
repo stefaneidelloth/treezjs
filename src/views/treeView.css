@@ -11,8 +11,8 @@
 }
 
 .treezDetails {
-	font-family: Monospace;
-	font-size: 12px;
+	font-family: Arial,sans-serif;
+    font-size: 12px;
 }
 
 .treezIndent {
@@ -63,8 +63,8 @@
 .treezMenuButtonLabel {
 	margin-left: 5px;
 	float: left;	
-    font-family: Monospace;			
-	font-size: 12px;	
+    font-family: Arial,sans-serif;
+    font-size: 12px;	
 }
 
 

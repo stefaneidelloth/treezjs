@@ -1,8 +1,8 @@
-import NameAndNumber from "./nameAndNumber.js";
+import NameAndNumber from "../nameAndNumber.js";
 import AtomTreeNodeAdapter from "./atomTreeNodeAdapter.js";
 import AtomCodeAdaption from "./atomCodeAdaption.js";
 import AtomGraphicsAdaption from "./atomGraphicsAdaption.js";
-import TreeViewerAction from "./treeViewerAction.js";
+import TreeViewerAction from "../treeViewerAction.js";
 
 export default class Atom {		
 
@@ -30,14 +30,17 @@ export default class Atom {
 	}		
 
 	copy() {
-		var newAtom = new Atom(this.name);		
-		newAtom.children = copyAtoms(atomToCopy.children);
-		
+		var newAtom = new Atom(this.name);			
+		this.copyChildrenTo(newAtom);
+		newAtom.expandedNodes = this.expandedNodes;		
+	}
+
+	copyChildrenTo(newAtom){
+		newAtom.children = this.copyAtoms(this.children);		
 		newAtom.children.forEach(function(child){
 			child.parentAtom = newAtom;
 		});		
 
-		newAtom.expandedNodes = atomToCopy.expandedNodes;		
 	}
 
 	copyAtoms(atomsToCopy) {
@@ -244,14 +247,12 @@ export default class Atom {
 	}
 
 	//#end region
-
-	//#region image
+	
 
 	provideImage() {
 		return "root.png";
 	}
-
-	//#end region	
+	
 
 	//#region child operations
 

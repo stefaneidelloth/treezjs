@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="./tabs.css" />
+
+        <script>
+
+            class TreezTabsHeader extends HTMLElement {}
+            window.customElements.define('treez-tabs-header', TreezTabsHeader);
+
+            class TreezTabHeader extends HTMLElement {}
+            window.customElements.define('treez-tab-header', TreezTabHeader);
+
+            class TreezTabs extends HTMLElement { 
+                connectedCallback() {
+                    this.style.display='block';       
+                    var tabsHeader = document.createElement('treez-tabs-header');                   
+                    this.appendChild(tabsHeader);                    
+                }
+            }
+            window.customElements.define('treez-tabs', TreezTabs);
+
+
+            class TreezTab extends HTMLElement {
+
+                constructor(){
+                    super();
+                    this.tabHeader=undefined;
+                }
+
+                static get observedAttributes() {
+                    return ['label']; 
+                }               
+
+                connectedCallback() {
+                    var headers = this.parentElement.children[0];
+                    this.tabHeader = this.createTabHeader(this.parentElement);                                                                                    
+                    headers.appendChild(this.tabHeader); 
+                    this.showFirstTab(this.parentElement);
+                }  
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                    if(attr==='label'){
+                        this.tabHeader.innerText= newValue;                       
+                    }
+                }
+
+                createTabHeader(tabs){
+                    var tabHeader = document.createElement('treez-tab-header'); 
+                    tabHeader.onclick=()=>{
+                    	var tabHeaders = tabs.children[0].children;
+                        for(var index=1;index<tabs.children.length;index++){ 
+                        	var tab = tabs.children[index];                        
+                            tab.style.display='none';
+
+                            var tabHeader = tabHeaders[index-1];
+                            tabHeader.classList.remove('selected')
+                        }                       
+
+                        this.style.display='block';
+                        this.tabHeader.classList.add('selected')                        
+                    };
+                    return tabHeader;
+                }
+
+                showFirstTab(tabs){
+					var firstHeader = tabs.children[0].children[0];
+					firstHeader.classList.add('selected')
+                    tabs.children[1].style.display="block"                    
+                    for(var index=2;index<tabs.children.length;index++){                            
+                            tabs.children[index].style.display="none";
+                    }                         
+                }
+            }
+            window.customElements.define('treez-tab', TreezTab);
+
+        </script>	
+		
+	</head>
+
+</html>
