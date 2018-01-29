@@ -1,0 +1,50 @@
+treez-tabs {
+    background-color:#f2f2f2;
+    width:100%;
+    height:100%;
+    padding-top:2px;
+     font-family: Arial,sans-serif;
+    font-size: 12px;
+}
+
+treez-tabs-header {
+    margin-left:-3px;   
+    color: #777777;  
+}
+
+treez-tab-header {   
+    background-color:#f2f2f2;
+    display:inline-block;
+    margin-left: 2px;
+   
+    padding:8px;
+    padding-top:1px;
+    padding-bottom:3px;
+    border: 1px solid;
+    border-color:#cccccc;
+
+    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2); 
+    transform: translate(0px, 1px);        
+}
+
+treez-tab-header:hover {
+    background-color:#e1e1e1;
+}
+
+treez-tab-header.selected {
+    border-bottom: none;
+    background-color:#e1e1e1;
+    transform: translate(0px, 2px); 
+    padding-top:2px; 
+}
+
+treez-tab {   
+    background-color:#e1e1e1;
+    border-top: 1px solid;
+    border-color:#cccccc;
+    border-bottom: none;
+    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2); 
+    height:100%;
+    vertical-alignment:bottom;
+
+}

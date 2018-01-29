@@ -1,40 +1,16 @@
-
+import AttributeAtom from './../../attributeAtom.js';
+import AttributeContainerAtom from './../attributeContainerAtom.js';
 
 export default class SectionControlProvider  {	
 
-	private Section section;
-
-	private Browser browser;
-
-	private FocusChangingRefreshable treeViewerRefreshable;
-
-	private org.eclipse.ui.forms.widgets.Section sectionComposite;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public HtmlSectionControlProvider(
-			Section section,
-			Browser browser,
-			FocusChangingRefreshable treeViewerRefreshable) {
-		this.section = section;
-		this.browser = browser;
+	constructor(section, treeViewerRefreshable) {
+		this.section = section;		
 		this.treeViewerRefreshable = treeViewerRefreshable;
 	}
 
-	//#end region
+	createAtomControl() {		
 
-	//#region METHODS
-
-	@Override
-	public void createAtomControl() {
-
-		D3 d3 = browser.getD3();
-
-		Selection root = d3.select("#root");
-
-		Selection expander = root //
+		var expander = this.section //
 				.append("details") //
 				.style("margin-bottom", "10px");
 
@@ -43,7 +19,7 @@ export default class SectionControlProvider  {
 						+ "   color: #194c7f "//
 						+ "}");
 
-		Selection expanderHeader = expander //
+		var expanderHeader = expander //
 				.append("summary") //
 				.style("background", "linear-gradient(#e0e8f1, white)")
 				.style("outline", "none")
@@ -54,10 +30,10 @@ export default class SectionControlProvider  {
 				.style("margin-bottom", "5px")
 				.text(section.getTitle());
 
-		Selection expanderBody = expander //
+		var expanderBody = expander //
 				.append("div");
 
-		boolean isExpanded = section.isExpanded();
+		var isExpanded = section.isExpanded();
 		if (isExpanded) {
 			expander.attr("open", "open");
 		} else {
@@ -75,59 +51,27 @@ export default class SectionControlProvider  {
 
 		//setEnabled(section.isEnabled()); //TODO
 
-		createSectionContent(expanderBody);
+		this.createSectionContent(expanderBody);
 
 	}
 
-	private void createSectionContent(Selection sectionBody) {
+	createSectionContent(sectionBody) {
 
-		List<TreeNodeAdaption> childNodes = section.createTreeNodeAdaption().getChildren();
-		for (TreeNodeAdaption childNode : childNodes) {
+		this.section.children.forEach((child)=>{
 
-			Adaptable adaptable = childNode.getAdaptable();
+		var isAttributeAtom = child is AttributeAtom;
+		if (isAttributeAtom) {
+			this.createControlFromAttributeAtom(sectionBody, child);
+			child.createAttributeAtomControl(sectionBody, this.treeViewerRefreshable);
+			return;
+		} 
 
-			boolean isAbstractAttributeAtom = adaptable instanceof AbstractAttributeAtom;
-			if (isAbstractAttributeAtom) {
-				createControlFromAttributeAtom(sectionBody, adaptable);
-			} else {
-				createControlFromAttributeContainerAtom(sectionBody, adaptable);
-			}
-		}
-
-	}
-
-	private void createControlFromAttributeAtom(Selection sectionBody, Adaptable adaptable) {
-		AbstractAttributeAtom<?, ?> attributeAtom = (AbstractAttributeAtom<?, ?>) adaptable;
-		attributeAtom.createAttributeAtomControl(browser, sectionBody, treeViewerRefreshable);
-	}
-
-	private void createControlFromAttributeContainerAtom(Selection sectionBody, Adaptable adaptable) {
-		boolean isAbstractAttributeContainerAtom = adaptable instanceof AbstractAttributeContainerAtom;
-		if (isAbstractAttributeContainerAtom) {
-			AbstractAttributeContainerAtom<?> attributeContainerAtom = (AbstractAttributeContainerAtom<?>) adaptable;
-			attributeContainerAtom.createAtomControl(browser, sectionBody, treeViewerRefreshable);
+		var isAttributeContainerAtom = atom is AttributeContainerAtom;
+		if (isAttributeContainerAtom) {			
+			atom.createAtomControl(sectionBody, this.treeViewerRefreshable);
 		} else {
-			String message = "Could not create attribute atom. Type '" + adaptable.getClass().getName()
-					+ "' is not yet implemented.";
-			LOG.error(message);
-			throw new IllegalStateException(message);
+			var message = "Could not create attribute atom. Type '" + atom.prototype.name() + "' is not yet implemented.";			
+			throw new Error(message);
 		}
 	}
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	@Override
-	public void setEnabled(boolean enable) {
-		throw new IllegalStateException("not yet implemented");
-	}
-
-	@Override
-	public void setVisible(boolean visible) {
-		throw new IllegalStateException("not yet implemented");
-	}
-
-	//#end region
-
 }

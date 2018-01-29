@@ -49,29 +49,15 @@ import org.treez.javafxd3.javafx.Browser;
 
 export default class Section extends AttributeContainerAtom {
 
-	//#region ATTRIBUTES
-	
-	private String title;
-
-	@IsParameter(defaultValue = "")
-	private String description;
-
-	@IsParameter(defaultValue = "true")
-	private boolean expanded;
-
-	private SectionControlProvider controlProvider;
-
-	private boolean isEnabled = true;
-
-	private boolean isVisible = true;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Section(String name) {
+	constructor(name) {
 		super(name);
-		title = Utils.firstToUpperCase(name); //this default title might be overridden by explicitly setting the label
+
+		this.title = name[0].toUpperCase() + name.slice(1); 
+		this.description="";
+		this.isExpanded=true;
+		this.isEnabled = true;
+		this.isVisible = true;
+		this.controlProvider="undefined";		
 	}
 
 	/**
@@ -79,33 +65,28 @@ export default class Section extends AttributeContainerAtom {
 	 */
 	private Section(Section sectionToCopy) {
 		super(sectionToCopy);
-		title = sectionToCopy.title;
-		description = sectionToCopy.description;
-		expanded = sectionToCopy.expanded;
+		
 	}
 
 	//#end region
 
 	//#region METHODS
 
-	@Override
-	protected Section getThis() {
-		return this;
+	copy() {
+		var newAtom = new Section(this.name);
+		newAtom.title = sectionToCopy.title;
+		newAtom.description = sectionToCopy.description;
+		newAtom.isExpanded = sectionToCopy.isExpanded;
+		newAtom.isEnabled = sectionToCopy.isEnabled;
+		newAtom.isVisible = sectionToCopy.isVisible;
 	}
 
-	@Override
-	public Section copy() {
-		return new Section(this);
+	provideImage() {
+		return "Section.png";
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("Section.png");
-	}
-
-	@Override
-	protected ArrayList<Object> createContextMenuActions(final TreeViewerRefreshable treeViewer) {
-		ArrayList<Object> actions = new ArrayList<>();
+	createContextMenuActions(treeViewer) {
+		var actions = [];
 
 		//add section
 		actions.add(new TreeViewerAction(
