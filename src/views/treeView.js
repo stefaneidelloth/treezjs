@@ -59,7 +59,7 @@ export default class TreeView {
     createButton(parent, imageName, tooltip, action){
     	parent
 		.append("img")
-		.attr("class","treezToolIcon")				
+		.attr("class","treez-tool-icon")				
 		.attr("src","./icons/" + imageName)
 		.attr("title", tooltip)
 		.on("click", action);
@@ -67,7 +67,7 @@ export default class TreeView {
 
     buildContent(parentSelection){
  		var content = parentSelection.append("div")
- 			.attr("class","treezTreeContent");
+ 			.attr("class","treez-tree-content");
  		this.content = content;
     }
 

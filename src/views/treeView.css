@@ -1,8 +1,8 @@
-.treezToolIcon {
+.treez-tool-icon {
     margin: 5px;
 }
 
-.treezTreeContent {
+.treez-tree-content {
     background-color: white;
  	position: absolute;
  	top: 25px;
@@ -10,40 +10,40 @@
  	width: 100%;
 }
 
-.treezDetails {
+.treez-details {
 	font-family: Arial,sans-serif;
     font-size: 12px;
 }
 
-.treezIndent {
+.treez-indent {
 	margin-left: 12px;
 }
 
-.treezLeafNode {
+.treez-leaf-node {
 	margin-left: 25px;
 }
 
-.treezSummary {
+.treez-summary {
 	outline: none;
 }
 
-.treezNodeIcon {
+.treez-node-icon {
 	vertical-align: middle;	
 	margin-bottom: 2px;
 }
 
-.treezNodeLabel {	
+.treez-node-label {	
 	margin-left: 5px;	
 }
 
-.treezContextMenu {
+.treez-context-menu {
 	position: absolute;
     display: none;    
     outline: thin solid lightgrey;                         
     background-color: white;
 }
 
-.treezMenuButton {
+.treez-menu-button {
 	min-width: 100px;
 	min-height: 22px;
     white-space: nowrap;    	
@@ -51,16 +51,16 @@
     background-color: white;
 }
 
-.treezMenuButton:hover {	
+.treez-menu-button:hover {	
     background-color: #ebebebff;
 }
 
-.treezMenuButtonIcon {
+.treez-menu-button-icon {
 	vertical-align: middle;
     float: left;
 }
 
-.treezMenuButtonLabel {
+.treez-menu-button-label {
 	margin-left: 5px;
 	float: left;	
     font-family: Arial,sans-serif;

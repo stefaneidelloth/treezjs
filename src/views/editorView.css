@@ -1,0 +1,15 @@
+.treez-editor-toolbar {
+	
+}
+
+.treez-editor-tool-icon {
+    margin: 5px;
+}
+
+.treez-editor-content {
+	background-color: white;
+ 	position: absolute;
+ 	top: 25px;
+ 	bottom: 0px; 		
+ 	width: 100%;
+}

@@ -1,4 +1,5 @@
 import TreeView from './views/treeView.js';
+import EditorView from './views/editorView.js';
 
 var self = {
 	editorViewer: undefined
@@ -16,7 +17,13 @@ requirejs.config({
 			}
 });
 
-require([ 'golden-layout' ], function(GoldenLayout) {
+require([
+	'golden-layout',
+	'd3'
+], function(
+	 GoldenLayout,
+	 d3
+) {
 
 	var goldenLayoutConfig = {
 		content : [ {
@@ -69,34 +76,8 @@ require([ 'golden-layout' ], function(GoldenLayout) {
 	});
 
 	myLayout.registerComponent('Editor', function(container) {
-
-		var element = container.getElement();
-		element.attr('id', 'editor');	
-			
-		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
-
-		var content = "import Atom from './src/core/atom/atom.js';\n"+		
-			"import AdjustableAtom from './src/core/adjustable/adjustableAtom.js';\n"+
-			"\n"+
-			"window.createModel = function(){\n"+
-			"\n"+
-			"	var root = new AdjustableAtom('root');\n"+
-			"	var firstChild = new Atom('firstChild');\n"+
-			"	root.addChild(firstChild);\n"+
-			"	var secondChild = new Atom('secondChild');\n"+
-			"	root.addChild(secondChild);\n"+
-			"	var grandChild = new Atom('grandChild');\n"+
-			"	secondChild.addChild(grandChild);\n"+
-			"	return root;\n"+
-			"};\n";
-			
-		var codeEdit = new CodeEdit();			
-		codeEdit.create({parent: 'editor'}).then(function(editorViewer) {
-				editorViewer.setContents(content, 'application/javascript');
-				self.editorViewer = editorViewer;
-			});
-		});       
-
+		var element = container.getElement()
+		new EditorView().buildView(element[0], self, d3);
 	});
 
 	myLayout.init();
