@@ -13,6 +13,7 @@ export default class AdjustableAtom extends Atom {
 		this.model = undefined;
 		this.isRunnable = false;
 		this.refreshableContentContainer=undefined;
+		
 	}
 
 	copy(atomToCopy){
@@ -167,5 +168,7 @@ export default class AdjustableAtom extends Atom {
 		var dummyParent = undefined;
 		this.createControlAdaption(dummyParent, null);
 	}	
+
+	
 
 }

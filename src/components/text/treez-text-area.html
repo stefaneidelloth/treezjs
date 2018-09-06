@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-text-area.css" />
+
+        <script>
+
+            class TreezTextArea extends HTMLElement {
+
+            	static get observedAttributes() {
+                    return ['title','value'];
+                }
+
+                constructor(){
+                    super();                  
+                    this.label=undefined;   
+                    this.textArea=undefined;                            
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.label){                       
+
+                        var label = document.createElement('label');  
+                        self.label = label;                     
+                        label.innerText = self.title;                       
+                        self.appendChild(label);  
+
+                        var container = document.createElement('div');
+                        self.appendChild(container);                                        
+
+                        var textArea = document.createElement('textarea');                       
+                        self.textArea = textArea;
+                        textArea.value = self.value;                       
+                        textArea.onchange = ()=>this.textAreaChanged();                                              
+                        container.appendChild(textArea);  
+                                                              		
+                    }
+                }
+
+                textAreaChanged(){
+                	this.value = this.textArea.value;                	
+                }               
+
+                disconnectedCallback(){
+                	while (this.firstChild) {
+						this.removeChild(this.firstChild);
+					}
+                }
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                    if(attr==='title'){
+                    	if(this.label){
+                    		 this.label.innerText= newValue;   
+                    	}                                           
+                    } else if(attr==='value'){  
+
+                    	if(this.textArea){
+                    		var oldValue = this.textArea.value;
+							if(newValue!=oldValue){
+								this.textArea.value= newValue; 								
+							}                    		
+                    	}  
+                    }
+                }
+
+                get value() {
+				  return this.getAttribute('value');
+				}
+
+				set value(newValue) {
+				  this.setAttribute('value', newValue);
+				}               
+            }
+            window.customElements.define('treez-text-area', TreezTextArea); 
+
+                   
+
+        </script>	
+		
+	</head>
+
+</html>

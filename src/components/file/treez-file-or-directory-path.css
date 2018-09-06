@@ -1,0 +1,31 @@
+
+treez-file-path {
+    padding: 3px;
+    font-family: Arial,sans-serif;
+    font-size: 12px;     
+}
+
+input[type=file] {
+color:transparent;
+width:16px;
+}
+
+input[type=file]::-webkit-file-upload-button {
+background: url('/icons/browse.png');
+background-repeat: no-repeat;
+border: none;
+width:16px;
+color:transparent;
+}
+
+#container{
+    display:'inline-block';
+    white-space: nowrap;
+}
+
+
+
+input[type=text] {   
+    width: 90%;      
+    margin-right:4px;
+}

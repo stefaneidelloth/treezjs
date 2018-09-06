@@ -6,7 +6,13 @@ Also see https://stackoverflow.com/questions/16333790/node-js-quick-file-server-
 -->
 <html>
 
-	<head>	
+	<head>
+
+		<!-- log4js2.js -->
+		<script  src="./bower_components/log4js2/dist/log4js2.es6.min.js"></script>
+
+		<!-- vue.js -->
+		<script  src="./bower_components/vue/dist/vue.js"></script>
 	
 		<!-- require.js -->
 		<script src="./bower_components/requirejs/require.js"></script>			
@@ -22,12 +28,11 @@ Also see https://stackoverflow.com/questions/16333790/node-js-quick-file-server-
 
 		<!-- treez -->
 		<link type="text/css" rel="stylesheet" href="./src/views/treeView.css" />	
-		<link type="text/css" rel="stylesheet" href="./src/views/editorView.css" />	
-		<link rel="import" href="./src/components/tabs/tabs.html">			
+		<link type="text/css" rel="stylesheet" href="./src/views/editorView.css" />
 
 	</head>
 
 	<body>	
-		<script type="module" src="./src/main.js"></script>				
+		<script type="module" src="./src/main.js"></script>	
 	</body>
 </html>

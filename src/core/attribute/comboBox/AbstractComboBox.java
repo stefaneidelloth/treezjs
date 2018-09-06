@@ -1,37 +1,4 @@
-package org.treez.core.atom.attribute.comboBox;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.treez.core.Activator;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.adaptable.TreeNodeAdaption;
-import org.treez.core.adaptable.composite.GrabbingRowComposite;
-import org.treez.core.adaptable.composite.GridComposite;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.base.AbstractAttributeAtom;
-import org.treez.core.atom.attribute.base.AbstractStringAttributeAtom;
-import org.treez.core.atom.attribute.base.parent.AbstractAttributeParentAtom;
-import org.treez.core.atom.base.AtomControlAdaption;
-import org.treez.core.atom.base.annotation.IsParameter;
-import org.treez.core.swt.CustomLabel;
-import org.treez.core.utils.Utils;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.functions.data.DirectDataFunction;
-import org.treez.javafxd3.javafx.Browser;
-
-/**
- * An item example
- */
-public abstract class AbstractComboBox<A extends AbstractComboBox<A>> extends AbstractStringAttributeAtom<A> {
+default export class class AbstractComboBox extends StringAttributeAtom {
 
 	//#region ATTRIBUTES
 

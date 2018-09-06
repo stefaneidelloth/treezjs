@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+	<head>
+		<script  src="../../../bower_components/vue/dist/vue.js"></script>
+		<link rel="import" id="treez-tab-folder" href="./treez-tab-folder.html"/>
+	</head>
+
+	<body>
+		<div id="tab-folder-placeholder"></div>
+		
+		<template id="tab-folder-template">
+			<treez-tab-folder id="root">
+				<treez-tab title="First tab">
+					<div>           
+					First tab content
+					</div>
+				</treez-tab>
+
+				<treez-tab title="Second tab" >
+					<div :style="{ 'background-color': color  }">
+					Second tab content
+					</div>
+				</treez-tab>
+			</treez-tab-folder>
+		</template>
+	
+		<script> 
+
+			new Vue({
+                el: '#tab-folder-placeholder',      
+                template: '#tab-folder-template',          
+                data: {
+                    color: 'green'
+                }                
+           	}); 
+
+		  var root = document.getElementById('root');
+			  var treezTab = document.createElement('treez-tab');
+			  treezTab.title = 'Third tab';
+			  root.appendChild(treezTab);
+
+			  var content = document.createElement('div');
+			  content.innerText = 'Third tab content';
+			  treezTab.appendChild(content); 
+            
+		</script>
+	</body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-tab-folder.css" />
+
+        <script>
+
+            class TreezTabFolderHeader extends HTMLElement {}
+            window.customElements.define('treez-tab-folder-header', TreezTabFolderHeader);
+
+            class TreezTabHeader extends HTMLElement {}
+            window.customElements.define('treez-tab-header', TreezTabHeader);
+
+            class TreezTabFolder extends HTMLElement {
+
+                constructor(){
+                    super();
+                    this.tabFolderHeader=undefined;
+                }
+
+                connectedCallback() {
+                	
+                    if(!this.tabFolderHeader){
+                        this.style.display='block';                       
+                        this.tabFolderHeader = document.createElement('treez-tab-folder-header');
+                        this.insertBefore(this.tabFolderHeader, this.firstChild);																	            
+                    }                    
+                }               
+
+                createTabHeaderForTabIfNotExists(tab){
+                	if(!tab.tabHeader){
+                		var tabFolderHeader = this.children[0]; 
+					var newTabHeader = document.createElement('treez-tab-header');  
+                    newTabHeader.innerText = tab.title;
+                    newTabHeader.onclick=()=>{                    	
+                        this.hideAllTabs(); 
+                        tab.style.display='block';
+                        newTabHeader.classList.add('selected')                        
+                    };
+                    tab.tabHeader = newTabHeader;
+                    tabFolderHeader.appendChild(newTabHeader);
+                    this.showFirstTab();
+                	} 					 
+                }
+
+                hideAllTabs(){
+                	var children = this.children;
+                	var tabFolderHeader = children[0];
+                	var tabHeaders = tabFolderHeader.children;
+                	for(var index=1;index<children.length;index++){ 
+						var tab = children[index];                        
+						tab.style.display='none';
+						var tabHeader = tabHeaders[index-1];
+						if(tabHeader){
+							tabHeader.classList.remove('selected');
+						}
+						
+                    }   
+                }
+
+                showFirstTab(){                	
+                	var children = this.children;
+                	var tabFolderHeader = children[0];
+
+					var firstTabHeader = tabFolderHeader.children[0];
+					firstTabHeader.classList.add('selected')
+                    tabFolderHeader.style.display="block"                    
+                    for(var index=1;index<children.length;index++){                            
+                        children[index].style.display="none";
+                    }   
+                    children[1].style.display="block";                      
+                }               
+
+                disconnectedCallback(){
+                    while (this.firstChild) {
+						this.removeChild(this.firstChild);
+					}
+                }
+            }
+            window.customElements.define('treez-tab-folder', TreezTabFolder);
+
+
+            class TreezTab extends HTMLElement {
+
+                constructor(){
+                    super();
+                    console.log('tab constructor');
+                    this.tabHeader=undefined;
+                }
+
+                static get observedAttributes() {
+                    return ['title']; 
+                }               
+
+                connectedCallback() { 
+					var tabFolder = this.parentElement;
+					if(tabFolder){			
+						tabFolder.createTabHeaderForTabIfNotExists(this);
+					}               
+                }
+
+                disconnectedCallback(){
+                	console.log('disconnected callback');
+                	while (this.firstChild) {
+						this.removeChild(this.firstChild);
+					}
+                }
+
+                adoptedCallback(){
+                    console.log('adopted callback');
+                }
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                    if(attr==='title' && this.tabHeader){
+                        this.tabHeader.innerText= newValue;                       
+                    }
+                } 
+               
+            }
+            window.customElements.define('treez-tab', TreezTab);
+
+        </script>	
+		
+	</head>
+
+</html>

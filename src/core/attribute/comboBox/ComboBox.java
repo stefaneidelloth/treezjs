@@ -1,6 +1,4 @@
-package org.treez.core.atom.attribute.comboBox;
-
-public class ComboBox extends AbstractComboBox<ComboBox> {
+default export class ComboBox extends AbstractComboBox {
 
 	//#region CONSTRUCTORS
 

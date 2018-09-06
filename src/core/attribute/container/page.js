@@ -1,4 +1,7 @@
 import AttributeContainerAtom from "./attributeContainerAtom.js";
+import Section from "./section/section.js";
+import TreeViewerAction from "../../treeview/treeViewerAction.js";
+import Atom from "../../atom/atom.js";
 
 export default class Page extends AttributeContainerAtom {
 
@@ -8,19 +11,19 @@ export default class Page extends AttributeContainerAtom {
 	}
 
 	copy() {
-		var newAtom = new Page(this.name);
-		newAtom.title = this.title;
+        const newAtom = new Page(this.name);
+        newAtom.title = this.title;
 		return newAtom;
 	}
 
-	provideImageName() {
+	static provideImageName() {
 		return "Page.png";
 	}
 
 	createContextMenuActions(treeViewer) {
-		var actions = [];
+        const actions = [];
 
-		//add
+        //add
 		actions.push(new TreeViewerAction(
 				"Add Section",
 				"Section.png",
@@ -37,16 +40,15 @@ export default class Page extends AttributeContainerAtom {
 		return actions;
 	}
 	
-	createAtomControl(tabFolder, treeViewerRefreshable) {		
+	createAtomControl(tabFolder, treeViewerRefreshable) {
 
-        var tabHeader = tabFolder.select(".tabHeader");
-        
-       
+        const tabHeader = tabFolder.select(".tabHeader");
 
-        var page = tabFolder.append("treez-tab")		
-		.attr("label", this.title);       
 
-		page.append("label").html(this.name);
+        const page = tabFolder.append("treez-tab")
+            .attr("label", this.title);
+
+        page.append("label").html(this.name);
 		
 		//create scrollbar
 		//TODO
@@ -75,14 +77,14 @@ export default class Page extends AttributeContainerAtom {
 	}
 
 	addSection(treeViewer) {
-		var name = Atom.createChildNameStartingWith(this, "mySection");
-		this.createSection(name);
+        const name = Atom.createChildNameStartingWith(this, "mySection");
+        this.createSection(name);
 		this.expand(treeViewer);
 	}
 	
-	createSection(name, absoluteHelpId, isExpanded) {
-		var section = this.createSection(name);
-		section.setAbsoluteHelpId(absoluteHelpId);
+	static createSection(name, absoluteHelpId, isExpanded) {
+        const section = new Section(name);
+        section.setAbsoluteHelpId(absoluteHelpId);
 		section.setExpanded(isExpanded);
 		return section;
 	}	

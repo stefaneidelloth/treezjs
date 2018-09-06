@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.2.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-react": "^7.10.0",
+    "prettier": "^1.13.7"
+  },
+  "dependencies": {
+    "asciidoctor-docbook.js": "^1.5.7-rc.2",
+    "asciidoctor.js": "^1.5.7-rc.1"
+  }
+}

@@ -1,51 +1,5 @@
 import AttributeContainerAtom from "../attributeContainerAtom.js";
-
-/*
-import org.treez.core.atom.attribute.attributeContainer.AttributeContainerAtom;
-import org.treez.core.atom.attribute.attributeContainer.Spacer;
-import org.treez.core.atom.attribute.checkBox.CheckBox;
-import org.treez.core.atom.attribute.color.ColorChooser;
-import org.treez.core.atom.attribute.color.ColorMap;
-import org.treez.core.atom.attribute.comboBox.ComboBox;
-import org.treez.core.atom.attribute.comboBox.ComboBoxEnableTarget;
-import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
-import org.treez.core.atom.attribute.comboBox.errorBar.ErrorBarStyle;
-import org.treez.core.atom.attribute.comboBox.fillStyle.FillStyle;
-import org.treez.core.atom.attribute.comboBox.font.Font;
-import org.treez.core.atom.attribute.comboBox.lineStyle.LineStyle;
-import org.treez.core.atom.attribute.comboBox.size.Size;
-import org.treez.core.atom.attribute.comboBox.symbolType.SymbolType;
-import org.treez.core.atom.attribute.fileSystem.DirectoryPath;
-import org.treez.core.atom.attribute.fileSystem.DirectoryPathList;
-import org.treez.core.atom.attribute.fileSystem.FileOrDirectoryPath;
-import org.treez.core.atom.attribute.fileSystem.FilePath;
-import org.treez.core.atom.attribute.fileSystem.FilePathList;
-import org.treez.core.atom.attribute.modelPath.ModelPath;
-import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
-import org.treez.core.atom.attribute.plot.FunctionPlotter;
-import org.treez.core.atom.attribute.text.InfoText;
-import org.treez.core.atom.attribute.text.TextArea;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.base.AtomTreeNodeAdaption;
-import org.treez.core.atom.base.annotation.IsParameter;
-import org.treez.core.atom.variablefield.DoubleVariableField;
-import org.treez.core.atom.variablefield.IntegerVariableField;
-import org.treez.core.atom.variablefield.QuantityVariableField;
-import org.treez.core.atom.variablefield.VariableField;
-import org.treez.core.atom.variablelist.DoubleVariableListField;
-import org.treez.core.atom.variablelist.IntegerVariableListField;
-import org.treez.core.atom.variablelist.QuantityVariableListField;
-import org.treez.core.atom.variablelist.VariableList;
-import org.treez.core.atom.variablelist.VariableListWithInfo;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.path.FilterDelegate;
-import org.treez.core.treeview.TreeViewerRefreshable;
-import org.treez.core.treeview.action.TreeViewerAction;
-import org.treez.core.utils.Utils;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.javafx.Browser;
-*/
+import controlProvider from "../../attributeAtom";
 
 export default class Section extends AttributeContainerAtom {
 
@@ -57,28 +11,15 @@ export default class Section extends AttributeContainerAtom {
 		this.isExpanded=true;
 		this.isEnabled = true;
 		this.isVisible = true;
-		this.controlProvider="undefined";		
 	}
-
-	/**
-	 * Copy constructor
-	 */
-	private Section(Section sectionToCopy) {
-		super(sectionToCopy);
-		
-	}
-
-	//#end region
-
-	//#region METHODS
 
 	copy() {
-		var newAtom = new Section(this.name);
-		newAtom.title = sectionToCopy.title;
-		newAtom.description = sectionToCopy.description;
-		newAtom.isExpanded = sectionToCopy.isExpanded;
-		newAtom.isEnabled = sectionToCopy.isEnabled;
-		newAtom.isVisible = sectionToCopy.isVisible;
+        const newAtom = new Section(this.name);
+        newAtom.title = this.title;
+		newAtom.description = this.description;
+		newAtom.isExpanded = this.isExpanded;
+		newAtom.isEnabled = this.isEnabled;
+		newAtom.isVisible = this.isVisible;
 	}
 
 	provideImage() {
@@ -86,85 +27,91 @@ export default class Section extends AttributeContainerAtom {
 	}
 
 	createContextMenuActions(treeViewer) {
-		var actions = [];
-
-		//add section
-		actions.add(new TreeViewerAction(
-				"Add Section",
-				Activator.getImage("Section.png"),
-				treeViewer,
-				() -> addSection(treeViewer)));
-
-		//add text field
-		actions.add(new TreeViewerAction(
-				"Add TextField",
-				Activator.getImage("TextField.png"),
-				treeViewer,
-				() -> addTextField(treeViewer)));
-
-		//add check box
-		actions.add(new TreeViewerAction(
-				"Add CheckBox",
-				Activator.getImage("CheckBox.png"),
-				treeViewer,
-				() -> addCheckBox(treeViewer)));
-
-		//add combo box
-		actions.add(new TreeViewerAction(
-				"Add ComboBox",
-				Activator.getImage("ComboBox.png"),
-				treeViewer,
-				() -> addComboBox(treeViewer)));
-
-		//add spacer
-		actions.add(new TreeViewerAction(
-				"Add Spacer",
-				Activator.getImage("Spacer.png"),
-				treeViewer,
-				() -> addSpacer(treeViewer)));
-
-		//delete
-		actions.add(new TreeViewerAction(
-				"Delete",
-				Activator.getImage(ISharedImages.IMG_TOOL_DELETE),
-				treeViewer,
-				() -> createTreeNodeAdaption().delete()));
-
-		return actions;
+		return [];
 	}
+		
+	createAtomControl(parent, treeViewerRefreshable) {
 
-	//#region CONTROL
+        const expander = parent //
+            .append("details") //
+            .style("margin-bottom", "10px");
 
-	@Override
-	public void createAtomControl(TreezComposite pageContentContainer, FocusChangingRefreshable treeViewerRefreshable) {
-		pageContentContainer.assertHasGridLayout();
-		controlProvider = new SwtSectionControlProvider(
-				this,
-				(GridComposite) pageContentContainer,
-				treeViewerRefreshable);
-		controlProvider.createAtomControl();
-	}
+        expander.append("style") //
+                .text("summary::-webkit-details-marker { " //
+                    + "   color: #194c7f "//
+                    + "}");
 
-	@Override
-	public void createAtomControl(Browser browser, Selection parent, FocusChangingRefreshable treeViewerRefreshable) {
-		controlProvider = new HtmlSectionControlProvider(this, browser, treeViewerRefreshable);
-		this.runUiJobBlocking(() -> controlProvider.createAtomControl());
+        const expanderHeader = expander //
+            .append("summary") //
+            .style("background", "linear-gradient(#e0e8f1, white)")
+            .style("outline", "none")
+            .style("border-top-left-radius", "2px")
+            .style("border-top-right-radius", "2px")
+            .style("padding-left", "5px")
+            .style("color", "#194c7f")
+            .style("margin-bottom", "5px")
+            .text(section.getTitle());
+
+        const expanderBody = expander //
+            .append("div");
+
+        const isExpanded = section.isExpanded();
+        if (isExpanded) {
+                expander.attr("open", "open");
+            } else {
+                expander.attr("open", "false");
+            }
+
+            /*
+             * sectionComposite.setDescription(section.getDescription());
+
+            String absoluteHelpId = section.getAbsoluteHelpId();
+            AbstractActivator.registerAbsoluteHelpId(absoluteHelpId, sectionComposite);
+
+            createSectionToolbar(toolkit); //TODO
+             */
+
+            //setEnabled(section.isEnabled()); //TODO
+
+            this.createSectionContent(expanderBody);
 
 	}
 
-	//#end region
+    createSectionContent(sectionBody) {
+
+        this.children.forEach((child)=>{
+
+            const isAttributeAtom = child instanceof controlProvider;
+            if (isAttributeAtom) {
+                child.createAttributeAtomControl(sectionBody, this.treeViewerRefreshable);
+                return;
+            }
+
+            const isAttributeContainerAtom = child instanceof AttributeContainerAtom;
+            if (isAttributeContainerAtom) {
+                child.createAtomControl(sectionBody, this.treeViewerRefreshable);
+            } else {
+                const message = "Could not create attribute atom. Type '" + child.prototype.name() + "' is not yet implemented.";
+                throw new Error(message);
+            }
+        });
+	}
+
+	
 
 	//#region SECTION
 
-	void addSection(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "mySection");
-		createSection(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	/*
+
+	addSection(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "mySection");
+        this.createSection(name);
+		this.expand(treeViewer);
 	}
 
-	public Section createSection(String name) {
-		Section section = new Section(name);
-		addChild(section);
+	createSection(name) {
+        const section = new Section(name);
+        this.addChild(section);
 		return section;
 	}
 
@@ -172,21 +119,15 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region SECTION ACTION
 
-	void addSectionAction(TreeViewerRefreshable treeViewer, String description, Runnable runnable) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "mySectionAction");
-		createSectionAction(name, description, runnable);
-		createTreeNodeAdaption().expand(treeViewer);
+	addSectionAction(treeViewer, description, runnable) {
+        const name = Atom.createChildNameStartingWith(this, "mySectionAction");
+        this.createSectionAction(name, description, runnable);
+		this.expand(treeViewer);
 	}
-
-	public SectionAction createSectionAction(String name, String description, Runnable runnable) {
-		SectionAction action = new SectionAction(name, description, runnable);
-		addChild(action);
-		return action;
-	}
-
-	public SectionAction createSectionAction(String name, String description, Runnable runnable, Image image) {
-		SectionAction action = new SectionAction(name, description, runnable, image);
-		addChild(action);
+	
+	createSectionAction(name, description, runnable, image) {
+        const action = new SectionAction(name, description, runnable, image);
+        this.addChild(action);
 		return action;
 	}
 
@@ -194,32 +135,24 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region TEXT FIELD
 
-	private void addTextField(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myTextField");
-		createTextField(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addTextField(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myTextField");
+        this.createTextField(name);
+		this.expand(treeViewer);
 	}
 
-	private TextField createTextField(String name) {
-		TextField textField = new TextField(name);
-		addChild(textField);
+	createTextField(name) {
+        const textField = new TextField(name);
+        this.addChild(textField);
 		return textField;
 	}
 
-	public TextField createTextField(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		TextField textField = new TextField(attributeName);
-		addChild(textField);
-		textField.wrap(wrap);
-		return textField;
-	}
-
-	public TextField createTextField(Attribute<String> wrap, Object attributeParent, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		TextField textField = new TextField(attributeName);
-		textField.setDefaultValue(defaultValue);
+	createTextFieldAndWrap(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const textField = new TextField(attributeName);
+        textField.setDefaultValue(defaultValue);
 		textField.set(defaultValue);
-		addChild(textField);
+		this.addChild(textField);
 		textField.wrap(wrap);
 		return textField;
 	}
@@ -228,10 +161,10 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region LABEL
 
-	public org.treez.core.atom.attribute.text.Label createLabel(String name, String labelText) {
-		org.treez.core.atom.attribute.text.Label label = new org.treez.core.atom.attribute.text.Label(name);
-		label.setLabel(labelText);
-		addChild(label);
+	createLabel(name, labelText) {
+        const label = new Label(name);
+        label.setLabel(labelText);
+		this.addChild(label);
 		return label;
 	}
 
@@ -239,30 +172,32 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region INFO TEXT
 
-	public InfoText createInfoText(Attribute<String> wrap, Object attributeParent, String label, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		InfoText infoText = createInfoText(attributeName, defaultValue);
-		infoText.setLabel(label);
-		infoText.wrap(wrap);
-		return infoText;
-	}
-
-	private InfoText createInfoText(String name, String defaultValue) {
-		InfoText infoText = new InfoText(name);
-		infoText.setDefaultValue(defaultValue);
+	createInfoText(name, defaultValue) {
+        const infoText = new InfoText(name);
+        infoText.setDefaultValue(defaultValue);
 		infoText.set(defaultValue);
 		addChild(infoText);
 		return infoText;
 	}
 
+	createInfoTextAndWrap(wrap, attributeParent, label, defaultValue) {
+        const attributeName = getFieldName(wrap, attributeParent);
+        const infoText = this.createInfoText(attributeName, defaultValue);
+        infoText.setLabel(label);
+		infoText.wrap(wrap);
+		return infoText;
+	}
+
+	
+
 	//#end region
 
 	//#region TEXT AREA
 
-	public TextArea createTextArea(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		TextArea textArea = new TextArea(attributeName);
-		addChild(textArea);
+	createTextAreaAndWrap(wrap, attributeParent) {
+        const attributeName = getFieldName(wrap, attributeParent);
+        const textArea = new TextArea(attributeName);
+        this.addChild(textArea);
 		textArea.wrap(wrap);
 		return textArea;
 	}
@@ -271,29 +206,21 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region CHECK BOX
 
-	void addCheckBox(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myCheckBox");
-		createCheckBox(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addCheckBox(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myCheckBox");
+        this.createCheckBox(name);
+		this.expand(treeViewer);
 	}
 
-	public CheckBox createCheckBox(String name) {
-		CheckBox checkBox = new CheckBox(name);
-		addChild(checkBox);
+	createCheckBox(name) {
+        const checkBox = new CheckBox(name);
+        this.addChild(checkBox);
 		return checkBox;
 	}
 
-	public CheckBox createCheckBox(Attribute<Boolean> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		CheckBox checkBox = new CheckBox(attributeName);
-		addChild(checkBox);
-		checkBox.wrap(wrap);
-		return checkBox;
-	}
-
-	public CheckBox createCheckBox(Attribute<Boolean> wrap, Object attributeParent, boolean defaultValue) {
-		CheckBox checkBox = createCheckBox(wrap, attributeParent);
-		checkBox.setDefaultValue(defaultValue);
+	createCheckBoxAndWrap(wrap, attributeParent, defaultValue) {
+        const checkBox = this.createCheckBox(wrap, attributeParent);
+        checkBox.setDefaultValue(defaultValue);
 		checkBox.set(defaultValue);
 		return checkBox;
 	}
@@ -302,34 +229,25 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region COMBO BOX
 
-	void addComboBox(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myComboBox");
-		createComboBox(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addComboBox(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myComboBox");
+        this.createComboBox(name);
+		this.expand(treeViewer);
 	}
 
-	private ComboBox createComboBox(String name) {
-		ComboBox comboBox = new ComboBox(name);
-		addChild(comboBox);
+	createComboBox(name) {
+        const comboBox = new ComboBox(name);
+        this.addChild(comboBox);
 		return comboBox;
-	}
+	}	
 
-	public ComboBox createComboBox(Attribute<String> wrap, Object attributeParent) {
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		String attributeName = getFieldName(wrap, attributeParent);
-		ComboBox comboBox = new ComboBox(attributeName);
-		addChild(comboBox);
-		comboBox.wrap(wrap);
-		return comboBox;
-	}
-
-	public ComboBox createComboBox(Attribute<String> wrap, Object attributeParent, String items, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ComboBox comboBox = new ComboBox(attributeName);
-		comboBox.setItems(items);
+	createComboBoxAndWrap(wrap, attributeParent, items, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const comboBox = new ComboBox(attributeName);
+        comboBox.setItems(items);
 		comboBox.setDefaultValue(defaultValue);
 		comboBox.setValue(defaultValue);
-		addChild(comboBox);
+		this.addChild(comboBox);
 		comboBox.wrap(wrap);
 		return comboBox;
 	}
@@ -338,9 +256,9 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region COMBO BOX ENABLE TARGET
 
-	public ComboBoxEnableTarget createComboBoxEnableTarget(String name, String enableValues, String targetPath) {
-		ComboBoxEnableTarget comboBoxEnableTarget = new ComboBoxEnableTarget(name, enableValues, targetPath);
-		addChild(comboBoxEnableTarget);
+	createComboBoxEnableTarget(name, enableValues, targetPath) {
+        const comboBoxEnableTarget = new ComboBoxEnableTarget(name, enableValues, targetPath);
+        this.addChild(comboBoxEnableTarget);
 		return comboBoxEnableTarget;
 	}
 
@@ -348,13 +266,10 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region ENUM COMBO BOX
 
-	public <E extends Enum<E>>
-			EnumComboBox<E>
-			createEnumComboBox(Attribute<E> wrap, Object attributeParent, E defaultEnumValue) {
-
-		String attributeName = getFieldName(wrap, attributeParent);
-		EnumComboBox<E> comboBox = new EnumComboBox<>(defaultEnumValue, attributeName);
-		addChild(comboBox);
+	createEnumComboBoxAndWrap(wrap, attributeParent, defaultEnumValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const comboBox = new EnumComboBox(defaultEnumValue, attributeName);
+        this.addChild(comboBox);
 		comboBox.wrap(wrap);
 		return comboBox;
 	}
@@ -363,29 +278,24 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region COLOR CHOOSER
 
-	void addColorChooser(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myColor");
-		createColorChooser(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addColorChooser(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myColor");
+        this.createColorChooser(name);
+		this.expand(treeViewer);
 	}
 
-	private ColorChooser createColorChooser(String name) {
-		ColorChooser colorChooser = new ColorChooser(name);
-		addChild(colorChooser);
+	createColorChooser(name) {
+        const colorChooser = new ColorChooser(name);
+        this.addChild(colorChooser);
 		return colorChooser;
-	}
+	}	
 
-	public ColorChooser createColorChooser(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ColorChooser colorChooser = new ColorChooser(attributeName);
-		addChild(colorChooser);
-		colorChooser.wrap(wrap);
-		return colorChooser;
-	}
-
-	public ColorChooser createColorChooser(Attribute<String> wrap, Object attributeParent, String defaultValue) {
-		ColorChooser colorChooser = createColorChooser(wrap, attributeParent);
-		colorChooser.setDefaultValue(defaultValue);
+	createColorChooserAndWrap(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const colorChooser = new ColorChooser(attributeName);
+        colorChooser.setDefaultValue(defaultValue);
+		this.addChild(colorChooser);
+		colorChooser.wrap(wrap);				
 		return colorChooser;
 	}
 
@@ -393,10 +303,10 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region COLOR MAP
 
-	public ColorMap createColorMap(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ColorMap colorMap = new ColorMap(attributeName);
-		addChild(colorMap);
+	createColorMapAndWrap(wrap, attributeParent) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const colorMap = new ColorMap(attributeName);
+        this.addChild(colorMap);
 		colorMap.wrap(wrap);
 		return colorMap;
 	}
@@ -405,30 +315,22 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region LINE STYLE
 
-	public LineStyle createLineStyle(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		LineStyle lineStyle = new LineStyle(attributeName);
-		addChild(lineStyle);
+	createLineStyleAndWrap(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const lineStyle = new LineStyle(attributeName, defaultValue);
+        this.addChild(lineStyle);
 		lineStyle.wrap(wrap);
 		return lineStyle;
-	}
-
-	public LineStyle createLineStyle(Attribute<String> wrap, Object attributeParent, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		LineStyle lineStyle = new LineStyle(attributeName, defaultValue);
-		addChild(lineStyle);
-		lineStyle.wrap(wrap);
-		return lineStyle;
-	}
+	}	
 
 	//#end region
 
 	//#region FILL STYLE
 
-	public FillStyle createFillStyle(Attribute<String> wrap, Object attributeParent, String label) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		FillStyle fillStyle = new FillStyle(attributeName, label);
-		addChild(fillStyle);
+	createFillStyleAndWrap(wrap, attributeParent, label) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const fillStyle = new FillStyle(attributeName, label);
+        this.addChild(fillStyle);
 		fillStyle.wrap(wrap);
 		return fillStyle;
 	}
@@ -437,10 +339,10 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region ERROR BAR STYLE
 
-	public ErrorBarStyle createErrorBarStyle(Attribute<String> wrap, Object attributeParent, String label) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ErrorBarStyle errorBarStyle = new ErrorBarStyle(attributeName);
-		errorBarStyle.setLabel(label);
+	createErrorBarStyle(wrap, attributeParent, label) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const errorBarStyle = new ErrorBarStyle(attributeName);
+        errorBarStyle.setLabel(label);
 		addChild(errorBarStyle);
 		errorBarStyle.wrap(wrap);
 		return errorBarStyle;
@@ -450,10 +352,10 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region FONT
 
-	public Font createFont(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		Font font = new Font(attributeName, "Arial");
-		addChild(font);
+	createFont(wrap, attributeParent) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const font = new Font(attributeName, "Arial");
+        this.addChild(font);
 		font.wrap(wrap);
 		return font;
 	}
@@ -462,128 +364,109 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region MODEL_PATH
 
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String defaultPath,
-			Class<?> atomType) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
-		ModelPath modelPath = new ModelPath(attributeName, defaultPath, atomType, selectionType, null, false);
-		addChild(modelPath);
+	createModelPathForAtomType(wrap, attributeParent, defaultPath, atomType) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const selectionType = ModelPathSelectionType.FLAT;
+        const modelPath = new ModelPath(attributeName, defaultPath, atomType, selectionType, null, false);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			ModelPath parentModelPath,
-			Class<?> atomType) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPath modelPath = new ModelPath(attributeName, parentModelPath, atomType);
-		addChild(modelPath);
+	createModelPathForAtomTypes(wrap, attributeParent, defaultPath, atomTypes) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const selectionType = ModelPathSelectionType.FLAT;
+        const modelPath = new ModelPath(
+            attributeName,
+            defaultPath,
+            atomTypes,
+            selectionType,
+            attributeParent,
+            false
+        );
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			AbstractAtom<?> attributeParent,
-			String defaultPath,
-			Class<?>[] atomTypes) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
-		ModelPath modelPath = new ModelPath(
-				attributeName,
-				defaultPath,
-				atomTypes,
-				selectionType,
-				attributeParent,
-				false);
-		addChild(modelPath);
+	createModelPathWithParentPath(wrap, attributeParent, parentModelPath, atomType) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const modelPath = new ModelPath(attributeName, parentModelPath, atomType);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			AbstractAtom<?> attributeParent,
-			String defaultPath,
-			Class<?> atomType,
-			ModelPathSelectionType selectionType) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPath modelPath = new ModelPath(
-				attributeName,
-				defaultPath,
-				atomType,
-				selectionType,
-				attributeParent,
-				false);
-		addChild(modelPath);
+	
+
+	createModelPath(wrap, attributeParent, defaultPath, atomType, selectionType) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const modelPath = new ModelPath(
+            attributeName,
+            defaultPath,
+            atomType,
+            selectionType,
+            attributeParent,
+            false);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String defaultPath,
-			Class<?> atomType,
-			AbstractAtom<?> modelEntryAtom) {
+	createModelPath(wrap, attributeParent, defaultPath, atomType, modelEntryAtom) {
 
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const selectionType = ModelPathSelectionType.FLAT;
 
-		ModelPath modelPath = new ModelPath(attributeName, defaultPath, atomType, selectionType, modelEntryAtom, false);
+        const modelPath = new ModelPath(attributeName, defaultPath, atomType, selectionType, modelEntryAtom, false);
 
-		addChild(modelPath);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	@SuppressWarnings("checkstyle:parameternumber")
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String defaultPath,
-			Class<?> atomType,
-			ModelPathSelectionType selectionType,
-			AbstractAtom<?> modelEntryPoint,
-			boolean hasToBeEnabled) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		ModelPath modelPath = new ModelPath(
-				attributeName,
-				defaultPath,
-				atomType,
-				selectionType,
-				modelEntryPoint,
-				hasToBeEnabled);
-		addChild(modelPath);
+	createModelPath(
+			wrap,
+			attributeParent,
+			defaultPath,
+			atomType,
+			selectionType,
+			modelEntryPoint,
+			hasToBeEnabled
+	) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const modelPath = new ModelPath(
+            attributeName,
+            defaultPath,
+            atomType,
+            selectionType,
+            modelEntryPoint,
+            hasToBeEnabled);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
 
-	@SuppressWarnings("checkstyle:parameternumber")
-	public ModelPath createModelPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String defaultPath,
-			Class<?> atomType,
-			AbstractAtom<?> modelEntryPoint,
-			FilterDelegate filterDelegate) {
+	createModelPath(
+			wrap,
+			attributeParent,
+			defaultPath,
+			atomType,
+			modelEntryPoint,
+			filterDelegate
+	) {
 
-		String attributeName = getFieldName(wrap, attributeParent);
+        const attributeName = this.getFieldName(wrap, attributeParent);
 
-		ModelPath modelPath = new ModelPath(
-				attributeName,
-				defaultPath,
-				atomType,
-				ModelPathSelectionType.FLAT,
-				modelEntryPoint,
-				filterDelegate);
+        const modelPath = new ModelPath(
+            attributeName,
+            defaultPath,
+            atomType,
+            ModelPathSelectionType.FLAT,
+            modelEntryPoint,
+            filterDelegate);
 
-		addChild(modelPath);
+        this.addChild(modelPath);
 		modelPath.wrap(wrap);
 		return modelPath;
 	}
@@ -592,115 +475,91 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region QUANTITY VARIABLE
 
-	public QuantityVariableField createQuantityVariableField(String name) {
-		QuantityVariableField variableField = new QuantityVariableField(name);
-		addChild(variableField);
+	createQuantityVariableField(name) {
+        const variableField = new QuantityVariableField(name);
+        this.addChild(variableField);
 		return variableField;
 	}
 
-	public QuantityVariableListField createQuantityVariableListField(String name) {
-		QuantityVariableListField variableListField = new QuantityVariableListField(name);
-		addChild(variableListField);
+	createQuantityVariableListField(name, label) {
+        const variableListField = new QuantityVariableListField(name);
+        variableListField.setLabel(label);
+		this.addChild(variableListField);
 		return variableListField;
-	}
-
-	public QuantityVariableListField createQuantityVariableListField(String name, String label) {
-		QuantityVariableListField variableListField = new QuantityVariableListField(name);
-		variableListField.setLabel(label);
-		addChild(variableListField);
-		return variableListField;
-	}
+	}	
 
 	//#end region
 
 	//#region DOUBLE VARIABLE
 
-	public DoubleVariableField createDoubleVariableField(
-			Attribute<Double> wrap,
-			Object attributeParent,
-			Double defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		DoubleVariableField variableField = new DoubleVariableField(attributeName);
-		variableField.setDefaultValue(defaultValue);
+	createDoubleVariableFieldAndWrap(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const variableField = new DoubleVariableField(attributeName);
+        variableField.setDefaultValue(defaultValue);
 		variableField.set(defaultValue);
 		variableField.wrap(wrap);
-		addChild(variableField);
+		this.addChild(variableField);
 		return variableField;
 	}
 
-	public DoubleVariableListField createDoubleListField(String name) {
-		DoubleVariableListField variableListField = new DoubleVariableListField(name);
-		addChild(variableListField);
-		return variableListField;
-	}
+	createDoubleVariableListFieldAndWrap(wrap, attributeParent, label) {
 
-	public DoubleVariableListField createDoubleVariableListField(String name, String label) {
-		DoubleVariableListField variableListField = new DoubleVariableListField(name);
-		variableListField.setLabel(label);
-		addChild(variableListField);
-		return variableListField;
-	}
+        const attributeName = getFieldName(wrap, attributeParent);
+        const variableListField = new DoubleVariableListField(attributeName);
+        variableListField.setLabel(label);
 
-	public DoubleVariableListField createDoubleVariableListField(
-			Attribute<List<Double>> wrap,
-			Object attributeParent,
-			String label) {
-
-		String attributeName = getFieldName(wrap, attributeParent);
-		DoubleVariableListField variableListField = new DoubleVariableListField(attributeName);
-		variableListField.setLabel(label);
-
-		addChild(variableListField);
+		this.addChild(variableListField);
 		variableListField.wrap(wrap);
 		return variableListField;
 
 	}
 
+	createDoubleVariableListField(name, label) {
+        const variableListField = new DoubleVariableListField(name);
+        variableListField.setLabel(label);
+		this.addChild(variableListField);
+		return variableListField;
+	}	
+
 	//#end region
 
 	//#region INTEGER VARIABLE
 
-	public IntegerVariableField createIntegerVariableField(
-			Attribute<Integer> wrap,
-			Object attributeParent,
-			Integer defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		IntegerVariableField variableField = new IntegerVariableField(attributeName);
-		variableField.setDefaultValue(defaultValue);
+	createIntegerVariableField(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const variableField = new IntegerVariableField(attributeName);
+        variableField.setDefaultValue(defaultValue);
 		variableField.set(defaultValue);
 		variableField.wrap(wrap);
-		addChild(variableField);
+		this.addChild(variableField);
 		return variableField;
 	}
 
-	public IntegerVariableField createIntegerVariableField(String name) {
-		IntegerVariableField variableField = new IntegerVariableField(name);
-		addChild(variableField);
+	createIntegerVariableField(name) {
+        const variableField = new IntegerVariableField(name);
+        this.addChild(variableField);
 		return variableField;
 	}
 
-	public IntegerVariableListField createIntegerListField(String name) {
-		IntegerVariableListField variableListField = new IntegerVariableListField(name);
-		addChild(variableListField);
+	createIntegerListField(name) {
+        const variableListField = new IntegerVariableListField(name);
+        this.addChild(variableListField);
 		return variableListField;
 	}
 
-	public IntegerVariableListField createIntegerVariableListField(String name, String label) {
-		IntegerVariableListField variableListField = new IntegerVariableListField(name);
-		variableListField.setLabel(label);
-		addChild(variableListField);
+	createIntegerVariableListField(name, label) {
+        const variableListField = new IntegerVariableListField(name);
+        variableListField.setLabel(label);
+		this.addChild(variableListField);
 		return variableListField;
 	}
 
-	public IntegerVariableListField createIntegerVariableListField(
-			Attribute<List<Integer>> wrap,
-			Object attributeParent,
-			String label) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		IntegerVariableListField variableListField = new IntegerVariableListField(attributeName);
-		variableListField.setLabel(label);
+	createIntegerVariableListField(wrap, attributeParent, label) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const variableListField = new IntegerVariableListField(attributeName);
+        variableListField.setLabel(label);
 
-		addChild(variableListField);
+		this.addChild(variableListField);
 		variableListField.wrap(wrap);
 		return variableListField;
 
@@ -710,59 +569,46 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region VARIABLE LIST
 
-	public VariableList createVariableList(
-			Attribute<List<VariableField<?, ?>>> wrap,
-			Object attributeParent,
-			String label) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		VariableList variableList = new VariableList(attributeName, null);
-		variableList.setLabel(label);
-		addChild(variableList);
+	createVariableList(wrap, attributeParent, label) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const variableList = new VariableList(attributeName, null);
+        variableList.setLabel(label);
+		this.addChild(variableList);
 		variableList.wrap(wrap);
 		return variableList;
 	}
 
-	public VariableListWithInfo createVariableListWithInfo(
-			Attribute<List<VariableField<?, ?>>> wrap,
-			Object attributeParent,
-			String label) {
-
-		String attributeName = getFieldName(wrap, attributeParent);
-		VariableListWithInfo variableList = new VariableListWithInfo(attributeName, null);
-		variableList.setLabel(label);
-		addChild(variableList);
+	createVariableListWithInfo(wrap, attributeParent, label) {
+        const attributeName = getFieldName(wrap, attributeParent);
+        const variableList = new VariableListWithInfo(attributeName, null);
+        variableList.setLabel(label);
+		this.addChild(variableList);
 		variableList.wrap(wrap);
 		return variableList;
-
 	}
 
 	//#end region
 
 	//#region FILE PATH
 
-	public FilePath createFilePath(Attribute<String> wrap, Object attributeParent, String defaultPath) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		FilePath filePath = new FilePath(attributeName);
-		filePath.setDefaultValue(defaultPath);
-		addChild(filePath);
+	createFilePath(wrap, attributeParent, defaultPath) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const filePath = new FilePath(attributeName);
+        filePath.setDefaultValue(defaultPath);
+		this.addChild(filePath);
 		filePath.wrap(wrap);
 		return filePath;
 	}
 
-	public FilePath createFilePath(Attribute<String> wrap, Object attributeParent, String label, String defaultPath) {
-		FilePath filePath = createFilePath(wrap, attributeParent, defaultPath);
-		filePath.setLabel(label);
+	createFilePath(wrap, attributeParent, label, defaultPath) {
+        const filePath = this.createFilePath(wrap, attributeParent, defaultPath);
+        filePath.setLabel(label);
 		return filePath;
 	}
 
-	public FilePath createFilePath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String label,
-			String defaultPath,
-			Boolean validatePath) {
-		FilePath filePath = createFilePath(wrap, attributeParent, defaultPath);
-		filePath.setLabel(label);
+	createFilePath(wrap, attributeParent, label, defaultPath, validatePath) {
+        const filePath = this.createFilePath(wrap, attributeParent, defaultPath);
+        filePath.setLabel(label);
 		filePath.setValidatePath(validatePath);
 		return filePath;
 	}
@@ -771,15 +617,15 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region FILE PATH LIST
 
-	void addFilePathList(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myFilePathList");
-		createFilePathList(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addFilePathList(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myFilePathList");
+        this.createFilePathList(name);
+		this.expand(treeViewer);
 	}
 
-	private FilePathList createFilePathList(String name) {
-		FilePathList filePathList = new FilePathList(name);
-		addChild(filePathList);
+	createFilePathList(name) {
+        const filePathList = new FilePathList(name);
+        this.addChild(filePathList);
 		return filePathList;
 	}
 
@@ -787,33 +633,34 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region DIRECTORY PATH
 
-	public DirectoryPath createDirectoryPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String label,
-			String defaultPath) {
-		DirectoryPath directoryPath = createDirectoryPath(wrap, attributeParent, defaultPath);
-		directoryPath.setLabel(label);
+	createDirectoryPath(
+			wrap,
+			attributeParent,
+			label,
+			defaultPath
+	) {
+        const directoryPath = this.createDirectoryPath(wrap, attributeParent, defaultPath);
+        directoryPath.setLabel(label);
 		return directoryPath;
 	}
 
-	public DirectoryPath createDirectoryPath(Attribute<String> wrap, Object attributeParent, String defaultPath) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		DirectoryPath directoryPath = createDirectoryPath(attributeName);
-		directoryPath.setDefaultValue(defaultPath);
+	createDirectoryPath(wrap, attributeParent, defaultPath) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const directoryPath = this.createDirectoryPath(attributeName);
+        directoryPath.setDefaultValue(defaultPath);
 		directoryPath.wrap(wrap);
 		return directoryPath;
 	}
 
-	void addDirectoryPath(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myDirectoryPath");
-		createDirectoryPath(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addDirectoryPath(treeViewer) {
+		const name = Atom.createChildNameStartingWith(this, "myDirectoryPath");
+		this.createDirectoryPath(name);
+		this.expand(treeViewer);
 	}
 
-	private DirectoryPath createDirectoryPath(String name) {
-		DirectoryPath directoryPath = new DirectoryPath(name);
-		addChild(directoryPath);
+	createDirectoryPath(name) {
+        const directoryPath = new DirectoryPath(name);
+        this.addChild(directoryPath);
 		return directoryPath;
 	}
 
@@ -821,36 +668,35 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region FILE OR DIRECTORY PATH
 
-	private FileOrDirectoryPath createFileOrDirectoryPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String defaultPath) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		FileOrDirectoryPath fileOrDirectoryPath = new FileOrDirectoryPath(attributeName);
-		fileOrDirectoryPath.setDefaultValue(defaultPath);
-		addChild(fileOrDirectoryPath);
+	createFileOrDirectoryPath(wrap, attributeParent, defaultPath) {
+        const attributeName = getFieldName(wrap, attributeParent);
+        const fileOrDirectoryPath = new FileOrDirectoryPath(attributeName);
+        fileOrDirectoryPath.setDefaultValue(defaultPath);
+		this.addChild(fileOrDirectoryPath);
 		fileOrDirectoryPath.wrap(wrap);
 		return fileOrDirectoryPath;
 	}
 
-	public FileOrDirectoryPath createFileOrDirectoryPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String label,
-			String defaultPath) {
-		FileOrDirectoryPath fileOrDirectoryPath = createFileOrDirectoryPath(wrap, attributeParent, defaultPath);
-		fileOrDirectoryPath.setLabel(label);
+	createFileOrDirectoryPath(
+			wrap,
+			attributeParent,
+			label,
+			defaultPath
+	) {
+        const fileOrDirectoryPath = this.createFileOrDirectoryPath(wrap, attributeParent, defaultPath);
+        fileOrDirectoryPath.setLabel(label);
 		return fileOrDirectoryPath;
 	}
 
-	public FileOrDirectoryPath createFileOrDirectoryPath(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String label,
-			String defaultPath,
-			Boolean validatePath) {
-		FileOrDirectoryPath fileOrDirectoryPath = createFileOrDirectoryPath(wrap, attributeParent, defaultPath);
-		fileOrDirectoryPath.setLabel(label);
+	createFileOrDirectoryPath(
+			wrap,
+			attributeParent,
+			label,
+			defaultPath,
+			validatePath
+	) {
+        const fileOrDirectoryPath = this.createFileOrDirectoryPath(wrap, attributeParent, defaultPath);
+        fileOrDirectoryPath.setLabel(label);
 		fileOrDirectoryPath.setValidatePath(validatePath);
 		return fileOrDirectoryPath;
 	}
@@ -859,15 +705,15 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region DIRECTORY PATH LIST
 
-	void addDirectoryPathList(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "myDirectoryPathList");
-		createDirectoryPathList(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addDirectoryPathList(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "myDirectoryPathList");
+        this.createDirectoryPathList(name);
+		this.createTreeNodeAdaption().expand(treeViewer);
 	}
 
-	private DirectoryPathList createDirectoryPathList(String name) {
-		DirectoryPathList directoryPathList = new DirectoryPathList(name);
-		addChild(directoryPathList);
+	createDirectoryPathList(name) {
+        const directoryPathList = new DirectoryPathList(name);
+        this.addChild(directoryPathList);
 		return directoryPathList;
 	}
 
@@ -875,15 +721,15 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region SPACER
 
-	private void addSpacer(TreeViewerRefreshable treeViewer) {
-		String name = AtomTreeNodeAdaption.createChildNameStartingWith(this, "mySpacer");
-		createSpacer(name);
-		createTreeNodeAdaption().expand(treeViewer);
+	addSpacer(treeViewer) {
+        const name = Atom.createChildNameStartingWith(this, "mySpacer");
+        this.createSpacer(name);
+		this.expand(treeViewer);
 	}
 
-	private Spacer createSpacer(String name) {
-		Spacer spacer = new Spacer(name);
-		addChild(spacer);
+	createSpacer(name) {
+        const spacer = new Spacer(name);
+        this.addChild(spacer);
 		return spacer;
 	}
 
@@ -891,14 +737,15 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region SYMBOL TYPE
 
-	public SymbolType createSymbolType(
-			Attribute<String> wrap,
-			Object attributeParent,
-			String label,
-			String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		SymbolType symbolType = new SymbolType(attributeName, label, defaultValue);
-		addChild(symbolType);
+	createSymbolType(
+			wrap,
+			attributeParent,
+			label,
+			defaultValue
+	) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const symbolType = new SymbolType(attributeName, label, defaultValue);
+        this.addChild(symbolType);
 		symbolType.wrap(wrap);
 		return symbolType;
 	}
@@ -907,29 +754,29 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region SIZE
 
-	public Size createSize(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		Size size = new Size(attributeName);
-		addChild(size);
+	createSize(wrap, attributeParent) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const size = new Size(attributeName);
+        this.addChild(size);
 		size.wrap(wrap);
 		return size;
 	}
 
-	public Size createSize(Attribute<String> wrap, Object attributeParent, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		Size size = new Size(attributeName);
-		size.setDefaultValue(defaultValue);
-		addChild(size);
+	createSize(wrap, attributeParent, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const size = new Size(attributeName);
+        size.setDefaultValue(defaultValue);
+		this.addChild(size);
 		size.wrap(wrap);
 		return size;
 	}
 
-	public Size createSize(Attribute<String> wrap, Object attributeParent, String label, String defaultValue) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		Size size = new Size(attributeName);
-		size.setDefaultValue(defaultValue);
+	createSize(wrap, attributeParent, label, defaultValue) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const size = new Size(attributeName);
+        size.setDefaultValue(defaultValue);
 		size.setLabel(label);
-		addChild(size);
+		this.addChild(size);
 		size.wrap(wrap);
 		return size;
 	}
@@ -938,52 +785,23 @@ export default class Section extends AttributeContainerAtom {
 
 	//#region FUNCTION PLOTTER
 
-	public FunctionPlotter createFunctionPlotter(Attribute<String> wrap, Object attributeParent) {
-		String attributeName = getFieldName(wrap, attributeParent);
-		FunctionPlotter plotter = new FunctionPlotter(attributeName);
-		addChild(plotter);
+	createFunctionPlotter(wrap, attributeParent) {
+        const attributeName = this.getFieldName(wrap, attributeParent);
+        const plotter = new FunctionPlotter(attributeName);
+        this.addChild(plotter);
 		plotter.wrap(wrap);
 		return plotter;
 	}
 
 	//#end region
 
+	*/
+
 	//#end region
 
-	//#region ACCESSORS
+	//#region ACCESSORS	
 
-	public String getTitle() {
-		return title;
-	}
-
-	public Section setLabel(String title) {
-		this.title = title;
-		return this;
-	}
-
-	public boolean isExpanded() {
-		return expanded;
-	}
-
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	@Override
-	public Section setEnabled(boolean enable) {
+	setEnabled(enable) {
 		this.isEnabled = enable;
 		if (controlProvider != null) {
 			controlProvider.setEnabled(enable);
@@ -991,13 +809,7 @@ export default class Section extends AttributeContainerAtom {
 		return getThis();
 	}
 
-	@Override
-	public boolean isVisible() {
-		return isVisible;
-	}
-
-	@Override
-	public Section setVisible(boolean visible) {
+	setVisible(visible) {
 		this.isVisible = visible;
 		if (controlProvider != null) {
 			controlProvider.setVisible(visible);

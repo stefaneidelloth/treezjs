@@ -101,7 +101,7 @@ export default class AtomTreeNodeAdapter {
 
     static showProperties(d3,treeViewerRefreshable,atom){
     	var propertiesView = d3.select('#properties');
-    	atom.createControlAdaption(propertiesView, treeViewerRefreshable);
+    	atom.createControlAdaption(propertiesView, d3, treeViewerRefreshable);
     }
      
 }

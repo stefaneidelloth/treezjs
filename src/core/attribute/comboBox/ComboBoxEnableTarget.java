@@ -1,18 +1,4 @@
-package org.treez.core.atom.attribute.comboBox;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.Activator;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.adaptable.composite.TreezComposite;
-import org.treez.core.atom.attribute.attributeContainer.AbstractAttributeContainerAtom;
-import org.treez.core.atom.base.annotation.IsParameter;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.javafx.Browser;
-
-public class ComboBoxEnableTarget extends AbstractAttributeContainerAtom<ComboBoxEnableTarget> {
+default export class ComboBoxEnableTarget extends AttributeContainerAtom {
 
 	//#region ATTRIBUTES
 

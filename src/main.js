@@ -1,6 +1,7 @@
 import TreeView from './views/treeView.js';
 import EditorView from './views/editorView.js';
 
+
 var self = {
 	editorViewer: undefined
 }
@@ -23,7 +24,7 @@ require([
 ], function(
 	 GoldenLayout,
 	 d3
-) {
+) {		
 
 	var goldenLayoutConfig = {
 		content : [ {

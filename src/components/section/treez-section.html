@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-section.css" />
+
+        <script>
+
+            class TreezSectionHeader extends HTMLElement {}
+            window.customElements.define('treez-section-header', TreezSectionHeader); 
+
+            class TreezSectionAction extends HTMLElement {
+
+ 				static get observedAttributes() {
+                    return ['title','image'];
+                }
+
+                constructor(){
+                    super();  
+                    this.actions = [];                  
+                }                            
+
+                addAction(action){
+                	this.actions.push(action);                	
+                }
+
+                get image() {
+				  return this.getAttribute('image');
+				}
+
+				set image(image) {
+				  this.setAttribute('image', image);
+				}
+
+				
+
+            }
+            window.customElements.define('treez-section-action', TreezSectionAction); 
+
+
+
+            class TreezSection extends HTMLElement {
+
+                static get observedAttributes() {
+                    return ['title','collapsed','actions'];
+                }
+
+                constructor(){
+                    super();
+                    this.sectionHeader=undefined;
+                    this.isInitiallyExpanded=true;
+                    this.actionArray=[];
+                }
+
+            	
+
+                connectedCallback() {
+                    if(!this.sectionHeader){
+                        this.style.display='block';
+                        this.sectionHeader = document.createElement('treez-section-header');
+
+                        var label = document.createElement('span');
+                        label.classList.add('treez-section-header-label');
+                        label.innerText = this.title;        
+                        this.sectionHeader.appendChild(label);
+
+                        var toolbar = document.createElement('span')
+                        toolbar.classList.add('treez-section-action-toolbar');
+                        this.sectionHeader.appendChild(toolbar);
+                        this.processSectionActions(toolbar);
+                                      
+                        this.sectionHeader.onclick = this.toggleExpansion;
+                        this.insertBefore(this.sectionHeader, this.firstChild);                        
+                    }
+                }
+
+                processSectionActions(toolbar){
+
+                   var acts = this.actions;
+                    
+
+                	for(var index=0; index < this.children.length;index++){
+                		var child = this.children[index];
+                		if(child instanceof TreezSectionAction){
+                			this.processSectionAction(child, toolbar);                			
+                		}
+                	}                	
+                }
+
+                processSectionAction(sectionAction, toolbar){
+                	
+                	var img = document.createElement('img');
+                	img.classList.add('treez-section-action');
+                	img.title = sectionAction.title;                	
+                	img.onclick = ()=> {
+                		var action = sectionAction.actions[0];
+
+                		sectionAction.action()
+                	};
+                	/*{
+                        var event = document.createEvent("MouseEvents");
+						event.initEvent("click");
+                        sectionAction.dispatchEvent(event);
+                	};
+                	*/
+                	img.src="/icons/" + sectionAction.image;
+                	toolbar.appendChild(img);
+                	
+                }
+
+                disconnectedCallback(){
+                	while (this.firstChild) {
+						this.removeChild(this.firstChild);
+					}
+                }
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                    if(attr==='title'){
+                    	if(this.sectionHeader){
+                    		 this.sectionHeader.innerText= newValue;   
+                    	}
+                                           
+                    } else if(attr==='collapsed'){
+						this.isInitiallyExpanded=false;
+                    }
+                }
+
+                observeChildren(){
+                	//also see documentation at https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+					var observer = new MutationObserver(this.childrenChanged);
+					var config = { 					              
+					               childList: true 
+					             };
+					observer.observe(this, config);
+                }
+
+                childrenChanged(mutations){
+                	mutations.forEach((mutation)=>{
+                		console.log('A child node has been added or removed.');
+                		if(this.isInitiallyExpanded){
+                			this.children[1].style.display="block";
+                		} else {
+                			this.children[1].style.display="none";
+                		}
+                	});						
+                }
+
+                toggleExpansion(){
+                	const section = this.parentElement;
+                	if(section.children.length<2){
+                		return;
+                	}
+
+                    var header = section.children[0];
+                	var content = section.children[1];
+                	var style = content.style;
+                	if(style['display']==='none'){
+						style.display='block';
+						header.classList.remove('collapsed');
+                	} else {
+                		style.display='none';
+                		header.classList.add('collapsed');
+                	}                	
+
+                }
+
+                set children(children){
+                    super.children=children;
+				}
+				
+				get children(){
+                    return super.children;
+				}
+
+				get actions(){
+					return this.actionArray;
+				}
+
+				set actions(actions){
+					this.actionArray=actions;
+				}
+            }
+            window.customElements.define('treez-section', TreezSection);            
+
+        </script>	
+		
+	</head>
+
+</html>
