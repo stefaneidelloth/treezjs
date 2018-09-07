@@ -1,61 +1,45 @@
 import Atom from '../atom/atom.js';
-import VueAtomCodeAdaption from './vueAtomCodeAdaption.js';
+import ComponentAtomCodeAdaption from './componentAtomCodeAdaption.js';
 import ActionSeparator from '../actionSeparator.js';
 import TreeViewerAction from '../treeview/treeViewerAction.js';
 
-export default class VueAtom extends Atom {
+export default class ComponentAtom extends Atom {
 
 	constructor(name) {
 		super(name);		
 		this.isRunnable = false;
-        VueAtom.initializeComponentsIfRequired()
+        ComponentAtom.initializeComponentsIfRequired()
 	}
 
 	static initializeComponentsIfRequired(){
-	    if(!VueAtom.componentsAreInitialized){
-	        VueAtom.initializeComponents();
+	    if(!ComponentAtom.componentsAreInitialized){
+	        ComponentAtom.initializeComponents();
         }
-        VueAtom.componentsAreInitialized = true;
+        ComponentAtom.componentsAreInitialized = true;
     }
 
     static initializeComponents(){
 	    const head = $('head');
+
+		head.append('<link rel="import" id="treez-checkbox" href="./src/components/checkbox/treez-checkbox.html"/>');
+
+	    head.append('<link rel="import" id="treez-file-or-directory-path" href="./src/components/file/treez-file-or-directory-path.html"/>');
+        head.append('<link rel="import" id="treez-file-path" href="./src/components/file/treez-file-path.html"/>');
+
+		head.append('<link rel="import" id="treez-label" href="./src/components/text/treez-label.html"/>');
+       
+        head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');
+      
         head.append('<link rel="import" id="treez-tab-folder" href="./src/components/tabs/treez-tab-folder.html"/>');
         head.append('<link rel="import" id="treez-text-area" href="./src/components/text/treez-text-area.html"/>');
-        head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');
-        head.append('<link rel="import" id="treez-file-path" href="./src/components/file/treez-file-path.html"/>');
-        head.append('<link rel="import" id="treez-file-or-directory-path" href="./src/components/file/treez-file-or-directory-path.html"/>');
+       
+        
 
-		Vue.directive('value-binding', { 
-		  bind: function (el, binding, vnode) {
-			var viewModel = vnode.context;
-			var propertyName = binding.expression;
-			
-            el.value = viewModel[propertyName];
-
-			el.addEventListener('input', (event)=>{ 
-			  var oldValue = viewModel[propertyName];
-			  var newValue = event.target.value;
-			  if(newValue != oldValue){
-				viewModel[propertyName] = newValue;        
-			  }    	
-			});    
-
-			viewModel.$watch(propertyName, ()=>{
-				var oldValue = el.value;
-			  var newValue = viewModel[propertyName];
-			  if(newValue != oldValue){
-				el.value = newValue;        
-			  } 
-			});
-
-		  }
-		});
       
     }
 
 	copy(atomToCopy){
-	    const newAtom = new VueAtom(atomToCopy.name);
+	    const newAtom = new ComponentAtom(atomToCopy.name);
 		if (atomToCopy.model) {
 		    newAtom.template = atomToCopy.template;
 		}
@@ -70,27 +54,21 @@ export default class VueAtom extends Atom {
 		parent.selectAll('treez-tab-folder').remove();	
 
 		const element = parent.append('div');
-		const template = parent.append('template');
+		
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
 		const tabFolder = d3.select(tabFolderElement);
-		self.createVueControl(tabFolder, d3);				
-		template.node().content.appendChild(tabFolderElement);	
-				
-		self.viewModel = new Vue({
-			el: element.node(),
-			template: template.node(),           
-			data: this,
-			mounted(){										
-				self.afterCreateControlAdaptionHook();										
-			}
-		}); 		
+		self.createComponentControl(tabFolder, d3);				
+		parent.node().appendChild(tabFolderElement);					
+	
+        self.afterCreateControlAdaptionHook();
+ 		
 	}	
 
 	/*
 	 * Should be overridden by inheriting classes
 	 */
-	createVueControl(tabFolder, d3){
+	createComponentControl(tabFolder, d3){
         tabFolder.append('treez-tab')
         	.append('div')
             .html('{{name}}');
@@ -105,7 +83,7 @@ export default class VueAtom extends Atom {
 	}
 
 	createCodeAdaption() {
-		return new VueAtomCodeAdaption(this);
+		return new ComponentAtomCodeAdaption(this);
 	}
 
 	createContextMenuActions(treeViewerRefreshable) {

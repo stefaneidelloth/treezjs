@@ -44,16 +44,16 @@ export default class Executable extends Model {
 
 	
 
-    createVueControl(tabFolder, d3){    
+    createComponentControl(tabFolder, d3){    
      
 		const page = tabFolder.append('treez-tab')
             .attr('title','Data');
 
 		this.createExecutableSection(page);  
        
-      //  this.createInputSection(page);
+        this.createInputSection(page);
         
-      //  this.createInputModificationSection(page);
+        this.createInputModificationSection(page);
 /*
         this.createOutputSection(page);
         this.createOutputModificationSection(page);
@@ -83,19 +83,7 @@ export default class Executable extends Model {
             .attr('title','Executable')           
             .on('change',this.refreshStatus)
             .node()
-            .bindValue(this,()=>this.executablePath);    
-
-        sectionContent.append('treez-file-path')
-            .attr('title','Executable2')           
-            .on('change',this.refreshStatus)
-            .node()
-            .bindValue(this,()=>this.executablePath);          
-
-        sectionContent.append('div')
-            .html('{{executablePath}}');
-		
-		   
-            
+            .bindValue(this,()=>this.executablePath);            
 	}
 
 	createInputSection(page) {
@@ -103,71 +91,79 @@ export default class Executable extends Model {
         const section = page.append('treez-section')
             .attr('title','Input'); 
 
-        section.append('treez-text-area')
+        const sectionContent = section.append('div'); 
+
+        sectionContent.append('treez-text-area')
             .attr('title','Input arguments')           
             .on('change',this.refreshStatus)
             .node()
-            .bindValue(this,()=>this.inputArguments);          
-           
+            .bindValue(this,()=>this.inputArguments); 
 
-		section.append('treez-file-or-directory-path')
+		sectionContent.append('treez-file-or-directory-path')
             .attr('title','Input file or folder')            
             .on('change',this.refreshStatus)
             .node()
-            .bindValue(this,()=>this.inputPath);
-            
+            .bindValue(this,()=>this.inputPath);            
 	}
 
     
 
    createInputModificationSection(page) {
 
-       const section = page.append('section')
+       const section = page.append('treez-section')
            .attr('title','Input modification')
            .attr('expanded','false');
 
-       section.append('treez-label')
+       const sectionContent = section.append('div'); 
+
+       sectionContent.append('treez-label')
        	   .attr('value','Include date in:')
 
-       section.append('treez-checkbox')
+       sectionContent.append('treez-checkbox')
 		   .attr('label','Folder name')
 		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingDateInInputFolder)
-		   .on('change', this.refreshStatus);
+		   .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingDateInInputFolder);
 
-	    section.append('treez-checkbox')
+	    sectionContent.append('treez-checkbox')
 		   .attr('label','Extra folder')
-		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingDateInInputSubFolder)
-		   .on('change', this.refreshStatus);
+		   .attr('value',false)		   
+		   .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingDateInInputSubFolder);
 
-	   	section.append('treez-checkbox')
+	   	sectionContent.append('treez-checkbox')
 		   .attr('label','File name')
 		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingDateInInputFile)
-		   .on('change', this.refreshStatus);
+		    .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingDateInInputFile);
 
 
-      	section.append('treez-label')
+      	sectionContent.append('treez-label')
        	   .attr('value','Include job index in:') 
        	   
-		section.append('treez-checkbox')
+		sectionContent.append('treez-checkbox')
 		   .attr('label','Folder name')
 		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingJobIndexInInputFolder)
-		   .on('change', this.refreshStatus);
+		   .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingJobIndexInInputFolder);
 
-	    section.append('treez-checkbox')
+	    sectionContent.append('treez-checkbox')
 		   .attr('label','Extra folder')
 		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingJobIndexInInputSubFolder)
-		   .on('change', this.refreshStatus);
+		   .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingJobIndexInInputSubFolder);
 
-	   section.append('treez-checkbox')
+	   sectionContent.append('treez-checkbox')
 		   .attr('label','File name')
 		   .attr('value',false)
-		   .attr('v-value-binding',()=>this.isIncludingJobIndexInInputFile)
-		   .on('change', this.refreshStatus);  
+		   .on('change', this.refreshStatus)
+		   .node()
+		   .bindValue(this,()=>this.isIncludingJobIndexInInputFile);  
    }
 
 /*
@@ -263,7 +259,7 @@ export default class Executable extends Model {
     */
 	refreshStatus() {
 
-			this.commandInfo = this.buildCommand();
+			//this.commandInfo = this.buildCommand();
 			this.executionStatusInfo = 'Not yet executed';
 			this.jobIndexInfo = this.jobId;
 

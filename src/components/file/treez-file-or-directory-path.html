@@ -5,30 +5,32 @@
 
 		<link type="text/css" rel="stylesheet" href="treez-file-or-directory-path.css" />
 
+		<link rel="import" href="./../treezElement.html" >	
+
         <script>
 
-            class TreezFileOrDirectoryPath extends HTMLElement {
+            class TreezFileOrDirectoryPath extends TreezElement {
 
             	static get observedAttributes() {
-                    return ['title','value'];
+            		return TreezElement.observedAttributes.concat(['title']);                    
                 }
 
                 constructor(){
                     super();                  
-                    this.label=undefined;   
+                    this.labelElement=undefined;   
                     this.textField=undefined;
-                    this.fileInput=undefined;                
+                    this.fileInput=undefined;                        
                 }            	
 
                 connectedCallback() {
                 	var self = this;
 
-                    if(!self.label){                       
+                    if(!self.labelElement){                       
 
-                        var label = document.createElement('label');  
-                        self.label = label;                     
-                        label.innerText = self.title;                       
-                        self.appendChild(label);  
+                        var labelElement = document.createElement('label');  
+                        self.labelElement = labelElement;                     
+                        labelElement.innerText = self.title;                       
+                        self.appendChild(labelElement);  
 
                         var container = document.createElement('div');
                         container.id ='container';                       
@@ -41,7 +43,7 @@
                         self.textField = textField;   
                         textField.value = self.value;                    
                         textField.type='text'  
-                        textField.onchange = ()=>this.textFieldChanged();                                              
+                        textField.onchange = ()=>this.__textFieldChanged();                                              
                         leftSpan.appendChild(textField);
 
                         var rightSpan = document.createElement('span');
@@ -51,64 +53,42 @@
 					    self.fileInput = fileInput;						   
 					    fileInput.type='file';
 					    fileInput.title=' ';
-					    fileInput.onchange = ()=>this.fileInputChanged();				   
+					    fileInput.onchange = ()=>this.__fileInputChanged();				   
                         rightSpan.appendChild(fileInput);                       		
                     }
                 }
 
-                textFieldChanged(){
+                __textFieldChanged(){
                 	this.value = this.textField.value;
-                	this.fileInput.value = '';
+                	this.fileInput.value = '';                	
                 }
 
-                fileInputChanged(){
+                __fileInputChanged(){
                 	var file = this.fileInput.files[0]
                 	if(file){
                 		this.value = file.name;
                 	    this.textField.value = this.value;
                 	}
-                	
                 }
 
-                disconnectedCallback(){
-                	while (this.firstChild) {
-						this.removeChild(this.firstChild);
-					}
-                }
+                updateElements(newValue){
+                	if(this.textField){ 
+						this.textField.value= newValue;  
+
+						if(this.fileInput){
+							this.fileInput.value= '';   
+						}
+					}					    
+                }                
 
                 attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='title'){
-                    	if(this.label){
-                    		 this.label.innerText= newValue;   
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
                     	}                                           
-                    } else if(attr==='value'){
-                    	
-
-
-                    	if(this.textField){
-                    		var oldValue = this.textField.value;
-							if(newValue!=oldValue){
-								this.textField.value= newValue;   
-								if(this.fileInput){
-									this.fileInput.value= '';   
-								} 
-								var event = new Event('input', {
-									'bubbles': true,
-									'cancelable': true
-								});
-								this.dispatchEvent(event);
-							}                    		
-                    	}  
-                    }
-                }
-
-                get value() {
-				  return this.getAttribute('value');
-				}
-
-				set value(newValue) {
-				  this.setAttribute('value', newValue);
-				}
+                    } 
+                }               
 
                
             }

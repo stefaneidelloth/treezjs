@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-label.css" />
+
+		<link rel="import" href="./../treezElement.html" >	
+
+        <script>
+
+            class TreezLabel extends TreezElement {            	
+
+                constructor(){
+                    super(); 								
+                }            	
+
+                connectedCallback() {                					
+					this.innerText = this.value 
+                }                  
+
+                updateElements(newValue){                	               	
+					this.innerText = newValue;                 						    
+                }                          
+            }
+            window.customElements.define('treez-label', TreezLabel);                    
+
+        </script>	
+		
+	</head>
+
+</html>

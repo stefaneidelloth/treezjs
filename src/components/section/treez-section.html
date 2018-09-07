@@ -16,6 +16,14 @@
                     return ['title','image'];
                 }
 
+                 get image() {
+				  return this.getAttribute('image');
+				}
+
+				set image(image) {
+				  this.setAttribute('image', image);
+				}	
+
                 constructor(){
                     super();  
                     this.actions = [];                  
@@ -23,17 +31,7 @@
 
                 addAction(action){
                 	this.actions.push(action);                	
-                }
-
-                get image() {
-				  return this.getAttribute('image');
-				}
-
-				set image(image) {
-				  this.setAttribute('image', image);
-				}
-
-				
+                }               			
 
             }
             window.customElements.define('treez-section-action', TreezSectionAction); 
@@ -45,6 +43,22 @@
                 static get observedAttributes() {
                     return ['title','collapsed','actions'];
                 }
+
+                 get actions(){
+					return this.actionArray;
+				}
+
+				set actions(actions){
+					this.actionArray=actions;
+				}                  
+
+                set children(children){
+                    super.children=children;
+				}
+				
+				get children(){
+                    return super.children;
+				}
 
                 constructor(){
                     super();
@@ -60,42 +74,66 @@
                         this.style.display='block';
                         this.sectionHeader = document.createElement('treez-section-header');
 
-                        var label = document.createElement('span');
+                        let label = document.createElement('span');
                         label.classList.add('treez-section-header-label');
                         label.innerText = this.title;        
                         this.sectionHeader.appendChild(label);
 
-                        var toolbar = document.createElement('span')
+                        let toolbar = document.createElement('span')
                         toolbar.classList.add('treez-section-action-toolbar');
                         this.sectionHeader.appendChild(toolbar);
-                        this.processSectionActions(toolbar);
+                        this.__processSectionActions(toolbar);
                                       
-                        this.sectionHeader.onclick = this.toggleExpansion;
+                        this.sectionHeader.onclick = this.__toggleExpansion;
                         this.insertBefore(this.sectionHeader, this.firstChild);                        
                     }
                 }
 
-                processSectionActions(toolbar){
+                __toggleExpansion(){
+                	const section = this.parentElement;
+                	if(section.children.length<2){
+                		return;
+                	}
 
-                   var acts = this.actions;
-                    
+                    let header = section.children[0];
+                	let content = __getSectionContentDiv(section)
+                	let style = content.style;
+                	if(style['display']==='none'){
+						style.display='block';
+						header.classList.remove('collapsed');
+                	} else {
+                		style.display='none';
+                		header.classList.add('collapsed');
+                	} 
 
-                	for(var index=0; index < this.children.length;index++){
-                		var child = this.children[index];
+                	function __getSectionContentDiv(section){
+
+                      for(let child of section.children){
+						if(child.tagName ==='DIV'){
+							return child;
+						}
+					  } 
+					  return section.children[1]; 
+                    }
+                }  
+
+                __processSectionActions(toolbar){ 
+
+                	for(let index=0; index < this.children.length;index++){
+                		let child = this.children[index];
                 		if(child instanceof TreezSectionAction){
-                			this.processSectionAction(child, toolbar);                			
+                			this.__processSectionAction(child, toolbar);                			
                 		}
                 	}                	
                 }
 
-                processSectionAction(sectionAction, toolbar){
+                __processSectionAction(sectionAction, toolbar){
                 	
-                	var img = document.createElement('img');
+                	let img = document.createElement('img');
                 	img.classList.add('treez-section-action');
                 	img.title = sectionAction.title;                	
                 	img.onclick = ()=> {
-                		var action = sectionAction.actions[0];
-
+                		let action = sectionAction.actions[0];
                 		sectionAction.action()
                 	};
                 	/*{
@@ -119,8 +157,7 @@
                     if(attr==='title'){
                     	if(this.sectionHeader){
                     		 this.sectionHeader.innerText= newValue;   
-                    	}
-                                           
+                    	}                                           
                     } else if(attr==='collapsed'){
 						this.isInitiallyExpanded=false;
                     }
@@ -128,14 +165,14 @@
 
                 observeChildren(){
                 	//also see documentation at https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-					var observer = new MutationObserver(this.childrenChanged);
+					var observer = new MutationObserver(this.__childrenChanged);
 					var config = { 					              
 					               childList: true 
 					             };
 					observer.observe(this, config);
                 }
 
-                childrenChanged(mutations){
+                __childrenChanged(mutations){
                 	mutations.forEach((mutation)=>{
                 		console.log('A child node has been added or removed.');
                 		if(this.isInitiallyExpanded){
@@ -146,40 +183,11 @@
                 	});						
                 }
 
-                toggleExpansion(){
-                	const section = this.parentElement;
-                	if(section.children.length<2){
-                		return;
-                	}
+                
 
-                    var header = section.children[0];
-                	var content = section.children[1];
-                	var style = content.style;
-                	if(style['display']==='none'){
-						style.display='block';
-						header.classList.remove('collapsed');
-                	} else {
-                		style.display='none';
-                		header.classList.add('collapsed');
-                	}                	
+               
 
-                }
-
-                set children(children){
-                    super.children=children;
-				}
 				
-				get children(){
-                    return super.children;
-				}
-
-				get actions(){
-					return this.actionArray;
-				}
-
-				set actions(actions){
-					this.actionArray=actions;
-				}
             }
             window.customElements.define('treez-section', TreezSection);            
 

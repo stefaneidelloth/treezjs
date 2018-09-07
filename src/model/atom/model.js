@@ -1,7 +1,7 @@
-import VueAtom from './../../core/vue/vueAtom.js';
+import ComponentAtom from './../../core/component/componentAtom.js';
 
 
-export default class Model extends VueAtom {
+export default class Model extends ComponentAtom {
 
     static get LOG() {
         return new Log4js.getLogger(Model.constructor.name);

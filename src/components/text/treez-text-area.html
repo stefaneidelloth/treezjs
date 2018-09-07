@@ -5,29 +5,31 @@
 
 		<link type="text/css" rel="stylesheet" href="treez-text-area.css" />
 
+		<link rel="import" href="./../treezElement.html" >	
+
         <script>
 
-            class TreezTextArea extends HTMLElement {
+            class TreezTextArea extends TreezElement {
 
             	static get observedAttributes() {
-                    return ['title','value'];
+            		return TreezElement.observedAttributes.concat(['title']);                    
                 }
 
                 constructor(){
                     super();                  
-                    this.label=undefined;   
+                    this.labelElement=undefined;   
                     this.textArea=undefined;                            
                 }            	
 
                 connectedCallback() {
                 	var self = this;
 
-                    if(!self.label){                       
+                    if(!self.labelElement){                       
 
-                        var label = document.createElement('label');  
-                        self.label = label;                     
-                        label.innerText = self.title;                       
-                        self.appendChild(label);  
+                        var labelElement = document.createElement('label');  
+                        self.labelElement = labelElement;                     
+                        labelElement.innerText = self.title;                       
+                        self.appendChild(labelElement);  
 
                         var container = document.createElement('div');
                         self.appendChild(container);                                        
@@ -35,49 +37,32 @@
                         var textArea = document.createElement('textarea');                       
                         self.textArea = textArea;
                         textArea.value = self.value;                       
-                        textArea.onchange = ()=>this.textAreaChanged();                                              
+                        textArea.onchange = ()=>this.__textAreaChanged();                                              
                         container.appendChild(textArea);  
                                                               		
                     }
                 }
 
-                textAreaChanged(){
+                __textAreaChanged(){
                 	this.value = this.textArea.value;                	
-                }               
-
-                disconnectedCallback(){
-                	while (this.firstChild) {
-						this.removeChild(this.firstChild);
-					}
-                }
+                }  
 
                 attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='title'){
-                    	if(this.label){
-                    		 this.label.innerText= newValue;   
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
                     	}                                           
-                    } else if(attr==='value'){  
+                    } 
+                }  
 
-                    	if(this.textArea){
-                    		var oldValue = this.textArea.value;
-							if(newValue!=oldValue){
-								this.textArea.value= newValue; 								
-							}                    		
-                    	}  
-                    }
-                }
-
-                get value() {
-				  return this.getAttribute('value');
-				}
-
-				set value(newValue) {
-				  this.setAttribute('value', newValue);
-				}               
+                updateElements(newValue){
+                	if(this.textArea){                    	
+						this.textArea.value= newValue; 
+                	}					    
+                }                          
             }
-            window.customElements.define('treez-text-area', TreezTextArea); 
-
-                   
+            window.customElements.define('treez-text-area', TreezTextArea);                    
 
         </script>	
 		

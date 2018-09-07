@@ -1,0 +1,135 @@
+<html>
+	<head>		
+        <script>
+			class TreezElement extends HTMLElement {
+
+				static get observedAttributes() {
+                    return ['value'];
+                }
+
+                get value() {
+				  return this.getAttribute('value');
+				}
+
+				set value(newValue) {
+				  this.setAttribute('value', newValue);	  
+
+				}     
+
+				constructor(){
+					super();										          
+				} 
+				           
+
+				bindValue(parent, lambdaExpressionEncodingPropertyToBind){
+					
+					var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingPropertyToBind)
+
+					this.value = parent[propertyName];					
+
+					this.__addListenerToUpdatePropertyOnElementChanges(parent, propertyName);
+
+					this.__modifyPropertyToUpdateElementOnPropertyChanges(parent, propertyName);	
+				}
+
+                //we want to avoid hard coded strings to pass/identify properties
+                //therefore a lambad expression is passed to identify the property
+                //this method extracts the property name using introspection
+				__extractPropertyNameFromLambdaExpression(expression){
+					try{
+						return expression.toString().split(".")[1];
+					}catch(error){
+						throw new Error("Could not determine property name to create binding from lambda expression '" + expression + "'")
+					}
+				}
+
+				__addListenerToUpdatePropertyOnElementChanges(parent, propertyName){
+
+					this.addEventListener('input', (event)=>{ 
+						  var oldValue = parent[propertyName];
+						  var newValue = event.target.value;
+						  if(newValue != oldValue){
+							parent[propertyName] = newValue;        
+						  }    	
+					}); 
+				}
+
+				__modifyPropertyToUpdateElementOnPropertyChanges(parent, propertyName){
+
+					let self = this;
+
+					let propertyDescriptor = Object.getOwnPropertyDescriptor(parent, propertyName);
+
+					let privateValue = parent[propertyName];
+
+					Object.defineProperty(
+					   parent, 
+					   propertyName, 
+					   {
+						get: __getPropertyValueProxy,
+						set: __setPropertyValueProxy					
+					   }
+					);	
+				
+
+					function __getPropertyValueProxy(){
+						let propertyAlreadyHasAGetter = propertyDescriptor.get !== undefined;
+						if(propertyAlreadyHasAGetter){
+							return propertyDescriptor.get();
+						} else {
+							return privateValue;
+						}
+					}
+
+					function __setPropertyValueProxy(newValue){
+							let oldValue = privateValue;
+							if(newValue != oldValue){
+								let propertyAlreadyHasASetter = propertyDescriptor.set !== undefined;
+								 if(propertyAlreadyHasASetter){
+									propertyDescriptor.set(newValue);
+								 } 
+								 privateValue = newValue;
+								 __updateElementValue(newValue); 													         
+							}     
+					}	
+
+					function __updateElementValue(newValue){
+						self.value = newValue;
+					}			
+				}
+
+				attributeChangedCallback(attr, oldValue, newValue) {
+                     if(attr==='value'){                      	                		
+						if(newValue!=oldValue){	
+							this.updateElements(newValue);							
+							this.__dispatchInputEvent();
+						}
+                     }                     
+                }
+
+				//should be overridden by inheriting classes
+                updateElements(newValue){
+
+                }				
+
+				__dispatchInputEvent(){
+					var event = new Event(
+										  'input', 
+										  {
+											'bubbles': true,
+											'cancelable': true
+										  }
+										 );
+					this.dispatchEvent(event);
+				}
+
+				disconnectedCallback(){
+					while (this.firstChild) {
+						this.removeChild(this.firstChild);
+					}
+				}
+
+            }
+ 		</script>
+	</head>
+</html>

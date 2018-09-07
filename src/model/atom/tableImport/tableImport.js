@@ -489,7 +489,7 @@ export default class TableImport extends Model {
 	}
 
 	 createCodeAdaption() {
-		return new VueAtomCodeAdaption(this);
+		return new ComponentAtomCodeAdaption(this);
 	}
 
 

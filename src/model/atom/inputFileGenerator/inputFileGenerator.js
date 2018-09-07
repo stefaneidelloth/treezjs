@@ -1,12 +1,12 @@
 import Executable from "../executable/executable.js";
-import VueAtom from "../../../core/vue/vueAtom.js";
+import ComponentAtom from "../../../core/component/componentAtom.js";
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the
  * Executable. It reads a template text file and replaces "tags"/"place holders" with Quantities. The filled template is
  * then saved as new input file at the wanted input file path.
  */
-export default class InputFileGenerator extends VueAtom  {
+export default class InputFileGenerator extends ComponentAtom  {
 
 	static get LOG(){
 	    return new Log4js.getLogger(Executable.constructor.name);
@@ -335,7 +335,7 @@ export default class InputFileGenerator extends VueAtom  {
 	}
 
 	createCodeAdaption() {
-		return new VueAtomCodeAdaption(this);
+		return new ComponentAtomCodeAdaption(this);
 	}
 
 
