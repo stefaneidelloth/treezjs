@@ -34,8 +34,8 @@ export default class Executable extends Model {
         this.logArguments = undefined;
         this.logFilePath = undefined;
         this.commandInfo = undefined;
-        this.executionStatusInfo = undefined;
-        this.jobIndexInfo = undefined;
+        this.executionStatusInfo = 'Not yet executed.';
+        this.jobIndexInfo = '1';
 	}
 
 	copy() {
@@ -44,211 +44,240 @@ export default class Executable extends Model {
 
 	
 
-    createComponentControl(tabFolder, d3){    
+    createComponentControl(tabFolder, dTreez){    
      
 		const page = tabFolder.append('treez-tab')
-            .attr('title','Data');
+            .title('Data');
 
-		this.createExecutableSection(page);  
-       
+		this.createExecutableSection(page); 
         this.createInputSection(page);
-        
         this.createInputModificationSection(page);
-/*
         this.createOutputSection(page);
         this.createOutputModificationSection(page);
         this.createLoggingSection(page);
         this.createStatusSection(page);
-	    */	   
+	     
 	}
 
 	createExecutableSection(tab) {
 
 		const section = tab.append('treez-section')
-            .attr('title','Executable');
+            .title('Executable');
 
         section.append('treez-section-action')
-            .attr('image','resetJobIndex.png')
-            .attr('title','Reset the job index to 1')
-            .node().addAction(this.resetJobIndex);
+            .image('resetJobIndex.png')
+            .title('Reset the job index to 1')
+            .addAction(this.resetJobIndex);
 
         section.append('treez-section-action')
-            .attr('image','run.png')
-            .attr('title','Run external executable')
-            .node().addAction(this.execute);  
+            .image('run.png')
+            .title('Run external executable')
+            .addAction(this.execute);  
 
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-file-path')
-            .attr('title','Executable')           
-            .on('change',this.refreshStatus)
-            .node()
+            .title('Executable')           
+            .onChange(this.refreshStatus)           
             .bindValue(this,()=>this.executablePath);            
+	}
+	
+	execute(){
+		
 	}
 
 	createInputSection(page) {
        
         const section = page.append('treez-section')
-            .attr('title','Input'); 
+            .title('Input'); 
 
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-text-area')
-            .attr('title','Input arguments')           
-            .on('change',this.refreshStatus)
-            .node()
+            .title('Input arguments')           
+            .onChange(this.refreshStatus)           
             .bindValue(this,()=>this.inputArguments); 
 
 		sectionContent.append('treez-file-or-directory-path')
-            .attr('title','Input file or folder')            
-            .on('change',this.refreshStatus)
-            .node()
+            .title('Input file or folder')            
+            .onChange(this.refreshStatus)           
             .bindValue(this,()=>this.inputPath);            
-	}
-
-    
+	}    
 
    createInputModificationSection(page) {
 
        const section = page.append('treez-section')
-           .attr('title','Input modification')
+           .title('Input modification')
            .attr('expanded','false');
 
        const sectionContent = section.append('div'); 
 
        sectionContent.append('treez-label')
-       	   .attr('value','Include date in:')
+       	   .value('Include date in:')
 
-       sectionContent.append('treez-checkbox')
-		   .attr('label','Folder name')
-		   .attr('value',false)
-		   .on('change', this.refreshStatus)
-		   .node()
+       sectionContent.append('treez-check-box')
+		   .label('Folder name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingDateInInputFolder);
 
-	    sectionContent.append('treez-checkbox')
-		   .attr('label','Extra folder')
-		   .attr('value',false)		   
-		   .on('change', this.refreshStatus)
-		   .node()
+	    sectionContent.append('treez-check-box')
+		   .label('Extra folder')
+		   .value(false)		   
+		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingDateInInputSubFolder);
 
-	   	sectionContent.append('treez-checkbox')
-		   .attr('label','File name')
-		   .attr('value',false)
-		    .on('change', this.refreshStatus)
-		   .node()
+	   	sectionContent.append('treez-check-box')
+		   .label('File name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingDateInInputFile);
 
-
       	sectionContent.append('treez-label')
-       	   .attr('value','Include job index in:') 
+       	   .value('Include job index in:') 
        	   
-		sectionContent.append('treez-checkbox')
-		   .attr('label','Folder name')
-		   .attr('value',false)
-		   .on('change', this.refreshStatus)
-		   .node()
+		sectionContent.append('treez-check-box')
+		   .label('Folder name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		 
 		   .bindValue(this,()=>this.isIncludingJobIndexInInputFolder);
 
-	    sectionContent.append('treez-checkbox')
-		   .attr('label','Extra folder')
-		   .attr('value',false)
-		   .on('change', this.refreshStatus)
-		   .node()
+	    sectionContent.append('treez-check-box')
+		   .label('Extra folder')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingJobIndexInInputSubFolder);
 
-	   sectionContent.append('treez-checkbox')
-		   .attr('label','File name')
-		   .attr('value',false)
-		   .on('change', this.refreshStatus)
-		   .node()
+	   sectionContent.append('treez-check-box')
+		   .label('File name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingJobIndexInInputFile);  
    }
 
-/*
+
    createOutputSection(page) {
-       const section = page.append('section')
-           .attr('title','Output');
+       const section = page.append('treez-section')
+           .title('Output');
 
-       TextField outputArgs = output.createTextField(outputArguments, this, "");
-       outputArgs.setLabel("Output arguments");
-       outputArgs.addModificationConsumer("updateStatus", updateStatusListener);
+       const sectionContent = section.append('div'); 
 
-       FileOrDirectoryPath outputPathChooser = output.createFileOrDirectoryPath(outputPath, this,
-               "Output file or folder", "", false);
-       outputPathChooser.addModificationConsumer("updateStatus", updateStatusListener);
+       sectionContent.append('treez-text-area')
+            .title('Output arguments')           
+            .onChange(this.refreshStatus)          
+            .bindValue(this,()=>this.outputArguments); 
 
-       CheckBox copyInputField = output.createCheckBox(copyInputFile, this, true);
-       copyInputField.setLabel("Copy input file");
+       sectionContent.append('treez-file-or-directory-path')
+            .title('Output file or folder')            
+            .onChange(this.refreshStatus)           
+            .bindValue(this,()=>this.outputPath); 
+
+       sectionContent.append('treez-check-box')
+		   .label('Copy input file')
+		   .value(true)
+		   .onChange(this.refreshStatus)		  
+		   .bindValue(this,()=>this.copyInputFile);       
    }
 
-   createOutputModificationSection(page) {
-       const section = page.append('section')
-           .attr('title','Output modification')
+   
+
+   createOutputModificationSection(page) {       
+
+       const section = page.append('treez-section')
+           .title('Output modification')
            .attr('expanded','false');
 
-       outputModification.createLabel("includeDate", "Include date in:");
+       const sectionContent = section.append('div'); 
 
-       CheckBox dateInFolderCheck = outputModification.createCheckBox(isIncludingDateInOutputFolder, this, false);
-       dateInFolderCheck.setLabel("Folder name");
-       dateInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+       sectionContent.append('treez-label')
+       	   .value('Include date in:')
 
-       CheckBox dateInSubFolderCheck = outputModification.createCheckBox(isIncludingDateInOutputSubFolder, this, false);
-       dateInSubFolderCheck.setLabel("Extra folder");
-       dateInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+       sectionContent.append('treez-check-box')
+		   .label('Folder name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		 
+		   .bindValue(this,()=>this.isIncludingDateInOutputFolder);
 
-       CheckBox dateInFileCheck = outputModification.createCheckBox(isIncludingDateInOutputFile, this, false);
-       dateInFileCheck.setLabel("File name");
-       dateInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-check-box')
+		   .label('Extra folder')
+		   .value(false)		   
+		   .onChange(this.refreshStatus)		  
+		   .bindValue(this,()=>this.isIncludingDateInOutputSubFolder);
 
-       @SuppressWarnings("unused")
-       org.treez.core.atom.attribute.text.Label jobIndexLabel = outputModification.createLabel("jobIndexLabel",
-               "Include job index in:");
+	   	sectionContent.append('treez-check-box')
+		   .label('File name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		 
+		   .bindValue(this,()=>this.isIncludingDateInOutputFile);
 
-       CheckBox jobIndexInFolderCheck = outputModification.createCheckBox(isIncludingJobIndexInOutputFolder, this, false);
-       jobIndexInFolderCheck.setLabel("Folder name");
-       jobIndexInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+      	sectionContent.append('treez-label')
+       	   .value('Include job index in:') 
+       	   
+		sectionContent.append('treez-check-box')
+		   .label('Folder name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
+		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFolder);
 
-       CheckBox jobIndexInSubFolderCheck = outputModification.createCheckBox(isIncludingJobIndexInOutputSubFolder, this,
-               false);
-       jobIndexInSubFolderCheck.setLabel("Extra folder");
-       jobIndexInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-check-box')
+		   .label('Extra folder')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
+		   .bindValue(this,()=>this.isIncludingJobIndexInOutputSubFolder);
 
-       CheckBox jobIndexInFileCheck = outputModification.createCheckBox(isIncludingJobIndexInOutputFile, this, false);
-       jobIndexInFileCheck.setLabel("File name");
-       jobIndexInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	   sectionContent.append('treez-check-box')
+		   .label('File name')
+		   .value(false)
+		   .onChange(this.refreshStatus)		  
+		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFile);           
+    
    }
 
    createLoggingSection(page) {
-       const section = page.append('section')
-           .attr('title','Logging')
+       const section = page.append('treez-section')
+           .title('Logging')
            .attr('expanded','false');
 
-       TextField logArgumentsText = logging.createTextField(logArguments, this, "");
-       logArgumentsText.setLabel("Log arguments");
-       logArgumentsText.addModificationConsumer("updateStatus", updateStatusListener);
+       const sectionContent = section.append('div'); 
 
-       FilePath logFilePathChooser = logging.createFilePath(logFilePath, this, "Log file", "", false);
-       logFilePathChooser.addModificationConsumer("updateStatus", updateStatusListener);
+       sectionContent.append('treez-text-area')
+            .title('Log arguments')           
+            .onChange(this.refreshStatus)          
+            .bindValue(this,()=>this.logArguments); 
+
+       sectionContent.append('treez-file-path')
+            .title('Log file')            
+            .onChange(this.refreshStatus)          
+            .bindValue(this,()=>this.logFilePath);
+      
    }
 
    createStatusSection(page) {
-       const section = page.append('section')
-           .attr('title','Status')
+       const section = page.append('treez-section')
+           .title('Status')
            .attr('expanded','false');
 
-       //resulting command
-       status.createInfoText(commandInfo, this, "Resulting command", "");
-
-       //execution status
-       status.createInfoText(executionStatusInfo, this, "Execution status", "Not yet executed.");
-
-       //job index
-       status.createInfoText(jobIndexInfo, this, "Next job index", "1");
+       const sectionContent = section.append('div'); 
+     
+       sectionContent.append('treez-text-area')
+            .title('Resulting command') 
+            .disable()          
+            .onChange(this.refreshStatus)           
+            .bindValue(this,()=>this.commandInfo);  
+     
+       sectionContent.append('treez-text-area')
+            .title('Execution status')                       
+            .onChange(this.refreshStatus)           
+            .bindValue(this,()=>this.executionStatusInfo);       
+     
+       sectionContent.append('treez-text-area')
+            .title('Next job index')                       
+            .onChange(this.refreshStatus)           
+            .bindValue(this,()=>this.jobIndexInfo);             
+      
    }
 
-   */
+   
 
    afterCreateControlAdaptionHook() {
        this.refreshStatus();
@@ -263,7 +292,7 @@ export default class Executable extends Model {
 			this.executionStatusInfo = 'Not yet executed';
 			this.jobIndexInfo = this.jobId;
 
-       //const infoText = d3.select('#executionStatusInfo');
+       //const infoText = dTreez.select('#executionStatusInfo');
        //infoText.resetError();
 
 
@@ -372,7 +401,7 @@ export default class Executable extends Model {
 	 */
 	resetError() {
 		if (this.executionStatusInfo != null) {
-		    const infoText = d3.select('#executionStatusInfo');
+		    const infoText = dTreez.select('#executionStatusInfo');
 		    //infoText.resetError();
 		}
 
@@ -383,7 +412,7 @@ export default class Executable extends Model {
 	 */
 	highlightError() {
 		if (this.executionStatusInfo != null) {
-            const infoText = d3.select('#executionStatusInfo');
+            const infoText = dTreez.select('#executionStatusInfo');
 			//infoText.highlightError();
 		}
 	}

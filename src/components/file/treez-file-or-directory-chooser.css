@@ -1,0 +1,49 @@
+
+treez-file-or-directory-chooser {
+  background-color: lightgrey;
+  width: 100%;
+  height:100%; 
+  top:0;
+  left:0; 
+  display: block;
+  position:absolute;
+}
+
+.panel-left {
+  background-color: white;
+  width: 30%;
+  height:80%;
+  top:1%;
+  left:1%;
+  display: block; 
+  position:absolute;
+}
+
+.panel-right {
+  background-color: white;
+  width: 67%;
+  height:80%;
+  top:1%;
+  left:32%;
+  display: block;  
+  position:absolute;
+}
+
+.panel-bottom {
+  background-color: white;
+  width: 98%;
+  height:17%;
+  top:82%;
+  left:1%;
+  display: block;  
+  position:absolute;
+}
+
+.directory {
+  background-color: lightblue;
+  margin:2px;
+  padding:2px;
+  width: 80%;
+}
+
+

@@ -1,17 +1,21 @@
 treez-section {
     background-color:#f2f2f2;
-    width:100%;
-    height:100%;
+    width:100%;   
     font-family: Arial,sans-serif;
     font-size: 12px;
+	margin-top:1px;	
+    margin-bottom:1px;	
+}
+
+treez-section div {
+  padding: 2px;
 }
 
 treez-section-header {
     display:inline-block;
     width:100%;
     height:14px;
-    padding:4px;
-    margin-top:4px;
+    padding:4px;   
     background-color:lightblue;
     color: #777777;  
 }

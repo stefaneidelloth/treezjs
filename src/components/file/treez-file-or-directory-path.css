@@ -1,21 +1,18 @@
 
-treez-file-path {
-    padding: 3px;
-    font-family: Arial,sans-serif;
-    font-size: 12px;     
+.browse-button {
+	background: url('/icons/browse.png');
+	background-repeat: no-repeat;
+	border: none;
+	width:16px;
+	color:transparent;
 }
 
-input[type=file] {
-color:transparent;
-width:16px;
-}
-
-input[type=file]::-webkit-file-upload-button {
-background: url('/icons/browse.png');
-background-repeat: no-repeat;
-border: none;
-width:16px;
-color:transparent;
+.play-button {
+	background: url('/icons/run_triangle.png');
+	background-repeat: no-repeat;
+	border: none;
+	width:16px;
+	color:transparent;
 }
 
 #container{

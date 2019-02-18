@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>WebSocket Client</title>
+
+ <script type="text/javascript">
+
+      var wsocket;      
+
+      function connect() {         
+
+    	  wsocket = new WebSocket("ws://localhost:8001/");       
+
+          wsocket.onmessage = onMessage;
+
+          wsocket.onopen = onOpen;
+
+          wsocket.onerror = onError      
+
+                  
+
+      }
+
+      function onOpen(){
+            wsocket.send("dir");  
+      }
+
+      function onMessage(event) {             
+
+         console.log(event.data);      
+
+      }
+
+      function onError(event){           
+            console.log(event.data);        
+      }
+
+      window.addEventListener("load", connect, false);
+
+  </script>
+
+</head>
+
+<body>
+
+
+
+</body>
+
+</html>

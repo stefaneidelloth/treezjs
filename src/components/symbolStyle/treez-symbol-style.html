@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+	<head>		
+
+		<link rel="import" href="./../imageComboBox/treez-image-combo-box.html" >	
+		<link rel="import" href="./treez-symbol-style-value.html" >
+
+        <script>
+
+            class TreezSymbolStyle extends TreezImageComboBox {  
+            	
+            	get value() {
+					 let stringValue = this.getAttribute('value');
+					 return TreezSymbolStyleValue.byName(stringValue);
+				}  
+            	
+            	set value(newValue) {
+            		super.value = newValue;	
+				}  		
+				
+                constructor(){
+                    super();  
+                    this.options=TreezSymbolStyleValue.stringValues();
+                }  
+                                     
+            }
+            window.customElements.define('treez-symbol-style', TreezSymbolStyle);                    
+
+        </script>	
+		
+	</head>
+
+</html>

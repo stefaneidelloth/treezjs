@@ -21,20 +21,31 @@ export default class ComponentAtom extends Atom {
     static initializeComponents(){
 	    const head = $('head');
 
-		head.append('<link rel="import" id="treez-checkbox" href="./src/components/checkbox/treez-checkbox.html"/>');
+		head.append('<link rel="import" id="treez-check-box" href="./src/components/checkBox/treez-check-box.html"/>');
+		head.append('<link rel="import" id="treez-color" href="./src/components/color/treez-color.html"/>');
+		head.append('<link rel="import" id="treez-color-map" href="./src/components/colorMap/treez-color-map.html"/>');
+		head.append('<link rel="import" id="treez-combo-box" href="./src/components/comboBox/treez-combo-box.html"/>');
+		
+		head.append('<link rel="import" id="treez-error-bar-style" href="./src/components/errorBarStyle/treez-error-bar-style.html"/>');
 
 	    head.append('<link rel="import" id="treez-file-or-directory-path" href="./src/components/file/treez-file-or-directory-path.html"/>');
-        head.append('<link rel="import" id="treez-file-path" href="./src/components/file/treez-file-path.html"/>');
-
-		head.append('<link rel="import" id="treez-label" href="./src/components/text/treez-label.html"/>');
+	    head.append('<link rel="import" id="treez-file-path" href="./src/components/file/treez-file-path.html"/>');
+	    head.append('<link rel="import" id="treez-fill-style" href="./src/components/fillStyle/treez-fill-style.html"/>');
+	    head.append('<link rel="import" id="treez-font" href="./src/components/font/treez-font.html"/>');
+	    
+	    head.append('<link rel="import" id="treez-image-combo-box" href="./src/components/imageComboBox/treez-image-combo-box.html"/>');		
+		
+		head.append('<link rel="import" id="treez-line-style" href="./src/components/lineStyle/treez-line-style.html"/>');
        
-        head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');
+        head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');        
+        head.append('<link rel="import" id="treez-size" href="./src/components/size/treez-size.html"/>');        
+        head.append('<link rel="import" id="treez-string-list" href="./src/components/list/treez-string-list.html"/>');
+        head.append('<link rel="import" id="treez-symbol-style" href="./src/components/symbolStyle/treez-symbol-style.html"/>');
       
         head.append('<link rel="import" id="treez-tab-folder" href="./src/components/tabs/treez-tab-folder.html"/>');
-        head.append('<link rel="import" id="treez-text-area" href="./src/components/text/treez-text-area.html"/>');
-       
-        
-
+        head.append('<link rel="import" id="treez-text-area" href="./src/components/text/area/treez-text-area.html"/>');
+        head.append('<link rel="import" id="treez-text-field" href="./src/components/text/field/treez-text-field.html"/>');
+        head.append('<link rel="import" id="treez-text-label" href="./src/components/text/label/treez-text-label.html"/>'); 
       
     }
 
@@ -47,7 +58,7 @@ export default class ComponentAtom extends Atom {
 		return newAtom;
 	}
 
-	createControlAdaption(parent, d3, treeViewRefreshable) {
+	createControlAdaption(parent, dTreez, treeViewRefreshable) {
 
 		const self = this;
 		self.treeViewRefreshable = treeViewRefreshable;
@@ -57,9 +68,9 @@ export default class ComponentAtom extends Atom {
 		
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
-		const tabFolder = d3.select(tabFolderElement);
-		self.createComponentControl(tabFolder, d3);				
-		parent.node().appendChild(tabFolderElement);					
+		const tabFolder = dTreez.select(tabFolderElement);
+		self.createComponentControl(tabFolder, dTreez);				
+		parent.appendChild(tabFolderElement);					
 	
         self.afterCreateControlAdaptionHook();
  		
@@ -68,10 +79,10 @@ export default class ComponentAtom extends Atom {
 	/*
 	 * Should be overridden by inheriting classes
 	 */
-	createComponentControl(tabFolder, d3){
+	createComponentControl(tabFolder, dTreez){
         tabFolder.append('treez-tab')
         	.append('div')
-            .html('{{name}}');
+            .html(this.name);
 	}
 
 	/**

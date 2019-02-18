@@ -3,9 +3,14 @@
 
 	<head>
 
+ 
 		<link type="text/css" rel="stylesheet" href="treez-file-path.css" />
 
-		<link rel="import" href="./../treezElement.html" >	
+
+		<link rel="import" href="./../treezElement.html" >			
+		<link rel="import" href="./treez-file-or-directory-chooser.html"/>
+		
+
 	
         <script>
        
@@ -25,7 +30,7 @@
                 connectedCallback() {
                 	var self = this;
 
-                    if(!self.labelElement){                       
+                    if(!self.labelElement){  
 
                         var labelElement = document.createElement('label');  
                         self.labelElement = labelElement;                     
@@ -50,12 +55,25 @@
                         container.appendChild(rightSpan); 
 
 					    var fileInput = document.createElement('input');
-					    self.fileInput = fileInput;						   
-					    fileInput.type='file';
+					    self.fileInput = fileInput;	
+					    fileInput.className='browse-button';					   
+					    fileInput.type='button';
 					    fileInput.title=' ';
-					    fileInput.onchange = ()=>this.__fileInputChanged();				   
-                        rightSpan.appendChild(fileInput);                       		
+					    fileInput.onclick = ()=>this.__browseFilePath();				   
+                        rightSpan.appendChild(fileInput);   
+
+                        var executeButton = document.createElement('input');
+                        executeButton.className='play-button';	
+                        executeButton.type="button";
+                        executeButton.title="execute";
+                        executeButton.onclick = ()=>this.__execute();   
+                        rightSpan.appendChild(executeButton);                    		
                     }
+                }
+
+                __execute(){
+                	var command = this.textField.value;
+                	window.treezWebSocketConsole.run(command);                     
                 }
 
                 __textFieldChanged(){
@@ -63,12 +81,29 @@
                 	this.fileInput.value = '';                	
                 }
 
-                __fileInputChanged(){
-                	var file = this.fileInput.files[0]
-                	if(file){
-                		this.value = file.name;
-                	    this.textField.value = this.value;
-                	}
+                __browseFilePath(){                  
+                    window.treezTerminal.browseFilePath(this.getDirectory(), (result)=>{
+                        if(result){
+	                        this.value = result;
+	                	    this.textField.value = result;
+                        }                    	
+                    }); 
+                }
+                
+                getDirectory(){
+                   var fullPath = this.textField.value;
+                   if(!fullPath){
+                   		return null;
+                   }
+                   
+                   if(fullPath.endsWith('/')){
+                   		return fullPath;
+                   }
+                                                         
+                   var items = fullPath.split('/');
+                   var itemArray = items.slice(0, items.length-1);
+                   return itemArray.join('/');
+                   
                 }
 
                 updateElements(newValue){

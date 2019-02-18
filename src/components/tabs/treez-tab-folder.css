@@ -1,13 +1,14 @@
-treez-tab-folder {    
-    width:100%;
-    /* height:100%; */
+treez-tab-folder {  
+	height:100%;   
+	width:100%;
     padding-top:2px;   
     font-family: Arial,sans-serif;
     font-size: 12px;
 }
 
 treez-tab-folder-header {   
-    color: #777777;  
+    color: #777777;   
+    height: 21px;	
 }
 
 treez-tab-header {   
@@ -40,7 +41,8 @@ treez-tab {
     border-top: 1px solid;
     border-color:#cccccc;
     border-bottom: none;
-    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2);
-    height:100%;
-    vertical-alignment:bottom;
+    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2);   
+    overflow-y: auto;	
+	height: 100%;	
+	width:100%;
 }

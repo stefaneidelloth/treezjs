@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-combo-box.css" />		
+
+		<link rel="import" href="./../treezElement.html" >	
+
+        <script>
+
+            class TreezComboBox extends TreezElement {
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['label','options']);                    
+                }
+
+                get label() {
+				  return this.getAttribute('label');
+				}
+
+				set label(newValue) {
+				  this.setAttribute('label', newValue);	
+				}  
+
+				get options() {
+				  return this.getAttribute('options');
+				}
+
+				set options(newValue) {
+				  this.setAttribute('options', newValue);	
+				}  	
+
+				set value(newValue) {
+
+					if(newValue === undefined){
+						throw new Error("Value for combobox must not be undefined!");
+					}
+
+					if(!this.options){
+						throw new Error("The option '"+ newValue +"' is not known because there are no available options.");
+					}
+					let stringValue = newValue.toString();
+					var optionEntries = this.options.split(',');
+					if (optionEntries.indexOf(stringValue) > -1){
+						this.setAttribute('value', stringValue);	
+					} else {
+						throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
+					}   
+
+				}  			
+
+                constructor(){
+                    super(); 
+                    this.comboBox=undefined;   
+                    this.labelElement=undefined;                         
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.comboBox){   
+
+						var container = document.createElement('div');  
+						container.setAttribute("class","treez-combo-box-container");
+						self.appendChild(container);      
+
+						var labelElement = document.createElement('label');
+						this.labelElement = labelElement;
+						labelElement.innerText = self.label;                                            
+						container.appendChild(labelElement);             
+
+						var comboBox = document.createElement('select');                       
+						self.comboBox = comboBox;								
+						comboBox.value= self.value;							
+						comboBox.onchange = ()=>this.__comboBoxChanged();                                              
+						container.appendChild(comboBox); 
+						
+						if(self.options){
+                           this.__recreateOptionTags();						  
+						}                                         
+                                                              		
+                    }
+                }  				
+
+                __comboBoxChanged(){
+				    let index = this.comboBox.selectedIndex;					
+                	this.value = this.comboBox.options[index].value;                	
+                } 
+
+				__recreateOptionTags(){
+				    var comboBox = this.comboBox;
+
+				    var oldValue = comboBox.value;
+
+					while (comboBox.hasChildNodes()) {
+						comboBox.removeChild(comboBox.lastChild);
+					}
+
+					var optionEntries = this.options.split(',');
+					optionEntries.forEach(option=>{
+						var optionTag = this.__createOptionTag(option)						
+					    comboBox.appendChild(optionTag);
+					});
+
+					if(oldValue){
+						if (optionEntries.indexOf(oldValue) > -1){
+							comboBox.value = oldValue;
+						} else {
+							if (optionEntries.length > 0 ){
+								comboBox.value = optionEntries[0];
+							}
+						}
+					}	
+				}	
+				
+				__createOptionTag(option){
+					var optionTag = document.createElement('option')
+				 	optionTag.innerText=option;
+					return optionTag;
+				}
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='label'){
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
+                    	}                                           
+                    } 
+					
+					if(attr==='options'){
+                    	if(this.comboBox){                    		
+                    		 this.__recreateOptionTags();
+                    	}                                           
+                    } 
+                }  
+
+                updateElements(newValue){
+                	if(this.comboBox){                    	
+						this.comboBox.value= newValue; 
+                	}					    
+                }                          
+            }
+            window.customElements.define('treez-combo-box', TreezComboBox);                    
+
+        </script>	
+		
+	</head>
+
+</html>

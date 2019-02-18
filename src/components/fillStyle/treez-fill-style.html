@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+	<head>		
+
+		<link rel="import" href="./../imageComboBox/treez-image-combo-box.html" >	
+		<link rel="import" href="./treez-fill-style-value.html" >
+
+        <script>
+
+            class TreezFillStyle extends TreezImageComboBox {  
+            	
+            	get value() {
+					 let stringValue = this.getAttribute('value');
+					 return TreezFillStyleValue.byName(stringValue);
+				}  
+            	
+            	set value(newValue) {
+            		super.value = newValue;	
+				}  		
+				
+                constructor(){
+                    super();  
+                    this.options=TreezFillStyleValue.stringValues();
+                }  
+                                     
+            }
+            window.customElements.define('treez-fill-style', TreezFillStyle);                    
+
+        </script>	
+		
+	</head>
+
+</html>

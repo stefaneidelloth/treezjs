@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-color.css" />		
+
+		<link rel="import" href="./../treezElement.html" >	
+
+        <script>
+
+            class TreezColor extends TreezElement {
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['label']);                    
+                }
+
+                get label() {
+				  return this.getAttribute('label');
+				}
+
+				set label(newValue) {
+				  this.setAttribute('label', newValue);	
+				}  
+				
+				get value(){
+					return this.colorPicker.value;
+				}
+
+				set value(newValue) {
+
+					if(newValue === undefined){
+						throw new Error("Value for color must not be undefined!");
+					}
+					
+					let stringValue = newValue.toString();					
+					this.setAttribute('value', stringValue);
+				}  			
+
+                constructor(){
+                    super();                     
+                    this.labelElement=undefined; 
+                    this.colorPicker=undefined;  
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.colorPicker){   
+
+						var container = document.createElement('div');  
+						container.setAttribute("class","treez-color-container");
+						self.appendChild(container);      
+
+						var labelElement = document.createElement('label');
+						this.labelElement = labelElement;
+						labelElement.innerText = self.label;                                            
+						container.appendChild(labelElement);             
+
+						var colorPicker = document.createElement('input');                       
+						self.colorPicker = colorPicker;		
+						container.appendChild(colorPicker); 
+						colorPicker.type='color';
+						colorPicker.value= self.value;							
+						colorPicker.onchange = ()=>this.__colorChanged(); 					
+						                                       
+                                                              		
+                    }
+                }  				
+
+                __colorChanged(){
+				                   	
+                } 
+
+				
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='label'){
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
+                    	}                                           
+                    } 					
+					
+                }  
+
+                updateElements(newValue){
+                	if(this.colorPicker){                    	
+						this.colorPicker.value= newValue; 
+                	}					    
+                }                          
+            }
+            window.customElements.define('treez-color', TreezColor);                    
+
+        </script>	
+		
+	</head>
+
+</html>

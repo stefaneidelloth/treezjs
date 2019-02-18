@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="core/attribute/comboBox/size/|**/node_modules/*|core/dtreez/|core/attribute/comboBox/font/|model/atom/genericInput/|core/atom/|model/atom/executable/|model/atom/inputFileGenerator/|**/bower_components/*|core/attribute/text/|core/treeview/|study/atom/sweep/|**/*.min.js|core/attribute/modelPath/|core/attribute/container/section/|core/attribute/color/|core/attribute/dateTime/|core/attribute/container/|core/attribute/comboBox/symbolType/|data/cell/|model/atom/|core/attribute/list/|core/|data/column/|model/input/|core/attribute/comboBox/errorBar/|core/attribute/comboBox/image/|views/|core/adjustable/|core/attribute/fileSystem/|core/attribute/|core/attribute/comboBox/enumeration/|core/attribute/plot/|core/attribute/checkBox/|core/attribute/comboBox/fillStyle/|model/atom/tableImport/|core/attribute/comboBox/lineStyle/|core/utils/|model/output/|core/component/" kind="src" path=""/>
+	<classpathentry excluding="attribute/text/|**/node_modules/*|adjustable/|attribute/comboBox/fillStyle/|attribute/modelPath/|component/|utils/|**/bower_components/*|attribute/comboBox/size/|attribute/comboBox/symbolType/|attribute/comboBox/font/|dtreez/|attribute/list/|**/*.min.js|attribute/comboBox/errorBar/|attribute/comboBox/image/|attribute/fileSystem/|attribute/comboBox/enumeration/|attribute/plot/|attribute/|attribute/checkBox/|treeview/|attribute/comboBox/lineStyle/|attribute/container/section/|attribute/color/|attribute/dateTime/|attribute/container/|atom/" kind="src" path="core"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/adjustable"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/atom"/>
+	<classpathentry excluding="fileSystem/|text/|**/node_modules/*|comboBox/enumeration/|comboBox/fillStyle/|plot/|comboBox/lineStyle/|checkBox/|container/section/|modelPath/|comboBox/size/|**/bower_components/*|color/|dateTime/|comboBox/symbolType/|container/|comboBox/font/|list/|**/*.min.js|comboBox/errorBar/|comboBox/image/" kind="src" path="core/attribute"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/checkBox"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/color"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/enumeration"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/errorBar"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/fillStyle"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/font"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/image"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/lineStyle"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/size"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/comboBox/symbolType"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|section/|**/*.min.js" kind="src" path="core/attribute/container"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/container/section"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/dateTime"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/fileSystem"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/list"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/modelPath"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/plot"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/attribute/text"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/component"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/dtreez"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/treeview"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="core/utils"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="data/cell"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="data/column"/>
+	<classpathentry excluding="tableImport/|**/bower_components/*|**/node_modules/*|executable/|inputFileGenerator/|**/*.min.js|genericInput/" kind="src" path="model/atom"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/atom/executable"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/atom/genericInput"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/atom/inputFileGenerator"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/atom/tableImport"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/input"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="model/output"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="study/atom/sweep"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="views"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+	<head>
+
+ 
+		<link type="text/css" rel="stylesheet" href="treez-file-or-directory-chooser.css" />
+
+
+		<link rel="import" href="./../treezElement.html" >	
+	
+        <script>
+       
+           	class TreezFileOrDirectoryChooser extends TreezElement {
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['title']);                    
+                }
+
+                constructor(){
+                    super();  
+                    this.leftPanel=undefined;  
+                    this.rightPanel=undefined;
+                    this.bottomPanel=undefined;        
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.leftPanel){                       
+
+                        var leftPanel = document.createElement('div'); 
+                        self.leftPanel = leftPanel; 
+                        self.appendChild(leftPanel);
+                        
+                        leftPanel.className='panel-left';
+                        
+                        var rightPanel = document.createElement('div'); 
+                        self.rightPanel = rightPanel; 
+                        self.appendChild(rightPanel); 
+                        
+                        rightPanel.className='panel-right'; 
+                        
+                        var bottomPanel = document.createElement('div'); 
+                        self.bottomPanel = bottomPanel; 
+                        self.appendChild(bottomPanel); 
+                        
+                        bottomPanel.className='panel-bottom';
+                        
+                        this.__createNavigationTreeOnLeftPanel();
+                        
+                        this.__updateRightPanel();                                          
+                                  		
+                    }
+                }
+
+                __createNavigationTreeOnLeftPanel(){
+                
+                  var self=this;
+                
+                  this.__processCurrentDirectory((currentDirectory)=>{
+                  
+                   self.__processDirectoryNames(
+                  	(directoryName) => self.__createDirectory(this.leftPanel, currentDirectory, directoryName)
+                   );
+                  
+                  });                
+                 
+                      
+                }
+                
+                __createDirectory(parentElement, currentDirectory, directoryName){
+                  
+                       var directoryElement = document.createElement('div');
+                       parentElement.appendChild(directoryElement);
+                       
+                       directoryElement.className='directory';
+                       directoryElement.innerText=directoryName;
+                       directoryElement.title = currentDirectory + "\\" + directoryName;                  
+                  
+                }
+                
+                __processCurrentDirectory(currentDirectoryHandler){
+                
+                	 window.treezConsole.execute("cd", handleCdResult, handleError);
+
+                	  function handleCdResult(message){
+                	  	  var lines = message.split("\n");
+                	  	  var currentDirectory = lines[1].trim();
+                   			currentDirectoryHandler(currentDirectory);
+                     }
+                                     	               
+                     function handleError(event){
+                   
+                     }
+                }
+                
+                __processDirectoryNames(directoryNameHandler){
+                
+                  
+                   window.treezConsole.execute("dir /b /AD", handleDirResult, handleError);
+                   
+                   
+                   function handleDirResult(dirMessage){
+                   
+                   		var directoryNames = extractDirectoryNames(dirMessage);
+                   		for(var directoryName of directoryNames){
+                   		   directoryNameHandler(directoryName);
+                   		}                   
+                   
+                   }
+                   
+                   function handleError(event){
+                   
+                   }
+
+                   function extractDirectoryNames(message){
+                
+                        var directoryNames = message.split("\n");
+                       
+
+                   		return directoryNames.slice(1, directoryNames.length-2);
+                
+                   }
+                   
+                   
+                 
+                }
+                
+                
+                
+                __updateRightPanel(){
+                
+                }
+
+                updateElements(newValue){
+                	if(this.textField){ 
+						this.textField.value= newValue;  
+
+						if(this.fileInput){
+							this.fileInput.value= '';   
+						}
+					}					    
+                }                
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='title'){
+                    	                                         
+                    } 
+                }               
+               
+            }
+            window.customElements.define('treez-file-or-directory-chooser', TreezFileOrDirectoryChooser);                    
+
+        </script>	
+		
+	</head>
+
+</html>

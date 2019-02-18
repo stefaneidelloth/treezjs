@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-text-area.css" />
+
+		<link rel="import" href="./../../treezElement.html" >	
+
+        <script>
+
+            class TreezTextArea extends TreezElement {
+
+            	 get title() {
+				  return this.getAttribute('title');
+				}
+
+				set title(newValue) {
+				  this.setAttribute('title', newValue);	  
+
+				}  
+
+				 get enabled() {
+				  return this.getAttribute('enabled');
+				}
+
+				set enabled(newValue) {
+				  this.setAttribute('enabled', newValue);	
+				}  
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['title','enabled']);                    
+                }
+
+                constructor(){
+                    super();                                  
+                    this.labelElement=undefined;   
+                    this.textArea=undefined;                            
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.labelElement){                       
+
+                        var labelElement = document.createElement('label');  
+                        self.labelElement = labelElement;                     
+                        labelElement.innerText = self.title;                       
+                        self.appendChild(labelElement);  
+
+                        var container = document.createElement('div');
+                        self.appendChild(container);                                        
+
+                        var textArea = document.createElement('textarea');                       
+                        self.textArea = textArea;                        
+                        textArea.value = self.value; 
+
+                        if (self.enabled === false || self.enabled === 'false' || self.enabled === 'False'){
+                        	 textArea.disabled = true;  
+                        }                          
+                                          
+                        textArea.onchange = ()=>this.__textAreaChanged();                                              
+                        container.appendChild(textArea);  
+                                                              		
+                    }
+                }
+
+                __textAreaChanged(){
+                	this.value = this.textArea.value;                	
+                }  
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='title'){
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
+                    	}                                           
+                    } 
+                    if(attr==='enabled'){
+                    	if(this.textArea){
+                    		if (newValue === 'false' || newValue === 'False'){
+                    			this.textArea.disabled = true;
+                    		} else {
+                    			 this.textArea.disabled= !newValue;   
+                    		}
+                    		
+                    	}                                           
+                    } 
+                }  
+
+                updateElements(newValue){
+                	if(this.textArea){                    	
+						this.textArea.value= newValue; 
+                	}					    
+                }                          
+            }
+            window.customElements.define('treez-text-area', TreezTextArea);                    
+
+        </script>	
+		
+	</head>
+
+</html>

@@ -1,3 +1,5 @@
+import DTreez from "../dTreez/dTreez.js";
+
 export default class AtomTreeNodeAdapter {	
 
 	static createTreeNode(parent,d3,treeViewerRefreshable,atom){
@@ -100,8 +102,9 @@ export default class AtomTreeNodeAdapter {
     }   
 
     static showProperties(d3,treeViewerRefreshable,atom){
-    	var propertiesView = d3.select('#properties');
-    	atom.createControlAdaption(propertiesView, d3, treeViewerRefreshable);
+    	let dTreez = new DTreez(d3);
+    	var propertiesView = dTreez.select('#properties');
+    	atom.createControlAdaption(propertiesView, dTreez, treeViewerRefreshable);
     }
      
 }

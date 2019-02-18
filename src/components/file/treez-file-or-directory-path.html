@@ -3,7 +3,9 @@
 
 	<head>
 
+
 		<link type="text/css" rel="stylesheet" href="treez-file-or-directory-path.css" />
+
 
 		<link rel="import" href="./../treezElement.html" >	
 
@@ -51,11 +53,24 @@
 
 					    var fileInput = document.createElement('input');
 					    self.fileInput = fileInput;						   
-					    fileInput.type='file';
+					    fileInput.type='button';
+					    fileInput.className='browse-button';	
 					    fileInput.title=' ';
-					    fileInput.onchange = ()=>this.__fileInputChanged();				   
-                        rightSpan.appendChild(fileInput);                       		
+					    fileInput.onclick = ()=>this.__browseFileOrDirectorPath();				   
+                        rightSpan.appendChild(fileInput);   
+                        
+                        var executeButton = document.createElement('input');
+                        executeButton.type="button";
+                        executeButton.className='play-button';	
+                        executeButton.title="execute";
+                        executeButton.onclick = ()=>this.__execute();   
+                        rightSpan.appendChild(executeButton); 
                     }
+                }
+                
+                __execute(){
+                	var command = this.textField.value;
+                	window.treezWebSocketConsole.run(command);                     
                 }
 
                 __textFieldChanged(){
@@ -63,12 +78,29 @@
                 	this.fileInput.value = '';                	
                 }
 
-                __fileInputChanged(){
-                	var file = this.fileInput.files[0]
-                	if(file){
-                		this.value = file.name;
-                	    this.textField.value = this.value;
-                	}
+                __browseFileOrDirectoryPath(){                  
+                    window.treezTerminal.browseFileOrDirectoryPath(this.getDirectory(), (result)=>{
+                        if(result){
+	                        this.value = result;
+	                	    this.textField.value = result;
+                        }                    	
+                    }); 
+                }
+                
+                getDirectory(){
+                   var fullPath = this.textField.value;
+                   if(!fullPath){
+                   		return null;
+                   }
+                   
+                   if(fullPath.endsWith('/')){
+                   		return fullPath;
+                   }
+                                                         
+                   var items = fullPath.split('/');
+                   var itemArray = items.slice(0, items.length-1);
+                   return itemArray.join('/');
+                   
                 }
 
                 updateElements(newValue){

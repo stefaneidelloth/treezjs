@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+
+	<head>		
+
+        <script>
+
+            class TreezColorMapValue {    
+            	
+            	 static get BLANK() {
+             		return new TreezColorMapValue("blank");                    
+                 }            	 
+            	 static get BLUE() {
+             		return new TreezColorMapValue("blue");                    
+                 }            	  
+            	 static get BLUEGREEN() {
+             		return new TreezColorMapValue("bluegreen");                    
+                 }            	                 	 
+            	 static get BLUEGREEN_STEP() {
+             		return new TreezColorMapValue("bluegreen-step");                    
+                 }            	 
+            	 static get COMPLEMENT() {
+             		return new TreezColorMapValue("complement");                    
+                 }            	 
+            	 static get COMPLEMENT_STEP() {
+             		return new TreezColorMapValue("complement-step");                    
+                 }            	 
+            	 static get GREEN() {
+             		return new TreezColorMapValue("green");                    
+                 }            	 
+            	 static get GREY() {
+             		return new TreezColorMapValue("grey");                    
+                 }            	 
+            	 static get GREY_STEP5() {
+             		return new TreezColorMapValue("grey-step5");                    
+                 }            	 
+            	 static get GREY_STEP6() {
+             		return new TreezColorMapValue("grey-step6");                    
+                 }            	 
+            	 static get HEAT() {
+             		return new TreezColorMapValue("heat");                    
+                 }            	 
+            	 static get RED() {
+             		return new TreezColorMapValue("red");                    
+                 }            	 
+            	 static get ROJAL() {
+             		return new TreezColorMapValue("rojal");                    
+                 }            	 
+            	 static get ROJAL_STEP() {
+             		return new TreezColorMapValue("rojal-step");                    
+                 }            	 
+            	 static get SPECTRUM() {
+             		return new TreezColorMapValue("spectrum");                    
+                 }            	 
+            	 static get SPECTRUM_STEP() {
+             		return new TreezColorMapValue("spectrum-step");                    
+                 }            	  
+            	 static get SPECTRUM2() {
+             		return new TreezColorMapValue("spectrum2");                    
+                 }            	 
+            	 static get SPECTRUM2_STEP() {
+             		return new TreezColorMapValue("spectrum2-step");                    
+                 }            	 
+            	 static get TRANSBLACK() {
+             		return new TreezColorMapValue("transblack");                    
+                 }            	 
+            	 static get TRANSPLACK_STEP() {
+             		return new TreezColorMapValue("transblack-step");                    
+                 }    
+            	
+            	
+            	static values(){
+            	    return [
+            		 TreezColorMapValue.BLANK,  
+                	 TreezColorMapValue.BLUE,   
+                	 TreezColorMapValue.BLUEGREEN,                  	 
+                	 TreezColorMapValue.BLUEGREEN_STEP,
+                	 TreezColorMapValue.COMPLEMENT,  
+                	 TreezColorMapValue.COMPLEMENT_STEP,
+                	 TreezColorMapValue.GREEN,
+                	 TreezColorMapValue.GREY, 
+                	 TreezColorMapValue.GREY_STEP5,
+                	 TreezColorMapValue.GREY_STEP6, 
+                	 TreezColorMapValue.HEAT,
+                	 TreezColorMapValue.RED,
+                	 TreezColorMapValue.ROJAL,
+                	 TreezColorMapValue.ROJAL_STEP,
+                	 TreezColorMapValue.SPECTRUM,  
+                	 TreezColorMapValue.SPECTRUM_STEP,  
+                	 TreezColorMapValue.SPECTRUM2, 
+                	 TreezColorMapValue.SPECTRUM2_STEP, 
+                	 TreezColorMapValue.TRANSBLACK,  
+                	 TreezColorMapValue.TRANSPLACK_STEP    	 
+                	];
+            	}
+            	
+            	static stringValues(){
+            		let items = []
+            		TreezColorMapValue.values().forEach((item)=>{
+            			items.push(item);
+            		});
+            		return items;
+            	}
+            	
+            	static byName(name){
+
+            	    let result = null;
+            		TreezColorMapValue.values().forEach((item)=>{
+            			if(item.name === name){
+            				result = item;
+            			}            			
+            		});
+
+            		if(!result){
+            		     throw new Error('Unknown color map name: "' + name + '""');         
+            		}
+            		return result;            		
+            		
+            	}
+            	
+            	constructor(name){
+            		this.name = name;            		
+            	}
+
+            	toString(){
+            	    return this.name;
+            	}
+                                     
+            }  
+           
+                             
+
+            </script>	
+                            		
+       	</head>
+
+</html>

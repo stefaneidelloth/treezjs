@@ -1,5 +1,5 @@
 import AttributeContainerAtom from "../attributeContainerAtom.js";
-import controlProvider from "../../attributeAtom";
+import controlProvider from "../../attributeAtom.js";
 
 export default class Section extends AttributeContainerAtom {
 

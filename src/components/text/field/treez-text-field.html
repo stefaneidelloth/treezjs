@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-text-field.css" />
+
+		<link rel="import" href="./../../treezElement.html" >	
+
+        <script>
+
+            class TreezTextField extends TreezElement {
+
+            	get title() {
+				  return this.getAttribute('title');
+				}
+
+				set title(newValue) {
+				  this.setAttribute('title', newValue);	  
+
+				}  
+
+				 get enabled() {
+				  return this.getAttribute('enabled');
+				}
+
+				set enabled(newValue) {
+				  this.setAttribute('enabled', newValue);	
+				}  
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['title','enabled']);                    
+                }
+
+                constructor(){
+                    super();                                  
+                    this.labelElement=undefined;   
+                    this.textField=undefined;                            
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.labelElement){                       
+
+                        var labelElement = document.createElement('label');  
+                        self.labelElement = labelElement;                     
+                        labelElement.innerText = self.title;                       
+                        self.appendChild(labelElement);                                                            
+
+                        var textField = document.createElement('input'); 
+                        self.appendChild(textField);                          
+                        self.textField = textField;                       
+                        textField.setAttribute('class','treez-text-field')
+                        textField.value = self.value; 
+
+                        if (self.enabled === false || self.enabled === 'false' || self.enabled === 'False'){
+                        	 textField.disabled = true;  
+                        }                          
+                                          
+                        textField.onchange = ()=>this.__textFieldChanged();                                              
+                       
+                                                              		
+                    }
+                }
+
+                __textFieldChanged(){
+                	this.value = this.textField.value;                	
+                }  
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='title'){
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
+                    	}                                           
+                    } 
+                    if(attr==='enabled'){
+                    	if(this.textField){
+                    		if (newValue === 'false' || newValue === 'False'){
+                    			this.textField.disabled = true;
+                    		} else {
+                    			 this.textField.disabled= !newValue;   
+                    		}
+                    		
+                    	}                                           
+                    } 
+                }  
+
+                updateElements(newValue){
+                	if(this.textField){                    	
+						this.textField.value= newValue; 
+                	}					    
+                }                          
+            }
+            window.customElements.define('treez-text-field', TreezTextField);                    
+
+        </script>	
+		
+	</head>
+
+</html>

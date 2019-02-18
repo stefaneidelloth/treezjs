@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-image-combo-box.css" />		
+
+		<link rel="import" href="./../comboBox/treez-combo-box.html" >	
+
+        <script>
+
+            class TreezImageComboBox extends TreezComboBox {                
+				
+                constructor(){
+                    super();                                           
+                }                
+
+				connectedCallback() {
+                	var self = this;
+
+                    if(!self.comboBox){   
+
+						var container = document.createElement('div');    
+						container.setAttribute("class","treez-combo-box-container");
+						self.appendChild(container);      
+
+						var labelDiv = document.createElement('div');
+						container.appendChild(labelDiv);
+						
+						var labelElement = document.createElement('label');
+						this.labelElement = labelElement;
+						container.appendChild(labelElement);   
+						labelElement.innerText = self.label;   
+						labelElement.setAttribute("class","treez-combo-box-label");							          
+
+						var comboBox = document.createElement('div');                       
+						self.comboBox = comboBox;	
+						container.appendChild(comboBox);
+						comboBox.setAttribute("class","treez-combo-box");	
+						comboBox.tabIndex=0; //required for onblur event to work
+						comboBox.onblur = () =>{ 
+							self.__collapseComboBox(); 
+						};
+						
+						var comboBoxDisplay = document.createElement('div');
+						comboBoxDisplay.setAttribute("class","treez-combo-box-display");	
+						comboBox.appendChild(comboBoxDisplay);
+
+                        var imageLabel = document.createElement('img');
+						comboBoxDisplay.appendChild(imageLabel);
+						this.imageLabel = imageLabel;
+						imageLabel.setAttribute("class","treez-image-label");						
+
+						this.__updateImageLabel();												
+						imageLabel.onclick = ()=>this.__expandComboBox();
+
+                        var comboButton = document.createElement('span');
+                        comboBoxDisplay.appendChild(comboButton);						
+						comboButton.setAttribute("class","treez-combo-button");	
+						comboButton.innerText = "▾";
+						comboButton.onclick = ()=>this.__expandComboBox();
+
+						let optionPanel = document.createElement('div');
+						this.optionPanel = optionPanel;						
+						comboBox.appendChild(optionPanel);
+						optionPanel.setAttribute("class","treez-option-panel");	
+						
+						if(self.options){
+                           this.__recreateOptionTags();						  
+						}  
+						
+						self.__collapseComboBox();                                                              		
+                    }
+                }  
+
+                updateElements(newValue){
+                 	this.value=newValue.toString();
+                	if(this.imageLabel){                    	
+						this.__updateImageLabel(); 
+                	}					    
+                } 	
+
+                __updateImageLabel(){
+                	let imageUrl = this.__selectedImageUrl();
+                	
+					if(imageUrl){
+						this.imageLabel.setAttribute("src",imageUrl);							
+					}
+                }
+
+				__expandComboBox(){
+					this.optionPanel.style="display:block;";
+				}	
+
+				__collapseComboBox(){
+					this.optionPanel.style="display:none;";
+				}	
+
+				__selectedImageUrl(){
+					let val = this.getAttribute('value');
+					if (val){
+						return val + this.__imageFormat()
+					} else {
+						if (this.options){
+							let optionEntries = this.options.split(",")
+							if(optionEntries.length>0){
+								return optionEntries[0] + this.__imageFormat();
+							}
+						}
+						return undefined;
+					}
+				}		
+
+				__imageFormat(){
+					return ".png";
+				}
+
+				__recreateOptionTags(){
+
+					var self = this;				   			    
+
+					this.__clearOptionPanel();					
+
+					this.__optionItems().forEach(option=>{					
+						let optionElement = document.createElement('div')
+						optionElement.setAttribute("class","treez-option");
+						this.optionPanel.appendChild(optionElement);
+						
+						let optionImage = document.createElement('img');
+						optionImage.setAttribute("class","treez-option-image");
+						optionImage.title = option;
+						optionElement.appendChild(optionImage);	
+
+					 	let optionImageUrl = option + this.__imageFormat();
+					 	optionImage.src=optionImageUrl;					 	
+
+					 	optionElement.onclick = ()=>{
+					 		self.value=option;
+					 		self.__collapseComboBox();
+					 	};
+					   
+					});
+					
+					self.__refreshSelectedValue();
+							
+				}
+
+				__clearOptionPanel(){
+					var optionPanel = this.optionPanel;  
+					while (optionPanel.hasChildNodes()) {
+						optionPanel.removeChild(optionPanel.lastChild);
+					}
+				}
+
+				__optionItems(){
+					return this.options.split(',');
+				}
+
+				__hasOption(option){
+					return this.__optionItems().indexOf(option) > -1
+				}
+
+				__refreshSelectedValue(){				
+					let oldValue = this.getAttribute('value');
+					if(oldValue){
+						if (!this.__hasOption(oldValue)){						
+							this.__tryToSelectFirstOption()
+						}					
+					} else {
+						this.__tryToSelectFirstOption()
+					}
+				}
+
+				__tryToSelectFirstOption(){
+					var optionItems = this.__optionItems();
+					if (optionItems.length > 0 ){								
+						this.value = optionItems[0];
+					}	
+				}						
+
+                                     
+            }
+            window.customElements.define('treez-image-combo-box', TreezImageComboBox);                    
+
+        </script>	
+		
+	</head>
+
+</html>

@@ -1,5 +1,6 @@
 import TreeView from './views/treeView.js';
 import EditorView from './views/editorView.js';
+import TreezTerminal from './treezTerminal.js'; 
 
 
 var self = {
@@ -25,36 +26,18 @@ require([
 	 GoldenLayout,
 	 d3
 ) {		
+	
+	createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3);
+	
+	window.treezTerminal = new TreezTerminal();
 
-	var goldenLayoutConfig = {
-		content : [ {
-			type : 'row',
-			content : [ {
-				type : 'component',
-				componentName : 'Tree'
-			}, {
-				type : 'column',
-				content : [ {
-					type : 'component',
-					componentName : 'Properties'
-				}, {
-					type : 'stack',
-					content : [ {
-						type : 'component',
-						componentName : 'Monitor'
-					}, {
-						type : 'component',
-						componentName : 'Graphics'
-					}, ]
-				} ]
-			}, {
-				type : 'component',
-				componentName : 'Editor'
-			} ]
-		} ]
-	};	
+});
 
-	var myLayout = new GoldenLayout(goldenLayoutConfig);
+
+
+function createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3){
+	
+	var myLayout = createGoldenLayout(GoldenLayout); //Also see http://golden-layout.com/docs/Config.html
 
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
@@ -82,8 +65,52 @@ require([
 	});
 
 	myLayout.init();
+}
 
-});
+function createGoldenLayout(GoldenLayout){
+	
+	var firstColumn = {
+			type : 'component',
+			componentName : 'Tree'
+	};
+	
+	var secondColumn = {
+			type : 'column',
+			content : [ 
+				{
+					type : 'component',
+					componentName : 'Properties'
+				}, 
+				{
+					type : 'stack',
+					content : [ 
+						{
+							type : 'component',
+							componentName : 'Monitor'
+						}, 		
+						{
+							type : 'component',
+							componentName : 'Graphics'
+						}
+					]
+				} 
+			]
+		};
+	
+	var thirdColumn = {
+			type : 'component',
+			componentName : 'Editor'
+		};
+	
+	var goldenLayoutConfig = {
+		content : [ {
+			type : 'row',
+			content : [ firstColumn, secondColumn, thirdColumn ]
+		} ]
+	};	
+
+	return new GoldenLayout(goldenLayoutConfig);
+}
 
 function getEditorViewer(){
 	return self.editorViewer.editor.getTextView();

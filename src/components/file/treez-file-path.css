@@ -1,29 +1,30 @@
 
-treez-file-path {
-    padding: 3px;
+treez-file-path {   
     font-family: Arial,sans-serif;
     font-size: 12px;     
 }
 
-input[type=file] {
-color:transparent;
-width:16px;
+
+.browse-button {
+	background: url('/icons/browse.png');
+	background-repeat: no-repeat;
+	border: none;
+	width:16px;
+	color:transparent;
 }
 
-input[type=file]::-webkit-file-upload-button {
-background: url('/icons/browse.png');
-background-repeat: no-repeat;
-border: none;
-width:16px;
-color:transparent;
+.play-button {
+	background: url('/icons/run_triangle.png');
+	background-repeat: no-repeat;
+	border: none;
+	width:16px;
+	color:transparent;
 }
 
 #container{
     display:'inline-block';
     white-space: nowrap;
 }
-
-
 
 input[type=text] {   
     width: 90%;      

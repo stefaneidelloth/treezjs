@@ -1,0 +1,26 @@
+.treez-string-list-container {   
+    with: auto; 
+    vertical-align: top;    
+}
+
+label {  
+    vertical-align: middle;	
+}
+
+.treez-list-button {   
+    with: auto; 
+    height:25px;
+    vertical-align: middle;
+    margin-right:5px;	
+}
+
+table {
+	width: 100%;
+	margin-top:5px;	
+	border-collapse: collapse;
+}
+
+tr {
+	border: 1px solid lightgrey;
+}
+

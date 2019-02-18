@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+
+	<head>		
+
+        <script>
+
+            class TreezSymbolStyleValue {                  	          	
+
+            	static get NONE() {
+            		return new TreezSymbolStyleValue("none");                    
+                }            	
+
+            	static get CIRCLE() {
+            		return new TreezSymbolStyleValue("circle");                    
+                }            	
+
+            	static get CROSS() {
+            		return new TreezSymbolStyleValue("cross");                    
+                }            	
+
+            	static get DIAMOND() {
+            		return new TreezSymbolStyleValue("diamond");                    
+                }            	
+
+            	static get SQUARE() {
+            		return new TreezSymbolStyleValue("square");                    
+                }            	
+
+            	static get TRIANGLE_DOWN() {
+            		return new TreezSymbolStyleValue("triangle-down");                    
+                }            	
+
+            	static get TRIANGLE_UP() {
+            		return new TreezSymbolStyleValue("triangle-up");                    
+                }            	
+            	
+
+            	//	STAR("star"),
+
+            	//	BARHORZ("barhorz"),
+
+            	//	BARVERT("barvert"),
+
+            	//	PENTAGON("pentagon"),
+
+            	//	HEXAGON("hexagon"),
+
+            	//	OCTAGON("octagon"),
+
+            	//	TIEVERT("tievert"),
+
+            	//	TIEHORZ("tiehorz"),
+
+            	//	TRIANGLE("triangle"),
+
+            	//	TRIANGLE_DOWN("triangledown"),
+
+            	//	TRIANGLE_LEFT("triangleleft"),
+
+            	//	TRIANGLE_RIGHT("triangleright"),
+
+            	//	DOT("dot"),
+
+            	//	CIRCLE_DOT("circledot"),
+
+            	//	BULLS_EYE("bullseye"),
+
+            	//	CIRCLE_HOLE("circlehole"),
+
+            	//	SQUARE_HOLE("squarehole"),
+
+            	//	DIAMOND_HOLE("diamondhole"),
+
+            	//	PENTAGON_HOLE("pentagonhole"),
+
+            	//	SQUARE_ROUNDED("squarerounded"),
+
+            	//	SQUASH_BOX("squashbox"),
+
+            	//	ELLIPSE_HORZ("ellipsehorz"),
+
+            	//	ELLIPSE_VERT("ellipsevert"),
+
+            	//	LOSENGE_HORZ("losengehorz"),
+
+            	//	LOSENGE_VERT("losengevert"),
+
+            	//	PLUS_NARROW("plusnarrow"),
+
+            	//	CROSS_NARROW("crossnarrow");
+            	
+            	static values(){
+            	    return [
+            	    	TreezSymbolStyleValue.NONE,
+            	    	TreezSymbolStyleValue.CIRCLE,
+            	    	TreezSymbolStyleValue.CROSS,
+            	    	TreezSymbolStyleValue.DIAMOND,
+            	    	TreezSymbolStyleValue.SQUARE,
+            	    	TreezSymbolStyleValue.TRIANGLE_DOWN,
+            	    	TreezSymbolStyleValue.TRIANGLE_UP  	 
+                	];
+            	}
+            	
+            	static stringValues(){
+            		let items = []
+            		TreezSymbolStyleValue.values().forEach((item)=>{
+            			items.push(item);
+            		});
+            		return items;
+            	}
+            	
+            	static byName(name){
+
+            	    let result = null;
+            		TreezSymbolStyleValue.values().forEach((item)=>{
+            			if(item.name === name){
+            				result = item;
+            			}            			
+            		});
+
+            		if(!result){
+            		     throw new Error('Unknown symbol style name: "' + name + '""');         
+            		}
+            		return result;            		
+            		
+            	}
+            	
+            	constructor(name){
+            		this.name = name;            		
+            	}
+
+            	toString(){
+            	    return this.name;
+            	}
+                                     
+            }  
+           
+                             
+
+            </script>	
+                            		
+       	</head>
+
+</html>
