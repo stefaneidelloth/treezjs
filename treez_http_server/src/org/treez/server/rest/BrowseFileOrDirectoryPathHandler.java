@@ -9,19 +9,22 @@ import javax.swing.UIManager;
 import com.sun.net.httpserver.HttpServer;
 
 public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
-	
-	//
-	
 
-	//#region CONSTRUCTORS
+	// #region ATTRIBUTES
+
+	private static Frame frame = null;
+
+	// #end region
+
+	// #region CONSTRUCTORS
 
 	private BrowseFileOrDirectoryPathHandler(String urlPrefix) {
 		super(urlPrefix);
 	}
 
-	//#end region
+	// #end region
 
-	//#region METHODS
+	// #region METHODS
 
 	public static void create(String urlPrefix, HttpServer server) {
 		server.createContext(urlPrefix, new BrowseFileOrDirectoryPathHandler(urlPrefix));
@@ -29,35 +32,41 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 
 	protected String result(String initialDirectory) {
 
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		var fileDialog = new JFileChooser();
-		fileDialog.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		var dialog = new JFileChooser();
+		dialog.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		if (initialDirectory != null) {
-			fileDialog.setCurrentDirectory(new File(initialDirectory));
+			dialog.setCurrentDirectory(new File(initialDirectory));
 		}
 
-		var frame = new Frame();
-		frame.setIconImage( getDialogIcon());		
-		
-		fileDialog.showOpenDialog(frame);
+		dialog.showOpenDialog(getFrame());
 
-		var file = fileDialog.getSelectedFile();
+		var file = dialog.getSelectedFile();
 		if (file != null) {
 			var path = file.getAbsolutePath();
 			return path.replace("\\", "/");
 		} else {
 			return "";
 		}
-	}	
-	
-	//#end region
-	
-	
+	}
+
+	// #end region
+
+	// #region ACCESSORS
+
+	private static Frame getFrame() {
+		if (frame == null) {
+			frame = new Frame();
+			frame.setIconImage(getDialogIcon());
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return frame;
+	}
+
+	// #end region
 
 }

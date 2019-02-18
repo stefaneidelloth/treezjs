@@ -1,11 +1,11 @@
-org\treez\server\rest\BrowseFileOrDirectoryPathHandler$IconView.class
 org\treez\server\rest\BrowseFileOrDirectoryPathHandler.class
 org\treez\server\websocket\CommandLineServerThread.class
+org\treez\server\rest\AbstractHttpQueryHandler.class
 org\treez\server\websocket\AbstractWebSocketServer.class
+org\treez\server\TreezServer.class
+org\treez\server\rest\BrowseDirectoryPathHandler.class
 org\treez\server\rest\BrowseFilePathHandler.class
 org\treez\server\rest\ConsoleHandler.class
-org\treez\server\rest\AbstractQueryHandler.class
 org\treez\server\rest\StaticFileHandler.class
 org\treez\server\websocket\AbstractServerThreadHandlingOneClient.class
-org\treez\server\TreezServer.class
 org\treez\server\websocket\WebSocketServer.class

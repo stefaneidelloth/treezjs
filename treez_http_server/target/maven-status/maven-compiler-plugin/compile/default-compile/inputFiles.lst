@@ -1,9 +1,10 @@
 D:\treezjs\treez_http_server\src\org\treez\server\websocket\WebSocketServer.java
 D:\treezjs\treez_http_server\src\org\treez\server\rest\ConsoleHandler.java
 D:\treezjs\treez_http_server\src\org\treez\server\rest\StaticFileHandler.java
+D:\treezjs\treez_http_server\src\org\treez\server\rest\BrowseDirectoryPathHandler.java
 D:\treezjs\treez_http_server\src\org\treez\server\websocket\AbstractServerThreadHandlingOneClient.java
 D:\treezjs\treez_http_server\src\org\treez\server\rest\BrowseFileOrDirectoryPathHandler.java
-D:\treezjs\treez_http_server\src\org\treez\server\rest\AbstractQueryHandler.java
+D:\treezjs\treez_http_server\src\org\treez\server\rest\AbstractHttpQueryHandler.java
 D:\treezjs\treez_http_server\src\org\treez\server\websocket\CommandLineServerThread.java
 D:\treezjs\treez_http_server\src\org\treez\server\TreezServer.java
 D:\treezjs\treez_http_server\src\org\treez\server\websocket\AbstractWebSocketServer.java
