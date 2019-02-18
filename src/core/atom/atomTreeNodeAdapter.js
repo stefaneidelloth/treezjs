@@ -1,4 +1,5 @@
 import DTreez from "../dTreez/dTreez.js";
+import ActionSeparator from "../actionSeparator.js";
 
 export default class AtomTreeNodeAdapter {	
 
@@ -65,7 +66,7 @@ export default class AtomTreeNodeAdapter {
           var menuItems = atom.createContextMenuActions(treeViewerRefreshable);
           var self=this;
           menuItems.forEach(function(item){
-          	self.createContextMenuItem(parent, d3, menu,item);
+          	self.createContextMenuItemOrSeparator(parent, d3, menu,item);
           });
          
 
@@ -80,7 +81,25 @@ export default class AtomTreeNodeAdapter {
     
     }
 
-    static createContextMenuItem(parent, d3, menu, item){
+    static createContextMenuItemOrSeparator(parent, d3, menu, item){
+
+
+    	 if (item instanceof ActionSeparator){
+             this.createContextMenuSeparator(parent, d3, menu);
+    	 } else {
+    	 	this.createContextMenuItem(parent, d3, menu, item)
+    	 }
+    	 
+    	
+    } 
+
+    static createContextMenuSeparator(parent, d3, menu){
+    	menu.append('div')
+    	.attr('class','treez-menu-separator');
+    }  
+
+    static createContextMenuItem(parent, d3, menu, item){    	
+
     	 var button = menu.append('div')    	 
     	     .append('button')
     	     .attr('class','treez-menu-button') 

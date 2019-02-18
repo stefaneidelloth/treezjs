@@ -65,7 +65,8 @@ export default class TreeView {
 		.on("click", action);
     }
 
-    buildContent(parentSelection){
+    buildContent(parentSelection){       
+
  		var content = parentSelection.append("div")
  			.attr("class","treez-tree-content");
  		this.content = content;
@@ -96,7 +97,7 @@ export default class TreeView {
     }  
 
     refresh(){
-    	this.content.selectAll("details").remove();
+    	this.content.selectAll("div").remove();    	
     	this.model.createTreeNodeAdaption(this.content, this.d3, this);
     }
 

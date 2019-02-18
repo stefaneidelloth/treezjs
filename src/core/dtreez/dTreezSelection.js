@@ -63,7 +63,7 @@ export default class DTreezSelection {
 	remove(){
 		this.__d3Selection.remove();
         return this;		
-	}
+	}	
 	
 	select(selector){
 		let selection = this.__d3Selection.select(selector);
