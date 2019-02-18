@@ -2,8 +2,8 @@ export default class TreezTerminal {
 
 	constructor(){
 		this.__webSocket = null;
-		this.onMessage = null;
-		this.onError = null;
+		this.__onMessage = null;
+		this.__onError = null;
 		
 		try {
 			this.__webSocket= new WebSocket("ws://localhost:8001/");    
@@ -22,9 +22,9 @@ export default class TreezTerminal {
     }
 	
 	execute(command, resultHandler, errorHandler){
-		window.treezConsole.onMessage = resultHandler;
-		window.treezConsole.onError = errorHandler;
-		webSocket.send(command);
+		this.__onMessage = resultHandler;
+		this.__onError = errorHandler;
+		this.__webSocket.send(command);
 	}
 
 	__webSocketOnOpen(event) { 
@@ -32,14 +32,14 @@ export default class TreezTerminal {
     }
 	
 	__webSocketOnMessage(event) { 
-		if(window.treezConsole.onMessage){
-			window.treezConsole.onMessage(event.data);
+		if(this.__onMessage){
+			this.__onMessage(event.data);
 		} 
     }
 
     __webSocketOnError(event) { 
-		if(window.treezConsole.onError){
-			window.treezConsole.onError(event.data);
+		if(this.__onError){
+			this.__onError(event.data);
 		} 
     }
     

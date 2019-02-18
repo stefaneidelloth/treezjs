@@ -12,14 +12,14 @@ export default class AtomTreeNodeAdapter {
 
 	static createExpandableNodeWithChildren(parent,d3,treeViewerRefreshable,atom){
 		var expandableNode = parent.append('details')
-		    .attr('class','treezDetails');		
+		    .attr('class','treez-details');		
 			
 		if(atom.parent){
 			expandableNode.classed('treezIndent',true);
 		}
 			
 		var summary = expandableNode.append('summary')
-			.attr('class','treezSummary');
+			.attr('class','treez-summary');
 
 		summary.on('click', ()=>{
 			this.showProperties(d3,treeViewerRefreshable,atom);
@@ -35,7 +35,7 @@ export default class AtomTreeNodeAdapter {
 
 	static crateLeafeNode(parent,d3,treeViewerRefreshable,atom){
 		var leafNode = parent.append('div')			
-			.attr('class', 'treezLeafNode');
+			.attr('class', 'treez-leaf-node');
 
 		leafNode.on('click', ()=>{
 			this.showProperties(d3,treeViewerRefreshable,atom);
@@ -49,18 +49,18 @@ export default class AtomTreeNodeAdapter {
 
 		parent.style('white-space','nowrap');
 		var icon = parent.append('img')	
-			.attr('class','treezNodeIcon')		
+			.attr('class','treez-node-icon')		
 			.attr('src','./icons/' + atom.provideImage());
 
 		var label = parent.append('label')
-			.attr('class','treezNodeLabel')								
+			.attr('class','treez-node-label')								
 			.text(atom.name);		
 	}
 
 	static createContextMenu(parent, d3, treeViewerRefreshable,atom){
 
           var menu = parent.append('div')
-          	.attr('class','treezContextMenu');
+          	.attr('class','treez-context-menu');          	
 
           var menuItems = atom.createContextMenuActions(treeViewerRefreshable);
           var self=this;
@@ -69,11 +69,12 @@ export default class AtomTreeNodeAdapter {
           });
          
 
+		//hide context menu when clicking outside context menu
 		d3.select('body')
 		  .on('mousedown', function () {
 				 var target = d3.select(d3.event.target);
-				 if (!target.classed('treezContextMenu')){
-					d3.selectAll('.treezContextMenu').style('display','none');			 	
+				 if (!target.classed('treez-context-menu')){
+					d3.selectAll('.treez-context-menu').style('display','none');			 	
 				 }
 		    });	
     
@@ -82,17 +83,17 @@ export default class AtomTreeNodeAdapter {
     static createContextMenuItem(parent, d3, menu, item){
     	 var button = menu.append('div')    	 
     	     .append('button')
-    	     .attr('class','treezMenuButton') 
+    	     .attr('class','treez-menu-button') 
           	 .on('mousedown', item.action) ;                   
           
           var imageName = item.imageName? item.imageName: 'error.png';
           
           button.append('img')
-          	.attr('class','treezMenuButtonIcon')          	
+          	.attr('class','treez-menu-button-icon')          	
           	.attr('src','./icons/' + imageName);
 
           button.append('label')
-          	.attr('class','treezMenuButtonLabel')          	
+          	.attr('class','treez-menu-button-label')          	
           	.text(item.label);
 
            parent.on('contextmenu', function () {

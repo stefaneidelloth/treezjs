@@ -22,11 +22,11 @@ treez-section-header {
 
 
 treez-section-header::before  {   
-    content:'▼ '
+    content:'\25BC  '
 }
 
 treez-section-header.collapsed::before  {   
-    content:'► '
+    content:'\25BA '
 }
 
 .treez-section-action-toolbar {

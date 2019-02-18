@@ -66,12 +66,16 @@ public abstract class AbstractWebSocketServer {
 			var serverThread = createServerThread(clientSocket);
 			serverThreads.add(serverThread);
 			serverThread.start();
+			
+			var threadIterator = serverThreads.iterator();
 
-			serverThreads.forEach((thread) -> {
-				if (!thread.isAlive()) {
-					serverThreads.remove(thread);
-				}
-			});
+			while (threadIterator.hasNext()) {
+			    var thread = threadIterator.next();			    
+			    if (!thread.isAlive()) {
+			    	threadIterator.remove();
+				}		   
+			}
+			
 		}
 	}
 	
