@@ -10,7 +10,7 @@ import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.adaptable.Refreshable;
 import org.treez.core.atom.base.AbstractAtom;
 import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.javafxd3.d3.D3;
 import org.treez.javafxd3.d3.core.Selection;
 import org.treez.javafxd3.d3.scales.Scale;
@@ -71,14 +71,14 @@ public class Bar extends GraphicsPropertiesPage implements LegendContributor {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		// no actions available right now
 		return actions;
 	}
 
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
-		treeViewRefreshable = refreshable;
+		treeView = refreshable;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class Bar extends GraphicsPropertiesPage implements LegendContributor {
 			Selection graphRectSelection,
 			FocusChangingRefreshable refreshable) {
 		Objects.requireNonNull(d3);
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //

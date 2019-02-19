@@ -80,7 +80,7 @@ public class SensitivityProbe extends AbstractProbe {
 
 		//time section
 		Section timeSection = page.createSection("timeSection", "Time");
-		timeSection.createSectionAction("action", "Run probe", () -> execute(treeViewRefreshable));
+		timeSection.createSectionAction("action", "Run probe", () -> execute(treeView));
 
 		TextField timeAxisLabel = timeSection.createTextField(timeLabel, this, "Year");
 		timeAxisLabel.setLabel("Label for time axis");

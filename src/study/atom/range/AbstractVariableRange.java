@@ -16,7 +16,7 @@ import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.AttributeWrapper;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.TreeViewerAction;
 import org.treez.core.utils.Utils;
 import org.treez.study.Activator;
@@ -76,7 +76,7 @@ public abstract class AbstractVariableRange<T> extends AdjustableAtom implements
 	@Override
 	protected List<Object> extendContextMenuActions(
 			List<Object> actions,
-			@SuppressWarnings("unused") TreeViewerRefreshable treeViewer) {
+			@SuppressWarnings("unused") treeView treeViewer) {
 
 		//disable
 		if (enabled.get()) {
@@ -291,8 +291,8 @@ public abstract class AbstractVariableRange<T> extends AdjustableAtom implements
 			enabled.set(enabledState);
 		}
 		//update tree view to show new overlay icon
-		if (treeViewRefreshable != null) {
-			treeViewRefreshable.refresh();
+		if (treeView != null) {
+			treeView.refresh();
 		}
 	}
 

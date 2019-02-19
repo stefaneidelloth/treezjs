@@ -30,11 +30,11 @@ export default class TreeView {
 		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
 
 			var code = "import Atom from './src/core/atom/atom.js';\n"+		
-				"import AdjustableAtom from './src/core/adjustable/adjustableAtom.js';\n"+
+				"import ComponentAtom from './src/core/component/componentAtom.js';\n"+
 				"\n"+
 				"window.createModel = function(){\n"+
 				"\n"+
-				"	var root = new AdjustableAtom('root');\n"+
+				"	var root = new ComponentAtom('root');\n"+
 				"	var firstChild = new Atom('firstChild');\n"+
 				"	root.addChild(firstChild);\n"+
 				"	var secondChild = new Atom('secondChild');\n"+

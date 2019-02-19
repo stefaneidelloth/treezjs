@@ -97,7 +97,7 @@ public class StringItemList extends AbstractAttributeAtom<StringItemList, List<S
 	@Override
 	public AbstractAttributeAtom<StringItemList, List<String>> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {
@@ -131,7 +131,7 @@ public class StringItemList extends AbstractAttributeAtom<StringItemList, List<S
 	 * Creates the control for the treezList by calling the corresponding method of the wrapped TreezListAtom
 	 */
 	private void createTreezListControl() {
-		treezList.createControlAdaption(listContainerComposite, treeViewRefreshable);
+		treezList.createControlAdaption(listContainerComposite, treeView);
 	}
 
 	/**

@@ -80,7 +80,7 @@ public class ProbabilityProbe extends AbstractProbe {
 
 		//time section
 		Section timeSection = page.createSection("timeSection", "Time");
-		timeSection.createSectionAction("action", "Run probe", () -> execute(treeViewRefreshable));
+		timeSection.createSectionAction("action", "Run probe", () -> execute(treeView));
 
 		TextField timeLabelField = timeSection.createTextField(timeLabel, this, "Year");
 		timeLabelField.setLabel("Label for time axis");

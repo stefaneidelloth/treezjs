@@ -1,8 +1,7 @@
- 
 export default class DTreezSelection {
 	
 	constructor(d3Selection){
-		this.__d3Selection = d3Selection;
+		this.__d3Selection = d3Selection;		
 	}
 	
 	addAction(action){
@@ -21,12 +20,27 @@ export default class DTreezSelection {
 	}
 	
 	attr(name, value){
+		if(value===undefined){
+			return this.__d3Selection.attr(name);
+		}
 		this.__d3Selection.attr(name, value);
 		return this;
 	}
 	
 	bindValue(parentObject, lambdaExpressionIdentifyingProperty){
 		this.__d3Selection.node().bindValue(parentObject, lambdaExpressionIdentifyingProperty);
+		return this;
+	}
+	
+	classed(className, flag){
+		if (flag === undefined){
+			return this.__d3Selection.classed(className);
+		}
+		return this.__d3Selection.classed(className, flag);
+	}
+
+	className(className){
+		this.__d3Selection.attr('class', className);		
 		return this;
 	}
 	
@@ -38,7 +52,7 @@ export default class DTreezSelection {
 	enable(){
 		this.__d3Selection.attr('enabled', true);		
 		return this;
-	}
+	}	
 	
 	html(content){
 		this.__d3Selection.html(content);
@@ -54,9 +68,29 @@ export default class DTreezSelection {
 		this.__d3Selection.attr('label', label);		
 		return this;
 	}
+
+	onClick(action){
+		this.__d3Selection.on('click', action);
+		return this;
+	}
 	
 	onChange(action){
 		this.__d3Selection.on('change', action);
+		return this;
+	}
+	
+	onToggle(action){
+		this.__d3Selection.on('toggle', action);
+		return this;
+	}
+	
+	onContextMenu(action){
+		this.__d3Selection.on('contextmenu', action);
+		return this;
+	}
+	
+	onMouseDown(action){
+		this.__d3Selection.on('mousedown', action);
 		return this;
 	}
 	
@@ -73,6 +107,21 @@ export default class DTreezSelection {
 	selectAll(selector){
 		let selection = this.__d3Selection.selectAll(selector);
 		return new DTreezSelection(selection);
+	}
+	
+	style(key, value){
+		this.__d3Selection.style(key, value);		
+		return this;
+	}
+	
+	src(source){
+		this.__d3Selection.attr('src', source);		
+		return this;
+	}
+	
+	text(value){
+		this.__d3Selection.text(value);		
+		return this;
 	}
 	
 	title(title){

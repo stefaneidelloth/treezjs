@@ -21,7 +21,7 @@ export default class JarExecutable extends Executable {
 
 		Image resetImage = Activator.getImage("resetJobIndex.png");
 		executable.createSectionAction("resetJobIndex", "Reset the job index to 1", () -> resetJobIndex(), resetImage);
-		executable.createSectionAction("action", "Run external executable", () -> execute(treeViewRefreshable));
+		executable.createSectionAction("action", "Run external executable", () -> execute(treeView));
 
 		FilePath filePath = executable.createFilePath(executablePath, this, "Path to java.exe",
 				"D:/EclipseJava/App/jdk1.8/bin/java.exe");

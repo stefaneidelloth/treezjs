@@ -13,7 +13,7 @@ import org.treez.core.atom.attribute.fileSystem.FilePath;
 import org.treez.core.atom.attribute.text.TextField;
 import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.data.database.mysql.MySqlDatabase;
 import org.treez.data.database.sqlite.SqLiteDatabase;
 import org.treez.model.atom.AbstractModel;
@@ -101,7 +101,7 @@ public class StudyInfoExport extends AbstractModel {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		return actions;
 	}
 
@@ -114,7 +114,7 @@ public class StudyInfoExport extends AbstractModel {
 		//study info
 		Section studyInfoSection = dataPage.createSection("studyInfo", absoluteHelpContextId);
 		studyInfoSection.setLabel("Export study info");
-		studyInfoSection.createSectionAction("action", "Export study info", () -> execute(treeViewRefreshable));
+		studyInfoSection.createSectionAction("action", "Export study info", () -> execute(treeView));
 
 		//export study info combo box
 		EnumComboBox<StudyInfoExportType> exportStudyInfoTypeCombo = studyInfoSection

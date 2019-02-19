@@ -107,7 +107,7 @@ public class ColorChooser extends AbstractStringAttributeAtom<ColorChooser> {
 	@Override
 	public AbstractStringAttributeAtom<ColorChooser> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {
@@ -413,8 +413,8 @@ public class ColorChooser extends AbstractStringAttributeAtom<ColorChooser> {
 		if (isAvailable(colorButton)) {
 			colorButton.setEnabled(state);
 		}
-		if (treeViewRefreshable != null) {
-			//treeViewRefreshable.refresh(); //creates flickering when targets are updated
+		if (treeView != null) {
+			//treeView.refresh(); //creates flickering when targets are updated
 		}
 		refreshAttributeAtomControl();
 		return getThis();

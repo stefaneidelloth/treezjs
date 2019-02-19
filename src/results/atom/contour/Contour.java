@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.graphics.length.Length;
 import org.treez.core.attribute.Consumer;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.javafxd3.d3.D3;
 import org.treez.javafxd3.d3.core.JsEngine;
 import org.treez.javafxd3.d3.core.Selection;
@@ -85,14 +85,14 @@ public class Contour extends GraphicsPropertiesPage {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		// no actions available right now
 		return actions;
 	}
 
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
-		treeViewRefreshable = refreshable;
+		treeView = refreshable;
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class Contour extends GraphicsPropertiesPage {
 			FocusChangingRefreshable refreshable) {
 		Objects.requireNonNull(d3);
 
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 		this.graphSelection = graphSelection;
 		graph = (Graph) getParentAtom();
 

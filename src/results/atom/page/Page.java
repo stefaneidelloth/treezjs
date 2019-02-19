@@ -20,7 +20,7 @@ import org.treez.core.atom.graphics.AbstractGraphicsAtom;
 import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.standallone.StandAloneWorkbench;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.TreezView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.javafxd3.d3.D3;
@@ -81,7 +81,7 @@ public class Page extends AbstractGraphicsAtom {
 		Section section = page.createSection("section");
 		section.setLabel("Page");
 
-		Runnable runAction = () -> execute(treeViewRefreshable);
+		Runnable runAction = () -> execute(treeView);
 		section.createSectionAction("action", "Build page", runAction);
 
 		//page settings
@@ -111,7 +111,7 @@ public class Page extends AbstractGraphicsAtom {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		Action addGraph = new AddChildAtomTreeViewerAction(
 				Graph.class,
@@ -129,9 +129,9 @@ public class Page extends AbstractGraphicsAtom {
 	 */
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
-		treeViewRefreshable = refreshable;
+		treeView = refreshable;
 
-		executeChildren(Graph.class, treeViewRefreshable);
+		executeChildren(Graph.class, treeView);
 
 		Runnable plotPageRunnable = () -> {
 			D3 d3 = browser.getD3();
@@ -142,7 +142,7 @@ public class Page extends AbstractGraphicsAtom {
 			AbstractGraphicsAtom.bindStringAttribute(svgSelection, "width", width);
 			AbstractGraphicsAtom.bindStringAttribute(svgSelection, "height", height);
 
-			plotWithD3(d3, svgSelection, treeViewRefreshable);
+			plotWithD3(d3, svgSelection, treeView);
 		};
 		browser = createD3BrowserInCadView(plotPageRunnable);
 	}
@@ -154,7 +154,7 @@ public class Page extends AbstractGraphicsAtom {
 	 * @return
 	 */
 	public Selection plotWithD3(D3 d3, Selection svgSelection, FocusChangingRefreshable refreshable) {
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		//remove old page group if it already exists
 		svgSelection //
@@ -193,7 +193,7 @@ public class Page extends AbstractGraphicsAtom {
 			Boolean isGraph = child.getClass().equals(Graph.class);
 			if (isGraph) {
 				Graph graph = (Graph) child;
-				graph.plotWithD3(d3, pageSelection, rectSelection, this.treeViewRefreshable);
+				graph.plotWithD3(d3, pageSelection, rectSelection, this.treeView);
 			}
 		}
 	}

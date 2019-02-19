@@ -89,9 +89,9 @@ public abstract class AbstractComboBox<A extends AbstractComboBox<A>> extends Ab
 	@SuppressWarnings("checkstyle:magicnumber")
 	public AbstractAttributeAtom<A, String> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 		this.attributeAtomParent = parent;
-		this.treeViewRefreshable = treeViewerRefreshable;
+		this.treeView = treeView;
 
 		//initialize value at the first call
 		if (!isInitialized()) {

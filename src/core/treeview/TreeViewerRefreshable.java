@@ -13,7 +13,7 @@ import org.treez.core.atom.base.AbstractAtom;
 /**
  * Custom TreeView that implements Refreshable
  */
-public class TreeViewerRefreshable extends TreeViewer implements FocusChangingRefreshable {
+public class treeView extends TreeViewer implements FocusChangingRefreshable {
 
 	//#region ATTRIBUTES
 
@@ -26,12 +26,12 @@ public class TreeViewerRefreshable extends TreeViewer implements FocusChangingRe
 
 	//#region CONSTRUCTORS
 
-	public TreeViewerRefreshable(Composite parent, FocusChangingRefreshable actionRefreshable) {
+	public treeView(Composite parent, FocusChangingRefreshable actionRefreshable) {
 		super(parent);
 		this.actionRefreshable = actionRefreshable;
 	}
 
-	public TreeViewerRefreshable(Composite parent, FocusChangingRefreshable actionRefreshable, int style) {
+	public treeView(Composite parent, FocusChangingRefreshable actionRefreshable, int style) {
 		super(parent, style);
 		this.actionRefreshable = actionRefreshable;
 

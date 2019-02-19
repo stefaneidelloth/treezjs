@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.Image;
 import org.treez.core.Activator;
 import org.treez.core.atom.base.AbstractAtom;
 import org.treez.core.atom.variablefield.VariableField;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.utils.Utils;
 
 /**
@@ -47,7 +47,7 @@ public class AddColoredChildAtomTreeViewerAction extends TreeViewerAction {
 			String namePrefix,
 			Image image,
 			AbstractAtom<?> parentAtom,
-			TreeViewerRefreshable treeViewer) {
+			treeView treeViewer) {
 
 		super(createLabel(namePrefix), image, treeViewer, null);
 		this.namePrefix = namePrefix;
@@ -81,7 +81,7 @@ public class AddColoredChildAtomTreeViewerAction extends TreeViewerAction {
 				throw new IllegalStateException("This class must only be used for VariableFields");
 			}
 
-			parentAtom.createTreeNodeAdaption().expand(treeViewerRefreshable);
+			parentAtom.createTreeNodeAdaption().expand(treeView);
 		};
 	}
 

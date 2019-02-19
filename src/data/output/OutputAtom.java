@@ -12,7 +12,7 @@ import org.treez.core.atom.attribute.base.EmptyControlAdaption;
 import org.treez.core.atom.base.AtomCodeAdaption;
 import org.treez.core.atom.uisynchronizing.AbstractUiSynchronizingAtom;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.data.table.nebula.Table;
 
 /**
@@ -68,8 +68,8 @@ public class OutputAtom extends AbstractUiSynchronizingAtom<OutputAtom> {
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite parent,
-			FocusChangingRefreshable treeViewRefreshable) {
-		this.treeViewRefreshable = treeViewRefreshable;
+			FocusChangingRefreshable treeView) {
+		this.treeView = treeView;
 		//LOG.debug("get root control");
 		return new EmptyControlAdaption(parent, this, "");
 	}
@@ -80,7 +80,7 @@ public class OutputAtom extends AbstractUiSynchronizingAtom<OutputAtom> {
 	}
 
 	@Override
-	protected ArrayList<Object> createContextMenuActions(final TreeViewerRefreshable treeViewer) {
+	protected ArrayList<Object> createContextMenuActions(final treeView treeViewer) {
 
 		ArrayList<Object> actions = new ArrayList<>();
 		return actions;

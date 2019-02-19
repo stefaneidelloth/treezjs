@@ -98,7 +98,7 @@ public class SymbolType extends AbstractStringAttributeAtom<SymbolType> {
 	@Override
 	public AbstractStringAttributeAtom<SymbolType> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {

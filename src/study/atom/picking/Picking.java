@@ -30,7 +30,7 @@ import org.treez.core.atom.variablelist.VariableList;
 import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.monitor.TreezMonitor;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.core.utils.Utils;
 import org.treez.data.output.OutputAtom;
@@ -109,9 +109,9 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 	@Override
 	public
 			AbstractControlAdaption
-			createControlAdaption(Composite parent, FocusChangingRefreshable treeViewRefreshable) {
+			createControlAdaption(Composite parent, FocusChangingRefreshable treeView) {
 		updateAvailableVariablesForVariableList();
-		AbstractControlAdaption controlAdaption = super.createControlAdaption(parent, treeViewRefreshable);
+		AbstractControlAdaption controlAdaption = super.createControlAdaption(parent, treeView);
 		return controlAdaption;
 	}
 
@@ -127,7 +127,7 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 		String absoluteHelpContextId = Activator.getInstance().getAbsoluteHelpContextId(relativeHelpContextId);
 
 		Section pickingSection = dataPage.createSection("picking", absoluteHelpContextId);
-		pickingSection.createSectionAction("action", "Run picking", () -> execute(treeViewRefreshable));
+		pickingSection.createSectionAction("action", "Run picking", () -> execute(treeView));
 
 		//choose selection type and entry atom
 		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
@@ -201,8 +201,8 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 
 		if (variablePath == null || "".equals(variablePath)) {
 			timeRangeAtom = null;
-			if (treeViewRefreshable != null) {
-				treeViewRefreshable.refresh();
+			if (treeView != null) {
+				treeView.refresh();
 			}
 			return;
 		}
@@ -212,8 +212,8 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 		boolean isDoubleVariable = DoubleVariableField.class.isAssignableFrom(atomClass);
 		if (isDoubleVariable) {
 			timeRangeAtom = section.createDoubleVariableListField(doubleTimeRange, this, "Time range (Double)");
-			if (treeViewRefreshable != null) {
-				treeViewRefreshable.refresh();
+			if (treeView != null) {
+				treeView.refresh();
 			}
 			return;
 		}
@@ -221,8 +221,8 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 		boolean isIntegerVariable = IntegerVariableField.class.isAssignableFrom(atomClass);
 		if (isIntegerVariable) {
 			timeRangeAtom = section.createIntegerVariableListField(integerTimeRange, this, "Time range (Integer)");
-			if (treeViewRefreshable != null) {
-				treeViewRefreshable.refresh();
+			if (treeView != null) {
+				treeView.refresh();
 			}
 			return;
 		}
@@ -268,7 +268,7 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 	 * Extends the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		//create sample
 		Action addSample = new AddChildAtomTreeViewerAction(
@@ -296,7 +296,7 @@ public class Picking extends AbstractParameterVariation implements NumberRangePr
 	@Override
 	public void runStudy(FocusChangingRefreshable refreshable, SubMonitor monitor) {
 		Objects.requireNonNull(monitor, "You need to pass a valid IProgressMonitor that is not null.");
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		String startMessage = "Executing picking '" + getName() + "'";
 		LOG.info(startMessage);

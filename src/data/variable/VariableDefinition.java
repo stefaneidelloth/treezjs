@@ -17,7 +17,7 @@ import org.treez.core.atom.uisynchronizing.AbstractUiSynchronizingAtom;
 import org.treez.core.data.row.Row;
 import org.treez.core.data.table.TreezTable;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.TreeViewerAction;
 import org.treez.data.evaluation.VariableDefinitionEvaluator;
 import org.treez.data.row.VariableDefinitionRow;
@@ -100,8 +100,8 @@ public class VariableDefinition extends AbstractUiSynchronizingAtom<VariableDefi
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite propertyMainForm,
-			FocusChangingRefreshable treeViewRefreshable) {
-		this.treeViewRefreshable = treeViewRefreshable;
+			FocusChangingRefreshable treeView) {
+		this.treeView = treeView;
 		return new VariableDefinitionControlAdaption(propertyMainForm, this);
 	}
 
@@ -111,7 +111,7 @@ public class VariableDefinition extends AbstractUiSynchronizingAtom<VariableDefi
 	}
 
 	@Override
-	protected ArrayList<Object> createContextMenuActions(final TreeViewerRefreshable treeViewer) {
+	protected ArrayList<Object> createContextMenuActions(final treeView treeViewer) {
 
 		ArrayList<Object> actions = new ArrayList<>();
 

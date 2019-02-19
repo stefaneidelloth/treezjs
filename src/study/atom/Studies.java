@@ -9,7 +9,7 @@ import org.treez.core.atom.adjustable.AdjustableAtom;
 import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
 import org.treez.core.atom.attribute.attributeContainer.section.Section;
 import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.study.Activator;
 import org.treez.study.atom.picking.Picking;
@@ -55,7 +55,7 @@ public class Studies extends AdjustableAtom {
 	 */
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 		for (AbstractAtom<?> child : getChildAtoms()) {
 			boolean isStudy = child instanceof Study;
 			if (isStudy) {
@@ -85,7 +85,7 @@ public class Studies extends AdjustableAtom {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		Action addSweep = new AddChildAtomTreeViewerAction(
 				Sweep.class,

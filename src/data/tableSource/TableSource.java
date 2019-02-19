@@ -17,7 +17,7 @@ import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.data.table.TableSourceType;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 public class TableSource extends AdjustableAtom implements org.treez.core.data.table.TableSource {
@@ -109,7 +109,7 @@ public class TableSource extends AdjustableAtom implements org.treez.core.data.t
 	private void createSourceTypeSection(Page dataPage, String absoluteHelpContextId) {
 		Section sourceTypeSection = dataPage.createSection("sourceTypeSection", absoluteHelpContextId);
 		sourceTypeSection.setLabel("Source type");
-		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeViewRefreshable));
+		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeView));
 
 		//source type
 		EnumComboBox<TableSourceType> sourceTypeCheck = sourceTypeSection.createEnumComboBox(sourceType, this,
@@ -282,7 +282,7 @@ public class TableSource extends AdjustableAtom implements org.treez.core.data.t
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		// no actions available right now
 		return actions;
 	}

@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.treez.core.adaptable.CodeAdaption;
 import org.treez.core.atom.base.AtomCodeAdaption;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.data.output.OutputAtom;
 import org.treez.study.Activator;
 
@@ -39,7 +39,7 @@ public class SweepOutput extends OutputAtom {
 	 * Creates the context menu actions
 	 */
 	@Override
-	protected ArrayList<Object> createContextMenuActions(final TreeViewerRefreshable treeViewer) {
+	protected ArrayList<Object> createContextMenuActions(final treeView treeViewer) {
 
 		ArrayList<Object> actions = new ArrayList<>();
 		return actions;

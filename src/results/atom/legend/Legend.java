@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
 import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.javafxd3.d3.D3;
 import org.treez.javafxd3.d3.core.Selection;
 import org.treez.results.Activator;
@@ -70,7 +70,7 @@ public class Legend extends GraphicsPropertiesPage {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		// no actions available right now
 		return actions;
 	}
@@ -82,7 +82,7 @@ public class Legend extends GraphicsPropertiesPage {
 			Selection graphRectSelection,
 			FocusChangingRefreshable refreshable) {
 		Objects.requireNonNull(d3);
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		graphSelection //
 				.select("#" + name) //

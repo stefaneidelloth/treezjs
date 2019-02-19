@@ -10,7 +10,7 @@ import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.adjustable.AdjustableAtom;
 import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
 import org.treez.core.atom.attribute.base.EmptyControlAdaption;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.data.output.OutputAtom;
 import org.treez.data.table.nebula.Table;
@@ -46,8 +46,8 @@ public class Data extends AdjustableAtom {
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite parent,
-			FocusChangingRefreshable treeViewRefreshable) {
-		this.treeViewRefreshable = treeViewRefreshable;
+			FocusChangingRefreshable treeView) {
+		this.treeView = treeView;
 		return new EmptyControlAdaption(parent, this, "This atom represents data.");
 	}
 
@@ -63,7 +63,7 @@ public class Data extends AdjustableAtom {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		//table
 		Action addTable = new AddChildAtomTreeViewerAction(
@@ -128,9 +128,9 @@ public class Data extends AdjustableAtom {
 	}
 
 	@Override
-	public void execute(FocusChangingRefreshable treeViewerRefreshable) {
-		treeViewRefreshable = treeViewerRefreshable;
-		executeChildren(AbstractProbe.class, treeViewRefreshable);
+	public void execute(FocusChangingRefreshable treeView) {
+		treeView = treeView;
+		executeChildren(AbstractProbe.class, treeView);
 	}
 
 	//#region CREATE CHILD ATOMS

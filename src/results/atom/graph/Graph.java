@@ -9,7 +9,7 @@ import org.treez.core.adaptable.Adaptable;
 import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.base.AbstractAtom;
 import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.javafxd3.d3.D3;
 import org.treez.javafxd3.d3.core.Selection;
@@ -74,7 +74,7 @@ public class Graph extends GraphicsPropertiesPage {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		Action addData = new AddChildAtomTreeViewerAction(
 				Axis.class,
@@ -133,7 +133,7 @@ public class Graph extends GraphicsPropertiesPage {
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
 
-		executeChildren(XySeries.class, treeViewRefreshable);
+		executeChildren(XySeries.class, treeView);
 
 		//org.treez.results.atom.page.Page page = (org.treez.results.atom.page.Page) createTreeNodeAdaption()
 		//		.getParent()
@@ -156,7 +156,7 @@ public class Graph extends GraphicsPropertiesPage {
 			FocusChangingRefreshable refreshable) {
 
 		Objects.requireNonNull(d3);
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		//remove old graph group if it already exists
 		pageSelection //
@@ -220,7 +220,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isAxis = child.getClass().equals(Axis.class);
 			if (isAxis) {
 				Axis axis = (Axis) child;
-				axis.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				axis.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}
@@ -230,7 +230,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isXySeries = child.getClass().equals(XySeries.class);
 			if (isXySeries) {
 				XySeries xySeries = (XySeries) child;
-				xySeries.plotWithD3(d3, graphGroupSelection, this.treeViewRefreshable);
+				xySeries.plotWithD3(d3, graphGroupSelection, this.treeView);
 			}
 		}
 	}
@@ -240,7 +240,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isXy = child.getClass().equals(Xy.class);
 			if (isXy) {
 				Xy xy = (Xy) child;
-				xy.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				xy.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}
@@ -250,7 +250,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isBar = child.getClass().equals(Bar.class);
 			if (isBar) {
 				Bar bar = (Bar) child;
-				bar.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				bar.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}
@@ -260,7 +260,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isTornado = child.getClass().equals(Tornado.class);
 			if (isTornado) {
 				Tornado tornado = (Tornado) child;
-				tornado.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				tornado.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}
@@ -270,7 +270,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isContour = child.getClass().equals(Contour.class);
 			if (isContour) {
 				Contour contour = (Contour) child;
-				contour.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				contour.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}
@@ -280,7 +280,7 @@ public class Graph extends GraphicsPropertiesPage {
 			Boolean isLegend = child.getClass().equals(Legend.class);
 			if (isLegend) {
 				Legend legend = (Legend) child;
-				legend.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeViewRefreshable);
+				legend.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
 			}
 		}
 	}

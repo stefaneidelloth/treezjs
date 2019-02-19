@@ -21,7 +21,7 @@ import org.treez.core.atom.uisynchronizing.AbstractUiSynchronizingAtom;
 import org.treez.core.atom.variablefield.VariableField;
 import org.treez.core.monitor.ObservableMonitor;
 import org.treez.core.monitor.TreezMonitor;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.core.utils.Utils;
 import org.treez.data.output.OutputAtom;
@@ -79,7 +79,7 @@ public class Sweep extends AbstractParameterVariation {
 		String absoluteHelpContextId = Activator.getInstance().getAbsoluteHelpContextId(relativeHelpContextId);
 
 		Section sweepSection = dataPage.createSection("sweep", absoluteHelpContextId);
-		sweepSection.createSectionAction("action", "Run sweep", () -> execute(treeViewRefreshable));
+		sweepSection.createSectionAction("action", "Run sweep", () -> execute(treeView));
 
 		//studyId
 		TextField studyIdField = sweepSection.createTextField(studyId, this, "");
@@ -132,7 +132,7 @@ public class Sweep extends AbstractParameterVariation {
 	@Override
 	public void runStudy(FocusChangingRefreshable refreshable, SubMonitor mainMonitor) {
 		//Objects.requireNonNull(monitor, "You need to pass a valid IProgressMonitor that is not null.");
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 		this.isAlreadyCanceled = false;
 
 		String startMessage = "Executing sweep '" + getName() + "'";
@@ -524,7 +524,7 @@ public class Sweep extends AbstractParameterVariation {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		Action addQuantityRange = new AddChildAtomTreeViewerAction(
 				QuantityVariableRange.class,

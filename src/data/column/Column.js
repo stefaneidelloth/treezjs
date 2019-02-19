@@ -19,7 +19,7 @@ import org.treez.core.data.column.ColumnType;
 import org.treez.core.data.row.Row;
 import org.treez.core.data.table.LinkableTreezTable;
 import org.treez.core.data.table.TreezTable;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 
 /**
  * Represents a table
@@ -176,7 +176,7 @@ public class Column extends AdjustableAtom {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		return actions;
 	}

@@ -134,7 +134,7 @@ public class VariableDefinitionTable implements TreezTable {
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite parent,
-			FocusChangingRefreshable treeViewRefreshable) {
+			FocusChangingRefreshable treeView) {
 		return null; //dummy implementation: not used here
 	}
 

@@ -62,7 +62,7 @@ export default class TableImport extends Model {
 	createSourceTypeSection(page) {
 		Section sourceTypeSection = dataPage.createSection("sourceTypeSection", absoluteHelpContextId);
 		sourceTypeSection.setLabel("Source type");
-		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeViewRefreshable));
+		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeView));
 
 		//source type
 		EnumComboBox<TableSourceType> sourceTypeCheck = sourceTypeSection.createEnumComboBox(sourceType, this,

@@ -58,10 +58,10 @@ export default class Results extends ComponentAtom {
 		return actions;
 	}
 
-	execute(treeViewerRefreshable) {
-		this.treeViewRefreshable = treeViewerRefreshable;
-		this.executeChildren(Data.class, treeViewRefreshable);
-		this.executeChildren(Page.class, treeViewRefreshable);
+	execute(treeView) {
+		this.treeView = treeView;
+		this.executeChildren(Data.class, treeView);
+		this.executeChildren(Page.class, treeView);
 	}
 
 	//#region CREATE CHILD ATOMS

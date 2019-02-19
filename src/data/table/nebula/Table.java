@@ -23,7 +23,7 @@ import org.treez.core.data.table.AbstractTreezTable;
 import org.treez.core.data.table.TableSource;
 import org.treez.core.data.table.TableSourceType;
 import org.treez.core.scripting.ScriptType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.core.treeview.action.TreeViewerAction;
 import org.treez.data.cell.TreezTableNebulaLabelProvider;
@@ -81,8 +81,8 @@ public class Table extends AbstractTreezTable<Table> {
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite parent,
-			FocusChangingRefreshable treeViewRefreshable) {
-		this.treeViewRefreshable = treeViewRefreshable;
+			FocusChangingRefreshable treeView) {
+		this.treeView = treeView;
 
 		if (isLinkedToSource()) {
 			if (!hasColumns()) {
@@ -113,7 +113,7 @@ public class Table extends AbstractTreezTable<Table> {
 	}
 
 	@Override
-	protected List<Object> createContextMenuActions(TreeViewerRefreshable treeViewer) {
+	protected List<Object> createContextMenuActions(treeView treeViewer) {
 
 		List<Object> actions = new ArrayList<>();
 

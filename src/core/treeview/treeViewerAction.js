@@ -1,13 +1,13 @@
 export default class TreeViewerAction {	
 
-	constructor(label, imageName, treeViewerRefreshable, action) {
+	constructor(label, imageName, treeView, action) {
 		var self=this;
 		self.label=label;
 		self.imageName=imageName;
-		self.treeViewerRefreshable=treeViewerRefreshable;		
+		self.treeView=treeView;		
 		self.action=()=>{
 			action();
-			self.treeViewerRefreshable.refresh();
+			self.treeView.refresh();
 			}
 	}
 

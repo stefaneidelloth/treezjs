@@ -13,7 +13,7 @@ import org.treez.core.atom.graphics.AbstractGraphicsAtom;
 import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.color.ColorBrewer;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.data.column.Column;
 import org.treez.data.column.Columns;
 import org.treez.data.table.nebula.Table;
@@ -76,7 +76,7 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 		Section section = page.createSection("section");
 		section.setLabel("XySeries");
 
-		Runnable runAction = () -> execute(treeViewRefreshable);
+		Runnable runAction = () -> execute(treeView);
 		section.createSectionAction("action", "Build XySeries", runAction);
 
 		section.createModelPath(sourceTable, this, "", Table.class, this) //
@@ -100,7 +100,7 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		return actions;
 	}
 
@@ -118,7 +118,7 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 
 	@Override
 	public void execute(FocusChangingRefreshable refreshable) {
-		treeViewRefreshable = refreshable;
+		treeView = refreshable;
 
 		String sourceTablePath = sourceTable.get();
 		boolean sourceIsSpecified = sourceTablePath != null && !"".equals(sourceTablePath);
@@ -317,7 +317,7 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 	}
 
 	public Selection plotWithD3(D3 d3, Selection graphSelection, FocusChangingRefreshable refreshable) {
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 
 		//remove old series group if it already exists
 		graphSelection //
@@ -342,7 +342,7 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 			Boolean isXy = child.getClass().equals(Xy.class);
 			if (isXy) {
 				Xy xy = (Xy) child;
-				xy.plotWithD3(d3, seriesGroupSelection, null, this.treeViewRefreshable);
+				xy.plotWithD3(d3, seriesGroupSelection, null, this.treeView);
 
 			}
 		}

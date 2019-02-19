@@ -12,7 +12,7 @@ import org.treez.core.atom.attribute.attributeContainer.Page;
 import org.treez.core.atom.attribute.attributeContainer.section.Section;
 import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
 import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 import org.treez.model.interfaces.Model;
 import org.treez.study.Activator;
@@ -57,7 +57,7 @@ public class Probability extends AbstractParameterVariation {
 		String absoluteHelpContextId = Activator.getInstance().getAbsoluteHelpContextId(relativeHelpContextId);
 
 		Section pickingSection = dataPage.createSection("probability", absoluteHelpContextId);
-		pickingSection.createSectionAction("action", "Run probability", () -> execute(treeViewRefreshable));
+		pickingSection.createSectionAction("action", "Run probability", () -> execute(treeView));
 
 		//choose selection type and entry atom
 		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
@@ -92,7 +92,7 @@ public class Probability extends AbstractParameterVariation {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> createContextMenuActions(TreeViewerRefreshable treeViewer) {
+	protected List<Object> createContextMenuActions(treeView treeViewer) {
 
 		List<Object> actions = new ArrayList<>();
 

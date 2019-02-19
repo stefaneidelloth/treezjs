@@ -101,7 +101,7 @@ public class StringList extends AbstractAttributeAtom<StringList, List<String>> 
 	@Override
 	public AbstractAttributeAtom<StringList, List<String>> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {
@@ -136,7 +136,7 @@ public class StringList extends AbstractAttributeAtom<StringList, List<String>> 
 	 */
 	private void createTreezListControl() {
 		treezListControlAdaption = (TreezListAtomControlAdaption) treezList
-				.createControlAdaption(listContainerComposite, treeViewRefreshable);
+				.createControlAdaption(listContainerComposite, treeView);
 	}
 
 	/**

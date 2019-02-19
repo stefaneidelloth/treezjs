@@ -306,7 +306,7 @@ public class ModelPath extends AbstractStringAttributeAtom<ModelPath> {
 	@Override
 	public AbstractStringAttributeAtom<ModelPath> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {

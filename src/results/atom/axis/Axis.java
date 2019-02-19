@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.eclipse.swt.graphics.Image;
 import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.javafxd3.d3.D3;
 import org.treez.javafxd3.d3.core.Selection;
 import org.treez.javafxd3.d3.scales.Scale;
@@ -90,7 +90,7 @@ public class Axis extends GraphicsPropertiesPage {
 	}
 
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 		//no actions available right now
 		return actions;
 	}
@@ -104,7 +104,7 @@ public class Axis extends GraphicsPropertiesPage {
 
 		Objects.requireNonNull(d3);
 		this.d3 = d3;
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 		removeOldAxisGroupIfAlreadyExists(graphSelection);
 		createNewAxisGroup(graphSelection);
 		updatePlotWithD3(d3);

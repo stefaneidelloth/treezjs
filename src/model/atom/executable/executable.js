@@ -2,6 +2,8 @@ import Model from './../model.js';
 import AddChildAtomTreeViewerAction from '../../../core/treeview/addChildAtomTreeViewerAction.js';
 import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
 import TableImport from './../tableImport/tableImport.js';
+import InputModification from './inputModification.js';
+import OutputModification from './outputModification.js';
 
 export default class Executable extends Model {
 
@@ -13,26 +15,19 @@ export default class Executable extends Model {
 		super(name);
 		this.image = 'run.png';
 		this.isRunnable=true;
-        this.executablePath = 'notepad.exe';
+        
+		this.executablePath = 'notepad.exe';
+        
         this.inputArguments = 'a b c';
         this.inputPath = undefined;
-        this.copyInputFile = undefined;
-        this.isIncludingDateInInputFile = undefined;
-        this.isIncludingDateInInputFolder = undefined;
-        this.isIncludingDateInInputSubFolder = undefined;
-        this.isIncludingJobIndexInInputFile = undefined;
-        this.isIncludingJobIndexInInputFolder = undefined;
-        this.isIncludingJobIndexInInputSubFolder = undefined;
+               
         this.outputArguments = undefined;
         this.outputPath = undefined;
-        this.isIncludingDateInOutputFile = undefined;
-        this.isIncludingDateInOutputFolder = undefined;
-        this.isIncludingDateInOutputSubFolder = undefined;
-        this.isIncludingJobIndexInOutputFile = undefined;
-        this.isIncludingJobIndexInOutputFolder = undefined;
-        this.isIncludingJobIndexInOutputSubFolder = undefined;
+        this.copyInputFile = undefined;        
+       
         this.logArguments = undefined;
         this.logFilePath = undefined;
+        
         this.commandInfo = undefined;
         this.executionStatusInfo = 'Not yet executed.';
         this.jobIndexInfo = '1';
@@ -42,18 +37,14 @@ export default class Executable extends Model {
 		//TODO
 	}
 
-	
-
     createComponentControl(tabFolder, dTreez){    
      
 		const page = tabFolder.append('treez-tab')
             .title('Data');
 
 		this.createExecutableSection(page); 
-        this.createInputSection(page);
-        this.createInputModificationSection(page);
-        this.createOutputSection(page);
-        this.createOutputModificationSection(page);
+        this.createInputSection(page);      
+        this.createOutputSection(page);       
         this.createLoggingSection(page);
         this.createStatusSection(page);
 	     
@@ -102,60 +93,8 @@ export default class Executable extends Model {
             .title('Input file or folder')            
             .onChange(this.refreshStatus)           
             .bindValue(this,()=>this.inputPath);            
-	}    
-
-   createInputModificationSection(page) {
-
-       const section = page.append('treez-section')
-           .title('Input modification')
-           .attr('expanded','false');
-
-       const sectionContent = section.append('div'); 
-
-       sectionContent.append('treez-label')
-       	   .value('Include date in:')
-
-       sectionContent.append('treez-check-box')
-		   .label('Folder name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInInputFolder);
-
-	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
-		   .value(false)		   
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInInputSubFolder);
-
-	   	sectionContent.append('treez-check-box')
-		   .label('File name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInInputFile);
-
-      	sectionContent.append('treez-label')
-       	   .value('Include job index in:') 
-       	   
-		sectionContent.append('treez-check-box')
-		   .label('Folder name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputFolder);
-
-	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputSubFolder);
-
-	   sectionContent.append('treez-check-box')
-		   .label('File name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputFile);  
-   }
-
-
+	}   
+  
    createOutputSection(page) {
        const section = page.append('treez-section')
            .title('Output');
@@ -177,61 +116,7 @@ export default class Executable extends Model {
 		   .value(true)
 		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.copyInputFile);       
-   }
-
-   
-
-   createOutputModificationSection(page) {       
-
-       const section = page.append('treez-section')
-           .title('Output modification')
-           .attr('expanded','false');
-
-       const sectionContent = section.append('div'); 
-
-       sectionContent.append('treez-label')
-       	   .value('Include date in:')
-
-       sectionContent.append('treez-check-box')
-		   .label('Folder name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingDateInOutputFolder);
-
-	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
-		   .value(false)		   
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInOutputSubFolder);
-
-	   	sectionContent.append('treez-check-box')
-		   .label('File name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingDateInOutputFile);
-
-      	sectionContent.append('treez-label')
-       	   .value('Include job index in:') 
-       	   
-		sectionContent.append('treez-check-box')
-		   .label('Folder name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFolder);
-
-	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputSubFolder);
-
-	   sectionContent.append('treez-check-box')
-		   .label('File name')
-		   .value(false)
-		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFile);           
-    
-   }
+   }  
 
    createLoggingSection(page) {
        const section = page.append('treez-section')
@@ -273,8 +158,7 @@ export default class Executable extends Model {
        sectionContent.append('treez-text-area')
             .title('Next job index')                       
             .onChange(this.refreshStatus)           
-            .bindValue(this,()=>this.jobIndexInfo);             
-      
+            .bindValue(this,()=>this.jobIndexInfo); 
    }
 
    
@@ -608,22 +492,42 @@ export default class Executable extends Model {
 		//this.refreshStatus();
 	}
 
-	extendContextMenuActions(actions, treeViewer) {
+	extendContextMenuActions(actions, parentSelection, treeView) {
 
 		const addInputFileGenerator = new AddChildAtomTreeViewerAction(
-				InputFileGenerator.class,
+				InputFileGenerator,
 				"inputFileGenerator",
 				"inputFile.png",
+				parentSelection,
 				this,
-				treeViewer);
+				treeView);
 		actions.push(addInputFileGenerator);
+		
+		const addInputModification = new AddChildAtomTreeViewerAction(
+				InputModification,
+				"inputModification",
+				"inputModification.png",
+				parentSelection,
+				this,
+				treeView);
+		actions.push(addInputModification);
+		
+		const addOutputModification = new AddChildAtomTreeViewerAction(
+				OutputModification,
+				"outputModification",
+				"outputModification.png",
+				parentSelection,	
+				this,
+				treeView);
+		actions.push(addOutputModification);
 
 		const addDataImport = new AddChildAtomTreeViewerAction(
-				TableImport.class,
+				TableImport,
 				"tableImport",
 				"tableImport.png",
+				parentSelection,
 				this,
-				treeViewer);
+				treeView);
 		actions.push(addDataImport);
 
 		return actions;

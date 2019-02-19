@@ -24,7 +24,7 @@ import org.treez.core.atom.variablelist.VariableListWithInfo;
 import org.treez.core.attribute.Attribute;
 import org.treez.core.attribute.Wrap;
 import org.treez.core.monitor.TreezMonitor;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.TreeViewerAction;
 import org.treez.core.utils.Utils;
 import org.treez.data.output.OutputAtom;
@@ -88,10 +88,10 @@ public class Sensitivity extends AbstractParameterVariation {
 	@Override
 	public
 			AbstractControlAdaption
-			createControlAdaption(Composite parent, FocusChangingRefreshable treeViewRefreshable) {
+			createControlAdaption(Composite parent, FocusChangingRefreshable treeView) {
 
 		updateAvailableVariablesForVariableList();
-		return super.createControlAdaption(parent, treeViewRefreshable);
+		return super.createControlAdaption(parent, treeView);
 
 	}
 
@@ -131,7 +131,7 @@ public class Sensitivity extends AbstractParameterVariation {
 
 	private ModelPath createSensitivitySection(Page dataPage, String absoluteHelpContextId) {
 		Section sensitivitySection = dataPage.createSection("sensitivity", absoluteHelpContextId);
-		sensitivitySection.createSectionAction("action", "Run sensitivity", () -> execute(treeViewRefreshable));
+		sensitivitySection.createSectionAction("action", "Run sensitivity", () -> execute(treeView));
 
 		//choose selection type and entry atom
 		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
@@ -214,7 +214,7 @@ public class Sensitivity extends AbstractParameterVariation {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> createContextMenuActions(TreeViewerRefreshable treeViewer) {
+	protected List<Object> createContextMenuActions(treeView treeViewer) {
 
 		List<Object> actions = new ArrayList<>();
 
@@ -232,7 +232,7 @@ public class Sensitivity extends AbstractParameterVariation {
 
 		/*
 		Objects.requireNonNull(monitor, "You need to pass a valid IProgressMonitor that is not null.");
-		this.treeViewRefreshable = refreshable;
+		this.treeView = refreshable;
 		
 		String startMessage = "Executing picking '" + getName() + "'";
 		LOG.info(startMessage);

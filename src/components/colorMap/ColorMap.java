@@ -106,7 +106,7 @@ public class ColorMap extends AbstractStringAttributeAtom<ColorMap> {
 	@Override
 	public AbstractStringAttributeAtom<ColorMap> createAttributeAtomControl(
 			Composite parent,
-			FocusChangingRefreshable treeViewerRefreshable) {
+			FocusChangingRefreshable treeView) {
 
 		//initialize value at the first call
 		if (!isInitialized()) {

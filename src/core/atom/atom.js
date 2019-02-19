@@ -17,31 +17,36 @@ export default class Atom {
 		 */
 		this.name = name;		
 		
-		this.nameChangeConsumers = [];
+		this.nameChangedConsumers = [];
 		
-		this.parent = undefined;
-		
+		this.parent = undefined;		
+				
 		this.children = [];	
 		
-		this.contextMenuActions = [];
-	
-		this.expandedNodes = [];
+		this.contextMenuActions = [];		
 		
-		this.helpId = undefined;			
+		this.helpId = undefined;	
+		
+		this.image = "tree.png"
+			
+		this.isExpanded=false;
 	}		
 
 	copy() {
 		var newAtom = new Atom(this.name);			
 		this.copyChildrenTo(newAtom);
-		newAtom.expandedNodes = this.expandedNodes;		
+		newAtom.contextMenuActions = this.contextMenuActions; //TODO: check if this works correctly
+		newAtom.hlepId = this.helpId;
+		newAtom.image = this.image
+		newAtom.isExpanded = this.isExpanded;
+		return newAtom;		
 	}
 
 	copyChildrenTo(newAtom){
 		newAtom.children = this.copyAtoms(this.children);		
 		newAtom.children.forEach(function(child){
-			child.parentAtom = newAtom;
-		});		
-
+			child.parent = newAtom;
+		});	
 	}
 
 	copyAtoms(atomsToCopy) {
@@ -50,35 +55,45 @@ export default class Atom {
 			atoms.push(atomToCopy.copy())
 		});		
 		return atoms;
+	}
+
+	createControlAdaption(propertiesView, treeView){
+		
+		propertiesView.selectAll('treez-tab-folder').remove();	
+		propertiesView.selectAll('div').remove();	
+		
+		propertiesView.append('div') //
+		.html('The control for this type of atom is not yet implemented; should be overridden by inheriting class!');
+		
 	}	
 
 	createCodeAdaption() {
 	   return new AtomCodeAdaption(this);
 	}
 
-	createGraphicsAdaption(parentD3Selection) {
-		return new AtomGraphicsAdaption(this,parentD3Selection);		
+	createGraphicsAdaption(parentSelection) {
+		return new AtomGraphicsAdaption(this,parentSelection);		
 	}	
 
-	createTreeNodeAdaption(parent, d3, treeViewerRefreshable){
-		AtomTreeNodeAdapter.createTreeNode(parent,d3,treeViewerRefreshable,this);		
+	createTreeNodeAdaption(parentSelection, treeView){		
+		return AtomTreeNodeAdapter.createTreeNode(parentSelection,treeView,this);		
 	}	
 
 	//#region actions
 
-	execute(treeViewerRefreshable) {
+	execute(treeView) {
 		//empty default implementation
 	}
 
 	
-	executeChildren(wantedClass, treeViewerRefreshable){
+	executeChildren(wantedClass, treeView){
 
 		this.children.forEach(function(child){
 			
 			var hasWantedClass = child instanceof wantedClass;
 			if (hasWantedClass) {
 				try {
-					child.execute(treeViewerRefreshable);
+					child.execute(treeView);
 				} catch (exception) {
 					var message = "Could not execute child '" + child.name + "' of '" + this.name + "'.";
 					console.error(message, exception);
@@ -88,10 +103,10 @@ export default class Atom {
 	}
 
 
-	createContextMenuActions(treeViewerRefreshable) {
+	createContextMenuActions(parentSelection, treeView) {
 
-		if(!treeViewerRefreshable){
-			throw Error("treeViewerRefreshable is undefined")
+		if(!treeView){
+			throw Error("treeView is undefined")
 		}
 
 		var actions = [];
@@ -100,7 +115,7 @@ export default class Atom {
 		actions.push(new TreeViewerAction(
 						"Rename",
 						"rename.png",
-						treeViewerRefreshable,
+						treeView,
 						()=>this.rename())
 					);
 
@@ -110,7 +125,7 @@ export default class Atom {
 			actions.push(new TreeViewerAction(
 							"Move up",
 							"up.png",
-							treeViewerRefreshable,
+							treeView,
 							()=>this.moveUp())
 						);
 		}
@@ -121,7 +136,7 @@ export default class Atom {
 			actions.push(new TreeViewerAction(
 							"Move down",
 							"down.png",
-							treeViewerRefreshable,
+							treeView,
 							()=>this.moveDown())
 						);
 		}
@@ -130,7 +145,7 @@ export default class Atom {
 		actions.push(new TreeViewerAction(
 						"Delete",
 						"delete.png",
-						treeViewerRefreshable,
+						treeView,
 						()=>this.delete())
 					);
 
@@ -238,11 +253,11 @@ export default class Atom {
 	}
 
 	removeNameChangedConsumer(nameChangedConsumer) {
-		nameChangedConsumers.remove(nameChangedConsumer);
+		this.nameChangedConsumers.remove(nameChangedConsumer);
 	}
 
 	triggerNameChangedConsumers(newName) {
-		nameChangedConsumers.forEach(function(nameChangedConsumer){
+		this.nameChangedConsumers.forEach(function(nameChangedConsumer){
 			nameChangedConsumer.consume(newName);
 		});		
 	}
@@ -251,7 +266,7 @@ export default class Atom {
 	
 
 	provideImage() {
-		return "root.png";
+		return this.image;
 	}
 	
 
@@ -339,15 +354,14 @@ export default class Atom {
 	 * Creates a child atom with the same class as the given atomInstance.
 	 * The name of the new child atom will start with the given prefix.
 	 */	
-	createChildAtom(atomInstance, namePrefix) {
+	createChildAtom(atomClass, namePrefix) {
 		
 		var newName = this.createChildNameStartingWith(namePrefix);
 		var newChild;
-		try {
-			var atomConstructor = atomClass.constructor;
-			newChild = new atomConstructor(newName);
+		try {			
+			newChild = new atomClass(newName);
 		} catch (exception) {
-			var message = "Could not create child atom for class " + atomInstance.constructor.name;
+			var message = "Could not create child atom for class " + atomClass.constructor.name;
 			throw new Error(message, exception);
 		}
 		this.addChild(newChild);
@@ -563,10 +577,10 @@ export default class Atom {
 	//#end region
 
 	setName(name) {
-		var isDifferentName = (name != null && !name.equals(this.name)) || (name == null && this.name != null);
+		var isDifferentName = (name != null && !(name === this.name)) || (name == null && this.name != null);
 		if (isDifferentName) {
 			this.name = name;
-			triggerNameChangedConsumers(name);
+			this.triggerNameChangedConsumers(name);
 		}
 		return this;
 	}	
@@ -590,7 +604,8 @@ export default class Atom {
 		this.children.forEach(child =>{
 			child.delete();
 		});	
-		this.parent.children.remove(this);		
+		var childIndex = this.parent.children.indexOf(this);
+		this.parent.children.splice(childIndex,1);		
 	}
 
 	removeChild(child) {
@@ -618,7 +633,7 @@ export default class Atom {
 		var nextNameAndNumber;
 		var goOn = true;
 		while (goOn) {
-			nextNameAndNumber = getNextDummyChildNameAndNumber(atom, currentNameAndNumber);
+			nextNameAndNumber = this.getNextDummyChildNameAndNumber(currentNameAndNumber);
 			var currentNameIsOk = nextNameAndNumber.equals(currentNameAndNumber);
 			if (currentNameIsOk) {
 				goOn = false;
@@ -634,13 +649,13 @@ export default class Atom {
 	 * Checks if a child atom with a name that corresponds to the given NameAndNumber already exists and returns a new
 	 * NameAndNumber
 	 */
-	static getNextDummyChildNameAndNumber(startNameAndNumber) {
-		var next = Object.create(startNameAndNumber);
+	getNextDummyChildNameAndNumber(startNameAndNumber) {
+		var nextNameAndNumber = startNameAndNumber.copy();
 		var childWithSameNameAlreadyExists = false;
-		var currentName = start.getFullName();
+		var currentName = startNameAndNumber.getFullName();
 		
 		this.children.forEach(child=>{			
-			var namesAreEqual = currentName.equals(child.name);
+			var namesAreEqual = currentName === child.name;
 			if (namesAreEqual) {
 				childWithSameNameAlreadyExists = true;				
 			}
@@ -648,9 +663,9 @@ export default class Atom {
 		
 		if (childWithSameNameAlreadyExists) {
 			//increase number to generate a new name
-			next.increaseNumber();
+			nextNameAndNumber.increaseNumber();
 		}
-		return next;
+		return nextNameAndNumber;
 	}
 
 	//#end region	

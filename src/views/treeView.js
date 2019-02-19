@@ -1,7 +1,9 @@
+import DTreez from '../core/dtreez/dTreez.js';
+
 export default class TreeView {
 
 	constructor(){
-		this.d3 = undefined;
+		this.dTreez = undefined;
 		this.content = undefined;
 		this.provideEditor = undefined;	
 		this.model = undefined;		
@@ -12,9 +14,9 @@ export default class TreeView {
         var self = this;
 		self.provideEditor = provideEditor;
 
-		require(['d3'], function(d3){
-			self.d3=d3;    	
-			var parentSelection = d3.select(element);
+		require(['d3'], function(d3){			
+			self.dTreez = new DTreez(d3);  	
+			var parentSelection = self.dTreez.select(element);
 			self.buildToolBar(parentSelection);
 			self.buildContent(parentSelection);
 		});
@@ -59,16 +61,16 @@ export default class TreeView {
     createButton(parent, imageName, tooltip, action){
     	parent
 		.append("img")
-		.attr("class","treez-tool-icon")				
-		.attr("src","./icons/" + imageName)
-		.attr("title", tooltip)
-		.on("click", action);
+		.className("treez-tool-icon")				
+		.src("./icons/" + imageName)
+		.title(tooltip)
+		.onClick(action);
     }
 
     buildContent(parentSelection){       
 
  		var content = parentSelection.append("div")
- 			.attr("class","treez-tree-content");
+ 			.className("treez-tree-content");
  		this.content = content;
     }
 
@@ -97,8 +99,9 @@ export default class TreeView {
     }  
 
     refresh(){
-    	this.content.selectAll("div").remove();    	
-    	this.model.createTreeNodeAdaption(this.content, this.d3, this);
+    	this.content.selectAll("div").remove(); 
+    	this.content.selectAll("details").remove();   	
+    	this.model.createTreeNodeAdaption(this.content, this);
     }
 
      fromTree(){

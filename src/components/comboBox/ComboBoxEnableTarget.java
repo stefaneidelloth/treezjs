@@ -68,7 +68,7 @@ public class ComboBoxEnableTarget extends AbstractAttributeContainerAtom<ComboBo
 	}
 
 	@Override
-	public void createAtomControl(Composite parent, FocusChangingRefreshable treeViewerRefreshable) {
+	public void createAtomControl(Composite parent, FocusChangingRefreshable treeView) {
 
 	}
 

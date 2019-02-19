@@ -58,18 +58,19 @@ export default class ComponentAtom extends Atom {
 		return newAtom;
 	}
 
-	createControlAdaption(parent, dTreez, treeViewRefreshable) {
+	createControlAdaption(parent, treeView) {
 
 		const self = this;
-		self.treeViewRefreshable = treeViewRefreshable;
+		self.treeView = treeView;
 		parent.selectAll('treez-tab-folder').remove();	
+		parent.selectAll('div').remove();
 
 		const element = parent.append('div');
 		
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
-		const tabFolder = dTreez.select(tabFolderElement);
-		self.createComponentControl(tabFolder, dTreez);				
+		const tabFolder = treeView.dTreez.select(tabFolderElement);
+		self.createComponentControl(tabFolder, treeView.dTreez);				
 		parent.appendChild(tabFolderElement);					
 	
         self.afterCreateControlAdaptionHook();
@@ -97,7 +98,7 @@ export default class ComponentAtom extends Atom {
 		return new ComponentAtomCodeAdaption(this);
 	}
 
-	createContextMenuActions(treeViewerRefreshable) {
+	createContextMenuActions(parentSelection, treeView) {
 
         let actions = [];
 
@@ -105,25 +106,25 @@ export default class ComponentAtom extends Atom {
 			actions.push(new TreeViewerAction(
 								"Run", 
 								"run.png",
-								treeViewerRefreshable,
-								() => this.execute(treeViewerRefreshable)
+								treeView,
+								() => this.execute(treeView)
 							)
 			);
 		}
 		
 		actions.push(new ActionSeparator());
 		
-		actions = this.extendContextMenuActions(actions, treeViewerRefreshable);
+		actions = this.extendContextMenuActions(actions, parentSelection, treeView);
 		
 		actions.push(new ActionSeparator());
 
-        const superActions = super.createContextMenuActions(treeViewerRefreshable);
+        const superActions = super.createContextMenuActions(parentSelection, treeView);
         actions.concat(superActions);
 
 		return actions;
 	}
 
-	extendContextMenuActions(actions, treeViewerRefreshable) {
+	extendContextMenuActions(actions, parentSelection, treeView) {
 		return actions;
 	}
 

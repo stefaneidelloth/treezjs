@@ -17,7 +17,7 @@ import org.treez.core.atom.attribute.base.EmptyControlAdaption;
 import org.treez.core.atom.base.AbstractAtom;
 import org.treez.core.data.column.ColumnBlueprint;
 import org.treez.core.data.column.ColumnType;
-import org.treez.core.treeview.TreeViewerRefreshable;
+import org.treez.core.treeview.treeView;
 import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
 
 /**
@@ -73,8 +73,8 @@ public class Columns extends AdjustableAtom {
 	@Override
 	public AbstractControlAdaption createControlAdaption(
 			Composite parent,
-			FocusChangingRefreshable treeViewRefreshable) {
-		this.treeViewRefreshable = treeViewRefreshable;
+			FocusChangingRefreshable treeView) {
+		this.treeView = treeView;
 		return new EmptyControlAdaption(parent, this, "This atom represents all columns of its parent table.");
 	}
 
@@ -82,7 +82,7 @@ public class Columns extends AdjustableAtom {
 	 * Creates the context menu actions for this atom
 	 */
 	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, TreeViewerRefreshable treeViewer) {
+	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
 		Action addColumn = new AddChildAtomTreeViewerAction(
 				Column.class,

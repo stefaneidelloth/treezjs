@@ -42,7 +42,7 @@ public class TreeViewProvider {
 	/**
 	 * The tree viewer that will actually show the tree
 	 */
-	private TreeViewerRefreshable treeViewer;
+	private treeView treeViewer;
 
 	/**
 	 * The content Composite
@@ -103,7 +103,7 @@ public class TreeViewProvider {
 		contentComposite.setLayout(new FillLayout());
 
 		//create the tree viewer
-		treeViewer = new TreeViewerRefreshable(contentComposite,
+		treeViewer = new treeView(contentComposite,
 				treeViewActionProvider,
 				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 
@@ -346,7 +346,7 @@ public class TreeViewProvider {
 		return contentProvider;
 	}
 
-	public TreeViewerRefreshable getTreeViewer() {
+	public treeView getTreeViewer() {
 		return treeViewer;
 	}
 

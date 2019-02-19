@@ -90,6 +90,21 @@
                         this.insertBefore(this.sectionHeader, this.firstChild);                        
                     }
                 }
+                
+                expand(){
+                	const section = this.parentElement;
+                	if(section.children.length<2){
+                		return;
+                	}
+
+                    let header = section.children[0];
+                	let content = this.__getSectionContentDiv(section)
+                	let style = content.style;
+                	
+					style.display='block';
+					header.classList.remove('collapsed');  
+                	
+                }
 
                 __toggleExpansion(){
                 	const section = this.parentElement;
@@ -98,7 +113,7 @@
                 	}
 
                     let header = section.children[0];
-                	let content = __getSectionContentDiv(section)
+                	let content = this.__getSectionContentDiv(section)
                 	let style = content.style;
                 	if(style['display']==='none'){
 						style.display='block';
@@ -106,18 +121,18 @@
                 	} else {
                 		style.display='none';
                 		header.classList.add('collapsed');
-                	} 
+                	}                 	
+                }  
+                
+                __getSectionContentDiv(section){
 
-                	function __getSectionContentDiv(section){
-
-                      for(let child of section.children){
+                    for(let child of section.children){
 						if(child.tagName ==='DIV'){
 							return child;
 						}
 					  } 
 					  return section.children[1]; 
-                    }
-                }  
+                  }
 
                 __processSectionActions(toolbar){ 
 

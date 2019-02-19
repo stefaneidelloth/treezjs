@@ -23,7 +23,7 @@ export default class GenericInputModel extends Model {
 	refresh() {
 		super.refresh();
 		if (this.parent) {
-		    super.createControlAdaption(parent, this.treeViewRefreshable);
+		    super.createControlAdaption(parent, this.treeView);
 		}
 	}
 
@@ -38,7 +38,7 @@ export default class GenericInputModel extends Model {
 
 		// build variable fields from children
 		for (var child of this.children) {
-			child.createControlAdaption(section, this.treeViewRefreshable);
+			child.createControlAdaption(section, this.treeView);
 		}
 	}
 

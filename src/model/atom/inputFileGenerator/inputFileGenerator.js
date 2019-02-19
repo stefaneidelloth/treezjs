@@ -63,7 +63,7 @@ export default class InputFileGenerator extends ComponentAtom  {
 
 		Section data = dataPage.createSection("data", helpContextId);
 		data.setLabel("");
-		data.createSectionAction("action", "Generate input file", () -> execute(treeViewRefreshable));
+		data.createSectionAction("action", "Generate input file", () -> execute(treeView));
 		//template
 		data.createFilePath(templateFilePath, this, "Template for input file (contains variable place holders)",
 				"C:/template.txt");
