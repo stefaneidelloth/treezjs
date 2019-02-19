@@ -73,7 +73,7 @@
 
                 connectedCallback() {
                     if(!this.sectionHeader){
-                        this.style.display='block';
+                    	this.className='treez-section';                       
                         this.sectionHeader = document.createElement('treez-section-header');
 
                         let label = document.createElement('span');
@@ -113,7 +113,7 @@
                 	}
 
                     let header = section.children[0];
-                	let content = this.__getSectionContentDiv(section)
+                	let content = section.__getSectionContentDiv(section)
                 	let style = content.style;
                 	if(style['display']==='none'){
 						style.display='block';

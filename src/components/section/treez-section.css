@@ -1,23 +1,39 @@
 treez-section {
-    background-color:#f2f2f2;
-    width:100%;   
+    background-color:white;
+    width:100%;
     font-family: Arial,sans-serif;
     font-size: 12px;
-	margin-top:1px;	
-    margin-bottom:1px;	
+    margin-top:1px;
+    margin-bottom:3px;
+    border-style: none;
+    display:'block';
+    
 }
 
 treez-section div {
   padding: 2px;
+  border-style:none;
 }
 
 treez-section-header {
     display:inline-block;
     width:100%;
     height:14px;
-    padding:4px;   
-    background-color:lightblue;
-    color: #777777;  
+    padding:4px;  
+    border-radius:6px; 
+    border-radius-:1px;
+    border-color: #f1f5f9; 
+    box-shadow: -1px -1px 1px 0px #a5bdd8;
+    border-width:1px;
+    border-style: solid;
+    border-bottom:none;
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    background-image:linear-gradient(#e0e8f1, white);
+    color: #194c7f; 
+    font-weight: bold;
+    
+   
 }
 
 
@@ -32,8 +48,10 @@ treez-section-header.collapsed::before  {
 .treez-section-action-toolbar {
     float:right;
     margin-right:10px;
+    border-style:none;
 }
 
 .treez-section-action {
-   margin-left:5px;  
+   margin-left:5px; 
+   border-style:none; 
 }

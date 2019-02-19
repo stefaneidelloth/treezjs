@@ -3,7 +3,7 @@ treez-tab-folder {
 	width:100%;
     padding-top:2px;   
     font-family: Arial,sans-serif;
-    font-size: 12px;
+    font-size: 12px;   
 }
 
 treez-tab-folder-header {   
@@ -45,4 +45,6 @@ treez-tab {
     overflow-y: auto;	
 	height: 100%;	
 	width:100%;
+	background-color:white;
+	
 }

@@ -540,7 +540,19 @@ export default class Executable extends Model {
 
 	createInputFileGenerator(name) {
 		const child = new InputFileGenerator(name);
-		addChild(child);
+		this.addChild(child);
+		return child;
+	}
+
+	createInputModification(name) {
+		const child = new InputModification(name);
+		this.addChild(child);
+		return child;
+	}
+
+	createOutputModification(name) {
+		const child = new OutputModification(name);
+		this.addChild(child);
 		return child;
 	}
 

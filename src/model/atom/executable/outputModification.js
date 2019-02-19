@@ -44,7 +44,7 @@ export default class Executable extends Model {
 
        const sectionContent = section.append('div'); 
 
-       sectionContent.append('treez-label')
+       sectionContent.append('treez-text-label')
        	   .value('Include date in:')
 
        sectionContent.append('treez-check-box')
@@ -65,7 +65,7 @@ export default class Executable extends Model {
 		   .onChange(this.refreshStatus)		 
 		   .bindValue(this,()=>this.isIncludingDateInOutputFile);
 
-      	sectionContent.append('treez-label')
+      	sectionContent.append('treez-text-label')
        	   .value('Include job index in:') 
        	   
 		sectionContent.append('treez-check-box')
