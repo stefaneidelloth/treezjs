@@ -3,11 +3,11 @@
     vertical-align: top;      
 }
 
-label {  
+.treez-color-label {  
      vertical-align: middle;	
 }
 
-input {   
+.treez-color-input {   
     with: auto; 
     vertical-align: middle;
     margin-left:5px;

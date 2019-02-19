@@ -93,7 +93,7 @@ export default class InputFileGenerator extends ComponentAtom  {
 		data.createFilePath(inputFilePath, this, "Input file to generate", "C:/generated_input_file.txt", false);
 
 		//enable deletion of template rows with unassigned variable place holders
-		CheckBox deleteUnassigned = data.createCheckBox(deleteUnassignedRows, this, true);
+		checkBox deleteUnassigned = data.createCheckBox(deleteUnassignedRows, this, true);
 		deleteUnassigned.setLabel("Delete template rows with unassigned variable place holders.");
 
 		String inputModificationRelativeHelpContextId = "executableInputModification";
@@ -120,15 +120,15 @@ export default class InputFileGenerator extends ComponentAtom  {
 
 		inputModification.createLabel("includeDate", "Include date in:");
 
-		CheckBox dateInFolderCheck = inputModification.createCheckBox(includeDateInInputFolder, this, false);
+		checkBox dateInFolderCheck = inputModification.createCheckBox(includeDateInInputFolder, this, false);
 		dateInFolderCheck.setLabel("Folder name");
 		dateInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		CheckBox dateInSubFolderCheck = inputModification.createCheckBox(includeDateInInputSubFolder, this, false);
+		checkBox dateInSubFolderCheck = inputModification.createCheckBox(includeDateInInputSubFolder, this, false);
 		dateInSubFolderCheck.setLabel("Extra folder");
 		dateInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		CheckBox dateInFileCheck = inputModification.createCheckBox(includeDateInInputFile, this, false);
+		checkBox dateInFileCheck = inputModification.createCheckBox(includeDateInInputFile, this, false);
 		dateInFileCheck.setLabel("File name");
 		dateInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
@@ -136,16 +136,16 @@ export default class InputFileGenerator extends ComponentAtom  {
 		org.treez.core.atom.attribute.text.Label jobIndexLabel = inputModification.createLabel("jobIndexLabel",
 				"Include job index in:");
 
-		CheckBox jobIndexInFolderCheck = inputModification.createCheckBox(includeJobIndexInInputFolder, this, false);
+		checkBox jobIndexInFolderCheck = inputModification.createCheckBox(includeJobIndexInInputFolder, this, false);
 		jobIndexInFolderCheck.setLabel("Folder name");
 		jobIndexInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		CheckBox jobIndexInSubFolderCheck = inputModification.createCheckBox(includeJobIndexInInputSubFolder, this,
+		checkBox jobIndexInSubFolderCheck = inputModification.createCheckBox(includeJobIndexInInputSubFolder, this,
 				false);
 		jobIndexInSubFolderCheck.setLabel("Extra folder");
 		jobIndexInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		CheckBox jobIndexInFileCheck = inputModification.createCheckBox(includeJobIndexInInputFile, this, false);
+		checkBox jobIndexInFileCheck = inputModification.createCheckBox(includeJobIndexInInputFile, this, false);
 		jobIndexInFileCheck.setLabel("File name");
 		jobIndexInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
 	}

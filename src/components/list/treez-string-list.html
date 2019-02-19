@@ -68,12 +68,14 @@
 
 						var labelElement = document.createElement('label');
 						this.labelElement = labelElement;
+						labelElement.className = 'treez-list-label'
 						labelElement.innerText = self.label;                                            
 						container.appendChild(labelElement); 
 						
 						this.__createButtons(container);					
 
-						var table = document.createElement('table');                       
+						var table = document.createElement('table'); 
+						table.className = 'treez-list-table';
 						self.table = table;		
 						container.appendChild(table); 
 
@@ -143,7 +145,7 @@
                 	let button = document.createElement('button');
 					container.appendChild(button);
 					
-					button.setAttribute('class','treez-list-button');
+					button.className = 'treez-list-button';
 					button.title = title;
 					
 					let image = document.createElement('img');
@@ -155,11 +157,13 @@
 
                 __createRow(value){
                 	var row = document.createElement('tr');
+                	row.className = 'treez-list-tr'
                 	this.tableBody.appendChild(row);                	
                 	
                 	row.onclick = (event)=>this.__rowClicked(event);
                 	
                 	var cell = document.createElement('td');
+                	cell.className = 'treez-list-td'
                 	row.appendChild(cell);
                 	
                 	cell.contentEditable=true;

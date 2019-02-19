@@ -5,20 +5,23 @@ treez-file-path {
 }
 
 
-.browse-button {
+.treez-file-path-browse-button {
 	background: url('/icons/browse.png');
 	background-repeat: no-repeat;
 	border: none;
 	width:16px;
 	color:transparent;
+	margin-right:4px;
+	vertical-align: middle;
 }
 
-.play-button {
+.treez-file-path-play-button {
 	background: url('/icons/run_triangle.png');
 	background-repeat: no-repeat;
 	border: none;
-	width:16px;
+	width:16px;	
 	color:transparent;
+	vertical-align: middle;
 }
 
 #container{
@@ -26,7 +29,9 @@ treez-file-path {
     white-space: nowrap;
 }
 
-input[type=text] {   
+.treez-file-path-text-field {   
     width: 90%;      
     margin-right:4px;
+    margin-left:0;
+    vertical-align: middle;
 }

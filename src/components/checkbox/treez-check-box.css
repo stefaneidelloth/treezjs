@@ -1,9 +1,9 @@
-input {   
+.treez-check-box {   
     with: auto; 
     vertical-align: middle;
 	
 }
 
-label {  
+.treez-check-box-label {  
      vertical-align: middle;	
 }

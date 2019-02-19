@@ -11,51 +11,11 @@
 			
 		</treez-file-path>	
 
-		<script>
-
-			createTreezConsole();
+		<script>			
 
            var filePath = document.getElementById('filePath');           
            filePath.title = "Title for file path";
-           filePath.value = "C:\\test.txt";
-
-
-
-           function createTreezConsole(){
-	
-				var webSocket = new WebSocket("ws://localhost:8001/");    
-				webSocket.onmessage = webSocketOnMessage;   
-				webSocket.onopen = webSocketOnOpen;
-				webSocket.onerror = webSocketOnError;   
-
-				window.treezConsole = {			
-						execute: execute,
-						onMessage: null,
-						onError: null,
-				}
-
-				function execute(command, resultHandler, errorHandler){
-					window.treezConsole.onMessage = resultHandler;
-					window.treezConsole.onError = errorHandler;
-					webSocket.send(command);
-				}
-
-				function webSocketOnOpen(event) { 
-					console.log("Opened web socket console");
-				}
-
-				function webSocketOnMessage(event) { 
-					if(window.treezConsole.onMessage){
-						window.treezConsole.onMessage(event.data);
-					} 
-				}
-
-				 function webSocketOnError(event) { 
-					if(window.treezConsole.onError){
-						window.treezConsole.onError(event.data);
-					} 
-				}
-			}
+           filePath.value = "C:\\test.txt";           
            
 		</script>
 	</body>

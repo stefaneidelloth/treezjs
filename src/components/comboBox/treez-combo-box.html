@@ -67,12 +67,14 @@
 
 						var labelElement = document.createElement('label');
 						this.labelElement = labelElement;
+						labelElement.className = 'treez-combo-box-label';
 						labelElement.innerText = self.label;                                            
 						container.appendChild(labelElement);             
 
 						var comboBox = document.createElement('select');                       
 						self.comboBox = comboBox;								
-						comboBox.value= self.value;							
+						comboBox.value= self.value;	
+						comboBox.className = 'treez-combo-box-select';
 						comboBox.onchange = ()=>this.__comboBoxChanged();                                              
 						container.appendChild(comboBox); 
 						

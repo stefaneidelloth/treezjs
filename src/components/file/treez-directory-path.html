@@ -3,12 +3,12 @@
 
 	<head>
  
-		<link type="text/css" rel="stylesheet" href="treez-file-path.css" />
-		<link rel="import" href="./../treezElement.html" >		
+		<link type="text/css" rel="stylesheet" href="treez-directory-path.css" />
+		<link rel="import" href="./../treezElement.html" >	
 	
         <script>
        
-           	class TreezFilePath extends TreezElement {
+           	class TreezDirectoryPath extends TreezElement {
 
             	static get observedAttributes() {
             		return TreezElement.observedAttributes.concat(['title']);                    
@@ -42,7 +42,7 @@
                         self.textField = textField;   
                         textField.value = self.value;                    
                         textField.type='text' 
-                        textField.className='treez-file-path-text-field'; 
+                        textField.className='treez-directory-path-text-field' 
                         textField.onchange = ()=>this.__textFieldChanged();                                              
                         leftSpan.appendChild(textField);
 
@@ -51,14 +51,14 @@
 
 					    var browseButton = document.createElement('input');
 					    self.browseButton = browseButton;	
-					    browseButton.className='treez-file-path-browse-button';					   
+					    browseButton.className='treez-directory-path-browse-button';					   
 					    browseButton.type='button';
 					    browseButton.title=' ';
 					    browseButton.onclick = ()=>this.__browseFilePath();				   
                         rightSpan.appendChild(browseButton);   
 
                         var executeButton = document.createElement('input');
-                        executeButton.className='treez-file-path-play-button';	
+                        executeButton.className='treez-directory-path-play-button';	
                         executeButton.type="button";
                         executeButton.title="execute";
                         executeButton.onclick = ()=>this.__execute();   
@@ -76,7 +76,7 @@
                 }
 
                 __browseFilePath(){                  
-                    window.treezTerminal.browseFilePath(this.getDirectory(), (result)=>{
+                    window.treezTerminal.browseDirectoryPath(this.getDirectory(), (result)=>{
                         if(result){
 	                        this.value = result;
 	                	    this.textField.value = result;
@@ -116,7 +116,7 @@
                 }               
                
             }
-            window.customElements.define('treez-file-path', TreezFilePath);                    
+            window.customElements.define('treez-directory-path', TreezDirectoryPath);                    
 
         </script>	
 		

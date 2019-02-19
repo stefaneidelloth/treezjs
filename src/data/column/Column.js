@@ -10,7 +10,7 @@ import org.treez.core.atom.adjustable.AdjustableAtom;
 import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
 import org.treez.core.atom.attribute.attributeContainer.Page;
 import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.checkBox.CheckBox;
+import org.treez.core.atom.attribute.checkBox.checkBox;
 import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
 import org.treez.core.atom.attribute.text.TextField;
 import org.treez.core.attribute.Attribute;
@@ -49,9 +49,9 @@ public class Column extends AdjustableAtom {
 
 	private EnumComboBox<ColumnType> typeCombo;
 
-	private CheckBox isNullableCheckBox;
+	private checkBox isNullableCheckBox;
 
-	private CheckBox isPrimaryCheckBox;
+	private checkBox isPrimaryCheckBox;
 
 	private TextField defaultValueField;
 

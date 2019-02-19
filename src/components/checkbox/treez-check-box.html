@@ -27,35 +27,37 @@
 
                 constructor(){
                     super(); 
-                    this.checkbox=undefined;   
+                    this.checkBox=undefined;   
                     this.labelElement=undefined;                         
                 }            	
 
                 connectedCallback() {
                 	var self = this;
 
-                    if(!self.checkbox){   
+                    if(!self.checkBox){   
 
 						var container = document.createElement('div');                   
 						self.appendChild(container);                 
 
-						var checkbox = document.createElement('input');                       
-						self.checkbox = checkbox;
-						checkbox.type='checkbox'						
-						checkbox.value= self.value;	
-						checkbox.onchange = ()=>this.__checkboxChanged();                                              
-						container.appendChild(checkbox); 
+						var checkBox = document.createElement('input');                       
+						self.checkBox = checkBox;
+						checkBox.type='checkBox'	
+						checkBox.className = 'treez-check-box';
+						checkBox.value= self.value;	
+						checkBox.onchange = ()=>this.__checkboxChanged();                                              
+						container.appendChild(checkBox); 
 
 						var labelElement = document.createElement('label');
 						this.labelElement = labelElement;
-						labelElement.innerText = self.label;                                            
+						labelElement.innerText = self.label;   
+						labelElement.className = 'treez-check-box-label';
 						container.appendChild(labelElement);                                               
                                                               		
                     }
                 }              
 
                 __checkboxChanged(){
-                	this.value = this.checkbox.checked;                	
+                	this.value = this.checkBox.checked;                	
                 }  
 
                 attributeChangedCallback(attr, oldValue, newValue) {
@@ -68,8 +70,8 @@
                 }  
 
                 updateElements(newValue){
-                	if(this.checkbox){                    	
-						this.checkbox.value= newValue; 
+                	if(this.checkBox){                    	
+						this.checkBox.value= newValue; 
                 	}					    
                 }                          
             }

@@ -106,7 +106,7 @@ export default class TableImport extends Model {
 		sourceDataSection.setLabel("Source data");
 
 		//inherit source file path : take (modified) parent output path
-		CheckBox inheritSourcePath = sourceDataSection.createCheckBox(inheritSourceFilePath, this, true);
+		checkBox inheritSourcePath = sourceDataSection.createCheckBox(inheritSourceFilePath, this, true);
 		inheritSourcePath.setLabel("Inherit source file");
 		inheritSourcePath.addModificationConsumer("enableComponents", () -> enableAndDisableDependentComponents());
 
@@ -202,7 +202,7 @@ export default class TableImport extends Model {
 		resultTable.setLabel("Result table");
 
 		//append check box (if true, existing data is not deleted and new data is appended)
-		CheckBox appendDataCheck = targetSection.createCheckBox(appendData, this, false);
+		checkBox appendDataCheck = targetSection.createCheckBox(appendData, this, false);
 		appendDataCheck.setLabel("Append data");
 	}
 

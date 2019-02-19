@@ -1,5 +1,11 @@
 
-.treez-file-or-directory-path-browse-button {
+treez-directory-path {   
+    font-family: Arial,sans-serif;
+    font-size: 12px;     
+}
+
+
+.treez-directory-path-browse-button {
 	background: url('/icons/browse.png');
 	background-repeat: no-repeat;
 	border: none;
@@ -9,7 +15,7 @@
 	vertical-align: middle;
 }
 
-.treez-file-or-directory-path-play-button {
+.treez-directory-path-play-button {
 	background: url('/icons/run_triangle.png');
 	background-repeat: no-repeat;
 	border: none;
@@ -23,7 +29,7 @@
     white-space: nowrap;
 }
 
-.treez-file-or-directory-path-text-field {   
+.treez-directory-path-text-field {   
     width: 90%;      
     margin-right:4px;
     margin-left:0;

@@ -13,7 +13,7 @@ import org.treez.core.adaptable.FocusChangingRefreshable;
 import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
 import org.treez.core.atom.attribute.attributeContainer.Page;
 import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.checkBox.CheckBox;
+import org.treez.core.atom.attribute.checkBox.checkBox;
 import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
 import org.treez.core.atom.attribute.text.TextField;
 import org.treez.core.atom.base.AbstractAtom;
@@ -108,7 +108,7 @@ public class Sweep extends AbstractParameterVariation {
 				.setLabel("Variable source model (provides variables)");
 
 		//parallel execution
-		CheckBox concurrentCheckBox = sweepSection.createCheckBox(isConcurrentVariation, this, true);
+		checkBox concurrentCheckBox = sweepSection.createCheckBox(isConcurrentVariation, this, true);
 		concurrentCheckBox.setLabel("Parallel execution");
 
 		setModel(root);

@@ -2,7 +2,7 @@ import Utils from './../../../core/utils/utils.js';
 
 export default class OutputPathModifier {
 
-	public OutputPathModifier(executable) {
+	constructor(executable) {
 		this.executable = executable;
 	}
 

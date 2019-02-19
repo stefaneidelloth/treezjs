@@ -54,12 +54,14 @@
 
 						var labelElement = document.createElement('label');
 						this.labelElement = labelElement;
+						labelElement.className = 'treez-color-label';
 						labelElement.innerText = self.label;                                            
 						container.appendChild(labelElement);             
 
 						var colorPicker = document.createElement('input');                       
 						self.colorPicker = colorPicker;		
 						container.appendChild(colorPicker); 
+						colorPicker.className = 'treez-color-input';
 						colorPicker.type='color';
 						colorPicker.value= self.value;							
 						colorPicker.onchange = ()=>this.__colorChanged(); 					
