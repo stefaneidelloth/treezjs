@@ -28,7 +28,7 @@
                 constructor(){
                     super(); 
                     this.checkBox=undefined;   
-                    this.labelElement=undefined;                         
+                    this.labelElement=undefined;                                   
                 }            	
 
                 connectedCallback() {
@@ -43,7 +43,11 @@
 						self.checkBox = checkBox;
 						checkBox.type='checkBox'	
 						checkBox.className = 'treez-check-box';
-						checkBox.value= self.value;	
+
+						if(self.value!=="undefined"){
+							checkBox.checked = self.value;
+						}									
+						
 						checkBox.onchange = ()=>this.__checkboxChanged();                                              
 						container.appendChild(checkBox); 
 
@@ -57,7 +61,9 @@
                 }              
 
                 __checkboxChanged(){
-                	this.value = this.checkBox.checked;                	
+                	if(this.value !== this.checkBox.checked){
+                		this.value = this.checkBox.checked; 
+                	}                	
                 }  
 
                 attributeChangedCallback(attr, oldValue, newValue) {
@@ -71,7 +77,7 @@
 
                 updateElements(newValue){
                 	if(this.checkBox){                    	
-						this.checkBox.value= newValue; 
+						this.checkBox.checked= newValue; 
                 	}					    
                 }                          
             }

@@ -39,8 +39,15 @@
                         container.appendChild(leftSpan);                    
 
                         var textField = document.createElement('input');
-                        self.textField = textField;   
-                        textField.value = self.value;                    
+                        self.textField = textField;  
+
+                        if(self.value !== undefined){
+                        	this.textField.value = self.value; 
+                        }  else {
+                        	this.textField.value = '';
+                        }
+                        
+                                           
                         textField.type='text' 
                         textField.className='treez-file-path-text-field'; 
                         textField.onchange = ()=>this.__textFieldChanged();                                              
@@ -76,10 +83,12 @@
                 }
 
                 __browseFilePath(){                  
-                    window.treezTerminal.browseFilePath(this.getDirectory(), (result)=>{
-                        if(result){
-	                        this.value = result;
-	                	    this.textField.value = result;
+                    window.treezTerminal.browseFilePath(this.getDirectory(), (newValue)=>{
+                        if(newValue){
+                        	var oldValue = this.value;
+	                        this.value = newValue;
+	                	    this.textField.value = newValue;
+	                	    this.dispatchEvent(new Event('change'));  
                         }                    	
                     }); 
                 }
@@ -102,7 +111,12 @@
 
                 updateElements(newValue){
                 	if(this.textField){ 
-						this.textField.value= newValue; 
+                		if(newValue !== undefined){
+                        	this.textField.value = newValue; 
+                        } else {
+                        	this.textField.value = '';
+                        }
+						
 					}					    
                 }                
 

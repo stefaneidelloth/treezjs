@@ -4,7 +4,9 @@ import TreezTerminal from './treezTerminal.js';
 
 
 var self = {
-	editorViewer: undefined
+	editorViewer: undefined,
+	getEditorView: getEditorView,
+	treeView: undefined
 }
 
 requirejs.config({
@@ -43,7 +45,8 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3){
 		var element = container.getElement();
 		element.attr('id','tree');
 		
-		new TreeView().buildView(element[0], getEditorViewer);
+		self.treeView = new TreeView();
+		self.treeView.buildView(element[0], self);
 	});
 
 	myLayout.registerComponent('Properties', function(container) {
@@ -112,6 +115,6 @@ function createGoldenLayout(GoldenLayout){
 	return new GoldenLayout(goldenLayoutConfig);
 }
 
-function getEditorViewer(){
+function getEditorView(){
 	return self.editorViewer.editor.getTextView();
 }

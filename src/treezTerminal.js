@@ -20,6 +20,14 @@ export default class TreezTerminal {
 	browseFilePath(initialDirectory, resultHandler){   	
       jQuery.get('browseFilePath', initialDirectory, resultHandler);    
     }
+
+    browseDirectoryPath(initialDirectory, resultHandler){   	
+      jQuery.get('browseDirectoryPath', initialDirectory, resultHandler);    
+    }
+
+    browseFileOrDirectoryPath(initialDirectory, resultHandler){   	
+      jQuery.get('browseFileOrDirectoryPath', initialDirectory, resultHandler);    
+    }
 	
 	execute(command, resultHandler, errorHandler){
 		this.__onMessage = resultHandler;

@@ -1,4 +1,4 @@
-export default class TreeView {
+export default class EditorView {
 
 	constructor(){
 		this.d3 = undefined;
@@ -98,11 +98,17 @@ export default class TreeView {
     openFromLocalStorage(editorViewer){
 		var code = localStorage.getItem('treezEditorContent');
 		if(code){
-			this.mainViewModel.editorViewer.setContents(code, 'application/javascript');
+				this.setEditorContentAndUpdateTree(code);		
 		} else {
 			alert('Local storage does not yet contain code.')
-		}		
+		}	
 
+    }
+
+    setEditorContentAndUpdateTree(code){
+    	this.mainViewModel.editorViewer.setContents(code, 'application/javascript').then(()=>{
+				this.mainViewModel.treeView.toTree();
+			});
     }
 
     saveToLocalStorage(editorViewer){
@@ -150,7 +156,7 @@ export default class TreeView {
 					var file = files[0]; 	
 					var fileReader = new FileReader();
 					fileReader.onloadend = ()=>{
-						self.mainViewModel.editorViewer.setContents(fileReader.result, 'application/javascript');
+						this.setEditorContentAndUpdateTree(fileReader.result);						
 					}; 									      
 					fileReader.readAsText(file);
 				}

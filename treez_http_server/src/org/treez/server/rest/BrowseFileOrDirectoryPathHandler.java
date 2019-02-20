@@ -1,9 +1,11 @@
 package org.treez.server.rest;
 
-import java.awt.Frame;
+import java.awt.Window;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.sun.net.httpserver.HttpServer;
@@ -12,7 +14,7 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 
 	// #region ATTRIBUTES
 
-	private static Frame frame = null;
+	private static JFrame frame = null;
 
 	// #end region
 
@@ -28,6 +30,9 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 
 	public static void create(String urlPrefix, HttpServer server) {
 		server.createContext(urlPrefix, new BrowseFileOrDirectoryPathHandler(urlPrefix));
+		
+		
+		
 	}
 
 	protected String result(String initialDirectory) {
@@ -38,7 +43,7 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 		if (initialDirectory != null) {
 			dialog.setCurrentDirectory(new File(initialDirectory));
 		}
-
+		
 		dialog.showOpenDialog(getFrame());
 
 		var file = dialog.getSelectedFile();
@@ -54,15 +59,12 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 
 	// #region ACCESSORS
 
-	private static Frame getFrame() {
-		if (frame == null) {
-			frame = new Frame();
-			frame.setIconImage(getDialogIcon());
-			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private static JFrame getFrame() {
+		if (frame == null) {			
+			
+			frame = new JFrame();
+			frame.setIconImage(getDialogIcon());				
+			
 		}
 		return frame;
 	}

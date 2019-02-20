@@ -9,10 +9,10 @@ export default class TreeView {
 		this.model = undefined;		
 	}
 
-	buildView(element, provideEditor){
+	buildView(element, mainViewModel){
 
         var self = this;
-		self.provideEditor = provideEditor;
+		self.provideEditor = mainViewModel.getEditorView;
 
 		require(['d3'], function(d3){			
 			self.dTreez = new DTreez(d3);  	
@@ -96,7 +96,15 @@ export default class TreeView {
 		script.innerHTML = sourceCode + "\n" + 
 						   "if(window.scriptLoadedHook){window.scriptLoadedHook();}"; 			
 		body.appendChild(script); 
-    }  
+
+		this.clearPropertiesView();
+    }
+
+    clearPropertiesView(){
+    	var propertiesView = this.dTreez.select('#properties');
+    	propertiesView.selectAll('treez-tab-folder').remove();	
+		propertiesView.selectAll('div').remove();
+    };  
 
     refresh(){
     	this.content.selectAll("div").remove(); 

@@ -59,8 +59,7 @@ export default class Atom {
 
 	createControlAdaption(propertiesView, treeView){
 		
-		propertiesView.selectAll('treez-tab-folder').remove();	
-		propertiesView.selectAll('div').remove();	
+		treeView.clearPropertiesView();
 		
 		propertiesView.append('div') //
 		.html('The control for this type of atom is not yet implemented; should be overridden by inheriting class!');

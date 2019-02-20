@@ -123,12 +123,18 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 				byte[] byteArray = new byte[1024];
 				int length = clientInputStream.read(byteArray);
 				if (length != -1) {
-					var message = decode(byteArray, length);
-					try {
-						handleClientMessage(message);
-					} catch (Exception exception) {
-						throw new IllegalStateException("Could not handle client message" + message);
+
+					var firstByte = byteArray[0];
+					if (!(firstByte == -120)) {
+
+						var message = decode(byteArray, length);
+						try {
+							handleClientMessage(message);
+						} catch (Exception exception) {
+							throw new IllegalStateException("Could not handle client message" + message);
+						}
 					}
+
 				}
 
 				if (client.isClosed()) {
@@ -141,7 +147,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 
 			}
 		} catch (java.net.SocketException socketException) {
-             //nothing to do 
+			//nothing to do 
 		} catch (IOException printException) {
 			throw new IllegalStateException("Could not connect to client input stream", printException);
 		}
@@ -156,7 +162,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 		// Original source code for encoding:
 		// https://stackoverflow.com/questions/8125507/how-can-i-send-and-receive-websocket-messages-on-the-server-side
 
-		byte[] rawData = message.getBytes();
+		byte[] rawData = message.getBytes("UTF-8");
 
 		int frameCount = 0;
 		byte[] frame = new byte[10];

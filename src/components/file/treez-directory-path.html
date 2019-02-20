@@ -80,6 +80,7 @@
                         if(result){
 	                        this.value = result;
 	                	    this.textField.value = result;
+	                	    this.dispatchEvent(new Event('change'));
                         }                    	
                     }); 
                 }

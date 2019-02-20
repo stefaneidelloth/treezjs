@@ -2,6 +2,9 @@ package org.treez.server;
 
 import java.net.InetSocketAddress;
 
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+
 import org.treez.server.rest.BrowseDirectoryPathHandler;
 import org.treez.server.rest.BrowseFileOrDirectoryPathHandler;
 import org.treez.server.rest.BrowseFilePathHandler;
@@ -31,6 +34,8 @@ public class TreezServer {
 	//#region METHODS
 
 	public static void main(String[] args) throws Exception {
+	
+	    setLookAndFeel();
 
 		var httpServer = HttpServer.create(new InetSocketAddress(fileServerPortNumber), 0);
 
@@ -42,6 +47,17 @@ public class TreezServer {
 		startHttpServer(httpServer);
 
 		new WebSocketServer(consoleSocketPortNumber);
+	}
+
+	private static void setLookAndFeel() {
+		try {
+			var systemLookAndFeel = UIManager.getSystemLookAndFeelClassName();
+			UIManager.setLookAndFeel(systemLookAndFeel);	
+			JFrame.setDefaultLookAndFeelDecorated(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private static void startHttpServer(HttpServer httpServer) {

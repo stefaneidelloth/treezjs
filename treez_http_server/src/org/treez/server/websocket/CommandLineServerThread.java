@@ -42,6 +42,8 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			return;
 		}
 		
+		System.out.println("Processing web socket command line command:" + message);
+		
 		var resultString = "Error"; 
 		
 		try {

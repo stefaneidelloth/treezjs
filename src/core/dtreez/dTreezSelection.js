@@ -78,6 +78,11 @@ export default class DTreezSelection {
 		this.__d3Selection.on('change', action);
 		return this;
 	}
+
+	onInput(action){
+		this.__d3Selection.on('input', action);
+		return this;
+	}
 	
 	onToggle(action){
 		this.__d3Selection.on('toggle', action);

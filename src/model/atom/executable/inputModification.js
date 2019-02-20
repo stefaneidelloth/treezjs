@@ -1,16 +1,10 @@
-import Model from './../model.js';
-import AddChildAtomTreeViewerAction from '../../../core/treeview/addChildAtomTreeViewerAction.js';
-import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
-import TableImport from './../tableImport/tableImport.js';
+import Utils from './../../../core/utils/utils.js';
+import ComponentAtom from './../../../core/component/componentAtom.js';
 
-export default class Executable extends Model {
+export default class InputModification extends ComponentAtom {
 
-    static get LOG() {
-        return new Log4js.getLogger(Executable.constructor.name);
-    }
-
-	constructor(name) {
-		super(name);
+	constructor(name) {		
+	    super(name);
 		this.image = 'inputModification.png';
 		
         this.isIncludingDateInInputFile = undefined;
@@ -24,17 +18,13 @@ export default class Executable extends Model {
 
 	copy() {
 		//TODO
-	}
+	}	
 
-	
-
-    createComponentControl(tabFolder, dTreez){    
-     
+    createComponentControl(tabFolder, dTreez){  
 		const page = tabFolder.append('treez-tab')
             .title('Data');
 		
-        this.createInputModificationSection(page);       
-	     
+        this.createInputModificationSection(page); 
 	}	
 
    createInputModificationSection(page) {
@@ -92,5 +82,101 @@ export default class Executable extends Model {
 
 		return actions;
 	}	
+	
+	getModifiedPath(executable){	
+
+		let inputPath = executable.inputPath;
+
+		//split path with point to determine file extension if one exists
+		const subStrings = inputPath.split("\\.");
+
+		let pathBase = subStrings[0];
+		let fileNameWithoutExtension = "";
+        let pathPostFix = "";
+        const hasFileExtension = subStrings.length > 1;
+		if (hasFileExtension) {
+			pathPostFix = "." + subStrings[1];
+			fileNameWithoutExtension = Utils.extractFileName(pathBase);
+			pathBase = Utils.extractParentFolder(pathBase);
+		}
+
+		let inputPathExpression = pathBase;
+
+		inputPathExpression = this.__includeDateInFolder(inputPathExpression, executable);
+
+		inputPathExpression = this.__includeJobIndexInFolder(inputPathExpression, executable);
+
+		inputPathExpression = this.__includeSubFolder(inputPathExpression, executable);
+
+		if (hasFileExtension) {
+			inputPathExpression = this.__includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix,
+					inputPathExpression, executable);
+		}
+
+		return inputPathExpression;
+	}
+
+	__includeDateInFolder(inputPathExpression, executable) {
+
+		let newInputPath = inputPathExpression;
+
+		const doIncludeDateInFolder = this.isIncludingDateInInputFolder;
+		if (doIncludeDateInFolder) {
+			newInputPath += "_" + Utils.getDateString();
+		}
+		return newInputPath;
+	}
+
+	 __includeJobIndexInFolder(inputPathExpression, executable) {
+
+		let newInputPath = inputPathExpression;
+
+		const doIncludejobIndexInFolder = this.isIncludingJobIndexInInputFolder;
+		if (doIncludejobIndexInFolder) {
+			newInputPath += "#" + executable.getJobIndex();
+		}
+		return newInputPath;
+	}
+
+	includeSubFolder(inputPathExpression, executable) {
+
+		let newInputPath = inputPathExpression;
+
+		const isIncludingDateInSubFolder = this.isIncludingDateInInputSubFolder;
+        const isIncludingJobIndexInSubFolder = this.isIncludingJobIndexInInputSubFolder;
+        const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingJobIndexInSubFolder;
+
+		if (doIncludeSubFolder) {
+			newInputPath += "/";
+		}
+
+		if (isIncludingDateInSubFolder) {
+			newInputPath += Utils.getDateString();
+		}
+
+		if (isIncludingJobIndexInSubFolder) {
+			newInputPath += "#" + executable.getJobIndex();
+		}
+		return newInputPath;
+	}
+
+	includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix, inputPathExpression, executable) {
+
+		let newInputPath = inputPathExpression;
+
+		newInputPath += "/";
+
+		newInputPath += fileNameWithoutExtension; //is empty for directories
+
+		if (this.isIncludingDateInFile) {
+			newInputPath += "_" + Utils.getDateString();
+		}
+
+		if (this.isIncludingJobIndexInInputFile) {
+			newInputPath += "#" + executable.getJobIndex();
+		}
+		newInputPath += pathPostFix; //is empty for directories
+		return newInputPath;
+	}
 
 }

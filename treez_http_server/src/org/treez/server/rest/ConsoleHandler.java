@@ -100,7 +100,9 @@ public class ConsoleHandler implements HttpHandler {
 		}
 		
 
-		var response = resultString.getBytes();
+		httpExchange.getResponseHeaders().set("Content-Type", "text/plain; charset=utf-8");	
+		
+		var response = resultString.getBytes("UTF-8");
 		httpExchange.sendResponseHeaders(200, response.length);
 		
 		var outputStream = httpExchange.getResponseBody();

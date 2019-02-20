@@ -1,16 +1,14 @@
-import Model from './../model.js';
-import AddChildAtomTreeViewerAction from '../../../core/treeview/addChildAtomTreeViewerAction.js';
-import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
-import TableImport from './../tableImport/tableImport.js';
+import Utils from './../../../core/utils/utils.js';
+import ComponentAtom from './../../../core/component/componentAtom.js';
 
-export default class Executable extends Model {
+export default class OutputModification extends ComponentAtom {
 
     static get LOG() {
         return new Log4js.getLogger(Executable.constructor.name);
     }
 
-	constructor(name) {
-		super(name);
+	constructor(name) {		
+	    super(name);
 		this.image = 'outputModification.png';
 		
         this.isIncludingDateInOutputFile = undefined;
@@ -23,9 +21,7 @@ export default class Executable extends Model {
 
 	copy() {
 		//TODO
-	}
-
-	
+	}	
 
     createComponentControl(tabFolder, dTreez){    
      
@@ -87,5 +83,94 @@ export default class Executable extends Model {
 		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFile);           
     
    }  
+   
+   getModifiedPath(executable) {
+		
+		//split path with point to determine file extension if one exists
+       const subStrings = executable.outputPath.split("\\.");
+
+       let pathBase = subStrings[0];
+       let fileNameWithoutExtension = "";
+       let pathPostFix = "";
+       const hasFileExtension = subStrings.length > 1;
+		if (hasFileExtension) {
+			pathPostFix = "." + subStrings[1];
+			fileNameWithoutExtension = Utils.extractFileName(pathBase);
+			pathBase = Utils.extractParentFolder(pathBase);
+		}
+
+		let outputPathExpression = pathBase;
+
+		outputPathExpression = this.__includeDateInFolder(outputPathExpression, executable);
+
+		outputPathExpression = this.__includeJobIndexInFolder(outputPathExpression, executable);
+
+		outputPathExpression = this.__includeSubFolder(outputPathExpression, executable);
+
+		if (hasFileExtension) {
+			//append file name and extension
+			outputPathExpression = this.__includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix,
+					outputPathExpression, executable);
+		}
+
+		return outputPathExpression;
+	}
+
+   __includeDateInFolder(outputPathExpression, executable) {
+		let newOutputPath = outputPathExpression;
+		if (this.isIncludingDateInOutputFolder) {
+			newOutputPath += "_" + Utils.getDateString();
+		}
+		return newOutputPath;
+	}
+
+   __includeJobIndexInFolder(outputPathExpression, executable) {
+		let newOutputPath = outputPathExpression;
+		if (this.isIncludingJobIndexInOutputFolder) {
+			newOutputPath += "#" + executable.getJobIndex();
+		}
+		return newOutputPath;
+	}
+
+   __includeSubFolder(outputPathExpression, executable) {
+
+		let newOutputPath = outputPathExpression;
+
+		const isIncludingDateInSubFolder = this.isIncludingDateInOutputSubFolder;
+       const isIncludingJobIndexInSubFolder = this.isIncludingJobIndexInOutputSubFolder;
+       const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingJobIndexInSubFolder;
+
+		if (doIncludeSubFolder) {
+			newOutputPath += "/";
+		}
+
+		if (isIncludingDateInSubFolder) {
+			newOutputPath += Utils.getDateString();
+		}
+
+		if (isIncludingJobIndexInSubFolder) {
+			newOutputPath += "#" + executable.getJobIndex();
+		}
+		return newOutputPath;
+	}
+
+   __includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix, outputPathExpression, executable) {
+
+		let newOutputPath = outputPathExpression;
+
+		newOutputPath += "/";
+
+		newOutputPath += fileNameWithoutExtension; //is empty for directories
+
+		if (this.isIncludingDateInOutputFile) {
+			newOutputPath += "_" + Utils.getDateString();
+		}
+
+		if (this.isIncludingJobIndexInOutputFile) {
+			newOutputPath += "#" + executable.getJobIndex();
+		}
+		newOutputPath += pathPostFix; //is empty for directories
+		return newOutputPath;
+	}
 
 }

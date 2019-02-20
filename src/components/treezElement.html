@@ -43,13 +43,13 @@
 					}
 				}
 
-				__addListenerToUpdatePropertyOnElementChanges(parent, propertyName){
+				__addListenerToUpdatePropertyOnElementChanges(parent, propertyName){				
 
 					this.addEventListener('input', (event)=>{ 
 						  var oldValue = parent[propertyName];
 						  var newValue = event.target.value;
 						  if(newValue != oldValue){
-							parent[propertyName] = newValue;        
+							parent[propertyName] = newValue; 							     
 						  }    	
 					}); 
 				}
@@ -89,7 +89,8 @@
 									propertyDescriptor.set(newValue);
 								 } 
 								 privateValue = newValue;
-								 __updateElementValue(newValue); 													         
+								 __updateElementValue(newValue);				
+																			         
 							}     
 					}	
 
