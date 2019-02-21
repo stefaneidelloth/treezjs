@@ -48,9 +48,9 @@ public class SweepDemo extends ModelProvider {
 		Executable executable = new Executable("executable");
 		executable.executablePath.set(resourcePath + "executable.bat");
 		executable.inputPath.set(inputFilePath);
-		executable.includeJobIndexInInputFile.set(true);
+		executable.includejobIdInInputFile.set(true);
 		executable.outputPath.set(importFilePath);
-		executable.includeJobIndexInOutputFile.set(true);
+		executable.includejobIdInOutputFile.set(true);
 		models.addChild(executable);
 
 		InputFileGenerator inputFile = new InputFileGenerator("inputFileGenerator");
@@ -58,7 +58,7 @@ public class SweepDemo extends ModelProvider {
 		inputFile.nameExpression.set("<name>");
 		inputFile.valueExpression.set("<value>");
 		inputFile.inputFilePath.set(inputFilePath);
-		inputFile.includeJobIndexInInputFile.set(true);
+		inputFile.includejobIdInInputFile.set(true);
 		inputFile.deleteUnassignedRows.set(false);
 		executable.addChild(inputFile);
 

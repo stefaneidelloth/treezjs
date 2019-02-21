@@ -400,14 +400,22 @@ export default class Atom {
 	 */
 	getChildByClass(clazz) {
 
-        this.children.forEach(child => {
-			var isWantedChild = currentChild instanceof clazz;
+		var result = null;
+
+        this.children.every(child => {
+			var isWantedChild = child instanceof clazz;
 			if (isWantedChild) {				
-				return child;
+				result = child;
+				return false;
 			}
+			return true;
         });
         		
-		throw new Error("Could not find a child with class'" + clazz + "' in '" + this.name + "'.");
+        		if(!result){
+        			throw new Error("Could not find a child with class'" + clazz + "' in '" + this.name + "'.");
+        		}
+        return result;
+		
 	}
 
 	/**

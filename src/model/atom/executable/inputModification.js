@@ -10,9 +10,9 @@ export default class InputModification extends ComponentAtom {
         this.isIncludingDateInInputFile = undefined;
         this.isIncludingDateInInputFolder = undefined;
         this.isIncludingDateInInputSubFolder = undefined;
-        this.isIncludingJobIndexInInputFile = undefined;
-        this.isIncludingJobIndexInInputFolder = undefined;
-        this.isIncludingJobIndexInInputSubFolder = undefined;
+        this.isIncludingjobIdInInputFile = undefined;
+        this.isIncludingjobIdInInputFolder = undefined;
+        this.isIncludingjobIdInInputSubFolder = undefined;
        
 	}
 
@@ -63,19 +63,19 @@ export default class InputModification extends ComponentAtom {
 		   .label('Folder name')
 		   .value(false)
 		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInInputFolder);
 
 	    sectionContent.append('treez-check-box')
 		   .label('Extra folder')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputSubFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInInputSubFolder);
 
 	   sectionContent.append('treez-check-box')
 		   .label('File name')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInInputFile);  
+		   .bindValue(this,()=>this.isIncludingjobIdInInputFile);  
    }	
 
 	extendContextMenuActions(actions, treeViewer) {		
@@ -88,7 +88,7 @@ export default class InputModification extends ComponentAtom {
 		let inputPath = executable.inputPath;
 
 		//split path with point to determine file extension if one exists
-		const subStrings = inputPath.split("\\.");
+		const subStrings = inputPath.split(".");
 
 		let pathBase = subStrings[0];
 		let fileNameWithoutExtension = "";
@@ -102,10 +102,8 @@ export default class InputModification extends ComponentAtom {
 
 		let inputPathExpression = pathBase;
 
-		inputPathExpression = this.__includeDateInFolder(inputPathExpression, executable);
-
-		inputPathExpression = this.__includeJobIndexInFolder(inputPathExpression, executable);
-
+		inputPathExpression = this.__includeFolder(inputPathExpression, executable);
+		
 		inputPathExpression = this.__includeSubFolder(inputPathExpression, executable);
 
 		if (hasFileExtension) {
@@ -114,6 +112,12 @@ export default class InputModification extends ComponentAtom {
 		}
 
 		return inputPathExpression;
+	}
+
+	__includeFolder(inputPathExpression, executable){
+		var newExpression = this.__includeDateInFolder(inputPathExpression, executable);
+		newExpression = this.__includejobIdInFolder(newExpression, executable);
+		return newExpression;
 	}
 
 	__includeDateInFolder(inputPathExpression, executable) {
@@ -127,24 +131,24 @@ export default class InputModification extends ComponentAtom {
 		return newInputPath;
 	}
 
-	 __includeJobIndexInFolder(inputPathExpression, executable) {
+	 __includejobIdInFolder(inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
-		const doIncludejobIndexInFolder = this.isIncludingJobIndexInInputFolder;
-		if (doIncludejobIndexInFolder) {
-			newInputPath += "#" + executable.getJobIndex();
+		const doIncludejobIdInFolder = this.isIncludingjobIdInInputFolder;
+		if (doIncludejobIdInFolder) {
+			newInputPath += "#" + executable.getJobId();
 		}
 		return newInputPath;
 	}
 
-	includeSubFolder(inputPathExpression, executable) {
+	__includeSubFolder(inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
 		const isIncludingDateInSubFolder = this.isIncludingDateInInputSubFolder;
-        const isIncludingJobIndexInSubFolder = this.isIncludingJobIndexInInputSubFolder;
-        const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingJobIndexInSubFolder;
+        const isIncludingjobIdInSubFolder = this.isIncludingjobIdInInputSubFolder;
+        const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingjobIdInSubFolder;
 
 		if (doIncludeSubFolder) {
 			newInputPath += "/";
@@ -154,13 +158,13 @@ export default class InputModification extends ComponentAtom {
 			newInputPath += Utils.getDateString();
 		}
 
-		if (isIncludingJobIndexInSubFolder) {
-			newInputPath += "#" + executable.getJobIndex();
+		if (isIncludingjobIdInSubFolder) {
+			newInputPath += "#" + executable.getJobId();
 		}
 		return newInputPath;
 	}
 
-	includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix, inputPathExpression, executable) {
+	__includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix, inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
@@ -168,12 +172,12 @@ export default class InputModification extends ComponentAtom {
 
 		newInputPath += fileNameWithoutExtension; //is empty for directories
 
-		if (this.isIncludingDateInFile) {
+		if (this.isIncludingDateInInputFile) {
 			newInputPath += "_" + Utils.getDateString();
 		}
 
-		if (this.isIncludingJobIndexInInputFile) {
-			newInputPath += "#" + executable.getJobIndex();
+		if (this.isIncludingjobIdInInputFile) {
+			newInputPath += "#" + executable.getJobId();
 		}
 		newInputPath += pathPostFix; //is empty for directories
 		return newInputPath;

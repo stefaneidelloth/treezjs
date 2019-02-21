@@ -51,7 +51,7 @@
 						  if(newValue != oldValue){
 							parent[propertyName] = newValue; 							     
 						  }    	
-					}); 
+					}); 					
 				}
 
 				__modifyPropertyToUpdateElementOnPropertyChanges(parent, propertyName){
@@ -101,7 +101,7 @@
 
 				attributeChangedCallback(attr, oldValue, newValue) {
                      if(attr==='value'){                      	                		
-						if(newValue!=oldValue){	
+						if(newValue!==oldValue){	
 							this.updateElements(newValue);							
 							this.__dispatchInputEvent();
 						}

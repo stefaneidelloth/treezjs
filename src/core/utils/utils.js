@@ -5,7 +5,7 @@ export default class Utils {
     }
 
     static extractParentFolder(path) {
-        const fileName = extractFileName(path);
+        const fileName = Utils.extractFileName(path);
         const endIndex = path.length - fileName.length - 1;
         const parentPath = path.substring(0, endIndex);
         return parentPath;
@@ -39,7 +39,7 @@ export default class Utils {
      */
     static getDateString() {
         const now = new Date();
-        return now.toLocaleDateString();
+        return now.toISOString().substring(0,19).replace('T','_');
     }
 
     /**

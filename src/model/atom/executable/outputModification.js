@@ -14,9 +14,9 @@ export default class OutputModification extends ComponentAtom {
         this.isIncludingDateInOutputFile = undefined;
         this.isIncludingDateInOutputFolder = undefined;
         this.isIncludingDateInOutputSubFolder = undefined;
-        this.isIncludingJobIndexInOutputFile = undefined;
-        this.isIncludingJobIndexInOutputFolder = undefined;
-        this.isIncludingJobIndexInOutputSubFolder = undefined;      
+        this.isIncludingjobIdInOutputFile = undefined;
+        this.isIncludingjobIdInOutputFolder = undefined;
+        this.isIncludingjobIdInOutputSubFolder = undefined;      
 	}
 
 	copy() {
@@ -68,26 +68,26 @@ export default class OutputModification extends ComponentAtom {
 		   .label('Folder name')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputFolder);
 
 	    sectionContent.append('treez-check-box')
 		   .label('Extra folder')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputSubFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputSubFolder);
 
 	   sectionContent.append('treez-check-box')
 		   .label('File name')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingJobIndexInOutputFile);           
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputFile);           
     
    }  
    
    getModifiedPath(executable) {
 		
 		//split path with point to determine file extension if one exists
-       const subStrings = executable.outputPath.split("\\.");
+       const subStrings = executable.outputPath.split(".");
 
        let pathBase = subStrings[0];
        let fileNameWithoutExtension = "";
@@ -101,9 +101,7 @@ export default class OutputModification extends ComponentAtom {
 
 		let outputPathExpression = pathBase;
 
-		outputPathExpression = this.__includeDateInFolder(outputPathExpression, executable);
-
-		outputPathExpression = this.__includeJobIndexInFolder(outputPathExpression, executable);
+		outputPathExpression = this.__includeFolder(outputPathExpression, executable);		
 
 		outputPathExpression = this.__includeSubFolder(outputPathExpression, executable);
 
@@ -116,6 +114,12 @@ export default class OutputModification extends ComponentAtom {
 		return outputPathExpression;
 	}
 
+	__includeFolder(inputPathExpression, executable){
+		var newExpression = this.__includeDateInFolder(inputPathExpression, executable);
+		newExpression = this.__includejobIdInFolder(newExpression, executable);
+		return newExpression;
+	}
+
    __includeDateInFolder(outputPathExpression, executable) {
 		let newOutputPath = outputPathExpression;
 		if (this.isIncludingDateInOutputFolder) {
@@ -124,10 +128,10 @@ export default class OutputModification extends ComponentAtom {
 		return newOutputPath;
 	}
 
-   __includeJobIndexInFolder(outputPathExpression, executable) {
+   __includejobIdInFolder(outputPathExpression, executable) {
 		let newOutputPath = outputPathExpression;
-		if (this.isIncludingJobIndexInOutputFolder) {
-			newOutputPath += "#" + executable.getJobIndex();
+		if (this.isIncludingjobIdInOutputFolder) {
+			newOutputPath += "#" + executable.getJobId();
 		}
 		return newOutputPath;
 	}
@@ -137,8 +141,8 @@ export default class OutputModification extends ComponentAtom {
 		let newOutputPath = outputPathExpression;
 
 		const isIncludingDateInSubFolder = this.isIncludingDateInOutputSubFolder;
-       const isIncludingJobIndexInSubFolder = this.isIncludingJobIndexInOutputSubFolder;
-       const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingJobIndexInSubFolder;
+       const isIncludingjobIdInSubFolder = this.isIncludingjobIdInOutputSubFolder;
+       const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingjobIdInSubFolder;
 
 		if (doIncludeSubFolder) {
 			newOutputPath += "/";
@@ -148,8 +152,8 @@ export default class OutputModification extends ComponentAtom {
 			newOutputPath += Utils.getDateString();
 		}
 
-		if (isIncludingJobIndexInSubFolder) {
-			newOutputPath += "#" + executable.getJobIndex();
+		if (isIncludingjobIdInSubFolder) {
+			newOutputPath += "#" + executable.getJobId();
 		}
 		return newOutputPath;
 	}
@@ -166,8 +170,8 @@ export default class OutputModification extends ComponentAtom {
 			newOutputPath += "_" + Utils.getDateString();
 		}
 
-		if (this.isIncludingJobIndexInOutputFile) {
-			newOutputPath += "#" + executable.getJobIndex();
+		if (this.isIncludingjobIdInOutputFile) {
+			newOutputPath += "#" + executable.getJobId();
 		}
 		newOutputPath += pathPostFix; //is empty for directories
 		return newOutputPath;

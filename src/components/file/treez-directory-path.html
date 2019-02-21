@@ -40,7 +40,13 @@
 
                         var textField = document.createElement('input');
                         self.textField = textField;   
-                        textField.value = self.value;                    
+                                                
+                        if(self.value !== 'undefined'){
+                        	self.textField.value = self.value; 
+                        }  else {
+                        	self.textField.value = '';
+                        }
+                                           
                         textField.type='text' 
                         textField.className='treez-directory-path-text-field' 
                         textField.onchange = ()=>this.__textFieldChanged();                                              

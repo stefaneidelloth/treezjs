@@ -37,9 +37,9 @@ export default class InputFileGenerator extends ComponentAtom  {
         this.isIncludingDateInInputFile = undefined;
         this.isIncludingDateInInputFolder = undefined;
         this.isIncludingDateInInputSubFolder = undefined;
-        this.isIncludingJobIndexInInputFile = undefined;
-        this.isIncludingJobIndexInInputFolder = undefined;
-        this.isIncludingJobIndexInInputSubFolder = undefined;
+        this.isIncludingjobIdInInputFile = undefined;
+        this.isIncludingjobIdInInputFolder = undefined;
+        this.isIncludingjobIdInInputSubFolder = undefined;
 		this.isRunnable=true;
         this.nameExpression = undefined;
         this.sourceModel = undefined;
@@ -133,21 +133,21 @@ export default class InputFileGenerator extends ComponentAtom  {
 		dateInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
 		@SuppressWarnings("unused")
-		org.treez.core.atom.attribute.text.Label jobIndexLabel = inputModification.createLabel("jobIndexLabel",
+		org.treez.core.atom.attribute.text.Label jobIdLabel = inputModification.createLabel("jobIdLabel",
 				"Include job index in:");
 
-		checkBox jobIndexInFolderCheck = inputModification.createCheckBox(includeJobIndexInInputFolder, this, false);
-		jobIndexInFolderCheck.setLabel("Folder name");
-		jobIndexInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+		checkBox jobIdInFolderCheck = inputModification.createCheckBox(includejobIdInInputFolder, this, false);
+		jobIdInFolderCheck.setLabel("Folder name");
+		jobIdInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		checkBox jobIndexInSubFolderCheck = inputModification.createCheckBox(includeJobIndexInInputSubFolder, this,
+		checkBox jobIdInSubFolderCheck = inputModification.createCheckBox(includejobIdInInputSubFolder, this,
 				false);
-		jobIndexInSubFolderCheck.setLabel("Extra folder");
-		jobIndexInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+		jobIdInSubFolderCheck.setLabel("Extra folder");
+		jobIdInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
 
-		checkBox jobIndexInFileCheck = inputModification.createCheckBox(includeJobIndexInInputFile, this, false);
-		jobIndexInFileCheck.setLabel("File name");
-		jobIndexInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
+		checkBox jobIdInFileCheck = inputModification.createCheckBox(includejobIdInInputFile, this, false);
+		jobIdInFileCheck.setLabel("File name");
+		jobIdInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
 	}
 
 	createStatusSection(page) {

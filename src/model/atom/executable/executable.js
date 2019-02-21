@@ -4,6 +4,7 @@ import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
 import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
+import LoggingArguments from './loggingArguments.js';
 
 export default class Executable extends Model {
 
@@ -14,7 +15,7 @@ export default class Executable extends Model {
 	constructor(name) {
 		super(name);
 		this.image = 'run.png';
-		this.isRunnable=true;
+		this.isRunnable=true;	
         
 		this.executablePath = 'notepad.exe';
         
@@ -23,14 +24,13 @@ export default class Executable extends Model {
                
         this.outputArguments = undefined;
         this.outputPath = undefined;
-        this.copyInputFileToOutputFolder = undefined;        
-       
-        this.logArguments = undefined;
-        this.logFilePath = undefined;
+        this.isCopyingInputFileToOutputFolder = false; 
         
         this.commandInfo = undefined;
         this.executionStatusInfo = 'Not yet executed.';
-        this.jobIndexInfo = '1';
+        this.jobIdInfo = '1';
+        
+        this.treeView=undefined;
 	}
 
 	copy() {
@@ -44,10 +44,8 @@ export default class Executable extends Model {
 
 		this.__createExecutableSection(page); 
         this.__createInputSection(page);      
-        this.__createOutputSection(page);       
-        this.__createLoggingSection(page);
+        this.__createOutputSection(page); 
         this.__createStatusSection(page);
-	     
 	}
 
 	provideFilePath() {
@@ -55,6 +53,8 @@ export default class Executable extends Model {
 	}
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
+		
+		this.treeView=treeView;
 
 		const addInputFileGenerator = new AddChildAtomTreeViewerAction(
 				InputFileGenerator,
@@ -82,6 +82,15 @@ export default class Executable extends Model {
 				this,
 				treeView);
 		actions.push(addOutputModification);
+		
+		const addLoggingArguments = new AddChildAtomTreeViewerAction(
+				LoggingArguments,
+				"loggingArguments",
+				"loggingArguments.png",
+				parentSelection,	
+				this,
+				treeView);
+		actions.push(addLoggingArguments);
 
 		const addDataImport = new AddChildAtomTreeViewerAction(
 				TableImport,
@@ -165,8 +174,8 @@ export default class Executable extends Model {
 
 		// copy input file to output folder (modifies input file name)
 		try {
-			if (this.copyInputFileToOutputFolder) {
-				this.copyInputFileToOutputFolder();
+			if (this.isCopyingInputFileToOutputFolder) {
+				this.__copyInputFileToOutputFolder();
 			}
 		} catch (exception) {
 			LOG.error("Could not copy input file to output folder for " + this.name, exception);
@@ -175,7 +184,7 @@ export default class Executable extends Model {
 		}
 
 		// increase job index
-		this.increasejobIndex();
+		this.increasejobId();
 
 		// inform progress monitor to be done
 		executableMonitor.setDescription("finished\n");
@@ -201,6 +210,12 @@ export default class Executable extends Model {
 		this.addChild(child);
 		return child;
 	}
+	
+	createLoggingArguments(name) {
+		const child = new LoggingArguments(name);
+		this.addChild(child);
+		return child;
+	}
 
 	createTableImport(name) {
 		const child = new TableImport(name);
@@ -214,14 +229,14 @@ export default class Executable extends Model {
             .title('Executable');
 
         section.append('treez-section-action')
-            .image('resetJobIndex.png')
-            .title('Reset the job index to 1')
-            .addAction(this.__resetJobIndex);
+            .image('resetjobId.png')
+            .title('Reset jobId to 1')
+            .addAction(()=>this.__resetjobId());
 
         section.append('treez-section-action')
             .image('run.png')
             .title('Run external executable')
-            .addAction(this.__execute);  
+            .addAction(()=>this.execute(this.treeView));  
 
         const sectionContent = section.append('div'); 
 
@@ -229,11 +244,7 @@ export default class Executable extends Model {
             .title('Executable')           
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.executablePath);            
-	}
-	
-    __execute(){
-		
-	}
+	}   
 
 	__createInputSection(page) {
        
@@ -271,29 +282,12 @@ export default class Executable extends Model {
 
        sectionContent.append('treez-check-box')
 		   .label('Copy input file to output folder')
-		   .value(true)
+		   .value(false)
 		   .onChange(()=>this.__refreshStatus())		  
-		   .bindValue(this,()=>this.copyInputFileToOutputFolder);       
+		   .bindValue(this,()=>this.isCopyingInputFileToOutputFolder);       
    }  
 
-	__createLoggingSection(page) {
-       const section = page.append('treez-section')
-           .title('Logging')
-           .attr('expanded','false');
-
-       const sectionContent = section.append('div'); 
-
-       sectionContent.append('treez-text-area')
-            .title('Log arguments')           
-            .onChange(()=>this.__refreshStatus())          
-            .bindValue(this,()=>this.logArguments); 
-
-       sectionContent.append('treez-file-path')
-            .title('Log file')            
-            .onChange(()=>this.__refreshStatus())          
-            .bindValue(this,()=>this.logFilePath);
-      
-   }
+	
 
 	__createStatusSection(page) {
        const section = page.append('treez-section')
@@ -315,7 +309,7 @@ export default class Executable extends Model {
        sectionContent.append('treez-text-area')
             .title('Next job index') 
             .disable() 
-            .bindValue(this,()=>this.jobIndexInfo); 
+            .bindValue(this,()=>this.jobIdInfo); 
    }   
 
    
@@ -323,23 +317,12 @@ export default class Executable extends Model {
    __refreshStatus() {
 		this.commandInfo = this.__buildCommand();
 		this.executionStatusInfo = 'Not yet executed';
-		this.jobIndexInfo = this.jobId;
+		this.jobIdInfo = ""+ this.jobId;
 	}
 
 
 
-	__increaseJobIndex() {
-		let currentIndex = 0;
-		try {
-			currentIndex = Integer.parse(this.jobId);
-		} catch (exception) {
-			LOG.warn("Could not interpret last jobId as Integer. "
-					+ "Starting with 1 for the next job index of the executable.");
-		}
-		const newIndex = currentIndex + 1;
-		this.jobId = "" + newIndex;
-		this.refreshStatus();
-	}
+	
 	
 
 	/**
@@ -482,7 +465,7 @@ export default class Executable extends Model {
 
 	__getModifiedInputPath() {
 		
-		const inputModification = null;
+		var inputModification = null;
 		try{
 			inputModification = this.getChildByClass(InputModification);
 		} catch(error){			
@@ -493,10 +476,10 @@ export default class Executable extends Model {
 			:this.inputPath;		
 	}
 
-	__getModifiedInputPath() {
-		const outputModification = null;
+	__getModifiedOutputPath() {
+		var outputModification = null;
 		try{
-			outputModification= this.getFirstChildByClass(OutputModification);
+			outputModification= this.getChildByClass(OutputModification);
 		} catch(error){			
 		}
 		
@@ -519,25 +502,31 @@ export default class Executable extends Model {
 	}
 
 	__addLoggingArguments(commandToExtend){
-		let command = commandToExtend;
-		if (this.logArguments) {
-			command += " " + logArguments;
-		}
-
-		if (this.logFilePath) {
-			command += " " + logFilePath;
-		}
-		return command;
+		
+		var loggingArguments = null;
+		try{
+			loggingArguments = this.getChildByClass(LoggingArguments);
+		} catch(error){			
+		}		
+		
+		return loggingArguments
+			?loggingArguments.addLoggingArguments(commandToExtend)
+			:commandToExtend;
 	}
 
-	
+	__increaseJobId() {		
+		this.jobId = this.jobId+1;
+		this.__refreshStatus();
+	}
 
-	__resetJobIndex(){
-		this.jobId = "1";
+	__resetJobId(){
+		this.jobId = 1;
 		this.__refreshStatus();
 	}
 	
-	
+	getJobId(){
+		return this.jobId;
+	}
 
 	
 

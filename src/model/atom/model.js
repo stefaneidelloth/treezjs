@@ -27,7 +27,7 @@ export default class Model extends ComponentAtom {
          * The id for the last execution of the model. This might be the id from a model input while executing a study (e.g.
          * sweep). It might also be an id from a manual execution that has been set by the model itself.
          */
-        this._jobId = "1";
+        this._jobId = 1;
 	}
 
 	copy(atomToCopy){ //TODO
@@ -43,7 +43,7 @@ export default class Model extends ComponentAtom {
 		this.assignModelInput(modelInput);
 
 		if (monitor.isCanceled()) {
-			console.error("Model '\" + name + \"' does not run since execution has been canceled.");
+			LOG.error("Model '" + name + "' does not run since execution has been canceled.");
 			return this.createEmptyModelOutput();
 		}
 
@@ -52,7 +52,7 @@ export default class Model extends ComponentAtom {
 
 	assignModelInput(modelInput) {
 
-		console.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
+		LOG.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
 
 		if (modelInput != null) {
 
@@ -79,18 +79,18 @@ export default class Model extends ComponentAtom {
 	/**
 	 * Executes the model with the current state of its variables
 	 */
-	execute(refreshable) {
-		/*
-		runNonUiTask("AbstractModel: execute", (monitor) => {
-			try {
-				const treezMonitor = new TreezMonitor("Treez console", monitor, 1);
-				this.runModel(refreshable, treezMonitor);
-			} catch (exception) {
-				LOG.error("Could not execute model '" + this.name + "'!", exception);
-				monitor.done();
-			}
-		});
-		*/
+	execute(treeView) {
+		try {
+			var monitor = {
+					//TODO
+			};
+			
+			const treezMonitor = new TreezMonitor("Treez console", monitor, 1);
+			this.runModel(treeView, treezMonitor);
+		} catch (exception) {
+			LOG.error("Could not execute model '" + this.name + "'!", exception);
+			monitor.done();
+		}
 	}
 
 	/**

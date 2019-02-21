@@ -19,8 +19,8 @@ export default class JarExecutable extends Executable {
 		Section executable = dataPage.createSection("javaExecutable", executableHelpContextId).setLabel(
 				"Java executable");
 
-		Image resetImage = Activator.getImage("resetJobIndex.png");
-		executable.createSectionAction("resetJobIndex", "Reset the job index to 1", () -> resetJobIndex(), resetImage);
+		Image resetImage = Activator.getImage("resetjobId.png");
+		executable.createSectionAction("resetjobId", "Reset the job index to 1", () -> resetjobId(), resetImage);
 		executable.createSectionAction("action", "Run external executable", () -> execute(treeView));
 
 		FilePath filePath = executable.createFilePath(executablePath, this, "Path to java.exe",
@@ -115,7 +115,7 @@ export default class JarExecutable extends Executable {
 			executionStatusInfoText.resetError();
 			executionStatusInfoText.set("Not yet executed");
 
-			jobIndexInfo.set("" + getJobId());
+			jobIdInfo.set("" + getJobId());
 		});
 
 	}

@@ -17,13 +17,24 @@
             		return TreezElement.observedAttributes.concat(['label']);                    
                 }
 
+                set value(newValue) {                	
+				  this.setAttribute('value', newValue);	
+				}  
+
+				get value() {
+				  var valueString = this.getAttribute('value');					
+				  return valueString === 'true';
+				}   
+
                  get label() {
 				  return this.getAttribute('label');
 				}
 
 				set label(newValue) {
 				  this.setAttribute('label', newValue);	
-				}    
+				} 
+
+				  
 
                 constructor(){
                     super(); 
@@ -44,11 +55,31 @@
 						checkBox.type='checkBox'	
 						checkBox.className = 'treez-check-box';
 
-						if(self.value!=="undefined"){
-							checkBox.checked = self.value;
-						}									
+						switch(self.value){
+						    	case 'true':
+						    		self.value=true;
+						    		checkBox.checked=true;
+						    		break;
+						    	case 'false':
+						    	    self.value = false;
+						    	    checkBox.checked=false;
+						    	    break;
+						    	case 'undefined':
+						    	    self.value = false;
+						    	    checkBox.checked=false;
+						    	    break;
+						    	case true:
+						    		checkBox.checked=true;
+						    		break;
+						    	case false:
+						    		checkBox.checked=false;
+						    		break;
+						}						  
+															
 						
-						checkBox.onchange = ()=>this.__checkboxChanged();                                              
+						checkBox.onchange = ()=>{
+							self.value = this.checkBox.checked; 
+						};                                              
 						container.appendChild(checkBox); 
 
 						var labelElement = document.createElement('label');
@@ -58,16 +89,32 @@
 						container.appendChild(labelElement);                                               
                                                               		
                     }
-                }              
+                }     
 
-                __checkboxChanged(){
-                	if(this.value !== this.checkBox.checked){
-                		this.value = this.checkBox.checked; 
-                	}                	
-                }  
+                __addListenerToUpdatePropertyOnElementChanges(parent, propertyName){				
 
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
+					this.addEventListener('input', (event)=>{ 
+						  var oldValue = parent[propertyName];
+						  var newValue = event.target.checked;
+						  if(newValue != oldValue){
+							parent[propertyName] = newValue; 							     
+						  }    	
+					}); 					
+				}            
+
+                attributeChangedCallback(attr, oldValueObj, newValueObj) {
+                	if(attr==='value'){ 
+
+                	  
+
+                	    var oldValue = oldValueObj === 'true' || oldValueObj === true;
+                	    var newValue = newValueObj === 'true' || newValueObj === true;
+                	                            	                		
+						if(newValue!==oldValue){	
+							this.updateElements(newValue);	
+						}
+                     }               	  
+                	
                     if(attr==='label'){
                     	if(this.labelElement){
                     		 this.labelElement.innerText= newValue;   
@@ -75,9 +122,11 @@
                     } 
                 }  
 
-                updateElements(newValue){
-                	if(this.checkBox){                    	
-						this.checkBox.checked= newValue; 
+                updateElements(newValue){  
+                	if(this.checkBox){                  	                 	                      	
+						if(this.checkBox.checked !== newValue){
+							this.checkBox.checked = (newValue === true);
+						}; 						 
                 	}					    
                 }                          
             }

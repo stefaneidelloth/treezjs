@@ -55,7 +55,7 @@ public class SweepDemoWithTableImportFromSqLite extends ModelProvider {
 		executable.executablePath.set("foo");
 		executable.commandInfo.set("\"foo\"");
 		executable.executionStatusInfo.set("Not yet executed");
-		executable.jobIndexInfo.set("31");
+		executable.jobIdInfo.set("31");
 
 		TableImport tableImport = executable.createTableImport("tableImport");
 		tableImport.sourceType.set(TableSourceType.SQLITE);
