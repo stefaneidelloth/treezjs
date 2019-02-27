@@ -1,14 +1,13 @@
-import ComponentAtom from './../../core/component/componentAtom.js';
+import ComponentAtom from './../core/component/componentAtom.js';
+import Monitor from './../core/monitor/monitor.js';
+import ModelOutput from './output/modelOutput.js';
 
 
-export default class Model extends ComponentAtom {
-
-    static get LOG() {
-        return new Log4js.getLogger(Model.constructor.name);
-    }
+export default class Model extends ComponentAtom {	
+   
 
 	constructor(name) {
-		super(name);
+		super(name);		
 
         /**
          * Is true if the Model is a manual Model. That means that the model is not remotely executed by a Study
@@ -37,22 +36,22 @@ export default class Model extends ComponentAtom {
 	/**
 	 * Remotely runs the model with the given ModelInput
 	 */
-	runModel(modelInput, refreshable, monitor) {
+	runModel(modelInput, treeView, monitor) {
 
 		//assign the model input to variable values (also assigns model input for sub models)
 		this.assignModelInput(modelInput);
 
-		if (monitor.isCanceled()) {
-			LOG.error("Model '" + name + "' does not run since execution has been canceled.");
+		if (monitor.isCanceled) {
+			console.error("Model '" + name + "' does not run since execution has been canceled.");
 			return this.createEmptyModelOutput();
 		}
 
-		return this.doRunModel(refreshable, monitor);
+		return this.doRunModel(treeView, monitor);
 	}
 
 	assignModelInput(modelInput) {
 
-		LOG.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
+		console.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
 
 		if (modelInput != null) {
 
@@ -80,15 +79,12 @@ export default class Model extends ComponentAtom {
 	 * Executes the model with the current state of its variables
 	 */
 	execute(treeView) {
+		const monitor = new Monitor("Treez console", treeView);
+		monitor.showInMonitorView();
 		try {
-			var monitor = {
-					//TODO
-			};
-			
-			const treezMonitor = new TreezMonitor("Treez console", monitor, 1);
-			this.runModel(treeView, treezMonitor);
+			this.doRunModel(treeView, monitor);
 		} catch (exception) {
-			LOG.error("Could not execute model '" + this.name + "'!", exception);
+			console.error("Could not execute model '" + this.name + "'!", exception);
 			monitor.done();
 		}
 	}
@@ -96,16 +92,16 @@ export default class Model extends ComponentAtom {
 	/**
 	 * Remotely runs the model with the current model state. Should be overridden by models that have no sub models.
 	 */
-	doRunModel(refreshable, monitor) {
+	doRunModel(treeView, monitor) {
 
-		LOG.info("Running " + this.constructor.name + " '" + this.name + "'");
+		console.info("Running " + this.constructor.name + " '" + this.name + "'");
 
 		const modelOutput = this.createEmptyModelOutput();
 		this.children.every((child)=>{
             const isModel = child instanceof Model;
             if (isModel) {
                 if (!child.isManualModel) {
-                    const childModelOutput = childModel.doRunModel(refreshable, monitor);
+                    const childModelOutput = childModel.doRunModel(treeView, monitor);
                     if (childModelOutput !== null) {
                         modelOutput.addChildOutput(childModelOutput);
                     }
@@ -120,14 +116,10 @@ export default class Model extends ComponentAtom {
 	 * Creates an empty model output. It wraps a RootOutput that is used to organize the child model outputs in a tree
 	 * structure;
 	 */
-	createEmptyModelOutput() {
+	__createEmptyModelOutput() {
 		const rootOutputName = this.name + "Output";
-		const rootOutput = new OutputAtom(rootOutputName, this.image);
-		const modelOutput = () => {
-			//overrides getRootOutput
-			return rootOutput;
-		};
-		return modelOutput;
+		return new ModelOutput(rootOutputName, this.image);
+		
 	}
 
 	/**
@@ -142,7 +134,7 @@ export default class Model extends ComponentAtom {
 			return variableAtom;
 		} catch (exception) {
 			const message = "Could not find a variable field for the model path '" + variableModelPath + "'.";
-			LOG.error(message);
+			console.error(message);
 			return null;
 		}
 	}

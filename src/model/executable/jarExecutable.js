@@ -14,9 +14,11 @@ export default class JarExecutable extends Executable {
 	 copy() {
 		//TODO
 	}
+	 
+	 /*
 
 	createExecutableSection(page) {
-		Section executable = dataPage.createSection("javaExecutable", executableHelpContextId).setLabel(
+		var executable = dataPage.createSection("javaExecutable", executableHelpContextId).setLabel(
 				"Java executable");
 
 		Image resetImage = Activator.getImage("resetjobId.png");
@@ -119,6 +121,8 @@ export default class JarExecutable extends Executable {
 		});
 
 	}
+	
+	*/
 
 	//#end region
 

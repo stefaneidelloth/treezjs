@@ -2,8 +2,7 @@ export default class EditorView {
 
 	constructor(){
 		this.d3 = undefined;
-		this.content = undefined;
-		this.provideEditor = undefined;	
+		this.content = undefined;		
 		this.model = undefined;	
 		this.fileInput = undefined;	
 	}
@@ -29,25 +28,21 @@ export default class EditorView {
 			
 		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
 
-			var code = "import Atom from './src/core/atom/atom.js';\n"+		
-				"import ComponentAtom from './src/core/component/componentAtom.js';\n"+
+			var code = "import Root from './src/root/root.js';\n"+		
+				
 				"\n"+
 				"window.createModel = function(){\n"+
 				"\n"+
-				"	var root = new ComponentAtom('root');\n"+
-				"	var firstChild = new Atom('firstChild');\n"+
-				"	root.addChild(firstChild);\n"+
-				"	var secondChild = new Atom('secondChild');\n"+
-				"	root.addChild(secondChild);\n"+
-				"	var grandChild = new Atom('grandChild');\n"+
-				"	secondChild.addChild(grandChild);\n"+
+				"	var root = new Root();\n"+	
+				"	var models = root.createModels();\n"+
+				"	var genericInput = models.createGenericInput();\n"+
 				"	return root;\n"+
 				"};\n";
 
 			var codeEdit = new CodeEdit();			
 			codeEdit.create({parent: 'editorContent'}).then(function(editorViewer) {
 					editorViewer.setContents(code, 'application/javascript');
-					mainViewModel.editorViewer = editorViewer;					
+					mainViewModel.setEditorViewer(editorViewer);					
 					self.fillEditorToolbar(toolbar, editorViewer);
 				});
 		});       
@@ -89,25 +84,25 @@ export default class EditorView {
 	createButton(parent, imageName, tooltip, action){
 			parent
 			.append("img")
-			.attr("class","treez-editor-tool-icon")				
-			.attr("src","./icons/" + imageName)
-			.attr("title", tooltip)
-			.on("click", action);
+			.className('treez-editor-tool-icon')				
+			.src('./icons/' + imageName)
+			.title(tooltip)
+			.onClick(action);
     }  
 
     openFromLocalStorage(editorViewer){
 		var code = localStorage.getItem('treezEditorContent');
 		if(code){
-				this.setEditorContentAndUpdateTree(code);		
+				this.setEditorContentAndUpdateTree(code, editorViewer);		
 		} else {
 			alert('Local storage does not yet contain code.')
 		}	
 
     }
 
-    setEditorContentAndUpdateTree(code){
-    	this.mainViewModel.editorViewer.setContents(code, 'application/javascript').then(()=>{
-				this.mainViewModel.treeView.toTree();
+    setEditorContentAndUpdateTree(code, editorViewer){
+    	editorViewer.setContents(code, 'application/javascript').then(()=>{
+				this.mainViewModel.getTreeView().toTree();
 			});
     }
 

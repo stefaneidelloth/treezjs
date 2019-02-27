@@ -19,7 +19,6 @@
     "d3": "5.1.0",
     "requirejs": "2.3.5",
     "jquery": "3.3.1",
-    "golden-layout": "1.5.9",   
-    "log4js2": "1.0.2"
+    "golden-layout": "1.5.9"    
   }
 }

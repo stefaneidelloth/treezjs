@@ -5,21 +5,21 @@ export default class TreeView {
 	constructor(){
 		this.dTreez = undefined;
 		this.content = undefined;
-		this.provideEditor = undefined;	
+		this.provideEditorView = undefined;	
+		this.provideMonitorView = undefined;	
 		this.model = undefined;		
 	}
 
-	buildView(element, mainViewModel){
+	buildView(element, mainViewModel, dTreez){
 
         var self = this;
-		self.provideEditor = mainViewModel.getEditorView;
+        self.dTreez = dTreez;
+		self.provideEditorView = mainViewModel.getEditorView;
+		self.provideMonitorView = mainViewModel.getMonitorView;
 
-		require(['d3'], function(d3){			
-			self.dTreez = new DTreez(d3);  	
-			var parentSelection = self.dTreez.select(element);
-			self.buildToolBar(parentSelection);
-			self.buildContent(parentSelection);
-		});
+		var parentSelection = self.dTreez.select(element);
+		self.buildToolBar(parentSelection);
+		self.buildContent(parentSelection);
 	}
 
     buildToolBar(parentSelection){
@@ -81,7 +81,7 @@ export default class TreeView {
     toTree(){
 
         var self = this;
-    	var editor = self.provideEditor();    		   	
+    	var editor = self.provideEditorView();    		   	
         var sourceCode =  editor.getText(); 
 
         window.scriptLoadedHook = function(){

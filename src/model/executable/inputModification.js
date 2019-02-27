@@ -1,5 +1,5 @@
-import Utils from './../../../core/utils/utils.js';
-import ComponentAtom from './../../../core/component/componentAtom.js';
+import Utils from './../../core/utils/utils.js';
+import ComponentAtom from './../../core/component/componentAtom.js';
 
 export default class InputModification extends ComponentAtom {
 

@@ -1,5 +1,5 @@
-import Executable from "../executable/executable.js";
-import ComponentAtom from "../../../core/component/componentAtom.js";
+import Executable from "./../executable/executable.js";
+import ComponentAtom from "./../../core/component/componentAtom.js";
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the
@@ -8,10 +8,7 @@ import ComponentAtom from "../../../core/component/componentAtom.js";
  */
 export default class InputFileGenerator extends ComponentAtom  {
 
-	static get LOG(){
-	    return new Log4js.getLogger(Executable.constructor.name);
-    }
-
+	
     static get NAME_TAG() {
         return '<name>';
     }
@@ -31,20 +28,19 @@ export default class InputFileGenerator extends ComponentAtom  {
 	constructor(name) {
 		super(name);
 		this.image = 'inputFile.png';
+		this.isRunnable=true;
+		
         this.inputFilePath = undefined;
         this.inputPathInfo = undefined;
+        
         this.isDeletingUnassignedRows = undefined;
-        this.isIncludingDateInInputFile = undefined;
-        this.isIncludingDateInInputFolder = undefined;
-        this.isIncludingDateInInputSubFolder = undefined;
-        this.isIncludingjobIdInInputFile = undefined;
-        this.isIncludingjobIdInInputFolder = undefined;
-        this.isIncludingjobIdInInputSubFolder = undefined;
-		this.isRunnable=true;
+		
         this.nameExpression = undefined;
+        this.valueExpression = undefined;
+        
         this.sourceModel = undefined;
         this.templateFilePath = undefined;
-        this.valueExpression = undefined;
+       
 	}
 
 	 copy() {

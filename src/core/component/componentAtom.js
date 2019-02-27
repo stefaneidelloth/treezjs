@@ -8,6 +8,7 @@ export default class ComponentAtom extends Atom {
 	constructor(name) {
 		super(name);		
 		this.isRunnable = false;
+		this.__treeView = undefined;
         ComponentAtom.initializeComponentsIfRequired()
 	}
 
@@ -61,7 +62,7 @@ export default class ComponentAtom extends Atom {
 	createControlAdaption(parent, treeView) {
 
 		const self = this;
-		self.treeView = treeView;
+		self.__treeView = treeView;
 		parent.selectAll('treez-tab-folder').remove();	
 		parent.selectAll('div').remove();
 

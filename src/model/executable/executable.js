@@ -1,16 +1,15 @@
 import Model from './../model.js';
-import AddChildAtomTreeViewerAction from '../../../core/treeview/addChildAtomTreeViewerAction.js';
+import AddChildAtomTreeViewerAction from './../../core/treeview/addChildAtomTreeViewerAction.js';
 import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
 import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
+import ModelOutput from './../output/modelOutput.js';
 
-export default class Executable extends Model {
+export default class Executable extends Model {   
 
-    static get LOG() {
-        return new Log4js.getLogger(Executable.constructor.name);
-    }
+	//static variable __finishedString is defined below class definition
 
 	constructor(name) {
 		super(name);
@@ -19,7 +18,7 @@ export default class Executable extends Model {
         
 		this.executablePath = 'notepad.exe';
         
-        this.inputArguments = 'a b c';
+        this.inputArguments = '';
         this.inputPath = undefined;
                
         this.outputArguments = undefined;
@@ -108,26 +107,28 @@ export default class Executable extends Model {
        this.__refreshStatus();
     }	
 
-    	doRunModel(refreshable, executableMonitor) {
+    doRunModel(treeView, executableMonitor, finishedHandler) {
 
-		const startMessage = "Running " + this.constructor.name + " '" + this.name + "'.";
-		LOG.info(startMessage);
+    	var self = this;
+
+		const startMessage = "Running " + self.constructor.name + " '" + self.name + "'.";
+		console.info(startMessage);
 
 		// initialize progress monitor
 		const totalWork = 3;
 		executableMonitor.setTotalWork(totalWork);
 
-		this.delteOldOutputAndLogFiles();
+		self.__deleteOldOutputAndLogFilesIfExist();
 
 		executableMonitor.setDescription("Running InputFileGenerator children if exist.");
 
 		// execute input file generator child(ren) if exist
 		try {
-			this.executeInputFileGenerator(refreshable);
+			self.__runInputFileGenerators(treeView);
 		} catch (exception) {
-			LOG.error("Could not execute input file generator for executable " + this.name, exception);
+			console.error("Could not execute input file generator for executable " + self.name, exception);
 			executableMonitor.cancel();
-			return this.createEmptyModelOutput();
+			finishedHandler(self.__createEmptyModelOutput());
 		}
 
 		// update progress monitor
@@ -135,39 +136,60 @@ export default class Executable extends Model {
 		executableMonitor.setDescription('Executing system command.');
 
 		// create command
-		const command = this.buildCommand();
-		LOG.info("Executing " + command);
+		const command = self.__buildCommand();
+		console.info("Executing " + command);
 
 		// execute command
-		const executor = new ExecutableExecutor(this);
+		
 
 		try {
-			const success = executor.executeCommand(command, executableMonitor);
-			if (!success) {
-				const message = '"Executing system command failed.';
-				executableMonitor.setDescription(message);
-				LOG.error(message);
-				executableMonitor.cancel();
-				return createEmptyModelOutput();
-			}
-		} catch (exception) {
-			LOG.error("Could not execute " + this.name, exception);
-			executableMonitor.cancel();
-			return this.createEmptyModelOutput();
-		}
 
+			window.treezTerminal.execute(command, resultHandler, errorHandler);
+			window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);
+
+			function resultHandler(message){
+				
+				var isFinished = (message === Executable.__finishedString);
+                if(isFinished){
+                	self.__postProcessExecution(treeView, executableMonitor, finishedHandler)
+                } else {
+                	var executableConsole = executableMonitor.getConsole();
+                	executableConsole.info(message);
+                }
+				
+			}
+
+			function errorHandler(message){
+				const errorTitle = 'Executing system command failed.';
+				executableMonitor.setDescription(errorTitle);
+				console.error(errorTitle);
+				executableMonitor.cancel();
+				finishedHandler(self.__createEmptyModelOutput());
+				
+			}
+
+
+			
+		} catch (exception) {
+			console.error("Could not execute " + this.name, exception);
+			executableMonitor.cancel();
+			finishedHandler(self.__createEmptyModelOutput());
+		}
+    }   
+
+    __postProcessExecution(treeView, executableMonitor, finishedHandler){
 		// update progress monitor
 		executableMonitor.worked(1);
 		executableMonitor.setDescription("=>Post processing model output.");
 
-		const modelOutput = this.createEmptyModelOutput();
+		const modelOutput = this.__createEmptyModelOutput();
 
 		// execute data import child(ren) if exist
 		try {
-			const dataImportOutput = this.runDataImport(refreshable, executableMonitor);
-			modelOutput.addChildOutput(dataImportOutput);
+			const dataImportOutput = this.__runDataImports(treeView, executableMonitor);
+			modelOutput.addChild(dataImportOutput);
 		} catch (exception) {
-			LOG.error("Could not import results of " + this.name, exception);
+			console.error("Could not import results of " + this.name, exception);
 			executableMonitor.cancel();
 			return modelOutput;
 		}
@@ -178,13 +200,13 @@ export default class Executable extends Model {
 				this.__copyInputFileToOutputFolder();
 			}
 		} catch (exception) {
-			LOG.error("Could not copy input file to output folder for " + this.name, exception);
+			console.error("Could not copy input file to output folder for " + this.name, exception);
 			executableMonitor.cancel();
 			return modelOutput;
 		}
 
 		// increase job index
-		this.increasejobId();
+		this.__increaseJobId();
 
 		// inform progress monitor to be done
 		executableMonitor.setDescription("finished\n");
@@ -231,7 +253,7 @@ export default class Executable extends Model {
         section.append('treez-section-action')
             .image('resetjobId.png')
             .title('Reset jobId to 1')
-            .addAction(()=>this.__resetjobId());
+            .addAction(()=>this.__resetJobId());
 
         section.append('treez-section-action')
             .image('run.png')
@@ -318,12 +340,7 @@ export default class Executable extends Model {
 		this.commandInfo = this.__buildCommand();
 		this.executionStatusInfo = 'Not yet executed';
 		this.jobIdInfo = ""+ this.jobId;
-	}
-
-
-
-	
-	
+	}	
 
 	/**
 	 * Copies input file to output folder and modifies the file name
@@ -385,18 +402,18 @@ export default class Executable extends Model {
 
 	
 	__runInputFileGenerators(refreshable){
-		this.executeChildren(InputFileGenerator.class, refreshable);
+		this.executeChildren(InputFileGenerator, refreshable);
 	}
 
 	
 	__runDataImports(refreshable, monitor){
-		const hasDataImportChild = this.hasChildModel(TableImport.class);
+		const hasDataImportChild = this.hasChildModel(TableImport);
 		if (hasDataImportChild) {
-			const modelOutput =  this.runChildModel(TableImport.class, refreshable, monitor);
+			const modelOutput =  this.runChildModel(TableImport, refreshable, monitor);
 			return modelOutput;
 		} else {
-			LOG.info("No data has been imported since there is no DataImport child.");
-			return this.createEmptyModelOutput();
+			console.info("No data has been imported since there is no DataImport child.");
+			return this.__createEmptyModelOutput();
 		}
 	}
 
@@ -531,3 +548,5 @@ export default class Executable extends Model {
 	
 
 }
+
+Executable.__finishedString = "_treezExecutionFinished_";

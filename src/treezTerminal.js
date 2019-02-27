@@ -11,9 +11,9 @@ export default class TreezTerminal {
 			   
 		} 		
 		  
-	    this.__webSocket.onopen = this.__webSocketOnOpen;
-	    this.__webSocket.onmessage = this.__webSocketOnMessage; 
-	    this.__webSocket.onerror = this.__webSocketOnError; 
+	    this.__webSocket.onopen = (event)=>this.__webSocketOnOpen(event);
+	    this.__webSocket.onmessage = (event)=>this.__webSocketOnMessage(event); 
+	    this.__webSocket.onerror = (event)=>this.__webSocketOnError(event); 
 			
 	}
 	
@@ -36,7 +36,7 @@ export default class TreezTerminal {
 	}
 
 	__webSocketOnOpen(event) { 
-		console.log("Opened web socket console");
+		console.info("Opened web socket console");
     }
 	
 	__webSocketOnMessage(event) { 

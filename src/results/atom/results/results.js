@@ -8,9 +8,7 @@ import Page from '../page/page.js'
  */
 export default class Results extends ComponentAtom {
 
-    static get LOG() {
-        return new Log4js.getLogger(Executable.constructor.name);
-    }
+   
 
 	constructor(name) {
 		super(name);

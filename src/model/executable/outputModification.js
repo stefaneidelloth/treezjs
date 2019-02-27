@@ -1,12 +1,9 @@
-import Utils from './../../../core/utils/utils.js';
-import ComponentAtom from './../../../core/component/componentAtom.js';
+import Utils from './../../core/utils/utils.js';
+import ComponentAtom from './../../core/component/componentAtom.js';
 
 export default class OutputModification extends ComponentAtom {
 
-    static get LOG() {
-        return new Log4js.getLogger(Executable.constructor.name);
-    }
-
+    
 	constructor(name) {		
 	    super(name);
 		this.image = 'outputModification.png';

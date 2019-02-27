@@ -1,0 +1,83 @@
+.treez-monitor-progress-host {
+	background-color: #e1e1e1;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	padding: 2px;
+	height:50%;
+}
+
+.treez-monitor-progress-panel {
+	background-color: white;
+	padding: 2px;
+	height:100%;
+}
+
+.treez-monitor-progress-collapsible-header {
+	text-size: 14px;
+}
+
+.treez-monitor-progress-title {
+	color: black;
+}
+
+.treez-monitor-progress-description {
+	color: black;
+}
+
+.treez-monitor-progress-toolbar {
+	padding-right: 10px;
+	float: right;
+}
+
+.treez-monitor-progress-label {
+	padding-right: 10px;
+	color: black;
+}
+
+.treez-monitor-progress-cancel-button {
+	height: 12px;
+	padding-bottom: 2px;
+	border: none;
+	-webkit-border-radius: 3px;
+	box-shadow: inset 0 0 0 1px #e82734, inset 0 0 0 2px #f69b9c;
+	background-color: #e82734;
+}
+
+.treez-monitor-progress-canceled-symbol {
+	font-weight: bold;
+	color: #e82734;
+	display: none;
+}
+
+.treez-monitor-progress-background {
+	background-color: lightgray;
+	height: 3px;		
+}
+
+.treez-monitor-progress-bar {	
+	background: linear-gradient(#65c46f, green);	
+	height: 3px;	
+}
+
+.treez-monitor-progress-collapsible-content {
+	padding-left: 10px;
+	display: block;
+}
+
+.treez-monitor-progress-collapsible-content .collapsed {
+	display: none;
+}
+
+.treez-monitor-logging-host {
+	background-color: #e1e1e1;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	padding: 2px;
+	height:50%;
+}
+
+.treez-monitor-logging-panel {
+	background-color: white;
+	padding: 2px;
+	height:100%;
+}

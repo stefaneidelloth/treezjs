@@ -1,10 +1,6 @@
 import Model from "./../model.js";
 
-export default class TableImport extends Model {
-
-	static get LOG(){
-		return Log4j.getLogger(TableImport.constructor.name);
-	}
+export default class TableImport extends Model {	
 
 	constructor(name) {
 		super(name);

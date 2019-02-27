@@ -1,34 +1,6 @@
 package org.treez.core.atom.attribute.modelPath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.treez.core.Activator;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.atom.attribute.base.AbstractStringAttributeAtom;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.base.annotation.IsParameter;
-import org.treez.core.path.FilterDelegate;
-import org.treez.core.path.ModelPathSelector;
-import org.treez.core.swt.CustomLabel;
-import org.treez.core.utils.Utils;
 
 /**
  * Allows the user to choose a model path
