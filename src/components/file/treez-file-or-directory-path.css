@@ -1,8 +1,13 @@
 treez-file-or-directory-path {	
     font-family: Consolas;
     font-size: 12px;  
-    margin-bottom:10px;   
-} 
+    margin-bottom:10px;    
+}
+
+.treez-file-or-directory-path-container{
+    display:'inline-block';
+    white-space: nowrap;
+     margin-bottom:10px;
 }
 
 .treez-file-or-directory-path-browse-button {
@@ -24,11 +29,7 @@ treez-file-or-directory-path {
 	vertical-align: middle;
 }
 
-#container{
-    display:'inline-block';
-    white-space: nowrap;
-     margin-bottom:10px;
-}
+
 
 .treez-file-or-directory-path-text-field {   
     width: 90%;      

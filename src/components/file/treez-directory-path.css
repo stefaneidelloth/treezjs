@@ -5,6 +5,11 @@ treez-directory-path {
     margin-bottom:10px;   
 }
 
+.treez-directory-path-container {
+    display:'inline-block';
+    white-space: nowrap;
+    margin-bottom:10px;
+}
 
 .treez-directory-path-browse-button {
 	background: url('/icons/browse.png');
@@ -23,12 +28,6 @@ treez-directory-path {
 	width:16px;
 	color:transparent;
 	vertical-align: middle;
-}
-
-#container{
-    display:'inline-block';
-    white-space: nowrap;
-    margin-bottom:10px;
 }
 
 .treez-directory-path-text-field {   

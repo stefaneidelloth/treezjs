@@ -88,7 +88,7 @@ export default class InputFileGenerator extends Model  {
 	        .image('run.png')
 	        .label('Generate input file')
 	        .addAction(
-	        ()=>this.execute(this.treeView)
+	        ()=>this.execute(this.__treeView)
 	        ); 
 	    
 	    var sectionContent = section.append('div'); 

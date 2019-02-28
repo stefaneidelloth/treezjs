@@ -15,5 +15,9 @@ export default class DTreezEvent {
 	preventDefault(){
 		this.__d3.event.preventDefault();
 	}
+
+	stopPropagation(){
+		this.__d3.event.stopPropagation();
+	}
 	
 }	

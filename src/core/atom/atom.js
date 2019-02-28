@@ -302,11 +302,11 @@ export default class Atom {
 	 */
 	getChild(childPath) {
 
-		var isPath = childPath.contains(".");
+		var isPath = childPath.indexOf('.') > -1;
 
 		if (isPath) {
 			//iterate through path to get wanted child
-			var childNames = childPath.split("\\.");
+			var childNames = childPath.split('.');
 			var firstName = childNames[0];
 			var child = this.getChildByName(firstName);
 			//go to the wanted child in a loop; each iteration
@@ -327,15 +327,15 @@ export default class Atom {
 	getChildFromRoot(childPathStartingWithRoot) {
 
 		var rootLength = 5; //"root."
-		var isTooShort = childPathStartingWithRoot.length() < rootLength + 1;
+		var isTooShort = childPathStartingWithRoot.length < rootLength + 1;
 		if (isTooShort) {
 			throw new Error("The path has to start with 'root.' but is '" + childPathStartingWithRoot + "'.");
 		}
 
-		var startsWithRoot = childPathStartingWithRoot.substring(0, rootLength).equals("root.");
+		var startsWithRoot = (childPathStartingWithRoot.substring(0, rootLength) === 'root.');
 
 		if (startsWithRoot) {
-			var length = childPathStartingWithRoot.length();
+			var length = childPathStartingWithRoot.length;
 			var childPath = childPathStartingWithRoot.substring(rootLength, length);
 			var root = this.getRoot();
 			var child = root.getChild(childPath);
@@ -494,6 +494,21 @@ export default class Atom {
 			this.children.remove(childToRemove);
 		}
 
+	}
+
+
+	collapseAll(){
+		this.isExpanded=false;
+		this.children.forEach((child)=>{
+			child.collapseAll();
+		});
+	}
+
+	expandAll(){
+		this.isExpanded=true;
+		this.children.forEach((child)=>{
+			child.expandAll();
+		});
 	}
 
 	//#end region

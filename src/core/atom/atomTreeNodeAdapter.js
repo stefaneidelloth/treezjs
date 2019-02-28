@@ -17,15 +17,31 @@ export default class AtomTreeNodeAdapter {
 		    					.className('treez-details');
 
 		if(atom.isExpanded){
-			expandableNode.attr("open","");
+			expandableNode.attr('open','');
 		} else {
-			expandableNode.attr("open", null);
+			expandableNode.attr('open', null);
 		}
+
+		expandableNode.onDoubleClick(()=>{
+
+			var event = treeView.dTreez.event;
+			event.stopPropagation();
+
+
+			var isOpen = expandableNode.attr('open') === '';
+			if(isOpen){
+				atom.collapseAll();				
+			} else {
+				atom.expandAll();				
+			}
+			treeView.refresh();			
+			
+		});
 		
 		expandableNode.onToggle(()=>{			
-			var isExpanded = expandableNode.attr("open") === "";
+			var isExpanded = expandableNode.attr('open') === '';
 			atom.isExpanded=isExpanded;
-		})
+		})		
 			
 		if(atom.parent){
 			expandableNode.classed('treez-indent',true);
@@ -100,14 +116,11 @@ export default class AtomTreeNodeAdapter {
 
     static createContextMenuItemOrSeparator(parentSelection, dTreez, menu, item){
 
-
     	 if (item instanceof ActionSeparator){
              this.createContextMenuSeparator(menu);
     	 } else {
     	 	this.createContextMenuItem(parentSelection, dTreez, menu, item)
-    	 }
-    	 
-    	
+    	 }    	
     } 
 
     static createContextMenuSeparator(menu){
@@ -142,5 +155,7 @@ export default class AtomTreeNodeAdapter {
     	var propertiesView = treeView.dTreez.select('#properties');
     	atom.createControlAdaption(propertiesView, treeView);
     }
+
+   
      
 }

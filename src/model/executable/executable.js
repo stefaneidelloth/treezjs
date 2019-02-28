@@ -131,7 +131,9 @@ export default class Executable extends Model {
 		} catch (exception) {
 			console.error("Could not execute input file generator for executable " + self.name, exception);
 			executableMonitor.cancel();
-			finishedHandler(self.__createEmptyModelOutput());
+			if(finishedHandler){
+				finishedHandler(self.__createEmptyModelOutput());
+			}
 		}
 
 		// update progress monitor
@@ -167,7 +169,9 @@ export default class Executable extends Model {
 				executableMonitor.setDescription(errorTitle);
 				console.error(errorTitle);
 				executableMonitor.cancel();
-				finishedHandler(self.__createEmptyModelOutput());
+				if(finishedHandler){
+					finishedHandler(self.__createEmptyModelOutput());
+				}
 				
 			}
 
@@ -176,7 +180,9 @@ export default class Executable extends Model {
 		} catch (exception) {
 			console.error("Could not execute " + this.name, exception);
 			executableMonitor.cancel();
-			finishedHandler(self.__createEmptyModelOutput());
+			if(finishedHandler){
+					finishedHandler(self.__createEmptyModelOutput());
+			}
 		}
     }   
 
@@ -215,7 +221,10 @@ export default class Executable extends Model {
 		executableMonitor.setDescription("finished\n");
 		executableMonitor.done();
 
-		return modelOutput;
+		if(finishedHandler){
+			finishedHandler(modelOutput);
+		}
+		
 	}
 
 	createInputFileGenerator(name) {

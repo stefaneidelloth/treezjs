@@ -78,6 +78,11 @@ export default class DTreezSelection {
 		this.__d3Selection.on('click', action);
 		return this;
 	}
+
+	onDoubleClick(action){
+		this.__d3Selection.on('dblclick', action);
+		return this;
+	}
 	
 	onChange(action){
 		this.__d3Selection.on('change', action);

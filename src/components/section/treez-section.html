@@ -18,7 +18,7 @@
                     return ['title','image'];
                 }
 
-                 get image() {
+                get image() {
 				  return this.getAttribute('image');
 				}
 
@@ -115,7 +115,8 @@
                 	
                 }
 
-                __toggleExpansion(){
+                __toggleExpansion(event){
+                	
                 	const section = this.parentElement;
                 	if(section.children.length<2){
                 		return;
@@ -158,16 +159,13 @@
                 	let img = document.createElement('img');
                 	img.classList.add('treez-section-action');
                 	img.title = sectionAction.title;                	
-                	img.onclick = ()=> {
-                		let action = sectionAction.actions[0];
-                		action();
-                	};
-                	/*{
-                        var event = document.createEvent("MouseEvents");
-						event.initEvent("click");
-                        sectionAction.dispatchEvent(event);
-                	};
-                	*/
+                	img.onclick = (event)=> {
+                		event.stopPropagation();
+                		sectionAction.actions.forEach(
+                			(action)=>action()
+                		);
+                		
+                	};                	
                 	img.src="/icons/" + sectionAction.image;
                 	toolbar.appendChild(img);
                 	

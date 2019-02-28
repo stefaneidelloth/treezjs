@@ -189,8 +189,9 @@ export default class GenericInput extends ComponentAtom {
 		this.__recreateVariableControls();
 	}
 
-	createDoubleVariable(name) {
+	createDoubleVariable(name, value) {
 		const child = new DoubleVariable(name);
+		child.value = value;
         this.addChild(child);
 		return child;
 	}
@@ -210,8 +211,9 @@ export default class GenericInput extends ComponentAtom {
 	
 	*/
 
-	createStringVariable(name) {
+	createStringVariable(name, value) {
         const child = new StringVariable(name);
+        child.value = value;
         this.addChild(child);
 		return child;
 	}

@@ -4,6 +4,11 @@ treez-file-path {
     font-size: 12px;         
 }
 
+.treez-file-path-container {
+    display:'inline-block';
+    white-space: nowrap;
+    margin-bottom:10px;
+}
 
 .treez-file-path-browse-button {
 	background: url('/icons/browse.png');
@@ -24,11 +29,7 @@ treez-file-path {
 	vertical-align: middle;
 }
 
-#container{
-    display:'inline-block';
-    white-space: nowrap;
-    margin-bottom:10px;
-}
+
 
 .treez-file-path-text-field {   
     width: 90%;      

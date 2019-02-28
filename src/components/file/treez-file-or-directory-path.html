@@ -44,7 +44,7 @@
                         self.appendChild(labelElement);  
 
                         var container = document.createElement('div');
-                        container.id ='container';                       
+                        container.className ='treez-file-or-directory-path-container';                       
                         self.appendChild(container);  
 
                         var leftSpan = document.createElement('span');
@@ -86,7 +86,7 @@
                 
                 __execute(){
                 	var command = this.textField.value;
-                	window.treezWebSocketConsole.run(command);                     
+                	window.treezTerminal.execute(command, undefined, console.error);                     
                 }
 
                 __textFieldChanged(){
