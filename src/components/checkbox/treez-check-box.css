@@ -1,9 +1,14 @@
-.treez-check-box {   
+
+.treez-check-box-container {
+	margin-bottom:3px;  
+	padding:0px;   
+}
+
+.treez-check-box-input {   
     with: auto; 
-    vertical-align: middle;
-	
+    vertical-align: middle;  
 }
 
 .treez-check-box-label {  
-     vertical-align: middle;	
+     vertical-align: middle;	    
 }

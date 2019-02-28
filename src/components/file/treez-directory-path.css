@@ -1,7 +1,8 @@
 
 treez-directory-path {   
-    font-family: Arial,sans-serif;
-    font-size: 12px;     
+    font-family: Consolas;
+    font-size: 12px;  
+    margin-bottom:10px;   
 }
 
 
@@ -27,6 +28,7 @@ treez-directory-path {
 #container{
     display:'inline-block';
     white-space: nowrap;
+    margin-bottom:10px;
 }
 
 .treez-directory-path-text-field {   

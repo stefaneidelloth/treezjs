@@ -1,6 +1,6 @@
 .treez-monitor-progress-host {
 	background-color: #e1e1e1;
-	font-family: Arial, sans-serif;
+	font-family: Consolas;
 	font-size: 12px;
 	padding: 2px;
 	height:50%;
@@ -70,7 +70,7 @@
 
 .treez-monitor-logging-host {
 	background-color: #e1e1e1;
-	font-family: Arial, sans-serif;
+	font-family: Consolas;
 	font-size: 12px;
 	padding: 2px;
 	height:50%;

@@ -28,7 +28,12 @@ export default class DTreezSelection {
 	}
 	
 	bindValue(parentObject, lambdaExpressionIdentifyingProperty){
-		this.__d3Selection.node().bindValue(parentObject, lambdaExpressionIdentifyingProperty);
+		var bindFunction = this.__d3Selection.node().bindValue
+		if(bindFunction){
+			this.__d3Selection.node().bindValue(parentObject, lambdaExpressionIdentifyingProperty);
+		} else {
+			throw new Error("(Custom) html element does not yet implement bindValue function.");
+		}
 		return this;
 	}
 	

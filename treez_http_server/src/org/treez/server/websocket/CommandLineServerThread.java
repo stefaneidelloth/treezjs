@@ -3,7 +3,6 @@ package org.treez.server.websocket;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -41,7 +40,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			return;
 		}
 
-		System.out.println("Processing web socket command line command:" + message);
+		System.out.println("#Processing web socket command line command:\n" + message);
 
 		var resultString = "Error";
 
@@ -51,28 +50,48 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			throw new IllegalStateException("Could not execute command line command '" + message + "'", exception);
 		}
 
-	
+	    var lineSeparator = System.getProperty("line.separator");
 		
-		var prefix = message + "\r\n";
+		var prefix = message + lineSeparator; //when running from within eclipse in debug mode
 		if(resultString.startsWith(prefix)) {
 			resultString = resultString.substring(prefix.length());
 		}
+				
+		var simplePrefix = message; //when running with compiled jar from command line
+		if(resultString.startsWith(simplePrefix)) {				
+			resultString = resultString.substring(simplePrefix.length());
+		}
+								
+		resultString =  removePromptLines(resultString);	
 		
-		resultString = removeLastLine(resultString);
-		resultString = removeLastLine(resultString);
-		
-		
-
+		System.out.println("#Sending message to client:\n" + resultString);
 		sendMessageToClient(resultString);
 	}
 
-	private String removeLastLine(String message) {
+	private String removePromptLines(String message) {
+		
+		var endsWithPrompt = message.lastIndexOf(">") == message.length()-1;
+		if(!endsWithPrompt) {
+			return message;
+		}
+		
+		var lineSeparator = System.getProperty("line.separator");
+		
+		var lines = message.split(lineSeparator);		
+		var lastLine = lines[lines.length-1];
+		
+		var lastLineIsTag = lastLine.startsWith("<");
+		if(lastLineIsTag) {
+			return message;
+		}
 		
 		var endIndex = message.lastIndexOf("\r");
 		if(endIndex==-1) {
 			return message;
 		}
-		return message.substring(0,endIndex);		
+		
+		var trimmedMessage = message.substring(0,endIndex);	
+		return removePromptLines(trimmedMessage);		
 	}
 
 	private String initializeConsoleProcess() {
@@ -96,7 +115,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 		try {
 			Thread.sleep(500);
 		} catch (Exception e) {
-			System.out.println("Waiting failed");
+			System.out.println("#Waiting failed");
 			System.exit(-1);
 		}
 
@@ -110,7 +129,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 
 		String output = getOutput();
 
-		System.out.println(output);
+		System.out.println("#Output:\n" +output);
 
 		return output;
 	}
@@ -185,11 +204,11 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 				}
 
 				if (hasError) {
-					output += "Error: " + errorText.trim();
+					output = "Error: " + errorText.trim();
 				}
 
 			} catch (Exception e) {
-				System.out.println("Reading console output failed!");
+				System.out.println("#Reading console output failed!");
 				output += "Error: " + "Reading console output failed!";
 			}
 

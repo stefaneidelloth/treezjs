@@ -1,330 +1,300 @@
+import Model from "./../model.js";
 import Executable from "./../executable/executable.js";
-import ComponentAtom from "./../../core/component/componentAtom.js";
+import AddChildAtomTreeViewerAction from './../../core/treeview/addChildAtomTreeViewerAction.js';
+import InputModification from './../executable/inputModification.js';
+import GenericInput from './../genericInput/genericInput.js';
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the
  * Executable. It reads a template text file and replaces "tags"/"place holders" with Quantities. The filled template is
  * then saved as new input file at the wanted input file path.
  */
-export default class InputFileGenerator extends ComponentAtom  {
-
+export default class InputFileGenerator extends Model  {
 	
-    static get NAME_TAG() {
-        return '<name>';
-    }
-
-    static get LABEL_TAG() {
-        return '<label>';
-    }
-
-    static get VALUE_TAG() {
-        return '<value>';
-    }
-
-    static get UNIT_TAG() {
-        return '<unit>';
-    }
 
 	constructor(name) {
+		if(!name){
+			name='inputFileGenerator';
+		}
 		super(name);
 		this.image = 'inputFile.png';
+		
+		this.nameTag = '<name>';		
+		this.valueTag = '<value>';
+		this.unitTag = '<unit>';
+		
 		this.isRunnable=true;
 		
-        this.inputFilePath = undefined;
+		this.templatePath = 'C:/template.txt';       
+        
+		this.sourceModelPath = 'root.models.genericModel';
+        this.nameExpression = '{$' + this.labelTag + '$}';
+        this.valueExpression = this.valueTag + ' [' + this.unitTag + ']'; 
+        
+        this.inputPath = 'C:/generated_input_file.txt';
         this.inputPathInfo = undefined;
         
         this.isDeletingUnassignedRows = undefined;
-		
-        this.nameExpression = undefined;
-        this.valueExpression = undefined;
         
-        this.sourceModel = undefined;
-        this.templateFilePath = undefined;
        
 	}
 
 	 copy() {
 		//TODO
 	}
+	 
+	extendContextMenuActions(actions, parentSelection, treeView) {
+			
+		this.treeView=treeView;			
+		
+		const addInputModification = new AddChildAtomTreeViewerAction(
+				InputModification,
+				"inputModification",
+				"inputModification.png",
+				parentSelection,
+				this,
+				treeView);
+		actions.push(addInputModification);
+		
+		return actions;
+	}
+	
+	createInputModification(name) {
+		const child = new InputModification(name);
+		this.addChild(child);
+		return child;
+	}
+	
+	createComponentControl(tabFolder, dTreez){    
+	     
+		const page = tabFolder.append('treez-tab')
+            .label('Data');
 
-	/*
-
-	createInputFileGeneratorModel() {
-
-		AttributeRoot root = new AttributeRoot("root");
-		Page dataPage = root.createPage("data", "   Data   ");
-
-		String relativeHelpContextId = "inputFileGenerator";
-		String helpContextId = Activator.getAbsoluteHelpContextIdStatic(relativeHelpContextId);
-
-		Section data = dataPage.createSection("data", helpContextId);
-		data.setLabel("");
-		data.createSectionAction("action", "Generate input file", () -> execute(treeView));
-		//template
-		data.createFilePath(templateFilePath, this, "Template for input file (contains variable place holders)",
-				"C:/template.txt");
-
-		//variable source model
-		String defaultValue = "root.models.genericModel";
-		ModelPathSelectionType selectionType = ModelPathSelectionType.FLAT;
-		ModelPath sourceModelPath = data.createModelPath(sourceModel, this, defaultValue, GenericInputModel.class,
-				selectionType, this, false);
-		sourceModelPath.setLabel("Variable source model (provides variables)");
-
-		//label width
-		final int prefferedLabelWidth = 180;
-
-		//name expression
-		TextField nameExpressionTextField = data.createTextField(nameExpression, this, "{$" + LABEL_TAG + "$}");
-		nameExpressionTextField.setLabel("Style for variable place holder");
-		nameExpressionTextField.setPrefferedLabelWidth(prefferedLabelWidth);
-
-		//value & unit expression
-		String defaultValueExpression = "" + VALUE_TAG + " [" + UNIT_TAG + "]";
-		TextField valueExpressionTextField = data.createTextField(valueExpression, this, defaultValueExpression);
-		valueExpressionTextField.setLabel("Style for value and unit injection");
-		valueExpressionTextField.setPrefferedLabelWidth(prefferedLabelWidth);
-
-		//path to input file (=the output of this atom)
-		data.createFilePath(inputFilePath, this, "Input file to generate", "C:/generated_input_file.txt", false);
-
-		//enable deletion of template rows with unassigned variable place holders
-		checkBox deleteUnassigned = data.createCheckBox(deleteUnassignedRows, this, true);
-		deleteUnassigned.setLabel("Delete template rows with unassigned variable place holders.");
-
-		String inputModificationRelativeHelpContextId = "executableInputModification";
-		String inputModificationHelpContextId = Activator
-				.getAbsoluteHelpContextIdStatic(inputModificationRelativeHelpContextId);
-
-		Consumer updateStatus = () -> refreshStatus();
-		createInputModificationSection(dataPage, updateStatus, inputModificationHelpContextId);
-
-		String statusRelativeHelpContextId = "statusLogging";
-		String statusHelpContextId = Activator.getAbsoluteHelpContextIdStatic(statusRelativeHelpContextId);
-		createStatusSection(dataPage, statusHelpContextId);
-
-		refreshStatus();
-
-		setModel(root);
+		this.__createInputSection(page); 	       
+        this.__createStatusSection(page);
 	}
 
-	createInputModificationSection(page) {
+	__createInputSection(page) {
+		
+		const section = page.append('treez-section')
+        .label('Input');
 
-		Section inputModification = dataPage.createSection("inputModification", helpContextId);
-		inputModification.setLabel("Input modification");
-		inputModification.setExpanded(false);
+	    section.append('treez-section-action')
+	        .image('resetjobId.png')
+	        .label('Reset jobId to 1')
+	        .addAction(()=>this.__resetJobId());
 
-		inputModification.createLabel("includeDate", "Include date in:");
+	    section.append('treez-section-action')
+	        .image('run.png')
+	        .label('Generate input file')
+	        .addAction(
+	        ()=>this.execute(this.treeView)
+	        ); 
+	    
+	    var sectionContent = section.append('div'); 
 
-		checkBox dateInFolderCheck = inputModification.createCheckBox(includeDateInInputFolder, this, false);
-		dateInFolderCheck.setLabel("Folder name");
-		dateInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-file-path')
+        	.label('Template for input file (contains variable place holders)')        	
+        	.bindValue(this,()=>this.templatePath);
+        
+	    
+	    sectionContent.append('treez-model-path')
+			.label('Variable source model (provides variables)')		
+			.attr('atomclasses',GenericInput.name)
+			.bindValue(this,()=>this.sourceModelPath);
+	
 
-		checkBox dateInSubFolderCheck = inputModification.createCheckBox(includeDateInInputSubFolder, this, false);
-		dateInSubFolderCheck.setLabel("Extra folder");
-		dateInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-text-field')
+			.label('Style for variable place holder')			
+			.bindValue(this,()=>this.nameExpression);
+		
+	    sectionContent.append('treez-text-field')
+			.label('Style for value and unit injection')			
+			.bindValue(this,()=>this.valueExpression);
 
-		checkBox dateInFileCheck = inputModification.createCheckBox(includeDateInInputFile, this, false);
-		dateInFileCheck.setLabel("File name");
-		dateInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-file-path')
+	    	.label('Input file to generate')	    	
+	    	.onChange(()=>this.__refreshStatus())	
+	    	.bindValue(this,()=>this.inputPath);
 
-		@SuppressWarnings("unused")
-		org.treez.core.atom.attribute.text.Label jobIdLabel = inputModification.createLabel("jobIdLabel",
-				"Include job index in:");
-
-		checkBox jobIdInFolderCheck = inputModification.createCheckBox(includejobIdInInputFolder, this, false);
-		jobIdInFolderCheck.setLabel("Folder name");
-		jobIdInFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
-
-		checkBox jobIdInSubFolderCheck = inputModification.createCheckBox(includejobIdInInputSubFolder, this,
-				false);
-		jobIdInSubFolderCheck.setLabel("Extra folder");
-		jobIdInSubFolderCheck.addModificationConsumer("updateStatus", updateStatusListener);
-
-		checkBox jobIdInFileCheck = inputModification.createCheckBox(includejobIdInInputFile, this, false);
-		jobIdInFileCheck.setLabel("File name");
-		jobIdInFileCheck.addModificationConsumer("updateStatus", updateStatusListener);
+	    sectionContent.append('treez-check-box')
+			.label('Delete template rows with unassigned variable place holders.')
+			.bindValue(this,()=>this.isDeletingUnassignedRows);	    
+	    
 	}
 
-	createStatusSection(page) {
-		Section status = dataPage.createSection("status", executableHelpContextId);
-		status.setExpanded(false);
+	
 
-		//resulting command
-		status.createInfoText(inputPathInfo, this, "Resulting input file path", "");
+	__createStatusSection(page) {
+		
+		const section = page.append('treez-section')
+        	.label('Status')
+        	.attr('open',false);
+
+		var sectionContent = section.append('div'); 
+		
+		sectionContent.append('treez-text-area')
+			.label('Resulting input file path')
+			.disable() 
+			.bindValue(this, ()=>this.inputPathInfo);	
+		
+		this.__refreshStatus();
 
 	}
 
-	refreshStatus() {
-		AbstractUiSynchronizingAtom.runUiTaskNonBlocking(() -> {
-
-			String modifiedInputPath = getModifiedInputFilePath();
-			inputPathInfo.set(modifiedInputPath);
-		});
+	__refreshStatus() {			
+		this.inputPathInfo = this.__getModifiedInputPath();	
+	}
+	
+	__getModifiedInputPath(){
+		var inputModification = null;
+		try{
+			inputModification = this.getChildByClass(InputModification);
+		} catch(error){			
+		}		
+		
+		return inputModification
+			?inputModification.getModifiedPath(this)
+			:this.inputPath;
 	}
 
-	execute(refreshable) {
+	doRunModel(treeView, executableMonitor, finishedHandler){
 
-		LOG.info("Executing " + this.getClass().getSimpleName() + " '" + getName() + "'");
+		console.info("Executing InputFileGenerator '" + this.name + "'");
 
-		String modifiedInputFilePath = getModifiedInputFilePath();
+		var modifiedInputPath = this.__getModifiedInputPath();
+				
+		//delete old input file if exists
+        
+		window.treezTerminal.delete(modifiedInputPath, console.error);
 
-		//delete old input file (=the output of this atom) if it exists
-		File inputFile = new File(modifiedInputFilePath);
-		if (inputFile.exists()) {
-			inputFile.delete();
-		}
+        var sourceModelAtom = this.getChildFromRoot(this.sourceModelPath);
+		
+	
+		window.treezTerminal.readTextFile(this.templatePath, processTemplate, console.error);
 
-		//read template file
-		String templateString = readTemplateFile(templateFilePath.get());
+		function processTemplate(templateString){
+			var inputFileString = this.__applyTemplateToSourceModel(templateString, sourceModelAtom);
 
-		//replace variable place holders with variable values
-		GenericInputModel sourceModelAtom = getChildFromRoot(this.sourceModel.get());
-		String inputFileString = applyTemplateToSourceModel(templateString, sourceModelAtom, nameExpression.get(),
-				valueExpression.get(), deleteUnassignedRows.get());
-
-		if (inputFileString.isEmpty()) {
-			String message = "The input file '" + modifiedInputFilePath
-					+ "' is empty. Please check the place holder and the source variables.";
-			LOG.warn(message);
-		}
-
-		//save result as new input file
-		saveResult(inputFileString, modifiedInputFilePath);
-
-	}
-
-	*/
-
-	/**
-	 * Applies the template to the variable model. This means that the variable place holders in the template string are
-	 * replaced by the variable values for all variables that are provided by the variable source model.
-	 */
-
-    /*
-	static applyTemplateToSourceModel(
-			 templateString,
-			 sourceModel,
-			 nameExpression,
-			 valueExpression,
-			deleteUnassignedRows) {
-
-		String resultString = templateString;
-
-		List<VariableField<?, ?>> variableFields = sourceModel.getEnabledVariableFields();
-		for (VariableField<?, ?> variableField : variableFields) {
-			String variableName = variableField.getName();
-			String variableLabel = variableField.getLabel();
-			String valueString = variableField.getValueString(); //e.g. "1"
-
-			String unitString = "";
-			boolean isQuantityVariableField = variableField instanceof QuantityVariableField;
-			if (isQuantityVariableField) {
-				QuantityVariableField quantityField = (QuantityVariableField) variableField;
-				unitString = quantityField.getUnitString(); //e.g. "m"
+			if (inputFileString.isEmpty()) {
+				var message = 'The input file "' + modifiedInputFilePath
+						+ '" is empty. Please check the place holder and the source variables.';
+				console.warn(message);
 			}
 
-			String placeholderExpression = createPlaceHolderExpression(nameExpression, variableName, variableLabel);
+			//save input file
+			window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString, console.error);
+		}	
 
-			String injectedExpression = createExpressionToInject(valueExpression, variableName, valueString,
-					unitString);
+		
+	}
+
+	
+
+	__applyTemplateToSourceModel(templateString, sourceModel) {
+
+		var resultString = templateString;
+
+		var variables = sourceModel.getEnabledVariables();
+		variables.forEach((variable)=>{
+			var variableName = variable.name;
+			var valueString = variable.value;			
+
+			var unit = "";
+			var isQuantityVariable = variable instanceof QuantityVariable;
+			if (isQuantityVariable) {				
+				unit = variable.unit;
+			}
+
+			var placeholderExpression = this.__createPlaceHolderExpression(variableName);
+
+			var injectedExpression = this.__createExpressionToInject(variableName, valueString, unit);
 
 			//inject expression into template
-			LOG.info("Template placeholder to replace: '" + placeholderExpression + "'");
-			LOG.info("Expression to inject: '" + injectedExpression + "'");
+			console.info("Template placeholder to replace: '" + placeholderExpression + "'");
+			console.info("Expression to inject: '" + injectedExpression + "'");
 			resultString = resultString.replace(placeholderExpression, injectedExpression);
+		});
 
-		}
-
-		if (deleteUnassignedRows) {
-			resultString = deleteRowsWithUnassignedPlaceHolders(nameExpression, resultString);
+		if (this.isDeletingUnassignedRows) {
+			resultString = thsi.__deleteRowsWithUnassignedPlaceHolders(resultString);
 		}
 
 		return resultString;
 	}
 
-	static createExpressionToInject(
-			 valueExpression,
-			 variableName,
-			 valueString,
-			 unitString) {
+	__createExpressionToInject(variableName, valueString, unitString) {
 
-		String correctedValueString = valueString;
-		if (valueString == null) {
-			String message = "Value for variable '" + variableName + "' is null.";
-			LOG.warn(message);
+		var correctedValueString = valueString;
+		if (valueString === null) {
+			var message = "Value for variable '" + variableName + "' is null.";
+			console.warn(message);
 			correctedValueString = "null";
 		}
 
-		String injectedExpression;
-		injectedExpression = valueExpression.replace(VALUE_TAG, correctedValueString);
+		var injectedExpression;
+		injectedExpression = valueExpression.replace(this.valueTag, correctedValueString);
 		if (unitString != null) {
-			injectedExpression = injectedExpression.replace(UNIT_TAG, unitString);
+			injectedExpression = injectedExpression.replace(this.unitTag, unitString);
 		} else {
 			//remove unit tag
-			injectedExpression = injectedExpression.replace(UNIT_TAG, "");
+			injectedExpression = injectedExpression.replace(this.unitTag, "");
 		}
 		return injectedExpression;
 	}
 
-	 static createPlaceHolderExpression(nameExpression, variableName,  variableLabel) {
-		String placeholderExpression;
-		boolean containsName = nameExpression.contains(NAME_TAG);
+	 __createPlaceHolderExpression(variableName) {
+		var placeholderExpression;
+		var containsName = this.nameExpression.indexOf(this.nameTag) > -1;
 		if (containsName) {
-			placeholderExpression = nameExpression.replace(NAME_TAG, variableName);
+			placeholderExpression = this.nameExpression.replace(this.nameTag, variableName);
 		} else {
-			boolean containsLabel = nameExpression.contains(LABEL_TAG);
-			if (containsLabel) {
-				placeholderExpression = nameExpression.replace(LABEL_TAG, variableLabel);
-			} else {
-				String message = "The placeholder must contain either a " + NAME_TAG + " or a " + LABEL_TAG + " tag.";
-				throw new IllegalStateException(message);
-			}
+			var message = "The placeholder must contain a " + this.nameTag + " tag.";
+				throw new Error(message);
 		}
 		return placeholderExpression;
 	}
 
-	 static deleteRowsWithUnassignedPlaceHolders(nameExpression, resultString) {
-		String generalPlaceHolderExpression = nameExpression.replace("{", "\\{");
+	 __deleteRowsWithUnassignedPlaceHolders(resultString) {
+		var generalPlaceHolderExpression = this.nameExpression.replace("{", "\\{");
 		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("}", "\\}");
 		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("$", "\\$");
 		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("<name>", ".*");
 		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("<label>", ".*");
 
-		if (generalPlaceHolderExpression.equals(".*")) {
-			String message = "The deletion of rows with unassigned place holders is not yet implemented for place holders"
+		if (generalPlaceHolderExpression === ".*") {
+			var message = "The deletion of rows with unassigned place holders is not yet implemented for place holders"
 					+ "of the type '" + nameExpression
 					+ "'. Please adapt the name expression or disable the deletion of template rows"
-					+ "with unassigned varaible place holders.";
-			LOG.warn(message);
+					+ "with unassigned variable place holders.";
+			console.warn(message);
 			return resultString;
 		}
 
-		String[] lines = resultString.split("\n");
-		List<String> removedLines = new ArrayList<>();
-		List<String> newLines = new ArrayList<>();
+		var lines = resultString.split("\n");
+		var removedLines = [];
+		var newLines = [];
 
-		Pattern pattern = Pattern.compile(generalPlaceHolderExpression);
+		var pattern = Pattern.compile(generalPlaceHolderExpression);
 
-		for (String line : lines) {
-			Matcher matcher = pattern.matcher(line);
-			boolean containsUnassignedPlaceHolder = matcher.find();
+		lines.forEach((line)=>{
+			var matcher = pattern.matcher(line);
+			var containsUnassignedPlaceHolder = matcher.find();
 			if (containsUnassignedPlaceHolder) {
 				removedLines.add(line);
 			} else {
 				newLines.add(line);
 			}
-		}
-		String newResultString = String.join("\n", newLines);
-		if (!removedLines.isEmpty()) {
-			String message = "Some rows with unassigned variable place holders have been removed from the input file:\n"
-					+ String.join("\n", removedLines);
-			LOG.info(message);
+		});
+
+		var newResultString = newLines.join("\n");
+		if (removedLines.length>0) {
+			var message = "Some rows with unassigned variable place holders have been removed from the input file:\n"
+					+ removedLines.join("\n");
+			console.info(message);
 		}
 		return newResultString;
 	}
-
-
 
 	extendContextMenuActions(actions, treeViewer) {
 		return actions;
@@ -334,56 +304,12 @@ export default class InputFileGenerator extends ComponentAtom  {
 		return new ComponentAtomCodeAdaption(this);
 	}
 
-
-	static readTemplateFile(templatePath) {
-
-		Path path = Paths.get(templatePath);
-		Charset charSet = Charset.forName("UTF-8");
-		byte[] encoded;
-		try {
-			encoded = Files.readAllBytes(path);
-			String text = new String(encoded, charSet);
-			return text;
-		} catch (IOException exception) {
-			String message = "Could not read file '" + templatePath + "'.";
-			throw new IllegalStateException(message, exception);
+	getJobId(){
+		if(this.parent){
+			return this.parent.getJobId();
+		} else {
+			return '{unknownJobId}';
 		}
 	}
-
-	//Saves the given text as text file with the given file path
-
-	static saveResult(text, filePath) {
-		File file = new File(filePath);
-		try {
-			FileUtils.writeStringToFile(file, text);
-		} catch (IOException exception) {
-			String message = "Could not write text to file '" + filePath + "'.";
-			throw new IllegalStateException(message, exception);
-		}
-
-	}
-
-	getModifiedInputFilePath() {
-		InputPathModifier inputPathModifier = new InputPathModifier(this);
-
-		String modifiedInputPath = inputPathModifier.getModifiedInputPath(inputFilePath.get());
-		return modifiedInputPath;
-	}
-
-
-
-	get jobId() {
-
-		AbstractAtom<?> parent = this.getParentAtom();
-		boolean parentIsExecutable = parent instanceof Executable;
-		if (parentIsExecutable) {
-			Executable executable = (Executable) parent;
-			return executable.getJobId();
-		}
-
-		return "{unknownJobId}";
-	}
-
-	*/
 
 }

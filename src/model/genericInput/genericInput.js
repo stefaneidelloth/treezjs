@@ -28,10 +28,10 @@ export default class GenericInput extends ComponentAtom {
 	createComponentControl(tabFolder, dTreez){    
 	     
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
 
 		this.__section = page.append('treez-section')
-        .title('Variables');  		
+        .label('Variables');  		
 		
 		this.__recreateVariableControls();   
 	     

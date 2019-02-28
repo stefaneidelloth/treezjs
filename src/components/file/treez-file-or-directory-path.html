@@ -14,8 +14,17 @@
             class TreezFileOrDirectoryPath extends TreezElement {
 
             	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['title']);                    
+            		return TreezElement.observedAttributes.concat(['label']);                    
                 }
+                
+                get label() {
+				  return this.getAttribute('label');
+				}
+
+				set label(newValue) {
+				  this.setAttribute('label', newValue);	  
+
+				}  
 
                 constructor(){
                     super();                  
@@ -31,7 +40,7 @@
 
                         var labelElement = document.createElement('label');  
                         self.labelElement = labelElement;                     
-                        labelElement.innerText = self.title;                       
+                        labelElement.innerText = self.label;                       
                         self.appendChild(labelElement);  
 
                         var container = document.createElement('div');
@@ -123,7 +132,7 @@
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='title'){
+                    if(attr==='label'){
                     	if(this.labelElement){
                     		 this.labelElement.innerText= newValue;   
                     	}                                           

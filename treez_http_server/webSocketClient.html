@@ -27,10 +27,10 @@
       }
 
       function onOpen(){
-            wsocket.send("dir");  
+            wsocket.send('type "D:\\foo.txt"');  
       }
 
-      function onMessage(event) {             
+      function onMessage(event) {                   
 
          console.log(event.data);      
 

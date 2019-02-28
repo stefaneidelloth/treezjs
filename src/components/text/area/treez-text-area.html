@@ -11,12 +11,12 @@
 
             class TreezTextArea extends TreezElement {
 
-            	 get title() {
-				  return this.getAttribute('title');
+            	 get label() {
+				  return this.getAttribute('label');
 				}
 
-				set title(newValue) {
-				  this.setAttribute('title', newValue);	  
+				set label(newValue) {
+				  this.setAttribute('label', newValue);	  
 
 				}  
 
@@ -29,7 +29,7 @@
 				}  
 
             	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['title','enabled']);                    
+            		return TreezElement.observedAttributes.concat(['label','enabled']);                    
                 }
 
                 constructor(){
@@ -45,7 +45,7 @@
 
                         var labelElement = document.createElement('label');  
                         self.labelElement = labelElement;                     
-                        labelElement.innerText = self.title;                       
+                        labelElement.innerText = self.label;                       
                         self.appendChild(labelElement);  
 
                         var container = document.createElement('div');
@@ -77,7 +77,7 @@
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='title'){
+                    if(attr==='label'){
                     	if(this.labelElement){
                     		 this.labelElement.innerText= newValue;   
                     	}                                           

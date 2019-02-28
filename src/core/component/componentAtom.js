@@ -37,6 +37,8 @@ export default class ComponentAtom extends Atom {
 	    head.append('<link rel="import" id="treez-image-combo-box" href="./src/components/imageComboBox/treez-image-combo-box.html"/>');		
 		
 		head.append('<link rel="import" id="treez-line-style" href="./src/components/lineStyle/treez-line-style.html"/>');
+		
+		head.append('<link rel="import" id="treez-model-path" href="./src/components/modelPath/treez-model-path.html"/>');
        
         head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');        
         head.append('<link rel="import" id="treez-size" href="./src/components/size/treez-size.html"/>');        

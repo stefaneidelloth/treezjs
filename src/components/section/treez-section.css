@@ -1,17 +1,16 @@
 treez-section {
     background-color:white;
     width:100%;
-    font-family: Arial,sans-serif;
+    font-family: Consolas;
     font-size: 12px;
     margin-top:1px;
     margin-bottom:3px;
     border-style: none;
     display:'block';
-    
 }
 
-treez-section div {
-  padding: 2px;
+treez-section div {  
+  padding-left: 2px;  
   border-style:none;
 }
 

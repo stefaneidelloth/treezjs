@@ -80,8 +80,8 @@ export default class Atom {
 
 	//#region actions
 
-	execute(treeView) {
-		//empty default implementation
+	execute(treeView) {		
+		alert('Execute of atom not yet implemented!');
 	}
 
 	
@@ -529,14 +529,14 @@ export default class Atom {
 	 */
 	getRoot() {
 
-		if (this.name.equals("root")) {
+		if (this.name === 'root') {
 			return this;
 		}
 		
 		if (!this.parent) {
 			throw new Error("The Atom '" + this.name + "' has no parent. Could not get root.");
 		} else {			
-			var parentIsRoot = this.parent.name.equals("root");
+			var parentIsRoot = (this.parent.name === 'root');
 			if (parentIsRoot) {
 				return this.parent;
 			} else {				
@@ -597,14 +597,9 @@ export default class Atom {
 
 	
 	getTreePath() {
-		var path = this.name;		
-		if (this.parent != null) {			
-			var parentName = this.parent.name;
-			if (!parentName.equals("invisibleRoot")) {
-				path = parent.getTreePath() + "." + path;
-			}
-		}
-		return path;
+		return this.parent
+			? this.parent.getTreePath() + "." + this.name
+			: this.name;
 	}
 
 	delete() {		

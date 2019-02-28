@@ -22,10 +22,10 @@ export default class Models extends Model {
 	createComponentControl(tabFolder, dTreez){    
 	     
 		const page = tabFolder.append('treez-tab')
-            .title('Data');		
+            .label('Data');		
 
 		const section = page.append('treez-section')
-        	.title('Models');   
+        	.label('Models');   
 
 	    const sectionContent = section.append('div'); 	     
 

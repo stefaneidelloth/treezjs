@@ -34,15 +34,55 @@ export default class TreezTerminal {
 		this.__onError = errorHandler;
 		this.__webSocket.send(command);
 	}
+	
+	readTextFile(filePath, resultHandler, errorHandler){
+		this.__onMessage = resultHandler;
+		this.__onError = errorHandler;
+		var dosPath = filePath.replace('/','\\');
+		var command = 'type "' + dosPath + '"\n';
+		this.__webSocket.send(command);		
+	}
+	
+	writeTextFile(filePath, text, errorHandler){	
+				
+		this.__onError = errorHandler;
+		var lines = text.split('\n');
+		var dosPath = filePath.replace('/','\\');
+		var redirect = '>';
+		lines.forEach((line)=>{
+			var command = 'echo ' + line + redirect + '"' + dosPath + '"';
+			this.__webSocket.send(command);
+			if(redirect === '>'){
+				redirect = '>>';
+			}					
+		});
+	
+	}
+
+	delete(filePath, errorHandler){
+		this.__onError = errorHandler;		
+
+		var deleteCommand = 'IF EXIST "' + filePath + '" DEL /F "' + filePath + '"';
+		this.__webSocket.send(deleteCommand); 
+	}
 
 	__webSocketOnOpen(event) { 
 		console.info("Opened web socket console");
     }
 	
 	__webSocketOnMessage(event) { 
-		if(this.__onMessage){
+
+
+      var isError = event.data.startsWith("Error:");
+      if(isError){
+			this.__webSocketOnError(event)
+      } else {
+      	if(this.__onMessage){
 			this.__onMessage(event.data);
-		} 
+		}
+      }
+
+		 
     }
 
     __webSocketOnError(event) { 

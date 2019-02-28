@@ -17,19 +17,21 @@
 				}     
 
 				constructor(){
-					super();										          
+					super();	
+					this.__parentAtom=undefined;
 				} 
 				           
 
-				bindValue(parent, lambdaExpressionEncodingPropertyToBind){
+				bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
+					this.__parentAtom = parentAtom;
 					
 					var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingPropertyToBind)
 
-					this.value = parent[propertyName];					
+					this.value = parentAtom[propertyName];					
 
-					this.__addListenerToUpdatePropertyOnElementChanges(parent, propertyName);
+					this.__addListenerToUpdatePropertyOnElementChanges(parentAtom, propertyName);
 
-					this.__modifyPropertyToUpdateElementOnPropertyChanges(parent, propertyName);	
+					this.__modifyPropertyToUpdateElementOnPropertyChanges(parentAtom, propertyName);	
 				}
 
                 //we want to avoid hard coded strings to pass/identify properties

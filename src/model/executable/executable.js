@@ -12,6 +12,9 @@ export default class Executable extends Model {
 	//static variable __finishedString is defined below class definition
 
 	constructor(name) {
+		if(!name){
+			name='exectuable';
+		}
 		super(name);
 		this.image = 'run.png';
 		this.isRunnable=true;	
@@ -39,7 +42,7 @@ export default class Executable extends Model {
     createComponentControl(tabFolder, dTreez){    
      
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
 
 		this.__createExecutableSection(page); 
         this.__createInputSection(page);      
@@ -248,22 +251,22 @@ export default class Executable extends Model {
     __createExecutableSection(tab) {
 
 		const section = tab.append('treez-section')
-            .title('Executable');
+            .label('Executable');
 
         section.append('treez-section-action')
             .image('resetjobId.png')
-            .title('Reset jobId to 1')
+            .label('Reset jobId to 1')
             .addAction(()=>this.__resetJobId());
 
         section.append('treez-section-action')
             .image('run.png')
-            .title('Run external executable')
+            .label('Run external executable')
             .addAction(()=>this.execute(this.treeView));  
 
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-file-path')
-            .title('Executable')           
+            .label('Executable')           
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.executablePath);            
 	}   
@@ -271,34 +274,34 @@ export default class Executable extends Model {
 	__createInputSection(page) {
        
         const section = page.append('treez-section')
-            .title('Input'); 
+            .label('Input'); 
 
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-text-area')
-            .title('Input arguments')           
+            .label('Input arguments')           
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.inputArguments); 
 
 		sectionContent.append('treez-file-or-directory-path')
-            .title('Input file or folder')            
+            .label('Input file or folder')            
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.inputPath);            
 	}   
   
 	__createOutputSection(page) {
        const section = page.append('treez-section')
-           .title('Output');
+           .label('Output');
 
        const sectionContent = section.append('div'); 
 
        sectionContent.append('treez-text-area')
-            .title('Output arguments')           
+            .label('Output arguments')           
             .onChange(()=>this.__refreshStatus())          
             .bindValue(this,()=>this.outputArguments); 
 
        sectionContent.append('treez-file-or-directory-path')
-            .title('Output file or folder')            
+            .label('Output file or folder')            
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.outputPath); 
 
@@ -313,23 +316,23 @@ export default class Executable extends Model {
 
 	__createStatusSection(page) {
        const section = page.append('treez-section')
-           .title('Status')
+           .label('Status')
            .attr('expanded','false');
 
        const sectionContent = section.append('div'); 
      
        sectionContent.append('treez-text-area')
-            .title('Resulting command') 
+            .label('Resulting command') 
             .disable() 
             .bindValue(this,()=>this.commandInfo);  
      
        sectionContent.append('treez-text-area')
-            .title('Execution status') 
+            .label('Execution status') 
             .disable()
             .bindValue(this,()=>this.executionStatusInfo);       
      
        sectionContent.append('treez-text-area')
-            .title('Next job index') 
+            .label('Next job index') 
             .disable() 
             .bindValue(this,()=>this.jobIdInfo); 
    }   

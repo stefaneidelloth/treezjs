@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+
+	<head>
+ 
+		<link type="text/css" rel="stylesheet" href="treez-model-path.css" />
+		<link rel="import" href="./../treezElement.html" >		
+	
+        <script>
+       
+           	class TreezModelPath extends TreezElement {
+
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['label','atomclasses']);                    
+                }
+            	
+            	get label() {
+  				  return this.getAttribute('label');
+  				}
+
+  				set label(newValue) {
+  				  this.setAttribute('label', newValue);	 
+  				}  
+  				
+  				get atomclasses() {
+   				  return this.getAttribute('atomclasses');
+   				}
+
+    			set atomclasses(value) {
+    			  this.setAttribute('atomclasses', value);	  
+    			} 
+
+                constructor(){
+                    super();   
+                    this.labelElement=undefined;  
+                    this.comboBox=undefined;                     
+                }            	
+
+                connectedCallback() {
+                	var self = this;
+
+                    if(!self.labelElement){  
+
+                        var labelElement = document.createElement('label');  
+                        self.labelElement = labelElement;                     
+                        labelElement.innerText = self.label;                       
+                        self.appendChild(labelElement);  
+                        
+                        var comboBox = document.createElement('select');
+                        self.comboBox = comboBox;   
+                        comboBox.className='treez-model-path-select';
+                        comboBox.onchange = () =>self.__comboBoxChanged();
+                        
+                        self.__updateOptions();
+                                               
+                        if(self.value !== 'undefined'){
+                        	self.comboBox.value = self.value; 
+                        }  else {
+                        	self.comboBox.value = '';
+                        } 
+                        self.appendChild(comboBox); 
+                                     		
+                    }
+                }
+                
+                __updateOptions(){
+                	var self=this;
+
+                	if(!self.__parentAtom){
+                		return;
+                	}
+
+                	if(!self.atomclasses){
+                		return;
+                	}
+
+                	var root = self.__parentAtom.getRoot();  
+                	
+                	var classNameArray = this.atomclasses.split(',');                	
+                    var modelPaths = this.__getAvailableModelPaths(root, classNameArray, this.hasToBeEnabled, this.filterDelegate);
+                    
+
+					while (self.comboBox.firstChild) {
+						self.comboBox.removeChild(self.comboBox.firstChild);
+					}                    
+                   
+                    
+                    modelPaths.forEach(
+                   		(modelPath)=>{
+                   			 var option = document.createElement('option');
+                   			 option.innerText = modelPath;
+                   			 self.comboBox.appendChild(option);                   			
+                   		}
+                    );
+
+                    if(modelPaths.length===1){
+                    	self.value=modelPaths[0];
+                    }
+
+                }
+                
+                __getAvailableModelPaths(atom, classNames, hasToBeEnabled, filterDelegate){ 
+                	
+                	var self=this;
+                	            		            		
+            		var availablePaths = [];
+            		
+            		atom.children.forEach(
+           				(child)=>{
+           					
+           					classNames.forEach((className)=>{
+           						var hasWantedType = (child.constructor.name === className);
+                				if (!hasWantedType) {
+                					return;
+                				}
+                				
+                				if (hasToBeEnabled) {                					
+                					if (!child.isEnabled) {
+                						return;
+                					}
+                				}
+
+                				if (filterDelegate) {
+                					var passedFilter = filterDelegate(child);
+                					if (!passedFilter) {
+                						return;
+                					}
+                				}          				
+                				                				
+                				var path = child.getTreePath();
+
+                				availablePaths.push(path);
+           					});
+                			
+                			availablePaths = availablePaths.concat(self.__getAvailableModelPaths(child, classNames, hasToBeEnabled, filterDelegate));
+           				}
+            		);
+            		
+
+            		return availablePaths;
+                	
+                }
+
+              
+
+                __comboBoxChanged(){
+                	this.value = this.comboBox.value;                	             	
+                }                   
+
+                updateElements(newValue){
+                	if(this.comboBox){ 
+                		if(newValue !== undefined){
+                        	this.comboBox.value = newValue; 
+                        } else {
+                        	this.comboBox.value = null;
+                        }						
+					}					    
+                }                
+
+                attributeChangedCallback(attr, oldValue, newValue) {
+                	super.attributeChangedCallback(attr, oldValue, newValue) 
+                    if(attr==='label'){
+                    	if(this.labelElement){
+                    		 this.labelElement.innerText= newValue;   
+                    		 return;
+                    	}                                           
+                    } 
+                	
+                	if(attr==='atomclasses'){
+                		this.__updateOptions();                    	                                        
+                    } 
+                }               
+               
+            }
+            window.customElements.define('treez-model-path', TreezModelPath);                    
+
+        </script>	
+		
+	</head>
+
+</html>

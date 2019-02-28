@@ -11,7 +11,7 @@
 }
 
 .treez-details {
-	font-family: Arial,sans-serif;
+	font-family: Consolas;
     font-size: 12px;
 }
 
@@ -63,7 +63,7 @@
 .treez-menu-button-label {
 	margin-left: 5px;
 	float: left;	
-    font-family: Arial,sans-serif;
+    font-family: Consolas;
     font-size: 12px;	
 }
 

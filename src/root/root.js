@@ -20,10 +20,10 @@ export default class Root extends ComponentAtom {
 	createComponentControl(tabFolder, dTreez){    
 	     
 		const page = tabFolder.append('treez-tab')
-        .title('Data');		
+        .label('Data');		
 
 		const section = page.append('treez-section')
-		.title('Root');   
+		.label('Root');   
 
 		const sectionContent = section.append('div'); 	     
 

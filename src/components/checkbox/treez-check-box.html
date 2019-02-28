@@ -24,7 +24,7 @@
 				  return valueString === 'true';
 				}   
 
-                 get label() {
+                get label() {
 				  return this.getAttribute('label');
 				}
 
@@ -45,13 +45,14 @@
 
                     if(!self.checkBox){   
 
-						var container = document.createElement('div');                   
+						var container = document.createElement('div'); 
+						container.className = 'treez-check-box-container';
 						self.appendChild(container);                 
 
 						var checkBox = document.createElement('input');                       
 						self.checkBox = checkBox;
 						checkBox.type='checkBox'	
-						checkBox.className = 'treez-check-box';
+						checkBox.className = 'treez-check-box-input';
 
 						switch(self.value){
 						    	case 'true':

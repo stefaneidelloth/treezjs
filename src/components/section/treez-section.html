@@ -43,10 +43,19 @@
             class TreezSection extends HTMLElement {
 
                 static get observedAttributes() {
-                    return ['title','collapsed','actions'];
+                    return ['label','collapsed','actions'];
                 }
+                
+                get label() {
+  				  return this.getAttribute('label');
+  				}
 
-                 get actions(){
+  				set label(newValue) {
+  				  this.setAttribute('label', newValue);	  
+
+  				}  
+
+                get actions(){
 					return this.actionArray;
 				}
 
@@ -78,7 +87,7 @@
 
                         let label = document.createElement('span');
                         label.classList.add('treez-section-header-label');
-                        label.innerText = this.title;        
+                        label.innerText = this.label;        
                         this.sectionHeader.appendChild(label);
 
                         let toolbar = document.createElement('span')
@@ -171,7 +180,7 @@
                 }
 
                 attributeChangedCallback(attr, oldValue, newValue) {
-                    if(attr==='title'){
+                    if(attr==='label'){
                     	if(this.sectionHeader){
                     		 this.sectionHeader.innerText= newValue;   
                     	}                                           
