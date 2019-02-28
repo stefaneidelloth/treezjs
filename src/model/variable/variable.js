@@ -13,26 +13,28 @@ export default class Variable extends ComponentAtom {
 	
 	constructor(name) {
 		super(name);
-		this.defaultValue;
-		this.__isEnabled;
+		this.value=undefined
+		this.defaultValue=undefined;
+		this.__isEnabled=true;
 	}
 	
 	copy() {
 		// TODO
 	}
 
-    createComponentControl(tabFolder, dTreez){    
+    createComponentControl(tabFolder, treeView){    
      
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
 
 		const section = page.append('treez-section')
-        	.title('Properties');   
+        	.label('Properties');   
 
 	    const sectionContent = section.append('div'); 
 	
 	    sectionContent.append('treez-text-field')
-	        .title('Name') 
+	        .label('Name') 
+	        .onChange(()=>treeView.refresh())
 	        .bindValue(this,()=>this.name);   
 	}
     

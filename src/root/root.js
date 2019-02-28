@@ -17,7 +17,7 @@ export default class Root extends ComponentAtom {
 
     }
 	
-	createComponentControl(tabFolder, dTreez){    
+	createComponentControl(tabFolder, treeView){    
 	     
 		const page = tabFolder.append('treez-tab')
         .label('Data');		

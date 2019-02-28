@@ -14,7 +14,8 @@ export default class AtomTreeNodeAdapter {
 
 	static createExpandableNodeWithChildren(parentSelection,treeView,atom){
 		var expandableNode = parentSelection.append('details')
-		    					.className('treez-details');
+		    					.className('treez-details')
+		    					.title(atom.constructor.name);
 
 		if(atom.isExpanded){
 			expandableNode.attr('open','');
@@ -65,7 +66,8 @@ export default class AtomTreeNodeAdapter {
 
 	static crateLeafeNode(parentSelection,treeView,atom){
 		var leafNode = parentSelection.append('div')			
-			.className('treez-leaf-node');
+			.className('treez-leaf-node')
+			.title(atom.constructor.name);
 
 		leafNode.onClick(()=>{
 			this.showProperties(treeView,atom);

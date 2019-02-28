@@ -65,7 +65,7 @@ export default class InputFileGenerator extends Model  {
 		return child;
 	}
 	
-	createComponentControl(tabFolder, dTreez){    
+	createComponentControl(tabFolder, treeView){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');

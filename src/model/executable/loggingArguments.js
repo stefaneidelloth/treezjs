@@ -15,7 +15,7 @@ export default class LoggingArguments extends ComponentAtom {
 		//TODO
 	}	
 
-    createComponentControl(tabFolder, dTreez){  
+    createComponentControl(tabFolder, treeView){  
 		const page = tabFolder.append('treez-tab')
             .title('Data');
 		

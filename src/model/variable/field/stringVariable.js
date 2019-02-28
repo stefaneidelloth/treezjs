@@ -10,7 +10,8 @@ export default class StringVariable extends Variable {
 	
 	createVariableControl(parent, dTreez){
 		var textField = parent.append('treez-text-field')
-		  .title(this.name);
+		.label(this.name)
+		.bindValue(this, ()=>this.value);
     }
 
 }

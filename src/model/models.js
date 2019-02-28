@@ -19,7 +19,7 @@ export default class Models extends Model {
 		//TODO
 	}
 
-	createComponentControl(tabFolder, dTreez){    
+	createComponentControl(tabFolder, treeView){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');		

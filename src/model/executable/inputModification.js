@@ -20,7 +20,7 @@ export default class InputModification extends ComponentAtom {
 		//TODO
 	}	
 
-    createComponentControl(tabFolder, dTreez){  
+    createComponentControl(tabFolder, treeView){  
 		const page = tabFolder.append('treez-tab')
             .title('Data');
 		
