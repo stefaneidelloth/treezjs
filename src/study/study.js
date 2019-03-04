@@ -1,5 +1,8 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Model from './../model/model.js';
+import ModelInput from './../model/input/modelInput.js';
+import Monitor from './../core/monitor/Monitor.js';
+import StudyOutput from './studyOutput.js';
 
 export default class Study extends ComponentAtom {
 			
@@ -18,6 +21,8 @@ export default class Study extends ComponentAtom {
 		
 		this.page = undefined;
 		this.sectionContent = undefined;
+
+		this.numberOfRemainingModelJobs = undefined;
 	}
 	
 	createComponentControl(tabFolder, treeView){   
@@ -46,12 +51,12 @@ export default class Study extends ComponentAtom {
 	   
 		this.sectionContent.append('treez-model-path')
         	.label('Model to run')
-        	.attr('atomclasses', Model.name)
+        	.nodeAttr('atomClasses', [Model])
         	.bindValue(this, ()=>this.controlledModelPath);
 		
 		this.sectionContent.append('treez-model-path')
 	    	.label('Variable source model (provides variables)')
-	    	.attr('atomclasses', Model.name)
+	    	.nodeAttr('atomClasses', [Model])	    	
 	    	.bindValue(this, ()=>this.sourceModelPath);
 		
 
@@ -67,7 +72,7 @@ export default class Study extends ComponentAtom {
 		try {
 			this.runStudy(treeView, monitor);
 		} catch (exception) {
-			console.error("Could not execute study '" + this.name + "'!", exception);
+			console.error('Could not execute study "' + this.name + '"!', exception);
 			monitor.done();
 		}
 	}
@@ -81,14 +86,15 @@ export default class Study extends ComponentAtom {
 		var startMessage = 'Executing ' + className + ' "' + this.name + '"';
 		console.info(startMessage);
 		
-		var activeRanges = this.inputGenerator.getActiveVariableRanges();
-		console.info('Number of variable ranges: ' + activeRanges.length());
+		var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
+		console.info('Number of (enabled) ranges: ' + numberOfRanges);
 	
 		var studyTitle = "Running " + className;
-		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
+		monitor.title = studyTitle;
 
-		var stuyMonitor = monitor.createChild(studyTitle, numberOfSimulations);
-		
+		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
+		monitor.setTotalWork(numberOfSimulations);
+				
 		console.info("Number of total simulations: " + numberOfSimulations);
 
 		//reset job index to 1
@@ -99,27 +105,25 @@ export default class Study extends ComponentAtom {
 
 		//prepare result structure
 		this.__prepareResultStructure();
-		this.__refresh();
+		treeView.refresh();
 
 		//get sweep output atom
-		var sweepOutputAtomPath = this.getStudyOutputAtomPath();
-		var sweepOutputAtom = this.getChildFromRoot(sweepOutputAtomPath);
+		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
+		var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
 
 		//remove all old children if they exist
-		sweepOutputAtom.removeAllChildren();
+		studyOutputAtom.removeAllChildren();
 
 		//execute target model for all model inputs
-		var numberOfRemainingModelJobs = [];
-		numberOfRemainingModelJobs.push(numberOfSimulations);
+		this.numberOfRemainingModelJobs = numberOfSimulations;
 
 		if (!monitor.isCanceled) {
-			var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, sweepMonitor,
-					numberOfRemainingModelJobs);
+			var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
 
 			if (this.isConcurrent) {
-				this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, sweepOutputAtom, sweepMonitor, jobFinishedHook);
+				this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
 			} else {
-				this.__executeTargetModelOneAfterAnother(refreshable, numberOfSimulations, modelInputs, sweepOutputAtom, sweepMonitor, jobFinishedHook);
+				this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
 			}
 
 			this.executeRunnableChildren(treeView);
@@ -128,10 +132,10 @@ export default class Study extends ComponentAtom {
 
 	}
 	
-	__finishOrCancelIfDone(treeView, monitor, numberOfRemainingModelJobs) {
-
-		var remainingModelJobs = numberOfRemainingModelJobs[0] - 1;
-		numberOfRemainingModelJobs[0] = remainingModelJobs;
+	__finishOrCancelIfDone(treeView, monitor) {
+		
+		var numberOfRemainingJobs = this.numberOfRemainingModelJobs-1;
+		this.numberOfRemainingModelJobs = numberOfRemainingJobs;
 
 		if (monitor.isChildCanceled()) {
 			if (this.isCanceled) {
@@ -142,11 +146,11 @@ export default class Study extends ComponentAtom {
 			monitor.setDescription('Canceled!');
 			monitor.cancel();
 
-			this.logAndShowCancelMessage();
+			this.__logAndShowCancelMessage();
 			treeView.refresh();			
 		}
 
-		if (remainingModelJobs === 0) {
+		if (numberOfRemainingJobs === 0) {
 
 			monitor.setDescription('Finished!');
 
@@ -156,7 +160,7 @@ export default class Study extends ComponentAtom {
 				monitor.done();
 			}
 
-			this.logAndShowEndMessage();
+			this.__logAndShowEndMessage();
 			treeView.refresh();
 		}
 	}
@@ -299,20 +303,20 @@ export default class Study extends ComponentAtom {
 		
 		modelInputs.forEach((modelInput)=>{
 			//allows to cancel the sweep if a user clicks the cancel button at the progress monitor window
-			if (!monitor.isCanceled()) {
+			if (!monitor.isCanceled) {
 				
-				this.__logModelStartMessage(counter, startTime, numberOfSimulations);
+				this.__logStartMessage(counter, startTime, numberOfSimulations);
 
-				monitor.setDescription("=>Job #" + counter);
+				monitor.setDescription('=>Job #' + counter);
 
-				var jobId = modelInput.getJobId();
-				var jobTitle = "Job '" + jobId + "'";
-				var jobMonitor = monitor.createChild(jobTitle, jobId, 1);
+				var jobId = modelInput.jobId;
+				var jobTitle = 'Job "' + jobId + '"';
+				var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
 
 				var modelOutputAtom = model.runModel(modelInput, treeView, jobMonitor);
 
 				
-				var modelOutputName = self.name + "OutputId" + modelInput.getJobId();
+				var modelOutputName = self.name + 'OutputId' + modelInput.jobId;
 				modelOutputAtom.name = modelOutputName;
 				outputAtom.addChild(modelOutputAtom);
 
@@ -321,16 +325,14 @@ export default class Study extends ComponentAtom {
 				counter++;
 			}
 		});
-
-		this.__refresh();
+		
 
 	}
 	
 	__prepareResultStructure() {
 		this.__createResultsAtomIfNotExists();
 		this.__createDataAtomIfNotExists();
-		this.__createOutputAtomIfNotExists();
-		this.refresh();
+		this.__createOutputAtomIfNotExists();		
 	}
 
 	__createOutputAtomIfNotExists() {
@@ -339,9 +341,9 @@ export default class Study extends ComponentAtom {
 		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
 		var studyOutputAtomExists = this.rootHasChild(studyOutputAtomPath);
 		if (!studyOutputAtomExists) {
-			var studyOutputAtom = new OutputAtom(studyOutputAtomName, this.image);
+			var studyOutput = new StudyOutput(studyOutputAtomName, this.image);
 			var data = this.getChildFromRoot(dataAtomPath);
-			data.addChild(sweepOutputAtom);
+			data.addChild(studyOutput);
 			console.info('Created ' + studyOutputAtomPath + ' for study output.');
 		}
 
@@ -360,7 +362,7 @@ export default class Study extends ComponentAtom {
 	__createDataAtomIfNotExists() {
 		var resultAtomPath = 'root.results';
 		var dataAtomName = 'data';
-		var dataAtomPath = this.__createOutputDataAtomPath();
+		var dataAtomPath = this.__createDataOutputAtomPath();
 		var dataAtomExists = this.rootHasChild(dataAtomPath);
 		if (!dataAtomExists) {			
 			var results = this.getChildFromRoot(resultAtomPath);
@@ -370,7 +372,7 @@ export default class Study extends ComponentAtom {
 	}
 	
 	__createStudyOutputAtomPath() {
-		return this.__createOutputDataAtomPath() + "." + this.__createStudyOutputAtomName();	
+		return this.__createDataOutputAtomPath() + "." + this.__createStudyOutputAtomName();	
 	}
 
 	__createDataOutputAtomPath() {
@@ -404,7 +406,7 @@ export default class Study extends ComponentAtom {
 		}
 	}
 
-	logModelStartMessage(counter, startTime, numberOfSimulations) {
+	__logStartMessage(counter, startTime, numberOfSimulations) {
 
 		//get current time
 		var date =new Date();		
@@ -412,7 +414,7 @@ export default class Study extends ComponentAtom {
 		var currentTime = date.valueOf();
 
 		//estimate end time
-		var endTimeString = this.estimateEndTime(startTime, currentTime, counter, numberOfSimulations);
+		var endTimeString = this.__estimateEndTime(startTime, currentTime, counter, numberOfSimulations);
 
 		//log start message
 		var message = "-- " + currentDateString + " --- Simulation " + counter + " of " + numberOfSimulations
@@ -421,7 +423,7 @@ export default class Study extends ComponentAtom {
 
 	}
 
-	logAndShowEndMessage() {		
+	__logAndShowEndMessage() {		
 		var date =new Date();		
 		var currentDateString = date.toLocaleString();	
 			
@@ -430,7 +432,7 @@ export default class Study extends ComponentAtom {
 		alert('Finished!');
 	}
 
-	logAndShowCancelMessage() {		
+	__logAndShowCancelMessage() {		
 		var date =new Date();		
 		var currentDateString = date.toLocaleString();
 				
@@ -440,10 +442,10 @@ export default class Study extends ComponentAtom {
 	}
 
 	
-	estimateEndTime(startTime, currentTime, counter, numberOfSimulations) {
+	__estimateEndTime(startTime, currentTime, counter, numberOfSimulations) {
 		var timeDifference = currentTime - startTime;
 		var numberOfFinishedSimulations = (counter - 1);
-		var estimatedTimePerSimulation = Double.NaN;
+		var estimatedTimePerSimulation = null;
 		if (numberOfFinishedSimulations != 0) {
 			estimatedTimePerSimulation = timeDifference / numberOfFinishedSimulations;
 		}

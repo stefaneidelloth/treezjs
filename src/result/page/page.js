@@ -3,7 +3,7 @@ import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeVi
 //import Graph from './../graph/graph.js';
 
 
-export default class Data extends ComponentAtom {
+export default class Page extends ComponentAtom {
    
 	constructor(name) {
 		if(!name){

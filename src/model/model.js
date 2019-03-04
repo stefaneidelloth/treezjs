@@ -60,13 +60,12 @@ export default class Model extends ComponentAtom {
 			this.jobId = modelInput.jobId;
 
 			//set variable values
-			const variableModelPaths = modelInput.getAllVariableModelPaths();
-            variableModelPaths.every((variableModelPath)=>{
-                const quantityToAssign = modelInput.getVariableValue(variableModelPath);
-                const variableAtom = this.getVariableAtom(variableModelPath);
-                const attributeName = this.getAttributeName(variableModelPath);
+			const variableModelPaths = modelInput.getAll();
+            variableModelPaths.forEach((variableModelPath)=>{
+                const quantityToAssign = modelInput.get(variableModelPath);
+                const variableAtom = this.getVariableAtom(variableModelPath);               
                 if (variableAtom !== null) {
-                    variableAtom[attributeName] = quantityToAssign;
+                    variableAtom.value = quantityToAssign;
                 } else {
                     throw new Error("Could not get variable atom for model path " + variableModelPath);
                 }
@@ -76,7 +75,8 @@ export default class Model extends ComponentAtom {
 	}
 
 	
-	execute(treeView) {
+	execute(treeView) {		
+		
 		const monitor = new Monitor("Treez console", treeView);
 		monitor.showInMonitorView();
 		try {
@@ -94,16 +94,16 @@ export default class Model extends ComponentAtom {
 
 		console.info("Running " + this.constructor.name + " '" + this.name + "'");
 
-		const modelOutput = this.createEmptyModelOutput();
-		this.children.every((child)=>{
+		const modelOutput = this.__createEmptyModelOutput();
+		this.children.forEach((child)=>{
             const isModel = child instanceof Model;
             if (isModel) {
-                if (!child.isManualModel) {
-                    const childModelOutput = childModel.doRunModel(treeView, monitor);
-                    if (childModelOutput !== null) {
-                        modelOutput.addChildOutput(childModelOutput);
-                    }
-                }
+               
+				const childOutput = child.doRunModel(treeView, monitor);
+				if (childOutput) {
+					modelOutput.addChild(childOutput);
+				}
+                
             }
         });
 

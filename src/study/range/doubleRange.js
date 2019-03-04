@@ -20,7 +20,7 @@ export default class DoubleRange extends Range {
 	    
 	    sectionContent.append('treez-model-path')
 	    	.label('Variable path')
-        	.attr('atomclasses', DoubleVariable.name)
+        	.nodeAttr('atomClasses', [DoubleVariable])
         	.bindValue(this, ()=>this.variablePath);
 
 	    //TODO apply source model path as origin and use
@@ -31,7 +31,7 @@ export default class DoubleRange extends Range {
 	    	.bindValue(this, ()=>this.rangeString);	 
 	    
 	    sectionContent.append('treez-check-box')
-	    	.label('Enabled')
+	    	.label('Enable')
 	    	.bindValue(this, ()=>this.isEnabled);
 				
     }	

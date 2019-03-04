@@ -165,9 +165,9 @@ export default class Executable extends Model {
 			}
 
 			function errorHandler(message){
-				const errorTitle = 'Executing system command failed.';
+				const errorTitle = 'Executing system command failed:\n';
 				executableMonitor.setDescription(errorTitle);
-				console.error(errorTitle);
+				console.error(errorTitle + message);
 				executableMonitor.cancel();
 				if(finishedHandler){
 					finishedHandler(self.__createEmptyModelOutput());

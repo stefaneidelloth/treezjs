@@ -5,7 +5,7 @@ import TreeViewAction from './../../core/treeView/TreeViewAction.js';
 export default class Range extends ComponentAtom {
 
 
-	get vaules(){
+	get values(){
 		return eval(this.rangeString);
 	}
 

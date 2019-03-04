@@ -4,12 +4,12 @@
  * The variables of this generic input atom can be used as dependency/input for other atoms, e.g.
  * for the InputFileGenerator.
  */
-import ComponentAtom from './../../core/component/componentAtom.js';
+import Model from './../model.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
 
-export default class GenericInput extends ComponentAtom {
+export default class GenericInput extends Model {
 
 	constructor(name) {
 		if(!name){

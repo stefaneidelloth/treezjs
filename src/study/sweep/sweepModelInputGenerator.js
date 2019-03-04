@@ -1,3 +1,6 @@
+import Range from './../range/range.js';
+import ModelInput from './../../model/input/modelInput.js';
+
 export default class SweepModelInputGenerator {
 
 	constructor(sweep) {
@@ -6,12 +9,12 @@ export default class SweepModelInputGenerator {
 
 	
 	createModelInputs() {
-		var enabledVariableRanges = this.__getEnabledVariableRanges();
+		var enabledVariableRanges = this.__getEnabledRanges();
 		return this.__createModelInputs(enabledVariableRanges);
 	}
 
 	getNumberOfSimulations() {
-		var enabledVariableRanges = this.__getEnabledVariableRanges();
+		var enabledVariableRanges = this.__getEnabledRanges();
 		return this.__getNumberOfSimulations(enabledVariableRanges);
 	}
 
@@ -23,7 +26,7 @@ export default class SweepModelInputGenerator {
 				'Total number of simulations:\r\n' + numberOfSimulations + '\r\n\r\n' + //
 				'Variable model paths and values:\r\n\r\n';
 
-		var variableRanges = this.__getEnabledVariableRanges();
+		var variableRanges = this.__getEnabledRanges();
 		variableRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			studyInfo += variablePath + '\r\n';
@@ -45,7 +48,7 @@ export default class SweepModelInputGenerator {
 	}
 
 	fillStudyInfo(database, tableName, studyId) {
-		var variableRanges = this.__getEnabledVariableRanges();
+		var variableRanges = this.__getEnabledRanges();
 		variableRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
@@ -58,7 +61,7 @@ export default class SweepModelInputGenerator {
 	}
 
 	fillStudyInfoForSchema(database, schemaName, tableName, studyId) {
-		var variableRanges = this.__getEnabledVariableRanges();
+		var variableRanges = this.__getEnabledRanges();
 		variableRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
@@ -69,25 +72,25 @@ export default class SweepModelInputGenerator {
 		});		
 	}
 	
-	__getEnabledVariableRanges() {
+	__getEnabledRanges() {
 		var variableRanges = [];
-		sweep.children.forEach(child=>{
-			var isVariableRange = child instanceof VariableRange;
+
+		this.sweep.children.forEach(child=>{
+			var isVariableRange = child instanceof Range;
 			if (isVariableRange) {				
 				if (child.isEnabled) {
 					
-					//check if corresponding variable is also enabled
-					var variableModelPath = child.sourceVariableModelPath;
+					//check if corresponding variable is also enabled					
 					var variable;
 					try {
-						variable = this.getChildFromRoot(variableModelPath);
+						variable = this.sweep.getChildFromRoot(child.variablePath);
 					} catch (error) {
-						var message = 'Could not find variable atom "' + variableModelPath + '".';
-						throw new Error(message);
+						var message = 'Could not find variable atom "' + child.variablePath + '".';
+						throw new Error(message + error);
 					}
 					
 					if (variable.isEnabled) {
-						variableRanges.add(variableRange);
+						variableRanges.push(child);
 					} else {
 						console.warn('Corresponding variable is not enabled for variable range ' + child.name);
 					}					
@@ -97,6 +100,10 @@ export default class SweepModelInputGenerator {
 		
 		return variableRanges;
 	}
+	
+	getNumberOfEnabledRanges(){
+		return this.__getEnabledRanges().length;
+	}
 		
 	__getNumberOfSimulations(variableRanges) {
 	
@@ -104,9 +111,9 @@ export default class SweepModelInputGenerator {
 		var hasAtLeastOneSimulation = false;
 		
 		variableRanges.forEach(variableRange=>{			
-			var numberOfValues = variableRange.values.size();
+			var numberOfValues = variableRange.values.length;
 			if (numberOfValues > 0) {
-				atLeastOneSimulation = true;
+				hasAtLeastOneSimulation = true;
 				numberOfSimulations *= numberOfValues;
 			}
 		});
@@ -124,11 +131,11 @@ export default class SweepModelInputGenerator {
 			var firstRange = variableRanges[0];
 			var remainingRanges = variableRanges.slice(1, variableRanges.length);
 			
-			var variableModelPath = firstRange.sourceVariableModelPath;
+			var variableModelPath = firstRange.variablePath;
 			
-			var study = firstRange.parentAtom;
-			var studyId = study.getId();
-			var studyDescription = study.getDescription();
+			var study = firstRange.parent;
+			var studyId = study.id;
+			var studyDescription = study.description;
 
 			firstRange.values.forEach(value=>{
 				//create model input that initially contains the current value
@@ -150,15 +157,15 @@ export default class SweepModelInputGenerator {
 		var self=this;
 		var modelInputs = [];
 
-		var isLastEntry = variableRanges.lengthh === 0;
+		var isLastEntry = variableRanges.length === 0;
 		if (isLastEntry) {
 			//the model input is already finished and can be returned as a single model input
-			modelInputs.add(initialInput);
+			modelInputs.push(initialInput);
 			return modelInputs;
 		} else {
 			//the initial model input needs to be copied and extended using the remaining variable ranges
 			var firstRange = variableRanges[0];
-			var variableModelPath = firstRange.sourceVariableModelPath;
+			var variableModelPath = firstRange.variablePath;
 			var values = firstRange.values;
 			var remainingRanges = variableRanges.slice(1, variableRanges.length);
 
@@ -182,7 +189,7 @@ export default class SweepModelInputGenerator {
 
 	
 	__createInitialModelInput(variableModelPath, studyId, studyDescription, value) {
-		var sweepModelPath = sweep.getTreePath();
+		var sweepModelPath = this.sweep.getTreePath();
 		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription);
 		initialInput.add(variableModelPath, value);
 		return initialInput;

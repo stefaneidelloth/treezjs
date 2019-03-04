@@ -10,7 +10,10 @@ export default class Monitor {
 		return this.__finishedWork >= this.__totalWork;
 	}
 	
-	constructor(title, treeView, totalWork, id, parentMonitor, coveredWorkOfParentMonitor) {		
+	
+	
+	
+	constructor(title, treeView, id, coveredWorkOfParentMonitor, totalWork, parentMonitor) {		
 		this.id = id;
 		this.title = title;
 		
@@ -40,7 +43,7 @@ export default class Monitor {
         this.__childCreatedListeners = [];	
         
         this.__consoleMap = {};
-        this.__console = this.__createConsole(title, id);
+        this.__console = this.__createConsole(title, treeView, id);
 	}
 
 	showInMonitorView() {		
@@ -50,21 +53,23 @@ export default class Monitor {
 
 	
 
-	createChild(title, id, coveredWorkOfParentMonitor, totalWork) {
+	createChild(title, treeView, id, coveredWorkOfParentMonitor, totalWork) {
 
 		this.__assertTotalWorkHasBeenSet();
 		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor);
 
 		this.__workCoveredByChildren += coveredWorkOfParentMonitor;
 		
-		var subMonitor = new Monitor(title, totalWork, id, this, coveredWorkOfParentMonitor);
-		this.__children.add(subMonitor);
+		
+		
+		var subMonitor = new Monitor(title, treeView, id, coveredWorkOfParentMonitor, totalWork, this);
+		this.__children.push(subMonitor);
 		
 		this.__triggerChildCreatedListeners(subMonitor);
-		return treezSubMonitor;
+		return subMonitor;
 	}
 
-	createChildWithoutTotal(title, id, coveredWorkOfParentMonitor) {
+	createChildWithoutTotal(title, treeView, id, coveredWorkOfParentMonitor) {
 
 		this.__assertTotalWorkHasBeenSet();
 		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor);
@@ -74,10 +79,10 @@ export default class Monitor {
 		//ThreadContext.put("id", id);
 
 		this.workCoveredByChildren += coveredWorkOfParentMonitor;
-		var subMonitor = new TreezMonitor(title, null, id, this, coveredWorkOfParentMonitor);
-		this.__children.add(subMonitor);
+		var subMonitor = new Monitor(title, treeView, id, coveredWorkOfParentMonitor, null, parentMonitor);
+		this.__children.push(subMonitor);
 		this.__triggerChildCreatedListeners(subMonitor);
-		return treezSubMonitor;
+		return subMonitor;
 	}
 
 	__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor) {
@@ -177,9 +182,9 @@ export default class Monitor {
 		this.__triggerPropertyChangedListeners();
 	}
 
-	__createConsole(title, id) {
+	__createConsole(title, treeView, id) {
 		
-		var monitorView = this.__treeView.provideMonitorView();
+		var monitorView = treeView.provideMonitorView();
 		
 		var loggingPanel = monitorView.getLoggingPanel();
 		
@@ -273,7 +278,7 @@ export default class Monitor {
 	isChildCanceled() {
 		var result = false;
 		this.__children.every((child)=>{
-			if (child.isCanceled() || child.isChildCanceled()) {
+			if (child.isCanceled || child.isChildCanceled()) {
 				result=true
 				return false;
 			}

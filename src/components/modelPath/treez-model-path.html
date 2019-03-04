@@ -11,7 +11,7 @@
            	class TreezModelPath extends TreezElement {
 
             	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label','atomclasses']);                    
+            		return TreezElement.observedAttributes.concat(['label']);                    
                 }
             	
             	get label() {
@@ -22,18 +22,20 @@
   				  this.setAttribute('label', newValue);	 
   				}  
   				
-  				get atomclasses() {
-   				  return this.getAttribute('atomclasses');
+  				get atomClasses() {   				
+   				  return this.__atomClasses
    				}
 
-    			set atomclasses(value) {
-    			  this.setAttribute('atomclasses', value);	  
+    			set atomClasses(value) {
+    			  this.__atomClasses = value;	
+    			  this.__updateOptions();  
     			} 
 
                 constructor(){
                     super();   
                     this.labelElement=undefined;  
-                    this.comboBox=undefined;                     
+                    this.comboBox=undefined;
+                    this.__atomClasses=[];                     
                 }            	
 
                 connectedCallback() {
@@ -68,16 +70,12 @@
 
                 	if(!self.__parentAtom){
                 		return;
-                	}
-
-                	if(!self.atomclasses){
-                		return;
-                	}
+                	}                	
 
                 	var root = self.__parentAtom.getRoot();  
                 	
-                	var classNameArray = this.atomclasses.split(',');                	
-                    var modelPaths = this.__getAvailableModelPaths(root, classNameArray, this.hasToBeEnabled, this.filterDelegate);
+                	             	
+                    var modelPaths = this.__getAvailableModelPaths(root, this.__atomClasses, this.hasToBeEnabled, this.filterDelegate);
                     
 
 					while (self.comboBox.firstChild) {
@@ -99,7 +97,7 @@
 
                 }
                 
-                __getAvailableModelPaths(atom, classNames, hasToBeEnabled, filterDelegate){ 
+                __getAvailableModelPaths(atom, classes, hasToBeEnabled, filterDelegate){ 
                 	
                 	var self=this;
                 	            		            		
@@ -108,9 +106,8 @@
             		atom.children.forEach(
            				(child)=>{
            					
-           					classNames.forEach((className)=>{
-           						var hasWantedType = (child.constructor.name === className);
-                				if (!hasWantedType) {
+           					classes.forEach((clazz)=>{           						
+                				if (!(child instanceof clazz)) {
                 					return;
                 				}
                 				
@@ -132,7 +129,7 @@
                 				availablePaths.push(path);
            					});
                 			
-                			availablePaths = availablePaths.concat(self.__getAvailableModelPaths(child, classNames, hasToBeEnabled, filterDelegate));
+                			availablePaths = availablePaths.concat(self.__getAvailableModelPaths(child, this.__atomClasses, hasToBeEnabled, filterDelegate));
            				}
             		);
             		
@@ -164,10 +161,6 @@
                     		 this.labelElement.innerText= newValue;   
                     		 return;
                     	}                                           
-                    } 
-                	
-                	if(attr==='atomclasses'){
-                		this.__updateOptions();                    	                                        
                     } 
                 }               
                

@@ -28,7 +28,7 @@ export default class InputFileGenerator extends Model  {
 		
 		this.templatePath = 'C:/template.txt';       
         
-		this.sourceModelPath = 'root.models.genericModel';
+		this.sourceModelPath = 'root.models.genericInput';
         this.nameExpression = '{$' + this.labelTag + '$}';
         this.valueExpression = this.valueTag + ' [' + this.unitTag + ']'; 
         
@@ -100,8 +100,8 @@ export default class InputFileGenerator extends Model  {
         
 	    
 	    sectionContent.append('treez-model-path')
-			.label('Variable source model (provides variables)')		
-			.attr('atomclasses',GenericInput.name)
+			.label('Variable source model (provides variables)')	
+			.nodeAttr('atomClasses', [Model])			
 			.bindValue(this,()=>this.sourceModelPath);
 	
 

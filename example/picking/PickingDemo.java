@@ -24,16 +24,16 @@ public class PickingDemo extends ModelProvider {
 		root.addChild(models);
 
 		//generic model
-		GenericInputModel genericModel = new GenericInputModel("genericModel");
-		models.addChild(genericModel);
+		GenericInputModel genericInput = new GenericInputModel("genericInput");
+		models.addChild(genericInput);
 
 		DoubleVariableField x = new DoubleVariableField("x");
 		x.setValueString("10");
-		genericModel.addChild(x);
+		genericInput.addChild(x);
 
 		DoubleVariableField y = new DoubleVariableField("y");
 		y.setValueString("20");
-		genericModel.addChild(y);
+		genericInput.addChild(y);
 
 		String resourcePath = "D:/EclipseJava/workspaceTreez/treezExamples/src/";
 

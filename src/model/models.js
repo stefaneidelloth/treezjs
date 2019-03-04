@@ -31,11 +31,7 @@ export default class Models extends Model {
 
 	    sectionContent.append('span')
 			.text('This atom represents models.');
-    }
-	
-	doRunModel(treeView, monitor){
-		//TODO
-	}
+    }	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 

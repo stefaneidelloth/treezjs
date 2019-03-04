@@ -495,7 +495,7 @@ export default class Atom {
 	 * Removes all children of this atom
 	 */
 	removeAllChildren() {
-		this.children.clear();
+		this.children.length = 0;
 	}
 
 	/**

@@ -60,11 +60,11 @@ export default class Picking extends Study {
 		var isTimeDependentCheckBox = sectionContent.append('treez-check-box')
 			.label('Use time series')
 			.bindValue(this, ()=>this.isTimeDependent);
-			
-		var supportedClasses = TntegerVariable.name + ',' + DoubleVariable.name;
+					
 		
 		var timeVariablePath = sectionContent.append('treez-model-path')
 			.label('Time variable')
+			.nodeAttr('atomClasses', [IntegerVariable, DoubleVariable])
 			.bindValue(this, ()=>this.timeVariableModelPath)
 			.enabled(false);
 		

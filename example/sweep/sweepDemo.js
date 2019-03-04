@@ -50,7 +50,7 @@ window.createModel = function(){
 	sweep.studyId = 'myStudyId';
 	sweep.studyDescription = 'myStudyDescription';
 	sweep.modelToRunModelPath = 'root.models';
-	sweep.sourceModelPath = 'root.models.genericModel';
+	sweep.sourceModelPath = 'root.models.genericInput';
 	
 
 	var xRange = sweep.createIntegerRange('x');

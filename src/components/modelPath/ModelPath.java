@@ -66,9 +66,9 @@ public class ModelPath extends AbstractStringAttributeAtom<ModelPath> {
 	 *
 	 * <pre>
 	 * realtiveRoot = null
-	 * =>root.models.genericModel.xVariable
+	 * =>root.models.genericInput.xVariable
 	 * relativeRoot = root.models
-	 * => genericModel.xVariable
+	 * => genericInput.xVariable
 	 * </pre>
 	 */
 	private AbstractAtom<?> relativeRoot = null;

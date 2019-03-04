@@ -241,6 +241,65 @@ export default class MonitorView {
 		});
 
 	}
+	
+	__createProgressNodes(parentSelection, monitor) {
+		
+		var self = this;
+
+		var subMonitors = monitor.getChildren();
+
+		var div = parentSelection.append('div');
+
+		var details = div.append('div'); //expandable for progress that has children (might be hidden)
+
+		var collapsibleHeader = details.append('div');
+
+		var collapsibleSymbol = collapsibleHeader
+				.append('span') //
+				.style('text-size', '14px') //
+				.text('\u25BE ');
+
+		var collapsibleContent = details
+				.append('div') //
+				.style('padding-left', '10px');
+
+		collapsibleSymbol.onClick(() => {
+
+			var isCollapsed = collapsibleContent.classed('collapsed');
+
+			if (isCollapsed) {
+				collapsibleContent.classed('collapsed', false);
+				collapsibleContent.style('display', 'block');
+				collapsibleSymbol.text('\u25BE ');
+			} else {
+				collapsibleContent.classed('collapsed', true);
+				collapsibleContent.style('display', 'none');
+				collapsibleSymbol.text('\u25B8 ');
+			}
+
+		});
+
+		var nonExpandableHeader = div.append('div'); //for progress that does not have children (might be hidden)
+
+		monitor.addChildCreatedListener((newChildMonitor) => {			
+			self.__appendChildMonitor(monitor, nonExpandableHeader, collapsibleHeader, collapsibleContent, details, newChildMonitor);	
+		});
+
+		if (subMonitors.length === 0) {
+			//show non-expandable header
+			collapsibleHeader.style('display', 'none');
+			self.__createHeaderNodes(nonExpandableHeader, monitor, null);
+		} else {
+			//show expandable header
+			nonExpandableHeader.style('display', 'none');
+			self.__createHeaderNodes(collapsibleHeader, monitor, details);
+
+			subMonitors.forEach(subMonitor=>{
+				self.__createProgressNodes(collapsibleContent, subMonitor);
+			});
+		}
+
+	}
 
 	__showLogMessagesForMonitor(monitor) {
 		

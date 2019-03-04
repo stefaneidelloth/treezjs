@@ -26,6 +26,14 @@ export default class DTreezSelection {
 		this.__d3Selection.attr(name, value);
 		return this;
 	}
+
+	nodeAttr(name, value){
+		if(value===undefined){
+			return this.__d3Selection.node()[name];
+		}
+		this.__d3Selection.node()[name] = value;
+		return this;
+	}
 	
 	bindValue(parentObject, lambdaExpressionIdentifyingProperty){
 		var bindFunction = this.__d3Selection.node().bindValue
