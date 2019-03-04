@@ -18,7 +18,7 @@ import org.treez.core.data.row.Row;
 import org.treez.core.data.table.TreezTable;
 import org.treez.core.scripting.ScriptType;
 import org.treez.core.treeview.treeView;
-import org.treez.core.treeview.action.TreeViewerAction;
+import org.treez.core.treeview.action.TreeViewAction;
 import org.treez.data.evaluation.VariableDefinitionEvaluator;
 import org.treez.data.row.VariableDefinitionRow;
 import org.treez.data.table.VariableDefinitionTable;
@@ -115,7 +115,7 @@ public class VariableDefinition extends AbstractUiSynchronizingAtom<VariableDefi
 
 		ArrayList<Object> actions = new ArrayList<>();
 
-		actions.add(new TreeViewerAction(
+		actions.add(new TreeViewAction(
 				"Add Atom",
 				Activator.getImage(ISharedImages.IMG_OBJ_ADD),
 				treeViewer,

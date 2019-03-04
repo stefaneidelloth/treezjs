@@ -18,7 +18,7 @@ import org.treez.core.atom.base.AbstractAtom;
 import org.treez.core.data.column.ColumnBlueprint;
 import org.treez.core.data.column.ColumnType;
 import org.treez.core.treeview.treeView;
-import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
+import org.treez.core.treeview.action.AddChildAtomTreeViewAction;
 
 /**
  * Represents all columns of a table. This will be a child of a table and the individual columns will be children of
@@ -84,7 +84,7 @@ public class Columns extends AdjustableAtom {
 	@Override
 	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
 
-		Action addColumn = new AddChildAtomTreeViewerAction(
+		Action addColumn = new AddChildAtomTreeViewAction(
 				Column.class,
 				"column",
 				Activator.getImage("column.png"),

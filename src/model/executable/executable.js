@@ -1,5 +1,5 @@
 import Model from './../model.js';
-import AddChildAtomTreeViewerAction from './../../core/treeview/addChildAtomTreeViewerAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
 import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
@@ -58,7 +58,7 @@ export default class Executable extends Model {
 		
 		this.treeView=treeView;
 
-		const addInputFileGenerator = new AddChildAtomTreeViewerAction(
+		const addInputFileGenerator = new AddChildAtomTreeViewAction(
 				InputFileGenerator,
 				"inputFileGenerator",
 				"inputFile.png",
@@ -67,7 +67,7 @@ export default class Executable extends Model {
 				treeView);
 		actions.push(addInputFileGenerator);
 		
-		const addInputModification = new AddChildAtomTreeViewerAction(
+		const addInputModification = new AddChildAtomTreeViewAction(
 				InputModification,
 				"inputModification",
 				"inputModification.png",
@@ -76,7 +76,7 @@ export default class Executable extends Model {
 				treeView);
 		actions.push(addInputModification);
 		
-		const addOutputModification = new AddChildAtomTreeViewerAction(
+		const addOutputModification = new AddChildAtomTreeViewAction(
 				OutputModification,
 				"outputModification",
 				"outputModification.png",
@@ -85,7 +85,7 @@ export default class Executable extends Model {
 				treeView);
 		actions.push(addOutputModification);
 		
-		const addLoggingArguments = new AddChildAtomTreeViewerAction(
+		const addLoggingArguments = new AddChildAtomTreeViewAction(
 				LoggingArguments,
 				"loggingArguments",
 				"loggingArguments.png",
@@ -94,7 +94,7 @@ export default class Executable extends Model {
 				treeView);
 		actions.push(addLoggingArguments);
 
-		const addDataImport = new AddChildAtomTreeViewerAction(
+		const addDataImport = new AddChildAtomTreeViewAction(
 				TableImport,
 				"tableImport",
 				"tableImport.png",

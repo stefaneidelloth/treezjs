@@ -24,8 +24,8 @@ import org.treez.core.data.table.TableSource;
 import org.treez.core.data.table.TableSourceType;
 import org.treez.core.scripting.ScriptType;
 import org.treez.core.treeview.treeView;
-import org.treez.core.treeview.action.AddChildAtomTreeViewerAction;
-import org.treez.core.treeview.action.TreeViewerAction;
+import org.treez.core.treeview.action.AddChildAtomTreeViewAction;
+import org.treez.core.treeview.action.TreeViewAction;
 import org.treez.data.cell.TreezTableNebulaLabelProvider;
 import org.treez.data.column.Column;
 import org.treez.data.column.Columns;
@@ -117,7 +117,7 @@ public class Table extends AbstractTreezTable<Table> {
 
 		List<Object> actions = new ArrayList<>();
 
-		Action addColumns = new AddChildAtomTreeViewerAction(
+		Action addColumns = new AddChildAtomTreeViewAction(
 				Columns.class,
 				"columns",
 				Activator.getImage("columns.png"),
@@ -125,7 +125,7 @@ public class Table extends AbstractTreezTable<Table> {
 				treeViewer);
 		actions.add(addColumns);
 
-		actions.add(new TreeViewerAction(
+		actions.add(new TreeViewAction(
 				"Delete",
 				org.treez.core.Activator.getImage("delete.png"),
 				treeViewer,

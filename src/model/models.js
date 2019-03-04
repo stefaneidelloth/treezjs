@@ -1,5 +1,5 @@
 import Model from "./model.js";
-import AddChildAtomTreeViewerAction from './../core/treeview/addChildAtomTreeViewerAction.js';
+import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import GenericInput from './genericInput/genericInput.js';
 import Executable from './executable/executable.js';
 import JarExecutable from './executable/jarExecutable.js';
@@ -32,10 +32,14 @@ export default class Models extends Model {
 	    sectionContent.append('span')
 			.text('This atom represents models.');
     }
+	
+	doRunModel(treeView, monitor){
+		//TODO
+	}
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 
-		const addGenericInput = new AddChildAtomTreeViewerAction(
+		const addGenericInput = new AddChildAtomTreeViewAction(
 				GenericInput,
 				"genericInput",
 				"genericInput.png",
@@ -44,7 +48,7 @@ export default class Models extends Model {
 				treeView);
 		actions.push(addGenericInput);
 
-        const addExecutable = new AddChildAtomTreeViewerAction(
+        const addExecutable = new AddChildAtomTreeViewAction(
 				Executable,
 				"executable",
 				"run.png",
@@ -53,7 +57,7 @@ export default class Models extends Model {
 				treeView);
 		actions.push(addExecutable);
 
-        const addJarExecutable = new AddChildAtomTreeViewerAction(
+        const addJarExecutable = new AddChildAtomTreeViewAction(
 				JarExecutable,
 				"jarExecutable",
 				"java.png",

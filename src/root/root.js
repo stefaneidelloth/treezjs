@@ -1,6 +1,8 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Models from './../model/models.js';
-import AddChildAtomTreeViewerAction from './../core/treeview/addChildAtomTreeViewerAction.js';
+import Studies from './../study/studies.js';
+import Results from './../result/results.js';
+import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 
 export default class Root extends ComponentAtom {	
    
@@ -35,7 +37,7 @@ export default class Root extends ComponentAtom {
 		
 		this.treeView=treeView;
 
-		const addModels = new AddChildAtomTreeViewerAction(
+		const addModels = new AddChildAtomTreeViewAction(
 				Models,
 				"models",
 				"models.png",
@@ -44,9 +46,9 @@ export default class Root extends ComponentAtom {
 				treeView);
 		actions.push(addModels);
 		
-		/*
 		
-		const addStudies = new AddChildAtomTreeViewerAction(
+		
+		const addStudies = new AddChildAtomTreeViewAction(
 				Studies,
 				"studies",
 				"studies.png",
@@ -55,7 +57,8 @@ export default class Root extends ComponentAtom {
 				treeView);
 		actions.push(addStudies);
 		
-		const addResults = new AddChildAtomTreeViewerAction(
+				
+		const addResults = new AddChildAtomTreeViewAction(
 				Results,
 				"results",
 				"results.png",
@@ -64,16 +67,24 @@ export default class Root extends ComponentAtom {
 				treeView);
 		actions.push(addResults);
 		
-		*/
+		
 		
 		return actions;
 	}
 	
 	createModels(name){
-		const models = new Models(name);
-		this.addChild(models);
-		return models;
+		return this.createChild(Models, name);		
 	}
+	
+	createStudies(name){
+		return this.createChild(Studies, name);		
+	}
+	
+	createResults(name){
+		return this.createChild(Results, name);		
+	}
+	
+	
 
 	
 }

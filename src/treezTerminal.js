@@ -38,8 +38,8 @@ export default class TreezTerminal {
 	readTextFile(filePath, resultHandler, errorHandler){
 		this.__onMessage = resultHandler;
 		this.__onError = errorHandler;
-		var dosPath = filePath.replace('/','\\');
-		var command = 'type "' + dosPath + '"\n';
+		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
+		var command = 'type "' + dosPath + '"';
 		this.__webSocket.send(command);		
 	}
 	
@@ -47,7 +47,7 @@ export default class TreezTerminal {
 				
 		this.__onError = errorHandler;
 		var lines = text.split('\n');
-		var dosPath = filePath.replace('/','\\');
+		var dosPath = this.__replaceForwardWithBackwardSlash(filePath);
 		var redirect = '>';
 		lines.forEach((line)=>{
 			var command = 'echo ' + line + redirect + '"' + dosPath + '"';
@@ -59,10 +59,14 @@ export default class TreezTerminal {
 	
 	}
 
-	delete(filePath, errorHandler){
-		this.__onError = errorHandler;		
+	__replaceForwardWithBackwardSlash(command){
+		return command.replace(/\//g,'\\');
+	}
 
-		var deleteCommand = 'IF EXIST "' + filePath + '" DEL /F "' + filePath + '"';
+	delete(filePath, errorHandler){
+		this.__onError = errorHandler;	
+		var dosPath = this.__replaceForwardWithBackwardSlash(filePath);
+		var deleteCommand = 'IF EXIST "' + dosPath + '" DEL /F "' + dosPath + '"';
 		this.__webSocket.send(deleteCommand); 
 	}
 

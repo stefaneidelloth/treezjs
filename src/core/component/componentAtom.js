@@ -1,13 +1,12 @@
 import Atom from '../atom/atom.js';
 import ComponentAtomCodeAdaption from './componentAtomCodeAdaption.js';
 import ActionSeparator from '../actionSeparator.js';
-import TreeViewerAction from '../treeview/treeViewerAction.js';
+import TreeViewAction from '../treeview/TreeViewAction.js';
 
 export default class ComponentAtom extends Atom {
 
 	constructor(name) {
-		super(name);		
-		this.isRunnable = false;
+		super(name);	
 		this.__treeView = undefined;
         ComponentAtom.initializeComponentsIfRequired()
 	}
@@ -106,7 +105,7 @@ export default class ComponentAtom extends Atom {
         let actions = [];
 
         if (this.isRunnable) {
-			actions.push(new TreeViewerAction(
+			actions.push(new TreeViewAction(
 								"Run", 
 								"run.png",
 								treeView,

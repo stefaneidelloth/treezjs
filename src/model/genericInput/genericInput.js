@@ -5,7 +5,7 @@
  * for the InputFileGenerator.
  */
 import ComponentAtom from './../../core/component/componentAtom.js';
-import AddChildAtomTreeViewerAction from './../../core/treeview/addChildAtomTreeViewerAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
 
@@ -63,7 +63,7 @@ export default class GenericInput extends ComponentAtom {
 		//disable children
 		const hasChildren = this.children && !this.children.length === 0;
 		if (hasChildren) {
-			actions.push(new TreeViewerAction(
+			actions.push(new TreeViewAction(
 					"Disable all variable fields",
 					"disable.png",
 					treeView,
@@ -71,7 +71,7 @@ export default class GenericInput extends ComponentAtom {
             );
 
 			//enable children
-			actions.push(new TreeViewerAction(
+			actions.push(new TreeViewAction(
 					"Enable all variable fields",
 					"enable.png",
 					treeViewer,
@@ -80,7 +80,7 @@ export default class GenericInput extends ComponentAtom {
 		}
 
 		/*
-		const addQuantityVariable = new AddChildAtomTreeViewerAction(
+		const addQuantityVariable = new AddChildAtomTreeViewAction(
 				QuantityVariable,
 				"quantityVariable",
 				"quantityVariable.png",
@@ -89,7 +89,7 @@ export default class GenericInput extends ComponentAtom {
 		actions.push(addQuantityVariable);
      	 */
 		
-        const addDoubleVariable = new AddChildAtomTreeViewerAction(
+        const addDoubleVariable = new AddChildAtomTreeViewAction(
 				DoubleVariable,
 				"doubleVariable",
 				"doubleVariable.png",
@@ -100,7 +100,7 @@ export default class GenericInput extends ComponentAtom {
 		
 		/*
 
-        const addIntegerVariableField = new AddColoredChildAtomTreeViewerAction(
+        const addIntegerVariableField = new AddColoredChildAtomTreeViewAction(
 				IntegerVariableField.class,
 				"integerVariable",
 				"integerVariable.png",
@@ -108,7 +108,7 @@ export default class GenericInput extends ComponentAtom {
 				treeViewer);
 		actions.push(addIntegerVariableField);
 
-        const addBooleanVariableField = new AddColoredChildAtomTreeViewerAction(
+        const addBooleanVariableField = new AddColoredChildAtomTreeViewAction(
 				BooleanVariableField.class,
 				"booleanVariable",
 				"booleanVariable.png",
@@ -118,7 +118,7 @@ export default class GenericInput extends ComponentAtom {
 		
 		*/
 
-        const addStringVariable = new AddChildAtomTreeViewerAction(
+        const addStringVariable = new AddChildAtomTreeViewAction(
 				StringVariable,
 				"stringVariable",
 				"stringVariable.png",
@@ -129,7 +129,7 @@ export default class GenericInput extends ComponentAtom {
 		
 		/*
 
-        const addStringItemVariableField = new AddColoredChildAtomTreeViewerAction(
+        const addStringItemVariableField = new AddColoredChildAtomTreeViewAction(
 				StringItemVariableField.class,
 				"stringItemVariable",
 				"stringItemVariable.png",
@@ -137,7 +137,7 @@ export default class GenericInput extends ComponentAtom {
 				treeViewer);
 		actions.push(addStringItemVariableField);
 
-        const addFilePathVariableField = new AddColoredChildAtomTreeViewerAction(
+        const addFilePathVariableField = new AddColoredChildAtomTreeViewAction(
 				FilePathVariableField.class,
 				"filePathVariable",
 				"filePathVariable.png",
@@ -145,7 +145,7 @@ export default class GenericInput extends ComponentAtom {
 				treeViewer);
 		actions.push(addFilePathVariableField);
 
-        const addDirectoryPathVariableField = new AddColoredChildAtomTreeViewerAction(
+        const addDirectoryPathVariableField = new AddColoredChildAtomTreeViewAction(
 				DirectoryPathVariableField.class,
 				"directoryPathVariable",
 				"directoryPathVariable.png",
@@ -159,7 +159,7 @@ export default class GenericInput extends ComponentAtom {
 	}
 
 
-	enableAllVariableFields() {
+	enableAllVariables() {
 		this.children.forEach(
 				(child)=>{
 					if (child instanceof Variable) {
@@ -169,12 +169,22 @@ export default class GenericInput extends ComponentAtom {
 		);		
 	}
 
-	disableAllVariableFields() {
+	disableAllVariables() {
 		(child)=>{
 			if (child instanceof Variable) {
 				child.isEnabled = false;
 			}
 		}
+	}
+
+	getEnabledVariables(){
+		var enabledVariables = [];
+		this.children.forEach((child)=>{
+			if(child.isEnabled){
+				enabledVariables.push(child);
+			}
+		});
+		return enabledVariables;
 	}
 
 	createCodeAdaption() {

@@ -75,9 +75,7 @@ export default class Model extends ComponentAtom {
 		}
 	}
 
-	/**
-	 * Executes the model with the current state of its variables
-	 */
+	
 	execute(treeView) {
 		const monitor = new Monitor("Treez console", treeView);
 		monitor.showInMonitorView();

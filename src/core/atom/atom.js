@@ -2,7 +2,7 @@ import NameAndNumber from "../nameAndNumber.js";
 import AtomTreeNodeAdapter from "./atomTreeNodeAdapter.js";
 import AtomCodeAdaption from "./atomCodeAdaption.js";
 import AtomGraphicsAdaption from "./atomGraphicsAdaption.js";
-import TreeViewerAction from "../treeview/treeViewerAction.js";
+import TreeViewAction from "../treeview/TreeViewAction.js";
 
 
 export default class Atom {		
@@ -29,7 +29,9 @@ export default class Atom {
 		
 		this.image = "tree.png"
 			
-		this.isExpanded=false;
+		this.isExpanded=true;
+		
+		this.isRunnable = false;
 	}		
 
 	copy() {
@@ -100,6 +102,14 @@ export default class Atom {
 			}
 		});		
 	}
+	
+	executeRunnableChildren(treeView) {
+		this.children.forEach(child=>{
+			if (child.isRunnable) {				
+				child.execute(treeView);
+			}
+		});		
+	}
 
 
 	createContextMenuActions(parentSelection, treeView) {
@@ -111,7 +121,7 @@ export default class Atom {
 		var actions = [];
 
 		//rename
-		actions.push(new TreeViewerAction(
+		actions.push(new TreeViewAction(
 						"Rename",
 						"rename.png",
 						treeView,
@@ -121,7 +131,7 @@ export default class Atom {
 		//move up
 		var canBeMovedUp = this.canBeMovedUp();
 		if (canBeMovedUp) {
-			actions.push(new TreeViewerAction(
+			actions.push(new TreeViewAction(
 							"Move up",
 							"up.png",
 							treeView,
@@ -132,7 +142,7 @@ export default class Atom {
 		//move down
 		var canBeMovedDown = this.canBeMovedDown();
 		if (canBeMovedDown) {
-			actions.push(new TreeViewerAction(
+			actions.push(new TreeViewAction(
 							"Move down",
 							"down.png",
 							treeView,
@@ -141,7 +151,7 @@ export default class Atom {
 		}
 
 		//delete
-		actions.push(new TreeViewerAction(
+		actions.push(new TreeViewAction(
 						"Delete",
 						"delete.png",
 						treeView,
@@ -349,27 +359,27 @@ export default class Atom {
 
 	}
 
-	/**
-	 * Creates a child atom with the same class as the given atomInstance.
-	 * The name of the new child atom will start with the given prefix.
-	 */	
-	createChildAtom(atomClass, namePrefix) {
+	createChild(atomClass, name) {
+		var child = new atomClass(name);
+		this.addChild(child);
+		return child;
+	}
+
+	createChildWithNamePrefix(atomClass, namePrefix) {
 		
 		var newName = this.createChildNameStartingWith(namePrefix);
 		var newChild;
 		try {			
 			newChild = new atomClass(newName);
-		} catch (exception) {
-			var message = "Could not create child atom for class " + atomClass.constructor.name;
-			throw new Error(message, exception);
+		} catch (error) {
+			var message = 'Could not create child atom for class ' + atomClass.constructor.name + ': ';
+			throw new Error(message + error);
 		}
 		this.addChild(newChild);
 		return newChild;
 	}
 
-	/**
-	 * Returns true if the root of this atom has a child at the given child path.
-	 */
+
 	rootHasChild(childPathStartingWithRoot) {
 		try {
 			getChildFromRoot(childPathStartingWithRoot);
@@ -384,14 +394,25 @@ export default class Atom {
 	 * found.
 	 */
 	getChildByName(childName) {
-		this.children.forEach(function(child){
-			var isWantedChild = childName.equals(currentChild.name);
+
+		var wantedChild = undefined;
+
+		this.children.every(function(child){
+			var isWantedChild = child.name === childName;
 			if (isWantedChild) {
-				return currentChild;
+				wantedChild = child;
+				return false;				
+			} else {
+				return true;
 			}
 		});
+
+		if(!wantedChild){
+			throw new Error("Could not find child '" + childName + "' in '" + name + "'.");
+		}
 		
-		throw new Error("Could not find child '" + childName + "' in '" + name + "'.");
+		return wantedChild;
+		
 	}
 
 	/**

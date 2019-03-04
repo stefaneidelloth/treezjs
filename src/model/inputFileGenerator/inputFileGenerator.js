@@ -1,8 +1,9 @@
-import Model from "./../model.js";
-import Executable from "./../executable/executable.js";
-import AddChildAtomTreeViewerAction from './../../core/treeview/addChildAtomTreeViewerAction.js';
+import Model from './../model.js';
+import Executable from './../executable/executable.js';
+import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import InputModification from './../executable/inputModification.js';
 import GenericInput from './../genericInput/genericInput.js';
+import QuantityVariable from './../variable/field/quantityVariable.js';
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the
@@ -34,7 +35,7 @@ export default class InputFileGenerator extends Model  {
         this.inputPath = 'C:/generated_input_file.txt';
         this.inputPathInfo = undefined;
         
-        this.isDeletingUnassignedRows = undefined;
+        this.isDeletingUnassignedRows = false;
         
        
 	}
@@ -47,7 +48,7 @@ export default class InputFileGenerator extends Model  {
 			
 		this.treeView=treeView;			
 		
-		const addInputModification = new AddChildAtomTreeViewerAction(
+		const addInputModification = new AddChildAtomTreeViewAction(
 				InputModification,
 				"inputModification",
 				"inputModification.png",
@@ -160,6 +161,8 @@ export default class InputFileGenerator extends Model  {
 
 	doRunModel(treeView, executableMonitor, finishedHandler){
 
+		var self=this;
+
 		console.info("Executing InputFileGenerator '" + this.name + "'");
 
 		var modifiedInputPath = this.__getModifiedInputPath();
@@ -168,16 +171,16 @@ export default class InputFileGenerator extends Model  {
         
 		window.treezTerminal.delete(modifiedInputPath, console.error);
 
-        var sourceModelAtom = this.getChildFromRoot(this.sourceModelPath);
+        var sourceModelAtom = this.getChildFromRoot(self.sourceModelPath);
 		
 	
-		window.treezTerminal.readTextFile(this.templatePath, processTemplate, console.error);
+		window.treezTerminal.readTextFile(self.templatePath, processTemplate, console.error);
 
 		function processTemplate(templateString){
-			var inputFileString = this.__applyTemplateToSourceModel(templateString, sourceModelAtom);
+			var inputFileString = self.__applyTemplateToSourceModel(templateString, sourceModelAtom);
 
-			if (inputFileString.isEmpty()) {
-				var message = 'The input file "' + modifiedInputFilePath
+			if (inputFileString.length === 0) {
+				var message = 'The input file "' + modifiedInputPath
 						+ '" is empty. Please check the place holder and the source variables.';
 				console.warn(message);
 			}
@@ -193,6 +196,8 @@ export default class InputFileGenerator extends Model  {
 
 	__applyTemplateToSourceModel(templateString, sourceModel) {
 
+		var self=this;
+
 		var resultString = templateString;
 
 		var variables = sourceModel.getEnabledVariables();
@@ -200,24 +205,24 @@ export default class InputFileGenerator extends Model  {
 			var variableName = variable.name;
 			var valueString = variable.value;			
 
-			var unit = "";
+			var unit = '';
 			var isQuantityVariable = variable instanceof QuantityVariable;
 			if (isQuantityVariable) {				
 				unit = variable.unit;
 			}
 
-			var placeholderExpression = this.__createPlaceHolderExpression(variableName);
+			var placeholderExpression = self.__createPlaceHolderExpression(variableName);
 
-			var injectedExpression = this.__createExpressionToInject(variableName, valueString, unit);
+			var injectedExpression = self.__createExpressionToInject(variableName, valueString, unit);
 
 			//inject expression into template
-			console.info("Template placeholder to replace: '" + placeholderExpression + "'");
-			console.info("Expression to inject: '" + injectedExpression + "'");
+			console.info('Template placeholder to replace: "' + placeholderExpression + '"');
+			console.info('Expression to inject: "' + injectedExpression + '"');
 			resultString = resultString.replace(placeholderExpression, injectedExpression);
 		});
 
-		if (this.isDeletingUnassignedRows) {
-			resultString = thsi.__deleteRowsWithUnassignedPlaceHolders(resultString);
+		if (self.isDeletingUnassignedRows) {
+			resultString = this.__deleteRowsWithUnassignedPlaceHolders(resultString);
 		}
 
 		return resultString;
@@ -227,18 +232,18 @@ export default class InputFileGenerator extends Model  {
 
 		var correctedValueString = valueString;
 		if (valueString === null) {
-			var message = "Value for variable '" + variableName + "' is null.";
+			var message = 'Value for variable "' + variableName + '" is null.';
 			console.warn(message);
-			correctedValueString = "null";
+			correctedValueString = 'null';
 		}
 
 		var injectedExpression;
-		injectedExpression = valueExpression.replace(this.valueTag, correctedValueString);
+		injectedExpression = this.valueExpression.replace(this.valueTag, correctedValueString);
 		if (unitString != null) {
 			injectedExpression = injectedExpression.replace(this.unitTag, unitString);
 		} else {
 			//remove unit tag
-			injectedExpression = injectedExpression.replace(this.unitTag, "");
+			injectedExpression = injectedExpression.replace(this.unitTag, '');
 		}
 		return injectedExpression;
 	}
@@ -249,29 +254,29 @@ export default class InputFileGenerator extends Model  {
 		if (containsName) {
 			placeholderExpression = this.nameExpression.replace(this.nameTag, variableName);
 		} else {
-			var message = "The placeholder must contain a " + this.nameTag + " tag.";
+			var message = 'The placeholder must contain a ' + this.nameTag + ' tag.';
 				throw new Error(message);
 		}
 		return placeholderExpression;
 	}
 
 	 __deleteRowsWithUnassignedPlaceHolders(resultString) {
-		var generalPlaceHolderExpression = this.nameExpression.replace("{", "\\{");
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("}", "\\}");
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("$", "\\$");
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("<name>", ".*");
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace("<label>", ".*");
+		var generalPlaceHolderExpression = this.nameExpression.replace('{', '\\{');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('}', '\\}');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('$', '\\$');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('<name>', '.*');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('<label>', '.*');
 
-		if (generalPlaceHolderExpression === ".*") {
-			var message = "The deletion of rows with unassigned place holders is not yet implemented for place holders"
-					+ "of the type '" + nameExpression
-					+ "'. Please adapt the name expression or disable the deletion of template rows"
-					+ "with unassigned variable place holders.";
+		if (generalPlaceHolderExpression === '.*') {
+			var message = 'The deletion of rows with unassigned place holders is not yet implemented for place holders'
+					+ 'of the type "' + nameExpression
+					+ '". Please adapt the name expression or disable the deletion of template rows'
+					+ 'with unassigned variable place holders.';
 			console.warn(message);
 			return resultString;
 		}
 
-		var lines = resultString.split("\n");
+		var lines = resultString.split('\n');
 		var removedLines = [];
 		var newLines = [];
 
@@ -287,10 +292,10 @@ export default class InputFileGenerator extends Model  {
 			}
 		});
 
-		var newResultString = newLines.join("\n");
+		var newResultString = newLines.join('\n');
 		if (removedLines.length>0) {
-			var message = "Some rows with unassigned variable place holders have been removed from the input file:\n"
-					+ removedLines.join("\n");
+			var message = 'Some rows with unassigned variable place holders have been removed from the input file:\n'
+					+ removedLines.join('\n');
 			console.info(message);
 		}
 		return newResultString;

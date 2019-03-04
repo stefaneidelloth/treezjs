@@ -13,8 +13,7 @@ export default class Variable extends ComponentAtom {
 	
 	constructor(name) {
 		super(name);
-		this.value=undefined
-		this.defaultValue=undefined;
+		this.value=undefined		
 		this.__isEnabled=true;
 	}
 	
