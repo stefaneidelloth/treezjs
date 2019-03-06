@@ -82,19 +82,19 @@ export default class Atom {
 
 	//#region actions
 
-	execute(treeView) {		
+	execute(treeView, optionalMonitor) {		
 		alert('Execute of atom not yet implemented!');
 	}
 
 	
-	executeChildren(wantedClass, treeView){
+	executeChildren(wantedClass, treeView, optionalMonitor){
 
 		this.children.forEach(function(child){
 			
 			var hasWantedClass = child instanceof wantedClass;
 			if (hasWantedClass) {
 				try {
-					child.execute(treeView);
+					child.execute(treeView, optionalMonitor);
 				} catch (exception) {
 					var message = "Could not execute child '" + child.name + "' of '" + this.name + "'.";
 					console.error(message, exception);
@@ -103,10 +103,10 @@ export default class Atom {
 		});		
 	}
 	
-	executeRunnableChildren(treeView) {
+	executeRunnableChildren(treeView, optionalMonitor) {
 		this.children.forEach(child=>{
 			if (child.isRunnable) {				
-				child.execute(treeView);
+				child.execute(treeView, optionalMonitor);
 			}
 		});		
 	}
@@ -648,7 +648,10 @@ export default class Atom {
 
 	removeChild(child) {
 		child.parent = undefined;
-		this.children.remove(child);
+		var index = this.children.indexOf(child);
+		if(index>-1){
+			this.children.splice(index,1);
+		}		
 	}
 
 	

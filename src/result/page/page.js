@@ -76,10 +76,10 @@ export default class Page extends ComponentAtom {
 	}
 
 
-	execute(treeView) {
+	execute(treeView, monitor) {
 		this.__treeView = treeView;
 
-		this.executeChildren(Graph, treeView);
+		this.executeChildren(Graph, treeView, monitor);
 
 		var dTreez = treeView.dTreez;
 		

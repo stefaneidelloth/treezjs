@@ -1,59 +1,23 @@
-package org.treez.results.atom.axis;
+export default class AxisLabel {
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.wrapper.Element;
-import org.treez.results.atom.graph.Graph;
+	constructor(){
+		
+		this.font = undefined;
+		this.size = undefined;
+		this.color = undefined;
+		this.italic = undefined;
+		this.bold = undefined;
+		this. underline = undefined;
+		//this.atEdge = undefined;
+		this. rotate = undefined;
+		this.labelOffset = undefined;
+		this.position = undefined;
+		this.hide = undefined;
+	}
 
-import javafx.geometry.BoundingBox;
+	
 
-/**
- * Represents the label for an axis
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class AxisLabel implements GraphicsPropertiesPageFactory {
-
-	//#region ATTRIBUTES
-
-	public final Attribute<String> font = new Wrap<>();
-
-	public final Attribute<String> size = new Wrap<>();
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<Boolean> italic = new Wrap<>();
-
-	public final Attribute<Boolean> bold = new Wrap<>();
-
-	public final Attribute<Boolean> underline = new Wrap<>();
-
-	//public final Attribute<Boolean> atEdge = new Wrap<>();
-
-	public final Attribute<String> rotate = new Wrap<>();
-
-	public final Attribute<String> labelOffset = new Wrap<>();
-
-	public final Attribute<String> position = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
+	createPage(root, parent) {
 
 		Page axisLabelPage = root.createPage("axisLabel", "   Axis label   ");
 
@@ -85,22 +49,21 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection axisSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, axisSelection, rectSelection, axis) {
 
-		Axis axis = (Axis) parent;
+		
 
 		//remove label group if it already exists
 		axisSelection //
 				.select("#axis-label").remove();
 
 		//create new label
-		Selection label = axisSelection//
+		var label = axisSelection//
 				.append("g").attr("id", "axis-label").append("text");
 
-		Consumer geometryConsumer = () -> {
-			Graph graph = (Graph) axis.getParentAtom();
-			updateLabelGeometry(axis, label, graph);
+		var geometryConsumer = () -> {
+			var graph = axis.parent;
+			this.__updateLabelGeometry(axis, label, graph);
 		};
 
 		position.addModificationConsumer("position", geometryConsumer);
@@ -109,7 +72,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 
 		geometryConsumer.consume();
 
-		Attribute<String> labelAttribute = axis.data.label;
+		var labelAttribute = axis.data.label;
 		AbstractGraphicsAtom.bindText(label, labelAttribute);
 		AbstractGraphicsAtom.bindStringAttribute(label, "font-family", font);
 		AbstractGraphicsAtom.bindStringAttribute(label, "font-size", size);
@@ -122,12 +85,12 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		return axisSelection;
 	}
 
-	private void updateLabelGeometry(Axis axis, Selection label, Graph graph) {
+	__updateLabelGeometry(axis, label, graph) {
 
-		String positionString = position.get();
+		var positionString = position.get();
 		setTextAnchor(label, positionString);
 
-		double rotation = getRotation();
+		var rotation = getRotation();
 
 		//initial transformation
 		applyTransformation(label, 0, 0, rotation);
@@ -145,7 +108,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		}
 	}
 
-	private static void setTextAnchor(Selection label, String positionString) {
+	__setTextAnchor(label, positionString) {
 		if (positionString.equals("at-minimum")) {
 			label.attr("text-anchor", "start");
 		} else if (positionString.equals("centre")) {
@@ -155,7 +118,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		}
 	}
 
-	private double getRotation() {
+	getRotation() {
 		String angleString = rotate.get();
 		double rotation = 0;
 		try {
@@ -164,7 +127,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		return rotation;
 	}
 
-	private void applyTransformationForVerticalOrientation(
+	applyTransformationForVerticalOrientation(
 			Graph graph,
 			Axis axis,
 			Selection label,
@@ -190,7 +153,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		applyTransformation(label, x, y, verticalRotation);
 	}
 
-	private void applyTransformationForHorizontalOrientation(
+	applyTransformationForHorizontalOrientation(
 			Graph graph,
 			Axis axis,
 			Selection label,
@@ -217,7 +180,7 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		applyTransformation(label, x, y, rotation);
 	}
 
-	private double determineLabelHeight(BoundingBox boundingBox) {
+	determineLabelHeight(BoundingBox boundingBox) {
 		double svgLabelHeight = boundingBox.getHeight();
 
 		String fontName = font.get();
@@ -229,12 +192,12 @@ public class AxisLabel implements GraphicsPropertiesPageFactory {
 		return height;
 	}
 
-	private static void applyTransformation(Selection tickLabels, double x, double y, double rotation) {
+	applyTransformation(Selection tickLabels, double x, double y, double rotation) {
 		String transformString = "translate(" + x + "," + y + "),rotate(" + rotation + ")";
 		tickLabels.attr("transform", transformString);
 	}
 
-	private static Double getPxLength(Attribute<String> attribute) {
+	getPxLength(Attribute<String> attribute) {
 		String stringValue = attribute.get();
 		Double doubleValue = Length.toPx(stringValue);
 		return doubleValue;

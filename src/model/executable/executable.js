@@ -127,7 +127,7 @@ export default class Executable extends Model {
 
 		// execute input file generator child(ren) if exist
 		try {
-			self.__runInputFileGenerators(treeView);
+			self.__runInputFileGenerators(treeView, executableMonitor);
 		} catch (exception) {
 			console.error("Could not execute input file generator for executable " + self.name, exception);
 			executableMonitor.cancel();
@@ -413,8 +413,8 @@ export default class Executable extends Model {
 	}
 
 	
-	__runInputFileGenerators(refreshable){
-		this.executeChildren(InputFileGenerator, refreshable);
+	__runInputFileGenerators(refreshable, monitor){
+		this.executeChildren(InputFileGenerator, refreshable, monitor);
 	}
 
 	

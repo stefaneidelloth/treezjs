@@ -99,15 +99,11 @@ export default class Graph extends GraphicsPropertiesPage {
 		return actions;
 	}
 
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
+	execute(treeView, monitor) {
 
-		executeChildren(XySeries.class, treeView);
+		executeChildren(XySeries, treeView, monitor);
 
-		//org.treez.results.atom.page.Page page = (org.treez.results.atom.page.Page) createTreeNodeAdaption()
-		//		.getParent()
-		//		.getAdaptable();
-		//page.execute(refreshable);
+		
 	}
 
 	//#region D3

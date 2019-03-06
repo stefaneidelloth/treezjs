@@ -33,21 +33,7 @@ export default class Model extends ComponentAtom {
 
     }
 
-	/**
-	 * Remotely runs the model with the given ModelInput
-	 */
-	runModel(modelInput, treeView, monitor) {
-
-		//assign the model input to variable values (also assigns model input for sub models)
-		this.assignModelInput(modelInput);
-
-		if (monitor.isCanceled) {
-			console.error("Model '" + name + "' does not run since execution has been canceled.");
-			return this.createEmptyModelOutput();
-		}
-
-		return this.doRunModel(treeView, monitor);
-	}
+	
 
 	assignModelInput(modelInput) {
 
@@ -75,12 +61,18 @@ export default class Model extends ComponentAtom {
 	}
 
 	
-	execute(treeView) {		
+	execute(treeView, monitor) {
 		
-		const monitor = new Monitor("Treez console", treeView);
-		monitor.showInMonitorView();
+		if(!monitor){
+			var monitorTitle = this.constructor.name + ' ' + this.name;
+			monitor = new Monitor(monitorTitle, treeView);
+			monitor.showInMonitorView();
+		}		
+		
 		try {
-			this.doRunModel(treeView, monitor);
+			this.doRunModel(treeView, monitor, (modelOutput)=>{
+				//nothing to do with model output here
+			});
 		} catch (exception) {
 			console.error("Could not execute model '" + this.name + "'!", exception);
 			monitor.done();
@@ -88,26 +80,63 @@ export default class Model extends ComponentAtom {
 	}
 
 	/**
+	 * Remotely runs the model with the given ModelInput
+	 */
+	runModel(modelInput, treeView, monitor, finishedHandler) {
+
+		//assign the model input to variable values (also assigns model input for sub models)
+		this.assignModelInput(modelInput);
+
+		if (monitor.isCanceled) {
+			console.error("Model '" + name + "' does not run since execution has been canceled.");
+			finishedHandler(this.createEmptyModelOutput());
+		}
+
+		this.doRunModel(treeView, monitor, finishedHandler);
+	}
+
+	/**
 	 * Remotely runs the model with the current model state. Should be overridden by models that have no sub models.
 	 */
-	doRunModel(treeView, monitor) {
+	doRunModel(treeView, monitor, finishedHandler) {
 
 		console.info("Running " + this.constructor.name + " '" + this.name + "'");
 
 		const modelOutput = this.__createEmptyModelOutput();
-		this.children.forEach((child)=>{
-            const isModel = child instanceof Model;
-            if (isModel) {
-               
-				const childOutput = child.doRunModel(treeView, monitor);
-				if (childOutput) {
-					modelOutput.addChild(childOutput);
-				}
-                
-            }
-        });
 
-		return modelOutput;
+		this.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, 0);
+
+		
+	}
+
+	__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex){
+
+		var self=this;
+
+		if(monitor.isCancled){
+			finishedHandler(modelOutput);
+			return;
+		}
+
+		if(childIndex > this.children.length-1){
+			finishedHandler(modelOutput);
+			return;			
+		}	
+
+		var child = this.children[childIndex];
+		const isModel = child instanceof Model;
+            if (isModel) {               
+				child.doRunModel(treeView, monitor, (childOutput) => {
+						if (childOutput) {
+							modelOutput.addChild(childOutput);
+						}
+						self.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex+1);
+					
+				});			
+                
+            } else {
+            	self.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex+1);
+            }
 	}
 
 	/**

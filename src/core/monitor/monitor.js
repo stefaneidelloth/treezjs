@@ -10,14 +10,31 @@ export default class Monitor {
 		return this.__finishedWork >= this.__totalWork;
 	}
 	
-	
+	isChildCanceled() {
+		var result = false;
+		this.__children.every((child)=>{
+			if (child.isCanceled) {
+				result=true
+				return false; //stops every loop
+			}
+			
+			if (child.isChildCanceled) {
+				result=true
+				return false; //stops every loop
+			}
+			
+			return true; //continues every loop
+		});
+		
+		return result;
+	}	
 	
 	
 	constructor(title, treeView, id, coveredWorkOfParentMonitor, totalWork, parentMonitor) {		
 		this.id = id;
 		this.title = title;
 		
-		this.isCanceled = false;
+		this.isCanceled = false; //Represents the canceled state of this monitor, not including the child monitors! Use method isChildCanceled to check the children.  
         this.hasIssue = false;
         
 		this.__description = '';
@@ -144,13 +161,7 @@ export default class Monitor {
 		
 		this.__triggerPropertyChangedListeners();
 		this.__incrementParentWork(workIncrement);
-	}
-
-	close() {
-		this.cancel();
-		//TODO
-		//NDC.pop();
-	}
+	}	
 
 	__assertTotalWorkHasBeenSet() {
 		if (this.__totalWork == undefined) {
@@ -158,6 +169,8 @@ export default class Monitor {
 		}
 	}
 
+	//Cancels the whole monitor tree: this monitor, all of its recursive child monitors and
+	//all its recursive parent monitors (including their recursive children). 
 	cancelAll() {
 		this.cancel();
 		if (this.__parent) {
@@ -165,10 +178,23 @@ export default class Monitor {
 		}
 	}
 
+	//Cancels this monitor and all of its recursive child monitors. 
+	//This does not cancel the parent monitor! (Also see cancelAll)
+	//It is due to the user to check:
+	//* if a monitor has been canceled
+	//* if some child of a monitor has been canceled (use the method isChildCanceled )
+	//=> This way a user can decide on its own if the total process should be stopped
+	//if a child process has been canceled or if the total process should continue in
+	//that case. 
 	cancel() {
+		if(this.isCanceled){
+			return;
+		}
+		
 		if (this.isDone) {
 			return;
 		}
+		
 		this.isCanceled = true;
 		this.__children.forEach(
 			(child)=>child.cancel()
@@ -226,17 +252,10 @@ export default class Monitor {
 
 	getConsole(id) {
 		return this.__consoleMap[id];
-	}
-
-	
+	}	
 
 	setDescription(description) {
-		this.__description = description;
-		
-		//TODO
-		//if (rootMonitor != null) {
-		//	rootMonitor.setTaskName(description);
-		//}
+		this.__description = description;	
 		this.__triggerPropertyChangedListeners();
 	}
 
@@ -247,12 +266,11 @@ export default class Monitor {
 	setTotalWork(totalWork) {
 		if (this.__totalWork === undefined) {
 			this.__totalWork = totalWork;
+			this.__triggerPropertyChangedListeners();
 		} else {
 			throw new Error("Total work must only be set once");
 		}
 	}	
-
-	
 
 	getProgressInPercent() {
 
@@ -272,21 +290,10 @@ export default class Monitor {
 	}
 
 	getOutputStream() {
-		return this.__console.newOutputStream();;
+		return this.__console.newOutputStream();
 	}
 
-	isChildCanceled() {
-		var result = false;
-		this.__children.every((child)=>{
-			if (child.isCanceled || child.isChildCanceled()) {
-				result=true
-				return false;
-			}
-			return true;
-		});
-		
-		return result;
-	}
+	
 
 	//#end region
 

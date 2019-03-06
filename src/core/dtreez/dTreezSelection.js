@@ -133,26 +133,41 @@ export default class DTreezSelection {
 	}
 	
 	style(key, value){
+		if (value === undefined){
+			return this.__d3Selection.style(key);
+		}
 		this.__d3Selection.style(key, value);		
 		return this;
 	}
 	
 	src(source){
+		if (source === undefined){
+			return this.__d3Selection.attr('src');
+		}
 		this.__d3Selection.attr('src', source);		
 		return this;
 	}
 	
 	text(value){
+		if (value === undefined){
+			return this.__d3Selection.text();
+		}
 		this.__d3Selection.text(value);		
 		return this;
 	}
 	
 	title(title){
+		if (title === undefined){
+			return this.__d3Selection.attr('title');
+		}
 		this.__d3Selection.attr('title', title);		
 		return this;
 	}
 	
 	value(value){
+		if (value === undefined){
+			return this.__d3Selection.attr('value');
+		}
 		this.__d3Selection.attr('value', value);		
 		return this;
 	}

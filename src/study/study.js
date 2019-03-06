@@ -66,19 +66,14 @@ export default class Study extends ComponentAtom {
 	    
     }
 	
-	execute(treeView) {
-		const monitor = new Monitor(this.constructor.name, treeView);
-		monitor.showInMonitorView();
-		try {
-			this.runStudy(treeView, monitor);
-		} catch (exception) {
-			console.error('Could not execute study "' + this.name + '"!', exception);
-			monitor.done();
+	execute(treeView, monitor) {
+		if(!monitor){
+			var monitorTitle = this.constructor.name + ' ' + this.name;
+			monitor = new Monitor(monitorTitle, treeView);
+			monitor.showInMonitorView();
 		}
-	}
-	
-	runStudy(treeView, monitor) {		
-		this.__treeView = treeView;
+		try {
+			this.__treeView = treeView;
 		this.isCanceled = false;
 		
 		var className = this.constructor.name;
@@ -125,32 +120,39 @@ export default class Study extends ComponentAtom {
 			} else {
 				this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
 			}
-
-			this.executeRunnableChildren(treeView);
-
 		}		
-
-	}
+		} catch (exception) {
+			console.error('Could not execute study "' + this.name + '"!', exception);
+			monitor.done();
+		}
+	}	
+	
 	
 	__finishOrCancelIfDone(treeView, monitor) {
-		
-		var numberOfRemainingJobs = this.numberOfRemainingModelJobs-1;
-		this.numberOfRemainingModelJobs = numberOfRemainingJobs;
 
-		if (monitor.isChildCanceled()) {
-			if (this.isCanceled) {
+		if (this.isCanceled) {
 				return;
-			}
-			this.isCancled = true;
+		}
+
+		if(monitor.isChildCanceled()){
+			monitor.cancel();			
+		}		
+
+		if (monitor.isCanceled) {			
+			
+			this.isCanceled = true;
 			monitor.markIssue();
 			monitor.setDescription('Canceled!');
-			monitor.cancel();
-
 			this.__logAndShowCancelMessage();
 			treeView.refresh();			
 		}
 
+		var numberOfRemainingJobs = this.numberOfRemainingModelJobs-1;
+		this.numberOfRemainingModelJobs = numberOfRemainingJobs;
+
 		if (numberOfRemainingJobs === 0) {
+
+			this.executeRunnableChildren(treeView, monitor);
 
 			monitor.setDescription('Finished!');
 
@@ -162,6 +164,8 @@ export default class Study extends ComponentAtom {
 
 			this.__logAndShowEndMessage();
 			treeView.refresh();
+
+
 		}
 	}
 
@@ -297,35 +301,57 @@ export default class Study extends ComponentAtom {
 	__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
 
 		var self=this;
-		var counter = 1;
+		
 		var model = this.__getControlledModel();
 		var startTime = new Date().valueOf();
+
+		this.__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook, model, startTime, 0);
+			
+
+	}
+
+	__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook, model, startTime, index){
+
+		var self = this;		
+
+		if(index > modelInputs.length-1){
+			jobFinishedHook();
+			return;
+		}
+
+		if(monitor.isCanceled){
+			jobFinishedHook();
+			return;
+		}
+
+		var modelInput = modelInputs[index];
+		var jobCounter = index+1;
+
+
+		this.__logStartMessage(jobCounter, startTime, numberOfSimulations);
+
 		
-		modelInputs.forEach((modelInput)=>{
-			//allows to cancel the sweep if a user clicks the cancel button at the progress monitor window
-			if (!monitor.isCanceled) {
-				
-				this.__logStartMessage(counter, startTime, numberOfSimulations);
 
-				monitor.setDescription('=>Job #' + counter);
-
-				var jobId = modelInput.jobId;
-				var jobTitle = 'Job "' + jobId + '"';
-				var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
-
-				var modelOutputAtom = model.runModel(modelInput, treeView, jobMonitor);
-
-				
-				var modelOutputName = self.name + 'OutputId' + modelInput.jobId;
-				modelOutputAtom.name = modelOutputName;
-				outputAtom.addChild(modelOutputAtom);
-
-				jobFinishedHook();
-
-				counter++;
-			}
-		});
+		var jobId = modelInput.jobId;
+		var jobTitle = 'Job #' + jobId ;
+		var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
 		
+		monitor.setDescription('=>' + jobTitle);
+
+		model.runModel(modelInput, treeView, jobMonitor, finishedHandler);
+
+		function finishedHandler(modelOutput){
+
+			var modelOutputName = self.name + 'OutputId' + modelInput.jobId;
+			modelOutput.name = modelOutputName;
+			outputAtom.addChild(modelOutput);
+
+			jobFinishedHook();
+
+			self.__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, 
+												monitor, jobFinishedHook, model, startTime, index+1);			
+
+		}
 
 	}
 	

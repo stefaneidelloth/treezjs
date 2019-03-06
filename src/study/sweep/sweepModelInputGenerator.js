@@ -139,7 +139,8 @@ export default class SweepModelInputGenerator {
 
 			firstRange.values.forEach(value=>{
 				//create model input that initially contains the current value
-				var initialInput = self.__createInitialModelInput(variableModelPath, studyId, studyDescription, value);
+				var dummyJobId = -1;
+				var initialInput = self.__createInitialModelInput(variableModelPath, studyId, studyDescription, value, dummyJobId);
 
 				//copy and extended the initial model input using the remaining variable values
 				var modelInputsWithCurrentValue = self.__extendModelInputs(initialInput, remainingRanges);

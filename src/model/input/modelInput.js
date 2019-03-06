@@ -7,12 +7,12 @@ export default class ModelInput {
 	
 	static nextId; //initial value is defined below class definition
 
-	constructor(studyModelPath, studyId, studyDescription) {
+	constructor(studyModelPath, studyId, studyDescription, jobId) {
 		this.studyModelPath = studyModelPath;
 		this.studyId = studyId;
 		this.studyDescription = studyDescription;
 		
-		this.jobId = ModelInput.getNextId();
+		this.jobId = jobId;
 		
 		this.__variableModelPathToValueMap = {};
 		
@@ -49,7 +49,8 @@ export default class ModelInput {
 	}
 
 	copy() {
-		var modelInput = new ModelInput(this.studyModelPath, this.studyId, this.studyDescription);
+		var jobId = ModelInput.getNextId();
+		var modelInput = new ModelInput(this.studyModelPath, this.studyId, this.studyDescription, jobId);
 		return modelInput;
 	}
 

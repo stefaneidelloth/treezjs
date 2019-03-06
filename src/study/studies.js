@@ -35,7 +35,13 @@ export default class Studies extends ComponentAtom {
 			.text('This atom represents studies.');
     }
 	
-	doRunModel(treeView, monitor){
+	execute(treeView, monitor){
+		if(!monitor){
+			var monitorTitle = this.constructor.name + ' ' + this.name;
+			monitor = new Monitor(monitorTitle, treeView);
+			monitor.showInMonitorView();
+		}
+		
 		this.children.forEach((child)=>{
 			var isStudy = child instanceof Study;
 			if (isStudy) {
