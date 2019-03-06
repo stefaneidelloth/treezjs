@@ -145,16 +145,13 @@ export default class Executable extends Model {
 		console.info("Executing " + command);
 
 		// execute command
-		
-
 		try {
 
-			//window.treezTerminal.execute(command, resultHandler, errorHandler);
-			//window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);
-
-			resultHandler(Executable.__finishedString);
+			window.treezTerminal.execute(command, resultHandler, errorHandler);
+			window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);			
 			
 			function resultHandler(message){
+				
 				
 				var isFinished = (message === Executable.__finishedString);
                 if(isFinished){
