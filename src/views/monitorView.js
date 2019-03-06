@@ -58,34 +58,14 @@ export default class MonitorView {
 
 		var div = self.__progressPanel.append('div');
 
-		var details = div.append('div'); //expandable for progress that has children (might be hidden)
-
-		var collapsibleHeader = details.append('div');
-
-		var collapsibleSymbol = collapsibleHeader
-				.append('span') //
-				.className('treez-monitor-progress-collapsible-header')				
-				.text('\u25BE ');
+		var details = div.append('details') //expandable for progress that has children (might be hidden)
+			.attr('open','');
+		
+		var collapsibleHeader = details.append('summary');		
 
 		var collapsibleContent = details
 				.append('div') //
-				.className('treez-monitor-progress-collapsible-content');
-
-		collapsibleSymbol.onClick(() => {
-
-			var isCollapsed = collapsibleContent.classed('collapsed');
-
-			if (isCollapsed) {
-				collapsibleContent.classed('collapsed', false);
-				//collapsibleContent.style('display', 'block');
-				collapsibleSymbol.text('\u25BE ');
-			} else {
-				collapsibleContent.classed('collapsed', true);
-				//collapsibleContent.style('display', 'none');
-				collapsibleSymbol.text('\u25B8 ');
-			}
-
-		});
+				.className('treez-monitor-progress-collapsible-content');		
 
 		var nonExpandableHeader = div.append('div'); //for progress that does not have children (might be hidden)
 
@@ -111,11 +91,11 @@ export default class MonitorView {
 
 	}
 
-	__appendChildMonitor( monitor, simpleHeader, expandableHeader, content, details, newChildMonitor) {
+	__appendChildMonitor( monitor, nonExpandableHeader, expandableHeader, content, details, newChildMonitor) {
 
 		var headerDisplay = expandableHeader.style('display');
 		if (headerDisplay === 'none') {
-			simpleHeader.style('display', 'none');
+			nonExpandableHeader.style('display', 'none');
 			expandableHeader.style('display', 'block');
 			this.__createHeaderNodes(expandableHeader, monitor, details);
 		}
@@ -143,7 +123,7 @@ export default class MonitorView {
 			titleLabel.onClick(() => {
 				var expandedString = details.attr('open');
 				if (expandedString === null) {
-					details.attr('open', 'true');
+					details.attr('open', '');
 				} else {					
 					details.attr('open', null);
 				}
@@ -176,8 +156,6 @@ export default class MonitorView {
 				.attr('type', 'button')
 				.attr('title', 'Cancel')
 				.className('treez-monitor-progress-cancel-button');
-		
-				
 
 		var canceledSymbol = right //
 				.append('label') //
@@ -200,7 +178,6 @@ export default class MonitorView {
 				.style('width', progressInPercent + '%');
 
 		monitor.addPropertyChangedListener(() => {
-
 			
 				//update title
 				var currentTitle = monitor.title;
@@ -250,35 +227,15 @@ export default class MonitorView {
 
 		var div = parentSelection.append('div');
 
-		var details = div.append('div'); //expandable for progress that has children (might be hidden)
-
-		var collapsibleHeader = details.append('div');
-
-		var collapsibleSymbol = collapsibleHeader
-				.append('span') //
-				.style('text-size', '14px') //
-				.text('\u25BE ');
+		var details = div.append('details') //expandable for progress that has children (might be hidden)
+			.attr('open','');
+			
+		var collapsibleHeader = details.append('summary');		
 
 		var collapsibleContent = details
 				.append('div') //
-				.style('padding-left', '10px');
-
-		collapsibleSymbol.onClick(() => {
-
-			var isCollapsed = collapsibleContent.classed('collapsed');
-
-			if (isCollapsed) {
-				collapsibleContent.classed('collapsed', false);
-				collapsibleContent.style('display', 'block');
-				collapsibleSymbol.text('\u25BE ');
-			} else {
-				collapsibleContent.classed('collapsed', true);
-				collapsibleContent.style('display', 'none');
-				collapsibleSymbol.text('\u25B8 ');
-			}
-
-		});
-
+				.className('treez-monitor-progress-collapsible-content');
+		
 		var nonExpandableHeader = div.append('div'); //for progress that does not have children (might be hidden)
 
 		monitor.addChildCreatedListener((newChildMonitor) => {			

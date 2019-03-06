@@ -10,7 +10,7 @@ export default class Monitor {
 		return this.__finishedWork >= this.__totalWork;
 	}
 	
-	isChildCanceled() {
+	get isChildCanceled() {
 		var result = false;
 		this.__children.every((child)=>{
 			if (child.isCanceled) {

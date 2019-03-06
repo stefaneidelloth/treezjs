@@ -134,7 +134,7 @@ export default class Study extends ComponentAtom {
 				return;
 		}
 
-		if(monitor.isChildCanceled()){
+		if(monitor.isChildCanceled){
 			monitor.cancel();			
 		}		
 
@@ -156,7 +156,7 @@ export default class Study extends ComponentAtom {
 
 			monitor.setDescription('Finished!');
 
-			if (monitor.isChildCanceled()) {
+			if (monitor.isChildCanceled) {
 				monitor.cancel();
 			} else {
 				monitor.done();
@@ -349,7 +349,9 @@ export default class Study extends ComponentAtom {
 			jobFinishedHook();
 
 			self.__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, 
-												monitor, jobFinishedHook, model, startTime, index+1);			
+												monitor, jobFinishedHook, model, startTime, index+1);	
+
+			treeView.refresh();		
 
 		}
 

@@ -113,7 +113,7 @@ export default class Model extends ComponentAtom {
 
 		var self=this;
 
-		if(monitor.isCancled){
+		if(monitor.isCanceled){
 			finishedHandler(modelOutput);
 			return;
 		}
