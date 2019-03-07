@@ -36,7 +36,12 @@ export default class Study extends ComponentAtom {
 		section.append('treez-section-action')
 		 	.label('Run')
 	        .image('run.png')	       
-	        .addAction(()=>this.execute(treeView));		
+	        .addAction(()=>this.execute(treeView)
+	        				   .catch(error => {
+	        					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
+	        					   	monitor.done();
+	        				   })
+	        );		
 		
 
 		this.sectionContent = section.append('div'); 	     
@@ -66,7 +71,7 @@ export default class Study extends ComponentAtom {
 	    
     }
 	
-	execute(treeView, monitor) {
+	async execute(treeView, monitor) {
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' ' + this.name;
 			monitor = new Monitor(monitorTitle, treeView);
@@ -74,53 +79,53 @@ export default class Study extends ComponentAtom {
 		}
 		try {
 			this.__treeView = treeView;
-		this.isCanceled = false;
-		
-		var className = this.constructor.name;
-
-		var startMessage = 'Executing ' + className + ' "' + this.name + '"';
-		console.info(startMessage);
-		
-		var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
-		console.info('Number of (enabled) ranges: ' + numberOfRanges);
+			this.isCanceled = false;
+			
+			var className = this.constructor.name;
 	
-		var studyTitle = "Running " + className;
-		monitor.title = studyTitle;
-
-		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
-		monitor.setTotalWork(numberOfSimulations);
-				
-		console.info("Number of total simulations: " + numberOfSimulations);
-
-		//reset job index to 1
-		ModelInput.resetIdCounter();
-
-		//create model inputs
-		var modelInputs = this.inputGenerator.createModelInputs();
-
-		//prepare result structure
-		this.__prepareResultStructure();
-		treeView.refresh();
-
-		//get sweep output atom
-		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
-		var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
-
-		//remove all old children if they exist
-		studyOutputAtom.removeAllChildren();
-
-		//execute target model for all model inputs
-		this.numberOfRemainingModelJobs = numberOfSimulations;
-
-		if (!monitor.isCanceled) {
-			var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
-
-			if (this.isConcurrent) {
-				this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
-			} else {
-				this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
-			}
-		}		
+			var startMessage = 'Executing ' + className + ' "' + this.name + '"';
+			console.info(startMessage);
+			
+			var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
+			console.info('Number of (enabled) ranges: ' + numberOfRanges);
+		
+			var studyTitle = "Running " + className;
+			monitor.title = studyTitle;
+	
+			var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
+			monitor.setTotalWork(numberOfSimulations);
+					
+			console.info("Number of total simulations: " + numberOfSimulations);
+	
+			//reset job index to 1
+			ModelInput.resetIdCounter();
+	
+			//create model inputs
+			var modelInputs = this.inputGenerator.createModelInputs();
+	
+			//prepare result structure
+			this.__prepareResultStructure();
+			treeView.refresh();
+	
+			//get sweep output atom
+			var studyOutputAtomPath = this.__createStudyOutputAtomPath();
+			var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
+	
+			//remove all old children if they exist
+			studyOutputAtom.removeAllChildren();
+	
+			//execute target model for all model inputs
+			this.numberOfRemainingModelJobs = numberOfSimulations;
+	
+			if (!monitor.isCanceled) {
+				var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
+	
+				if (this.isConcurrent) {
+					await this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
+				} else {
+					await this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
+				}
+			}		
 		} catch (exception) {
 			console.error('Could not execute study "' + this.name + '"!', exception);
 			monitor.done();
@@ -245,7 +250,7 @@ export default class Study extends ComponentAtom {
 
 		var rootSnapshot = root.copy();
 
-		var modelJob = () => {
+		var modelJob = async () => {
 
 			if (monitor.isCanceled) {
 				jobFinishedDelegate();
@@ -269,7 +274,7 @@ export default class Study extends ComponentAtom {
 						return;
 					}
 
-					var modelOutputAtom = shadowModelToRun.runModel(modelInput, treeView, jobMonitor);
+					var modelOutputAtom = await shadowModelToRun.runModel(modelInput, treeView, jobMonitor);
 
 					if (monitor.isCanceled) {
 						jobFinishedDelegate();
@@ -298,64 +303,47 @@ export default class Study extends ComponentAtom {
 
 	}
 
-	__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
+	async __executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
 
 		var self=this;
 		
 		var model = this.__getControlledModel();
-		var startTime = new Date().valueOf();
+		var startTime = new Date().valueOf();		
+		
+		var jobCounter = 1;
 
-		this.__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook, model, startTime, 0);
+
+		for(const modelInput of modelInputs){
 			
+			if(monitor.isCanceled){
+				jobFinishedHook();
+				return;
+			}
+			
+			this.__logStartMessage(jobCounter, startTime, numberOfSimulations);
 
-	}
+			var jobId = modelInput.jobId;
+			var jobTitle = 'Job #' + jobId ;
+			var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
+			
+			monitor.setDescription('=>' + jobTitle);
 
-	__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook, model, startTime, index){
-
-		var self = this;		
-
-		if(index > modelInputs.length-1){
-			jobFinishedHook();
-			return;
-		}
-
-		if(monitor.isCanceled){
-			jobFinishedHook();
-			return;
-		}
-
-		var modelInput = modelInputs[index];
-		var jobCounter = index+1;
-
-
-		this.__logStartMessage(jobCounter, startTime, numberOfSimulations);
-
-		
-
-		var jobId = modelInput.jobId;
-		var jobTitle = 'Job #' + jobId ;
-		var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
-		
-		monitor.setDescription('=>' + jobTitle);
-
-		model.runModel(modelInput, treeView, jobMonitor, finishedHandler);
-
-		function finishedHandler(modelOutput){
-
+			var modelOutput = await model.runModel(modelInput, treeView, jobMonitor);
+			
 			var modelOutputName = self.name + 'OutputId' + modelInput.jobId;
 			modelOutput.name = modelOutputName;
 			outputAtom.addChild(modelOutput);
 
-			jobFinishedHook();
-
-			self.__processModelInputsRecursively(treeView, numberOfSimulations, modelInputs, outputAtom, 
-												monitor, jobFinishedHook, model, startTime, index+1);	
+			jobFinishedHook();			
 
 			treeView.refresh();		
-
-		}
+			
+			jobCounter++;	
+			
+		};
 
 	}
+
 	
 	__prepareResultStructure() {
 		this.__createResultsAtomIfNotExists();

@@ -82,33 +82,33 @@ export default class Atom {
 
 	//#region actions
 
-	execute(treeView, optionalMonitor) {		
+	async execute(treeView, optionalMonitor) {		
 		alert('Execute of atom not yet implemented!');
 	}
 
 	
-	executeChildren(wantedClass, treeView, optionalMonitor){
+	async executeChildren(wantedClass, treeView, optionalMonitor){	
 
-		this.children.forEach(function(child){
+		for(const child of this.children){
 			
 			var hasWantedClass = child instanceof wantedClass;
 			if (hasWantedClass) {
 				try {
-					child.execute(treeView, optionalMonitor);
+					await child.execute(treeView, optionalMonitor);
 				} catch (exception) {
 					var message = "Could not execute child '" + child.name + "' of '" + this.name + "'.";
 					console.error(message, exception);
 				}
 			}
-		});		
+		};		
 	}
 	
-	executeRunnableChildren(treeView, optionalMonitor) {
-		this.children.forEach(child=>{
+	async executeRunnableChildren(treeView, optionalMonitor) {
+		for(const child of this.children){
 			if (child.isRunnable) {				
-				child.execute(treeView, optionalMonitor);
+				await child.execute(treeView, optionalMonitor);
 			}
-		});		
+		};		
 	}
 
 

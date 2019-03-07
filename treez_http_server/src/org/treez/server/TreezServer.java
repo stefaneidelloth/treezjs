@@ -8,7 +8,10 @@ import javax.swing.UIManager;
 import org.treez.server.rest.BrowseDirectoryPathHandler;
 import org.treez.server.rest.BrowseFileOrDirectoryPathHandler;
 import org.treez.server.rest.BrowseFilePathHandler;
+import org.treez.server.rest.DeleteFileHandler;
+import org.treez.server.rest.ReadTextFileHandler;
 import org.treez.server.rest.StaticFileHandler;
+import org.treez.server.rest.WriteTextFileHandler;
 import org.treez.server.websocket.WebSocketServer;
 
 import com.sun.net.httpserver.HttpServer;
@@ -43,6 +46,10 @@ public class TreezServer {
 		BrowseFilePathHandler.create("/browseFilePath", httpServer);
 		BrowseDirectoryPathHandler.create("/browseDirectoryPath", httpServer);
 		BrowseFileOrDirectoryPathHandler.create("/browseFileOrDirectoryPath", httpServer);
+		
+		DeleteFileHandler.create("/delete", httpServer);
+		ReadTextFileHandler.create("/readTextFile", httpServer);
+		WriteTextFileHandler.create("/writeTextFile", httpServer);
 
 		startHttpServer(httpServer);
 

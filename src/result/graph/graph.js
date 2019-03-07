@@ -99,9 +99,9 @@ export default class Graph extends GraphicsPropertiesPage {
 		return actions;
 	}
 
-	execute(treeView, monitor) {
+	async execute(treeView, monitor) {
 
-		executeChildren(XySeries, treeView, monitor);
+		await this.executeChildren(XySeries, treeView, monitor);
 
 		
 	}

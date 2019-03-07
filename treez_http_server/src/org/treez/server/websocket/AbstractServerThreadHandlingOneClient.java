@@ -3,6 +3,7 @@ package org.treez.server.websocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,6 +26,8 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 	private Scanner scanner;
 
 	protected boolean isRunning = false;
+	
+	protected static String ENCODING = "UTF-8"; //"cp1252";
 
 	// #end region
 
@@ -83,7 +86,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 	private void doHandShakeToInitializeWebSocketConnection() {
 
 		try {
-			this.scanner = new Scanner(clientInputStream, "UTF-8");
+			this.scanner = new Scanner(clientInputStream, ENCODING);
 			String data = this.scanner.useDelimiter("\\r\\n\\r\\n").next();
 
 			Matcher get = Pattern.compile("^GET").matcher(data);
@@ -97,13 +100,13 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 				var messageDigest = MessageDigest.getInstance("SHA-1");
 
 				var byteMessage = messageDigest
-						.digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes("UTF-8"));
+						.digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes(ENCODING));
 
 				var stringMessage = DatatypeConverter.printBase64Binary(byteMessage);
 
 				response = ("HTTP/1.1 101 Switching Protocols\r\n" + "Connection: Upgrade\r\n"
 						+ "Upgrade: websocket\r\n" + "Sec-WebSocket-Accept: " + stringMessage + "\r\n\r\n")
-								.getBytes("UTF-8");
+								.getBytes(ENCODING);
 
 				clientOutputStream.write(response, 0, response.length);
 			} else {
@@ -128,6 +131,10 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 					if (!(firstByte == -120)) {
 
 						var message = decode(byteArray, length);
+						
+						var commandPostfix = "<#end#>";						
+						message = message.split(commandPostfix)[0]; //removes possible ghost byte rubbish
+						
 						try {
 							handleClientMessage(message);
 						} catch (Exception exception) {
@@ -162,7 +169,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 		// Original source code for encoding:
 		// https://stackoverflow.com/questions/8125507/how-can-i-send-and-receive-websocket-messages-on-the-server-side
 
-		byte[] rawData = message.getBytes("UTF-8");
+		byte[] rawData = message.getBytes(ENCODING);
 
 		int frameCount = 0;
 		byte[] frame = new byte[10];
@@ -209,7 +216,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 		return reply;
 	}
 
-	protected static String decode(byte[] byteArray, int length) {
+	protected static String decode(byte[] byteArray, int length) throws UnsupportedEncodingException {
 
 		// Original source code for decoding:
 		// https://stackoverflow.com/questions/8125507/how-can-i-send-and-receive-websocket-messages-on-the-server-side
@@ -245,7 +252,7 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 		for (i = rDataStart, j = 0; i < length; i++, j++) {
 			message[j] = (byte) (byteArray[i] ^ masks[j % 4]);
 		}
-		return new String(message);
+		return new String(message,ENCODING);
 
 	}
 

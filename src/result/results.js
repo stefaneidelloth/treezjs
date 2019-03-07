@@ -48,10 +48,10 @@ export default class Results extends ComponentAtom {
 		return actions;
 	}
 
-	execute(treeView, monitor) {
+	async execute(treeView, monitor) {
 		this.__treeView = treeView;
-		this.executeChildren(Data, treeView, monitor);
-		this.executeChildren(Page, treeView, monitor);
+		await this.executeChildren(Data, treeView, monitor);
+		await this.executeChildren(Page, treeView, monitor);
 	}
 	
 		

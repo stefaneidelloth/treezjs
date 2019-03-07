@@ -58,7 +58,10 @@ export default class TableImport extends Model {
 	createSourceTypeSection(page) {
 		Section sourceTypeSection = dataPage.createSection("sourceTypeSection", absoluteHelpContextId);
 		sourceTypeSection.setLabel("Source type");
-		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeView));
+		sourceTypeSection.createSectionAction("action", "Import data", () -> execute(treeView).catch(error => {
+											  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
+											  monitor.done();
+										  }));
 
 		//source type
 		EnumComboBox<TableSourceType> sourceTypeCheck = sourceTypeSection.createEnumComboBox(sourceType, this,
@@ -305,7 +308,7 @@ export default class TableImport extends Model {
 	}
 
 
-	doRunModel(refreshable, monitor) {
+	async doRunModel(treeView, monitor) {
 
 		LOG.info("Running " + this.getClass().getSimpleName() + " '" + getName() + "'");
 

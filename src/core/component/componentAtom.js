@@ -106,10 +106,14 @@ export default class ComponentAtom extends Atom {
 
         if (this.isRunnable) {
 			actions.push(new TreeViewAction(
-								"Run", 
-								"run.png",
+								'Run', 
+								'run.png',
 								treeView,
 								() => this.execute(treeView)
+										  .catch(error => {
+											  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
+											  monitor.done();
+										  })
 							)
 			);
 		}

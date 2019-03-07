@@ -61,83 +61,59 @@ export default class Model extends ComponentAtom {
 	}
 
 	
-	execute(treeView, monitor) {
+	async execute(treeView, monitor) {
 		
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' ' + this.name;
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
-		}		
+		}			
 		
-		try {
-			this.doRunModel(treeView, monitor, (modelOutput)=>{
-				//nothing to do with model output here
-			});
-		} catch (exception) {
-			console.error("Could not execute model '" + this.name + "'!", exception);
-			monitor.done();
-		}
+		await this.doRunModel(treeView, monitor);		
 	}
 
 	/**
 	 * Remotely runs the model with the given ModelInput
 	 */
-	runModel(modelInput, treeView, monitor, finishedHandler) {
+	async runModel(modelInput, treeView, monitor) {
 
 		//assign the model input to variable values (also assigns model input for sub models)
 		this.assignModelInput(modelInput);
 
 		if (monitor.isCanceled) {
 			console.error("Model '" + name + "' does not run since execution has been canceled.");
-			finishedHandler(this.createEmptyModelOutput());
+			return this.createEmptyModelOutput();
 		}
 
-		this.doRunModel(treeView, monitor, finishedHandler);
+		return await this.doRunModel(treeView, monitor);
 	}
 
 	/**
 	 * Remotely runs the model with the current model state. Should be overridden by models that have no sub models.
 	 */
-	doRunModel(treeView, monitor, finishedHandler) {
+	async doRunModel(treeView, monitor) {
+
+		
 
 		console.info("Running " + this.constructor.name + " '" + this.name + "'");
 
 		const modelOutput = this.__createEmptyModelOutput();
-
-		this.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, 0);
-
 		
-	}
 
-	__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex){
-
-		var self=this;
-
-		if(monitor.isCanceled){
-			finishedHandler(modelOutput);
-			return;
+		for (const child of this.children){
+			if(child instanceof Model){
+				var childModelOutput = await child.doRunModel(treeView, monitor);
+				if (childModelOutput) {
+					modelOutput.addChild(childModelOutput);
+				}
+			}
 		}
+			
 
-		if(childIndex > this.children.length-1){
-			finishedHandler(modelOutput);
-			return;			
-		}	
-
-		var child = this.children[childIndex];
-		const isModel = child instanceof Model;
-            if (isModel) {               
-				child.doRunModel(treeView, monitor, (childOutput) => {
-						if (childOutput) {
-							modelOutput.addChild(childOutput);
-						}
-						self.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex+1);
-					
-				});			
-                
-            } else {
-            	self.__runChildModelsRecursivly(treeView, monitor, finishedHandler, modelOutput, childIndex+1);
-            }
+		return modelOutput; 		
 	}
+
+	
 
 	/**
 	 * Creates an empty model output. It wraps a RootOutput that is used to organize the child model outputs in a tree

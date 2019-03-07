@@ -110,121 +110,121 @@ export default class Executable extends Model {
        this.__refreshStatus();
     }	
 
-    doRunModel(treeView, executableMonitor, finishedHandler) {
+    async doRunModel(treeView, monitor) {
 
-    	var self = this;
-
+    	
 		const startMessage = "Running " + self.constructor.name + " '" + self.name + "'.";
 		console.info(startMessage);
 
-		// initialize progress monitor
+		//initialize progress monitor
 		const totalWork = 3;
-		executableMonitor.setTotalWork(totalWork);
+		monitor.setTotalWork(totalWork);
 
-		self.__deleteOldOutputAndLogFilesIfExist();
+		this.__deleteOldOutputAndLogFilesIfExist();
 
-		executableMonitor.setDescription("Running InputFileGenerator children if exist.");
+		monitor.setDescription("Running InputFileGenerator children if exist.");
 
-		// execute input file generator child(ren) if exist
+		//execute input file generator child(ren) if exist		
+		
 		try {
-			self.__runInputFileGenerators(treeView, executableMonitor);
+			await this.__runInputFileGenerators(treeView, monitor);
 		} catch (exception) {
 			console.error("Could not execute input file generator for executable " + self.name, exception);
-			executableMonitor.cancel();
-			if(finishedHandler){
-				finishedHandler(self.__createEmptyModelOutput());
-			}
+			monitor.cancel();
+			return this.__createEmptyModelOutput();			
 		}
 
-		// update progress monitor
-		executableMonitor.worked(1);
-		executableMonitor.setDescription('Executing system command.');
+		//update progress monitor
+		monitor.worked(1);
+		monitor.setDescription('Executing system command.');
 
-		// create command
-		const command = self.__buildCommand();
+		//create command
+		const command = this.__buildCommand();
 		console.info("Executing " + command);
 
-		// execute command
-		try {
-
-			window.treezTerminal.execute(command, resultHandler, errorHandler);
-			window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);			
-			
-			function resultHandler(message){
+		//execute command
+		await this.__executeCommand(command, monitor);		
+		
+		//post process execution results
+		return await this.__postProcessExecution(treeView, monitor)
+    }  
+    
+    async __executeCommand(command, monitor){
+    	return await new Promise(function(resolve, reject){
+	    	try {
+	
+				window.treezTerminal.execute(command, resultHandler, errorHandler);
+				window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);			
 				
-				
-				var isFinished = (message === Executable.__finishedString);
-                if(isFinished){
-                	self.__postProcessExecution(treeView, executableMonitor, finishedHandler)
-                } else {
-                	var executableConsole = executableMonitor.getConsole();
-                	executableConsole.info(message);
-                }
-				
-			}
-
-			function errorHandler(message){
-				const errorTitle = 'Executing system command failed:\n';
-				executableMonitor.setDescription(errorTitle);
-				console.error(errorTitle + message);
-				executableMonitor.cancel();
-				if(finishedHandler){
-					finishedHandler(self.__createEmptyModelOutput());
+				function resultHandler(message){					
+					
+					var isFinished = (message === Executable.__finishedString);
+	                if(isFinished){
+	                	resolve();	                	
+	                } else {
+	                	var executableConsole = monitor.getConsole();
+	                	executableConsole.info(message);
+	                }					
+				}
+	
+				function errorHandler(message){
+					const errorTitle = 'Executing system command failed:\n';
+					monitor.setDescription(errorTitle);
+					console.error(errorTitle + message);
+					monitor.cancel();
+					
+					reject(errorTitle+ message);					
 				}
 				
+			} catch (exception) {
+				let errorTitle  = "Could not execute " + this.name;
+				console.error(errorTitle, exception);
+				monitor.cancel();
+				reject(errorTitle + exception.toString());
+			}	
+    	});	
+    }
+    
+    async __postProcessExecution(treeView, monitor){
+    	    		
+			// update progress monitor
+			monitor.worked(1);
+			monitor.setDescription("=>Post processing model output.");
+
+			const modelOutput = this.__createEmptyModelOutput();
+
+			// execute data import child(ren) if exist
+			try {
+				const dataImportOutput = await this.__runDataImports(treeView, monitor);
+				modelOutput.addChild(dataImportOutput);
+			} catch (exception) {
+				console.error("Could not import results of " + this.name, exception);
+				monitor.cancel();
+				return modelOutput;
 			}
 
-
-			
-		} catch (exception) {
-			console.error("Could not execute " + this.name, exception);
-			executableMonitor.cancel();
-			if(finishedHandler){
-					finishedHandler(self.__createEmptyModelOutput());
+			// copy input file to output folder (modifies input file name)
+			try {
+				if (this.isCopyingInputFileToOutputFolder) {
+					await this.__copyInputFileToOutputFolder();
+				}
+			} catch (exception) {
+				console.error("Could not copy input file to output folder for " + this.name, exception);
+				monitor.cancel();
+				return modelOutput;
 			}
-		}
-    }   
 
-    __postProcessExecution(treeView, executableMonitor, finishedHandler){
-		// update progress monitor
-		executableMonitor.worked(1);
-		executableMonitor.setDescription("=>Post processing model output.");
+			// increase job index
+			this.__increaseJobId();
 
-		const modelOutput = this.__createEmptyModelOutput();
+			// inform progress monitor to be done
+			monitor.setDescription("finished\n");
+			monitor.done();
 
-		// execute data import child(ren) if exist
-		try {
-			const dataImportOutput = this.__runDataImports(treeView, executableMonitor);
-			modelOutput.addChild(dataImportOutput);
-		} catch (exception) {
-			console.error("Could not import results of " + this.name, exception);
-			executableMonitor.cancel();
-			return modelOutput;
-		}
-
-		// copy input file to output folder (modifies input file name)
-		try {
-			if (this.isCopyingInputFileToOutputFolder) {
-				this.__copyInputFileToOutputFolder();
-			}
-		} catch (exception) {
-			console.error("Could not copy input file to output folder for " + this.name, exception);
-			executableMonitor.cancel();
-			return modelOutput;
-		}
-
-		// increase job index
-		this.__increaseJobId();
-
-		// inform progress monitor to be done
-		executableMonitor.setDescription("finished\n");
-		executableMonitor.done();
-
-		if(finishedHandler){
-			finishedHandler(modelOutput);
-		}
-		
+			return modelOutput;	
 	}
+
+    
 
 	createInputFileGenerator(name) {
 		const child = new InputFileGenerator(name);
@@ -269,7 +269,11 @@ export default class Executable extends Model {
         section.append('treez-section-action')
             .image('run.png')
             .label('Run external executable')
-            .addAction(()=>this.execute(this.treeView));  
+            .addAction(()=>this.execute(this.treeView)
+            				   .catch(error => {
+            					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
+            				   })
+            );  
 
         const sectionContent = section.append('div'); 
 
@@ -412,8 +416,8 @@ export default class Executable extends Model {
 	}
 
 	
-	__runInputFileGenerators(refreshable, monitor){
-		this.executeChildren(InputFileGenerator, refreshable, monitor);
+	async __runInputFileGenerators(refreshable, monitor){
+		await this.executeChildren(InputFileGenerator, refreshable, monitor);
 	}
 
 	
@@ -513,7 +517,7 @@ export default class Executable extends Model {
 		
 		return outputModification
 			?outputModification.getModifiedPath(this)
-			:this.inputPath;		
+			:this.outputPath;		
 	}
 
 	__addOutputArguments(commandToExtend){

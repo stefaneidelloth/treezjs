@@ -81,9 +81,9 @@ export default class Data extends ComponentAtom {
 
 	}
 	
-	execute(treeView) {
+	async execute(treeView, monitor) {
 		this.__treeView = treeView;
-		this.executeChildren(Probe, treeView);
+		await this.executeChildren(Probe, treeView);
 	}
 
 	createTable(name) {

@@ -1,12 +1,9 @@
 package org.treez.server.rest;
 
-import java.awt.Window;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import com.sun.net.httpserver.HttpServer;
 

@@ -11,7 +11,8 @@ import QuantityVariable from './../variable/field/quantityVariable.js';
  * then saved as new input file at the wanted input file path.
  */
 export default class InputFileGenerator extends Model  {
-	
+
+
 
 	constructor(name) {
 		if(!name){
@@ -75,6 +76,30 @@ export default class InputFileGenerator extends Model  {
         this.__createStatusSection(page);
 	}
 
+	async doRunModel(treeView, executableMonitor){
+				
+		console.info("Executing InputFileGenerator '" + this.name + "'");
+
+		var modifiedInputPath = this.__getModifiedInputPath();				
+		        
+		await window.treezTerminal.deleteFile(modifiedInputPath);	
+
+		var template = await window.treezTerminal.readTextFile(this.templatePath);
+
+		var sourceModelAtom = this.getChildFromRoot(this.sourceModelPath);	
+		
+		var inputFileString = this.__applyTemplateToSourceModel(template, sourceModelAtom);
+
+		if (inputFileString.length === 0) {
+			var message = 'The input file "' + modifiedInputPath
+					+ '" is empty. Please check the place holder and the source variables.';
+			console.warn(message);
+		}
+
+		await window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString);			
+				
+	}	
+
 	__createInputSection(page) {
 		
 		const section = page.append('treez-section')
@@ -90,6 +115,10 @@ export default class InputFileGenerator extends Model  {
 	        .label('Generate input file')
 	        .addAction(
 	        ()=>this.execute(this.__treeView)
+	                .catch(error => {
+	                	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
+	                	monitor.done();
+			  })
 	        ); 
 	    
 	    var sectionContent = section.append('div'); 
@@ -159,39 +188,7 @@ export default class InputFileGenerator extends Model  {
 			:this.inputPath;
 	}
 
-	doRunModel(treeView, executableMonitor, finishedHandler){
-
-		var self=this;
-
-		console.info("Executing InputFileGenerator '" + this.name + "'");
-
-		var modifiedInputPath = this.__getModifiedInputPath();
-				
-		//delete old input file if exists
-        
-		window.treezTerminal.delete(modifiedInputPath, console.error);
-
-        var sourceModelAtom = this.getChildFromRoot(self.sourceModelPath);
 		
-	
-		window.treezTerminal.readTextFile(self.templatePath, processTemplate, console.error);
-
-		function processTemplate(templateString){
-			var inputFileString = self.__applyTemplateToSourceModel(templateString, sourceModelAtom);
-
-			if (inputFileString.length === 0) {
-				var message = 'The input file "' + modifiedInputPath
-						+ '" is empty. Please check the place holder and the source variables.';
-				console.warn(message);
-			}
-
-			//save input file
-			window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString, console.error);
-		}	
-
-		
-	}
-
 	
 
 	__applyTemplateToSourceModel(templateString, sourceModel) {

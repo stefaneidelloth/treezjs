@@ -16,6 +16,10 @@ public abstract class AbstractHttpQueryHandler implements HttpHandler {
 	
 	private static BufferedImage dialogIcon=null;
 	
+	protected static String SUCCEEDED = "#Succeeded";
+	
+	protected static String ERROR = "#Error: ";
+	
 	//#end region
 		
 		

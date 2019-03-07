@@ -1,11 +1,15 @@
 package org.treez.server.websocket;
 
+import static org.treez.server.websocket.AbstractServerThreadHandlingOneClient.ENCODING;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+
 
 public class CommandLineServerThread extends AbstractServerThreadHandlingOneClient {
 
@@ -22,6 +26,8 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 	private String outputText;
 
 	private String errorText;
+	
+	
 
 	public CommandLineServerThread(Socket client) {
 		super(client);
@@ -62,7 +68,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			resultString = resultString.substring(simplePrefix.length());
 		}
 								
-		resultString =  removePromptLines(resultString);	
+		resultString =  removePromptLines(resultString).trim();	
 		
 		System.out.println("#Sending message to client:\n" + resultString);
 		sendMessageToClient(resultString);
@@ -97,14 +103,18 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 	private String initializeConsoleProcess() {
 		var runtime = Runtime.getRuntime();
 		try {
-			process = runtime.exec("cmd.exe");
+			process = runtime.exec("cmd.exe /k chcp 65001");
+			
+			
+			
 		} catch (IOException e) {
 			throw new IllegalStateException("Could not start command line cmd.exe");
 		}
 
 		try {
 			//Connect to input, output and error stream
-			printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream(),"UTF-8")), true);
+			var outputStreamWriter = new OutputStreamWriter(process.getOutputStream(),ENCODING);
+			printWriter = new PrintWriter(new BufferedWriter(outputStreamWriter), true);
 			outputStream = process.getInputStream();
 			errorStream = process.getErrorStream();
 		} catch (Exception e) {
@@ -126,6 +136,9 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 	private String result(String request) throws IOException, InterruptedException {
 
 		printWriter.println(request);
+		
+		
+		
 
 		String output = getOutput();
 
@@ -173,7 +186,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 					if (n2 > 0) {
 						byte buffer[] = new byte[128];							
 						int numberOfBytes = outputStream.read(buffer);
-						outputText = outputText + new String(buffer,"UTF-8");
+						outputText = outputText + new String(buffer,ENCODING);
 						byteLength = byteLength + numberOfBytes;
 						hasOutput = true;
 					}
@@ -187,7 +200,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 					if (secondEndIndex > 0) {
 						byte buffer[] = new byte[128];
 						int numberOfErrorBytes = errorStream.read(buffer);
-						errorText = errorText + new String(buffer,"UTF-8");
+						errorText = errorText + new String(buffer,ENCODING);
 						errorByteLength = errorByteLength + numberOfErrorBytes;
 						hasError = true;
 					}
