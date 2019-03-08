@@ -9,35 +9,18 @@ export default class MonitorView {
 		this.__monitor = undefined;
 	}
 
-	buildView(element, mainViewModel, dTreez){
+	buildView(mainViewModel, dTreez){
         
         this.__dTreez = dTreez;		
 
-		var parentSelection = dTreez.select(element);		
-		this.__buildContent(parentSelection);
-	}	
+		this.__progressPanel = dTreez.select('#progress')
+									.className('treez-monitor-progress-panel');	
 
-	__buildContent(parentSelection) {
-
-		var progressHost = parentSelection.append('div')
-			.className('treez-monitor-progress-host');
-		
-		progressHost.append('span')
-			.text('Progress');
-		
-		this.__progressPanel = progressHost.append('div')
-		.className('treez-monitor-progress-panel');	
-
-		var loggingHost = parentSelection.append('div')
-			.className('treez-monitor-logging-host');
+		this.__loggingPanel = dTreez.select('#log')
+									.className('treez-monitor-logging-panel');
 			
-		loggingHost.append('span')
-			.text('Log messages');	
-		
-		this.__loggingPanel = loggingHost.append('div')
-			.className('treez-monitor-logging-panel');	
-		
-	}	
+	}
+	
 	
 	setMonitor(monitor) {
 		this.__monitor = monitor;

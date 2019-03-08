@@ -13,7 +13,7 @@ export default class Executable extends Model {
 
 	constructor(name) {
 		if(!name){
-			name='exectuable';
+			name='executable';
 		}
 		super(name);
 		this.image = 'run.png';
@@ -60,8 +60,8 @@ export default class Executable extends Model {
 
 		const addInputFileGenerator = new AddChildAtomTreeViewAction(
 				InputFileGenerator,
-				"inputFileGenerator",
-				"inputFile.png",
+				'inputFileGenerator',
+				'inputFile.png',
 				parentSelection,
 				this,
 				treeView);
@@ -69,8 +69,8 @@ export default class Executable extends Model {
 		
 		const addInputModification = new AddChildAtomTreeViewAction(
 				InputModification,
-				"inputModification",
-				"inputModification.png",
+				'inputModification',
+				'inputModification.png',
 				parentSelection,
 				this,
 				treeView);
@@ -78,8 +78,8 @@ export default class Executable extends Model {
 		
 		const addOutputModification = new AddChildAtomTreeViewAction(
 				OutputModification,
-				"outputModification",
-				"outputModification.png",
+				'outputModification',
+				'outputModification.png',
 				parentSelection,	
 				this,
 				treeView);
@@ -87,8 +87,8 @@ export default class Executable extends Model {
 		
 		const addLoggingArguments = new AddChildAtomTreeViewAction(
 				LoggingArguments,
-				"loggingArguments",
-				"loggingArguments.png",
+				'loggingArguments',
+				'loggingArguments.png',
 				parentSelection,	
 				this,
 				treeView);
@@ -96,8 +96,8 @@ export default class Executable extends Model {
 
 		const addDataImport = new AddChildAtomTreeViewAction(
 				TableImport,
-				"tableImport",
-				"tableImport.png",
+				'tableImport',
+				'tableImport.png',
 				parentSelection,
 				this,
 				treeView);
@@ -111,25 +111,28 @@ export default class Executable extends Model {
     }	
 
     async doRunModel(treeView, monitor) {
+    	
+    	monitor.warn('warning');
+    	monitor.error('error');
 
     	
-		const startMessage = "Running " + self.constructor.name + " '" + self.name + "'.";
-		console.info(startMessage);
+		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
+		monitor.info(startMessage);
 
 		//initialize progress monitor
 		const totalWork = 3;
 		monitor.setTotalWork(totalWork);
 
-		this.__deleteOldOutputAndLogFilesIfExist();
+		await this.__deleteOldOutputAndLogFilesIfExist();
 
-		monitor.setDescription("Running InputFileGenerator children if exist.");
+		monitor.setDescription('Running InputFileGenerator children if exist.');
 
 		//execute input file generator child(ren) if exist		
 		
 		try {
 			await this.__runInputFileGenerators(treeView, monitor);
 		} catch (exception) {
-			console.error("Could not execute input file generator for executable " + self.name, exception);
+			monitor.error('Could not execute input file generator for executable ' + this.name, exception);
 			monitor.cancel();
 			return this.__createEmptyModelOutput();			
 		}
@@ -140,10 +143,10 @@ export default class Executable extends Model {
 
 		//create command
 		const command = this.__buildCommand();
-		console.info("Executing " + command);
+		monitor.info('Executing ' + command);
 
 		//execute command
-		await this.__executeCommand(command, monitor);		
+		await this.__executeCommand(command, monitor);			
 		
 		//post process execution results
 		return await this.__postProcessExecution(treeView, monitor)
@@ -154,31 +157,30 @@ export default class Executable extends Model {
 	    	try {
 	
 				window.treezTerminal.execute(command, resultHandler, errorHandler);
-				window.treezTerminal.execute("echo " + Executable.__finishedString , resultHandler, errorHandler);			
+				window.treezTerminal.execute('echo ' + Executable.__finishedString , resultHandler, errorHandler);			
 				
 				function resultHandler(message){					
 					
 					var isFinished = (message === Executable.__finishedString);
 	                if(isFinished){
 	                	resolve();	                	
-	                } else {
-	                	var executableConsole = monitor.getConsole();
-	                	executableConsole.info(message);
+	                } else {	                	
+	                	monitor.info(message);
 	                }					
 				}
 	
 				function errorHandler(message){
 					const errorTitle = 'Executing system command failed:\n';
 					monitor.setDescription(errorTitle);
-					console.error(errorTitle + message);
+					monitor.error(errorTitle + message);
 					monitor.cancel();
 					
 					reject(errorTitle+ message);					
 				}
 				
 			} catch (exception) {
-				let errorTitle  = "Could not execute " + this.name;
-				console.error(errorTitle, exception);
+				let errorTitle  = 'Could not execute "' + this.name + '"';
+				monitor.error(errorTitle, exception);
 				monitor.cancel();
 				reject(errorTitle + exception.toString());
 			}	
@@ -189,7 +191,7 @@ export default class Executable extends Model {
     	    		
 			// update progress monitor
 			monitor.worked(1);
-			monitor.setDescription("=>Post processing model output.");
+			monitor.setDescription('=>Post processing model output.');
 
 			const modelOutput = this.__createEmptyModelOutput();
 
@@ -198,7 +200,7 @@ export default class Executable extends Model {
 				const dataImportOutput = await this.__runDataImports(treeView, monitor);
 				modelOutput.addChild(dataImportOutput);
 			} catch (exception) {
-				console.error("Could not import results of " + this.name, exception);
+				monitor.error('Could not import results of ' + this.name, exception);
 				monitor.cancel();
 				return modelOutput;
 			}
@@ -209,7 +211,7 @@ export default class Executable extends Model {
 					await this.__copyInputFileToOutputFolder();
 				}
 			} catch (exception) {
-				console.error("Could not copy input file to output folder for " + this.name, exception);
+				monitor.error('Could not copy input file to output folder for ' + this.name, exception);
 				monitor.cancel();
 				return modelOutput;
 			}
@@ -218,7 +220,7 @@ export default class Executable extends Model {
 			this.__increaseJobId();
 
 			// inform progress monitor to be done
-			monitor.setDescription("finished\n");
+			monitor.setDescription('finished\n');
 			monitor.done();
 
 			return modelOutput;	
@@ -354,7 +356,7 @@ export default class Executable extends Model {
    __refreshStatus() {
 		this.commandInfo = this.__buildCommand();
 		this.executionStatusInfo = 'Not yet executed';
-		this.jobIdInfo = ""+ this.jobId;
+		this.jobIdInfo = ''+ this.jobId;
 	}	
 
 	/**
@@ -367,8 +369,8 @@ export default class Executable extends Model {
 		 * const inputFile = new File(inputFilePath); if (inputFile.exists()) {
 		 * String destinationPath = null; try { destinationPath =
 		 * getOutputPathToCopyInputFile(); } catch (Exception exception) {
-		 * LOG.warn("Input file is not copied to output folder since output
-		 * folder is not known."); } if (destinationPath != null) {
+		 * LOG.warn('Input file is not copied to output folder since output
+		 * folder is not known.'); } if (destinationPath != null) {
 		 * copyInputFileToOutputFolder(inputFile, destinationPath); } }
 		 */
 
@@ -382,8 +384,8 @@ export default class Executable extends Model {
 		 * File destinationFile = new File(destinationPath);
 		 * 
 		 * try { FileUtils.copyFile(inputFile, destinationFile); } catch
-		 * (IOException exception) { String message = "Could not copy input file
-		 * to output folder"; LOG.error(message, exception); }
+		 * (IOException exception) { String message = 'Could not copy input file
+		 * to output folder'; LOG.error(message, exception); }
 		 */
 	}
 
@@ -406,8 +408,8 @@ export default class Executable extends Model {
 		const inputPathIsFilePath = Utils.isFilePath(inputPathString);
 		if (inputPathIsFilePath) {
 			const inputFileName = Utils.extractFileName(inputPathString);
-			const newInputFileName = Utils.includeNumberInFileName(inputFileName, "#" + getJobId());
-			const destinationPath = folderPath + "/" + newInputFileName;
+			const newInputFileName = Utils.includeNumberInFileName(inputFileName, '#' + getJobId());
+			const destinationPath = folderPath + '/' + newInputFileName;
 			return destinationPath;
 		} else {
 			return null;
@@ -427,12 +429,12 @@ export default class Executable extends Model {
 			const modelOutput =  this.runChildModel(TableImport, refreshable, monitor);
 			return modelOutput;
 		} else {
-			console.info("No data has been imported since there is no DataImport child.");
+			monitor.info('No data has been imported since there is no DataImport child.');
 			return this.__createEmptyModelOutput();
 		}
 	}
 
-	__deleteOldOutputAndLogFilesIfExist(){
+	async __deleteOldOutputAndLogFilesIfExist(){
 	    // TODO
 	    /*
 		 * File outputFile = new File(outputPath.get()); if
@@ -443,7 +445,7 @@ export default class Executable extends Model {
 
 
 	__buildCommand(){
-		let command = "\"" + this.executablePath + "\"";
+		let command = '"' + this.executablePath + '"';
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);
 		command = this.__addLoggingArguments(command);
@@ -454,11 +456,11 @@ export default class Executable extends Model {
 		let command = commandToExtend;
 		if (this.inputArguments) {
 			const modifiedInputArguments = this.__injectStudyAndJobInfoIfPlaceholdersAreUsed(this.inputArguments);
-			command += " " + modifiedInputArguments;
+			command += ' ' + modifiedInputArguments;
 		}
 
 		if (this.inputPath) {
-			command += " " + this.__getModifiedInputPath();
+			command += ' ' + this.__getModifiedInputPath();
 		}
 		return command;
 	}	
@@ -469,16 +471,16 @@ export default class Executable extends Model {
 	 * Otherwise the input is not modified. 
 	 */
 	__injectStudyAndJobInfoIfPlaceholdersAreUsed(input){
-		const studyIdKey = "{$studyId$}";
-        const studyDescriptionKey = "{$studyDescription$}";
-        const jobIdKey = "{$jobId$}";
+		const studyIdKey = '{$studyId$}';
+        const studyDescriptionKey = '{$studyDescription$}';
+        const jobIdKey = '{$jobId$}';
 
         let currentInputArguments = input;
 
 		if (currentInputArguments.includes(studyIdKey)) {
 
 			if (this.studyId == null) {
-				currentInputArguments = currentInputArguments.replace(studyIdKey, "");
+				currentInputArguments = currentInputArguments.replace(studyIdKey, '');
 			} else {
 				currentInputArguments = currentInputArguments.replace(studyIdKey, this.studyId);
 			}
@@ -524,11 +526,11 @@ export default class Executable extends Model {
 		let command = commandToExtend;
 
 		if (this.outputArguments) {
-			command += " " + this.outputArguments;
+			command += ' ' + this.outputArguments;
 		}
 
 		if (this.outputPath) {
-			command += " " + this.__getModifiedOutputPath();
+			command += ' ' + this.__getModifiedOutputPath();
 		}
 		return command;
 	}
@@ -564,4 +566,4 @@ export default class Executable extends Model {
 
 }
 
-Executable.__finishedString = "_treezExecutionFinished_";
+Executable.__finishedString = '_treezExecutionFinished_';

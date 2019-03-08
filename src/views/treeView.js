@@ -98,6 +98,7 @@ export default class TreeView {
 		body.appendChild(script); 
 
 		this.clearPropertiesView();
+		this.clearMonitoringView();
     }
 
     clearPropertiesView(){
@@ -105,6 +106,14 @@ export default class TreeView {
     	propertiesView.selectAll('treez-tab-folder').remove();	
 		propertiesView.selectAll('div').remove();
     };  
+
+    clearMonitoringView(){
+    	var progressView = this.dTreez.select('#progress');    	
+		progressView.selectAll('div').remove();
+
+		var logView = this.dTreez.select('#log');    	
+		logView.selectAll('div').remove();
+    };
 
     refresh(){
     	this.content.selectAll("div").remove(); 

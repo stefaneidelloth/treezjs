@@ -58,8 +58,7 @@ export default class Monitor {
 
         this.__propertyChangedListeners = [];
         this.__childCreatedListeners = [];	
-        
-        this.__consoleMap = {};
+              
         this.__console = this.__createConsole(title, treeView, id);
 	}
 
@@ -215,9 +214,7 @@ export default class Monitor {
 		var loggingPanel = monitorView.getLoggingPanel();
 		
 		var monitorConsole = new MonitorConsole(loggingPanel);		
-		
-		this.__registerConsole(id, monitorConsole);		
-		
+				
 		return monitorConsole;
 	}
 
@@ -240,19 +237,18 @@ export default class Monitor {
 				(listener)=>listener(newChild)
 		);		
 	}
-
-
-	__registerConsole(id, console) {
-		this.__consoleMap[id] = console;
+	
+	info(message){
+		this.__console.info(message);
 	}
-
-	__unRegisterConsole(id) {
-		this.__consoleMap[id] = undefined;
+	
+	warn(message){
+		this.__console.warn(message);
 	}
-
-	getConsole(id) {
-		return this.__consoleMap[id];
-	}	
+	
+	error(message){
+		this.__console.error(message);
+	}
 
 	setDescription(description) {
 		this.__description = description;	
@@ -285,9 +281,7 @@ export default class Monitor {
 		return this.__children;
 	}
 
-	getConsole() {
-		return this.__console;
-	}
+	
 
 	getOutputStream() {
 		return this.__console.newOutputStream();

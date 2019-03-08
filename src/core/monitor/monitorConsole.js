@@ -1,53 +1,59 @@
+import LogMessage from './logMessage.js';
+
 export default class MonitorConsole {
 
 		
 	constructor(parent) {		
 		this.__parent = parent;		
-		this.__infoMessages = [];
-		this.__warnMessages = [];
-		this.__errorMessages = [];
+		this.__logMessages = [];	
 	}		
 		
-	info(message){
-		this.__infoMessages.push(message);
-		this.__appendInfoMessageToParent(message)
+	info(message){		
+		let logMessage = new LogMessage(message, 'info', new Error().stack);
+		this.__logMessages.push(logMessage);
+		this.__appendLogMessageToParent(logMessage)
 	}
 	
 	warn(message){
-		this.__warnMessages.push(message);
-		this.__appendWarnMessageToParent(message);	
+		let logMessage = new LogMessage(message, 'warn', new Error().stack);
+		this.__logMessages.push(logMessage);
+		this.__appendLogMessageToParent(logMessage);	
 	}
 	
 	error(message){
-		this.__errorMessages.push(message);
-		this.__appendErrorMessageToParent(message);
+		let logMessage = new LogMessage(message, 'error', new Error().stack);
+		this.__logMessages.push(logMessage);
+		this.__appendLogMessageToParent(logMessage);
 	}
 	
 	showMessages(){
-		var self=this;
-		this.__infoMessages.forEach(
-				(message)=> self.__appendInfoMessageToParent(message)
-		);
-		
-		this.__warnMessages.forEach(
-				(message)=> self.__appendWarnMessageToParent(message)
-		);
-		
-		this.__errorMessages.forEach(
-				(message)=> self.__appendErrorMessageToParent(message)
-		);		
+		for(var logMessage of this.__logMessages){
+			 self.__appendLogMessageToParent(logMessage);
+		}			
 	}	
 		
-	__appendInfoMessageToParent(message){
-		this.__parent.append('div').html(message);
-	}	
+	__appendLogMessageToParent(logMessage){
+		var multiLineText = this.__replaceLineBreaksWithHtmlBrElements(logMessage.text);
+		var entry = this.__parent.append('div') //
+			.style('color',logMessage.color)
+			.className('treez-titled')			
+			.html(multiLineText);
 		
-	__appendWarnMessageToParent(message){
-		this.__parent.append('div').html(message);
+		var title = entry.append('div')
+			.className('treez-title');
+
+		entry.onMouseOver(()=>{ //this lazily creates the stackTrace ... to not slow down logging.
+				title.html(logMessage.stackTrace); 
+				entry.onMouseOver(null);
+		});
+			
+	}		
+	
+
+	__replaceLineBreaksWithHtmlBrElements(message){
+		var result = message.replace(/\r\n/g,'<br>');
+		return message.replace(/\n/g,'<br>');
 	}
 	
-	__appendErrorMessageToParent(message){
-		__parent.append('div').html(message);
-	}	
 
 }

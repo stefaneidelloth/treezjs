@@ -34,8 +34,13 @@ require([
 	 GoldenLayout,
 	 d3	
 ) {		
+
+	var dTreez = new DTreez(d3);  
 	
-	createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3);
+	createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez);
+
+	self.__monitorView = new MonitorView();
+	self.__monitorView.buildView(self, dTreez);
 	
 	window.treezTerminal = new TreezTerminal();	
 
@@ -43,9 +48,7 @@ require([
 
 
 
-function createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3){
-	
-	var dTreez = new DTreez(d3);  	
+function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){	
 	
 	var myLayout = createGoldenLayout(GoldenLayout); //Also see http://golden-layout.com/docs/Config.html
 
@@ -60,19 +63,32 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, d3){
 	myLayout.registerComponent('Properties', function(container) {
 		var element = container.getElement();
 		element.attr('id','properties')
+	});	
+
+	myLayout.registerComponent('Progress', function(container) {		
+		var element = container.getElement();
+		element.attr('id','progress');
+
+		var layoutSettings = container.layoutManager.config.settings;
+		layoutSettings.showMaximiseIcon = false;
+		layoutSettings.showPopoutIcon = false;				
 	});
 
-	myLayout.registerComponent('Monitor', function(container) {		
+	myLayout.registerComponent('Log', function(container) {		
 		var element = container.getElement();
-		element.attr('id','monitor');
-		
-		self.__monitorView = new MonitorView();
-		self.__monitorView.buildView(element[0], self, dTreez);
-		
+		element.attr('id','log');
+
+		var layoutSettings = container.layoutManager.config.settings;
+		layoutSettings.showMaximiseIcon = false;
+		layoutSettings.showPopoutIcon = false;		
 	});
 
 	myLayout.registerComponent('Graphics', function(container) {
 		var element = container.getElement();
+
+		var layoutSettings = container.layoutManager.config.settings;
+		layoutSettings.showMaximiseIcon = true;
+		layoutSettings.showPopoutIcon = true;
 	});
 
 	myLayout.registerComponent('Editor', function(container) {
@@ -89,27 +105,44 @@ function createGoldenLayout(GoldenLayout){
 			type : 'component',
 			componentName : 'Tree'
 	};
-	
-	var secondColumn = {
-			type : 'column',
-			content : [ 
-				{
+
+	var secondColumnUpper = {
 					type : 'component',
 					componentName : 'Properties'
-				}, 
-				{
+				};
+	
+	var secondColumnLower = {
 					type : 'stack',
 					content : [ 
 						{
-							type : 'component',
-							componentName : 'Monitor'
+							type : 'column',
+							title : 'Monitor',
+							id: 'monitor',
+							content : [
+								{
+									type : 'component',
+									componentName : 'Progress',
+									isClosable: false																
+								},
+								{
+									type : 'component',
+									componentName : 'Log',
+									isClosable: false
+								}
+							]
 						}, 		
 						{
 							type : 'component',
 							componentName : 'Graphics'
 						}
 					]
-				} 
+	} ;
+
+	var secondColumn = {
+			type : 'column',
+			content : [ 
+				secondColumnUpper, 
+				secondColumnLower
 			]
 		};
 	
