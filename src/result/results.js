@@ -16,15 +16,15 @@ export default class Results extends ComponentAtom {
 	}
 
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab'); 
 		
 		const section = page.append('treez-section')
-    	.label('Results');
+    		.label('Results');
 	
 		section.append('treez-text-label')
-		.value('This atom represents results.');		
+			.value('This atom represents results.');		
 	}	
 	
 	extendContextMenuActions(actions, parentSelection, treeView) {	

@@ -14,15 +14,15 @@ export default class Data extends ComponentAtom {
 	}
 
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab'); 
 		
 		const section = page.append('treez-section')
-    	.label('Data');
+    		.label('Data');
 	
 		section.append('treez-text-label')
-		.value('This atom represents data.');		
+			.value('This atom represents data.');		
 	}	
 
 

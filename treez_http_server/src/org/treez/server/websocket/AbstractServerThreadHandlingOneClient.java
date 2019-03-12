@@ -3,6 +3,7 @@ package org.treez.server.websocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -11,6 +12,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.xml.bind.DatatypeConverter;
 
 public abstract class AbstractServerThreadHandlingOneClient extends Thread {
@@ -75,8 +78,55 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 	}
 
 	protected void sendMessageToClient(String message) {
+		
+		 var jsonObject = Json.createObjectBuilder()
+				 .add("result", message)
+				 .add("error", "")
+				 .add("finished", false)
+				 .build();
+		 
+		 sendJsonToClient(jsonObject);
+	}
+	
+	protected void sendErrorToClient(String errorMessage) {
+		
+		 var jsonObject = Json.createObjectBuilder()
+				 .add("result", "")
+				 .add("error", errorMessage)
+				 .add("finished", false)
+				 .build();
+		 
+		 sendJsonToClient(jsonObject);
+	}
+	
+	protected void sendFinishedToClient() {
+		
+		 var jsonObject = Json.createObjectBuilder()
+				 .add("result", "")
+				 .add("error", "")
+				 .add("finished", true)
+				 .build();
+		 
+		 sendJsonToClient(jsonObject);
+	}
+	
+	protected void sendFinishedErrorToClient(String errorMessage) {
+		
+		 var jsonObject = Json.createObjectBuilder()
+				 .add("result", "")
+				 .add("error", errorMessage)
+				 .add("finished", true)
+				 .build();
+		 
+		 sendJsonToClient(jsonObject);
+	}
+
+	private void sendJsonToClient(JsonObject jsonObject) {
+		var jsonString = jsonObject.toString();
+			
+		
 		try {
-			clientOutputStream.write(encode(message));
+			clientOutputStream.write(encode(jsonString));
 			clientOutputStream.flush();
 		} catch (IOException exception) {
 			throw new IllegalStateException("Could not send message to client.", exception);
@@ -132,14 +182,28 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 
 						var message = decode(byteArray, length);
 						
-						var commandPostfix = "<#end#>";						
-						message = message.split(commandPostfix)[0]; //removes possible ghost byte rubbish
+						var commandPostfix = "<#end#>";	
+						var parts = message.split(commandPostfix);
+						message = parts[0]; //removes possible ghost byte rubbish
 						
-						try {
-							handleClientMessage(message);
-						} catch (Exception exception) {
-							throw new IllegalStateException("Could not handle client message" + message);
+						if(parts.length>1) {
+							var ghost = parts[1];
+							System.out.println("#Warning: Ghost bytes: " + ghost);
 						}
+						
+						try(var jsonReader = Json.createReader(new StringReader(message))){
+							var jsonObject = jsonReader.readObject();
+							var command = jsonObject.getString("command");
+							
+							try {
+								handleClientMessage(command);
+							} catch (Exception exception) {
+								throw new IllegalStateException("Could not handle client message" + message);
+							}
+							
+						}
+						
+						
 					}
 
 				}

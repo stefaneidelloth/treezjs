@@ -2,19 +2,11 @@ export default class TreezTerminal {
 
 	constructor(){
 
-		this.__ERROR_PREFIX = '#Error: ';
-		this.__SUCCEEDED_PREFIX = '#Succeeded';
-
-		this.__webSocket = null;
-		this.__onMessage = null;
-		this.__onError = null;
-		this.__commandPostfix = '<#end#>';
+		this.__onMessage =  undefined;
+		this.__onError =  undefined;
+		this.__onFinished = undefined;		
 		
-		try {
-			this.__webSocket= new WebSocket("ws://localhost:8001/");    
-		} catch(exception){
-			   
-		} 		
+		this.__webSocket= new WebSocket("ws://localhost:8001/");    				
 		  
 	    this.__webSocket.onopen = (event)=>this.__webSocketOnOpen(event);
 	    this.__webSocket.onmessage = (event)=>this.__webSocketOnMessage(event); 
@@ -51,27 +43,20 @@ export default class TreezTerminal {
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
 		return jQuery.get('deleteFile', uri);			
-	}
-
-	isError(message){
-		if(!message){
-			return false;
-		}
-		return message.startsWith(this.__ERROR_PREFIX);
-	}
-	
-	execute(command, resultHandler, errorHandler){
-		this.__onMessage = resultHandler;
-		this.__onError = errorHandler;
-		this.__send(command);		
 	}	
 	
-	
-	
-	
+	execute(command, messageHandler, errorHandler, finishedHandler){
+		this.__onMessage = messageHandler;
+		this.__onError = errorHandler;
+		this.__onFinished = finishedHandler;
+		this.__send(command);		
+	}		
 	
 	__send(command){
-		this.__webSocket.send(command + this.__commandPostfix);	
+		var jsonObject = {
+			command: command
+		};
+		this.__webSocket.send(JSON.stringify(jsonObject));	
 	}
 
 	__replaceForwardWithBackwardSlash(command){
@@ -87,17 +72,26 @@ export default class TreezTerminal {
     }
 	
 	__webSocketOnMessage(event) { 
-
-
-      var isError = event.data.startsWith("Error:");
-      if(isError){
-			this.__webSocketOnError(event)
-      } else {
-      	if(this.__onMessage){
-			this.__onMessage(event.data);
-		}
+		
+	  var jsonObject = JSON.parse(event.data);
+	  
+	  if(jsonObject.result){
+		  if(this.__onMessage){
+				this.__onMessage(jsonObject.result);
+			}
+	  }
+     
+      if(jsonObject.error){    	  
+    	  if(this.__onError){
+  			this.__onError(jsonObject.error);
+  		} 
       }
-
+      
+      if(jsonObject.finished){    	  
+    	  if(this.__onFinished){
+  			this.__onFinished();
+  		} 
+      }      
 		 
     }
 

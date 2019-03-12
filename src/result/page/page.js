@@ -1,9 +1,9 @@
-import ComponentAtom from './../../core/component/componentAtom.js';
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
-//import Graph from './../graph/graph.js';
+import Monitor from './../../core/monitor/monitor.js';
+import Graph from './../graph/graph.js';
 
-
-export default class Page extends ComponentAtom {
+export default class Page extends GraphicsAtom {
    
 	constructor(name) {
 		if(!name){
@@ -23,19 +23,22 @@ export default class Page extends ComponentAtom {
 	}
 
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){  		
 	     
-		const page = tabFolder.append('treez-tab'); 
+		const page = tabFolder.append('treez-tab')
+			.label('Page'); 
 		
 		const section = page.append('treez-section')
-    		.label('Page');
-	
-		section.append('treez-text-label')
-			.value('This atom represents data.');	
+    		.label('Data');		
 		
 		section.append('treez-section-action')
+			.image('run.png')
 			.label('Build page')
-			.addAction(()=> this.execute(treeView))
+			.addAction(()=> this.execute(this.__treeView)
+					.catch(error => {
+					   	console.error('Could not build Page  "' + this.name + '"!', error);            					   
+				   })
+			)			
 		
 		var sectionContent = section.append('div');
 		
@@ -55,72 +58,70 @@ export default class Page extends ComponentAtom {
 			.label('IsHidden')
 			.bindValue(this, ()=>this.isHidden);
 		
-	}	
-
-
-	extendContextMenuActions(actions, treeView) {
-
-		/*
+	}
+	
+	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		actions.add( new AddChildAtomTreeViewAction(
+		actions.push(new AddChildAtomTreeViewAction(
 				Graph,
-				'Graph',
-				'graph.png',
+				"graph",
+				"graph.png",
+				parentSelection,
 				this,
-				treeView)
-		);
-
-		*/
+				treeView));	
 
 		return actions
 	}
 
 
 	async execute(treeView, monitor) {
+		if(!monitor){
+			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
+			monitor = new Monitor(monitorTitle, treeView);
+			monitor.showInMonitorView();
+		}	
+		
 		this.__treeView = treeView;
 
 		await this.executeChildren(Graph, treeView, monitor);
 
 		var dTreez = treeView.dTreez;
 		
-		var svgSelection = dTreez.select("#svg");
-		
-		GraphicsAtom.bindStringAttribute(svgSelection, "width", this.width);
-		GraphicsAtom.bindStringAttribute(svgSelection, "height", this.height);
+		var svg = dTreez.select('#treez-svg');
+						
+		this.bindString(()=>this.width, svg, 'width');
+		this.bindString(()=>this.height, svg, 'height');		
 
-		this.plot(dTreez, svgSelection, treeView);
+		this.plot(dTreez, svg, treeView);
+
+		treeView.provideGraphicsView().setFocus();
 		
 	}
 
-	plot(dTreez, svgSelection, treeView) {
+	plot(dTreez, svg, treeView) {
 		this.__treeView = treeView;
 
 		//remove old page group if it already exists
-		svgSelection //
-				.select('#' + this.name).remove();
-
+		svg.select('#' + this.name).remove();
+		
 		//create new page group
-		var pageSelection = svgSelection.append('g'); 
+		this.pageSelection = svg.append('g'); 
 		
-		/*
-		this.bindNameToId(pageSelection);
-
-		GraphicsAtom.bindDisplayToBooleanAttribute("hidePage", pageSelection, this.isHiding);
-
-		//create rect
-		rectSelection = pageSelection //
-				.append("rect") //
-				.onClick(this);
-
-		bindStringAttribute(rectSelection, "fill", color);
-		bindStringAttribute(rectSelection, "width", width);
-		bindStringAttribute(rectSelection, "height", height);
-
-		updatePlotWithD3(d3);
+		this.bindString(()=>this.name, this.pageSelection, 'id');
 		
-		*/
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.pageSelection);
+		
+		this.rectSelection = this.pageSelection //
+				.append('rect') //
+				.onClick(()=>this.handleMouseClick());
 
-		return pageSelection;
+		this.bindString(()=>this.color, this.rectSelection, 'fill');
+		this.bindString(()=>this.width, this.rectSelection, 'width');
+		this.bindString(()=>this.height, this.rectSelection, 'height');
+		
+		//this.updatePlot(dTreez);	
+
+		return page;
 	}
 
 	updatePlot(dTreez) {
@@ -128,17 +129,15 @@ export default class Page extends ComponentAtom {
 	}
 
 	plotChildGraphs(dTreez) {
-		this.children.forEach(child=>{			
+		for(const child of this.children){			
 			if (child instanceof Graph) {				
 				child.plot(dTreez, this.pageSelection, this.rectSelection, this.__treeView);
 			}
-		});
-		
+		}		
 	}	
 
 	createGraph(name) {
 		return this.createChild(Graph, name);		
-	}
-	
+	}	
 
 }

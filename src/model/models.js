@@ -2,7 +2,7 @@ import Model from "./model.js";
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import GenericInput from './genericInput/genericInput.js';
 import Executable from './executable/executable.js';
-import JarExecutable from './executable/jarExecutable.js';
+import JavaExecutable from './executable/javaExecutable.js';
 
 export default class Models extends Model {
 
@@ -19,7 +19,7 @@ export default class Models extends Model {
 		//TODO
 	}
 
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');		
@@ -35,32 +35,31 @@ export default class Models extends Model {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 
-		const addGenericInput = new AddChildAtomTreeViewAction(
+		
+		actions.push(new AddChildAtomTreeViewAction(
 				GenericInput,
 				"genericInput",
 				"genericInput.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addGenericInput);
+				treeView));
 
-        const addExecutable = new AddChildAtomTreeViewAction(
+       
+		actions.push(new AddChildAtomTreeViewAction(
 				Executable,
 				"executable",
 				"run.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addExecutable);
-
-        const addJarExecutable = new AddChildAtomTreeViewAction(
-				JarExecutable,
-				"jarExecutable",
+				treeView));
+       
+		actions.push(new AddChildAtomTreeViewAction(
+				JavaExecutable,
+				"javaExecutable",
 				"java.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addJarExecutable);
+				treeView));
 
 		return actions;
 	}
@@ -70,21 +69,15 @@ export default class Models extends Model {
 	}
 
 	createGenericInput(name) {
-		const child = new GenericInput(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(GenericInput, name);		
 	}
 
 	createExecutable(name) {
-		const child = new Executable(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(Executable, name);
 	}
 
-	createJarExecutable(name) {
-		const child = new JarExecutable(name);
-		this.addChild(child);
-		return child;
+	createJavaExecutable(name) {
+		return this.createChild(JavaExecutable, name);
 	}
 
 }

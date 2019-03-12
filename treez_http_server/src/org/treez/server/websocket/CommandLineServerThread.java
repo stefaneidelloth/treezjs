@@ -1,7 +1,5 @@
 package org.treez.server.websocket;
 
-import static org.treez.server.websocket.AbstractServerThreadHandlingOneClient.ENCODING;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,11 +7,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
-
 public class CommandLineServerThread extends AbstractServerThreadHandlingOneClient {
 
-	static private boolean isCheckingConsoleOutput = false;
+	static private boolean isCheckingConsoleOutput = false;	
 
 	private Process process;
 
@@ -25,9 +21,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 
 	private String outputText;
 
-	private String errorText;
-	
-	
+	private String errorText;	
 
 	public CommandLineServerThread(Socket client) {
 		super(client);
@@ -47,16 +41,52 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 		}
 
 		System.out.println("#Processing web socket command line command:\n" + message);
+		
+		
 
-		var resultString = "Error";
+		printWriter.println(message);
+		
+		readAndHandleProcessOutput(message);
+		
+		while(process.isAlive()) {
+			readAndHandleProcessOutput(message);
+		}
+		
+		readAndHandleProcessOutput(message);
+		
+		var exitValue = process.exitValue();
+		
+		if(exitValue == 0) {
+			sendFinishedToClient();
+		} else {			
+			sendFinishedErrorToClient("Process failed with exit value " + exitValue );
+		}	
+		
+		initializeConsoleProcess();
+		
+	}
 
+	private void readAndHandleProcessOutput(String message) {
+		
+		var resultString = "";
 		try {
-			resultString = result(message);
+			resultString = getOutputAndHandleErrors();
+			if(resultString.isEmpty()) {
+				return;
+			}
+			System.out.println("#Output:\n" +resultString);				
 		} catch (Exception exception) {
 			throw new IllegalStateException("Could not execute command line command '" + message + "'", exception);
 		}
 
-	    var lineSeparator = System.getProperty("line.separator");
+		resultString = postProcessProcessResult(message, resultString);	
+		
+		System.out.println("#Sending message to client:'" + resultString+ "'");
+		sendMessageToClient(resultString);		
+	}
+
+	private String postProcessProcessResult(String message, String resultString) {
+		var lineSeparator = System.getProperty("line.separator");
 		
 		var prefix = message + lineSeparator; //when running from within eclipse in debug mode
 		if(resultString.startsWith(prefix)) {
@@ -68,10 +98,8 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			resultString = resultString.substring(simplePrefix.length());
 		}
 								
-		resultString =  removePromptLines(resultString).trim();	
-		
-		System.out.println("#Sending message to client:\n" + resultString);
-		sendMessageToClient(resultString);
+		resultString =  removePromptLines(resultString).trim();
+		return resultString;
 	}
 
 	private String removePromptLines(String message) {
@@ -100,7 +128,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 		return removePromptLines(trimmedMessage);		
 	}
 
-	private String initializeConsoleProcess() {
+	private void initializeConsoleProcess() {
 		var runtime = Runtime.getRuntime();
 		try {
 			process = runtime.exec("cmd.exe /k chcp 65001");
@@ -129,25 +157,14 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			System.exit(-1);
 		}
 
-		var output = getOutput();
-		return output;
+		@SuppressWarnings("unused")
+		var initialOutput = getOutputAndHandleErrors();
+		
 	}
 
-	private String result(String request) throws IOException, InterruptedException {
+	
 
-		printWriter.println(request);
-		
-		
-		
-
-		String output = getOutput();
-
-		System.out.println("#Output:\n" +output);
-
-		return output;
-	}
-
-	private String getOutput() {
+	private String getOutputAndHandleErrors() {
 
 		String output = "";
 
@@ -202,7 +219,10 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 						int numberOfErrorBytes = errorStream.read(buffer);
 						errorText = errorText + new String(buffer,ENCODING);
 						errorByteLength = errorByteLength + numberOfErrorBytes;
-						hasError = true;
+						if(!errorText.isEmpty()) {
+							hasError = true;
+						}
+						
 					}
 					//check again if console has data in output streams
 					numberOfAvailableBytes = outputStream.available();
@@ -217,18 +237,19 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 				}
 
 				if (hasError) {
-					output = "Error: " + errorText.trim();
+					var text = errorText.trim();
+					sendErrorToClient(text);					
 				}
 
 			} catch (Exception e) {
 				System.out.println("#Reading console output failed!");
-				output += "Error: " + "Reading console output failed!";
+				sendErrorToClient("Reading console output failed!" + e.getMessage());				
 			}
 
 			isCheckingConsoleOutput = false;
 		}
 
 		return output;
-	}
+	}	
 
 }

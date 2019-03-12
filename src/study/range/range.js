@@ -20,7 +20,7 @@ export default class Range extends ComponentAtom {
 		
 	}
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 		
 	}
 	

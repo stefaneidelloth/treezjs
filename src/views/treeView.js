@@ -2,24 +2,25 @@ import DTreez from '../core/dtreez/dTreez.js';
 
 export default class TreeView {
 
-	constructor(){
-		this.dTreez = undefined;
+	constructor(mainViewModel, dTreez){
+		this.__mainViewModel = mainViewModel;
+		this.dTreez = dTreez;
 		this.content = undefined;
 		this.provideEditorView = undefined;	
 		this.provideMonitorView = undefined;	
-		this.model = undefined;		
+			
 	}
 
-	buildView(element, mainViewModel, dTreez){
+	buildView(){ 
+       
+		this.provideEditorView = this.__mainViewModel.getEditorView;
+		this.provideMonitorView = this.__mainViewModel.getMonitorView;
+		this.provideGraphicsView = this.__mainViewModel.getGraphicsView;
 
-        var self = this;
-        self.dTreez = dTreez;
-		self.provideEditorView = mainViewModel.getEditorView;
-		self.provideMonitorView = mainViewModel.getMonitorView;
-
-		var parentSelection = self.dTreez.select(element);
-		self.buildToolBar(parentSelection);
-		self.buildContent(parentSelection);
+		
+		var parentSelection = this.dTreez.select('#treez-tree');
+		this.buildToolBar(parentSelection);
+		this.buildContent(parentSelection);
 	}
 
     buildToolBar(parentSelection){
@@ -80,6 +81,9 @@ export default class TreeView {
 
     toTree(){
 
+    	this.clearPropertiesView();
+		this.clearMonitoringView();
+
         var self = this;
     	var editor = self.provideEditorView();    		   	
         var sourceCode =  editor.getText(); 
@@ -97,21 +101,20 @@ export default class TreeView {
 						   "if(window.scriptLoadedHook){window.scriptLoadedHook();}"; 			
 		body.appendChild(script); 
 
-		this.clearPropertiesView();
-		this.clearMonitoringView();
+		
     }
 
     clearPropertiesView(){
-    	var propertiesView = this.dTreez.select('#properties');
+    	var propertiesView = this.dTreez.select('#treez-properties');
     	propertiesView.selectAll('treez-tab-folder').remove();	
 		propertiesView.selectAll('div').remove();
     };  
 
     clearMonitoringView(){
-    	var progressView = this.dTreez.select('#progress');    	
+    	var progressView = this.dTreez.select('#treez-progress');    	
 		progressView.selectAll('div').remove();
 
-		var logView = this.dTreez.select('#log');    	
+		var logView = this.dTreez.select('#treez-log');    	
 		logView.selectAll('div').remove();
     };
 
@@ -121,12 +124,17 @@ export default class TreeView {
     	this.model.createTreeNodeAdaption(this.content, this);
     }
 
-     fromTree(){
+    fromTree(){
     	console.log("from tree");
     }
 
-     showHelp(){
+    showHelp(){
     	console.log("show help");
+    }
+    
+    setFocus(atom){
+    	var propertiesView = this.dTreez.select('#treez-properties');
+    	atom.createControlAdaption(propertiesView, this);
     }
 
 }

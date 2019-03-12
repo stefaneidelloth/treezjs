@@ -21,7 +21,7 @@ export default class Variable extends ComponentAtom {
 		// TODO
 	}
 
-    createComponentControl(tabFolder, treeView){    
+    createComponentControl(tabFolder){    
      
 		const page = tabFolder.append('treez-tab')
             .label('Data');
@@ -33,7 +33,7 @@ export default class Variable extends ComponentAtom {
 	
 	    sectionContent.append('treez-text-field')
 	        .label('Name') 
-	        .onChange(()=>treeView.refresh())
+	        .onChange(()=>this.__treeView.refresh())
 	        .bindValue(this,()=>this.name);   
 	}
     

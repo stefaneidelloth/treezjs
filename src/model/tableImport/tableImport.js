@@ -3,6 +3,9 @@ import Model from "./../model.js";
 export default class TableImport extends Model {	
 
 	constructor(name) {
+		if(!name){
+			name='tableImport';
+		}
 		super(name);
         this.columnSeparator = undefined;
         this.customJobId= undefined;

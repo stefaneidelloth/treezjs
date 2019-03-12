@@ -1,6 +1,7 @@
 import TreeView from './views/treeView.js';
 import EditorView from './views/editorView.js';
 import MonitorView from './views/monitorView.js';
+import GraphicsView from './views/graphicsView.js';
 import TreezTerminal from './treezTerminal.js'; 
 import DTreez from './core/dtreez/dTreez.js'; 
 
@@ -10,9 +11,12 @@ var self = {
 	getEditorView: getEditorView,
 	setEditorViewer: setEditorViewer,
 	getMonitorView: getMonitorView,
+	getGraphicsView: getGraphicsView,
+	graphicsContainer: undefined,
 	__editorViewer: undefined,	
 	__treeView: undefined,
-	__monitorView: undefined	
+	__monitorView: undefined,
+	__graphicsView: undefined
 }
 
 requirejs.config({
@@ -38,9 +42,18 @@ require([
 	var dTreez = new DTreez(d3);  
 	
 	createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez);
+	
+	self.__treeView = new TreeView(self, dTreez);
+	self.__treeView.buildView();
 
-	self.__monitorView = new MonitorView();
-	self.__monitorView.buildView(self, dTreez);
+	self.__monitorView = new MonitorView(self, dTreez);
+	self.__monitorView.buildView();
+	
+	self.__graphicsView = new GraphicsView(self, dTreez);
+	self.__graphicsView.buildView();
+	
+	self.__editorView = new EditorView(self, dTreez);
+	self.__editorView.buildView(); //calls setEditorViewer to set the editor viewer of the editor view
 	
 	window.treezTerminal = new TreezTerminal();	
 
@@ -54,20 +67,17 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){
 
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
-		element.attr('id','tree');
-		
-		self.__treeView = new TreeView();
-		self.__treeView.buildView(element[0], self, dTreez);
+		element.attr('id','treez-tree');		
 	});
 
 	myLayout.registerComponent('Properties', function(container) {
 		var element = container.getElement();
-		element.attr('id','properties')
+		element.attr('id','treez-properties')
 	});	
 
 	myLayout.registerComponent('Progress', function(container) {		
 		var element = container.getElement();
-		element.attr('id','progress');
+		element.attr('id','trez-progress');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
@@ -76,7 +86,7 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){
 
 	myLayout.registerComponent('Log', function(container) {		
 		var element = container.getElement();
-		element.attr('id','log');
+		element.attr('id','treez-log');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
@@ -84,7 +94,9 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){
 	});
 
 	myLayout.registerComponent('Graphics', function(container) {
+		self.graphicsContainer = container;
 		var element = container.getElement();
+		element.attr('id','treez-graphics');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = true;
@@ -92,8 +104,8 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){
 	});
 
 	myLayout.registerComponent('Editor', function(container) {
-		var element = container.getElement()		
-		new EditorView().buildView(element[0], self, dTreez); //creates self.__editorViewer
+		var element = container.getElement()	
+		element.attr('id','treez-editor');		
 	});
 
 	myLayout.init();
@@ -103,7 +115,7 @@ function createGoldenLayout(GoldenLayout){
 	
 	var firstColumn = {
 			type : 'component',
-			componentName : 'Tree'
+			componentName : 'Tree'			
 	};
 
 	var secondColumnUpper = {
@@ -175,4 +187,8 @@ function setEditorViewer(editorViewer){
 
 function getMonitorView(){
 	return self.__monitorView;
+}
+
+function getGraphicsView(){
+	return self.__graphicsView;
 }

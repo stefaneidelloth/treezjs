@@ -30,7 +30,7 @@ export default class InputFileGenerator extends Model  {
 		this.templatePath = 'C:/template.txt';       
         
 		this.sourceModelPath = 'root.models.genericInput';
-        this.nameExpression = '{$' + this.labelTag + '$}';
+        this.nameExpression = '{$' + this.nameTag + '$}';
         this.valueExpression = this.valueTag + ' [' + this.unitTag + ']'; 
         
         this.inputPath = 'C:/generated_input_file.txt';
@@ -67,7 +67,7 @@ export default class InputFileGenerator extends Model  {
 		return child;
 	}
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');
@@ -76,9 +76,9 @@ export default class InputFileGenerator extends Model  {
         this.__createStatusSection(page);
 	}
 
-	async doRunModel(treeView, executableMonitor){
+	async doRunModel(treeView, monitor){
 				
-		console.info("Executing InputFileGenerator '" + this.name + "'");
+		monitor.info("Executing InputFileGenerator '" + this.name + "'");
 
 		var modifiedInputPath = this.__getModifiedInputPath();				
 		        
@@ -93,7 +93,7 @@ export default class InputFileGenerator extends Model  {
 		if (inputFileString.length === 0) {
 			var message = 'The input file "' + modifiedInputPath
 					+ '" is empty. Please check the place holder and the source variables.';
-			console.warn(message);
+			monitor.warn(message);
 		}
 
 		await window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString);			
@@ -213,8 +213,8 @@ export default class InputFileGenerator extends Model  {
 			var injectedExpression = self.__createExpressionToInject(variableName, valueString, unit);
 
 			//inject expression into template
-			console.info('Template placeholder to replace: "' + placeholderExpression + '"');
-			console.info('Expression to inject: "' + injectedExpression + '"');
+			//console.info('Template placeholder to replace: "' + placeholderExpression + '"');
+			//console.info('Expression to inject: "' + injectedExpression + '"');
 			resultString = resultString.replace(placeholderExpression, injectedExpression);
 		});
 

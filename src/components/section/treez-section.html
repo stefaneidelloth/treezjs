@@ -165,8 +165,14 @@
                 			(action)=>action()
                 		);
                 		
-                	};                	
-                	img.src="/icons/" + sectionAction.image;
+                	};  
+                	if(sectionAction.image){
+                		img.src="/icons/" + sectionAction.image;
+                	} else {
+                		img.src="/icons/root.png";
+                		console.warn('Section action has no image! (title: "'+ sectionAction.title +'")')
+                	}             	
+                	
                 	toolbar.appendChild(img);
                 	
                 }

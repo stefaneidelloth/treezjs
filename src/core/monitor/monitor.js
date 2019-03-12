@@ -246,8 +246,8 @@ export default class Monitor {
 		this.__console.warn(message);
 	}
 	
-	error(message){
-		this.__console.error(message);
+	error(message, error){
+		this.__console.error(message, error);
 	}
 
 	setDescription(description) {
@@ -285,6 +285,10 @@ export default class Monitor {
 
 	getOutputStream() {
 		return this.__console.newOutputStream();
+	}
+
+	showLogMessages(){
+		this.__console.showMessages();
 	}
 
 	

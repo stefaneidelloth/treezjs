@@ -25,7 +25,7 @@ export default class Study extends ComponentAtom {
 		this.numberOfRemainingModelJobs = undefined;
 	}
 	
-	createComponentControl(tabFolder, treeView){   
+	createComponentControl(tabFolder){   
 	     
 		this.page = tabFolder.append('treez-tab')
             .label('Data');		
@@ -36,7 +36,7 @@ export default class Study extends ComponentAtom {
 		section.append('treez-section-action')
 		 	.label('Run')
 	        .image('run.png')	       
-	        .addAction(()=>this.execute(treeView)
+	        .addAction(()=>this.execute(this.__treeView)
 	        				   .catch(error => {
 	        					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
 	        					   	monitor.done();
@@ -73,7 +73,7 @@ export default class Study extends ComponentAtom {
 	
 	async execute(treeView, monitor) {
 		if(!monitor){
-			var monitorTitle = this.constructor.name + ' ' + this.name;
+			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
 		}
@@ -84,10 +84,10 @@ export default class Study extends ComponentAtom {
 			var className = this.constructor.name;
 	
 			var startMessage = 'Executing ' + className + ' "' + this.name + '"';
-			console.info(startMessage);
+			monitor.info(startMessage);
 			
 			var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
-			console.info('Number of (enabled) ranges: ' + numberOfRanges);
+			monitor.info('Number of (enabled) ranges: ' + numberOfRanges);
 		
 			var studyTitle = "Running " + className;
 			monitor.title = studyTitle;
@@ -95,7 +95,7 @@ export default class Study extends ComponentAtom {
 			var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
 			monitor.setTotalWork(numberOfSimulations);
 					
-			console.info("Number of total simulations: " + numberOfSimulations);
+			monitor.info("Number of total simulations: " + numberOfSimulations);
 	
 			//reset job index to 1
 			ModelInput.resetIdCounter();
@@ -104,7 +104,7 @@ export default class Study extends ComponentAtom {
 			var modelInputs = this.inputGenerator.createModelInputs();
 	
 			//prepare result structure
-			this.__prepareResultStructure();
+			this.__prepareResultStructure(monitor);
 			treeView.refresh();
 	
 			//get sweep output atom
@@ -127,7 +127,7 @@ export default class Study extends ComponentAtom {
 				}
 			}		
 		} catch (exception) {
-			console.error('Could not execute study "' + this.name + '"!', exception);
+			monitor.error('Could not execute study "' + this.name + '"!', exception);
 			monitor.done();
 		}
 	}	
@@ -148,7 +148,7 @@ export default class Study extends ComponentAtom {
 			this.isCanceled = true;
 			monitor.markIssue();
 			monitor.setDescription('Canceled!');
-			this.__logAndShowCancelMessage();
+			this.__logAndShowCancelMessage(monitor);
 			treeView.refresh();			
 		}
 
@@ -167,7 +167,7 @@ export default class Study extends ComponentAtom {
 				monitor.done();
 			}
 
-			this.__logAndShowEndMessage();
+			this.__logAndShowEndMessage(monitor);
 			treeView.refresh();
 
 
@@ -182,7 +182,7 @@ export default class Study extends ComponentAtom {
 		
 		var currentDateString = new Date().toLocaleString();	
 		var message = '-- ' + currentDateString + ' --- Starting ' + numberOfSimulations + ' simulations ----------';
-		console.info(message);
+		monitor.info(message);
 
 		var jobQueue = [];
 
@@ -292,7 +292,7 @@ export default class Study extends ComponentAtom {
 				}
 
 			} catch (exception) {
-				console.error("Could not run " + jobTitle, exception);
+				monitor.error("Could not run " + jobTitle, exception);
 				monitor.cancel();
 			}
 
@@ -320,7 +320,7 @@ export default class Study extends ComponentAtom {
 				return;
 			}
 			
-			this.__logStartMessage(jobCounter, startTime, numberOfSimulations);
+			this.__logStartMessage(jobCounter, startTime, numberOfSimulations, monitor);
 
 			var jobId = modelInput.jobId;
 			var jobTitle = 'Job #' + jobId ;
@@ -345,13 +345,13 @@ export default class Study extends ComponentAtom {
 	}
 
 	
-	__prepareResultStructure() {
-		this.__createResultsAtomIfNotExists();
-		this.__createDataAtomIfNotExists();
-		this.__createOutputAtomIfNotExists();		
+	__prepareResultStructure(monitor) {
+		this.__createResultsAtomIfNotExists(monitor);
+		this.__createDataAtomIfNotExists(monitor);
+		this.__createOutputAtomIfNotExists(monitor);		
 	}
 
-	__createOutputAtomIfNotExists() {
+	__createOutputAtomIfNotExists(monitor) {
 		var dataAtomPath = this.__createDataOutputAtomPath();
 		var studyOutputAtomName = this.__createStudyOutputAtomName();
 		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
@@ -360,22 +360,22 @@ export default class Study extends ComponentAtom {
 			var studyOutput = new StudyOutput(studyOutputAtomName, this.image);
 			var data = this.getChildFromRoot(dataAtomPath);
 			data.addChild(studyOutput);
-			console.info('Created ' + studyOutputAtomPath + ' for study output.');
+			monitor.info('Created ' + studyOutputAtomPath + ' for study output.');
 		}
 
 	}
 
-	__createResultsAtomIfNotExists() {
+	__createResultsAtomIfNotExists(monitor) {
 		var resultAtomPath = "root.results";
 		var resultAtomExists = this.rootHasChild(resultAtomPath);
 		if (!resultAtomExists) {			
 			var root = this.getRoot();
 			root.createResults();			
-			console.info('Created ' + resultAtomPath + ' for study output.');
+			monitor.info('Created ' + resultAtomPath + ' for study output.');
 		}
 	}
 
-	__createDataAtomIfNotExists() {
+	__createDataAtomIfNotExists(monitor) {
 		var resultAtomPath = 'root.results';
 		var dataAtomName = 'data';
 		var dataAtomPath = this.__createDataOutputAtomPath();
@@ -383,7 +383,7 @@ export default class Study extends ComponentAtom {
 		if (!dataAtomExists) {			
 			var results = this.getChildFromRoot(resultAtomPath);
 			results.createData();
-			console.info('Created ' + dataAtomPath + ' for study output.');
+			monitor.info('Created ' + dataAtomPath + ' for study output.');
 		}
 	}
 	
@@ -422,7 +422,7 @@ export default class Study extends ComponentAtom {
 		}
 	}
 
-	__logStartMessage(counter, startTime, numberOfSimulations) {
+	__logStartMessage(counter, startTime, numberOfSimulations, monitor) {
 
 		//get current time
 		var date =new Date();		
@@ -435,25 +435,27 @@ export default class Study extends ComponentAtom {
 		//log start message
 		var message = "-- " + currentDateString + " --- Simulation " + counter + " of " + numberOfSimulations
 				+ " -------- " + endTimeString + " --";
-		console.info(message);
+		monitor.info(message);
 
 	}
 
-	__logAndShowEndMessage() {		
+	__logAndShowEndMessage(monitor) {		
 		var date =new Date();		
 		var currentDateString = date.toLocaleString();	
 			
 		var message = "-- " + currentDateString + " -------- Finished! --------------------------------";
-		console.info(message);
-		alert('Finished!');
+		monitor.info(message);
+		
+		var alertMessage = 'Finished ' + this.constructor.name + ' "' + this.name + '"!'
+		alert(alertMessage);
 	}
 
-	__logAndShowCancelMessage() {		
+	__logAndShowCancelMessage(monitor) {		
 		var date =new Date();		
 		var currentDateString = date.toLocaleString();
 				
 		var message = "-- " + currentDateString + " -------- Canceled! --------------------------------";
-		console.info(message);
+		monitor.info(message);
 		alert("Canceled!");
 	}
 

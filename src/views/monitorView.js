@@ -1,7 +1,8 @@
 export default class MonitorView {
 
-	constructor(){
-		this.__dTreez = undefined;
+	constructor(mainViewModel, dTreez){
+		this.__mainViewModel = mainViewModel;
+		this.__dTreez = dTreez;
 		this.__content = undefined;
 		this.__progressPanel = undefined;
 		this.__loggingPanel =undefined;
@@ -9,18 +10,14 @@ export default class MonitorView {
 		this.__monitor = undefined;
 	}
 
-	buildView(mainViewModel, dTreez){
-        
-        this.__dTreez = dTreez;		
+	buildView(){    
 
-		this.__progressPanel = dTreez.select('#progress')
+		this.__progressPanel = this.__dTreez.select('#treez-progress')
 									.className('treez-monitor-progress-panel');	
 
-		this.__loggingPanel = dTreez.select('#log')
+		this.__loggingPanel = this.__dTreez.select('#treez-log')
 									.className('treez-monitor-logging-panel');
-			
-	}
-	
+	}	
 	
 	setMonitor(monitor) {
 		this.__monitor = monitor;
@@ -52,7 +49,11 @@ export default class MonitorView {
 
 		var nonExpandableHeader = div.append('div'); //for progress that does not have children (might be hidden)
 
-		self.__monitor.addChildCreatedListener((newChildMonitor) => {			
+		self.__monitor.addChildCreatedListener((newChildMonitor) => {
+
+			if(!collapsibleHeader.node()){
+				return;
+			}			
 			self.__appendChildMonitor(self.__monitor, nonExpandableHeader, collapsibleHeader, collapsibleContent, details,
 						newChildMonitor);
 		});
@@ -76,7 +77,9 @@ export default class MonitorView {
 
 	__appendChildMonitor( monitor, nonExpandableHeader, expandableHeader, content, details, newChildMonitor) {
 
+		
 		var headerDisplay = expandableHeader.style('display');
+				
 		if (headerDisplay === 'none') {
 			nonExpandableHeader.style('display', 'none');
 			expandableHeader.style('display', 'block');
@@ -94,7 +97,7 @@ export default class MonitorView {
 		var description = monitor.getDescription();
 
 		header.onClick(() => {
-			self.__showLogMessagesForMonitor(monitor);
+			monitor.showLogMessages();
 		});
 
 		var titleLabel = header
@@ -241,18 +244,7 @@ export default class MonitorView {
 
 	}
 
-	__showLogMessagesForMonitor(monitor) {
-		
-		
-		this.__loggingPanel.selectAll('div').remove();		
-		
-		var console = monitor.getConsole();
-
-		if (console != null) {			
-			console.showMessages();						
-		}		
-
-	}
+	
 	
 	getLoggingPanel(){
 		return this.__loggingPanel;

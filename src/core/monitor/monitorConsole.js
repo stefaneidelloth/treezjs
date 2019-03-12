@@ -9,27 +9,37 @@ export default class MonitorConsole {
 	}		
 		
 	info(message){		
-		let logMessage = new LogMessage(message, 'info', new Error().stack);
+		let logMessage = new LogMessage(message, 'info', this.__getStack());
 		this.__logMessages.push(logMessage);
 		this.__appendLogMessageToParent(logMessage)
 	}
 	
 	warn(message){
-		let logMessage = new LogMessage(message, 'warn', new Error().stack);
+		let logMessage = new LogMessage(message, 'warn', this.__getStack());
 		this.__logMessages.push(logMessage);
 		this.__appendLogMessageToParent(logMessage);	
 	}
 	
-	error(message){
-		let logMessage = new LogMessage(message, 'error', new Error().stack);
+	error(message, error){
+
+		let logMessage = error
+			?new LogMessage(message + error.message, 'error', error.stack)
+			:new LogMessage(message, 'error', this.__getStack());
 		this.__logMessages.push(logMessage);
 		this.__appendLogMessageToParent(logMessage);
 	}
 	
 	showMessages(){
 		for(var logMessage of this.__logMessages){
-			 self.__appendLogMessageToParent(logMessage);
+			 this.__appendLogMessageToParent(logMessage);
 		}			
+	}
+
+	__getStack(){
+		var stack = new Error().stack
+		var lines = stack.split('\n');
+		var stackLines = lines.slice(4);
+		return stackLines.join('\n');
 	}	
 		
 	__appendLogMessageToParent(logMessage){

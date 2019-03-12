@@ -1,19 +1,20 @@
 export default class EditorView {
 
-	constructor(){
-		this.d3 = undefined;
+	constructor(mainViewModel, dTreez){	
+		this.__mainViewModel = mainViewModel;
+		this.__dTreez = dTreez;
+			
 		this.content = undefined;		
 		this.model = undefined;	
 		this.fileInput = undefined;	
+		
 	}
 
-	buildView(element, mainViewModel, d3){
+	buildView(){
 
         var self = this;
-        self.d3=d3;
-        self.mainViewModel = mainViewModel;
 
-		var parentSelection = d3.select(element);
+		var parentSelection = this.__dTreez.select('#treez-editor');
 
 		var toolbar = parentSelection.append('div')
 			.attr('id','editor-toolbar')
@@ -24,7 +25,7 @@ export default class EditorView {
 			.attr('class','treez-editor-content');	
 
 		
-		this.fileInput =this.createHiddenFileInputElement();
+		
 			
 		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
 
@@ -42,7 +43,9 @@ export default class EditorView {
 			var codeEdit = new CodeEdit();			
 			codeEdit.create({parent: 'editorContent'}).then(function(editorViewer) {
 					editorViewer.setContents(code, 'application/javascript');
-					mainViewModel.setEditorViewer(editorViewer);					
+					self.__mainViewModel.setEditorViewer(editorViewer);					
+					
+					self.fileInput =self.createHiddenFileInputElement(editorViewer);
 					self.fillEditorToolbar(toolbar, editorViewer);
 				});
 		});       
@@ -102,7 +105,7 @@ export default class EditorView {
 
     setEditorContentAndUpdateTree(code, editorViewer){
     	editorViewer.setContents(code, 'application/javascript').then(()=>{
-				this.mainViewModel.getTreeView().toTree();
+				this.__mainViewModel.getTreeView().toTree();
 			});
     }
 
@@ -141,7 +144,7 @@ export default class EditorView {
 				
 	}
 
-	createHiddenFileInputElement(){
+	createHiddenFileInputElement(editorViewer){
 		var input = document.createElement('input');		
 		input.setAttribute('type','file');
 		input.onchange = (event)=>{	
@@ -151,7 +154,7 @@ export default class EditorView {
 					var file = files[0]; 	
 					var fileReader = new FileReader();
 					fileReader.onloadend = ()=>{
-						this.setEditorContentAndUpdateTree(fileReader.result);						
+						this.setEditorContentAndUpdateTree(fileReader.result, editorViewer);						
 					}; 									      
 					fileReader.readAsText(file);
 				}

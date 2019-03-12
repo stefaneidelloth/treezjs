@@ -2,11 +2,11 @@ export default class LogMessage {
 	
 	get stackTrace(){
 		
-		var lines = this.__rawStackTrace.split('\n');
+		var lines = this.__stackTrace.split('\n');
 		
 		var htmlContent = '';
 		
-		for(var line of lines.slice(3)){
+		for(var line of lines){
 
 			var parts = line.split('(http');
 
@@ -47,11 +47,11 @@ export default class LogMessage {
 		return htmlContent;
 	}
 
-	constructor(text, level, rawStackTrace){
+	constructor(text, level, stackTrace){
 		this.text = text;
 		this.level = level;
 		this.color = this.__determineColor(level);
-		this.__rawStackTrace = rawStackTrace;
+		this.__stackTrace = stackTrace;
 		
 	}	
 	

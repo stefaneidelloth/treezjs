@@ -44,11 +44,11 @@ export default class Picking extends Study {
 	}
 
 
-	createComponentControl(tabFolder, treeView){  
+	createComponentControl(tabFolder){  
 		
 		var self = this;	
 		this.__updateAvailableVariablesForVariableList();
-		super.createComponentControl(tabFolder, treeView);
+		super.createComponentControl(tabFolder);
 
 		//time dependent picking
 		var timeDependentSection = this.page.append('treez-section')

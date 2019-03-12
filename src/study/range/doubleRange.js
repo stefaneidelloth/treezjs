@@ -8,7 +8,7 @@ export default class DoubleRange extends Range {
 		this.image = 'doubleRange.png';		
 	}
 
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');		

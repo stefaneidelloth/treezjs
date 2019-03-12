@@ -1,58 +1,52 @@
-export default class Graph extends GraphicsPropertiesPage {
+import PagedGraphicsAtom  from './../graphics/pagedGraphicsAtom.js';
+import Data from './data.js';
+import Background from './../graphics/background.js';
+import Border from './../graphics/border.js';
 
-	//#region ATTRIBUTES
+export default class Graph extends PagedGraphicsAtom {
 
-	public Data data;
-
-	public Background background;
-
-	public Border border;
-
-	private Selection graphGroupSelection;
-
-	private Selection rectSelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Graph(String name) {
+	constructor(name) {
+		if(!name){
+			name='graph';
+		}
 		super(name);
-		setRunnable();
+		this.image='graph.png';
+		
+		this.data = undefined;
+		this.background = undefined;
+		this.border = undefined;
+
+		this.__graphGroupSelection = undefined;
+		this.__rectSelection = undefined;		
+	}	
+
+	createPageFactories() {
+
+		var pageFactories =  [];
+		this.data = new Data();
+		pageFactories.push(this.data);
+		
+		this.background = new Background();
+		pageFactories.push(this.background);
+
+		this.border = new Border();
+		pageFactories.push(this.border);	
+
+		return pageFactories;	
 	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	protected void createPropertyPageFactories() {
-		data = new Data();
-		propertyPageFactories.add(data);
-
-		background = new Background();
-		propertyPageFactories.add(background);
-
-		border = new Border();
-		propertyPageFactories.add(border);
-	}
-
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("graph.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-
-		Action addData = new AddChildAtomTreeViewAction(
-				Axis.class,
+	
+	extendContextMenuActions(actions, parentSelection, treeView) {
+		
+		/*
+		actions.push(new AddChildAtomTreeViewAction(
+				Axis,
 				"axis",
-				Activator.getImage("axis.png"),
+				"axis.png",
+				parentSelection,
 				this,
-				treeViewer);
-		actions.add(addData);
-
+				treeView));	
+		
+		
 		Action addXySeries = new AddChildAtomTreeViewAction(
 				XySeries.class,
 				"xySeries",
@@ -95,34 +89,19 @@ export default class Graph extends GraphicsPropertiesPage {
 				this,
 				treeViewer);
 		actions.add(addLegend);
+		*/
 
-		return actions;
+
+		return actions
 	}
+
 
 	async execute(treeView, monitor) {
-
-		await this.executeChildren(XySeries, treeView, monitor);
-
-		
+		//await this.executeChildren(XySeries, treeView, monitor);		
 	}
 
-	//#region D3
-
-	/**
-	 * @param d3
-	 * @param pageSelection
-	 * @return
-	 */
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection pageSelection,
-			Selection pageRectSelection,
-			FocusChangingRefreshable refreshable) {
-
-		Objects.requireNonNull(d3);
-		this.treeView = refreshable;
-
+	plot(dTreez, pageSelection, pageRectSelection, treeView) {
+			
 		//remove old graph group if it already exists
 		pageSelection //
 				.select("#" + name) //
@@ -131,173 +110,88 @@ export default class Graph extends GraphicsPropertiesPage {
 		//create new graph group
 		graphGroupSelection = pageSelection //
 				.append("g");
-		bindNameToId(graphGroupSelection);
-
-		//create rect
+		
+		this.bindString(()=>this.name, graphGroupSelection, 'id');	
+	
 		rectSelection = graphGroupSelection //
 				.append("rect") //
 				.onClick(this);
 
-		updatePlotWithD3(d3);
+		this.updatePlot(dTreez);
+		
 		return graphGroupSelection;
 	}
 
-	@Override
-	public void updatePlotWithD3(D3 d3) {
-		clearAutoScaleData();
-		plotPageModels(d3);
-		plotChildren(d3);
+	updatePlot(dTreez) {
+		this.__clearAutoScaleData();
+		this.__plotWithPages(dTreez);
+		this.__plotChildrenInSpecificOrder(dTreez);
 	}
 
-	public void updatePlotForChangedScales(D3 d3) {
-		plotChildren(d3);
+	updatePlotForChangedScales(dTreez) {
+		this.__plotChildrenInSpecificOrder(dTreez);
 	}
 
-	private void clearAutoScaleData() {
-		for (AbstractAtom<?> child : getChildAtoms()) {
-			boolean isAxis = child instanceof Axis;
-			if (isAxis) {
-				Axis axis = (Axis) child;
-				axis.clearDataForAutoScale();
-			}
-		}
-
-	}
-
-	private void plotPageModels(D3 d3) {
-		for (GraphicsPropertiesPageFactory pageModel : propertyPageFactories) {
-			graphGroupSelection = pageModel.plotWithD3(d3, graphGroupSelection, rectSelection, this);
-		}
-	}
-
-	private void plotChildren(D3 d3) {
-		plotAxis(d3);
-		plotContour(d3);
-		plotXySeries(d3);
-		plotXy(d3);
-		plotBar(d3);
-		plotTornado(d3);
-		plotLegend(d3);
-	}
-
-	private void plotAxis(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isAxis = child.getClass().equals(Axis.class);
-			if (isAxis) {
-				Axis axis = (Axis) child;
-				axis.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
+	__clearAutoScaleData() {
+		for (var child of children) {			
+			if (child instanceof Axis) {
+				child.clearDataForAutoScale();
 			}
 		}
 	}
 
-	private void plotXySeries(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isXySeries = child.getClass().equals(XySeries.class);
-			if (isXySeries) {
-				XySeries xySeries = (XySeries) child;
-				xySeries.plotWithD3(d3, graphGroupSelection, this.treeView);
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.pageFactories) {
+			pageFactory.plot(dTreez, this.graphGroupSelection, this.rectSelection, this);
+		}
+	}
+
+	__plotChildrenInSpecificOrder(dTreez) {
+		/*
+		this.__plotChildren(Axis, dTreez);
+		this.__plotChildren(Contour, dTreez);
+		this.__plotChildren(XySeries, dTreez);
+		this.__plotChildren(Xy, dTreez);
+		this.__plotChildren(Bar, dTreez);
+		this.__plotChildren(Tornado, dTreez);
+		this.__plotChildren(Legend, dTreez);
+		*/
+	}	
+	
+	__plotChildren(clazz, dTreez){
+		for (var child of this.children) {			
+			if (child instanceof clazz) {				
+				child.plot(dTreez, gthis.graphGroupSelection, this.rectSelection, this.treeView);
 			}
 		}
 	}
 
-	private void plotXy(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isXy = child.getClass().equals(Xy.class);
-			if (isXy) {
-				Xy xy = (Xy) child;
-				xy.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
-			}
-		}
+	createAxis(name) {
+		return this.createChild(Axis, name);	
 	}
 
-	private void plotBar(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isBar = child.getClass().equals(Bar.class);
-			if (isBar) {
-				Bar bar = (Bar) child;
-				bar.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
-			}
-		}
+	createXySeries(name) {
+		return this.createChild(XySeries, name);
 	}
 
-	private void plotTornado(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isTornado = child.getClass().equals(Tornado.class);
-			if (isTornado) {
-				Tornado tornado = (Tornado) child;
-				tornado.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
-			}
-		}
+	createXy(name) {
+		return this.createChild(Xy, name);
 	}
 
-	private void plotContour(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isContour = child.getClass().equals(Contour.class);
-			if (isContour) {
-				Contour contour = (Contour) child;
-				contour.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
-			}
-		}
+	createBar(name) {
+		return this.createChild(Bar, name);
 	}
 
-	private void plotLegend(D3 d3) {
-		for (Adaptable child : children) {
-			Boolean isLegend = child.getClass().equals(Legend.class);
-			if (isLegend) {
-				Legend legend = (Legend) child;
-				legend.plotWithD3(d3, graphGroupSelection, rectSelection, this.treeView);
-			}
-		}
+	createTornado(name) {
+		return this.createChild(Tornado, name);
 	}
 
-	//#end region
-
-	//#region CREATE CHILD ATOMS
-
-	public Axis createAxis(String name) {
-		Axis child = new Axis(name);
-		addChild(child);
-		return child;
+	createLegend(name) {
+		return this.createChild(Legend, name);
 	}
 
-	public XySeries createXySeries(String name) {
-		XySeries child = new XySeries(name);
-		addChild(child);
-		return child;
+	createContour(name) {
+		return this.createChild(Contour, name);
 	}
-
-	public Xy createXy(String name) {
-		Xy child = new Xy(name);
-		addChild(child);
-		return child;
-	}
-
-	public Bar createBar(String name) {
-		Bar child = new Bar(name);
-		addChild(child);
-		return child;
-	}
-
-	public Tornado createTornado(String name) {
-		Tornado child = new Tornado(name);
-		addChild(child);
-		return child;
-	}
-
-	public Legend createLegend(String name) {
-		Legend child = new Legend(name);
-		addChild(child);
-		return child;
-	}
-
-	public Contour createContour(String name) {
-		Contour child = new Contour(name);
-		addChild(child);
-		return child;
-	}
-
-	//#end region
-
-	//#end region
 
 }

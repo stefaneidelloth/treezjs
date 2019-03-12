@@ -27,14 +27,14 @@
 					return this.colorPicker.value;
 				}
 
-				set value(newValue) {
+				set value(value) {
 
-					if(newValue === undefined){
+					if(value === undefined){
 						throw new Error("Value for color must not be undefined!");
 					}
 					
-					let stringValue = newValue.toString();					
-					this.setAttribute('value', stringValue);
+					let hexString = this.getColorHexString(value);					
+					this.setAttribute('value', hexString);
 				}  			
 
                 constructor(){
@@ -63,7 +63,7 @@
 						container.appendChild(colorPicker); 
 						colorPicker.className = 'treez-color-input';
 						colorPicker.type='color';
-						colorPicker.value= self.value;							
+						colorPicker.value= self.getAttribute("value");							
 						colorPicker.onchange = ()=>this.__colorChanged(); 					
 						                                       
                                                               		
@@ -71,7 +71,8 @@
                 }  				
 
                 __colorChanged(){
-				                   	
+                	
+				                 	
                 } 
 
 				
@@ -90,7 +91,40 @@
                 	if(this.colorPicker){                    	
 						this.colorPicker.value= newValue; 
                 	}					    
-                }                          
+                } 
+
+                getColorHexString(value){
+                	
+                	if(value.startsWith('#')){
+                		return value;
+                	}
+                	
+                	var colorMap ={
+                			'white': '#ffffff',
+                			'black': '#000000',
+                        	'red': '#ff0000',
+                        	'green': '#008000',
+                        	'blue': '#0000ff',
+                        	'cyan': '#00ffff',
+                        	'magenta': '#ff00ff',
+                        	'yellow': '#ffff00',
+                        	'grey': '#808080',
+                        	'darkred': '#8b0000',
+                        	'darkgreen': '#006400',
+                        	'darkblue': '#00008b',
+                        	'darkcyan': '#008b8b',
+                        	'darkmagenta': '#8b008b'
+                	};
+                	
+                	var hexString = colorMap[value];
+                	
+                	if(!hexString){
+                		throw new Error('Unknown color value ' + value);
+                	}
+                	
+                	return hexString;                 	
+                	
+                }                         
             }
             window.customElements.define('treez-color', TreezColor);                    
 

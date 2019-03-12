@@ -72,7 +72,7 @@ export default class ComponentAtom extends Atom {
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
 		const tabFolder = treeView.dTreez.select(tabFolderElement);
-		self.createComponentControl(tabFolder, treeView);				
+		self.createComponentControl(tabFolder);				
 		parent.appendChild(tabFolderElement);					
 	
         self.afterCreateControlAdaptionHook();
@@ -82,7 +82,7 @@ export default class ComponentAtom extends Atom {
 	/*
 	 * Should be overridden by inheriting classes
 	 */
-	createComponentControl(tabFolder, treeView){
+	createComponentControl(tabFolder){
         tabFolder.append('treez-tab')
         	.append('div')
             .html(this.name);

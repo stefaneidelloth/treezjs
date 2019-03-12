@@ -1,29 +1,13 @@
-package org.treez.results.atom.graphicsPage;
 
-import java.util.List;
 
-import org.treez.core.adaptable.CodeContainer;
-import org.treez.core.adaptable.TreeNodeAdaption;
-import org.treez.core.atom.adjustable.AdjustableAtom;
-import org.treez.core.atom.adjustable.AdjustableAtomCodeAdaption;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.base.parent.AttributeParentCodeAdaption;
-import org.treez.core.atom.base.AbstractAtom;
 
-/**
- * Code adaption for GraphicsPropertiesPage
- */
-public class GraphicsPropertiesPageCodeAdaption extends AdjustableAtomCodeAdaption {
+export default class PagedGraphicsAtomCodeAdaption extends AdjustableAtomCodeAdaption {
 
-	//#region CONSTRUCTORS
-
-	public GraphicsPropertiesPageCodeAdaption(GraphicsPropertiesPage atom) {
+	constructor(atom) {
 		super(atom);
 	}
 
-	//#end region
-
-	//#region METHODS
+	
 
 	/**
 	 * Builds the code for setting attribute values of the atom. Might be overridden by inheriting classes.
@@ -68,6 +52,5 @@ public class GraphicsPropertiesPageCodeAdaption extends AdjustableAtomCodeAdapti
 		return attributeContainer;
 	}
 
-	//#end region
-
+	
 }

@@ -35,9 +35,9 @@ export default class Model extends ComponentAtom {
 
 	
 
-	assignModelInput(modelInput) {
+	__assignModelInput(modelInput, monitor) {
 
-		console.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
+		monitor.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
 
 		if (modelInput != null) {
 
@@ -64,7 +64,7 @@ export default class Model extends ComponentAtom {
 	async execute(treeView, monitor) {
 		
 		if(!monitor){
-			var monitorTitle = this.constructor.name + ' ' + this.name;
+			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
 		}			
@@ -78,10 +78,10 @@ export default class Model extends ComponentAtom {
 	async runModel(modelInput, treeView, monitor) {
 
 		//assign the model input to variable values (also assigns model input for sub models)
-		this.assignModelInput(modelInput);
+		this.__assignModelInput(modelInput, monitor);
 
 		if (monitor.isCanceled) {
-			console.error("Model '" + name + "' does not run since execution has been canceled.");
+			monitor.error("Model '" + name + "' does not run since execution has been canceled.");
 			return this.createEmptyModelOutput();
 		}
 
@@ -95,7 +95,7 @@ export default class Model extends ComponentAtom {
 
 		
 
-		console.info("Running " + this.constructor.name + " '" + this.name + "'");
+		monitor.info("Running " + this.constructor.name + " '" + this.name + "'");
 
 		const modelOutput = this.__createEmptyModelOutput();
 		

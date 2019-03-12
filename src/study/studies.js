@@ -21,7 +21,7 @@ export default class Studies extends ComponentAtom {
 		//TODO
 	}
 
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');		
@@ -37,7 +37,7 @@ export default class Studies extends ComponentAtom {
 	
 	async execute(treeView, monitor){
 		if(!monitor){
-			var monitorTitle = this.constructor.name + ' ' + this.name;
+			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
 		}
@@ -54,15 +54,14 @@ export default class Studies extends ComponentAtom {
 	}
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
-
-		const addSweep = new AddChildAtomTreeViewAction(
+		
+		actions.push(new AddChildAtomTreeViewAction(
 				Sweep,
 				"sweep",
 				"sweep.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addSweep);
+				treeView));
 		
 		/*
 
@@ -100,29 +99,21 @@ export default class Studies extends ComponentAtom {
 	
 
 	createSweep(name) {
-		var child = new Sweep(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(Sweep, name);
 	}
 	
 	/*
 	
 	createPicking(name) {
-		var child = new Picking(name);
-		thisaddChild(child);
-		return child;
+		return this.createChild(Picking, name);
 	}
 	
 	createSensitivity(name) {
-		var child = new Sensitivity(name);
-		thisaddChild(child);
-		return child;
+		return this.createChild(Sensitivity, name);
 	}
 	
 	createPropability(name) {
-		var child = new Probability(name);
-		thisaddChild(child);
-		return child;
+		return this.createChild(Probability, name);
 	}
 	
 	*/

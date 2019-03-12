@@ -25,7 +25,7 @@ export default class GenericInput extends Model {
 		//TODO
 	}
 	
-	createComponentControl(tabFolder, treeView){    
+	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')
             .label('Data');

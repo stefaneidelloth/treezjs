@@ -27,12 +27,21 @@
       }
 
       function onOpen(){
-            wsocket.send('type "D:\\foo.txt"');  
+
+            //var command = '"D:/EclipseJava/App/jdk/bin/java.exe" -cp "D:/Sensitivity/trunk/matisse/MatisseShip/lib/*;D:/Sensitivity/trunk/matisse/MatisseShip/bin/." repast.simphony.runtime.RepastMain  -params D:/Sensitivity/trunk/matisse/MatisseShip/batch/batch_params.xml -interactive D:/Sensitivity/trunk/matisse/MatisseShip/MatisseShip.rs';
+
+            var command = "dir";
+            var jsonObject = {
+                  command: command
+            }
+            wsocket.send(JSON.stringify(jsonObject));  
       }
 
-      function onMessage(event) {                   
+      function onMessage(event) { 
 
-         console.log(event.data);      
+         var jsonObject = JSON.parse(event.data);                  
+
+         console.log(jsonObject.result);      
 
       }
 

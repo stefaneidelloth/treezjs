@@ -39,12 +39,13 @@ export default class Executable extends Model {
 		// TODO
 	}
 
-    createComponentControl(tabFolder, treeView){    
+    createComponentControl(tabFolder){    
      
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
 		this.__createExecutableSection(page); 
+		this.__createInterimSections(page);
         this.__createInputSection(page);      
         this.__createOutputSection(page); 
         this.__createStatusSection(page);
@@ -111,11 +112,7 @@ export default class Executable extends Model {
     }	
 
     async doRunModel(treeView, monitor) {
-    	
-    	monitor.warn('warning');
-    	monitor.error('error');
-
-    	
+    	    	    	
 		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
 		monitor.info(startMessage);
 
@@ -153,23 +150,25 @@ export default class Executable extends Model {
     }  
     
     async __executeCommand(command, monitor){
+
+    	var self = this;
+
     	return await new Promise(function(resolve, reject){
 	    	try {
-	
-				window.treezTerminal.execute(command, resultHandler, errorHandler);
-				window.treezTerminal.execute('echo ' + Executable.__finishedString , resultHandler, errorHandler);			
-				
-				function resultHandler(message){					
+				var exitingCommand = command + " & exit";
+				window.treezTerminal.execute(exitingCommand, messageHandler, errorHandler, finishedHandler);
+
+				function messageHandler(message){
+					monitor.info(message);
+				}						
 					
-					var isFinished = (message === Executable.__finishedString);
-	                if(isFinished){
-	                	resolve();	                	
-	                } else {	                	
-	                	monitor.info(message);
-	                }					
-				}
-	
 				function errorHandler(message){
+					
+					if(message.startsWith('WARNING')){
+						messageHandler(message);
+						return;
+					}
+					
 					const errorTitle = 'Executing system command failed:\n';
 					monitor.setDescription(errorTitle);
 					monitor.error(errorTitle + message);
@@ -177,9 +176,13 @@ export default class Executable extends Model {
 					
 					reject(errorTitle+ message);					
 				}
+
+				function finishedHandler(){
+					resolve();
+				}
 				
 			} catch (exception) {
-				let errorTitle  = 'Could not execute "' + this.name + '"';
+				let errorTitle  = 'Could not execute "' + self.name + '"\n';
 				monitor.error(errorTitle, exception);
 				monitor.cancel();
 				reject(errorTitle + exception.toString());
@@ -229,33 +232,23 @@ export default class Executable extends Model {
     
 
 	createInputFileGenerator(name) {
-		const child = new InputFileGenerator(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(InputFileGenerator, name);		
 	}
 
 	createInputModification(name) {
-		const child = new InputModification(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(InputModification, name);
 	}
 
 	createOutputModification(name) {
-		const child = new OutputModification(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(OutputModification, name);
 	}
 	
 	createLoggingArguments(name) {
-		const child = new LoggingArguments(name);
-		this.addChild(child);
-		return child;
+		return this.createChild(LoggingArguments, name);
 	}
 
 	createTableImport(name) {
-		const child = new TableImport(name);
-		addChild(child);
-		return child;
+		return this.createChild(TableImport, name);
 	}
 
     __createExecutableSection(tab) {
@@ -283,7 +276,11 @@ export default class Executable extends Model {
             .label('Executable')           
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.executablePath);            
-	}   
+	}  
+    
+    __createInterimSections(page){
+    	//can be overridden by inheriting classes
+    }
 
 	__createInputSection(page) {
        
