@@ -14,10 +14,7 @@ export default class InputFileGenerator extends Model  {
 
 
 
-	constructor(name) {
-		if(!name){
-			name='inputFileGenerator';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'inputFile.png';
 		

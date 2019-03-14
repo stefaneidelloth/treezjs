@@ -6,10 +6,7 @@ import JavaExecutable from './executable/javaExecutable.js';
 
 export default class Models extends Model {
 
-	constructor(name) {
-		if(!name){
-			name='models';
-		}
+	constructor(name) {		
 		super(name);
 		this.isRunnable=true;
 		this.image = "models.png";

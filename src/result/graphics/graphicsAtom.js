@@ -68,7 +68,7 @@ export default class GraphicsAtom extends ComponentAtom {
 	
 	bindLineTransparency(lambdaExpressionEncodingPropertyToBind, selection){		
 		var valueConverter = value => {
-			var transparency = parseFloat(value);
+			var transparency = parseDouble(value);
 			return '' + (1-transparency);					
 		}		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-opacity', valueConverter);
@@ -89,7 +89,7 @@ export default class GraphicsAtom extends ComponentAtom {
 				return '0';
 			}
 			
-			var transparency = parseFloat(self[transparencyPropertyName]);
+			var transparency = parseDouble(self[transparencyPropertyName]);
 			return '' + (1-transparency);					
 		}	
 		

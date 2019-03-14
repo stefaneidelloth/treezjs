@@ -25,6 +25,7 @@ export default class ComponentAtom extends Atom {
 		head.append('<link rel="import" id="treez-color" href="./src/components/color/treez-color.html"/>');
 		head.append('<link rel="import" id="treez-color-map" href="./src/components/colorMap/treez-color-map.html"/>');
 		head.append('<link rel="import" id="treez-combo-box" href="./src/components/comboBox/treez-combo-box.html"/>');
+		head.append('<link rel="import" id="treez-enum-combo-box" href="./src/components/comboBox/treez-enum-combo-box.html"/>');
 		
 		head.append('<link rel="import" id="treez-error-bar-style" href="./src/components/errorBarStyle/treez-error-bar-style.html"/>');
 

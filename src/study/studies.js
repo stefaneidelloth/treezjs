@@ -8,10 +8,7 @@ import Sweep from './sweep/sweep.js';
 
 export default class Studies extends ComponentAtom {
 
-	constructor(name) {
-		if(!name){
-			name='studies';
-		}
+	constructor(name) {		
 		super(name);
 		this.isRunnable=true;
 		this.image = "studies.png";

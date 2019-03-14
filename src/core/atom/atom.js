@@ -15,7 +15,9 @@ export default class Atom {
 		 * In order to be able to identify an Atom by its tree path, this name should only be used once for all children of the parent
 		 * Atom. The name might also be used in code for saving the tree structure. It is recommended to use lower case names.
 		 */
-		this.name = name;		
+		this.name = name
+						?name
+						:this.__getDefaultName();			
 		
 		this.nameChangedConsumers = [];
 		
@@ -42,6 +44,12 @@ export default class Atom {
 		newAtom.image = this.image
 		newAtom.isExpanded = this.isExpanded;
 		return newAtom;		
+	}
+
+	__getDefaultName(){
+		var className = this.constructor.name;
+		var firstLetter = className[0].toLowerCase();
+		return firstLetter  + className.substring(1);
 	}
 
 	copyChildrenTo(newAtom){
@@ -446,7 +454,7 @@ export default class Atom {
 	getChildrenByClass(clazz) {
 		var wantedChildren = [];
         this.children.forEach(child => {
-			var isWantedChild = currentChild instanceof clazz;
+			var isWantedChild = child instanceof clazz;
 			if (isWantedChild) {			
 				wantedChildren.push(child);
 			}

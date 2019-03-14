@@ -43,7 +43,7 @@ export default class Background extends GraphicsAtom {
 		
 		this.addListenerAndRun(()=>this.transparency, () => {
 			try {
-				var fillTransparency = parseFloat(this.transparency);
+				var fillTransparency = parseDouble(this.transparency);
 				var opacity = 1 - fillTransparency;
 				rectSelection.attr('fill-opacity', '' + opacity);
 			} catch (error) {
@@ -57,7 +57,7 @@ export default class Background extends GraphicsAtom {
 					rectSelection.attr('fill-opacity', '0');
 				} else {
 					try {	
-						var fillTransparency = parseFloat(this.transparency);
+						var fillTransparency = parseDouble(this.transparency);
 						var opacity = 1 - fillTransparency;
 						rectSelection.attr('fill-opacity', '' + opacity);
 					} catch (error) {

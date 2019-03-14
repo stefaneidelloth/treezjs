@@ -49,7 +49,7 @@ export default class TreezTerminal {
 		this.__onMessage = messageHandler;
 		this.__onError = errorHandler;
 		this.__onFinished = finishedHandler;
-		this.__send(command);		
+		this.__send(command + " & exit");		
 	}		
 	
 	__send(command){

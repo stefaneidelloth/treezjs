@@ -5,10 +5,7 @@ import DoubleRange from './../range/doubleRange.js';
 
 export default class Sweep extends Study {	
 		
-	constructor(name) {
-		if(!name){
-			name='sweep';
-		}
+	constructor(name) {		
 		super(name);
 		this.isCanceled = false;
 		this.inputGenerator = new SweepModelInputGenerator(this);

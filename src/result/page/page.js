@@ -5,10 +5,7 @@ import Graph from './../graph/graph.js';
 
 export default class Page extends GraphicsAtom {
    
-	constructor(name) {
-		if(!name){
-			name='page';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'page.png';
 		this.isRunnable=true;	

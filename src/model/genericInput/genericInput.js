@@ -11,10 +11,7 @@ import StringVariable from './../variable/field/stringVariable.js';
 
 export default class GenericInput extends Model {
 
-	constructor(name) {
-		if(!name){
-			name='genericInput';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'genericInput.png';
 		

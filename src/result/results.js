@@ -6,10 +6,7 @@ import Page from './page/page.js'
 
 export default class Results extends ComponentAtom {
    
-	constructor(name) {
-		if(!name){
-			name='results';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'results.png';
 		this.isRunnable=true;		

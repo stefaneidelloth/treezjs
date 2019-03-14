@@ -5,10 +5,7 @@ import Border from './../graphics/border.js';
 
 export default class Graph extends PagedGraphicsAtom {
 
-	constructor(name) {
-		if(!name){
-			name='graph';
-		}
+	constructor(name) {		
 		super(name);
 		this.image='graph.png';
 		

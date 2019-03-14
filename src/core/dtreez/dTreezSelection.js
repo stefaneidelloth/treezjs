@@ -26,18 +26,10 @@ export default class DTreezSelection {
 		this.__d3Selection.attr(name, value);
 		return this;
 	}
+	
+	
 
-	nodeAttr(name, value){
-		if(value===undefined){
-			return this.__d3Selection.node()[name];
-		}
-		this.__d3Selection.node()[name] = value;
-		return this;
-	}
-
-	node(){
-		return this.__d3Selection.node();
-	}
+	
 	
 	bindValue(parentObject, lambdaExpressionIdentifyingProperty){
 		var bindFunction = this.__d3Selection.node().bindValue
@@ -61,9 +53,19 @@ export default class DTreezSelection {
 		return this;
 	}
 	
+	data(data){
+		var selection = this.__d3Selection.data(data);
+		return new DTreezSelection(selection);
+	}
+	
 	disable(){
 		this.__d3Selection.attr('enabled', false);		
 		return this;
+	}
+	
+	enter(){
+		var selection = this.__d3Selection.enter();
+		return new DTreezSelection(selection);
 	}
 	
 	enable(){
@@ -83,6 +85,18 @@ export default class DTreezSelection {
 	
 	label(label){
 		this.__d3Selection.attr('label', label);		
+		return this;
+	}
+	
+	node(){
+		return this.__d3Selection.node();
+	}
+
+	nodeAttr(name, value){
+		if(value===undefined){
+			return this.__d3Selection.node()[name];
+		}
+		this.__d3Selection.node()[name] = value;
 		return this;
 	}
 

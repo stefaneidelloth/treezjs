@@ -7,10 +7,7 @@ import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewA
 export default class Root extends ComponentAtom {	
    
 
-	constructor(name) {
-		if(!name){
-			name='root';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'root.png';
 	}

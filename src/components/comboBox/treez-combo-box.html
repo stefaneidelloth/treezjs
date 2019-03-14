@@ -37,11 +37,12 @@
 						throw new Error("Value for combobox must not be undefined!");
 					}
 
-					if(!this.options){
+					var options = this.getAttribute('options');
+					if(!options){
 						throw new Error("The option '"+ newValue +"' is not known because there are no available options.");
 					}
 					let stringValue = newValue.toString();
-					var optionEntries = this.options.split(',');
+					var optionEntries = options.split(',');
 					if (optionEntries.indexOf(stringValue) > -1){
 						this.setAttribute('value', stringValue);	
 					} else {
@@ -72,20 +73,20 @@
 						container.appendChild(labelElement);             
 
 						var comboBox = document.createElement('select');                       
-						self.comboBox = comboBox;								
-						comboBox.value= self.value;	
+						self.comboBox = comboBox;	
 						comboBox.className = 'treez-combo-box-select';
-						comboBox.onchange = ()=>this.__comboBoxChanged();                                              
+						comboBox.onchange = (event)=>this.__comboBoxChanged(event);                                              
 						container.appendChild(comboBox); 
 						
-						if(self.options){
-                           this.__recreateOptionTags();						  
+						if(self.getAttribute('options')){
+                           this.__recreateOptionTags();	
+                           comboBox.value= self.value.toString();	
 						}                                         
                                                               		
                     }
                 }  				
 
-                __comboBoxChanged(){
+                __comboBoxChanged(event){
 				    let index = this.comboBox.selectedIndex;					
                 	this.value = this.comboBox.options[index].value;                	
                 } 
@@ -99,7 +100,7 @@
 						comboBox.removeChild(comboBox.lastChild);
 					}
 
-					var optionEntries = this.options.split(',');
+					var optionEntries = this.getAttribute('options').split(',');
 					optionEntries.forEach(option=>{
 						var optionTag = this.__createOptionTag(option)						
 					    comboBox.appendChild(optionTag);

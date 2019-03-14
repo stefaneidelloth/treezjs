@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<link type="text/css" rel="stylesheet" href="treez-combo-box.css" />		
+
+		<link rel="import" href="./treez-combo-box.html" >	
+
+        <script>
+
+            class TreezEnumComboBox extends TreezComboBox {
+            	
+            	get value() {
+            		if(!this.__enumClass){
+            			throw new Error('Options have to be set before retrieving value');
+            		}
+            		
+            		var stringValue = this.getAttribute('value');
+
+					if(stringValue!=='undefined'){
+						return this.__enumValueByName(stringValue);
+					} else {
+						return this.__enumClass.values()[0];
+					}
+  				  	
+  				}
+
+  				set value(newValue){
+  					super.value = newValue;
+  				}
+  				 
+            	
+				set options(enumClass) {
+					this.__enumClass = enumClass;
+
+					var names = enumClass.values().map((enumValue)=>enumValue.name);
+					var optionsString = names.join(',');
+				  	this.setAttribute('options', optionsString);	
+				} 
+				
+                constructor(){
+                    super(); 
+                    this.__enumClass = undefined;                        
+                } 
+                
+                __enumValueByName(name){                	
+                		for(var type of this.__enumClass.values()){
+                			if(type.name === name){
+                				return type;
+                			}
+                		}
+                		throw new Error('Could not find value "' + name + '" of Enum "' + this.__enumClass.name + '"".');
+                	
+                }               		
+                                      
+            }
+            window.customElements.define('treez-enum-combo-box', TreezEnumComboBox);                    
+
+        </script>	
+		
+	</head>
+
+</html>

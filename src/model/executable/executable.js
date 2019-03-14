@@ -11,10 +11,7 @@ export default class Executable extends Model {
 
 	//static variable __finishedString is defined below class definition
 
-	constructor(name) {
-		if(!name){
-			name='executable';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'run.png';
 		this.isRunnable=true;	
@@ -58,51 +55,46 @@ export default class Executable extends Model {
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		this.treeView=treeView;
-
-		const addInputFileGenerator = new AddChildAtomTreeViewAction(
+		
+		actions.push(new AddChildAtomTreeViewAction(
 				InputFileGenerator,
 				'inputFileGenerator',
 				'inputFile.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addInputFileGenerator);
+				treeView));		
 		
-		const addInputModification = new AddChildAtomTreeViewAction(
+		actions.push(new AddChildAtomTreeViewAction(
 				InputModification,
 				'inputModification',
 				'inputModification.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addInputModification);
+				treeView));		
 		
-		const addOutputModification = new AddChildAtomTreeViewAction(
+		actions.push(new AddChildAtomTreeViewAction(
 				OutputModification,
 				'outputModification',
 				'outputModification.png',
 				parentSelection,	
 				this,
-				treeView);
-		actions.push(addOutputModification);
+				treeView));		
 		
-		const addLoggingArguments = new AddChildAtomTreeViewAction(
+		actions.push(new AddChildAtomTreeViewAction(
 				LoggingArguments,
 				'loggingArguments',
 				'loggingArguments.png',
 				parentSelection,	
 				this,
-				treeView);
-		actions.push(addLoggingArguments);
-
-		const addDataImport = new AddChildAtomTreeViewAction(
+				treeView));
+		
+		actions.push(new AddChildAtomTreeViewAction(
 				TableImport,
 				'tableImport',
 				'tableImport.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addDataImport);
+				treeView));
 
 		return actions;
 	}

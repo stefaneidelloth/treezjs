@@ -37,11 +37,15 @@ treez-section-header {
 
 
 treez-section-header::before  {   
-    content:'\25BC  '
+    content:'\25BC  ';     
+    font-size: 15px;
+    vertical-align:middle;
 }
 
 treez-section-header.collapsed::before  {   
-    content:'\25BA '
+   content:'\25B6  ';  
+   font-size: 12px;
+   vertical-align:middle;
 }
 
 .treez-section-action-toolbar {

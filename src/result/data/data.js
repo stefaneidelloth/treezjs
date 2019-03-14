@@ -1,13 +1,11 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import Table from './../../data/table/table.js';
 
 
 export default class Data extends ComponentAtom {
    
-	constructor(name) {
-		if(!name){
-			name='data';
-		}
+	constructor(name) {		
 		super(name);
 		this.image = 'data.png';
 		this.isRunnable=true;		
@@ -26,17 +24,18 @@ export default class Data extends ComponentAtom {
 	}	
 
 
-	extendContextMenuActions(actions, treeView) {
+	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		/*
-
-		actions.add( new AddChildAtomTreeViewAction(
+		actions.push( new AddChildAtomTreeViewAction(
 				Table,
 				'table',
 				'table.png',
+				parentSelection,
 				this,
 				treeView)
 		);
+
+		/*
 		
 		actions.add( new AddChildAtomTreeViewAction(
 				PickingProbe,
@@ -52,6 +51,7 @@ export default class Data extends ComponentAtom {
 				'sweepProbe',
 				'sweep.png',
 				this,
+				parentSelection,
 				treeView,
 				'probe.png')
 		);
@@ -61,6 +61,7 @@ export default class Data extends ComponentAtom {
 				'sensitvityProbe',
 				'sensitivity.png',
 				this,
+				parentSelection,
 				treeView,
 				'probe.png')
 		);
@@ -70,6 +71,7 @@ export default class Data extends ComponentAtom {
 				'probabilityProbe',
 				'probability.png',
 				this,
+				parentSelection,
 				treeView,
 				'probe.png')
 		);		
