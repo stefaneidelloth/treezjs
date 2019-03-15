@@ -24,15 +24,19 @@
 
 				set image(image) {
 				  this.setAttribute('image', image);
-				}	
+				}
+				
+				get actions(){
+					return this.__actions;
+				}
 
                 constructor(){
                     super();  
-                    this.actions = [];                  
+                    this.__actions = [];                  
                 }                            
 
                 addAction(action){
-                	this.actions.push(action);                	
+                	this.__actions.push(action);                	
                 }               			
 
             }
@@ -56,11 +60,11 @@
   				}  
 
                 get actions(){
-					return this.actionArray;
+					return this.__actionArray;
 				}
 
 				set actions(actions){
-					this.actionArray=actions;
+					this.__actionArray=actions;
 				}                  
 
                 set children(children){
@@ -73,30 +77,30 @@
 
                 constructor(){
                     super();
-                    this.sectionHeader=undefined;
-                    this.isInitiallyExpanded=true;
-                    this.actionArray=[];
-                }
-
-            	
+                    this.__sectionHeader=undefined;
+                    this.__isInitiallyExpanded=true;
+                    this.__actionArray=[];
+                }            	
 
                 connectedCallback() {
-                    if(!this.sectionHeader){
-                    	this.className='treez-section';                       
-                        this.sectionHeader = document.createElement('treez-section-header');
+                    if(!this.__sectionHeader){
+                    	this.className='treez-section'; 
+                    	
+                    	let sectionHeader = document.createElement('treez-section-header');
+                        this.__sectionHeader = sectionHeader;
 
                         let label = document.createElement('span');
                         label.classList.add('treez-section-header-label');
                         label.innerText = this.label;        
-                        this.sectionHeader.appendChild(label);
+                        sectionHeader.appendChild(label);
 
                         let toolbar = document.createElement('span')
                         toolbar.classList.add('treez-section-action-toolbar');
-                        this.sectionHeader.appendChild(toolbar);
+                        sectionHeader.appendChild(toolbar);
                         this.__processSectionActions(toolbar);
                                       
-                        this.sectionHeader.onclick = this.__toggleExpansion;
-                        this.insertBefore(this.sectionHeader, this.firstChild);                        
+                        sectionHeader.onclick = this.__toggleExpansion;
+                        this.insertBefore(sectionHeader, this.firstChild);                        
                     }
                 }
                 
@@ -185,11 +189,11 @@
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                     if(attr==='label'){
-                    	if(this.sectionHeader){
-                    		 this.sectionHeader.innerText= newValue;   
+                    	if(this.__sectionHeader){
+                    		 this.__sectionHeader.innerText= newValue;   
                     	}                                           
                     } else if(attr==='collapsed'){
-						this.isInitiallyExpanded=false;
+						this.__isInitiallyExpanded=false;
                     }
                 }
 
@@ -205,15 +209,13 @@
                 __childrenChanged(mutations){
                 	mutations.forEach((mutation)=>{
                 		console.log('A child node has been added or removed.');
-                		if(this.isInitiallyExpanded){
+                		if(this.__isInitiallyExpanded){
                 			this.children[1].style.display="block";
                 		} else {
                 			this.children[1].style.display="none";
                 		}
                 	});						
-                }
-
-                
+                } 
 
                
 

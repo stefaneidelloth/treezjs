@@ -29,7 +29,11 @@
 
 				set options(newValue) {
 				  this.setAttribute('options', newValue);	
-				}  	
+				} 
+
+				get value(){
+					return super.value;
+				} 	
 
 				set value(newValue) {
 
@@ -53,47 +57,68 @@
 
                 constructor(){
                     super(); 
-                    this.comboBox=undefined;   
-                    this.labelElement=undefined;                         
+                    this.__container=undefined;
+                    this.__comboBox=undefined;   
+                    this.__labelElement=undefined;                         
                 }            	
 
                 connectedCallback() {
-                	var self = this;
-
-                    if(!self.comboBox){   
+                
+                    if(!this.__comboBox){   
 
 						var container = document.createElement('div');  
+						this.__container = container;
 						container.className = 'treez-combo-box-container';
-						self.appendChild(container);      
+						this.appendChild(container);      
 
 						var labelElement = document.createElement('label');
-						this.labelElement = labelElement;
+						this.__labelElement = labelElement;
 						labelElement.className = 'treez-combo-box-label';
 						labelElement.innerText = self.label;                                            
 						container.appendChild(labelElement);             
 
 						var comboBox = document.createElement('select');                       
-						self.comboBox = comboBox;	
+						this.__comboBox = comboBox;	
 						comboBox.className = 'treez-combo-box-select';
 						comboBox.onchange = (event)=>this.__comboBoxChanged(event);                                              
 						container.appendChild(comboBox); 
 						
-						if(self.getAttribute('options')){
-                           this.__recreateOptionTags();	
-                           comboBox.value= self.value.toString();	
-						}                                         
-                                                              		
+						if(this.getAttribute('options')){
+                           this.__recreateOptionTags();	                           
+						}                                     		
                     }
-                }  				
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
+                }  	
+                
+                updateElements(newValue){
+                	if(this.__comboBox){                    	
+						this.__comboBox.value= '' + newValue; 
+                	}	
+                }	
+               
+                disableElements(booleanValue){
+                	if(this.__comboBox){   
+                		this.__comboBox.disabled = booleanValue;
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__container){   
+                		this.hide(this.__container, booleanValue);                		
+                	}
+                }	
 
                 __comboBoxChanged(event){
-				    let index = this.comboBox.selectedIndex;					
-                	this.value = this.comboBox.options[index].value;                	
+				    let index = this.__comboBox.selectedIndex;	
+				    let newInputValue = this.__comboBox.options[index].value; 				   	
+                	this.value =  this.convertFromStringValue(newInputValue);    	
                 } 
 
 				__recreateOptionTags(){
-				    var comboBox = this.comboBox;
-
+				    var comboBox = this.__comboBox;
 				    var oldValue = comboBox.value;
 
 					while (comboBox.hasChildNodes()) {
@@ -138,11 +163,7 @@
                     } 
                 }  
 
-                updateElements(newValue){
-                	if(this.comboBox){                    	
-						this.comboBox.value= newValue; 
-                	}					    
-                }                          
+                                        
             }
             window.customElements.define('treez-combo-box', TreezComboBox);                    
 

@@ -14,8 +14,8 @@ Enum.values =  function(){
 };
 
 
-Enum.of = function(name){
-	for(var type of instance.constructor.values){
+Enum.forName = function(name){
+	for(var type of this.values()){
 		if(type.name === name){
 			return type;
 		}

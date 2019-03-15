@@ -1,37 +1,14 @@
-package org.treez.data.database.mysql;
+import Importer from './../importer.js';
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.List;
+export default class MySqlImporter extends Importer {
 
-import org.apache.log4j.Logger;
-import org.treez.core.data.column.ColumnBlueprint;
-import org.treez.core.data.column.ColumnType;
-import org.treez.core.data.column.ColumnTypeConverter;
-import org.treez.core.data.foreignkey.ForeignKeyBlueprint;
-import org.treez.core.data.index.IndexBlueprint;
-import org.treez.core.data.row.Row;
-import org.treez.core.data.table.TreezTable;
-import org.treez.data.database.AbstractImporter;
-import org.treez.data.database.ResultSetProcessor;
-import org.treez.data.database.TableData;
-import org.treez.data.database.sqlite.SqLiteColumnTypeConverter;
+	constructor() {
+		
+	}
+	
+	/*
 
-public final class MySqlImporter extends AbstractImporter {
-
-	private static Logger LOG = Logger.getLogger(MySqlImporter.class);
-
-	//#region CONSTRUCTORS
-
-	/**
-	 * Private Constructor that prevents construction
-	 */
-	private MySqlImporter() {}
-
-	//#end region
-
-	//#region METHODS
+	
 
 	public static int getNumberOfRows(String url, String user, String password, String tableName) {
 
@@ -429,6 +406,6 @@ public final class MySqlImporter extends AbstractImporter {
 		return row;
 	}
 
-	//#end region
+	*/
 
 }

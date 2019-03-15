@@ -33,37 +33,56 @@
 
                 constructor(){
                     super();   
-                    this.labelElement=undefined;  
-                    this.comboBox=undefined;
-                    this.__atomClasses=[];                     
+                    this.__label = undefined;  
+                    this.__comboBox = undefined;
+                    this.__atomClasses = [];                     
                 }            	
 
                 connectedCallback() {
-                	var self = this;
+                	
+                    if(!this.__label){  
 
-                    if(!self.labelElement){  
-
-                        var labelElement = document.createElement('label');  
-                        self.labelElement = labelElement;                     
-                        labelElement.innerText = self.label;                       
-                        self.appendChild(labelElement);  
+                        var label = document.createElement('label');  
+                        this.__label = label;                     
+                        label.innerText = this.label;                       
+                        this.appendChild(label);  
                         
                         var comboBox = document.createElement('select');
-                        self.comboBox = comboBox;   
+                        this.__comboBox = comboBox;   
                         comboBox.className='treez-model-path-select';
-                        comboBox.onchange = () =>self.__comboBoxChanged();
-                        
-                        self.__updateOptions();
-                                               
-                        if(self.value !== 'undefined'){
-                        	self.comboBox.value = self.value; 
-                        }  else {
-                        	self.comboBox.value = '';
-                        } 
-                        self.appendChild(comboBox); 
+                        comboBox.onchange = () =>self.__comboBoxChanged();                       
+                        this.appendChild(comboBox); 
                                      		
                     }
+                    
+                    this.__updateOptions(); 
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
                 }
+                
+                updateElements(newValue){
+                	if(this.__comboBox){ 
+                		if(newValue !== undefined){
+                        	this.__comboBox.value = newValue; 
+                        } else {
+                        	this.__comboBox.value = null;
+                        }						
+					}					    
+                }                 
+               
+                disableElements(booleanValue){
+                	if(this.__comboButton){                   		
+                		this.__comboButton.disabled = booleanValue;                		
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__label){ 
+                		this.hide(this.__label, booleanValue);
+                		this.hide(this.__comboBox, booleanValue); 
+                	}
+                }	
                 
                 __updateOptions(){
                 	var self=this;
@@ -78,8 +97,8 @@
                     var modelPaths = this.__getAvailableModelPaths(root, this.__atomClasses, this.hasToBeEnabled, this.filterDelegate);
                     
 
-					while (self.comboBox.firstChild) {
-						self.comboBox.removeChild(self.comboBox.firstChild);
+					while (this.__comboBox.firstChild) {
+						this.__comboBox.removeChild(this.__comboBox.firstChild);
 					}                    
                    
                     
@@ -87,12 +106,12 @@
                    		(modelPath)=>{
                    			 var option = document.createElement('option');
                    			 option.innerText = modelPath;
-                   			 self.comboBox.appendChild(option);                   			
+                   			 self.__comboBox.appendChild(option);                   			
                    		}
                     );
 
                     if(modelPaths.length===1){
-                    	self.value=modelPaths[0];
+                    	this.value=modelPaths[0];
                     }
 
                 }
@@ -137,28 +156,16 @@
             		return availablePaths;
                 	
                 }
-
               
-
                 __comboBoxChanged(){
-                	this.value = this.comboBox.value;                	             	
-                }                   
-
-                updateElements(newValue){
-                	if(this.comboBox){ 
-                		if(newValue !== undefined){
-                        	this.comboBox.value = newValue; 
-                        } else {
-                        	this.comboBox.value = null;
-                        }						
-					}					    
-                }                
+                	this.value = this.__comboBox.value;                	             	
+                }                           
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     		 return;
                     	}                                           
                     } 

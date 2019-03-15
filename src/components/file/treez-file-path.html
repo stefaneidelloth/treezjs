@@ -25,38 +25,31 @@
 
                 constructor(){
                     super();                  
-                    this.labelElement=undefined;   
-                    this.textField=undefined;
-                    this.browseButton=undefined;                        
+                    this.__label = undefined;   
+                    this.__textField = undefined;
+                    this.__browseButton = undefined;
+                    this.__executeButton = undefined;
                 }            	
 
                 connectedCallback() {
-                	var self = this;
+                	
+                    if(!this.__label){  
 
-                    if(!self.labelElement){  
-
-                        var labelElement = document.createElement('label');  
-                        self.labelElement = labelElement;                     
-                        labelElement.innerText = self.label;                       
-                        self.appendChild(labelElement);  
+                        var label = document.createElement('label');  
+                        this.__label = label;                     
+                        label.innerText = this.label;                       
+                        this.appendChild(label);  
 
                         var container = document.createElement('div');
+                        this.__container = container;
                         container.className= 'treez-file-path-container';                       
-                        self.appendChild(container);  
+                        this.appendChild(container);  
 
                         var leftSpan = document.createElement('span');
                         container.appendChild(leftSpan);                    
 
                         var textField = document.createElement('input');
-                        self.textField = textField;  
-
-                        if(self.value !== 'undefined'){
-                        	this.textField.value = self.value; 
-                        }  else {
-                        	this.textField.value = '';
-                        }
-                        
-                                           
+                        this.__textField = textField;                                            
                         textField.type='text' 
                         textField.className='treez-file-path-text-field'; 
                         textField.onchange = ()=>this.__textFieldChanged();                                              
@@ -66,7 +59,7 @@
                         container.appendChild(rightSpan); 
 
 					    var browseButton = document.createElement('input');
-					    self.browseButton = browseButton;	
+					    this.__browseButton = browseButton;	
 					    browseButton.className='treez-file-path-browse-button';					   
 					    browseButton.type='button';
 					    browseButton.title=' ';
@@ -74,21 +67,51 @@
                         rightSpan.appendChild(browseButton);   
 
                         var executeButton = document.createElement('input');
+                        this.__executeButton = executeButton;
                         executeButton.className='treez-file-path-play-button';	
                         executeButton.type="button";
                         executeButton.title="execute";
                         executeButton.onclick = ()=>this.__execute();   
                         rightSpan.appendChild(executeButton);                    		
                     }
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
                 }
+                
+                updateElements(newValue){
+                	if(this.__textField){ 
+                	 	if(newValue !== undefined){
+                        	this.__textField.value = newValue; 
+                        }  else {
+                        	this.__textField.value = '';
+                        }											
+					}					    
+                }    
+               
+                disableElements(booleanValue){
+                	if(this.__textField){   
+                		this.__textField.disabled = booleanValue;
+                		this.__browseButton.disabled = booleanValue;
+                		this.__executeButton.disabled = booleanValue;
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__label){   
+                		this.hide(this.__label, booleanValue);
+                		this.hide(this.__container, booleanValue); 
+                	}
+                }	
 
                 __execute(){
-                	var command = this.textField.value;
+                	var command = this.__textField.value;
                 	window.treezTerminal.execute(command, undefined, console.error);                     
                 }
 
                 __textFieldChanged(){
-                	this.value = this.textField.value;                	             	
+                	this.value = this.__textField.value;                	             	
                 }
 
                 __browseFilePath(){                  
@@ -132,8 +155,8 @@
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     	}                                           
                     } 
                 }               

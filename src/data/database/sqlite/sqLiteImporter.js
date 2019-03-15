@@ -1,32 +1,12 @@
-package org.treez.data.database.sqlite;
+import Importer from './../importer.js';
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.List;
+export default class SqLiteImporter extends Importer {
 
-import org.apache.log4j.Logger;
-import org.treez.core.data.column.ColumnBlueprint;
-import org.treez.core.data.column.ColumnType;
-import org.treez.core.data.column.ColumnTypeConverter;
-import org.treez.core.data.foreignkey.ForeignKeyBlueprint;
-import org.treez.core.data.index.IndexBlueprint;
-import org.treez.core.data.row.Row;
-import org.treez.core.data.table.TreezTable;
-import org.treez.data.database.AbstractImporter;
-import org.treez.data.database.ResultSetProcessor;
-import org.treez.data.database.TableData;
-
-public final class SqLiteImporter extends AbstractImporter {
-
-	private static Logger LOG = Logger.getLogger(SqLiteImporter.class);
-
-	//#region CONSTRUCTORS
-
-	/**
-	 * Private Constructor that prevents construction
-	 */
-	private SqLiteImporter() {}
+	constructor() {
+		
+	}
+	
+	/*
 
 	//#end region
 
@@ -407,6 +387,6 @@ public final class SqLiteImporter extends AbstractImporter {
 		return row;
 	}
 
-	//#end region
+	*/
 
 }

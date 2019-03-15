@@ -1,37 +1,14 @@
-package org.treez.data.tableImport;
+import Importer from './../importer.js';
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+export default class TextImporter extends Importer {
 
-import org.apache.log4j.Logger;
-import org.treez.core.data.column.ColumnType;
+	constructor() {
+		
+	}
 
-/**
- * Imports table data from a text file
- */
-public final class TextDataTableImporter {
+	/*
 
-	private static final Logger LOG = Logger.getLogger(TextDataTableImporter.class);
 
-	//#region CONSTRUCTORS
-
-	/**
-	 * Private Constructor that prevents construction
-	 */
-	private TextDataTableImporter() {}
-
-	//#end region
-
-	//#region METHODS
-
-	/**
-	 * @param filePath
-	 * @return
-	 */
 	public static TableData importData(String filePath, String columnSeparator, int rowLimit) {
 
 		//read tab separated entries
@@ -71,11 +48,7 @@ public final class TextDataTableImporter {
 		return tableData;
 	}
 
-	/**
-	 * Checks if the data has at least two rows (header and data) and if the number of columns is equal for each row
-	 *
-	 * @param data
-	 */
+
 	private static void checkDataSizes(List<List<Object>> data) {
 		int numberOfLines = data.size();
 
@@ -102,12 +75,7 @@ public final class TextDataTableImporter {
 
 	}
 
-	/**
-	 * Reads data from a text file
-	 *
-	 * @param filePath
-	 * @return
-	 */
+
 	private static List<List<Object>> readTextData(String filePath, String columnSeparator, int rowLimit) {
 
 		List<List<Object>> lines = new ArrayList<>();
@@ -129,6 +97,6 @@ public final class TextDataTableImporter {
 		return lines;
 	}
 
-	//#end region
+	*/
 
 }

@@ -12,7 +12,7 @@
             	
             	get value() {
 					 let stringValue = this.getAttribute('value');
-					 return TreezErrorBarStyleValue.byName(stringValue);
+					 return TreezErrorBarStyleValue.forName(stringValue);
 				}  
             	
             	set value(newValue) {

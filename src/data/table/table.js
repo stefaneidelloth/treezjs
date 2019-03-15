@@ -1,12 +1,12 @@
 
-import Atom from './../../core/atom/atom.js';
+import ComponentAtom from './../../core/component/componentAtom.js';
 import ColumnFolder from './../column/columnFolder.js';
 import TreeViewAction from './../../core/treeview/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import TableSource from './tableSource.js';
 import Row from './../row/row.js';
 
-export default class Table extends Atom {
+export default class Table extends ComponentAtom {
 	
 	constructor(name) {	
 		super(name);
@@ -14,6 +14,15 @@ export default class Table extends Atom {
 		this.__rows = [];
 		this.__pagedRows = undefined;
 		this.__rowIndexOffset = 0;
+		
+		this.__firstRowIndex = 1;
+		this.__lastRowIndex = 1;
+		this.__numberOfRows = 1;
+		
+		this.__pageIndex = 1;
+		this.__numberOfPages = 1;
+		this.__maxNumberOfRowsPerPage = 1000;
+		
 		this.__isCaching = false;
 		this.__COLUMN_SEPARATOR = ';';
 		this.__ROW_SEPARATOR = '\n';
@@ -224,6 +233,80 @@ export default class Table extends Atom {
 	}
 	
 	__createPagination(parent, treeView){
+		var pagination = parent.append('div')
+								.className('treez-table-pagination');
+		
+		pagination.append('span')
+			.text('Rows ')
+			
+		pagination.append('treez-text-label')
+			.bindValue(this, ()=>this.__firstRowIndex);
+		
+		pagination.append('span')
+			.text('...')
+			
+		pagination.append('treez-text-label')
+			.bindValue(this, ()=>this.__lastRowIndex);
+		
+		pagination.append('span')
+		.text(' of ')
+		
+		pagination.append('treez-text-label')
+			.bindValue(this, ()=>this.__numberOfRows);
+		
+		pagination.append('span')
+		.text('   Page ')
+		
+		pagination.append('input')
+			.attr('type','button')
+			.className('treez-table-first-button')
+			.title('First')
+			.onClick(()=>this.__firstPage());
+		
+		pagination.append('input')
+			.attr('type','button')
+			.className('treez-table-previous-button')
+			.title('Previous')
+			.onClick(()=>this.__previousPage());
+		
+		pagination.append('treez-text-field')
+			.attr('width', '40px')
+			.bindValue(this, ()=>this.__pageIndex);
+		
+		pagination.append('input')
+			.attr('type','button')
+			.className('treez-table-next-button')
+			.title('First')
+			.onClick(()=>this.__nextPage());
+	
+		pagination.append('input')
+			.attr('type','button')
+			.className('treez-table-last-button')
+			.title('Previous')
+			.onClick(()=>this.__lastPage());
+		
+		pagination.append('span')
+		.text(' of ')
+		
+		pagination.append('treez-text-label')
+			.bindValue(this, ()=>this.__numberOfPages);
+			
+			
+	}
+	
+	__firstPage(){
+		
+	}
+	
+	__previousPage(){
+		
+	}
+	
+	__nextPage(){
+		
+	}
+	
+	__lastPage(){
 		
 	}
 	

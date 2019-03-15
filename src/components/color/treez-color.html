@@ -24,7 +24,7 @@
 				}  
 				
 				get value(){
-					return this.colorPicker.value;
+					return this.__colorPicker.value;
 				}
 
 				set value(value) {
@@ -33,67 +33,73 @@
 						throw new Error("Value for color must not be undefined!");
 					}
 					
-					let hexString = this.getColorHexString(value);					
+					let hexString = this.__getColorHexString(value);					
 					this.setAttribute('value', hexString);
 				}  			
 
                 constructor(){
-                    super();                     
-                    this.labelElement=undefined; 
-                    this.colorPicker=undefined;  
+                    super();
+                    this.__container=undefined;
+                    this.__label=undefined; 
+                    this.__colorPicker=undefined;  
                 }            	
 
                 connectedCallback() {
-                	var self = this;
+                	
+                    if(!this.__colorPicker){   
 
-                    if(!self.colorPicker){   
-
-						var container = document.createElement('div');  
+						var container = document.createElement('div');
+						this.__container = container;
 						container.setAttribute("class","treez-color-container");
-						self.appendChild(container);      
+						this.appendChild(container);      
 
-						var labelElement = document.createElement('label');
-						this.labelElement = labelElement;
-						labelElement.className = 'treez-color-label';
-						labelElement.innerText = self.label;                                            
-						container.appendChild(labelElement);             
+						var label = document.createElement('label');
+						this.__label = label;
+						label.className = 'treez-color-label';
+						label.innerText = this.label;                                            
+						container.appendChild(label);             
 
 						var colorPicker = document.createElement('input');                       
-						self.colorPicker = colorPicker;		
+						this.__colorPicker = colorPicker;		
 						container.appendChild(colorPicker); 
 						colorPicker.className = 'treez-color-input';
-						colorPicker.type='color';
-						colorPicker.value= self.getAttribute("value");							
-						colorPicker.onchange = ()=>this.__colorChanged(); 					
-						                                       
-                                                              		
+						colorPicker.type='color';            		
                     }
-                }  				
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
+                }               
 
-                __colorChanged(){
-                	
-				                 	
-                } 
-
-				
+                updateElements(newValue){
+                	if(this.__colorPicker){                    	
+						this.__colorPicker.value= newValue; 
+                	}
+                }	
+               
+                disableElements(booleanValue){
+                	if(this.__colorPicker){   
+                		this.__colorPicker.disabled = booleanValue;
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__container){  
+                		this.hide(this.__container, booleanValue);                		
+                	}
+                }				
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     	}                                           
                     } 					
 					
-                }  
+                }                 
 
-                updateElements(newValue){
-                	if(this.colorPicker){                    	
-						this.colorPicker.value= newValue; 
-                	}					    
-                } 
-
-                getColorHexString(value){
+                __getColorHexString(value){
                 	
                 	if(value.startsWith('#')){
                 		return value;

@@ -4,23 +4,64 @@
 			class TreezElement extends HTMLElement {
 
 				static get observedAttributes() {
-                    return ['value'];
+                    return ['value', 'disabled', 'hidden'];
                 }
 
+				//The purpose of the following properties is to 
+				//translate html string attribute values to and from
+				//values that can be of other types, e. g. boolean
+				//
+				//In html a boolen value is always represented by a string attribute.
+				//The only way to represent fals is to omit the value, e.g.
+				//<input type='checkbox' >
+				//vs.
+				//<input type='checkbox' checked> or <input type='checkbox' checked='foo'>
+				
+				
                 get value() {
-				  return this.getAttribute('value');
+				  var stringValue = this.getAttribute('value')
+				  return this.convertFromStringValue(stringValue);
 				}
 
-				set value(newValue) {
-				  this.setAttribute('value', newValue);	  
+				set value(value) {
+				  var stringValue = this.convertToStringValue(value);
+				  if(stringValue === null){
+					  this.removeAttribute('value');
+				  } else {
+				  	this.setAttribute('value', stringValue);
+				  }
+				}
 
-				}     
+				get disabled() {
+					var stringValue = this.getAttribute('disabled')
+				    return  !(stringValue === null);
+				}
+
+				set disabled(booleanValue) {
+					if(booleanValue){
+						this.setAttribute('disabled','')
+					} else {
+						this.removeAttribute('disabled');
+					}				 	  
+				}  
+
+				get hidden() {
+					var stringValue = this.getAttribute('hidden')
+				    return  !(stringValue === null);
+				}
+
+				set hidden(booleanValue) {
+					if(booleanValue){
+						this.setAttribute('hidden','')
+					} else {
+						this.removeAttribute('hidden');
+					}	  
+				}        
 
 				constructor(){
 					super();	
-					this.__parentAtom=undefined;
-				} 
-				           
+					this.__parentAtom=undefined;								
+				} 				           
 
 				bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
 					this.__parentAtom = parentAtom;
@@ -34,6 +75,39 @@
 					this.__modifyPropertyToUpdateElementOnPropertyChanges(parentAtom, propertyName);	
 				}
 
+				//Can be overrriden by inheriting classes to implement different property types
+				convertFromStringValue(value){
+					return value;
+				}
+				
+				//Can be overrriden by inheriting classes to implement different property types
+				//Return null if you want an html attribute to be removed (="set to false")
+				convertToStringValue(value){
+					return value;
+				}
+				
+				//should be overridden by inheriting classes
+                updateElements(newValue){
+					throw new Error('Not yet implemented for ' + this.constructor.name);
+                }	
+
+                //should be overridden by inheriting classes
+                disableElements(booleanValue){
+                	throw new Error('Not yet implemented for ' + this.constructor.name);
+                }	
+
+                //should be overridden by inheriting classes
+                hideElements(booleanValue){
+                	throw new Error('Not yet implemented for ' + this.constructor.name);
+                }	
+                
+                hide(element, booleanValue){
+                	element.style.display = booleanValue
+							         			?'none'
+							         			:null;
+                }
+               
+
                 //we want to avoid hard coded strings to pass/identify properties
                 //therefore a lambda expression is passed to identify the property
                 //this method extracts the property name using introspection
@@ -45,27 +119,31 @@
 					}
 				}
 
-				__addListenerToUpdatePropertyOnElementChanges(parent, propertyName){				
+				__addListenerToUpdatePropertyOnElementChanges(parentAtom, propertyName){				
 
 					this.addEventListener('input', (event)=>{ 
-						  var oldValue = parent[propertyName];
-						  var newValue = event.target.value;
-						  if(newValue != oldValue){
-							parent[propertyName] = newValue; 							     
+						  var oldValue = parentAtom[propertyName];
+						  var newInputValue = event.target.value;
+						  var newValue = this.convertFromStringValue(newInputValue);
+						  if(newValue !== oldValue){
+							parentAtom[propertyName] = newValue; 							     
 						  }    	
 					}); 					
 				}
 
-				__modifyPropertyToUpdateElementOnPropertyChanges(parent, propertyName){
+				__modifyPropertyToUpdateElementOnPropertyChanges(parentAtom, propertyName){
 
 					let self = this;
 
-					let propertyDescriptor = Object.getOwnPropertyDescriptor(parent, propertyName);
+					let propertyDescriptor = Object.getOwnPropertyDescriptor(parentAtom, propertyName);
 
-					let privateValue = parent[propertyName];
+					
+
+					let privateValue = parentAtom[propertyName];
+					
 
 					Object.defineProperty(
-					   parent, 
+					   parentAtom, 
 					   propertyName, 
 					   {
 						get: __getPropertyValueProxy,
@@ -75,7 +153,7 @@
 				
 
 					function __getPropertyValueProxy(){
-						let propertyAlreadyHasAGetter = propertyDescriptor.get !== undefined;
+						let propertyAlreadyHasAGetter = propertyDescriptor && (propertyDescriptor.get !== undefined);
 						if(propertyAlreadyHasAGetter){
 							return propertyDescriptor.get();
 						} else {
@@ -84,36 +162,46 @@
 					}
 
 					function __setPropertyValueProxy(newValue){
+						   
 							let oldValue = privateValue;
 							if(newValue != oldValue){
-								let propertyAlreadyHasASetter = propertyDescriptor.set !== undefined;
+								let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
 								 if(propertyAlreadyHasASetter){
 									propertyDescriptor.set(newValue);
 								 } 
 								 privateValue = newValue;
-								 __updateElementValue(newValue);				
-																			         
+								 self.value = newValue;																		         
 							}     
 					}	
 
-					function __updateElementValue(newValue){
-						self.value = newValue;
-					}			
+							
 				}
 
-				attributeChangedCallback(attr, oldValue, newValue) {
+				attributeChangedCallback(attr, oldStringValue, newStringValue) {
                      if(attr==='value'){                      	                		
-						if(newValue!==oldValue){	
+						if(newStringValue!==oldStringValue){
+							var newValue = this.convertFromStringValue(newStringValue);
 							this.updateElements(newValue);							
 							this.__dispatchInputEvent();
 						}
-                     }                     
+                     }    
+
+                     if(attr==='disabled'){                      	                		
+						if(newStringValue!==oldStringValue){	
+							var newValue = !(newStringValue === null);
+							this.disableElements(newValue);
+						}
+                     }  
+
+                      if(attr==='hidden'){                      	                		
+						if(newStringValue!==oldStringValue){	
+							var newValue = !(newStringValue === null);
+							this.hideElements(newValue);							
+						}
+                     }                   
                 }
 
-				//should be overridden by inheriting classes
-                updateElements(newValue){
-
-                }				
+						
 
 				__dispatchInputEvent(){
 					var event = new Event(

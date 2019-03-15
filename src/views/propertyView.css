@@ -94,3 +94,30 @@
 .treez-table-width-button {	
 	background: url(../../icons/resize_width.png) center center no-repeat;	
 }
+
+.treez-table-pagination {
+	
+}
+
+.treez-table-pagination input[type=button] {	
+	border:none;
+	width:16px;
+	height:16px;
+	margin:2px;
+}
+
+.treez-table-first-button {
+	background: url(../../icons/first.png) center center no-repeat;	
+}
+
+.treez-table-previous-button {
+	background: url(../../icons/previous.png) center center no-repeat;	
+}
+
+.treez-table-next-button {
+	background: url(../../icons/next.png) center center no-repeat;	
+}
+
+.treez-table-last-button {
+	background: url(../../icons/last.png) center center no-repeat;	
+}

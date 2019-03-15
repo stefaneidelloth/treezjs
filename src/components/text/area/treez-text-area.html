@@ -10,95 +10,87 @@
         <script>
 
             class TreezTextArea extends TreezElement {
+            	
+            	static get observedAttributes() {
+            		return TreezElement.observedAttributes.concat(['label']);                    
+                }
 
-            	 get label() {
+            	get label() {
 				  return this.getAttribute('label');
 				}
 
 				set label(newValue) {
 				  this.setAttribute('label', newValue);	  
 
-				}  
-
-				 get enabled() {
-				  return this.getAttribute('enabled');
-				}
-
-				set enabled(newValue) {
-				  this.setAttribute('enabled', newValue);	
-				}  
-
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label','enabled']);                    
-                }
+				}             	
 
                 constructor(){
                     super();                                  
-                    this.labelElement=undefined;   
-                    this.textArea=undefined;                            
+                    this.__label = undefined;  
+                    this.__container = undefined;
+                    this.__textArea = undefined;                            
                 }            	
 
                 connectedCallback() {
-                	var self = this;
+                	
 
-                    if(!self.labelElement){                       
+                    if(!this.__label){                     
 
-                        var labelElement = document.createElement('label');  
-                        self.labelElement = labelElement;                     
-                        labelElement.innerText = self.label;                       
-                        self.appendChild(labelElement);  
+                        var label = document.createElement('label');  
+                        this.__label = label;                     
+                        label.innerText = this.label;                       
+                        this.appendChild(label);  
 
                         var container = document.createElement('div');
-                        self.appendChild(container);                                        
+                        this.__container = container;
+                        this.appendChild(container);                                        
 
                         var textArea = document.createElement('textarea');                       
-                        self.textArea = textArea;   
-                        
-                        if(self.value !== 'undefined'){
-                        	textArea.value = self.value; 
-                        }  else {
-                        	textArea.value = ''; 
-                        }
-                        
-
-                        if (self.enabled === false || self.enabled === 'false' || self.enabled === 'False'){
-                        	 textArea.disabled = true;  
-                        }                          
-                                          
+                        this.__textArea = textArea;
                         textArea.onchange = ()=>this.__textAreaChanged();                                              
-                        container.appendChild(textArea);  
-                                                              		
+                        container.appendChild(textArea);    		
                     }
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
                 }
+                
+                updateElements(newValue){
+                	if(this.__textArea){                    	
+						this.__textArea.value = newValue; 
+                	}					    
+                } 
+                
+                
+                disableElements(booleanValue){
+                	if(this.__textArea){   
+                		this.__textArea.disabled = booleanValue;
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__label){   
+                		this.hide(this.__label, booleanValue);
+                		this.hide(this.__container, booleanValue); 
+                	}
+                }	  
 
                 __textAreaChanged(){
-                	this.value = this.textArea.value;                	
+                	this.value = this.__textArea.value;                	
                 }  
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     	}                                           
                     } 
-                    if(attr==='enabled'){
-                    	if(this.textArea){
-                    		if (newValue === 'false' || newValue === 'False'){
-                    			this.textArea.disabled = true;
-                    		} else {
-                    			 this.textArea.disabled= !newValue;   
-                    		}
-                    		
-                    	}                                           
-                    } 
+                   
                 }  
 
-                updateElements(newValue){
-                	if(this.textArea){                    	
-						this.textArea.value= newValue; 
-                	}					    
-                }                          
+                                        
             }
             window.customElements.define('treez-text-area', TreezTextArea);                    
 

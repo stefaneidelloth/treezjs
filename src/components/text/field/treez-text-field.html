@@ -12,7 +12,7 @@
             class TreezTextField extends TreezElement {
             	
             	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label','enabled']);                    
+            		return TreezElement.observedAttributes.concat(['label']);                    
                 }
 
             	get label() {
@@ -24,76 +24,69 @@
 
 				}  
 
-				get enabled() {
-				  return this.getAttribute('enabled');
-				}
-
-				set enabled(newValue) {
-				  this.setAttribute('enabled', newValue);	
-				}  
-
-            	
-
                 constructor(){
                     super();                                  
-                    this.labelElement=undefined;   
-                    this.textField=undefined;                            
+                    this.__label = undefined;   
+                    this.__textField = undefined;                            
                 }            	
 
                 connectedCallback() {
-                	var self = this;
+                	
+                    if(!this.__label){                       
 
-                    if(!self.labelElement){                       
-
-                        var labelElement = document.createElement('label');  
-                        self.labelElement = labelElement;                     
-                        labelElement.innerText = self.label;                       
-                        self.appendChild(labelElement);                                                            
+                        var label = document.createElement('label');  
+                        this.__label = label;                     
+                        label.innerText = this.label;                       
+                        this.appendChild(label);                                                            
 
                         var textField = document.createElement('input'); 
-                        self.appendChild(textField);                          
-                        self.textField = textField;                       
-                        textField.setAttribute('class','treez-text-field')
-                        textField.value = self.value; 
-
-                        if (self.enabled === false || self.enabled === 'false' || self.enabled === 'False'){
-                        	 textField.disabled = true;  
-                        }                          
-                                          
-                        textField.onchange = ()=>this.__textFieldChanged();                                              
-                       
-                                                              		
+                        this.__textField = textField;
+                        this.appendChild(textField); 
+                        textField.setAttribute('class','treez-text-field')                
+                        textField.onchange = ()=>this.__textFieldChanged(); 
                     }
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
                 }
+                
+                updateElements(newValue){
+                	if(this.__textField){                    	
+						this.__textField.value= newValue; 
+                	}					    
+                } 
+
+                disableElements(newValue){
+					if(this.__textField){                    	
+						this.__textField.disabled= newValue; 
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__label){   
+                		this.hide(this.__label, booleanValue);
+                		this.hide(this.__textField, booleanValue); 
+                	}
+                }	  
 
                 __textFieldChanged(){
-                	this.value = this.textField.value;                	
+                	this.value = this.__textField.value;                	
                 }  
 
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     	}                                           
                     } 
-                    if(attr==='enabled'){
-                    	if(this.textField){
-                    		if (newValue === 'false' || newValue === 'False'){
-                    			this.textField.disabled = true;
-                    		} else {
-                    			 this.textField.disabled= !newValue;   
-                    		}
-                    		
-                    	}                                           
-                    } 
+                   
                 }  
 
-                updateElements(newValue){
-                	if(this.textField){                    	
-						this.textField.value= newValue; 
-                	}					    
-                }                          
+                
+               
+                                      
             }
             window.customElements.define('treez-text-field', TreezTextField);                    
 

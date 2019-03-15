@@ -12,35 +12,36 @@
             class TreezImageComboBox extends TreezComboBox {                
 				
                 constructor(){
-                    super();                                           
+                    super();  
+                    this.__comboButton = undefined;
+                    this.__optionPanel = undefined;
                 }                
 
 				connectedCallback() {
-                	var self = this;
+                	
 
-                    if(!self.comboBox){   
+                    if(!this.__comboBox){   
 
 						var container = document.createElement('div');    
+						this.__container = container;
 						container.setAttribute("class","treez-combo-box-container");
-						self.appendChild(container);      
+						this.appendChild(container);      
 
 						var labelDiv = document.createElement('div');
 						container.appendChild(labelDiv);
 						
-						var labelElement = document.createElement('label');
-						this.labelElement = labelElement;
-						container.appendChild(labelElement);   
-						labelElement.innerText = self.label;   
-						labelElement.setAttribute("class","treez-combo-box-label");							          
+						var label = document.createElement('label');
+						this.__label = label;
+						container.appendChild(label);   
+						label.innerText = this.label;   
+						label.setAttribute("class","treez-combo-box-label");							          
 
 						var comboBox = document.createElement('div');                       
-						self.comboBox = comboBox;	
+						this.__comboBox = comboBox;	
 						container.appendChild(comboBox);
 						comboBox.setAttribute("class","treez-combo-box");	
 						comboBox.tabIndex=0; //required for onblur event to work
-						comboBox.onblur = () =>{ 
-							self.__collapseComboBox(); 
-						};
+						comboBox.onblur = () => this.__collapseComboBox();
 						
 						var comboBoxDisplay = document.createElement('div');
 						comboBoxDisplay.setAttribute("class","treez-combo-box-display");	
@@ -48,52 +49,67 @@
 
                         var imageLabel = document.createElement('img');
 						comboBoxDisplay.appendChild(imageLabel);
-						this.imageLabel = imageLabel;
-						imageLabel.setAttribute("class","treez-image-label");						
-
-						this.__updateImageLabel();												
+						this.__imageLabel = imageLabel;
+						imageLabel.setAttribute("class","treez-image-label");															
 						imageLabel.onclick = ()=>this.__expandComboBox();
 
                         var comboButton = document.createElement('span');
+                        this.__comboBotton = comboButton;
                         comboBoxDisplay.appendChild(comboButton);						
 						comboButton.setAttribute("class","treez-combo-button");	
 						comboButton.innerText = "▾";
 						comboButton.onclick = ()=>this.__expandComboBox();
 
 						let optionPanel = document.createElement('div');
-						this.optionPanel = optionPanel;						
+						this.__optionPanel = optionPanel;						
 						comboBox.appendChild(optionPanel);
 						optionPanel.setAttribute("class","treez-option-panel");	
 						
-						if(self.options){
+						if(this.options){
                            this.__recreateOptionTags();						  
 						}  
 						
-						self.__collapseComboBox();                                                              		
+						this.__collapseComboBox();                                                              		
                     }
+                    
+                    this.updateElements(this.value);	
+                    this.disableElements(this.disabled)
+					this.hideElements(this.hidden); 
                 }  
 
                 updateElements(newValue){
                  	this.value=newValue.toString();
-                	if(this.imageLabel){                    	
+                	if(this.__imageLabel){                    	
 						this.__updateImageLabel(); 
                 	}					    
-                } 	
+                } 
+               
+                disableElements(booleanValue){
+                	if(this.__comboBox){                   		
+                		this.__comboButton.disabled = booleanValue;                		
+                	}
+                }	
+               
+                hideElements(booleanValue){
+                	if(this.__container){                 		
+                		this.hide(this.__container, booleanValue); 
+                	}
+                }	
 
                 __updateImageLabel(){
                 	let imageUrl = this.__selectedImageUrl();
                 	
 					if(imageUrl){
-						this.imageLabel.setAttribute("src",imageUrl);							
+						this.__imageLabel.setAttribute('src', imageUrl);							
 					}
                 }
 
 				__expandComboBox(){
-					this.optionPanel.style="display:block;";
+					this.__optionPanel.style='display:block;';
 				}	
 
 				__collapseComboBox(){
-					this.optionPanel.style="display:none;";
+					this.__optionPanel.style='display:none;';
 				}	
 
 				__selectedImageUrl(){
@@ -112,7 +128,7 @@
 				}		
 
 				__imageFormat(){
-					return ".png";
+					return '.png';
 				}
 
 				__recreateOptionTags(){
@@ -124,14 +140,14 @@
 					this.__optionItems().forEach(option=>{					
 						let optionElement = document.createElement('div')
 						optionElement.setAttribute("class","treez-option");
-						this.optionPanel.appendChild(optionElement);
+						self.__optionPanel.appendChild(optionElement);
 						
 						let optionImage = document.createElement('img');
 						optionImage.setAttribute("class","treez-option-image");
 						optionImage.title = option;
 						optionElement.appendChild(optionImage);	
 
-					 	let optionImageUrl = option + this.__imageFormat();
+					 	let optionImageUrl = option + self.__imageFormat();
 					 	optionImage.src=optionImageUrl;					 	
 
 					 	optionElement.onclick = ()=>{
@@ -141,12 +157,12 @@
 					   
 					});
 					
-					self.__refreshSelectedValue();
+					this.__refreshSelectedValue();
 							
 				}
 
 				__clearOptionPanel(){
-					var optionPanel = this.optionPanel;  
+					var optionPanel = this.__optionPanel;  
 					while (optionPanel.hasChildNodes()) {
 						optionPanel.removeChild(optionPanel.lastChild);
 					}
