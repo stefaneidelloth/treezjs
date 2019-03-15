@@ -123,8 +123,18 @@
 
 					this.addEventListener('input', (event)=>{ 
 						  var oldValue = parentAtom[propertyName];
-						  var newInputValue = event.target.value;
-						  var newValue = this.convertFromStringValue(newInputValue);
+
+						  var target = event.target;
+
+						  var newInputValue
+						  if(target instanceof TreezElement){
+								newInputValue = target.getAttribute('value');
+						  } else{
+						  	newInputValue = target.value;
+						  }
+
+						 
+						  var newValue = this.convertFromStringValue(newInputValue);						
 						  if(newValue !== oldValue){
 							parentAtom[propertyName] = newValue; 							     
 						  }    	

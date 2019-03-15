@@ -93,7 +93,7 @@ export default class TableImport extends Model {
 			.label('Source type')
 			.nodeAttr('options', TableSourceType)			
 			.bindValue(this,()=>this.sourceType)
-			.onChange(()=>this.__enableAndDisableDependentComponents());
+			.onChange(()=>this.__showAndHideDependentComponents());
 		
 		
 		//if true, the target table is linked to the original source
@@ -104,7 +104,7 @@ export default class TableImport extends Model {
 		this.__isLinkingSourceSelection = sectionContent.append('treez-check-box')
 			.label('Link source')
 			.bindValue(this, ()=>this.isLinkingSource)
-			.onChange(()=>this.__enableAndDisableDependentComponents());
+			.onChange(()=>this.__showAndHideDependentComponents());
 
 		
 
@@ -127,7 +127,7 @@ export default class TableImport extends Model {
 		this.__isInheritingSourceFilePathSelection = sectionContent.append('treez-check-box')
 			.label('Inherit source file path')			
 			.bindValue(this, ()=>this.isInheritingSourceFilePath)
-			.onChange(()=>this.__enableAndDisableDependentComponents());
+			.onChange(()=>this.__showAndHideDependentComponents());
 
 		this.__sourceFilePathSelection = section.append('treez-file-path')
 			.label('Source file')
@@ -164,7 +164,7 @@ export default class TableImport extends Model {
 		this.__isFilteringforJobIdSelection = sectionContent.append('treez-check-box')
 			.label('Filter rows with JobId')			
 			.bindValue(this, ()=>this.isFilteringforJob)
-			.onChange(()=>this.__enableAndDisableJobComponents());		
+			.onChange(()=>this.__showAndHideJobComponents());		
 
 		this.__customJobIdSelection = section.append('treez-text-field')
 			.label('JobId')			
@@ -178,7 +178,7 @@ export default class TableImport extends Model {
 		this.__isUsingCustomQuerySelection = sectionContent.append('treez-check-box')
 			.label('Use custom query')			
 			.bindValue(this, ()=>this.isUsingCustomQuery)
-			.onChange(()=>this.__enableAndDisableQueryComponents());
+			.onChange(()=>this.__showAndHideQueryComponents());
 
 		this.__customQuerySelection = section.append('treez-text-field')
 			.label('Custom query')
@@ -206,42 +206,20 @@ export default class TableImport extends Model {
 		
 	}
 	
-	__enableAndDisableLinkComponents() {		
+	__showAndHideLinkComponents() {		
 		if (this.isLinkingSource) {
-			this.__rowLimitSelection.disable();
-			this.__appendDataSelection.disable();			
+			this.__rowLimitSelection.hide();
+			this.__appendDataSelection.hide();			
 		} else {
-			this.__rowLimitSelection.enable();
-			this.__appendDataSelection.enable();
-		}
-	}
-
-	__enableAndDisableJobComponents() {		
-		if (this.isFilteringforJobId) {
-			this.__customJobIdSelection.enable();
-		} else {
-			this.__customJobIdSelection.disable();
-		}
-	}
-
-	__enableAndDisableQueryComponents() {		
-		if (this.isUsingCustomQuery) {
-			this.__customQuerySelection.enable();
-			this.__tableNameSelection.disable();
-			this.__isFilteringforJobIdSelection.disable();
-			this.__customJobIdSelection.enable();
-		} else {
-			this.__customQuerySelection.disable();
-			this.__tableNameSelection.enable();
-			this.__isFilteringforJobIdSelection.enable();
-			this.__enableAndDisableJobComponents();
+			this.__rowLimitSelection.show();
+			this.__appendDataSelection.show();
 		}
 	}
 
 	
 
 	afterCreateControlAdaptionHook() {
-		this.__enableAndDisableDependentComponents();
+		this.__showAndHideDependentComponents();
 		this.__updatedInheritedSourcePath();
 	}
 
@@ -251,16 +229,16 @@ export default class TableImport extends Model {
 		}
 	}
 
-	__enableAndDisableDependentComponents() {		
+	__showAndHideDependentComponents() {		
 		switch (this.sourceType) {
 		case TableSourceType.Csv:
-			this.__enableAndDisableCompontentsForCsv();
+			this.__showAndHideCompontentsForCsv();
 			break;
 		case TableSourceType.SqLite:
-			this.__enableAndDisableCompontentsForSqLite();
+			this.__showAndHideCompontentsForSqLite();
 			break;
 		case TableSourceType.MySql:
-			this.__enableAndDisableCompontentsForMySql();
+			this.__showAndHideCompontentsForMySql();
 			break;
 		default:
 			var message = 'The TableSourceType ' + this.sourceType + ' is not yet implemented.';
@@ -268,80 +246,107 @@ export default class TableImport extends Model {
 		}
 	}
 
-	__enableAndDisableCompontentsForCsv() {
+	__showAndHideCompontentsForCsv() {
 
-		this.__isLinkingSourceSelection.disable(); //TODO: check if csv can be read paginated. If so, it might make sense to enable this
-		this.__isFilteringforJobIdSelection.disable();
+		this.__isLinkingSourceSelection.hide(); //TODO: check if csv can be read paginated. If so, it might make sense to show this
+		
+		this.__isFilteringforJobIdSelection.show();		
+		this.__showAndHideJobComponents()
 
-		this.__isInheritingSourceFilePathSelection.enable();
+		this.__isInheritingSourceFilePathSelection.show();
 	
 		if(this.isInheritingSourceFilePath){
-			this.__sourceFilePathSelection.disable();
-			this.__columnSeparatorSelection.disable();
+			this.__sourceFilePathSelection.hide();
+			this.__columnSeparatorSelection.hide();
 		} else {
-			this.__sourceFilePathSelection.enable();
-			this.__columnSeparatorSelection.enable();
+			this.__sourceFilePathSelection.show();
+			this.__columnSeparatorSelection.show();
 		}
 		
 
-		this.__hostSelection.disable();
-		this.__portSelection.disable();
-		this.__userSelection.disable();
-		this.__passwordSelection.disable();
-		this.__schemaSelection.disable();
-		this.__tableNameSelection.disable();
+		this.__hostSelection.hide();
+		this.__portSelection.hide();
+		this.__userSelection.hide();
+		this.__passwordSelection.hide();
+		this.__schemaSelection.hide();
+		this.__tableNameSelection.hide();
 
-		this.__isUsingCustomQuerySelection.disable();
+		this.__isUsingCustomQuerySelection.hide();
+		this.__customQuerySelection.hide();
 	}
 
-	__enableAndDisableCompontentsForSqLite() {
+	__showAndHideCompontentsForSqLite() {
 		
-		this.__isLinkingSourceSelection.enable(); 
-		this.__isFilteringforJobIdSelection.enable();		
+		this.__isLinkingSourceSelection.show(); 
+		this.__isFilteringforJobIdSelection.show();		
 
-		this.__isInheritingSourceFilePathSelection.enable();
+		this.__isInheritingSourceFilePathSelection.show();
 		
 		if(this.isInheritingSourceFilePath){
-			this.__sourceFilePathSelection.disable();			
+			this.__sourceFilePathSelection.hide();			
 		} else {
-			this.__sourceFilePathSelection.enable();			
+			this.__sourceFilePathSelection.show();			
 		}
 		
-		this.__columnSeparatorSelection.disable();
+		this.__columnSeparatorSelection.hide();
 		
-		this.__hostSelection.disable();
-		this.__portSelection.disable();
-		this.__userSelection.disable();		
-		this.__passwordSelection.enable();
+		this.__hostSelection.hide();
+		this.__portSelection.hide();
+		this.__userSelection.hide();		
+		this.__passwordSelection.show();
 		
-		this.__schemaSelection.disable();
-		this.__tableNameSelection.enable();
+		this.__schemaSelection.hide();
+		this.__tableNameSelection.show();
 		
-		this.__isUsingCustomQuerySelection.enable();		
-		this.__enableAndDisableQueryComponents();
+		this.__isUsingCustomQuerySelection.show();			
+		
+		this.__showAndHideQueryComponents();
 	}
 
-	__enableAndDisableCompontentsForMySql() {
+	__showAndHideCompontentsForMySql() {
 
-		this.__isLinkingSourceSelection.enable(); 
-		this.__isFilteringforJobIdSelection.enable();	
+		this.__isLinkingSourceSelection.show(); 
+		this.__isFilteringforJobIdSelection.show();	
 
-		this.__isInheritingSourceFilePathSelection.disable();
-		this.__sourceFilePathSelection.disable();		
+		this.__isInheritingSourceFilePathSelection.hide();
+		this.__sourceFilePathSelection.hide();		
 		
-		this.__columnSeparatorSelection.disable();
+		this.__columnSeparatorSelection.hide();
 		
-		this.__hostSelection.enable();
-		this.__portSelection.enable();
-		this.__userSelection.enable();
-		this.__passwordSelection.enable();
+		this.__hostSelection.show();
+		this.__portSelection.show();
+		this.__userSelection.show();
+		this.__passwordSelection.show();
 		
-		this.__schemaSelection.enable();
-		this.__tableNameSelection.enable();
+		this.__schemaSelection.show();
+		this.__tableNameSelection.show();
 		
-		this.__isUsingCustomQuerySelection.enable();		
-		this.__enableAndDisableQueryComponents();
+		this.__isUsingCustomQuerySelection.show();	
 		
+		this.__showAndHideQueryComponents();
+		
+	}
+	
+	__showAndHideQueryComponents() {		
+		if (this.isUsingCustomQuery) {
+			this.__customQuerySelection.show();
+			this.__tableNameSelection.hide();
+			this.__isFilteringforJobIdSelection.hide();
+			this.__customJobIdSelection.show();
+		} else {
+			this.__customQuerySelection.hide();
+			this.__tableNameSelection.show();
+			this.__isFilteringforJobIdSelection.show();
+			this.__showAndHideJobComponents();
+		}
+	}
+	
+	__showAndHideJobComponents() {		
+		if (this.isFilteringforJobId) {
+			this.__customJobIdSelection.show();
+		} else {
+			this.__customJobIdSelection.hide();
+		}
 	}
 
 	async doRunModel(treeView, monitor) {

@@ -59,7 +59,7 @@ export default class DTreezSelection {
 	}
 	
 	disable(){
-		this.__d3Selection.attr('enabled', false);		
+		this.__d3Selection.attr('disabled', '');		
 		return this;
 	}
 	
@@ -69,9 +69,14 @@ export default class DTreezSelection {
 	}
 	
 	enable(){
-		this.__d3Selection.attr('enabled', true);		
+		this.__d3Selection.attr('disabled', null);		
 		return this;
-	}	
+	}
+	
+	hide(){
+		this.__d3Selection.attr('hidden', '');		
+		return this;
+	}
 	
 	html(content){
 		this.__d3Selection.html(content);
@@ -153,6 +158,11 @@ export default class DTreezSelection {
 	selectAll(selector){
 		let selection = this.__d3Selection.selectAll(selector);
 		return new DTreezSelection(selection);
+	}
+	
+	show(){
+		this.__d3Selection.attr('hidden', null);		
+		return this;
 	}
 	
 	style(key, value){

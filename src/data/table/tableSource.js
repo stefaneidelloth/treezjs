@@ -63,7 +63,7 @@ export default class TableSource extends ComponentAtom  {
 		sectionContent.append('treez-combo-box')
 			.label('Source type')
 			.values(TableSourceType.values)
-			.onChange(()=> this.enableAndDisableDependentComponents())
+			.onChange(()=> this.showAndHideDependentComponents())
 			.bindValue(this, ()=>this.type);		
 
 	}
@@ -109,7 +109,7 @@ export default class TableSource extends ComponentAtom  {
 		
 		this.__isFilteringForJobSelection = sectionContent.append('treez-check-box')
 			.label('Filter rows with JobId')
-			.onChange(()=>this.enableAndDisableJobComponents())
+			.onChange(()=>this.showAndHideJobComponents())
 			.bindValue(this, this.isFilteringForJob);
 		
 		this.__jobIdSelection = sectionContent.append('treez-text-field')
@@ -118,7 +118,7 @@ export default class TableSource extends ComponentAtom  {
 	
 		this.__isUsingCustomQuerySelection = sectionContent.append('treez-check-box')
 			.label('Use custom query')
-			.onChange(()=>this.enableAndDisableJobComponents())
+			.onChange(()=>this.showAndHideJobComponents())
 			.bindValue(this, this.isUsingCustomQuery);		
 			
 		this.__customQuerySelection = sectionContent.append('treez-text-area')
@@ -128,19 +128,19 @@ export default class TableSource extends ComponentAtom  {
 	}
 
 	afterCreateControlAdaptionHook() {
-		this.__enableAndDisableDependentComponents();
+		this.__showAndHideDependentComponents();
 	}
 
-	__enableAndDisableDependentComponents() {		
+	__showAndHideDependentComponents() {		
 		switch (this.type) {
 		case TableSourceType.CsV:
-			this.__enableAndDisableElementsForCsv();
+			this.__showAndHideElementsForCsv();
 			break;
 		case TableSourceType.SqLite:
-			this.__enableAndDisableElementsForSqLite();
+			this.__showAndHideElementsForSqLite();
 			break;
 		case TableSourceType.MySql:
-			this.__enableAndDisableElementsForMySql();
+			this.__showAndHideElementsForMySql();
 			break;
 		default:
 			var message = 'The TableSourceType ' + this.type + ' is not yet implemented.';
@@ -148,7 +148,7 @@ export default class TableSource extends ComponentAtom  {
 		}
 	}
 
-	__enableAndDisableJobComponents() {	
+	__showAndHideJobComponents() {	
 		if (this.isFilteringForJob) {
 			this.__jobIdSelection.enable();
 		} else {
@@ -156,7 +156,7 @@ export default class TableSource extends ComponentAtom  {
 		}
 	}
 
-	__enableAndDisableQueryComponents() {
+	__showAndHideQueryComponents() {
 		
 		if (this.isUsingCustomQuery) {
 			this.__customQuerySelection.enable();
@@ -167,11 +167,11 @@ export default class TableSource extends ComponentAtom  {
 			this.__customQuerySelection.disable();
 			this.__tableNameSelection.enable();
 			this.__filterForJobSelection.enable();
-			enableAndDisableJobComponents();
+			showAndHideJobComponents();
 		}
 	}
 
-	__enableAndDisableElementsForCsv() {
+	__showAndHideElementsForCsv() {
 
 		this.__hostSelection.disable();
 		this.__portSelection.disable();
@@ -185,7 +185,7 @@ export default class TableSource extends ComponentAtom  {
 		this.__customQuerySelection.disable();
 	}
 
-	__enableAndDisableElementsForSqLite() {
+	__showAndHideElementsForSqLite() {
 
 		this.__columnSeparatorSelection.disable();
 		this.__hostSelection.disable();
@@ -196,10 +196,10 @@ export default class TableSource extends ComponentAtom  {
 		this.__tableNameSelection.enable();
 		this.__filterForJobSelection.enable();
 		this.__useCustomQuerySelection.enable();
-		enableAndDisableQueryComponents();
+		showAndHideQueryComponents();
 	}
 
-	__enableAndDisableElementsForMySql() {
+	__showAndHideElementsForMySql() {
 
 		this.__filePathSelection.disable();
 		this.__columnSeparatoSelectionr.disable();
@@ -211,7 +211,7 @@ export default class TableSource extends ComponentAtom  {
 		this.__tableNameSelection.enable();
 		this.__filterForJobSelection.enable();
 		this.__useCustomQuerySelection.enable();
-		enableAndDisableQueryComponents();
+		showAndHideQueryComponents();
 	}
 
 	

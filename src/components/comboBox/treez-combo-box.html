@@ -57,9 +57,9 @@
 
                 constructor(){
                     super(); 
-                    this.__container=undefined;
-                    this.__comboBox=undefined;   
-                    this.__labelElement=undefined;                         
+                    this.__container = undefined;
+                    this.__comboBox = undefined;   
+                    this.__label = undefined;                         
                 }            	
 
                 connectedCallback() {
@@ -71,11 +71,11 @@
 						container.className = 'treez-combo-box-container';
 						this.appendChild(container);      
 
-						var labelElement = document.createElement('label');
-						this.__labelElement = labelElement;
-						labelElement.className = 'treez-combo-box-label';
-						labelElement.innerText = self.label;                                            
-						container.appendChild(labelElement);             
+						var label = document.createElement('label');
+						this.__label = label;
+						label.className = 'treez-combo-box-label';
+						label.innerText = this.label;                                            
+						container.appendChild(label);             
 
 						var comboBox = document.createElement('select');                       
 						this.__comboBox = comboBox;	
@@ -151,13 +151,13 @@
                 attributeChangedCallback(attr, oldValue, newValue) {
                 	super.attributeChangedCallback(attr, oldValue, newValue) 
                     if(attr==='label'){
-                    	if(this.labelElement){
-                    		 this.labelElement.innerText= newValue;   
+                    	if(this.__label){
+                    		 this.__label.innerText= newValue;   
                     	}                                           
                     } 
 					
 					if(attr==='options'){
-                    	if(this.comboBox){                    		
+                    	if(this.__comboBox){                    		
                     		 this.__recreateOptionTags();
                     	}                                           
                     } 
