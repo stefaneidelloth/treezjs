@@ -399,12 +399,12 @@ export default class Table extends ComponentAtom {
 		var sourceType = tableSource.type;
 
 		switch(sourceType){
-			case TableSourceType.SQLITE:
+			case TableSourceType.sqLite:
 				this.__deleteColumnsIfExist();
 				var tableStructure = this.__readTableStructureForSqLiteTable(tableSource);
 				this.__createColumns(tableStructure);
 				break;
-			case TableSourceType.MYSQL:
+			case TableSourceType.mySql:
 				this.deleteColumnsIfExist();
 				var tableStructure = this.__readTableStructureForMySqlTable(tableSource);
 				this.__createColumns(tableStructure);

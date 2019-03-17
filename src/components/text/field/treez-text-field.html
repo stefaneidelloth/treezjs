@@ -5,25 +5,13 @@
 
 		<link type="text/css" rel="stylesheet" href="treez-text-field.css" />
 
-		<link rel="import" href="./../../treezElement.html" >	
+		<link rel="import" href="./../../labeledTreezElement.html" >	
 
         <script>
 
-            class TreezTextField extends TreezElement {
+            class TreezTextField extends LabeledTreezElement {
             	
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label']);                    
-                }
-
-            	get label() {
-				  return this.getAttribute('label');
-				}
-
-				set label(newValue) {
-				  this.setAttribute('label', newValue);	  
-
-				}  
-
+            	
                 constructor(){
                     super();                                  
                     this.__label = undefined;   
@@ -73,19 +61,6 @@
                 __textFieldChanged(){
                 	this.value = this.__textField.value;                	
                 }  
-
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    	}                                           
-                    } 
-                   
-                }  
-
-                
-               
                                       
             }
             window.customElements.define('treez-text-field', TreezTextField);                    

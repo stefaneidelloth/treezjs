@@ -1,10 +1,9 @@
 <!doctype html>
 <html>
 
-	<head>		
-
+	<head>	      
 		<link rel="import" href="./../imageComboBox/treez-image-combo-box.html" >	
-		<link rel="import" href="./treez-color-map-value.html" >
+		<link rel="import" href="./color-map.html" >
 
         <script>
 
@@ -12,16 +11,20 @@
             	
             	get value() {
 					 let stringValue = this.getAttribute('value');
-					 return TreezColorMapValue.forName(stringValue);
+					 try{
+					 	 return ColorMap.forName(stringValue);
+					 } catch(error){
+						 return null;
+					 }					
 				}  
             	
-            	set value(newValue) {
-            		super.value = newValue;	
+            	set value(colorMap) {
+            		super.value = colorMap;	
 				}  		
 				
                 constructor(){
                     super();  
-                    this.options=TreezColorMapValue.stringValues();
+                    this.options=ColorMap.names;
                 }  
                                      
             }

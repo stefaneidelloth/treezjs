@@ -10,7 +10,7 @@ export default class Column extends ComponentAtom {
 		
 		this.header = name;
 		this.legend = '';
-		this.type = ColumnType.String;
+		this.type = ColumnType.string;
 		this.isNullable = false;
 		this.isPrimaryKey = false;
 		this.defaultValueString = '';
@@ -112,11 +112,11 @@ export default class Column extends ComponentAtom {
 	get numericValues() {
 		var valueObjects = this.values;
 		switch (this.type) {
-		case ColumnType.Integer:
+		case ColumnType.integer:
 			return this.values;
-		case ColumnType.Double:
+		case ColumnType.double:
 			return this.values;
-		case ColumnType.String:
+		case ColumnType.string:
 			return valueObjects.map(element => {
 				return parseFloat(element);
 			});

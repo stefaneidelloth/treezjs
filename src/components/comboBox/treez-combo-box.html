@@ -5,23 +5,15 @@
 
 		<link type="text/css" rel="stylesheet" href="treez-combo-box.css" />		
 
-		<link rel="import" href="./../treezElement.html" >	
+		<link rel="import" href="./../labeledTreezElement.html" >	
 
         <script>
 
-            class TreezComboBox extends TreezElement {
+            class TreezComboBox extends LabeledTreezElement {
 
             	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label','options']);                    
-                }
-
-                get label() {
-				  return this.getAttribute('label');
-				}
-
-				set label(newValue) {
-				  this.setAttribute('label', newValue);	
-				}  
+            		return LabeledTreezElement.observedAttributes.concat(['options']);                    
+                }              
 
 				get options() {
 				  return this.getAttribute('options');
@@ -38,7 +30,7 @@
 				set value(newValue) {
 
 					if(newValue === undefined){
-						throw new Error("Value for combobox must not be undefined!");
+						throw new Error("Value for combo box must not be undefined!");
 					}
 
 					var options = this.getAttribute('options');
@@ -149,12 +141,7 @@
 				}
 
                 attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    	}                                           
-                    } 
+                	super.attributeChangedCallback(attr, oldValue, newValue)                     
 					
 					if(attr==='options'){
                     	if(this.__comboBox){                    		

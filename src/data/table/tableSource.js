@@ -8,7 +8,7 @@ export default class TableSource extends ComponentAtom  {
 		this.__isRunnable=true;
 		this.image = 'source.png';
 		
-		this.type = TableSourceType.SqLite;
+		this.type = TableSourceType.sqLite;
 		this.filePath = 'C:\database.sqlite';
 		this.columnSeparator = ';';
 		this.host = 'localhost';
@@ -133,13 +133,13 @@ export default class TableSource extends ComponentAtom  {
 
 	__showAndHideDependentComponents() {		
 		switch (this.type) {
-		case TableSourceType.CsV:
+		case TableSourceType.csv:
 			this.__showAndHideElementsForCsv();
 			break;
-		case TableSourceType.SqLite:
+		case TableSourceType.sqLite:
 			this.__showAndHideElementsForSqLite();
 			break;
-		case TableSourceType.MySql:
+		case TableSourceType.mySql:
 			this.__showAndHideElementsForMySql();
 			break;
 		default:

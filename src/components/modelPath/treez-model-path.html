@@ -4,24 +4,12 @@
 	<head>
  
 		<link type="text/css" rel="stylesheet" href="treez-model-path.css" />
-		<link rel="import" href="./../treezElement.html" >		
+		<link rel="import" href="./../labeledTreezElement.html" >		
 	
         <script>
        
-           	class TreezModelPath extends TreezElement {
-
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label']);                    
-                }
-            	
-            	get label() {
-  				  return this.getAttribute('label');
-  				}
-
-  				set label(newValue) {
-  				  this.setAttribute('label', newValue);	 
-  				}  
-  				
+           	class TreezModelPath extends LabeledTreezElement {
+            	 				
   				get atomClasses() {   				
    				  return this.__atomClasses
    				}
@@ -159,17 +147,7 @@
               
                 __comboBoxChanged(){
                 	this.value = this.__comboBox.value;                	             	
-                }                           
-
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    		 return;
-                    	}                                           
-                    } 
-                }               
+                }   
                
             }
             window.customElements.define('treez-model-path', TreezModelPath);                    

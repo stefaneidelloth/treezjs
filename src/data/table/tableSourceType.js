@@ -1,7 +1,6 @@
-import Enum from './../../core/enum/enum.js';
 
 export default class TableSourceType extends Enum {}
 
-TableSourceType.Csv = new TableSourceType('Csv');
-TableSourceType.SqLite = new TableSourceType('SqLite');
-TableSourceType.MySql = new TableSourceType('MySql');
+TableSourceType.csv = new TableSourceType('csv');
+TableSourceType.sqLite = new TableSourceType('sqLite');
+TableSourceType.mySql = new TableSourceType('mySql');

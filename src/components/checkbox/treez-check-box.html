@@ -5,24 +5,11 @@
 
 
 		<link type="text/css" rel="stylesheet" href="treez-check-box.css" />
-		<link rel="import" href="./../treezElement.html" >	
+		<link rel="import" href="./../labeledTreezElement.html" >	
 
         <script>
 
-            class TreezCheckBox extends TreezElement {
-
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label']);                    
-                }  
-
-                get label() {
-				  return this.getAttribute('label');
-				}
-
-				set label(newValue) {
-				  this.setAttribute('label', newValue);	
-				}          
-				  
+            class TreezCheckBox extends LabeledTreezElement {
 
                 constructor(){
                     super(); 
@@ -89,30 +76,20 @@
                 		this.hide(this.__container, booleanValue);                		
                 	}
                 }	       	
-
-                
-
+            
+               //overrides super methode to listen to checked property instead of value property
                 __addListenerToUpdatePropertyOnElementChanges(parent, propertyName){				
 
 					this.addEventListener('input', (event)=>{ 
 						  var oldValue = parent[propertyName];
-						  var newValue = event.target.checked;
+						  var newValue = event.target.checked; 
 						  if(newValue != oldValue){
 							parent[propertyName] = newValue; 							     
 						  }    	
 					}); 					
 				}            
 
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue)                	      
-                	
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    	}                                           
-                    }
-                   
-                }                 
+                           
                           
             }
             window.customElements.define('treez-check-box', TreezCheckBox);                    

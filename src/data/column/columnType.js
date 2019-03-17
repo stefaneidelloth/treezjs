@@ -1,4 +1,3 @@
-import Enum from './../../core/enum/enum.js';
 
 export default class ColumnType extends Enum {
 			
@@ -8,11 +7,11 @@ export default class ColumnType extends Enum {
 	}
 	
 	get isNumeric() {
-		return !(this === ColumnType.String);
+		return !(this === ColumnType.string);
 	}
 }
 
-ColumnType.Integer = new ColumnType('Number', Number);
-ColumnType.Double = new ColumnType('Double', Number);
-ColumnType.String = new ColumnType('String', String);
+ColumnType.integer = new ColumnType('number', Number);
+ColumnType.double = new ColumnType('double', Number);
+ColumnType.string = new ColumnType('string', String);
 

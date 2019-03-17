@@ -4,7 +4,7 @@
 	<head>		
 
 		<link rel="import" href="./../imageComboBox/treez-image-combo-box.html" >	
-		<link rel="import" href="./treez-fill-style-value.html" >
+		<link rel="import" href="./fill-style.html" >
 
         <script>
 
@@ -12,16 +12,20 @@
             	
             	get value() {
 					 let stringValue = this.getAttribute('value');
-					 return TreezFillStyleValue.forName(stringValue);
+					 try{
+					 	return FillStyle.forName(stringValue);
+					 } catch(error){
+						 return null;
+					 }
 				}  
             	
-            	set value(newValue) {
-            		super.value = newValue;	
+            	set value(fillStyle) {
+            		super.value = fillStyle;	
 				}  		
 				
                 constructor(){
                     super();  
-                    this.options=TreezFillStyleValue.stringValues();
+                    this.options=FillStyle.names;
                 }  
                                      
             }

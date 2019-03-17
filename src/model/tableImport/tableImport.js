@@ -19,7 +19,7 @@ export default class TableImport extends Model {
 
         this.isAppendingData= false;
         this.isFilteringforJobId = false;
-        this.isInheritingSourceFilePath = false;
+        this.isInheritingSourceFilePath = true;
         this.isLinkingSource = false;
 		this.isRunnable=true;
 
@@ -32,7 +32,7 @@ export default class TableImport extends Model {
 
         this.schema = 'my_schema';
         this.sourceFilePath = 'C:/data.csv';
-        this.sourceType = TableSourceType.Csv;
+        this.sourceType = TableSourceType.csv;
 
         this.tableName = 'table_name';
 
@@ -231,13 +231,13 @@ export default class TableImport extends Model {
 
 	__showAndHideDependentComponents() {		
 		switch (this.sourceType) {
-		case TableSourceType.Csv:
+		case TableSourceType.csv:
 			this.__showAndHideCompontentsForCsv();
 			break;
-		case TableSourceType.SqLite:
+		case TableSourceType.sqLite:
 			this.__showAndHideCompontentsForSqLite();
 			break;
-		case TableSourceType.MySql:
+		case TableSourceType.mySql:
 			this.__showAndHideCompontentsForMySql();
 			break;
 		default:
@@ -385,11 +385,11 @@ export default class TableImport extends Model {
 
 	async importTableData() {			
 		switch (this.tableSourceType) {
-		case TableSourceType.CSV:
+		case TableSourceType.csv:
 			return await TextDataTableImporter.importData(this.sourcePath, this.columnSeparator, this.rowLimit);			
-		case TableSourceType.SQLITE:
+		case TableSourceType.sqLite:
 			return await SqLiteImporter.importData(this.sourcePath, this.password, this.tableName, this.isFilteringforJobId, this.jobId, this.rowLimit, 0);			
-		case TableSourceType.MYSQL:			
+		case TableSourceType.mySql:			
 			var url = this.host + ":" + this.port + "/" + this.schema;
 			return await MySqlImporter.importData(url, this.user, this.password, this.tableName, this.isFilteringforJobId, this.jobId, this.rowLimit, 0);			
 		default:
@@ -466,7 +466,7 @@ export default class TableImport extends Model {
 			}
 
 			for (var header of headers) {
-				columnFolder.createColumn(header, ColumnType.String);
+				columnFolder.createColumn(header, ColumnType.string);
 			}
 		}
 	}	

@@ -1,19 +1,19 @@
-.treez-combo-box-container {   
+.treez-image-combo-box-container {   
     with: auto; 
     vertical-align: top;   
 }
 
-.treez-combo-box-display {
+.treez-image-combo-box-display {
   padding:0px;	
   margin:0px;
 }
 
-.treez-combo-box-label {
+.treez-image-combo-box-label {
 	vertical-alin: top;
 	 display:inline-block;	
 }
 
-.treez-combo-box {
+.treez-image-combo-box {
 	display:inline-block;
 	vertical-align: middle;
 	border: 1px solid lightgrey;
@@ -24,36 +24,36 @@
 	padding-bottom:0px;
 }
 
-.treez-combo-box:hover {	
+.treez-image-combo-box:hover {	
 	border: 1px solid grey;	
 }
 
-.treez-image-label {
+.treez-image-combo-box-image-label {
 	padding-left:2px;
 	margin:0px;
 }
 
-.treez-combo-button {
+.treez-image-combo-box-button {
 	padding-left:3px;
 	margin:0px;
 }
 
-.treez-option-panel {	
+.treez-image-combo-box-option-panel {	
 	 align-items: center;
 	
 }
 
-.treez-option {	
+.treez-image-combo-box-option {	
 	align-items: center;
 	padding:0px;
 	margin:0px;
 }
 
-.treez-option:hover {
+.treez-image-combo-box-option:hover {
 	background-color: #3297FD; 
 }
 
-.treez-option-image {	
+.treez-image-combo-box-option-image {	
 	padding-left:4px;
 	padding-top:4px;
 	margin:0px;

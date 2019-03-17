@@ -7,24 +7,11 @@
 		<link type="text/css" rel="stylesheet" href="treez-file-or-directory-path.css" />
 
 
-		<link rel="import" href="./../treezElement.html" >	
+		<link rel="import" href="./../labeledTreezElement.html" >	
 
         <script>
 
-            class TreezFileOrDirectoryPath extends TreezElement {
-
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label']);                    
-                }
-                
-                get label() {
-				  return this.getAttribute('label');
-				}
-
-				set label(newValue) {
-				  this.setAttribute('label', newValue);	  
-
-				}  
+            class TreezFileOrDirectoryPath extends LabeledTreezElement {
 
                 constructor(){
                     super();    
@@ -143,19 +130,7 @@
                    var itemArray = items.slice(0, items.length-1);
                    return itemArray.join('/');
                    
-                }
-
-                               
-
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    	}                                           
-                    } 
-                }               
-
+                }   
                
             }
             window.customElements.define('treez-file-or-directory-path', TreezFileOrDirectoryPath); 

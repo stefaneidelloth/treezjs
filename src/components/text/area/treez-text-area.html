@@ -5,24 +5,11 @@
 
 		<link type="text/css" rel="stylesheet" href="treez-text-area.css" />
 
-		<link rel="import" href="./../../treezElement.html" >	
+		<link rel="import" href="./../../labeledTreezElement.html" >	
 
         <script>
 
-            class TreezTextArea extends TreezElement {
-            	
-            	static get observedAttributes() {
-            		return TreezElement.observedAttributes.concat(['label']);                    
-                }
-
-            	get label() {
-				  return this.getAttribute('label');
-				}
-
-				set label(newValue) {
-				  this.setAttribute('label', newValue);	  
-
-				}             	
+            class TreezTextArea extends LabeledTreezElement {    
 
                 constructor(){
                     super();                                  
@@ -78,18 +65,7 @@
 
                 __textAreaChanged(){
                 	this.value = this.__textArea.value;                	
-                }  
-
-                attributeChangedCallback(attr, oldValue, newValue) {
-                	super.attributeChangedCallback(attr, oldValue, newValue) 
-                    if(attr==='label'){
-                    	if(this.__label){
-                    		 this.__label.innerText= newValue;   
-                    	}                                           
-                    } 
-                   
-                }  
-
+                }
                                         
             }
             window.customElements.define('treez-text-area', TreezTextArea);                    
