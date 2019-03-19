@@ -29,8 +29,7 @@ export default class TableImport extends Model {
 
         this.password = 'password';
         this.port = 'port';
-
-        this.resultTableModelPath= 'root.results.data.table';
+       
         this.rowLimit = 1000;
 
         this.schema = 'my_schema';
@@ -65,8 +64,7 @@ export default class TableImport extends Model {
             .label('Data');
 				
 		this.__createSourceTypeSection(page); 
-		this.__createSourceDataSection(page);
-        this.__createTargetSection(page);            
+		this.__createSourceDataSection(page);                
 	}
 
 	
@@ -127,43 +125,43 @@ export default class TableImport extends Model {
 			.bindValue(this, ()=>this.isInheritingSourceFilePath)
 			.onChange(()=>this.__showAndHideDependentComponents());
 
-		this.__sourceFilePathSelection = section.append('treez-file-path')
+		this.__sourceFilePathSelection = sectionContent.append('treez-file-path')
 			.label('Source file')
 			.bindValue(this, ()=>this.sourceFilePath);
 
-		this.__numberOfHeaderLinesToSkipSelection = section.append('treez-text-field')
+		this.__numberOfHeaderLinesToSkipSelection = sectionContent.append('treez-text-field')
 			.label('Number of header lines to skip')
 			.bindValue(this, ()=>this.numberOfHeaderLinesToSkip);
 
-		this.__customColumnHeadersSelection = section.append('treez-text-field')
+		this.__customColumnHeadersSelection = sectionContent.append('treez-text-field')
 			.label('Custom column headers (as comma separated list)' )
 			.bindValue(this, ()=>this.customColumnHeaders);
 		
-		this.__columnSeparatorSelection = section.append('treez-text-field')
+		this.__columnSeparatorSelection = sectionContent.append('treez-text-field')
 			.label('Column separator')
 			.bindValue(this, ()=>this.columnSeparator);
 		
-		this.__hostSelection = section.append('treez-text-field')
+		this.__hostSelection = sectionContent.append('treez-text-field')
 			.label('Host')
 			.bindValue(this, ()=>this.host);
 		
-		this.__portSelection = section.append('treez-text-field')
+		this.__portSelection = sectionContent.append('treez-text-field')
 			.label('Port')
 			.bindValue(this, ()=>this.port);
 		
-		this.__userSelection = section.append('treez-text-field')
+		this.__userSelection = sectionContent.append('treez-text-field')
 			.label('User')
 			.bindValue(this, ()=>this.user);
 		
-		this.__passwordSelection = section.append('treez-text-field')
+		this.__passwordSelection = sectionContent.append('treez-text-field')
 			.label('Password')
 			.bindValue(this, ()=>this.password);
 		
-		this.__schemaSelection = section.append('treez-text-field')
+		this.__schemaSelection = sectionContent.append('treez-text-field')
 			.label('Schema name')
 			.bindValue(this, ()=>this.schema);
 		
-		this.__tableNameSelection = section.append('treez-text-field')
+		this.__tableNameSelection = sectionContent.append('treez-text-field')
 			.label('Table name')
 			.bindValue(this, ()=>this.tableName);
 		
@@ -172,7 +170,7 @@ export default class TableImport extends Model {
 			.bindValue(this, ()=>this.isFilteringforJob)
 			.onChange(()=>this.__showAndHideJobComponents());		
 
-		this.__customJobIdSelection = section.append('treez-text-field')
+		this.__customJobIdSelection = sectionContent.append('treez-text-field')
 			.label('JobId')			
 			.bindValue(this, ()=>this.customJobId)
 			.onChange(()=>{
@@ -186,31 +184,17 @@ export default class TableImport extends Model {
 			.bindValue(this, ()=>this.isUsingCustomQuery)
 			.onChange(()=>this.__showAndHideQueryComponents());
 
-		this.__customQuerySelection = section.append('treez-text-field')
+		this.__customQuerySelection = sectionContent.append('treez-text-field')
 			.label('Custom query')
-			.bindValue(this, ()=>this.customQuery);	
-
-	}
-	
-	__createTargetSection(page) {
-		
-		var section = page.append('treez-section')
-		.label('Target data');
-	
-		var sectionContent = section.append('div');
-		
-		//target result table (must already exist for manual execution of the TableImport)
-		sectionContent.append('treez-model-path')
-			.label('Result table')
-			.nodeAttr('atomClasses', [Table])
-			.bindValue(this, ()=>this.resultTableModelPath);
-
+			.bindValue(this, ()=>this.customQuery);
 		
 		sectionContent.append('treez-check-box')
 			.label('Append data')			
 			.bindValue(this, ()=>this.isAppendingData);
-		
+
 	}
+	
+	
 	
 	__showAndHideLinkComponents() {		
 		if (this.isLinkingSource) {
@@ -361,25 +345,14 @@ export default class TableImport extends Model {
 
 	async doRunModel(treeView, monitor) {
 
-		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');
-
-		if (!this.resultTableModelPath) {
-			throw new Error('The table import must define a target result table.');
-		}
-
-		try {
-			this.getChildFromRoot(this.resultTableModelPath);
-		} catch (error) {
-			var message = 'Could not find target result table ' + this.resultTableModelPath;
-			throw new Error(message);
-		}
+		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');		
 
 		var table;		
 		if (this.isLinkingToSource) {
-			table = this.__linkTargetTableToSource(this.resultTableModelPath);
+			table = this.__linkTargetTableToSource();
 		} else {
 			var tableData = await this.__importTableData();			
-			table = this.__writeDataToTargetTable(tableData, this.resultTableModelPath, this.isAppendingData);
+			table = this.__writeDataToTargetTable(tableData);
 		}
 
 		treeView.refresh();
@@ -476,8 +449,9 @@ export default class TableImport extends Model {
 		}		
 	}
 
-	__linkTargetTableToSource(targetModelPath, tableSource) {
-		var table = this.getChildFromRoot(targetModelPath);
+	__linkTargetTableToSource(tableSource) {
+		this.__createTableIfNotExists();		
+		var table = this.getChildByClass(Table);
 		table.removeChildrenByClass(TableSource);
 		
 		var newTableSource = new TableSource(tableSource);
@@ -488,8 +462,8 @@ export default class TableImport extends Model {
 
 
 	__writeDataToTargetTable(tableData, tableModelPath, appendData) {
-
-		var table = this.getChildFromRoot(tableModelPath);
+		this.__createTableIfNotExists();		
+		var table = this.getChildByClass(Table);
 		
 		TableImport.__checkAndPrepareColumnsIfRequired(tableData, table);
 		
@@ -502,6 +476,12 @@ export default class TableImport extends Model {
 		}
 
 		return table;
+	}
+	
+	__createTableIfNotExists(){
+		if(this.children.length < 1){
+			this.createChild(Table,'table');
+		}
 	}
 
 	static __checkAndPrepareColumnsIfRequired(tableData, table) {
