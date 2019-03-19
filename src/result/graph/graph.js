@@ -101,22 +101,20 @@ export default class Graph extends PagedGraphicsAtom {
 			
 		//remove old graph group if it already exists
 		pageSelection //
-				.select("#" + name) //
+				.select("#" + this.name) //
 				.remove();
 
 		//create new graph group
-		graphGroupSelection = pageSelection //
+		this.__graphGroupSelection = pageSelection //
 				.append("g");
 		
-		this.bindString(()=>this.name, graphGroupSelection, 'id');	
+		this.bindString(()=>this.name, this.__graphGroupSelection, 'id');	
 	
-		rectSelection = graphGroupSelection //
+		this.__rectSelection = this.__graphGroupSelection //
 				.append("rect") //
 				.onClick(this);
 
-		this.updatePlot(dTreez);
-		
-		return graphGroupSelection;
+		this.updatePlot(dTreez);		
 	}
 
 	updatePlot(dTreez) {
@@ -130,7 +128,7 @@ export default class Graph extends PagedGraphicsAtom {
 	}
 
 	__clearAutoScaleData() {
-		for (var child of children) {			
+		for (var child of this.children) {			
 			if (child instanceof Axis) {
 				child.clearDataForAutoScale();
 			}
@@ -138,8 +136,8 @@ export default class Graph extends PagedGraphicsAtom {
 	}
 
 	__plotWithPages(dTreez) {
-		for (var pageFactory of this.pageFactories) {
-			pageFactory.plot(dTreez, this.graphGroupSelection, this.rectSelection, this);
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__graphGroupSelection, this.__rectSelection, this);
 		}
 	}
 

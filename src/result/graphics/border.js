@@ -5,9 +5,9 @@ export default class Border extends GraphicsAtom {
 	constructor(){
 		super('border');
 
-		this.color = 'black';
+		this.color = Color.black;
 		this.width = '2';
-		this.style = 'solid'
+		this.style = LineStyle.solid;
 		this.transparency = 0;
 		this.isHidden = false;
 	}
@@ -30,11 +30,11 @@ export default class Border extends GraphicsAtom {
 			.label('Width')
 			.bindValue(this, ()=>this.width);
 
-		/*
-		sectionContent.append('treez-line-style')
+		
+		sectionContent.append('treez-line-style')			
 			.label('Style')
 			.bindValue(this, ()=>this.style);
-		*/
+		
 
 		sectionContent.append('treez-text-field')
 			.label('Transparency')
@@ -49,9 +49,9 @@ export default class Border extends GraphicsAtom {
 
 	plot(dTreez, parentSelection, rectSelection, parent) {
 
-		this.bindString(()=>this.color, rectSelection, 'stroke');
+		this.bindColor(()=>this.color, rectSelection, 'stroke');
 		this.bindString(()=>this.width, rectSelection, 'stroke-width');
-		//this.bindLineStyle(()=>this.style, rectSelection);
+		this.bindLineStyle(()=>this.style, rectSelection);
 		this.bindLineTransparency(()=>this.transparency, rectSelection);
 		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, rectSelection);
 

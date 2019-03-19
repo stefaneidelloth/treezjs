@@ -154,10 +154,8 @@ export default class AtomTreeNodeAdapter {
     }   
 
     static showProperties(treeView,atom){    	
-    	var propertiesView = treeView.dTreez.select('#treez-properties');
+    	var propertiesView = treeView.dTreez.select('#treez-properties');    	
     	atom.createControlAdaption(propertiesView, treeView);
-    }
-
-   
+    }   
      
 }

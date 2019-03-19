@@ -12,11 +12,11 @@ export default class Page extends GraphicsAtom {
 		
 		this.width = '15 cm';
 		this.height = '15 cm';
-		this.color = 'white';
+		this.color = Color.white;
 		this.isHidden = false;
 		
-		this.pageSelection = undefined;
-		this.rectSelection = undefined;		
+		this.__pageSelection = undefined;
+		this.__rectSelection = undefined;		
 	}
 
 	
@@ -102,21 +102,21 @@ export default class Page extends GraphicsAtom {
 		svg.select('#' + this.name).remove();
 		
 		//create new page group
-		this.pageSelection = svg.append('g'); 
+		this.__pageSelection = svg.append('g'); 
 		
-		this.bindString(()=>this.name, this.pageSelection, 'id');
+		this.bindString(()=>this.name, this.__pageSelection, 'id');
 		
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.pageSelection);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.__pageSelection);
 		
-		this.rectSelection = this.pageSelection //
+		this.__rectSelection = this.__pageSelection //
 				.append('rect') //
 				.onClick(()=>this.handleMouseClick());
 
-		this.bindString(()=>this.color, this.rectSelection, 'fill');
-		this.bindString(()=>this.width, this.rectSelection, 'width');
-		this.bindString(()=>this.height, this.rectSelection, 'height');
+		this.bindColor(()=>this.color, this.__rectSelection, 'fill');
+		this.bindString(()=>this.width, this.__rectSelection, 'width');
+		this.bindString(()=>this.height, this.__rectSelection, 'height');
 		
-		//this.updatePlot(dTreez);	
+		this.updatePlot(dTreez);	
 
 		return page;
 	}
@@ -128,7 +128,7 @@ export default class Page extends GraphicsAtom {
 	plotChildGraphs(dTreez) {
 		for(const child of this.children){			
 			if (child instanceof Graph) {				
-				child.plot(dTreez, this.pageSelection, this.rectSelection, this.__treeView);
+				child.plot(dTreez, this.__pageSelection, this.__rectSelection, this.__treeView);
 			}
 		}		
 	}	

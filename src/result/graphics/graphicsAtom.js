@@ -1,4 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
+import Length from './length.js';
 
 
 export default class GraphicsAtom extends ComponentAtom {
@@ -18,16 +19,22 @@ export default class GraphicsAtom extends ComponentAtom {
 	
 	addListenerAndRun(lambdaExpressionEncodingPropertyToBind, listener){
 		this.addListener(lambdaExpressionEncodingPropertyToBind, listener);
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingPropertyToBind);
 		listener(this[propertyName]);
 	}
 	
-	addListenerAndRun(lambdaExpressionEncodingPropertyToBind, listener){
+	addListener(lambdaExpressionEncodingPropertyToBind, listener){
 		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingPropertyToBind);
 		this.__modifyPropertyToCallListenerOnPropertyChanges(propertyName, listener);		
 	}
 	
 	bindString(lambdaExpressionEncodingPropertyToBind, selection, attributeName){		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, this.__trim);		
+	}
+
+	bindColor(lambdaExpressionEncodingPropertyToBind, selection, attributeName){	
+	    var valueConverter = color=>color.hexString;	
+		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, valueConverter);		
 	}
 	
 	bindBooleanToNegatingDisplay(lambdaExpressionEncodingPropertyToBind, selection){
@@ -59,16 +66,13 @@ export default class GraphicsAtom extends ComponentAtom {
 	}
 	
 	bindLineStyle(lambdaExpressionEncodingPropertyToBind, selection){		
-		var valueConverter = value => {
-			var lineStyle = LineStyleValue.fromString(value);
-			return lineStyle.getDashArray();					
-		}		
+		var valueConverter = lineStyle => lineStyle.dashArrayString;		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-dasharray', valueConverter);
 	}
 	
 	bindLineTransparency(lambdaExpressionEncodingPropertyToBind, selection){		
-		var valueConverter = value => {
-			var transparency = parseDouble(value);
+		var valueConverter = valueString => {
+			var transparency = parseFloat(valueString);
 			return '' + (1-transparency);					
 		}		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-opacity', valueConverter);
@@ -89,7 +93,7 @@ export default class GraphicsAtom extends ComponentAtom {
 				return '0';
 			}
 			
-			var transparency = parseDouble(self[transparencyPropertyName]);
+			var transparency = parseFloat(self[transparencyPropertyName]);
 			return '' + (1-transparency);					
 		}	
 		
@@ -185,13 +189,10 @@ export default class GraphicsAtom extends ComponentAtom {
 			get: __getPropertyValueProxy,
 			set: __setPropertyValueProxy					
 		   }
-		);
-		
-		__updateSelection(privateValue);
-	
+		);	
 
 		function __getPropertyValueProxy(){
-			let propertyAlreadyHasAGetter = propertyDescriptor.get !== undefined;
+			let propertyAlreadyHasAGetter = propertyDescriptor && (propertyDescriptor.get !== undefined);
 			if(propertyAlreadyHasAGetter){
 				return propertyDescriptor.get();
 			} else {
@@ -202,7 +203,7 @@ export default class GraphicsAtom extends ComponentAtom {
 		function __setPropertyValueProxy(newValue){
 				let oldValue = privateValue;
 				if(newValue != oldValue){
-					let propertyAlreadyHasASetter = propertyDescriptor.set !== undefined;
+					let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
 					 if(propertyAlreadyHasASetter){
 						propertyDescriptor.set(newValue);
 					 } 

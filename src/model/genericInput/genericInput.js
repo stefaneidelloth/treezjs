@@ -7,6 +7,8 @@
 import Model from './../model.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
+import FilePathVariable from './../variable/field/filePathVariable.js';
+import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
 
 export default class GenericInput extends Model {
@@ -18,9 +20,7 @@ export default class GenericInput extends Model {
 		this.__section = undefined;
 	}
 
-	copy() {
-		//TODO
-	}
+	
 	
 	createComponentControl(tabFolder){    
 	     
@@ -86,27 +86,27 @@ export default class GenericInput extends Model {
 		actions.push(addQuantityVariable);
      	 */
 		
-        const addDoubleVariable = new AddChildAtomTreeViewAction(
+       
+		actions.push(new AddChildAtomTreeViewAction(
 				DoubleVariable,
 				"doubleVariable",
 				"doubleVariable.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addDoubleVariable);
+				treeView));
 		
 		/*
 
-        const addIntegerVariableField = new AddColoredChildAtomTreeViewAction(
-				IntegerVariableField.class,
+        const addIntegerVariableField = new AddChildAtomTreeViewAction(
+				IntegerVariable,
 				"integerVariable",
 				"integerVariable.png",
 				this,
 				treeViewer);
 		actions.push(addIntegerVariableField);
 
-        const addBooleanVariableField = new AddColoredChildAtomTreeViewAction(
-				BooleanVariableField.class,
+        const addBooleanVariableField = new AddChildAtomTreeViewAction(
+				BooleanVariable,
 				"booleanVariable",
 				"booleanVariable.png",
 				this,
@@ -115,40 +115,46 @@ export default class GenericInput extends Model {
 		
 		*/
 
-        const addStringVariable = new AddChildAtomTreeViewAction(
+       
+		actions.push(new AddChildAtomTreeViewAction(
 				StringVariable,
 				"stringVariable",
 				"stringVariable.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addStringVariable);
+				treeView));
+		
+		
+		actions.push(new AddChildAtomTreeViewAction(
+				FilePathVariable,
+				"filePathVariable",
+				"filePathVariable.png",
+				parentSelection,
+				this,
+				treeView));
+		
+		
+		actions.push(new AddChildAtomTreeViewAction(
+				DirectoryPathVariable,
+				"directoryPathVariable",
+				"directoryPathVariable.png",
+				parentSelection,
+				this,
+				treeView));
 		
 		/*
 
-        const addStringItemVariableField = new AddColoredChildAtomTreeViewAction(
-				StringItemVariableField.class,
+        const addStringItemVariableField = new AddChildAtomTreeViewAction(
+				StringItemVariable,
 				"stringItemVariable",
 				"stringItemVariable.png",
 				this,
 				treeViewer);
 		actions.push(addStringItemVariableField);
 
-        const addFilePathVariableField = new AddColoredChildAtomTreeViewAction(
-				FilePathVariableField.class,
-				"filePathVariable",
-				"filePathVariable.png",
-				this,
-				treeViewer);
-		actions.push(addFilePathVariableField);
+       
 
-        const addDirectoryPathVariableField = new AddColoredChildAtomTreeViewAction(
-				DirectoryPathVariableField.class,
-				"directoryPathVariable",
-				"directoryPathVariable.png",
-				this,
-				treeViewer);
-		actions.push(addDirectoryPathVariableField);
+       
 		
 		*/
 
@@ -197,60 +203,38 @@ export default class GenericInput extends Model {
 	}
 
 	createDoubleVariable(name, value) {
-		const child = new DoubleVariable(name);
-		child.value = value;
-        this.addChild(child);
-		return child;
+		return this.createChild(DoubleVariable, name, value); 		
 	}
 
-	/*
-	createIntegerVariabled(name) {
-        const child = new IntegerVariable(name);
-        this.addChild(child);
-		return child;
-	}
-
-	createQuantityVariable(name) {
-        const child = new QuantityVariable(name);
-        this.addChild(child);
-		return child;
-	}
 	
-	*/
-
-	createStringVariable(name, value) {
-        const child = new StringVariable(name);
-        child.value = value;
-        this.addChild(child);
-		return child;
+	createIntegerVariable(name, value) {
+		return this.createChild(IntegerVariable, name, value);	
 	}
 
-	/*
-	createFilePathVariable(name) {
-        const child = new FilePathVariable(name);
-        this.addChild(child);
-		return child;
+	createQuantityVariable(name, value) {
+		return this.createChild(QuantityVariable, name, value);	
+	}       
+
+	createStringVariable(name, value) {		
+        return this.createChild(StringVariable, name, value);       
 	}
 
-	createDirectoryPathVariable(name) {
-        const child = new DirectoryPathVariable(name);
-        this.addChild(child);
-		return child;
+	
+	createFilePathVariable(name, value) {
+		return this.createChild(FilePathVariable, name, value); 
 	}
 
-	createBooleanVariable(name) {
-        const child = new BooleanVariable(name);
-        this.addChild(child);
-		return child;
+	createDirectoryPathVariable(name, value) {
+		return this.createChild(DirectoryPathVariable, name, value);        
 	}
 
-	createStringItemVariable(name) {
-        const child = new StringItemVariable(name);
-		this.addChild(child);
-		return child;
+	createBooleanVariable(name, value) {
+		return this.createChild(BooleanVariable, name, value);  
 	}
 
-
+	createStringItemVariable(name, value) {
+		return this.createChild(StringItemVariable, name, value); 
+	}
 
 	getVariable(variableName) {
 		return this.getAttribute("root.data.data." + variableName);
@@ -280,7 +264,7 @@ export default class GenericInput extends Model {
         return variableFields;
 	}
 	
-	*/
+	
 
 	
 }

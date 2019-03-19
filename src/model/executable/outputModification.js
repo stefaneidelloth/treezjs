@@ -16,9 +16,7 @@ export default class OutputModification extends ComponentAtom {
         this.isIncludingjobIdInOutputSubFolder = undefined;      
 	}
 
-	copy() {
-		//TODO
-	}	
+	
 
     createComponentControl(tabFolder){    
      

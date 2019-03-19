@@ -24,9 +24,12 @@
 				}  		
 				
                 constructor(){
-                    super();  
-                    this.options=LineStyle.names;
+                    super();                    
                 }  
+                
+                beforeConnectedCallbackHook(){
+                	 this.options=LineStyle.names;
+            	}
                                      
             }
             window.customElements.define('treez-line-style', TreezLineStyle);                    

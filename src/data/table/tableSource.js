@@ -36,9 +36,7 @@ export default class TableSource extends ComponentAtom  {
 		this.__customQuerySelection = undefined;		
 	}
 	
-	copy() {
-		//TODO
-	}
+	
 	
 	createComponentControl(tabFolder){    
 	     

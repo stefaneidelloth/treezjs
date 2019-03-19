@@ -11,9 +11,7 @@ export default class LoggingArguments extends ComponentAtom {
 	    this.logFilePath = undefined;       
 	}
 
-	copy() {
-		//TODO
-	}	
+	
 
     createComponentControl(tabFolder){  
 		const page = tabFolder.append('treez-tab')

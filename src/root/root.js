@@ -12,10 +12,7 @@ export default class Root extends ComponentAtom {
 		this.image = 'root.png';
 	}
 
-	copy(atomToCopy){ //TODO
-
-    }
-	
+		
 	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')

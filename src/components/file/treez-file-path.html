@@ -106,14 +106,14 @@
                         if(newValue){
                         	var oldValue = this.value;
 	                        this.value = newValue;
-	                	    this.textField.value = newValue;
+	                	    this.__textField.value = newValue;
 	                	    this.dispatchEvent(new Event('change'));  
                         }                    	
                     }); 
                 }
                 
                 getDirectory(){
-                   var fullPath = this.textField.value;
+                   var fullPath = this.__textField.value;
                    if(!fullPath){
                    		return null;
                    }
@@ -129,11 +129,11 @@
                 }
 
                 updateElements(newValue){
-                	if(this.textField){ 
+                	if(this.__textField){ 
                 		if(newValue !== undefined){
-                        	this.textField.value = newValue; 
+                        	this.__textField.value = newValue; 
                         } else {
-                        	this.textField.value = '';
+                        	this.__textField.value = '';
                         }
 						
 					}					    

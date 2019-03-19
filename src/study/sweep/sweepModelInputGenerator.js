@@ -72,6 +72,10 @@ export default class SweepModelInputGenerator {
 		});		
 	}
 	
+	getNumberOfEnabledRanges(){
+		return this.__getEnabledRanges().length;
+	}
+	
 	__getEnabledRanges() {
 		var variableRanges = [];
 
@@ -101,29 +105,6 @@ export default class SweepModelInputGenerator {
 		return variableRanges;
 	}
 	
-	getNumberOfEnabledRanges(){
-		return this.__getEnabledRanges().length;
-	}
-		
-	__getNumberOfSimulations(variableRanges) {
-	
-		var numberOfSimulations = 1;		
-		var hasAtLeastOneSimulation = false;
-		
-		variableRanges.forEach(variableRange=>{			
-			var numberOfValues = variableRange.values.length;
-			if (numberOfValues > 0) {
-				hasAtLeastOneSimulation = true;
-				numberOfSimulations *= numberOfValues;
-			}
-		});
-
-		return hasAtLeastOneSimulation
-			?numberOfSimulations
-			:0;			
-	}
-
-	
 	__createModelInputs(variableRanges) {
 		var self=this;
 		var modelInputs = [];
@@ -151,7 +132,8 @@ export default class SweepModelInputGenerator {
 		return modelInputs;
 
 	}
-
+	
+	
 
 	__extendModelInputs(initialInput, variableRanges) {
 		
@@ -160,11 +142,10 @@ export default class SweepModelInputGenerator {
 
 		var isLastEntry = variableRanges.length === 0;
 		if (isLastEntry) {
-			//the model input is already finished and can be returned as a single model input
-			modelInputs.push(initialInput);
+			modelInputs.push(initialInput.copy());
 			return modelInputs;
 		} else {
-			//the initial model input needs to be copied and extended using the remaining variable ranges
+			//the initial model input needs to be duplicated and extended using the remaining variable ranges
 			var firstRange = variableRanges[0];
 			var variableModelPath = firstRange.variablePath;
 			var values = firstRange.values;
@@ -189,11 +170,29 @@ export default class SweepModelInputGenerator {
 	}
 
 	
-	__createInitialModelInput(variableModelPath, studyId, studyDescription, value) {
+	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId) {
 		var sweepModelPath = this.sweep.getTreePath();
-		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription);
+		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId);
 		initialInput.add(variableModelPath, value);
 		return initialInput;
+	}
+
+	__getNumberOfSimulations(variableRanges) {
+	
+		var numberOfSimulations = 1;		
+		var hasAtLeastOneSimulation = false;
+		
+		variableRanges.forEach(variableRange=>{			
+			var numberOfValues = variableRange.values.length;
+			if (numberOfValues > 0) {
+				hasAtLeastOneSimulation = true;
+				numberOfSimulations *= numberOfValues;
+			}
+		});
+
+		return hasAtLeastOneSimulation
+			?numberOfSimulations
+			:0;			
 	}
 	
 	

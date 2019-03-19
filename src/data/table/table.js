@@ -11,6 +11,7 @@ export default class Table extends ComponentAtom {
 	constructor(name) {	
 		super(name);
 		this.image='table.png';	
+		this.isExpanded=false;
 		this.__rows = [];
 		this.__pagedRows = undefined;
 		this.__rowIndexOffset = 0;
@@ -27,10 +28,7 @@ export default class Table extends ComponentAtom {
 		this.__COLUMN_SEPARATOR = ';';
 		this.__ROW_SEPARATOR = '\n';
 	}
-
-	copy() {
-		//TODO
-	}
+	
 	
 	createControlAdaption(parent, treeView) {
 
@@ -39,11 +37,14 @@ export default class Table extends ComponentAtom {
 		
 		parent.selectAll('div').remove();
 		parent.selectAll('treez-tab-folder').remove();	
+		
+		const pathInfo = parent.append('div')
+			.className('treez-properties-path-info')
+			.text(this.getTreePath());	
 
 		const tableContainer = parent.append('div')
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
-		
-		
+						
 		if (this.isLinkedToSource) {
 			if (!this.hasColumns) {
 				this.reload();
@@ -109,7 +110,7 @@ export default class Table extends ComponentAtom {
 	
 	checkHeaders(expectedHeaders) {
 		try {			
-			return this.getColumns().checkHeaders(expectedHeaders);
+			return this.columnFolder.checkHeaders(expectedHeaders);
 		} catch (error) {
 			return false;
 		}
@@ -176,7 +177,11 @@ export default class Table extends ComponentAtom {
 	__createTableControl(parent, treeView){
 		
 		this.__createToolbar(parent, treeView);
-		this.__createTableView(parent, treeView);
+		
+		const tableContent = parent.append('div')
+			.className('treez-table-content');		
+		this.__createTableView(tableContent, treeView);
+		
 		this.__createPagination(parent, treeView);
 		
 	}	
@@ -236,60 +241,76 @@ export default class Table extends ComponentAtom {
 		var pagination = parent.append('div')
 								.className('treez-table-pagination');
 		
-		pagination.append('span')
+		pagination.append('treez-text-field')
+			.label('Rows per page')
+			.attr('width','40px')		
+			.bindValue(this, ()=>this.__maxNumberOfRowsPerPage);
+
+		var rowInfo = pagination.append('span')
+			.className('treez-table-pagination-row-info');
+
+		rowInfo.append('span')
 			.text('Rows ')
 			
-		pagination.append('treez-text-label')
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__firstRowIndex);
 		
-		pagination.append('span')
+		rowInfo.append('span')
 			.text('...')
 			
-		pagination.append('treez-text-label')
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__lastRowIndex);
 		
-		pagination.append('span')
+		rowInfo.append('span')
 		.text(' of ')
 		
-		pagination.append('treez-text-label')
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__numberOfRows);
+
+		var pageControl = pagination.append('span')
+			.className('treez-table-pagination-page-info');
 		
-		pagination.append('span')
-		.text('   Page ')
+		pageControl.append('span')
+			.html('&nbsp;&nbsp;&nbsp;Page&nbsp;')
 		
-		pagination.append('input')
+		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-first-button')
 			.title('First')
 			.onClick(()=>this.__firstPage());
 		
-		pagination.append('input')
+		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-previous-button')
 			.title('Previous')
 			.onClick(()=>this.__previousPage());
 		
-		pagination.append('treez-text-field')
+		pageControl.append('treez-text-field')
 			.attr('width', '40px')
 			.bindValue(this, ()=>this.__pageIndex);
 		
-		pagination.append('input')
+		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-next-button')
-			.title('First')
+			.title('Next')
 			.onClick(()=>this.__nextPage());
 	
-		pagination.append('input')
+		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-last-button')
-			.title('Previous')
+			.title('Last')
 			.onClick(()=>this.__lastPage());
 		
-		pagination.append('span')
-		.text(' of ')
+		pageControl.append('span')
+			.text(' of ')
 		
-		pagination.append('treez-text-label')
+		pageControl.append('treez-text-label')
 			.bindValue(this, ()=>this.__numberOfPages);
+
+
+		
+
+		
 			
 			
 	}
@@ -516,7 +537,11 @@ export default class Table extends ComponentAtom {
 	//#region ACCESSORS	
 
 	get headers() {
-		return this.columnFolder.headers;
+		try{
+			return this.columnFolder.headers;
+		} catch (error){
+			return [];
+		}
 	}
 
 	get columnFolder() {
@@ -643,7 +668,7 @@ export default class Table extends ComponentAtom {
 	
 	get hasColumns(){
 		try {			
-			return this.columnFolder.hasColumns();
+			return this.columnFolder.hasColumns;
 		} catch (error) {
 			return false;
 		}

@@ -1,4 +1,5 @@
 import Importer from './../importer.js';
+import ColumnType from './../../column/columnType.js';
 
 export default class TextImporter extends Importer {
 
@@ -6,97 +7,83 @@ export default class TextImporter extends Importer {
 		
 	}
 
-	/*
+	static async importData(filePath, numberOfHeaderLinesToSkip, customColumnHeaders, columnSeparator, isFilteringForJobId, jobId, rowLimit) {
 
-
-	public static TableData importData(String filePath, String columnSeparator, int rowLimit) {
-
-		//read tab separated entries
-		List<List<Object>> data = readTextData(filePath, columnSeparator, rowLimit);
+		var isUsingCustomColumnHeaders = customColumnHeaders.length > 0;
+		
+		var numberOfRowsForHeaders = isUsingCustomColumnHeaders
+											?0
+											:1;
+		
+		var maxNumberOfRowsToRead = rowLimit+numberOfRowsForHeaders;
+		
+		var lineData = await TextImporter.__readLines(filePath, numberOfHeaderLinesToSkip, columnSeparator, maxNumberOfRowsToRead);
+		
+		var headerData = isUsingCustomColumnHeaders
+							?customColumnHeaders
+							:lineData[0];
+							
+		var rowData = isUsingCustomColumnHeaders
+						?lineData
+						:lineData.slice(1);
+				
 
 		//check data size (number of lines > 1, number of columns equal)
-		checkDataSizes(data);
-
-		//get header data
-		List<Object> currentHeaderDataObjects = data.get(0);
-		List<String> currentHeaderData = new ArrayList<>();
-		for (Object headerObj : currentHeaderDataObjects) {
-			currentHeaderData.add(headerObj.toString());
-		}
-
-		//get row data
-		List<List<Object>> currentRowData = data.subList(1, data.size());
-
-		TableData tableData = new TableData() {
-
-			@Override
-			public List<String> getHeaderData() {
-				return currentHeaderData;
-			}
-
-			@Override
-			public ColumnType getColumnType(String header) {
-				return ColumnType.STRING;
-			}
-
-			@Override
-			public List<List<Object>> getRowData() {
-				return currentRowData;
-			}
-		};
+		var firstRowIndex = numberOfHeaderLinesToSkip + numberOfRowsForHeaders;
+		TextImporter.__checkDataSizes(headerData, rowData, firstRowIndex);
+		
+		//TODO: implement filtering of rows for jobId
+						
+		var tableData = {
+				headerData: headerData,
+				rowData: rowData,
+				columnType: ColumnType.string
+		}			
 
 		return tableData;
 	}
 
 
-	private static void checkDataSizes(List<List<Object>> data) {
-		int numberOfLines = data.size();
-
-		//check number of lines
-		if (numberOfLines < 2) {
-			throw new IllegalStateException("The text file must contain at least two lines");
+	static __checkDataSizes(headerData, rowData, firstRowIndex) {
+		
+		if (rowData.length < 1) {
+			throw new Error('The imported text file must contain at least one data row');
 		}
+		
+		var numberOfColumns = headerData.length;
 
-		//get number of columns from first line
-		int numberOfColumns = data.get(0).size();
-
-		//check number of columns of all lines
-		int lineCounter = 1;
-		for (List<Object> entries : data) {
-			int currentNumberOfColumns = entries.size();
-			boolean hasSameNumberOfColumns = (currentNumberOfColumns == numberOfColumns);
-			if (!hasSameNumberOfColumns) {
-				String message = "The number of columns in line " + lineCounter + " has to be " + numberOfColumns
-						+ " but is " + currentNumberOfColumns + ".";
-				throw new IllegalStateException(message);
+		var relativeRowIndex = 0;
+		for(var row of rowData){
+			if(row.length !== numberOfColumns){				
+				var lineNumber = firstRowIndex + relativeRowIndex;
+				var message = 'The number of columns in line ' + lineNumber + ' has to be ' + numberOfColumns + ' but is ' + row.length + '. Line: "' + row + '"';
+				throw new Error(message);			
 			}
-			lineCounter++;
-		}
+			relativeRowIndex++;
+		}	
 
 	}
 
 
-	private static List<List<Object>> readTextData(String filePath, String columnSeparator, int rowLimit) {
+	static async __readLines(filePath, numberOfHeaderLinesToSkip, columnSeparator, maxNumberOfRowsToRead){
+		
+		var text = await window.treezTerminal.readTextFile(filePath); //TODO: consider maxNumberOfRowsToRead
+		
+		var trimmedText = text.trim(); //removes empty lines
 
-		List<List<Object>> lines = new ArrayList<>();
-		int rowCount = 0;
-		try (
-				BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-			String line;
-			while ((line = br.readLine()) != null && rowCount < rowLimit) {
-				String[] lineEntries = line.split(columnSeparator);
-				lines.add(Arrays.asList(lineEntries));
-				rowCount++;
-			}
-		} catch (IOException exception) {
-			String message = "Could not read text file '" + filePath + "'";
-			LOG.error(message, exception);
-			throw new IllegalStateException(message, exception);
-		}
+		var allLineStrings = trimmedText.split('\n');
+		var lineStrings = allLineStrings.slice(numberOfHeaderLinesToSkip);
+		
+        var splitExpression = columnSeparator.replace('\\t','\t').replace('\\n','\n').replace('\\r','\r'); 
+
+		var lines = [];
+		for(var lineString of lineStrings){
+			lines.push(lineString.split(splitExpression));
+		}		
 
 		return lines;
 	}
 
-	*/
+	
 
 }

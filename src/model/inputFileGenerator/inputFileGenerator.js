@@ -38,9 +38,7 @@ export default class InputFileGenerator extends Model  {
        
 	}
 
-	 copy() {
-		//TODO
-	}
+	
 	 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 			
@@ -81,7 +79,10 @@ export default class InputFileGenerator extends Model  {
 		        
 		await window.treezTerminal.deleteFile(modifiedInputPath);	
 
-		var template = await window.treezTerminal.readTextFile(this.templatePath);
+		var template = await window.treezTerminal.readTextFile(this.templatePath) //
+												 .catch((error)=>{
+													monitor.error(error);
+												 });
 
 		var sourceModelAtom = this.getChildFromRoot(this.sourceModelPath);	
 		
@@ -206,13 +207,13 @@ export default class InputFileGenerator extends Model  {
 			}
 
 			var placeholderExpression = self.__createPlaceHolderExpression(variableName);
-
+			
 			var injectedExpression = self.__createExpressionToInject(variableName, valueString, unit);
 
 			//inject expression into template
 			//console.info('Template placeholder to replace: "' + placeholderExpression + '"');
 			//console.info('Expression to inject: "' + injectedExpression + '"');
-			resultString = resultString.replace(placeholderExpression, injectedExpression);
+			resultString = this.__replaceAll(resultString, placeholderExpression, injectedExpression);
 		});
 
 		if (self.isDeletingUnassignedRows) {
@@ -220,6 +221,16 @@ export default class InputFileGenerator extends Model  {
 		}
 
 		return resultString;
+	}
+
+	//The normal string.replace(...) method only replaces the first occurance of a string.
+	//In order to replace all occurrances, this method applys a global regular expression.
+	//The expression to be replaced might contain special regular expression characters.
+	//Those characteres are escaped here, so that they are treaded as normal characters.  
+	__replaceAll(text, expressionToReplace, expressionToInject){
+		var escapedExpression = expressionToReplace.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		var regularExpression = new RegExp(escapedExpression, 'g')
+        return text.replace(regularExpression, expressionToInject);
 	}
 
 	__createExpressionToInject(variableName, valueString, unitString) {

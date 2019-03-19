@@ -1,8 +1,9 @@
-import NameAndNumber from "../nameAndNumber.js";
-import AtomTreeNodeAdapter from "./atomTreeNodeAdapter.js";
-import AtomCodeAdaption from "./atomCodeAdaption.js";
-import AtomGraphicsAdaption from "./atomGraphicsAdaption.js";
-import TreeViewAction from "../treeview/TreeViewAction.js";
+import NameAndNumber from './../nameAndNumber.js';
+import AtomTreeNodeAdapter from './atomTreeNodeAdapter.js';
+import AtomCodeAdaption from './atomCodeAdaption.js';
+import AtomGraphicsAdaption from './atomGraphicsAdaption.js';
+import TreeViewAction from './../treeview/treeViewAction.js';
+import TreeView from './../../views/treeView.js';
 
 
 export default class Atom {		
@@ -29,7 +30,7 @@ export default class Atom {
 		
 		this.helpId = undefined;	
 		
-		this.image = "tree.png"
+		this.image = 'tree.png'
 			
 		this.isExpanded=true;
 		
@@ -37,13 +38,7 @@ export default class Atom {
 	}		
 
 	copy() {
-		var newAtom = new Atom(this.name);			
-		this.copyChildrenTo(newAtom);
-		newAtom.contextMenuActions = this.contextMenuActions; //TODO: check if this works correctly
-		newAtom.hlepId = this.helpId;
-		newAtom.image = this.image
-		newAtom.isExpanded = this.isExpanded;
-		return newAtom;		
+		return Atom.__deepCopy(this);		
 	}
 
 	__getDefaultName(){
@@ -51,21 +46,8 @@ export default class Atom {
 		var firstLetter = className[0].toLowerCase();
 		return firstLetter  + className.substring(1);
 	}
-
-	copyChildrenTo(newAtom){
-		newAtom.children = this.copyAtoms(this.children);		
-		newAtom.children.forEach(function(child){
-			child.parent = newAtom;
-		});	
-	}
-
-	copyAtoms(atomsToCopy) {
-		var atoms = [];
-		atomsToCopy.forEach(function(atomToCopy){
-			atoms.push(atomToCopy.copy())
-		});		
-		return atoms;
-	}
+	
+	
 
 	createControlAdaption(propertiesView, treeView){
 		
@@ -104,7 +86,7 @@ export default class Atom {
 				try {
 					await child.execute(treeView, optionalMonitor);
 				} catch (exception) {
-					var message = "Could not execute child '" + child.name + "' of '" + this.name + "'.";
+					var message = 'Could not execute child "' + child.name + '" of "' + this.name + '".';
 					console.error(message, exception);
 				}
 			}
@@ -123,15 +105,15 @@ export default class Atom {
 	createContextMenuActions(parentSelection, treeView) {
 
 		if(!treeView){
-			throw Error("treeView is undefined")
+			throw Error('treeView is undefined')
 		}
 
 		var actions = [];
 
 		//rename
 		actions.push(new TreeViewAction(
-						"Rename",
-						"rename.png",
+						'Rename',
+						'rename.png',
 						treeView,
 						()=>this.rename())
 					);
@@ -140,8 +122,8 @@ export default class Atom {
 		var canBeMovedUp = this.canBeMovedUp();
 		if (canBeMovedUp) {
 			actions.push(new TreeViewAction(
-							"Move up",
-							"up.png",
+							'Move up',
+							'up.png',
 							treeView,
 							()=>this.moveUp())
 						);
@@ -151,8 +133,8 @@ export default class Atom {
 		var canBeMovedDown = this.canBeMovedDown();
 		if (canBeMovedDown) {
 			actions.push(new TreeViewAction(
-							"Move down",
-							"down.png",
+							'Move down',
+							'down.png',
 							treeView,
 							()=>this.moveDown())
 						);
@@ -160,8 +142,8 @@ export default class Atom {
 
 		//delete
 		actions.push(new TreeViewAction(
-						"Delete",
-						"delete.png",
+						'Delete',
+						'delete.png',
 						treeView,
 						()=>this.delete())
 					);
@@ -211,7 +193,7 @@ export default class Atom {
 		if (canBeMovedUp()) {			
 			var currentChildren = this.parent.children;
 			var currentIndex = currentChildren.indexOf(this);
-			throw new Error("not yet implemented");
+			throw new Error('not yet implemented');
 			//Collections.rotate(currentChildren.subList(position, currentIndex + 1), 1);
 			
 			this.tryToRefreshAtom(parent);
@@ -261,7 +243,7 @@ export default class Atom {
 	//#region name	
 
 	rename() {
-		var newName = prompt("Please enter the new name:", this.name); 
+		var newName = prompt('Please enter the new name:', this.name); 
 		this.setName(newName);
 	}
 
@@ -308,8 +290,8 @@ export default class Atom {
 	/**
 	 * Adds the given Atom as a child but does not set the parent of the child. The given Atom
 	 * will be listed as a child of this Atom. If the given Atom is asked for its parent, the old
-	 * parent will be returned. This way, an Atom can be used in several trees as a child while the "one and
-	 * only real parent" is kept.
+	 * parent will be returned. This way, an Atom can be used in several trees as a child while the 'one and
+	 * only real parent' is kept.
 	 */
 	addChildReference(child) {
 		children.add(child);
@@ -344,10 +326,10 @@ export default class Atom {
 	 */
 	getChildFromRoot(childPathStartingWithRoot) {
 
-		var rootLength = 5; //"root."
+		var rootLength = 5; //'root.'
 		var isTooShort = childPathStartingWithRoot.length < rootLength + 1;
 		if (isTooShort) {
-			throw new Error("The path has to start with 'root.' but is '" + childPathStartingWithRoot + "'.");
+			throw new Error('The path has to start with "root." but is "' + childPathStartingWithRoot + '".');
 		}
 
 		var startsWithRoot = (childPathStartingWithRoot.substring(0, rootLength) === 'root.');
@@ -362,13 +344,16 @@ export default class Atom {
 			}
 			return child;
 		} else {
-			throw new Error("The path has to start with 'root.' but is '" + childPathStartingWithRoot + "'.");
+			throw new Error('The path has to start with "root." but is "' + childPathStartingWithRoot + '".');
 		}
 
 	}
 
-	createChild(atomClass, name) {
+	createChild(atomClass, name, value) {
 		var child = new atomClass(name);
+		if(value!==undefined){
+			child.value=value;
+		}
 		this.addChild(child);
 		return child;
 	}
@@ -416,7 +401,7 @@ export default class Atom {
 		});
 
 		if(!wantedChild){
-			throw new Error("Could not find child '" + childName + "' in '" + name + "'.");
+			throw new Error('Could not find child "' + childName + '" in "' + name + '".');
 		}
 		
 		return wantedChild;
@@ -441,7 +426,7 @@ export default class Atom {
         });
         		
         		if(!result){
-        			throw new Error("Could not find a child with class'" + clazz + "' in '" + this.name + "'.");
+        			throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');
         		}
         return result;
 		
@@ -545,7 +530,7 @@ export default class Atom {
 	//#region expansion state
 
 	setExpandedNodes(expandedNodesString) {		
-		this.expandedNodes = expandedNodesString.split(",");		
+		this.expandedNodes = expandedNodesString.split(',');		
 	}
 
 	//#end region
@@ -560,7 +545,7 @@ export default class Atom {
 		
 		var parentName = this.parent.name;
 		if (parentName) {
-			if (parentName.equals("invisibleRoot")) {
+			if (parentName.equals('invisibleRoot')) {
 				return false;
 			}
 		}
@@ -578,7 +563,7 @@ export default class Atom {
 		}
 		
 		if (!this.parent) {
-			throw new Error("The Atom '" + this.name + "' has no parent. Could not get root.");
+			throw new Error('The Atom "' + this.name + '" has no parent. Could not get root.');
 		} else {			
 			var parentIsRoot = (this.parent.name === 'root');
 			if (parentIsRoot) {
@@ -642,7 +627,7 @@ export default class Atom {
 	
 	getTreePath() {
 		return this.parent
-			? this.parent.getTreePath() + "." + this.name
+			? this.parent.getTreePath() + '.' + this.name
 			: this.name;
 	}
 
@@ -716,7 +701,69 @@ export default class Atom {
 		}
 		return nextNameAndNumber;
 	}
+	
+	//original source:https://stackoverflow.com/questions/4459928/how-to-deep-clone-in-javascript/
+	static __deepCopy(obj, parent, hash = new WeakMap()) {
+		
+		//primitives
+	    if (Object(obj) !== obj) {
+	    	return obj; 
+	    }
+	    
+	    //Set
+	    if (obj instanceof Set) {
+	    	return new Set(obj); 
+	    }
 
+	    //TreeView
+	    if (obj instanceof TreeView){
+	    	return obj;
+	    }
+
+	    //HtmlElements
+	    if (obj instanceof HTMLElement){
+	    	return obj;
+	    }
+	    
+	    //cyclic reference
+	    if (hash.has(obj)) {
+	    	return hash.get(obj); 
+	    }
+
+	   	    
+	    var result=undefined;
+
+		try{
+			result = obj instanceof Date ? new Date(obj)
+						 : obj instanceof RegExp ? new RegExp(obj.source, obj.flags)
+						 : obj.constructor ? new obj.constructor() 
+						 : Object.create(null);
+		} catch (error){
+			
+		}
+	                 
+	    hash.set(obj, result);
+	    
+	    //Map
+	    if (obj instanceof Map){
+	        Array.from(obj, ([key, val]) => result.set(key, Atom.__deepCopy(val, result, hash)) );
+	    }
+	    
+	    var keys = Object.keys(obj);	   
+	    var parentIndex = keys.indexOf('parent');
+	    if (parentIndex >-1){
+	    	keys.splice(parentIndex,1);
+	    	
+	    	var itemWithAssignedAttributes = Object.assign(result, ...keys.map(key => ({ [key]: Atom.__deepCopy(obj[key], result, hash) }) ));
+	    	itemWithAssignedAttributes['parent'] = parent;
+	    	return itemWithAssignedAttributes;
+	    }
+	  
+	    
+	    return Object.assign(result, ...keys.map(key => ({ [key]: Atom.__deepCopy(obj[key], result, hash) }) ));
+	}
+	
+	
 	//#end region	
 
 }

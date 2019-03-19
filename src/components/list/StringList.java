@@ -88,10 +88,7 @@ public class StringList extends AbstractAttributeAtom<StringList, List<String>> 
 		treezList.setShowHeaders(false);
 	}
 
-	@Override
-	public StringList copy() {
-		return new StringList(this);
-	}
+	
 
 	@Override
 	public Image provideImage() {

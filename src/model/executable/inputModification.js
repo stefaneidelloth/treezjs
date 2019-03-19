@@ -16,9 +16,7 @@ export default class InputModification extends ComponentAtom {
        
 	}
 
-	copy() {
-		//TODO
-	}	
+	
 
     createComponentControl(tabFolder){  
 		const page = tabFolder.append('treez-tab')

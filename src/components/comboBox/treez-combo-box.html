@@ -33,17 +33,22 @@
 						throw new Error("Value for combo box must not be undefined!");
 					}
 
-					var options = this.getAttribute('options');
-					if(!options){
-						throw new Error("The option '"+ newValue +"' is not known because there are no available options.");
-					}
+					
+					
 					let stringValue = newValue.toString();
-					var optionEntries = options.split(',');
-					if (optionEntries.indexOf(stringValue) > -1){
-						this.setAttribute('value', stringValue);	
+
+					var options = this.getAttribute('options');
+					if(options){
+						var optionEntries = options.split(',');
+						if (optionEntries.indexOf(stringValue) > -1){
+							this.setAttribute('value', stringValue);	
+						} else {
+							throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
+						}   
 					} else {
-						throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
-					}   
+						this.setAttribute('value', stringValue);
+					}
+					
 
 				}  			
 

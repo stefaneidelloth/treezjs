@@ -5,7 +5,7 @@ export default class Background extends GraphicsAtom {
 	constructor(){
 		super('background');
 		
-		this.color = 'white';
+		this.color = Color.white;
 		this.transparency = 0;
 		this.isHidden = false;
 	}	
@@ -39,7 +39,7 @@ export default class Background extends GraphicsAtom {
 
 	plot(dTreez, parentSelection, rectSelection, parent) {
 
-		this.bindString(()=>this.color, rectSelection, 'fill');
+		this.bindColor(()=>this.color, rectSelection, 'fill');
 		
 		this.addListenerAndRun(()=>this.transparency, () => {
 			try {

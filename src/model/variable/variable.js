@@ -17,10 +17,7 @@ export default class Variable extends ComponentAtom {
 		this.__isEnabled=true;
 	}
 	
-	copy() {
-		// TODO
-	}
-
+	
     createComponentControl(tabFolder){    
      
 		const page = tabFolder.append('treez-tab')

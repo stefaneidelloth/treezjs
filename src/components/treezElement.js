@@ -1,7 +1,7 @@
 class TreezElement extends HTMLElement {
 
 	static get observedAttributes() {
-        return ['value', 'disabled', 'hidden'];
+        return ['value', 'disabled', 'hidden', 'width'];
     }
 
 	//The purpose of the following properties is to 
@@ -12,7 +12,7 @@ class TreezElement extends HTMLElement {
 	//The only way to represent fals is to omit the value, e.g.
 	//<input type='checkbox' >
 	//vs.
-	//<input type='checkbox' checked> or <input type='checkbox' checked='foo'>
+	//<input type='checkbox' checked> or <input type='checkbox' checked='checked'>
 	
 	
     get value() {
@@ -53,7 +53,15 @@ class TreezElement extends HTMLElement {
 		} else {
 			this.removeAttribute('hidden');
 		}	  
-	}        
+	}  
+
+	get width(){
+		return this.getAttribute('width');
+	} 
+
+	set width(value){
+		this.setAttribute('width', value);
+	}     
 
 	constructor(){
 		super();	
@@ -86,6 +94,11 @@ class TreezElement extends HTMLElement {
 	//should be overridden by inheriting classes
     updateElements(newValue){
 		throw new Error('Not yet implemented for ' + this.constructor.name);
+    }
+
+    //can be overriden by inheriting classes
+    updateWidth(width){
+		this.style.width = width;
     }	
 
     //should be overridden by inheriting classes
@@ -103,6 +116,8 @@ class TreezElement extends HTMLElement {
 				         			?'none'
 				         			:null;
     }
+
+	
    
 
     //we want to avoid hard coded strings to pass/identify properties
@@ -154,8 +169,10 @@ class TreezElement extends HTMLElement {
 		   propertyName, 
 		   {
 			get: __getPropertyValueProxy,
-			set: __setPropertyValueProxy					
-		   }
+			set: __setPropertyValueProxy,
+			configurable: true					
+		   },
+
 		);	
 	
 
@@ -200,12 +217,18 @@ class TreezElement extends HTMLElement {
 			}
          }  
 
-          if(attr==='hidden'){                      	                		
+         if(attr==='hidden'){                      	                		
 			if(newStringValue!==oldStringValue){	
 				var newValue = !(newStringValue === null);
 				this.hideElements(newValue);							
 			}
-         }                   
+         }   
+
+          if(attr==='width'){                      	                		
+			if(newStringValue!==oldStringValue){				
+				this.updateWidth(newStringValue);							
+			}
+         }                 
     }
 
 			

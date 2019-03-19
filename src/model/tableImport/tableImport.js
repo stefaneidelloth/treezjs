@@ -9,21 +9,24 @@ export default class TableImport extends Model {
 
 	constructor(name) {		
 		super(name);
-        this.columnSeparator = ';';
+              
+        this.columnSeparator = ',';
+        this.customColumnHeaders = '';
         this.customJobId = 'myCustomJobId';
-       
         this.customQuery = '';
 
         this.host = 'host';
-		this.image = 'tableImport.png';
 
-        this.isAppendingData= false;
+		this.image = 'tableImport.png';
+        this.isAppendingData= false;        
         this.isFilteringforJobId = false;
-        this.isInheritingSourceFilePath = true;
+        this.isInheritingSourceFilePath = false;
         this.isLinkingSource = false;
 		this.isRunnable=true;
-
         this.isUsingCustomQuery= false;
+
+        this.numberOfHeaderLinesToSkip=0;
+
         this.password = 'password';
         this.port = 'port';
 
@@ -54,11 +57,7 @@ export default class TableImport extends Model {
 		this.__customJobIdSelection = undefined;
 		this.__isUsingCustomQuerySelection = undefined;
 		this.__customQuerySelection = undefined;
-	}
-
-	copy() {
-		//TODO
-	}
+	}	
 
 	createComponentControl(tabFolder){    
 	     
@@ -82,8 +81,7 @@ export default class TableImport extends Model {
 	         .label('Import data')
 	         .addAction(()=>this.execute(this.__treeView)
 	        		 			.catch(error => {
-									  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
-									  monitor.done();
+									  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);									 
 								  })
 	         );
 		 
@@ -132,6 +130,14 @@ export default class TableImport extends Model {
 		this.__sourceFilePathSelection = section.append('treez-file-path')
 			.label('Source file')
 			.bindValue(this, ()=>this.sourceFilePath);
+
+		this.__numberOfHeaderLinesToSkipSelection = section.append('treez-text-field')
+			.label('Number of header lines to skip')
+			.bindValue(this, ()=>this.numberOfHeaderLinesToSkip);
+
+		this.__customColumnHeadersSelection = section.append('treez-text-field')
+			.label('Custom column headers (as comma separated list)' )
+			.bindValue(this, ()=>this.customColumnHeaders);
 		
 		this.__columnSeparatorSelection = section.append('treez-text-field')
 			.label('Column separator')
@@ -262,6 +268,8 @@ export default class TableImport extends Model {
 			this.__sourceFilePathSelection.show();
 			this.__columnSeparatorSelection.show();
 		}
+
+		this.__numberOfHeaderLinesToSkipSelection.show();
 		
 
 		this.__hostSelection.hide();
@@ -287,6 +295,8 @@ export default class TableImport extends Model {
 		} else {
 			this.__sourceFilePathSelection.show();			
 		}
+
+		this.__numberOfHeaderLinesToSkipSelection.hide();
 		
 		this.__columnSeparatorSelection.hide();
 		
@@ -309,8 +319,8 @@ export default class TableImport extends Model {
 		this.__isFilteringforJobIdSelection.show();	
 
 		this.__isInheritingSourceFilePathSelection.hide();
-		this.__sourceFilePathSelection.hide();		
-		
+		this.__sourceFilePathSelection.hide();
+		this.__numberOfHeaderLinesToSkipSelection.hide();	
 		this.__columnSeparatorSelection.hide();
 		
 		this.__hostSelection.show();
@@ -372,6 +382,8 @@ export default class TableImport extends Model {
 			table = this.__writeDataToTargetTable(tableData, this.resultTableModelPath, this.isAppendingData);
 		}
 
+		treeView.refresh();
+
 		//create a copy of the target table to be able to conserve it as a model output for the current run
 		var outputTableName = this.name + 'Output';
 		var outputTable = table.copy();
@@ -383,18 +395,62 @@ export default class TableImport extends Model {
 		return outputTable;
 	}
 
-	async importTableData() {			
-		switch (this.tableSourceType) {
-		case TableSourceType.csv:
-			return await TextDataTableImporter.importData(this.sourcePath, this.columnSeparator, this.rowLimit);			
+	async __importTableData() {			
+		switch (this.sourceType) {
+		case TableSourceType.csv:	
+			
+					
+			
+			return await TextImporter.importData(
+				this.sourcePath, 
+				this.numberOfHeaderLinesToSkip, 
+				this.customColumnHeaderArray, 
+				this.columnSeparator, 
+				this.isFilteringForJobId,
+				this.jobId,
+				this.rowLimit				
+				);	
+			
 		case TableSourceType.sqLite:
-			return await SqLiteImporter.importData(this.sourcePath, this.password, this.tableName, this.isFilteringforJobId, this.jobId, this.rowLimit, 0);			
+			var rowOffset = 0;
+			return await SqLiteImporter.importData(
+				this.sourcePath, 
+				this.password, 
+				this.tableName, 
+				this.isFilteringforJobId, 
+				this.jobId, 
+				this.rowLimit,
+				rowOffset);	
+			
 		case TableSourceType.mySql:			
 			var url = this.host + ":" + this.port + "/" + this.schema;
-			return await MySqlImporter.importData(url, this.user, this.password, this.tableName, this.isFilteringforJobId, this.jobId, this.rowLimit, 0);			
+			var rowOffset = 0;
+			return await MySqlImporter.importData(
+				url, this.user, 
+				this.password,
+				 this.tableName, 
+				 this.isFilteringforJobId, 
+				 this.jobId, 
+				 this.rowLimit, 
+				 rowOffset);
+			
 		default:
 			throw new Error('The TableSourceType "' + tableSourceType + '" is not yet implemented.');
 		}
+	}
+	
+	get customColumnHeaderArray(){
+
+		if(!this.customColumnHeaders){
+			return [];
+		}
+
+		var customColumnHeaders = [];
+		var customHeaders = this.customColumnHeaders.split(',');
+		for(var header of customHeaders){
+			customColumnHeaders.push(header.trim());
+		}
+		return customColumnHeaders;
 	}
 
 	get sourcePath() {		
@@ -435,21 +491,21 @@ export default class TableImport extends Model {
 
 		var table = this.getChildFromRoot(tableModelPath);
 		
-		this.__checkAndPrepareColumnsIfRequired(tableData, treezTable);
+		TableImport.__checkAndPrepareColumnsIfRequired(tableData, table);
 		
 		if (!this.isAppendingData) {
 			table.deleteAllRows();
 		}
 		
-		for (var rowEntries of tableData.getRowData()) {
-			table.addRow(rowEntries);
+		for (var rowEntries of tableData.rowData) {
+			table.createRow(rowEntries);
 		}
 
 		return table;
 	}
 
-	static checkAndPrepareColumnsIfRequired(tableData, table) {
-		var headers = tableData.getHeaderData();		
+	static __checkAndPrepareColumnsIfRequired(tableData, table) {
+		var headers = tableData.headerData;		
 		if (table.hasColumns) {			
 			var columnNamesAreOk = table.checkHeaders(headers);
 			if (!columnNamesAreOk) {

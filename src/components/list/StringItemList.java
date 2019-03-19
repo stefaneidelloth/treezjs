@@ -84,10 +84,7 @@ public class StringItemList extends AbstractAttributeAtom<StringItemList, List<S
 		treezList.setFirstRowAutoCreation(false);
 	}
 
-	@Override
-	public StringItemList copy() {
-		return new StringItemList(this);
-	}
+	
 
 	@Override
 	public Image provideImage() {

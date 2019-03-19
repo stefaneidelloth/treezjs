@@ -7,6 +7,8 @@ class TreezImageComboBox extends TreezComboBox {
     }                
 
 	connectedCallback() {
+		
+		this.beforeConnectedCallbackHook();
     	
 
         if(!this.__comboBox){   
@@ -64,7 +66,14 @@ class TreezImageComboBox extends TreezComboBox {
         this.updateElements(this.value);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
+        
+        
     }  
+	
+	//can be overridden by inheriting classes
+	beforeConnectedCallbackHook(){
+		
+	}
 
     updateElements(newValue){                 	
     	if(this.__imageLabel){                    	
@@ -103,16 +112,25 @@ class TreezImageComboBox extends TreezComboBox {
 	__selectedImageUrl(){
 		let val = this.getAttribute('value');
 		if (val){
-			return val + this.__imageFormat()
+			return this.__nameToImageUrl(val);
 		} else {
 			if (this.options){
 				let optionEntries = this.options.split(',')
-				if(optionEntries.length>0){
-					return optionEntries[0] + this.__imageFormat();
+				if(optionEntries.length>0){					
+					return this.__nameToImageUrl(optionEntries[0]);
 				}
 			}
 			return undefined;
 		}
+	}
+
+	__nameToImageUrl(name){
+
+        var trimmedName = this.constructor.name.substring(5);
+
+        var folderName = trimmedName[0].toLowerCase() + trimmedName.substring(1);
+
+		return 'src/components/' + folderName + '/' + name + this.__imageFormat()
 	}		
 
 	__imageFormat(){
@@ -135,7 +153,7 @@ class TreezImageComboBox extends TreezComboBox {
 			optionImage.title = option;
 			optionElement.appendChild(optionImage);	
 
-		 	let optionImageUrl = option + self.__imageFormat();
+		 	let optionImageUrl = this.__nameToImageUrl(option);
 		 	optionImage.src=optionImageUrl;					 	
 
 		 	optionElement.onclick = ()=>{

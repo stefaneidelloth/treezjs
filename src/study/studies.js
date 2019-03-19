@@ -14,9 +14,6 @@ export default class Studies extends ComponentAtom {
 		this.image = "studies.png";
 	}
 
-	copy() {
-		//TODO
-	}
 
 	createComponentControl(tabFolder){    
 	     

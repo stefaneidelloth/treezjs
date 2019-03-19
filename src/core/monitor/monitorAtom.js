@@ -5,11 +5,7 @@ export default class MonitorAtom extends Atom {
 	constructor(name) {
 		super(name);
 		this.isRunnable = false;
-	}
-
-	copy(){
-		//TODO
-	}
+	}	
 
 	createControlAdaption(parent, treeView) {
 
@@ -24,9 +20,4 @@ export default class MonitorAtom extends Atom {
  		
 	}	
 
-
-
-	
-
-	//#end region
 }

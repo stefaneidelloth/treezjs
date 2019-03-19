@@ -9,13 +9,10 @@ export default class ColumnFolder extends ComponentAtom {
 			name='columns';
 		}
 		super(name);	
-		this.image = 'columns.png';		
+		this.image = 'columns.png';			
 	}
 
-	copy() {
-		//TODO
-	}
-
+	
 	createComponentControl(tabFolder){    
 	     
 		const page = tabFolder.append('treez-tab')

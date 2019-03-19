@@ -6,16 +6,15 @@ treez-tab-folder {
     font-size: 12px;   
 }
 
-treez-tab-folder-header {   
+treez-tab-folder-header {   	
     color: #777777;   
     height: 21px;	
 }
 
-treez-tab-header {   
+treez-tab-header {  	
     background-color:#f2f2f2;
     display:inline-block;
-    margin-left: 2px;
-   
+    margin-left: 2px;   
     padding:8px;
     padding-top:1px;
     padding-bottom:3px;
@@ -38,13 +37,17 @@ treez-tab-header.selected {
 }
 
 treez-tab {   
+	position:absolute;
+	top:36px;
+	left:0;
+	bottom:0;
+	right:0;
     border-top: 1px solid;
     border-color:#cccccc;
     border-bottom: none;
-    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2);   
-    overflow-y: auto;	
-	height: 100%;	
-	width:100%;
+    box-shadow: 2px -2px 2px -2px rgba(0,0,0,0.2);  
+    overflow-x: hidden;	 
+    overflow-y: auto;
 	background-color:white;
 	
 }

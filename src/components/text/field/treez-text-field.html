@@ -24,7 +24,8 @@
 
                         var label = document.createElement('label');  
                         this.__label = label;                     
-                        label.innerText = this.label;                       
+                        label.innerText = this.label;  
+                        label.setAttribute('class','treez-text-field-label');
                         this.appendChild(label);                                                            
 
                         var textField = document.createElement('input'); 
@@ -32,6 +33,10 @@
                         this.appendChild(textField); 
                         textField.setAttribute('class','treez-text-field')                
                         textField.onchange = ()=>this.__textFieldChanged(); 
+                    }
+
+                    if(!this.width){
+                    	this.width='99%';
                     }
                     
                     this.updateElements(this.value);	
@@ -43,7 +48,13 @@
                 	if(this.__textField){                    	
 						this.__textField.value= newValue; 
                 	}					    
-                } 
+                }
+
+                updateWidth(width){
+                	if(this.__textField){ 
+                		this.__textField.style.width = width;  //TODO: consider label width?   
+                	}                	
+                }                 
 
                 disableElements(newValue){
 					if(this.__textField){                    	

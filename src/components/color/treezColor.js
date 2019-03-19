@@ -1,7 +1,7 @@
 class TreezColor extends LabeledTreezElement {
             		
 	get value() {
-	  var stringValue = this.__colorPicker.value;
+	  var stringValue = this.getAttribute('value');
 	  return this.convertFromStringValue(stringValue);
 	}
 
@@ -55,7 +55,8 @@ class TreezColor extends LabeledTreezElement {
 			this.__colorPicker = colorPicker;		
 			container.appendChild(colorPicker); 
 			colorPicker.className = 'treez-color-input';
-			colorPicker.type='color';            		
+			colorPicker.type='color';  
+			          		
         }
         
         this.updateElements(this.value);	
@@ -66,6 +67,7 @@ class TreezColor extends LabeledTreezElement {
     updateElements(color){
     	if(this.__colorPicker){                    	
 			this.__colorPicker.value= color.hexString; 
+			this.__colorPicker.title = color.hexString;
     	}
     }	
    

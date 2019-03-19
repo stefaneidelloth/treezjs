@@ -31,10 +31,7 @@ export default class Executable extends Model {
         
         this.treeView=undefined;
 	}
-
-	copy() {
-		// TODO
-	}
+	
 
     createComponentControl(tabFolder){    
      

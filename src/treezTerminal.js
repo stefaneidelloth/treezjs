@@ -26,7 +26,7 @@ export default class TreezTerminal {
     	return jQuery.get('browseFileOrDirectoryPath', initialDirectory);    
     }
 
-    async readTextFile(filePath, resultHandler){
+    async readTextFile(filePath){
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
 		return jQuery.get('readTextFile', uri); 

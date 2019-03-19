@@ -60,10 +60,7 @@ public class OutputAtom extends AbstractUiSynchronizingAtom<OutputAtom> {
 		return this;
 	}
 
-	@Override
-	public OutputAtom copy() {
-		return new OutputAtom(this);
-	}
+	
 
 	@Override
 	public AbstractControlAdaption createControlAdaption(

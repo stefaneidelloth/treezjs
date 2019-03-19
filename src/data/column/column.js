@@ -25,11 +25,8 @@ export default class Column extends ComponentAtom {
 		this.__legendSelection = undefined;
 	}	
 
-	copy() {
-		//TODO
-	}
 	
-	 createComponentControl(tabFolder){    
+	createComponentControl(tabFolder){    
 	     
 		const tab = tabFolder.append('treez-tab')
 	            .label('Data');

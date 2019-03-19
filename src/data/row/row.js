@@ -9,10 +9,7 @@ export default class Row {
 		this.__hasValidationErrors = false;
 	}
 	
-	copy() {
-		//TODO
-	}
-
+	
 	get values(){
 		return Object.values(this.__entryMap);
 	}	

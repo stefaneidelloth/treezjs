@@ -13,9 +13,7 @@ export default class JavaExecutable extends Executable {
 	}
 
 
-	 copy() {
-		//TODO
-	}
+	
 	 
 	 __createExecutableSection(tab) {
 

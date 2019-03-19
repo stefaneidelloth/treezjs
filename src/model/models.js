@@ -12,9 +12,7 @@ export default class Models extends Model {
 		this.image = "models.png";
 	}
 
-	copy() {
-		//TODO
-	}
+	
 
 	createComponentControl(tabFolder){    
 	     

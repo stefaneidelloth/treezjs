@@ -36,12 +36,7 @@ export default class Study extends ComponentAtom {
 		section.append('treez-section-action')
 		 	.label('Run')
 	        .image('run.png')	       
-	        .addAction(()=>this.execute(this.__treeView)
-	        				   .catch(error => {
-	        					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
-	        					   	monitor.done();
-	        				   })
-	        );		
+	        .addAction(()=>this.execute(this.__treeView));		
 		
 
 		this.sectionContent = section.append('div'); 	     
@@ -77,60 +72,63 @@ export default class Study extends ComponentAtom {
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
 		}
-		try {
-			this.__treeView = treeView;
-			this.isCanceled = false;
-			
-			var className = this.constructor.name;
-	
-			var startMessage = 'Executing ' + className + ' "' + this.name + '"';
-			monitor.info(startMessage);
-			
-			var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
-			monitor.info('Number of (enabled) ranges: ' + numberOfRanges);
-		
-			var studyTitle = "Running " + className;
-			monitor.title = studyTitle;
-	
-			var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
-			monitor.setTotalWork(numberOfSimulations);
-					
-			monitor.info("Number of total simulations: " + numberOfSimulations);
-	
-			//reset job index to 1
-			ModelInput.resetIdCounter();
-	
-			//create model inputs
-			var modelInputs = this.inputGenerator.createModelInputs();
-	
-			//prepare result structure
-			this.__prepareResultStructure(monitor);
-			treeView.refresh();
-	
-			//get sweep output atom
-			var studyOutputAtomPath = this.__createStudyOutputAtomPath();
-			var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
-	
-			//remove all old children if they exist
-			studyOutputAtom.removeAllChildren();
-	
-			//execute target model for all model inputs
-			this.numberOfRemainingModelJobs = numberOfSimulations;
-	
-			if (!monitor.isCanceled) {
-				var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
-	
-				if (this.isConcurrent) {
-					await this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
-				} else {
-					await this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
-				}
-			}		
-		} catch (exception) {
-			monitor.error('Could not execute study "' + this.name + '"!', exception);
-			monitor.done();
-		}
+		await this.__doExecute(treeView, monitor)
+			  .catch((exception)=> {
+					monitor.error('Could not execute study "' + this.name + '"!', exception);
+					monitor.cancel();
+			  });
 	}	
+	
+	async __doExecute(treeView, monitor){
+		this.__treeView = treeView;
+		this.isCanceled = false;
+		
+		var className = this.constructor.name;
+
+		var startMessage = 'Executing ' + className + ' "' + this.name + '"';
+		monitor.info(startMessage);
+		
+		var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
+		monitor.info('Number of (enabled) ranges: ' + numberOfRanges);
+	
+		var studyTitle = "Running " + className;
+		monitor.title = studyTitle;
+
+		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
+		monitor.setTotalWork(numberOfSimulations);
+				
+		monitor.info("Number of total simulations: " + numberOfSimulations);
+
+		//reset job index to 1
+		ModelInput.resetIdCounter();
+
+		//create model inputs
+		var modelInputs = this.inputGenerator.createModelInputs();
+
+		//prepare result structure
+		this.__prepareResultStructure(monitor);
+		treeView.refresh();
+
+		//get sweep output atom
+		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
+		var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
+
+		//remove all old children if they exist
+		studyOutputAtom.removeAllChildren();
+
+		//execute target model for all model inputs
+		this.numberOfRemainingModelJobs = numberOfSimulations;
+
+		if (!monitor.isCanceled) {
+			var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
+
+			if (this.isConcurrent) {
+				await this.__executeTargetModelConcurrently(treView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
+			} else {
+				await this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
+			}
+		}		
+	}
 	
 	
 	__finishOrCancelIfDone(treeView, monitor) {
@@ -329,10 +327,11 @@ export default class Study extends ComponentAtom {
 			monitor.setDescription('=>' + jobTitle);
 
 			var modelOutput = await model.runModel(modelInput, treeView, jobMonitor);
-			
-			var modelOutputName = self.name + 'OutputId' + modelInput.jobId;
-			modelOutput.name = modelOutputName;
-			outputAtom.addChild(modelOutput);
+			if(modelOutput){
+				var modelOutputName = '#' + modelInput.jobId;
+				modelOutput.name = modelOutputName;
+				outputAtom.addChild(modelOutput);
+			}			
 
 			jobFinishedHook();			
 

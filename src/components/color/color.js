@@ -8,7 +8,7 @@ class Color extends Enum {
 }
 
 Color.forHexString = function(colorHexString){
-	for(var color of this.values()){
+	for(var color of this.values){
 		if(color.hexString === colorHexString){
 			return color;
 		}

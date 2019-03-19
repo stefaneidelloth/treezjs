@@ -20,7 +20,7 @@ export default class Model extends ComponentAtom {
          */
         this._studyId = undefined;
 
-        this._studyDescription = "";
+        this._studyDescription = '';
 
         /**
          * The id for the last execution of the model. This might be the id from a model input while executing a study (e.g.
@@ -29,15 +29,11 @@ export default class Model extends ComponentAtom {
         this._jobId = 1;
 	}
 
-	copy(atomToCopy){ //TODO
 
-    }
-
-	
 
 	__assignModelInput(modelInput, monitor) {
 
-		monitor.info("Assigning model input for " + this.constructor.name + " '" + this.name + "'");
+		monitor.info('Assigning model input for ' + this.constructor.name + ' "' + this.name + '"');
 
 		if (modelInput != null) {
 
@@ -53,7 +49,7 @@ export default class Model extends ComponentAtom {
                 if (variableAtom !== null) {
                     variableAtom.value = quantityToAssign;
                 } else {
-                    throw new Error("Could not get variable atom for model path " + variableModelPath);
+                    throw new Error('Could not get variable atom for model path ' + variableModelPath);
                 }
             });
 
@@ -81,7 +77,7 @@ export default class Model extends ComponentAtom {
 		this.__assignModelInput(modelInput, monitor);
 
 		if (monitor.isCanceled) {
-			monitor.error("Model '" + name + "' does not run since execution has been canceled.");
+			monitor.error('Model "' + name + '" does not run since execution has been canceled.');
 			return this.createEmptyModelOutput();
 		}
 
@@ -93,9 +89,8 @@ export default class Model extends ComponentAtom {
 	 */
 	async doRunModel(treeView, monitor) {
 
-		
 
-		monitor.info("Running " + this.constructor.name + " '" + this.name + "'");
+		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');
 
 		const modelOutput = this.__createEmptyModelOutput();
 		
@@ -108,9 +103,14 @@ export default class Model extends ComponentAtom {
 				}
 			}
 		}
-			
+		
+		if(modelOutput.children.length>0){
+			return modelOutput; 		
+		} else {
+			return null;
+		}			
 
-		return modelOutput; 		
+		
 	}
 
 	
@@ -120,7 +120,7 @@ export default class Model extends ComponentAtom {
 	 * structure;
 	 */
 	__createEmptyModelOutput() {
-		const rootOutputName = this.name + "Output";
+		const rootOutputName = this.name;
 		return new ModelOutput(rootOutputName, this.image);
 		
 	}
@@ -136,7 +136,7 @@ export default class Model extends ComponentAtom {
 			variableAtom = this.getChildFromRoot(variableModelPath);
 			return variableAtom;
 		} catch (exception) {
-			const message = "Could not find a variable field for the model path '" + variableModelPath + "'.";
+			const message = 'Could not find a variable field for the model path "' + variableModelPath + '".';
 			console.error(message);
 			return null;
 		}
@@ -153,12 +153,12 @@ export default class Model extends ComponentAtom {
                 if (child instanceof Model) {
                     return  child.doRunModel(refreshable, monitor);
                 } else {
-                    throw new Error("The found child '" + child.name + "' is not a model.");
+                    throw new Error('The found child "' + child.name + '" is not a model.');
                 }
             }
         }
 
-        const message = "Could not find a child of wanted class '" + wantedConstructor.name + "'.";
+        const message = 'Could not find a child of wanted class "' + wantedConstructor.name + '".';
         throw new Error(message);
 
 	}

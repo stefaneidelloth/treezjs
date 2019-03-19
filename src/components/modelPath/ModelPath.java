@@ -270,10 +270,7 @@ public class ModelPath extends AbstractStringAttributeAtom<ModelPath> {
 		return this;
 	}
 
-	@Override
-	public ModelPath copy() {
-		return new ModelPath(this);
-	}
+	
 
 	@Override
 	public AbstractStringAttributeAtom<ModelPath> createAttributeAtomControl(

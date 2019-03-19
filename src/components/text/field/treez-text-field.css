@@ -1,9 +1,11 @@
-
-.treez-text-field {   
-    font-family: Consolas;
-    font-size: 12px;
-    width:99%;  
-    resize:vertical;   
-    margin-bottom:10px;
+.treez-text-field-label {
+	margin-right:5px;	
 }
 
+.treez-text-field {
+    font-family: Consolas;
+    font-size: 12px;   
+    resize:vertical;
+    margin-bottom:10px;
+    margin-right:5px;
+}

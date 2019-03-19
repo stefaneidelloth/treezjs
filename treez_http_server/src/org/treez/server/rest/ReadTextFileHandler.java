@@ -1,5 +1,6 @@
 package org.treez.server.rest;
 
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -19,8 +20,10 @@ public class ReadTextFileHandler extends AbstractHttpQueryHandler {
 		
 		try {			
 			return Files.readString(Path.of(filePath));	
+		} catch(MalformedInputException exception) {
+			return ERROR + "Please check the format of the text file. It has to be UTF8. " + exception;
 		} catch(Exception exception) {
-			return ERROR + exception.getMessage();
+			return ERROR + exception;
 		}   	
 			
 	}	
