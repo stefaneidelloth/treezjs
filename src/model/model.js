@@ -1,6 +1,6 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
-import ModelOutput from './output/modelOutput.js';
+import OutputAtom from './../core/output/outputAtom.js';
 
 
 export default class Model extends ComponentAtom {	
@@ -119,10 +119,8 @@ export default class Model extends ComponentAtom {
 	 * Creates an empty model output. It wraps a RootOutput that is used to organize the child model outputs in a tree
 	 * structure;
 	 */
-	__createEmptyModelOutput() {
-		const rootOutputName = this.name;
-		return new ModelOutput(rootOutputName, this.image);
-		
+	__createEmptyModelOutput() {		
+		return new OutputAtom(this.name, this.image);		
 	}
 
 	/**

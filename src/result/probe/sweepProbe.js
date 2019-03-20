@@ -1,486 +1,339 @@
-package org.treez.results.atom.probe;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.modelPath.ModelPath;
-import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.atom.variablerange.VariableRange;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.core.data.column.ColumnBlueprint;
-import org.treez.core.data.column.ColumnType;
-import org.treez.core.data.row.Row;
-import org.treez.core.quantity.Quantity;
-import org.treez.data.column.Column;
-import org.treez.data.output.OutputAtom;
-import org.treez.data.table.nebula.Table;
-import org.treez.results.Activator;
+import Probe from './probe.js';
+import SweepOutput from './../../study/sweep/sweepOutput.js';
+import Table from './../../data/table/table.js';
+import VariableRange from './../../study/range/variableRange.js';
+import ColumnBlueprint from './../../data/column/columnBlueprint.js'; 
 
 /**
  * Collects data from a sweep parameter variation and puts it in a single (probe-) table. That table can easier be used
  * to produce plots than the distributed sweep results.
  */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class SweepProbe extends AbstractProbe {
+export default class SweepProbe extends Probe {
 
-	private static final Logger LOG = Logger.getLogger(SweepProbe.class);
+	constructor(name) {
+		super(name);		
+		this.image = 'sweep.png';
+		
+		this.columnNameSeparator = '_'; 
+		
+		this.domainLabel = 'x'; 
+		this.domainRangePath = 'root.studies.sweep.firstRange'; 
+						
+		this.firstFamilyLegend = 'family1'; 
+		this.firstFamilyRangePath = '';	
+		
+		this.secondFamilyLegend = 'family2'; 
+		this.secondFamilyRangePath = '';	
+		
+		/**
+		 * If there is only one result column, this equals the name of the result column. If there are several
+		 * result columns, this will be used as name prefix. The family range indices will also be added to the result
+		 * column names.
+		 */
+		this.probeLabel = 'y';	
 
-	//#region ATTRIBUTES
+		this.sweepOutputPath = '';
+		this.firstProbeTablePath = '';
+		this.probeColumnIndex = 0;
+		this.probeRowIndex = 0;
 
-	/**
-	 * Used as separator in column names, e.g. probeColumn_1_3
-	 */
-	private static final String NAME_SEPARATOR = "_";
-
-	//x section
-
-	/**
-	 * domain label (name of first column)
-	 */
-	public final Attribute<String> domainLabel = new Wrap<>();
-
-	/**
-	 * domain range (values of first column)
-	 */
-	public final Attribute<String> domainRange = new Wrap<>();
-
-	//range section
-
-	/**
-	 * probe label If there is only one result column, this equals the name of the result column. If there are several
-	 * result columns, this will be used as name prefix. The family range indices will also be added to the result
-	 * column names.
-	 */
-	public final Attribute<String> probeLabel = new Wrap<>();
-
-	//first family section
-
-	/**
-	 * first family legend (will be saved as column description)
-	 */
-	public final Attribute<String> firstFamilyLegend = new Wrap<>();
-
-	/**
-	 * first family range
-	 */
-	public final Attribute<String> firstFamilyRange = new Wrap<>();
-
-	//second family section
-
-	/**
-	 * second family legend (will be saved as column description)
-	 */
-	public final Attribute<String> secondFamilyLegend = new Wrap<>();
-
-	/**
-	 * second family range
-	 */
-	public final Attribute<String> secondFamilyRange = new Wrap<>();
-
-	//probe section
-
-	//public final Attribute<String> probeName = new Wrap<>();
-
-	public final Attribute<String> sweepOutput = new Wrap<>();
-
-	public final Attribute<String> firstProbeTable = new Wrap<>();
-
-	public final Attribute<String> probeColumnIndex = new Wrap<>();
-
-	public final Attribute<String> probeRowIndex = new Wrap<>();
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public SweepProbe(String name) {
-		super(name);
-		createSweepProbeModel();
+		this.__firstProbeTableSelection = undefined;
 	}
 
-	//#end region
+	 createComponentControl(tabFolder){    
+	     
+		const page = tabFolder.append('treez-tab')
+            .label('Data');
+					
+		this.__createDomainSection(page);
+		this.__createFirstFamilySection(page);
+		this.__createSecondFamilySection(page);
+		this.__crateProbeSection(page);
+	 }
+	 
+	__createDomainSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Domain');		
+		
+		section.append('treez-section-action')
+            .image('run.png')
+            .label('Run probe')
+            .addAction(()=>this.execute(this.__treeView));		
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Domain label')
+			.bindValue(this, ()=>this.domainLabel);		
+		
+		sectionContent.append('treez-model-path')
+			.label('Domain range')
+			.nodeAttr('atomClasses', [VariableRange])	
+			.bindValue(this, ()=>this.domainRangePath);			
+	}
+	
+	__createFirstFamilySection(page){
+		
+		var section = page.append('treez-section')
+			.label('First family')
+			.attr('collapsed','collapsed');
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Legend for first family')
+			.bindValue(this, ()=>this.firstFamilyLegend);	
+		
+		sectionContent.append('treez-model-path')
+			.label('Range for first family')
+			.nodeAttr('atomClasses', [VariableRange])	
+			.bindValue(this, ()=>this.firstFamilyRangePath);		
+	}
+	
+	__createSecondFamilySection(page){
+		
+		var section = page.append('treez-section')
+			.label('Second family')
+			.attr('collapsed','collapsed');
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Legend for second family')
+			.bindValue(this, ()=>this.secondFamilyLegend);	
+		
+		sectionContent.append('treez-model-path')
+			.label('Range for second family')
+			.nodeAttr('atomClasses', [VariableRange])	
+			.bindValue(this, ()=>this.secondFamilyRangePath);		
+	}
+	
+	__crateProbeSection(page){
+		var section = page.append('treez-section')
+			.label('Probe');
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Probe label')
+			.bindValue(this, ()=>this.probeLabel);
 
-	//#region METHODS
+		sectionContent.append('treez-model-path')
+			.label('Sweep output')
+			.nodeAttr('atomClasses', [SweepOutput])	
+			.bindValue(this, ()=>this.sweepOutputPath)
+			.onChange(()=>this.__sweepOutputPathChanged());
+		
+		this.__firstProbeTableSelection = sectionContent.append('treez-model-path')
+			.label('First probe table')
+			.nodeAttr('atomClasses', [Table])			
+			.bindValue(this, ()=>this.firstProbeTablePath);
 
-	@SuppressWarnings({ "checkstyle:javancss", "checkstyle:executablestatementcount" })
-	private void createSweepProbeModel() {
-		AttributeRoot root = new AttributeRoot("root");
+		this.__sweepOutputPathChanged();
 
-		org.treez.core.atom.attribute.attributeContainer.Page page = root.createPage("page");
+		sectionContent.append('treez-text-field')
+			.label('Column index')
+			.bindValue(this, ()=>this.probeColumnIndex);
 
-		//domain section
-		Section domainSection = page.createSection("domainSection", "DomainSectionHelpId");
-		domainSection.setLabel("Domain");
-		domainSection.createSectionAction("action", "Run probe", () -> execute(treeView));
-
-		TextField domainLabelField = domainSection.createTextField(domainLabel, this, "x");
-		domainLabelField.setLabel("Domain label");
-		ModelPath xRangePath = domainSection.createModelPath(domainRange, this, "", VariableRange.class, this);
-		xRangePath.setLabel("Domain range");
-		xRangePath.setSelectionType(ModelPathSelectionType.FLAT);
-		xRangePath.set("root.studies.sweep.threshold");
-
-		//first family section
-		Section firstFamilySection = page.createSection("firstFamily") //
-				.setLabel("First family");
-		firstFamilySection.setExpanded(false);
-
-		TextField firstFamilyField = firstFamilySection.createTextField(firstFamilyLegend, this, "family1");
-		firstFamilyField.setLabel("Legend for first family");
-		ModelPath firstFamilyRangePath = firstFamilySection.createModelPath(firstFamilyRange, this, "",
-				VariableRange.class, this);
-		firstFamilyRangePath.setLabel("Range for first family");
-
-		//second family section
-		Section secondFamilySection = page.createSection("secondFamily") //
-				.setLabel("Second family");
-		secondFamilySection.setExpanded(false);
-
-		TextField secondFamilyField = secondFamilySection.createTextField(secondFamilyLegend, this, "family2");
-		secondFamilyField.setLabel("Legend for second family");
-		ModelPath secondFamilyRangePath = secondFamilySection.createModelPath(secondFamilyRange, this, "",
-				VariableRange.class, this);
-		secondFamilyRangePath.setLabel("Range for second family");
-
-		//probe section
-		Section probeSection = page.createSection("probe", "Probe");
-
-		TextField probeLabelField = probeSection.createTextField(probeLabel, this, "y");
-		probeLabelField.setLabel("Probe label");
-
-		ModelPath sweepOutputModelPath = probeSection.createModelPath(sweepOutput, this, "", OutputAtom.class, this);
-		sweepOutputModelPath.setLabel("Sweep output");
-
-		ModelPath firstProbeTablePath = probeSection.createModelPath(firstProbeTable, this, sweepOutputModelPath,
-				Table.class);
-		firstProbeTablePath.setLabel("First probe table");
-
-		TextField columnIndex = probeSection.createTextField(probeColumnIndex, this, "0");
-		columnIndex.setLabel("Column index");
-
-		TextField rowIndex = probeSection.createTextField(probeRowIndex, this, "0");
-		rowIndex.setLabel("Row index");
-
-		setModel(root);
-
+		sectionContent.append('treez-text-field')
+			.label('Row index')
+			.bindValue(this, ()=>this.probeRowIndex);		
 	}
 
-	@Override
-	protected void afterCreateControlAdaptionHook() {
-		updateRelativePathRoots();
+	__sweepOutputPathChanged(){
+		var relativeRoot = null;
+		try{
+			relativeRoot = this.getChildFromRoot(this.sweepOutputPath);
+		} catch(error){
+
+		}
+		this.__firstProbeTableSelection.nodeAttr('relativeRootAtom', relativeRoot);
 	}
 
-	@Override
-	protected void updateRelativePathRoots() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath firstProbeTableModelPath = (ModelPath) attribute;
-		firstProbeTableModelPath.updateRelativeRootAtom();
-	}
+	createTableColumns(table, monitor) {
 
-	/**
-	 * Provides an image to represent this atom
-	 */
-	@Override
-	public Image provideBaseImage() {
-		Image baseImage = Activator.getImage("sweep.png");
-		return baseImage;
-	}
-
-	//#region CREATE TABLE COLUMNS
-
-	/**
-	 * Creates the required columns for the given new table. This also includes meta data about the column legends.
-	 *
-	 * @param table
-	 */
-	@Override
-	@SuppressWarnings({ "checkstyle:executablestatementcount", "checkstyle:javancss" })
-	protected void createTableColumns(Table table) {
-
-		LOG.info("Creating table columns...");
+		monitor.info('Creating table columns...');
 
 		//create column blueprints
-		List<ColumnBlueprint> columnBlueprints = new ArrayList<>();
+		var columnBlueprints = [];
 
-		//domain column----------------------------------------
-		String domainLabelString = domainLabel.get();
-		String domainColumnName = domainLabelString;
-		Class<?> domainType = getDomainType();
-		ColumnType domainColumnType = ColumnType.getType(domainType);
-		String domainLegend = domainLabelString;
-		columnBlueprints.add(new ColumnBlueprint(domainColumnName, domainColumnType, domainLegend));
+		//domain column----------------------------------------			
+		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType));
 
-		//probe columns---------------------------------------
-
-		//get probe information
-		String probeLabelString = probeLabel.get();
-		ColumnType probeColumnType = getProbeColumnType();
-
-		//get first family information
-		String firstFamilyLabelString = firstFamilyLegend.get();
-		List<?> firstFamilyRangeValues = getFirstFamilyRangeValues();
-
-		//get second family information
-		String secondFamilyLabelString = firstFamilyLegend.get();
-		List<?> secondFamilyRangeValues = getSecondFamilyRangeValues();
+		//probe columns---------------------------------------				
+		var probeColumnType = this.__probeColumnType;
+		var firstFamilyRangeValues = this.__firstFamilyRangeValues;
+        var secondFamilyRangeValues = this.__secondFamilyRangeValues;
 
 		//create y column names, types and legends
-		boolean firstFamilyIsSpecified = firstFamilyRangeValues != null;
+		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
 		if (firstFamilyIsSpecified) {
-			boolean secondFamilyIsSpecified = secondFamilyRangeValues != null;
-			int firstFamilyIndex = 1;
-			for (Object firstFamilyRangeValue : firstFamilyRangeValues) {
-				String columnName = probeLabelString + NAME_SEPARATOR + firstFamilyIndex;
-				String firstFamilyRangeValueString = firstFamilyRangeValue.toString();
-				String legendText = firstFamilyLabelString + ": " + firstFamilyRangeValueString;
+			var secondFamilyIsSpecified = secondFamilyRangeValues !== null;
+			var firstFamilyIndex = 1;
+			for (var firstFamilyRangeValue of firstFamilyRangeValues) {
+				var columnName = this.probeLabel + NAME_SEPARATOR + firstFamilyIndex;				
+				var legendText = this.firstFamilyLabel + ': ' + firstFamilyRangeValue;
 				if (secondFamilyIsSpecified) {
-					int secondFamilyIndex = 1;
-					for (Object secondFamilyRangeValue : secondFamilyRangeValues) {
-						String extendedColumnName = columnName + NAME_SEPARATOR + secondFamilyIndex;
-						String secondFamilyRangeValueString = secondFamilyRangeValue.toString();
-						String extendedLegendText = legendText + ", " + secondFamilyLabelString + ": "
-								+ secondFamilyRangeValueString;
-						columnBlueprints
-								.add(new ColumnBlueprint(extendedColumnName, probeColumnType, extendedLegendText));
+					var secondFamilyIndex = 1;
+					for (var secondFamilyRangeValue of secondFamilyRangeValues) {
+						var extendedColumnName = columnName + NAME_SEPARATOR + secondFamilyIndex;
+						
+						var extendedLegendText = legendText + ', ' + secondFamilyLabelString + ': ' + secondFamilyRangeValue;
+						columnBlueprints.push(new ColumnBlueprint(extendedColumnName, probeColumnType, extendedLegendText));
 						secondFamilyIndex++;
 					}
-
 				} else {
-					columnBlueprints.add(new ColumnBlueprint(columnName, probeColumnType, legendText));
+					columnBlueprints.push(new ColumnBlueprint(columnName, probeColumnType, legendText));
 				}
 				firstFamilyIndex++;
 			}
-		} else {
-			String columnName = probeLabelString;
-			columnBlueprints.add(new ColumnBlueprint(columnName, probeColumnType, ""));
+		} else {			
+			columnBlueprints.push(new ColumnBlueprint(this.probeLabel, probeColumnType, ''));
 		}
 
 		//create columns
-		createColumns(table, columnBlueprints);
+		table.createColumns(columnBlueprints);
 
-		LOG.info("Created table columns.");
+		monitor.info('Created table columns.');
 
 	}
-
-	private ColumnType getProbeColumnType() {
-
-		String probeTableRelativePath = getFirstProbeRelativePath();
-		String sweepOutputPath = sweepOutput.get();
-		String tablePath = sweepOutputPath + "." + probeTableRelativePath;
-		Table probeTable = this.getChildFromRoot(tablePath);
-		int columnIndex = Integer.parseInt(probeColumnIndex.get());
-		Column probeColumn = (Column) probeTable.getColumns().getChildAtoms().get(columnIndex);
-		return probeColumn.getColumnType();
+	
+	get __domainColumnType() {		
+		if (this.domainRangePath) {
+			var rangeAtom = this.getChildFromRoot(this.domainRangePath);
+			return rangeAtom.columnType;
+		} else {
+			return null;
+		}		
 	}
 
-	private List<?> getFirstFamilyRangeValues() {
-		String firstFamilyPath = firstFamilyRange.get();
-		boolean firstFamilyIsSpecified = firstFamilyPath != null && !"".equals(firstFamilyPath);
-		List<?> firstFamilyRangeValues = null;
-		if (firstFamilyIsSpecified) {
-			VariableRange<?> firstFamilyRangeAtom = this.getChildFromRoot(firstFamilyPath);
-			firstFamilyRangeValues = firstFamilyRangeAtom.getRange();
+	get __probeColumnType() {
+		var probeTable = this.getChildFromRoot(this.firstProbeTablePath);
+		var columnIndex = parseInt(this.probeColumnIndex);
+		var probeColumn = probeTable.columns[columnIndex];
+		return probeColumn.type;
+	}
+
+	get __firstFamilyRangeValues() {				
+		if (this.firstFamilyRangePath) {
+			var rangeAtom = this.getChildFromRoot(this.firstFamilyRangePath);
+			return rangeAtom.values;
+		} else {
+			return null;
+		}		
+	}
+
+	get __secondFamilyRangeValues() {
+		if (this.firstFamilyRangePath) {
+			var rangeAtom = this.getChildFromRoot(this.firstFamilyRangePath);
+			return rangeAtom.values;
+		} else {
+			return null;
 		}
-		return firstFamilyRangeValues;
 	}
 
-	private List<?> getSecondFamilyRangeValues() {
-		String secondFamilyPath = secondFamilyRange.get();
-		boolean secondFamilyIsSpecified = secondFamilyPath != null && !"".equals(secondFamilyPath);
-		List<?> secondFamilyRangeValues = null;
-		if (secondFamilyIsSpecified) {
-			VariableRange<?> secondFamilyRangeAtom = this.getChildFromRoot(secondFamilyPath);
-			secondFamilyRangeValues = secondFamilyRangeAtom.getRange();
+	
+
+	collectProbeDataAndFillTable(table, monitor) {
+
+		monitor.info('Filling probe table...');
+
+		
+
+		var domainRangeValues = null;
+		if (this.domainRangePath) {
+			var rangeAtom = this.getChildFromRoot(this.domainRangePath);
+			domainRangeValues = rangeAtom.values;
 		}
-		return secondFamilyRangeValues;
-	}
+		
+		var firstFamilyRangeValues = getFirstFamilyRangeValues();
+		var secondFamilyRangeValues = getSecondFamilyRangeValues();
 
-	private Class<?> getDomainType() {
-		String xPath = domainRange.get();
-		boolean xIsSpecified = !"".equals(xPath);
-		Class<?> xType = null;
-		if (xIsSpecified) {
-			VariableRange<?> xRangeAtom = this.getChildFromRoot(xPath);
-			xType = xRangeAtom.getType();
-		}
-		return xType;
-	}
+		var columnNames = this.createColumnNames(this.domainLabel, this.probeLabel, firstFamilyRangeValues, secondFamilyRangeValues);
 
-	//#end region
-
-	//#region COLLECT PROBE DATA
-
-	@Override
-	protected void collectProbeDataAndFillTable(Table table) {
-
-		LOG.info("Filling probe table...");
-
-		//get x information
-		String xLabelString = domainLabel.get();
-		String xPath = domainRange.get();
-		boolean xIsSpecified = !"".equals(xPath);
-		VariableRange<?> xRangeAtom = null;
-
-		List<?> xRangeValues = null;
-		if (xIsSpecified) {
-			xRangeAtom = this.getChildFromRoot(xPath);
-			xRangeValues = xRangeAtom.getRange();
-		}
-
-		//get y information
-		String yLabelString = probeLabel.get();
-
-		//get first family information
-		List<?> firstFamilyRangeValues = getFirstFamilyRangeValues();
-
-		//get second family information
-		List<?> secondFamilyRangeValues = getSecondFamilyRangeValues();
-
-		//column names
-		List<String> columnNames = createColumnNames(xLabelString, yLabelString, firstFamilyRangeValues,
-				secondFamilyRangeValues);
-
-		//get sweep output path
-		String sweepOutputPath = sweepOutput.get();
-
+		
 		//get probe table relative path
-		String firstProbeTableRelativePath = getFirstProbeRelativePath();
-		String[] pathItems = firstProbeTableRelativePath.split("\\.");
-		String firstPrefix = pathItems[0];
-		int firstIndex = firstPrefix.length() + 1;
-		String relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
+		var firstProbeTableRelativePath = this.firstProbeTablePath;
+		var pathItems = firstProbeTableRelativePath.split('\\.');
+		var firstPrefix = pathItems[0];
+		var firstIndex = firstPrefix.length + 1;
+		var relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
 
 		//get probe table prefix
-		String prefix = getProbeTablePrefix(firstPrefix);
+		var prefix = this.getProbeTablePrefix(firstPrefix);
 
-		fillProbeTable(table, xRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix);
+		fillProbeTable(table, xRangeValues, columnNames, sweepOutputPath, this.relativeProbeTablePath, prefix);
 
-		LOG.info("Filled probe table.");
+		LOG.info('Filled probe table.');
 
 	}
 
-	private void fillProbeTable(
-			Table table,
-			List<?> xRangeValues,
-			List<String> columnNames,
-			String sweepOutputPath,
-			String relativeProbeTablePath,
-			String prefix) {
-		//get probe table row index
-		int probeRowId = Integer.parseInt(probeRowIndex.get());
+	fillProbeTable(table, domainRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix) {
+		
+		var probeRowIndex = parseInt(this.probeRowIndex);		
+		var probeColumnIndex = parseInt(this.probeColumnIndex);
 
-		//get probe table column index
-		int probeColumnId = Integer.parseInt(probeColumnIndex.get());
+		var sweepIndex = 1;
+		for (var rowIndex = 0; rowIndex < xRangeValues.length; rowIndex++) {
 
-		int sweepIndex = 1;
-		for (int rowIndex = 0; rowIndex < xRangeValues.size(); rowIndex++) {
-
-			//create new row
-			Row row = new Row(table);
-
-			//fill x column entry
-			Object xValue = xRangeValues.get(rowIndex);
-			boolean isQuantity = xValue instanceof Quantity;
+			var row = new Row(table);
+			
+			var domainValue = domainRangeValues[rowIndex];
+			var isQuantity = xValue instanceof Quantity;
 			if (isQuantity) {
-				//only take numeric value (="remove" unit)
-				Quantity quantity = (Quantity) xValue;
-				xValue = quantity.getValue();
+				//only take numeric value (='remove' unit)
+				xValue = xValue.value;
 			}
-			row.setEntry(columnNames.get(0), xValue);
-
-			//fill y column entries
-			for (int columnIndex = 1; columnIndex < columnNames.size(); columnIndex++) {
-				String yColumnName = columnNames.get(columnIndex);
-				String tablePath = sweepOutputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
-				Object yValue = getProbeValue(tablePath, probeRowId, probeColumnId);
-				row.setEntry(yColumnName, yValue);
-
-				//increase sweep index
+			row.setEntry(columnNames[0], xValue);
+			
+			for (var columnIndex = 1; columnIndex < columnNames.length; columnIndex++) {
+				var columnName = columnNames[columnIndex];
+				var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
+				var value = this.getProbeValue(tablePath, probeRowId, probeColumnId);
+				row.setEntry(clumnName, value);				
 				sweepIndex++;
 			}
-
-			//add row
+			
 			table.addRow(row);
 
 		}
 	}
 
-	private static String getProbeTablePrefix(String firstPrefix) {
-		String idSeparator = "Id";
-		String[] prefixItems = firstPrefix.split(idSeparator);
-		String prefix = prefixItems[0] + idSeparator;
+	getProbeTablePrefix(firstPrefix) {
+		var idSeparator = '#';
+		var prefixItems = firstPrefix.split(idSeparator);
+		var prefix = prefixItems[0] + idSeparator;
 		return prefix;
-	}
+	}	
 
-	private String getFirstProbeRelativePath() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath probeTablePath = (ModelPath) attribute;
-		String firstRelativeProbeTablePath = probeTablePath.getRelativeValue();
-		return firstRelativeProbeTablePath;
-	}
-
-	private static List<String> createColumnNames(
-			String xLabelString,
-			String yLabelString,
-			List<?> firstFamilyRangeValues,
-			List<?> secondFamilyRangeValues) {
-		List<String> columnNames = new ArrayList<>();
-
-		//create first column info (=x column)
-		String xColumnName = xLabelString;
-		columnNames.add(xColumnName);
-
-		//create remaining column info (=y columns)
-		boolean firstFamilyIsSpecified = firstFamilyRangeValues != null;
-		boolean secondFamilyIsSpecified = secondFamilyRangeValues != null;
-		if (firstFamilyIsSpecified) {
-			for (int firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.size(); firstFamilyIndex++) {
-				String columnName = yLabelString + NAME_SEPARATOR + firstFamilyIndex;
+	static createColumnNames(xColumnName, yColumnName, firstFamilyRangeValues, secondFamilyRangeValues) {
+		
+		var columnNames = [];		
+		columnNames.add(xColumnName);		
+		if (firstFamilyRangeValues) {
+			for (var firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.length; firstFamilyIndex++) {
+				var columnName = yColumnName + this.columnNameSeparator + firstFamilyIndex;
 				if (secondFamilyIsSpecified) {
-					for (int secondFamilyIndex = 1; secondFamilyIndex <= secondFamilyRangeValues
-							.size(); secondFamilyIndex++) {
-						String extendedColumnName = columnName + NAME_SEPARATOR + secondFamilyIndex;
+					for (var secondFamilyIndex = 1; secondFamilyIndex <= secondFamilyRangeValues.length; secondFamilyIndex++) {
+						var extendedColumnName = columnName + this.columnNameSeparator + secondFamilyIndex;
 						columnNames.add(extendedColumnName);
 					}
 				} else {
 					columnNames.add(columnName);
 				}
 			}
-		} else {
-			String yColumnName = yLabelString;
+		} else {			
 			columnNames.add(yColumnName);
 		}
 		return columnNames;
 	}
 
-	private Object getProbeValue(String probeTablePath, int rowIndex, int columnIndex) {
-
-		//get probe table
-		Table probeTable = this.getChildFromRoot(probeTablePath);
-
-		//get probe value
-		String columnHeader = probeTable.getHeaders().get(columnIndex);
-		Row row = probeTable.getRow(rowIndex);
-		Object value = row.getEntry(columnHeader);
-
-		//return probe value
-		return value;
-	}
-
-	public Table createTable(String name) {
-		Table table = new Table(name);
-		addChild(table);
-		return table;
-	}
-
-	//#end region
-
-	//#end region
+	getProbeValue(probeTablePath, rowIndex, columnIndex) {		
+		var table = this.getChildFromRoot(probeTablePath);		
+		var columnHeader = table.headers[columnIndex];
+		var row = table.getRow(rowIndex);
+		return row.getEntry(columnHeader);		
+	}	
 
 }

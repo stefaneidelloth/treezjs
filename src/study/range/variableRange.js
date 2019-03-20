@@ -1,8 +1,9 @@
 
 import ComponentAtom from './../../core/component/componentAtom.js';
 import TreeViewAction from './../../core/treeView/TreeViewAction.js';
+import ColumnType from './../../data/column/columnType.js';
 
-export default class Range extends ComponentAtom {
+export default class VariableRange extends ComponentAtom {
 
 
 	get values(){
@@ -17,6 +18,7 @@ export default class Range extends ComponentAtom {
 		super(name);
 		this.isEnabled = true;		
 		this.variablePath = undefined;
+		this.columnType = ColumnType.string;
 		
 	}
 	

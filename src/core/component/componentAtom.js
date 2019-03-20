@@ -132,7 +132,7 @@ export default class ComponentAtom extends Atom {
 		actions.push(new ActionSeparator());
 
         const superActions = super.createContextMenuActions(parentSelection, treeView);
-        actions.concat(superActions);
+        actions = actions.concat(superActions);
 
 		return actions;
 	}

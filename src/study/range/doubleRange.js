@@ -1,11 +1,13 @@
-import Range from './range.js';
+import VariableRange from './variableRange.js';
 import DoubleVariable from './../../model/variable/field/doubleVariable.js';
+import ColumnType from './../../data/column/columnType.js';
 
-export default class DoubleRange extends Range {
+export default class DoubleRange extends VariableRange {
 
 	constructor(name) {
 		super(name);
 		this.image = 'doubleRange.png';		
+		this.columnType = ColumnType.double;
 	}
 
 	createComponentControl(tabFolder){    

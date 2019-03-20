@@ -5,7 +5,7 @@ import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
-import ModelOutput from './../output/modelOutput.js';
+
 
 export default class Executable extends Model {   
 

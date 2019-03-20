@@ -1,4 +1,5 @@
 import Study from './../study.js';
+import SweepOutput from './sweepOutput.js';
 import SweepModelInputGenerator from './sweepModelInputGenerator.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleRange from './../range/doubleRange.js';
@@ -102,8 +103,12 @@ export default class Sweep extends Study {
 
 		return actions;
 	}
+	
+	createStudyOutputAtom(name){
+		return new SweepOutput(name);
+	}
 
-	//#region CREATE CHILD ATOMS
+	
 
 	createDoubleRange(name) {
 		return this.createChild(DoubleRange, name);		

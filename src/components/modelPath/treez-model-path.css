@@ -1,12 +1,22 @@
 
+
 treez-model-path {   
     font-family: Consolas;
     font-size: 12px;     
 }
 
+.treez-model-path-container{
+	margin:0;
+	padding:0;
+}
+
+.treez-model-path-relative-root-label{
+	width: 100%;	
+	background-color: lightgrey;
+}
 
 .treez-model-path-select {
-	width: 100%;
+	width: 90%;
 	margin-bottom:10px;
 }
 

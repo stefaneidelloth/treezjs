@@ -1,4 +1,4 @@
-import Range from './../range/range.js';
+import VariableRange from './../range/variableRange.js';
 import ModelInput from './../../model/input/modelInput.js';
 
 export default class SweepModelInputGenerator {
@@ -80,7 +80,7 @@ export default class SweepModelInputGenerator {
 		var variableRanges = [];
 
 		this.sweep.children.forEach(child=>{
-			var isVariableRange = child instanceof Range;
+			var isVariableRange = child instanceof VariableRange;
 			if (isVariableRange) {				
 				if (child.isEnabled) {
 					

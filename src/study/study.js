@@ -2,12 +2,13 @@ import ComponentAtom from './../core/component/componentAtom.js';
 import Model from './../model/model.js';
 import ModelInput from './../model/input/modelInput.js';
 import Monitor from './../core/monitor/Monitor.js';
-import StudyOutput from './studyOutput.js';
+
 
 export default class Study extends ComponentAtom {
 			
 	constructor(name){
 		super(name);
+		this.isRunnable=true;
 		
 		this.id = '';
 		this.description = '';
@@ -353,15 +354,21 @@ export default class Study extends ComponentAtom {
 	__createOutputAtomIfNotExists(monitor) {
 		var dataAtomPath = this.__createDataOutputAtomPath();
 		var studyOutputAtomName = this.__createStudyOutputAtomName();
+		
 		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
 		var studyOutputAtomExists = this.rootHasChild(studyOutputAtomPath);
 		if (!studyOutputAtomExists) {
-			var studyOutput = new StudyOutput(studyOutputAtomName, this.image);
+			var studyOutput = this.createStudyOutputAtom(studyOutputAtomName);
 			var data = this.getChildFromRoot(dataAtomPath);
-			data.addChild(studyOutput);
+			data.addChild(studyOutput);			
 			monitor.info('Created ' + studyOutputAtomPath + ' for study output.');
 		}
 
+	}
+	
+	//Needs to be implemented by inheriting class
+	createStudyOutputAtom(name){
+		throw new Exception('Not yet implemented');
 	}
 
 	__createResultsAtomIfNotExists(monitor) {

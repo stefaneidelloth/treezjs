@@ -274,6 +274,15 @@ export default class Atom {
 	hasChildren() {
 	  return this.children.length > 0;	  	
 	}
+	
+	hasChildByClass(clazz){
+		for(var child of this.children){
+			if(child instanceof clazz){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Add the given Atom as a child and removes it from the old parent if an old parent exists.
@@ -414,22 +423,14 @@ export default class Atom {
 	 */
 	getChildByClass(clazz) {
 
-		var result = null;
-
-        this.children.every(child => {
-			var isWantedChild = child instanceof clazz;
-			if (isWantedChild) {				
-				result = child;
-				return false;
+		for(var child of this.children){
+			if(child instanceof clazz){
+				return child;
 			}
-			return true;
-        });
-        		
-        		if(!result){
-        			throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');
-        		}
-        return result;
+		}
 		
+        throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');
+        		
 	}
 
 	/**
@@ -455,7 +456,7 @@ export default class Atom {
 				childrenToRemove.push(child);
 			}
 		});
-		this.children.removeAll(childrenToRemove);
+		this.removeChildren(childrenToRemove);
 	}
 
 	/**
@@ -497,17 +498,12 @@ export default class Atom {
 	 */
 	removeChildIfExists(childName) {
 
-		var childToRemove;
-		this.children.forEach(child => {			
-			var isWantedChild = child.name.equals(childName);
-			if (isWantedChild) {
-				childToRemove = child;				
-			}
-		});
-		if (childToRemove) {
-			this.children.remove(childToRemove);
-		}
+		try{
+			var childToRemove = this.getChildByName();
+			this.removeChild(childToRemove);
+		} catch(error){
 
+		}		
 	}
 
 
@@ -645,6 +641,12 @@ export default class Atom {
 		if(index>-1){
 			this.children.splice(index,1);
 		}		
+	}
+
+	removeChildren(children){
+		for(var child of children){
+			this.removeChild(child);
+		}
 	}
 
 	

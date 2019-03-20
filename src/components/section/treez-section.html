@@ -99,53 +99,54 @@
                         sectionHeader.appendChild(toolbar);
                         this.__processSectionActions(toolbar);
                                       
-                        sectionHeader.onclick = this.__toggleExpansion;
-                        this.insertBefore(sectionHeader, this.firstChild);                        
+                        sectionHeader.onclick = () => this.__toggleExpansion();
+                        this.insertBefore(sectionHeader, this.firstChild); 
+
+                        if(!this.__isInitiallyExpanded){
+                        	this.__toggleExpansion();
+                        }                       
                     }
                 }
                 
-                expand(){
-                	const section = this.parentElement;
-                	if(section.children.length<2){
-                		return;
-                	}
-
-                    let header = section.children[0];
-                	let content = this.__getSectionContentDiv(section)
+                expand(){                	
+                    let header = this.children[0];
+                	let content = this.__getSectionContentDiv()
                 	let style = content.style;
                 	
 					style.display='block';
-					header.classList.remove('collapsed');  
+					header.classList.remove('collapsed');                  	
+                }
+
+                collapse(){
+                	
+                    let header = this.children[0];
+                	let content = this.__getSectionContentDiv()
+                	let style = content.style;
+                	
+					style.display='none';
+                	header.classList.add('collapsed'); 
                 	
                 }
 
-                __toggleExpansion(event){
-                	
-                	const section = this.parentElement;
-                	if(section.children.length<2){
-                		return;
-                	}
-
-                    let header = section.children[0];
-                	let content = section.__getSectionContentDiv(section)
+                __toggleExpansion(){ 
+                   
+                	let content = this.__getSectionContentDiv()
                 	let style = content.style;
                 	if(style['display']==='none'){
-						style.display='block';
-						header.classList.remove('collapsed');
+						this.expand();
                 	} else {
-                		style.display='none';
-                		header.classList.add('collapsed');
+                		this.collapse();
                 	}                 	
                 }  
                 
-                __getSectionContentDiv(section){
+                __getSectionContentDiv(){
 
-                    for(let child of section.children){
+                    for(let child of this.children){
 						if(child.tagName ==='DIV'){
 							return child;
 						}
 					  } 
-					  return section.children[1]; 
+					  return this.children[1]; 
                   }
 
                 __processSectionActions(toolbar){ 
@@ -193,7 +194,7 @@
                     		 this.__sectionHeader.innerText= newValue;   
                     	}                                           
                     } else if(attr==='collapsed'){
-						this.__isInitiallyExpanded=false;
+						this.__isInitiallyExpanded = (newValue === null);
                     }
                 }
 

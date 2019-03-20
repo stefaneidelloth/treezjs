@@ -91,9 +91,29 @@ export default class Table extends ComponentAtom {
 		return this.createChild(ColumnFolder, name);
 	}
 
+	__createColumnFolderIfNotExist() {
+		if(!this.columnFolder){
+			this.createColumnFolder();
+		}		
+	}
+
 	createTableSource(name) {
 		return this.createChild(TableSource, name);		
 	}
+		
+	createColumns(columnBlueprints) {
+		this.__createColumnFolderIfNotExist()		
+		var columnFolder = this.columnFolder;
+		for (var columnBlueprint of columnBlueprints) {
+			columnFolder.createColumnWithBlueprint(columnBlueprint);
+		}
+	}
+	
+	__deleteColumnsIfExist() {
+		removeChildrenByClass(Columns);		
+	}
+	
+	
 	
 	addColumn(newColumn) {
 		this.__createColumnsIfNotExist();
@@ -397,11 +417,7 @@ export default class Table extends ComponentAtom {
 	}
 	
 	
-	__createColumnFolderIfNotExist() {
-		if(!this.getColumnFolder()){
-			this.createColumnFolder();
-		}		
-	}
+	
 
 	__reload() {
 		this.__resetCache();
@@ -436,9 +452,7 @@ export default class Table extends ComponentAtom {
 
 	}
 
-	__deleteColumnsIfExist() {
-		removeChildrenByClass(Columns);		
-	}
+	
 
 	__readTableStructureForSqLiteTable(tableSource) {
 		var sqLiteFilePath = tableSource.filePath;
@@ -475,12 +489,7 @@ export default class Table extends ComponentAtom {
 		}
 	}
 
-	__createColumns(columnBlueprints) {
-		var columns = this.createColumns('columns');
-		for (var columnBlueprint of columnBlueprints) {
-			columns.createColumn(columnBlueprint);
-		}
-	}
+	
 
 	__readRowFromTableSource(tableSource, rowIndex) {		
 		switch(tableSource.type){
