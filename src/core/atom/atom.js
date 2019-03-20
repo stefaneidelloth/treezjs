@@ -31,6 +31,7 @@ export default class Atom {
 		this.helpId = undefined;	
 		
 		this.image = 'tree.png'
+		this.overlayImage = undefined;
 			
 		this.isExpanded=true;
 		
@@ -264,9 +265,6 @@ export default class Atom {
 	//#end region
 	
 
-	provideImage() {
-		return this.image;
-	}
 	
 
 	//#region child operations

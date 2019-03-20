@@ -118,8 +118,7 @@ export default class ComponentAtom extends Atom {
 								treeView,
 								() => this.execute(treeView)
 										  .catch(error => {
-											  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
-											  monitor.done();
+											  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);											 
 										  })
 							)
 			);

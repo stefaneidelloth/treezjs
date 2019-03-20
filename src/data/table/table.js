@@ -564,10 +564,10 @@ export default class Table extends ComponentAtom {
 				try {
 					return this.getChildByClass(ColumnFolder);					
 				} catch (error) {
-					throw new Error('Could not get colunFolder of table "' + this.name + '"');
+					return null;
 				}
 			}
-			throw new Error('Could not get columnFolder of table "' + this.name + '"');
+			return null;
 		}
 	}	
 
@@ -589,7 +589,7 @@ export default class Table extends ComponentAtom {
 			var tableSource = this.getTableSource();
 			return this.__readRowFromTableSource(tableSource, rowIndex);
 		} else {
-			return this.getRows().get(rowIndex);
+			return this.rows[rowIndex];
 		}
 	}	
 

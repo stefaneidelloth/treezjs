@@ -78,6 +78,7 @@ class TreezImageComboBox extends TreezComboBox {
     updateElements(newValue){                 	
     	if(this.__imageLabel){                    	
 			this.__updateImageLabel(); 
+			this.dispatchInputEvent();
     	}					    
     } 
    

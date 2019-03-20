@@ -38,7 +38,7 @@ export default class Probe extends ComponentAtom {
 		}
 
 		if (continueProbe) {			
-			await this.__collectProbeDataAndFillTable(table);
+			await this.collectProbeDataAndFillTable(table, monitor);
 			if(treeView){
 				treeView.refresh();
 			}				
@@ -64,7 +64,7 @@ export default class Probe extends ComponentAtom {
 	}
 
 	//should be overridden by inheriting class
-	async collectProbeDataAndFillTable(table){
+	async collectProbeDataAndFillTable(table, monitor){
 		throw new Error('Not yet implemented');
 	}	
 

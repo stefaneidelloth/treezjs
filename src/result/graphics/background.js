@@ -43,7 +43,7 @@ export default class Background extends GraphicsAtom {
 		
 		this.addListenerAndRun(()=>this.transparency, () => {
 			try {
-				var fillTransparency = parseDouble(this.transparency);
+				var fillTransparency = parseFloat(this.transparency);
 				var opacity = 1 - fillTransparency;
 				rectSelection.attr('fill-opacity', '' + opacity);
 			} catch (error) {
@@ -51,13 +51,13 @@ export default class Background extends GraphicsAtom {
 			}
 		})
 
-		this.addListenerAndRun(()=>this.idHidden, () => {
+		this.addListenerAndRun(()=>this.isHidden, () => {
 						
 				if (this.isHidden) {
 					rectSelection.attr('fill-opacity', '0');
 				} else {
 					try {	
-						var fillTransparency = parseDouble(this.transparency);
+						var fillTransparency = parseFloat(this.transparency);
 						var opacity = 1 - fillTransparency;
 						rectSelection.attr('fill-opacity', '' + opacity);
 					} catch (error) {

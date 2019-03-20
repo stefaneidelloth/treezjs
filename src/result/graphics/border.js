@@ -29,12 +29,10 @@ export default class Border extends GraphicsAtom {
 		sectionContent.append('treez-text-field')
 			.label('Width')
 			.bindValue(this, ()=>this.width);
-
 		
 		sectionContent.append('treez-line-style')			
 			.label('Style')
-			.bindValue(this, ()=>this.style);
-		
+			.bindValue(this, ()=>this.style);		
 
 		sectionContent.append('treez-text-field')
 			.label('Transparency')

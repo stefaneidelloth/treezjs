@@ -94,7 +94,7 @@ export default class Row {
 					throw new Error(message);
 				}
 			} else {
-				this.entryMap[columnHeader] = value;
+				this.__entryMap[columnHeader] = value;
 			}
 
 		} else {

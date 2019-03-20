@@ -66,7 +66,12 @@ export default class GraphicsAtom extends ComponentAtom {
 	}
 	
 	bindLineStyle(lambdaExpressionEncodingPropertyToBind, selection){		
-		var valueConverter = lineStyle => lineStyle.dashArrayString;		
+		var valueConverter = lineStyle => {
+			if(lineStyle instanceof LineStyle){
+				return lineStyle.dashArrayString;
+			}
+			return LineStyle.forName(lineStyle).dashArrayString;
+		}		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-dasharray', valueConverter);
 	}
 	
@@ -116,11 +121,19 @@ export default class GraphicsAtom extends ComponentAtom {
     //therefore a lambda expression is passed to identify the property
     //this method extracts the property name using introspection
 	__extractPropertyNameFromLambdaExpression(expression){
+		
+		var propertyName;
 		try{
-			return expression.toString().split(".")[1];
+			propertyName = expression.toString().split(".")[1];
 		}catch(error){
 			throw new Error("Could not determine property name to create binding from lambda expression '" + expression + "'")
 		}
+		
+		if(!(propertyName in this)){
+			throw new Error('Unknown property ' + propertyName);
+		}
+
+		return propertyName;
 	}	
 
 	__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, attributeName, valueConverter){
@@ -136,7 +149,8 @@ export default class GraphicsAtom extends ComponentAtom {
 		   propertyName, 
 		   {
 			get: __getPropertyValueProxy,
-			set: __setPropertyValueProxy					
+			set: __setPropertyValueProxy,
+			configurable: true								
 		   }
 		);
 		
@@ -187,7 +201,8 @@ export default class GraphicsAtom extends ComponentAtom {
 		   propertyName, 
 		   {
 			get: __getPropertyValueProxy,
-			set: __setPropertyValueProxy					
+			set: __setPropertyValueProxy,
+			configurable: true								
 		   }
 		);	
 

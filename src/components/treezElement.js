@@ -71,7 +71,7 @@ class TreezElement extends HTMLElement {
 	bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
 		this.__parentAtom = parentAtom;
 		
-		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingPropertyToBind)
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
 
 		this.value = parentAtom[propertyName];					
 
@@ -123,12 +123,19 @@ class TreezElement extends HTMLElement {
     //we want to avoid hard coded strings to pass/identify properties
     //therefore a lambda expression is passed to identify the property
     //this method extracts the property name using introspection
-	__extractPropertyNameFromLambdaExpression(expression){
+	__extractPropertyNameFromLambdaExpression(parentAtom, expression){
+		var propertyName;
 		try{
-			return expression.toString().split(".")[1];
+			propertyName = expression.toString().split(".")[1];
 		}catch(error){
 			throw new Error("Could not determine property name to create binding from lambda expression '" + expression + "'")
 		}
+		
+		if(!(propertyName in parentAtom)){
+			throw new Error('Unknown property "' + propertyName + '" of atom "' + parentAtom.name + '".');
+		}
+
+		return propertyName;
 	}
 
 	__addListenerToUpdatePropertyOnElementChanges(parentAtom, propertyName){				
@@ -205,7 +212,8 @@ class TreezElement extends HTMLElement {
          if(attr==='value'){                      	                		
 			if(newStringValue!==oldStringValue){
 				var newValue = this.convertFromStringValue(newStringValue);
-				this.updateElements(newValue);							
+				this.updateElements(newValue);
+										
 				//this.__dispatchInputEvent(); //caused issue for checkbox mayby enable for other components?
 			}
          }    
@@ -231,9 +239,11 @@ class TreezElement extends HTMLElement {
          }                 
     }
 
+	
+
 			
 
-	__dispatchInputEvent(){
+	dispatchInputEvent(){
 		var event = new Event(
 							  'input', 
 							  {

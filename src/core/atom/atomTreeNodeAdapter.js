@@ -81,9 +81,19 @@ export default class AtomTreeNodeAdapter {
 	static createIconAndLabel(parentSelection, atom){
 
 		parentSelection.style('white-space','nowrap');
-		var icon = parentSelection.append('img')	
+
+		var iconFolder = parentSelection.append('span')
+							.className('treez-node-icon-folder');
+
+		iconFolder.append('img')	
 			.className('treez-node-icon')		
-			.attr('src','./icons/' + atom.provideImage());
+			.attr('src','./icons/' + atom.image);
+
+		if(atom.overlayImage){
+			iconFolder.append('img')	
+			.className('treez-node-overlay-icon')		
+			.attr('src','./icons/' + atom.overlayImage);
+		}		
 
 		var label = parentSelection.append('label')
 			.className('treez-node-label')								

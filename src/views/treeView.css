@@ -28,9 +28,19 @@
 	outline: none;
 }
 
-.treez-node-icon {
+.treez-node-icon-folder {
+		
+}
+
+.treez-node-icon {	
+	vertical-align: middle;	
+	margin-bottom: 2px;	
+}
+
+.treez-node-overlay-icon {	
 	vertical-align: middle;	
 	margin-bottom: 2px;
+	margin-left:-16px;
 }
 
 .treez-node-label {	
