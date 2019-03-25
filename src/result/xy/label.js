@@ -1,52 +1,33 @@
-package org.treez.results.atom.xy;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.ComboBox;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
+export default class Label extends GraphicsAtom {
+	
+	constructor(){
+		super();
 
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Label implements GraphicsPropertiesPageFactory {
+		this.horizontalPosition = 'centre';
+		this.verticalPosition = 'centre';
+		this.angle = '0';
+		this.font = 'serif';
+		this.fontSize = '14pt';
+		this.color = Color.black;
+		this.isItalic = false;
+		this.isBold = false;
+		this.hasUnderline = false;
+		this.isHidden = false;		
+	}
 
-	//#region ATTRIBUTES
+	createPage(root) {
+		
+		var page = root.append('treez-tab')
+		.label('Label');
 
-	public final Attribute<String> horizontalPosition = new Wrap<>();
+		var section = page.append('treez-section')
+			.label('Label');
+	
+		var sectionContent = section.append('div');
 
-	public final Attribute<String> verticalPosition = new Wrap<>();
-
-	public final Attribute<String> angle = new Wrap<>();
-
-	public final Attribute<String> font = new Wrap<>();
-
-	public final Attribute<String> fontSize = new Wrap<>();
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<Boolean> italic = new Wrap<>();
-
-	public final Attribute<Boolean> bold = new Wrap<>();
-
-	public final Attribute<Boolean> underline = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page labelPage = root.createPage("label", "   Label   ");
-
-		Section label = labelPage.createSection("label");
+		/*
 
 		ComboBox horzPosComboBox = label.createComboBox(horizontalPosition, this, "right, centre, left", "centre");
 		horzPosComboBox.setLabel("Horz position");
@@ -69,16 +50,17 @@ public class Label implements GraphicsPropertiesPageFactory {
 		label.createCheckBox(underline, this);
 
 		label.createCheckBox(hide, this);
+		
+		*/
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection graphSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, graphSelection, rectSelection, parent) {
 
 		//parent.bindStringAttribute(selection, "x", leftMargin);
 
 		return graphSelection;
 	}
 
-	//#end region
+	
 
 }

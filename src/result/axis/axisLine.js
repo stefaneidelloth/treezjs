@@ -1,75 +1,63 @@
-package org.treez.results.atom.axis;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
+export default class AxisLine extends GraphicsAtom {
 
-/**
- * Represents the line of an axis
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class AxisLine implements GraphicsPropertiesPageFactory {
+	constructor(){
+		super();
+		this.color = 'black';
+		this.width = '2';
+		this.style = LineStyle.solid;
+		this.transparency = '0'
+		this.isHidden = false;		
+	}
 
-	//#region ATTRIBUTES
+	createPage(root) {
+		
+		var page = root.append('treez-tab')
+			.label('Axis line');
 
-	public final Attribute<String> color = new Wrap<>();
+		var section = page.append('treez-section')
+			.label('Axis line');
+	
+		var sectionContent = section.append('div');
 
-	public final Attribute<String> width = new Wrap<>();
+		sectionContent.append('treez-color')
+			.label('Color')
+			.bindValue(this,()=>this.color);
 
-	public final Attribute<String> style = new Wrap<>();
-
-	public final Attribute<Double> transparency = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page axisLinePage = root.createPage("axisLine", "   Axis line   ");
-
-		Section axisLineSection = axisLinePage.createSection("axisLine", "Axis line");
-
-		axisLineSection.createColorChooser(color, this, "black");
-
-		axisLineSection.createTextField(width, this, "2");
-
-		axisLineSection.createLineStyle(style, this, "solid");
-
-		axisLineSection.createDoubleVariableField(transparency, this, 0.0);
-
-		axisLineSection.createCheckBox(hide, this);
+		sectionContent.append('treez-text-field')
+			.label('Width')
+			.bindValue(this, ()=>this.width);
+		
+		sectionContent.append('treez-line-style')			
+			.label('Style')
+			.bindValue(this, ()=>this.style);		
+	
+		sectionContent.append('treez-text-field')
+			.label('Transparency')
+			.bindValue(this, ()=>this.transparency);
+	
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')
+			.bindValue(this, ()=>this.isHidden);	
 
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection axisSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, axisSelection, rectSelection, parentAtom) {
 
-		Selection axisDomainLine = axisSelection //
-				.selectAll(".domain") //
-				.style("fill", "none") //
-				.style("stroke-linecap", "square") //
-				.style("shape-rendering", "geometricPrecision");
+		var axisDomainLine = axisSelection //
+				.selectAll('.domain') //
+				.style('fill', 'none') //
+				.style('stroke-linecap', 'square') //
+				.style('shape-rendering', 'geometricPrecision');
 
-		AbstractGraphicsAtom.bindStringAttribute(axisDomainLine, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(axisDomainLine, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineStyle(axisDomainLine, style);
-		AbstractGraphicsAtom.bindLineTransparency(axisDomainLine, transparency);
-		AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(axisDomainLine, hide, transparency);
+		this.bindString(()=>this.color, axisDomainLine, 'stroke');
+		this.bindString(()=>this.width, axisDomainLine, 'stroke-width');
+		this.bindLineStyle(()=>this.style, axisDomainLine);		
+		this.bindLineTransparency(()=>this.transparency, axisDomainLine);
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, axisDomainLine);		
 
 		return axisSelection;
-	}
-
-	//#end region
+	}	
 
 }

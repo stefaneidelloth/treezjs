@@ -33,7 +33,7 @@ export default class Length {
 				throw new Error('Could not parse the length expression "' + lengthExpression + '"');
 			}
 		} else {
-			var value = parseFloat(lengthExpresssion);
+			var value = parseFloat(lengthExpression);
 			return new Length(value, LengthUnit.px);
 		}
 		

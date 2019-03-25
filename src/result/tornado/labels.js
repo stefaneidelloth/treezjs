@@ -1,184 +1,151 @@
-package org.treez.results.atom.tornado;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.apache.log4j.Logger;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.JsEngine;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.functions.data.attribute.AttributeStringDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleInversedValueDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleKeyDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleValueDataFunction;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.results.atom.graph.Graph;
+export default class Labels extends GraphicsAtom {
+	
+	constructor(){
+		super();
 
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Labels implements GraphicsPropertiesPageFactory {
+		this.labelMode = LabelMode.absolute;
+		this.font = 'serif';
+		this.size = '14';
+		this.color = Color.black;
+		this.isItalic = false;
+		this.isBold = false;
+		this.hasUnderline = false;
+		this.isHidden = false;
 
-	Logger LOG = Logger.getLogger(Labels.class);
+	} 
+	
+	createPage(root) {
 
-	//#region ATTRIBUTES
+		var page = root.append('treez-tab')
+			.label('Labels');
+		
+		var section = page.append('treez-section')
+			.label('Labels');	
+	
+		var sectionContent = section.append('div');
 
-	public final Attribute<LabelMode> labelMode = new Wrap<>();
-
-	public final Attribute<String> font = new Wrap<>();
-
-	public final Attribute<Integer> size = new Wrap<>();
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<Boolean> italic = new Wrap<>();
-
-	public final Attribute<Boolean> bold = new Wrap<>();
-
-	public final Attribute<Boolean> underline = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page labelsPage = root.createPage("labels");
-
-		Section labels = labelsPage.createSection("labels");
-
-		labels.createEnumComboBox(labelMode, this, LabelMode.ABSOLUTE).setLabel("Label mode");
-
-		labels.createFont(font, this);
-
-		final int defaultFontSize = 14;
-		labels.createIntegerVariableField(size, this, defaultFontSize) //
-				.setLabel("Size");
-
-		labels.createColorChooser(color, this, "black");
-
-		labels.createCheckBox(italic, this);
-
-		labels.createCheckBox(bold, this);
-
-		labels.createCheckBox(underline, this);
-
-		labels.createCheckBox(hide, this);
+		sectionContent.append('treez-enum-combo-box')
+			.label('Label mode')
+			.nodeAttr('options', LabelMode)
+			.bindValue(this, ()=>this.labelMode);
+		
+		sectionContent.append('treez-font')
+			.label('Font')		
+			.bindValue(this, ()=>this.font);
+		
+		sectionContent.append('treez-text-field')
+			.label('Size')		
+			.bindValue(this, ()=>this.size);
+		
+		sectionContent.append('treez-color')
+			.label('Color')		
+			.bindValue(this, ()=>this.color);
+		
+		sectionContent.append('treez-check-box')
+			.label('Italic')		
+			.bindValue(this, ()=>this.isItalic);
+		
+		sectionContent.append('treez-check-box')
+			.label('Bold')		
+			.bindValue(this, ()=>this.isBold);
+		
+		sectionContent.append('treez-check-box')
+			.label('Underline')		
+			.bindValue(this, ()=>this.isUnderline);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')		
+			.bindValue(this, ()=>this.isHidden);	
 
 	}
 
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection tornadoSelection,
-			Selection rectSelection,
-			AbstractGraphicsAtom parent) {
+	plot(dTreez, tornadoSelection, rectSelection, tornado) {
 
-		String parentName = parent.getName();
+		var leftSelection = tornadoSelection //
+				.select('.bar-rects-left'); //
 
-		Selection leftSelection = tornadoSelection //
-				.select(".bar-rects-left"); //
+		var rightSelection = tornadoSelection //
+				.select('.bar-rects-right');
 
-		Selection rightSelection = tornadoSelection //
-				.select(".bar-rects-right");
+		
+		var graph = tornado.graph;
+		var graphHeight = Length.toPx(graph.data.height);
+		var graphWidth = Length.toPx(graph.data.width);
 
-		Tornado tornado = (Tornado) parent;
-		Graph graph = tornado.getGraph();
-		double graphHeight = Length.toPx(graph.data.height.get());
-		double graphWidth = Length.toPx(graph.data.width.get());
+		var inputAxis = tornado.data.inputAxis;		
+		var inputScale = tornado.data.inputScale;
 
-		org.treez.results.atom.axis.Axis inputAxis = tornado.data.getInputAxis();
-		boolean inputAxisIsOrdinal = inputAxis.isOrdinal();
-		boolean inputAxisIsHorizontal = inputAxis.isHorizontal();
-		Scale<?> inputScale = tornado.data.getInputScale();
+		var outputAxis = tornado.data.outputAxis;		
+		var outputScale = tornado.data.outputScale;
 
-		org.treez.results.atom.axis.Axis outputAxis = tornado.data.getOutputAxis();
-		boolean outputAxisIsOrdinal = outputAxis.isOrdinal();
-		boolean outputAxisIsHorizontal = outputAxis.isHorizontal();
-		Scale<?> outputScale = tornado.data.getOutputScale();
+		var leftDataString = tornado.data.leftBarDataString;
+		var rightDataString = tornado.data.rightBarDataString;
+		
 
-		String leftDataString = tornado.data.getLeftBarDataString();
-		String rightDataString = tornado.data.getRightBarDataString();
+		if (outputAxis.isHorizontal) {
 
-		JsEngine engine = leftSelection.getJsEngine();
-
-		if (outputAxisIsHorizontal) {
-
-			leftSelection.selectAll("text") //
+			leftSelection.selectAll('text') //
 					.data(leftDataString) //
 					.enter() //
-					.append("text")
-					.attr("x", new AxisScaleValueDataFunction(engine, outputScale))
-					.attr("y", new AxisScaleKeyDataFunction(engine, inputScale))
-					.style("fill", "black")
-					.text(new AttributeStringDataFunction(engine, "input"));
+					.append('text')
+					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
+					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.style('fill', 'black')
+					.text(new AttributeStringDataFunction(engine, 'input'));
 
-			rightSelection.selectAll("text") //
+			rightSelection.selectAll('text') //
 					.data(rightDataString) //
 					.enter() //
-					.append("text")
-					.attr("x", new AxisScaleValueDataFunction(engine, outputScale))
-					.attr("y", new AxisScaleKeyDataFunction(engine, inputScale))
-					.style("fill", "black")
-					.text(new AttributeStringDataFunction(engine, "input"));
+					.append('text')
+					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
+					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.style('fill', 'black')
+					.text(new AttributeStringDataFunction(engine, 'input'));
 
 		} else {
 
-			leftSelection.selectAll("text") //
+			leftSelection.selectAll('text') //
 					.data(leftDataString) //
 					.enter() //
-					.append("text")
-					.attr("x", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("y", new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
-					.style("fill", "black")
-					.text(new AttributeStringDataFunction(engine, "input"));
+					.append('text')
+					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.style('fill', 'black')
+					.text(new AttributeStringDataFunction(engine, 'input'));
 
-			rightSelection.selectAll("text") //
+			rightSelection.selectAll('text') //
 					.data(rightDataString) //
 					.enter() //
-					.append("text")
-					.attr("x", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("y", new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
-					.style("fill", "black")
-					.text(new AttributeStringDataFunction(engine, "input"));
+					.append('text')
+					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.style('fill', 'black')
+					.text(new AttributeStringDataFunction(engine, 'input'));
 		}
 
-		Selection textSelection = tornadoSelection.selectAll("g").selectAll("text");
+		var textSelection = tornadoSelection.selectAll('g') //
+								.selectAll('text');
 
-		formatText(textSelection);
+		this.__formatText(textSelection);
 
 		return tornadoSelection;
 	}
 
-	public Selection formatText(Selection textSelection) {
-		AbstractGraphicsAtom.bindStringAttribute(textSelection, "font-family", font);
-		AbstractGraphicsAtom.bindIntegerAttribute(textSelection, "font-size", size);
-		AbstractGraphicsAtom.bindStringStyle(textSelection, "fill", color);
-		AbstractGraphicsAtom.bindFontItalicStyle(textSelection, italic);
-		AbstractGraphicsAtom.bindFontBoldStyle(textSelection, bold);
-		AbstractGraphicsAtom.bindFontUnderline(textSelection, underline);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(textSelection, hide);
-
-		/*
-		Consumer refreshLegendLayout = () -> main.refresh();
-		font.addModificationConsumer("font", refreshLegendLayout);
-		size.addModificationConsumer("font", refreshLegendLayout);
-		color.addModificationConsumer("font", refreshLegendLayout);
-		italic.addModificationConsumer("font", refreshLegendLayout);
-		bold.addModificationConsumer("font", refreshLegendLayout);
-		underline.addModificationConsumer("font", refreshLegendLayout);
-		 */
+	__formatText(textSelection) {		
+		
+		this.bindString(()=>this.font, textSelection, 'font-family');
+		this.bindString(()=>this.size, textSelection, 'font-size');
+		this.bindString(()=>this.color, textSelection, 'fill');			
+		this.bindFontItalicStyle(()=>this.isItalic, textSelection);
+		this.bindFontBoldStyle(()=>this.isBold, textSelection);
+		this.bindFontUnderline(()=>this.hasUnderline, textSelection);
+		this.bindBooleanToTransparency(()=>this.isHidden, null, textSelection);			
 
 		return textSelection;
 	}
 
-	//#end region
+	
 
 }

@@ -1,117 +1,64 @@
-package org.treez.results.atom.legend;
+import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
 
-import java.util.List;
-import java.util.Objects;
+export default class Legend extends PagedGraphicsAtom {
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.treeView;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.results.Activator;
-import org.treez.results.atom.graphicsPage.Background;
-import org.treez.results.atom.graphicsPage.Border;
-import org.treez.results.atom.graphicsPage.GraphicsPropertiesPage;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Legend extends GraphicsPropertiesPage {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOG = Logger.getLogger(Legend.class);
-
-	//#region ATTRIBUTES
-
-	public Main main;
-
-	public Text text;
-
-	public Background background;
-
-	public Border border;
-
-	private Selection legendGroupSelection;
-
-	private Selection rectSelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Legend(String name) {
+	constructor(name){
 		super(name);
+		this.image = 'legend.png';
+		this.__legendGroupSelection = undefined;	
+		this.__rectSelection = undefined;		
 	}
 
-	//#end region
+	createPageFactories() {
+		
+		var factories = [];
 
-	//#region METHODS
+		this.main = new Main();
+		factories.push(this.main);
 
-	@Override
-	protected void createPropertyPageFactories() {
+		this.text = new Text();
+		factories.push(this.text);
 
-		main = new Main();
-		propertyPageFactories.add(main);
+		this.background = new Background();
+		factories.push(this.background);
 
-		text = new Text();
-		propertyPageFactories.add(text);
-
-		background = new Background();
-		propertyPageFactories.add(background);
-
-		border = new Border();
-		propertyPageFactories.add(border);
-
+		this.border = new Border();
+		factories.push(this.border);
+		
+		return factories;
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("legend.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		// no actions available right now
-		return actions;
-	}
-
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection graphSelection,
-			Selection graphRectSelection,
-			FocusChangingRefreshable refreshable) {
-		Objects.requireNonNull(d3);
-		this.treeView = refreshable;
+	plot(dTreez, graphSelection, graphRectSelection, treeView) {
+		
+		this.__treeView = treeView;
 
 		graphSelection //
-				.select("#" + name) //
+				.select('#' + name) //
 				.remove();
 
-		legendGroupSelection = graphSelection //
-				.append("g") //
-				.attr("class", "legend");
-		bindNameToId(legendGroupSelection);
+		this.__legendGroupSelection = graphSelection //
+				.append('g') //
+				.className('legend');
+		
+		this.bindString(()=>this.name, this.__legendGroupSelection, 'id');
 
-		rectSelection = legendGroupSelection //
-				.append("rect").onClick(this);
+		this.__rectSelection = legendGroupSelection //
+				.append('rect') //
+				.onClick(()=>this.handleMouseClick());
 
-		updatePlotWithD3(d3);
+		this.__updatePlot(dTreez);
 
 		return legendGroupSelection;
 	}
 
-	@Override
-	public void updatePlotWithD3(D3 d3) {
-		plotPageModels(d3);
+	__updatePlot(dTreez) {
+		this.__plotWithPages(dTreez);
 	}
 
-	private void plotPageModels(D3 d3) {
-		for (GraphicsPropertiesPageFactory pageModel : propertyPageFactories) {
-			legendGroupSelection = pageModel.plotWithD3(d3, legendGroupSelection, rectSelection, this);
+	__plotWithPages(dTreez) {
+		for (var factory of this.pageFactories) {
+			factory.plot(dTreez, this.__legendGroupSelection, this.__rectSelection, this);
 		}
-	}
-
-	//#end region
+	}	
 
 }

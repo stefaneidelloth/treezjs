@@ -1,155 +1,123 @@
-package org.treez.results.atom.xy;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.List;
+export default class Line extends GraphicsAtom {
+	
+	constructor(){
+		super();
+		this.interpolationMode = InterpolationMode.linear;
+		//this.bezierJoin = false;
+		this.color = Color.black;
+		this.width = '3';
+		this.style = LineStyle.solid;
+		this.transparency = '0';
+		this.isHidden = false;
+	}
+	
+	createPage(root) {
+		
+		var page = root.append('treez-tab')
+			.label('Line');
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.JsEngine;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleFirstDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleSecondDataFunction;
-import org.treez.javafxd3.d3.scales.Scale;
+		var section = page.append('treez-section')
+			.label('Line');	
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-enum-combo-box')
+			.label('Interpolation mode')
+			.nodeAttr('options', InterpolationMode)
+			.bindValue(this, ()=>this.interpolationMode);		
 
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Line implements GraphicsPropertiesPageFactory {
-
-	//#region ATTRIBUTES
-
-	public final Attribute<org.treez.javafxd3.d3.svg.InterpolationMode> interpolation = new Wrap<>();
-
-	//public final Attribute<Boolean> bezierJoin = new Wrap<>();
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<String> width = new Wrap<>();
-
-	public final Attribute<String> style = new Wrap<>();
-
-	public final Attribute<Double> transparency = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page linePage = root.createPage("line", "   Line    ");
-
-		Section line = linePage.createSection("line");
-
-		line.createEnumComboBox(interpolation, this, org.treez.javafxd3.d3.svg.InterpolationMode.LINEAR);
-
-		//line.createCheckBox(bezierJoin, this).setLabel("Bezier join");
-
-		line.createColorChooser(color, this, "black");
-
-		line.createTextField(width, this, "3");
-
-		line.createLineStyle(style, this, "solid");
-
-		line.createDoubleVariableField(transparency, this, 0.0);
-
-		line.createCheckBox(hide, this);
+		//line.createCheckBox(bezierJoin, this).setLabel('Bezier join');
+		
+		sectionContent.append('treez-color')
+			.label('Color mode')	
+			.bindValue(this, ()=>this.color);	
+		
+		sectionContent.append('treez-text-field')
+			.label('Width')	
+			.bindValue(this, ()=>this.width);	
+		
+		sectionContent.append('treez-line-style')
+			.label('Style')	
+			.bindValue(this, ()=>this.style);
+		
+		sectionContent.append('treez-text-field')
+			.label('Transparency')	
+			.bindValue(this, ()=>this.transparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.isHideen);
+		
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection xySelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, xySelection, rectSelection, xy) {
 
-		String parentName = parent.getName();
-		String id = "lines_" + parentName;
+		var parentName = parent.name;
+		var id = 'lines_' + parentName;
 
 		//remove old line group if it already exists
-		xySelection //
-				.selectAll("#" + id) //
-				.remove();
+		xySelection.selectAll('#' + id) //
+				   .remove();
 
 		//create new line group
-		Selection linesSelection = xySelection //
-				.append("g") //
-				.attr("id", id) //
-				.attr("class", "lines");
+		var linesSelection = xySelection //
+				.append('g') //
+				.attr('id', id) //
+				.attr('class', 'lines');		
 
-		//get xy parent
-		Xy xy = (Xy) parent;
-
-		//get interpolation mode
-
-		org.treez.javafxd3.d3.svg.InterpolationMode mode = interpolation.get();
-
-		//line path generator
-		Scale<?> xScale = xy.getXScale();
-		Scale<?> yScale = xy.getYScale();
-
-		JsEngine engine = xySelection.getJsEngine();
-
-		org.treez.javafxd3.d3.svg.Line linePathGenerator = d3 //
+		var linePathGenerator = d3 //
 				.svg()//
 				.line()
-				.x(new AxisScaleFirstDataFunction(engine, xScale))
-				.y(new AxisScaleSecondDataFunction(engine, yScale))//
-				.interpolate(mode);
+				.x(new AxisScaleFirstDataFunction(engine, xy.xScale))
+				.y(new AxisScaleSecondDataFunction(engine, xy.yScale))//
+				.interpolate(this.interpolationMode);
 
-		//plot new lines
-		List<Object> xDataValues = xy.getXValues();
-		List<Object> yDataValues = xy.getYValues();
-		String xyDataString = xy.createXyDataString(xDataValues, yDataValues);
+		//plot new lines		
+		var xyDataString = xy.createXyDataString(xy.xValues, xy.yValues);
 
-		Selection lines = linesSelection //
-				.append("path") //
-				.attr("d", linePathGenerator.generate(xyDataString))
-				.attr("fill", "none");
+		var lines = linesSelection //
+				.append('path') //
+				.attr('d', linePathGenerator.generate(xyDataString))
+				.attr('fill', 'none');
 
 		//bind attributes
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideLine", lines, hide);
-		AbstractGraphicsAtom.bindStringAttribute(lines, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(lines, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineTransparency(lines, transparency);
-		AbstractGraphicsAtom.bindLineStyle(lines, style);
-
-		interpolation.addModificationConsumer("replot", () -> {
-			//if the line interpolation changes other stuff like the area
-			//has to be updated as well
-			//=> update the whole xy
-			xy.updatePlotWithD3(d3);
-		});
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, lines);
+		this.bindString(()=>this.color,lines, 'stroke');
+		this.bindString(()=>this.width,lines, 'stroke-width');
+		this.bindLineTransparency(()=>this.transparency, lines)
+		this.bindLineStyle(()=>this.style, lines);
+		
+		this.addListener(()=>this.interpolationMode, ()=>xy.updatePlot(dTreez));
 
 		return xySelection;
 	}
 
-	public Selection plotLegendLineWithD3(D3 d3, Selection parentSelection, int length) {
+	plotLegendLine(dTreez, parentSelection, length) {
 
-		org.treez.javafxd3.d3.svg.Line linePathGenerator = d3 //
+		var linePathGenerator = d3 //
 				.svg()//
 				.line();
 
-		String path = linePathGenerator.generate("[[0,0],[" + length + ",0]]");
+		var path = linePathGenerator.generate('[[0,0],[' + length + ',0]]');
 
-		Selection legendLine = parentSelection //
-				.append("path") //
-				.classed("legend-line", true)
-				.attr("d", path)
-				.attr("fill", "none");
+		var legendLine = parentSelection //
+				.append('path') //
+				.classed('legend-line', true)
+				.attr('d', path)
+				.attr('fill', 'none');
 
 		//bind attributes
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hide", legendLine, hide);
-		AbstractGraphicsAtom.bindStringAttribute(legendLine, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(legendLine, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineTransparency(legendLine, transparency);
-		AbstractGraphicsAtom.bindLineStyle(legendLine, style);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, legendLine);
+		this.bindString(()=>this.color,legendLine, 'stroke');
+		this.bindString(()=>this.width,legendLine, 'stroke-width');
+		this.bindLineTransparency(()=>this.transparency, legendLine)
+		this.bindLineStyle(()=>this.style, legendLine);		
 
 		return parentSelection;
 	}
 
-	//#end region
+	
 
 }

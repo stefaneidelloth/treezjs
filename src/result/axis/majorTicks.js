@@ -1,157 +1,137 @@
-package org.treez.results.atom.axis;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
+export default class MajorTicks extends GraphicsAtom {
+	
+	constructor(){	
+		super();	
+		this.number = '6'; //Number of minor ticks aimed for
+		this.color = Color.black;
+		this.width = '2'
+		this.length = '10';
+		this.style = LineStyle.solid;
+		this.transparency = '0';
+		this.isHidden = false;
+	}	
 
-/**
- * Represents the major tick lines
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class MajorTicks implements GraphicsPropertiesPageFactory {
+	createPage(root) {
+		
+		var page = root.append('treez-section')
+			.label('Major ticks');
+		
+		var section = page.append('treez-section')
+			.label('Ticks');
 
-	//#region ATTRIBUTES
-
-	/**
-	 * Number of major ticks aimed for
-	 */
-	public final Attribute<String> number = new Wrap<>();
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<String> width = new Wrap<>();
-
-	public final Attribute<String> length = new Wrap<>();
-
-	public final Attribute<String> style = new Wrap<>();
-
-	public final Attribute<Double> transparency = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page majorTicksPage = root.createPage("majorTicks", "   Major ticks   ");
-
-		Section ticksSection = majorTicksPage.createSection("ticks");
-
-		ticksSection.createTextField(number, this, "6");
-
-		ticksSection.createColorChooser(color, this, "black");
-
-		ticksSection.createTextField(width, this, "2");
-
-		ticksSection.createTextField(length, this, "10");
-
-		ticksSection.createLineStyle(style, this, "solid");
-
-		ticksSection.createDoubleVariableField(transparency, this, 0.0);
-
-		ticksSection.createCheckBox(hide, this);
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Number')
+			.bindValue(this, ()=>this.number);
+		
+		sectionContent.append('treez-color')
+			.label('Color')
+			.bindValue(this, ()=>this.color);
+		
+		sectionContent.append('treez-text-field')
+			.label('Width')
+			.bindValue(this, ()=>this.width);
+		
+		sectionContent.append('treez-text-field')
+			.label('Length')
+			.bindValue(this, ()=>this.length);
+		
+		sectionContent.append('treez-line-style')
+			.label('Line style')
+			.bindValue(this, ()=>this.style);
+		
+		sectionContent.append('treez-text-field')
+			.label('Transparency')
+			.bindValue(this, ()=>this.transparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')
+			.bindValue(this, ()=>this.isHidden);		
 
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection axisSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, axisSelection, rectSelection, axis) {
 
 		//Hint: The major tick lines already have been created with the axis (see Data).
 		//Here only the properties of the ticks need to be applied.
 
-		Axis axis = (Axis) parent;
+		var primary = axisSelection //
+				.selectAll('.primary');
 
-		Selection primary = axisSelection //
-				.selectAll(".primary");
+		var secondary = axisSelection //
+				.selectAll('.secondary');
 
-		Selection secondary = axisSelection //
-				.selectAll(".secondary");
+		this.__markMajorTicksWithCssClass(axis, primary, secondary);
 
-		markMajorTicksWithCssClass(axis, primary, secondary);
+		var primaryMajorTickLines = primary //
+				.selectAll('.major') //
+				.selectAll('line');
 
-		Selection primaryMajorTickLines = primary //
-				.selectAll(".major") //
-				.selectAll("line");
+		var secondaryMajorTickLines = secondary //
+				.selectAll('.major') //
+				.selectAll('line')
+				.style('fill', 'none') //
+				.style('shape-rendering', 'geometricPrecision');
 
-		Selection secondaryMajorTickLines = secondary //
-				.selectAll(".major") //
-				.selectAll("line")
-				.style("fill", "none") //
-				.style("shape-rendering", "geometricPrecision");
+		var majorTickLines = axisSelection //
+				.selectAll('g') //
+				.selectAll('.major') //
+				.selectAll('line');
+		
+		this.addListener(()=>this.number, () => axis.updatePlot(dTreez))
 
-		Selection majorTickLines = axisSelection //
-				.selectAll("g") //
-				.selectAll(".major") //
-				.selectAll("line");
-
-		number.addModificationConsumer("replotAxis", () -> axis.updatePlotWithD3(d3));
-
-		length.addModificationConsumerAndRun("length", () -> {
-			boolean isHorizontal = axis.data.direction.get().isHorizontal();
+		this.addListener(()=>this.length, () => {
+			var isHorizontal = axis.data.direction.isHorizontal;
 			if (isHorizontal) {
-				primaryMajorTickLines.attr("y2", "-" + length.get());
-				secondaryMajorTickLines.attr("y2", "" + length.get());
+				primaryMajorTickLines.attr('y2', '-' + this.length);
+				secondaryMajorTickLines.attr('y2', '' + this.length);
 			} else {
-				primaryMajorTickLines.attr("x2", length.get());
-				secondaryMajorTickLines.attr("x2", "-" + length.get());
+				primaryMajorTickLines.attr('x2', this.length);
+				secondaryMajorTickLines.attr('x2', '-' + this.length);
 			}
 		});
 
-		AbstractGraphicsAtom.bindStringAttribute(majorTickLines, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(majorTickLines, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineStyle(majorTickLines, style);
-		AbstractGraphicsAtom.bindLineTransparency(majorTickLines, transparency);
-		AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(majorTickLines, hide, transparency);
+		this.bindString(()=>this.color, majorTickLines, 'stroke');
+		this.bindString(()=>this.width, majorTickLines, 'stroke-width');
+		this.bindLineStyle(()=>this.style, majorTickLines);
+		this.bindLineTransparency(()=>this.transparency, majorTickLines);
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, majorTickLines);		
 
 		return axisSelection;
 	}
 
-	private static void markMajorTicksWithCssClass(Axis axis, Selection primary, Selection secondary) {
+	__markMajorTicksWithCssClass(axis, primary, secondary) {
 
-		if (axis.data.isQuantitative()) {
-			boolean isLog = axis.data.log.get();
+		if (axis.data.isQuantitative) {
+			var isLog = axis.data.isLog;
 			if (isLog) {
 
-				primary //
-						.selectAll(".tick:nth-child(1)") //
-						.classed("major", true);
+				primary.selectAll('.tick:nth-child(1)') //
+						.classed('major', true);
 
-				primary //
-						.selectAll(".tick:nth-child(9n+1)") //
-						.classed("major", true);
+				primary.selectAll('.tick:nth-child(9n+1)') //
+						.classed('major', true);
 
-				secondary //
-						.selectAll(".tick:nth-child(1)") //
-						.classed("major", true);
+				secondary.selectAll('.tick:nth-child(1)') //
+						.classed('major', true);
 
-				secondary //
-						.selectAll(".tick:nth-child(9n+1)") //
-						.classed("major", true);
+				secondary.selectAll('.tick:nth-child(9n+1)') //
+						.classed('major', true);
 				return;
-
 			}
 		}
 
-		primary //
-				.selectAll(".tick") //
-				.classed("major", true);
+		primary.selectAll('.tick') //
+				.classed('major', true);
 
-		secondary //
-				.selectAll(".tick") //
-				.classed("major", true);
+		secondary.selectAll('.tick') //
+				.classed('major', true);
 
 	}
 
-	//#end region
+	
 
 }

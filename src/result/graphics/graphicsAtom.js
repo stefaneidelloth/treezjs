@@ -30,21 +30,12 @@ export default class GraphicsAtom extends ComponentAtom {
 	
 	bindString(lambdaExpressionEncodingPropertyToBind, selection, attributeName){		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, this.__trim);		
-	}
+	}	
 
 	bindColor(lambdaExpressionEncodingPropertyToBind, selection, attributeName){	
 	    var valueConverter = color=>color.hexString;	
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, valueConverter);		
-	}
-	
-	bindBooleanToNegatingDisplay(lambdaExpressionEncodingPropertyToBind, selection){
-		var valueConverter = value => {
-			return value
-				?'none'
-				:'inline';			
-		}		
-		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'display', valueConverter);
-	}
+	}	
 	
 	bindTranslation(lambdaExpressionEncodingXTranslation, lambdaExpressionEncodingYTranslation, selection){
 		
@@ -83,6 +74,46 @@ export default class GraphicsAtom extends ComponentAtom {
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-opacity', valueConverter);
 	}
 	
+	bindBooleanToNegatingDisplay(lambdaExpressionEncodingPropertyToBind, selection){
+		var valueConverter = value => {
+			return value
+				?'none'
+				:'inline';			
+		}		
+		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'display', valueConverter);
+	}
+	
+	bindBooleanToTransparency(lambdaExpressionEncodingHideProperty, lambdaExpressionEncodingTransparencyProperty, selection){
+		
+		var hidePropertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingHideProperty);
+		
+		var transparencyPropertyName = lambdaExpressionEncodingTransparencyProperty
+											?this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingTransparencyProperty)
+											:null;
+		
+		var self = this;
+		var valueConverter = () => {
+			
+			var isHidden = self[hidePropertyName];	
+			
+			if (isHidden) {
+				return '0';
+			} else {
+				if(transparencyPropertyName){
+					var transparency = parseFloat(self[transparencyPropertyName]);
+					var opacity = 1 - transparencyValue;
+					return '' + opacity;
+				} else {
+					return '1';
+				}				
+			}					
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(hidePropertyName, selection, 'fill-opacity', valueConverter);	
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(transparencyPropertyName, selection, 'fill-opacity', valueConverter);		
+		
+	}
+	
 	bindBooleanToLineTransparency(lambdaExpressionEncodingHideProperty, lambdaExpressionEncodingTransparencyProperty, selection){
 				
 		var hidePropertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingHideProperty);
@@ -105,6 +136,87 @@ export default class GraphicsAtom extends ComponentAtom {
 		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(hidePropertyName, selection, 'stroke-opacity', valueConverter);	
 		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(transparencyPropertyName, selection, 'stroke-opacity', valueConverter);		
 		
+	}
+	
+	bindTransparency(lambdaExpressionEncodingTransparency, selection){
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingTransparency);
+
+		var self = this;
+		var valueConverter = (transparencyString) => {			
+			var transparency = parseFloat(transparencyString);
+			return '' + (1-transparency);						
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, 'fill-opacity', valueConverter);	
+	}
+
+	bindFontItalicStyle(lambdaExpressionEncodingItalicProperty, selection){
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingItalicProperty);
+		
+		var valueConverter = (isItalic) => {
+			return isItalic
+				?'italic'
+				:'normal';							
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, 'font-style', valueConverter);	
+	}
+
+	
+
+	bindFontBoldStyle(lambdaExpressionEncodingBoldProperty, selection){
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingBoldProperty);
+			
+		var valueConverter = (isBold) => {	
+			return isBold
+				?'bold'
+				:'normal';							
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, 'font-weight', valueConverter);
+	}
+
+	bindFontUnderline(lambdaExpressionEncodingUnderlineProperty, selection){
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingUnderlineProperty);
+				
+		var valueConverter = (hasUnderline) => {
+			return hasUnderline
+				?'underline'
+				:'none';							
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, 'text-decoration', valueConverter);	
+	}
+	
+	bindRotation(lambdaExpressionEncodingRotationProperty, isHorizontal, selection){
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingRotationProperty);
+				
+		var valueConverter = (rotationString) => {				
+			var rotation = 0;
+			try {
+				rotation = parseFloat(rotationString);
+			} catch (error) {
+				
+			}
+			if (!isHorizontal) {
+				var extraVerticalRotation = 90;
+				rotation += extraVerticalRotation;
+			}
+			return 'rotate(' + rotation + ')';						
+		}	
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, 'transform', valueConverter);	
+	}
+	
+	bindText(lambdaExpressionEncodingTextPropertyToBind, selection){		
+				
+		var propertyName = this.__extractPropertyNameFromLambdaExpression(lambdaExpressionEncodingTextPropertyToBind);
+		
+		var selectionModifier = (textValue)=>{
+			selection.text(textValue);
+		}
+		
+		this.__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, null, this.__trim, selectionModifier);	
 	}
 	
 		
@@ -134,9 +246,11 @@ export default class GraphicsAtom extends ComponentAtom {
 		}
 
 		return propertyName;
-	}	
+	}
+	
+	
 
-	__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, attributeName, valueConverter){
+	__modifyPropertyToUpdateSelectionOnPropertyChanges(propertyName, selection, attributeName, valueConverter, selectionModifier){
 
 		let self = this;
 
@@ -158,7 +272,7 @@ export default class GraphicsAtom extends ComponentAtom {
 	
 
 		function __getPropertyValueProxy(){
-			let propertyAlreadyHasAGetter = propertyDescriptor.get !== undefined;
+			let propertyAlreadyHasAGetter = propertyDescriptor && (propertyDescriptor.get !== undefined);
 			if(propertyAlreadyHasAGetter){
 				return propertyDescriptor.get();
 			} else {
@@ -169,7 +283,7 @@ export default class GraphicsAtom extends ComponentAtom {
 		function __setPropertyValueProxy(newValue){
 				let oldValue = privateValue;
 				if(newValue != oldValue){
-					let propertyAlreadyHasASetter = propertyDescriptor.set !== undefined;
+					let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
 					 if(propertyAlreadyHasASetter){
 						propertyDescriptor.set(newValue);
 					 } 
@@ -180,12 +294,16 @@ export default class GraphicsAtom extends ComponentAtom {
 		}	
 
 		function __updateSelection(newValue){
-			let convertedValue = valueConverter
-									?valueConverter(newValue)
-									:newValue;
-								
-			selection.attr(attributeName, convertedValue);
 			
+			let convertedValue = valueConverter
+				?valueConverter(newValue)
+				:newValue;
+			
+			if(selectionModifier){
+				selectionModifier(convertedValue)
+			} else {
+				selection.attr(attributeName, convertedValue);
+			}	
 		}			
 	}
 	

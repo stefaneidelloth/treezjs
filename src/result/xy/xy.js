@@ -1,396 +1,311 @@
-package org.treez.results.atom.xy;
+import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+export default class Xy extends PagedGraphicsAtom {
 
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.treeView;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.results.Activator;
-import org.treez.results.atom.axis.Axis;
-import org.treez.results.atom.graph.Graph;
-import org.treez.results.atom.graphicsPage.GraphicsPropertiesPage;
-import org.treez.results.atom.legend.LegendContributor;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Xy extends GraphicsPropertiesPage implements LegendContributor {
-
-	//#region ATTRIBUTES
-
-	public Data data;
-
-	public Symbol symbol;
-
-	public Line line;
-
-	//public ErrorBar errorBar;
-
-	public Area area;
-
-	//public Label label;
-
-	private Selection xySelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Xy(String name) {
+	constructor(name){
 		super(name);
+		this.image = 'xy.png';
+		this.__xySelection = undefined;		
 	}
+	
+	createPageFactories() {
 
-	//#end region
+		var factories = [];
+		
+		this.data = new Data();
+		factories.push(this.data);
 
-	//#region METHODS
+		this.area = new Area();
+		factories.push(this.area);
 
-	@Override
-	protected void createPropertyPageFactories() {
+		this.line = new Line();
+		factories.push(this.line);
 
-		data = new Data();
-		propertyPageFactories.add(data);
-
-		area = new Area();
-		propertyPageFactories.add(area);
-
-		line = new Line();
-		propertyPageFactories.add(line);
-
-		symbol = new Symbol();
-		propertyPageFactories.add(symbol);
+		this.symbol = new Symbol();
+		factories.push(this.symbol);
 
 		//errorBar = new ErrorBar();
 		//label = new Label();
+		
+		return factories;
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("xy.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		// no actions available right now
-		return actions;
-	}
-
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
-		treeView = refreshable;
-	}
-
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection graphOrXySeriesSelection,
-			Selection graphRectSelection,
-			FocusChangingRefreshable refreshable) {
-
-		Objects.requireNonNull(d3);
-		this.treeView = refreshable;
+	plot(dTreez, graphOrXySeriesSelection, graphRectSelection, treeView) {
+		
+		this.__treeView = treeView;
 
 		//remove old xy group if it already exists
 		graphOrXySeriesSelection //
-				.select("#" + name) //
+				.select('#' + name) //
 				.remove();
 
 		//create new axis group
-		xySelection = graphOrXySeriesSelection //
-				.insert("g", ".axis") //
-				.attr("class", "xy") //
+		this.__xySelection = graphOrXySeriesSelection //
+				.insert('g', '.axis') //
+				.className('xy') //
 				.onClick(this);
-		bindNameToId(xySelection);
-
-		updatePlotWithD3(d3);
+		
+		this.bindString(()=>this.name, this.__xySelection, 'id');
+		
+		this.__updatePlot(dTreez);
 
 		return xySelection;
 	}
 
-	@Override
-	public void updatePlotWithD3(D3 d3) {
-		contributeDataForAutoScale(d3);
-		plotPageModels(d3);
+	__updatePlot(dTreez) {
+		this.__contributeDataForAutoScale(dTreez);
+		this.__plotWithPages(dTreez);
 	}
 
-	private void plotPageModels(D3 d3) {
-		for (GraphicsPropertiesPageFactory pageModel : propertyPageFactories) {
-			xySelection = pageModel.plotWithD3(d3, xySelection, null, this);
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__xySelection, null, this);
 		}
 	}
 
-	private void contributeDataForAutoScale(D3 d3) {
+	__contributeDataForAutoScale(dTreez) {
 
-		boolean xScaleChanged = contributeDataForXAxis();
-		boolean yScaleChanged = contributeDataForYAxis();
+		var xScaleChanged = this.__contributeDataForXAxis();
+		var yScaleChanged = this.__contributeDataForYAxis();
 		if (xScaleChanged || yScaleChanged) {
-			Graph graph = getGraph();
-			graph.updatePlotForChangedScales(d3);
+			this.graph.updatePlotForChangedScales(dTreez);
 		}
 	}
 
-	private boolean contributeDataForXAxis() {
-		boolean xScaleChanged = false;
-		Axis xAxis = getXAxis();
-		boolean xAxisIsOrdinal = xAxis.isOrdinal();
+	__contributeDataForXAxis() {
+		var xScaleChanged = false;		
+		var xAxisIsOrdinal = this.xAxis.isOrdinal();
 		if (xAxisIsOrdinal) {
-
-			int oldNumberOfXValues = xAxis.getNumberOfValues();
-			List<String> ordinalXValues = getOrdinalXValues();
-			xAxis.includeOrdinalValuesForAutoScale(ordinalXValues);
-			int numberOfXValues = xAxis.getNumberOfValues();
-			xScaleChanged = numberOfXValues != oldNumberOfXValues;
+			var oldNumberOfXValues = xAxis.numberOfValues;			
+			xAxis.includeOrdinalValuesForAutoScale(this.ordinalXValues);			
+			xScaleChanged = this.numberOfXValues != oldNumberOfXValues;
 
 		} else {
-			List<Double> xDataValues = getQuantitativeXValues();
-
-			Double[] oldXLimits = xAxis.getQuantitativeLimits();
-			xAxis.includeDataForAutoScale(xDataValues);
-			Double[] xLimits = xAxis.getQuantitativeLimits();
-			xScaleChanged = !Arrays.equals(xLimits, oldXLimits);
+			var oldXLimits = xAxis.quantitativeLimits;
+			xAxis.includeDataForAutoScale(this.quantitativeXValues);
+			var xLimits = xAxis.quantitativeLimits;
+			if(xLimits[0] !== oldXLimits[0]){
+				xScaleChanged = true;
+			}
+			if(xLimits[1] !== oldXLimits[1]){
+				xScaleChanged = true;
+			}			
 		}
 		return xScaleChanged;
 	}
-
-	private boolean contributeDataForYAxis() {
-		boolean yScaleChanged = false;
-		Axis yAxis = getYAxis();
-		boolean yAxisIsOrdinal = yAxis.isOrdinal();
+	
+	__contributeDataForYAxis() {
+		var yScaleChanged = false;		
+		var yAxisIsOrdinal = this.yAxis.isOrdinal();
 		if (yAxisIsOrdinal) {
-			int oldNumberOfYValues = yAxis.getNumberOfValues();
-			List<String> ordinalYValues = getOrdinalYValues();
-			yAxis.includeOrdinalValuesForAutoScale(ordinalYValues);
-			int numberOfYValues = yAxis.getNumberOfValues();
-			yScaleChanged = numberOfYValues != oldNumberOfYValues;
+			var oldNumberOfYValues = yAxis.numberOfValues;			
+			yAxis.includeOrdinalValuesForAutoScale(this.ordinalYValues);			
+			yScaleChanged = this.numberOfYValues != oldNumberOfYValues;
 
 		} else {
-			List<Double> yDataValues = getQuantitativeYValues();
-
-			Double[] oldYLimits = yAxis.getQuantitativeLimits();
-			yAxis.includeDataForAutoScale(yDataValues);
-			Double[] yLimits = yAxis.getQuantitativeLimits();
-			yScaleChanged = !Arrays.equals(yLimits, oldYLimits);
+			var oldYLimits = yAxis.quantitativeLimits;
+			yAxis.includeDataForAutoScale(this.quantitativeYValues);
+			var yLimits = yAxis.quantitativeLimits;
+			if(yLimits[0] !== oldYLimits[0]){
+				yScaleChanged = true;
+			}
+			if(yLimits[1] !== oldYLimits[1]){
+				yScaleChanged = true;
+			}			
 		}
 		return yScaleChanged;
 	}
 
-	private Graph getGraph() {
-		AbstractAtom<?> parent = getParentAtom();
-		boolean parentIsGraph = Graph.class.isAssignableFrom(parent.getClass());
-		if (parentIsGraph) {
-			return (Graph) parent;
+	get graph() {		
+		if (this.parent instanceof Graph) {
+			return this.parent;
 		} else {
-			AbstractAtom<?> grandParent = parent.getParentAtom();
-			return (Graph) grandParent;
+			var grandParent = this.parent.parent;
+			return grandParent;
 		}
 	}
 
-	@Override
-	public void addLegendContributors(List<LegendContributor> legendContributors) {
-		if (providesLegendEntry()) {
+	addLegendContributors(legendContributors) {
+		if (this.providesLegendEntry) {
 			legendContributors.add(this);
 		}
 	}
 
-	@Override
-	public boolean providesLegendEntry() {
-		return !getLegendText().isEmpty();
+	get providesLegendEntry() {
+		return this.legendText.length > 0;
 	}
 
-	@Override
-	public String getLegendText() {
-		return data.legendText.get();
+	get legendText() {
+		return data.legendText;
 	}
 
-	@Override
-	public Selection createLegendSymbolGroup(
-			D3 d3,
-			Selection parentSelection,
-			int symbolLengthInPx,
-			Refreshable refreshable) {
-		Selection symbolSelection = parentSelection //
-				.append("g") //
-				.classed("xy-legend-entry-symbol", true);
+	createLegendSymbolGroup(dTreez , parentSelection, symbolLengthInPx, treeView) {
+		var symbolSelection = parentSelection //
+				.append('g') //
+				.classed('xy-legend-entry-symbol', true);
 
-		this.line.plotLegendLineWithD3(d3, symbolSelection, symbolLengthInPx);
-		this.symbol.plotLegendSymbolWithD3(d3, symbolSelection, symbolLengthInPx / 2, refreshable);
+		this.line.plotLegendLine(dTreez, symbolSelection, symbolLengthInPx);
+		this.symbol.plotLegendSymbol(dTreez, symbolSelection, symbolLengthInPx / 2, treeView);
 
 		return symbolSelection;
 	}
 
-	public String createXyDataString(List<Object> xDataValues, List<Object> yDataValues) {
+	createXyDataString(xDataValues, yDataValues) {
 
-		int xLength = xDataValues.size();
-		int yLength = yDataValues.size();
-		boolean lengthsAreOk = xLength == yLength;
+		var xLength = xDataValues.length;
+		var yLength = yDataValues.length;
+		var lengthsAreOk = xLength == yLength;
 		if (!lengthsAreOk) {
-			String message = "The x and y data has to be of equal size but size of x data is " + xLength
-					+ " and size of y data is " + yLength;
-			throw new IllegalStateException(message);
+			var message = 'The x and y data has to be of equal size but size of x data is ' + xLength
+					+ ' and size of y data is ' + yLength;
+			throw new Error(message);
 		}
 
 		if (xLength == 0) {
-			return "[]";
+			return '[]';
 		}
 
-		Object firstXObject = xDataValues.get(0);
-		boolean xIsOrdinal = firstXObject instanceof String;
+		var firstXObject = xDataValues[0];
+		var xIsOrdinal = firstXObject instanceof String;
 
-		boolean xAxisIsOrdinal = getXAxis().isOrdinal();
+		var xAxisIsOrdinal = this.xAxis.isOrdinal;
 
-		Object firstYObject = yDataValues.get(0);
-		boolean yIsOrdinal = firstYObject instanceof String;
+		var firstYObject = yDataValues[0];
+		var yIsOrdinal = firstYObject instanceof String;
 
-		boolean yAxisIsOrdinal = getYAxis().isOrdinal();
+		var yAxisIsOrdinal = this.yAxis.isOrdinal;
 
-		List<String> rowList = new java.util.ArrayList<>();
-		for (int rowIndex = 0; rowIndex < xLength; rowIndex++) {
+		var rowList =[];
+		for (var rowIndex = 0; rowIndex < xLength; rowIndex++) {
 
-			Object xObj = xDataValues.get(rowIndex);
-			String x = xObj.toString();
+			var xObj = xDataValues[rowIndex];
+			var x = xObj.toString();
 			if (xIsOrdinal) {
 				if (xAxisIsOrdinal) {
-					x = "'" + x + "'";
+					x = '"' + x + '"';
 				} else {
-					x = "" + (xDataValues.indexOf(xObj) + 1);
+					x = '' + (xDataValues.indexOf(xObj) + 1);
 				}
 
 			}
 
-			Object yObj = yDataValues.get(rowIndex);
-			String y = yObj.toString();
+			var yObj = yDataValues[rowIndex];
+			var y = yObj.toString();
 			if (yIsOrdinal) {
 				if (yAxisIsOrdinal) {
-					y = "'" + y + "'";
+					y = '"' + y + '"';
 				} else {
-					y = "" + (yDataValues.indexOf(xObj) + 1);
+					y = '' + (yDataValues.indexOf(xObj) + 1);
 				}
 			}
 
-			String rowString = "[" + x + "," + y + "]";
+			var rowString = '[' + x + ',' + y + ']';
 			rowList.add(rowString);
 		}
-		String xyDataString = "[" + String.join(",", rowList) + "]";
+		var xyDataString = '[' + rowList.join(',') + ']';
 		return xyDataString;
 	}
 
-	public Scale<?> getXScale() {
-		Axis xAxisAtom = getXAxis();
-		return xAxisAtom.getScale();
+	get xScale() {	
+		return this.xAxis
+			?this.xAxis.scale
+			:null;
 	}
 
-	public Scale<?> getYScale() {
-		Axis yAxisAtom = getYAxis();
-		return yAxisAtom.getScale();
+	get yScale() {		
+		return this.yAxis
+				?this.yAxis.scale
+				:null;
 	}
 
-	public Axis getXAxis() {
-		String xAxisPath = data.xAxis.get();
-		if (xAxisPath == null || xAxisPath.isEmpty()) {
+	get xAxis() {
+		var xAxisPath = data.xAxis;
+		if (!xAxisPath) {
 			return null;
 		}
-		Axis xAxisAtom = getChildFromRoot(xAxisPath);
-		return xAxisAtom;
+		return this.getChildFromRoot(xAxisPath);		
 	}
 
-	public Axis getYAxis() {
-		String yAxisPath = data.yAxis.get();
-		if (yAxisPath == null || yAxisPath.isEmpty()) {
+	get yAxis() {
+		var yAxisPath = data.yAxis;
+		if (!yAxisPath) {
 			return null;
 		}
-		Axis yAxisAtom = getChildFromRoot(yAxisPath);
-		return yAxisAtom;
+		return this.getChildFromRoot(yAxisPath);		
 	}
 
-	public List<Object> getXValues() {
-		String xDataPath = data.xData.get();
-		if (xDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get xValues() {
+		var xDataPath = data.xData;
+		if (!xDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column xDataColumn = getChildFromRoot(xDataPath);
-		return xDataColumn.getValues();
+		var xDataColumn = this.getChildFromRoot(xDataPath);
+		return xDataColumn.values;
 	}
-
-	public List<Object> getYValues() {
-		String yDataPath = data.yData.get();
-		if (yDataPath.isEmpty()) {
-			return new ArrayList<>();
+	
+	get yValues() {
+		var yDataPath = data.yData;
+		if (!yDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column yDataColumn = getChildFromRoot(yDataPath);
-		return yDataColumn.getValues();
+		var yDataColumn = this.getChildFromRoot(yDataPath);
+		return yDataColumn.values;
+	}	
 
-	}
-
-	public List<Double> getQuantitativeXValues() {
-		String xDataPath = data.xData.get();
-		if (xDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get quantitativeXValues() {
+		var xDataPath = data.xData;
+		if (!xDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column xDataColumn = getChildFromRoot(xDataPath);
-		boolean isQuantitative = xDataColumn.isNumeric();
+		var xDataColumn = this.getChildFromRoot(xDataPath);
+		var isQuantitative = xDataColumn.isNumeric();
 		if (isQuantitative) {
-			List<Double> xDataValues = xDataColumn.getDoubleValues();
-			return xDataValues;
+			return xDataColumn.doubleValues;			
 		} else {
-			List<String> ordinalValues = xDataColumn.getStringValues();
-			List<Double> xValues = new ArrayList<>();
-
-			for (Double x = 1.0; x <= ordinalValues.size(); x++) {
-				xValues.add(x);
+			var ordinalValues = xDataColumn.stringValues;
+			var xValues = [];
+			for (var x = 1.0; x <= ordinalValues.length; x++) {
+				xValues.push(x);
 			}
 			return xValues;
 		}
-
 	}
 
-	public List<Double> getQuantitativeYValues() {
-		String yDataPath = data.yData.get();
-		if (yDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get quantitativeYValues() {
+		var yDataPath = data.yData;
+		if (!yDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column yDataColumn = getChildFromRoot(yDataPath);
-		boolean isQuantitative = yDataColumn.isNumeric();
+		var yDataColumn = this.getChildFromRoot(yDataPath);
+		var isQuantitative = yDataColumn.isNumeric();
 		if (isQuantitative) {
-			List<Double> yDataValues = yDataColumn.getDoubleValues();
-			return yDataValues;
+			return yDataColumn.doubleValues;			
 		} else {
-			List<String> ordinalValues = yDataColumn.getStringValues();
-			List<Double> yValues = new ArrayList<>();
-
-			for (Double y = 1.0; y <= ordinalValues.size(); y++) {
-				yValues.add(y);
+			var ordinalValues = yDataColumn.stringValues;
+			var yValues = [];
+			for (var y = 1.0; y <= ordinalValues.length; y++) {
+				yValues.push(y);
 			}
 			return yValues;
 		}
 	}
 
-	private List<String> getOrdinalXValues() {
-		String xDataPath = data.xData.get();
-		if (xDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get ordinalXValues() {
+		var xDataPath = data.xData;
+		if (!xDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column xDataColumn = getChildFromRoot(xDataPath);
-		List<String> xDataValues = xDataColumn.getStringValues();
-		return xDataValues;
-
+		var xDataColumn = this.getChildFromRoot(xDataPath);
+		return xDataColumn.stringValues;
 	}
 
-	private List<String> getOrdinalYValues() {
-		String yDataPath = data.yData.get();
-		if (yDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get ordinalYValues() {
+		var yDataPath = data.yData;
+		if (!yDataPath) {
+			return [];
 		}
-		org.treez.data.column.Column yDataColumn = getChildFromRoot(yDataPath);
-		List<String> yDataValues = yDataColumn.getStringValues();
-		return yDataValues;
+		var yDataColumn = this.getChildFromRoot(yDataPath);
+		return yDataColumn.stringValues;
 	}
-
-	//#end region
 
 }

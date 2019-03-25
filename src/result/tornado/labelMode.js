@@ -1,37 +1,6 @@
-package org.treez.results.atom.tornado;
+export default class LabelMode extends Enum{}
 
-public enum LabelMode {
-
-	//#region VALUES
-
-	ABSOLUTE("absolute"), //
-	PERCENT("percent"), //
-	DIFFERENCE("difference"), //
-	DIFFERENCE_IN_PERCENT("differenceInPercent");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	LabelMode(String value) {
-		this.value = value;
-	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
-	}
-
-	//#end region
-
-}
+LabelMode.absolute = new LabelMode('absolute');
+LabelMode.percent = new LabelMode('percent');
+LabelMode.difference = new LabelMode('difference');
+LabelMode.differenceInPercent = new LabelMode('differenceInPercent');

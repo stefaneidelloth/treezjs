@@ -1,298 +1,202 @@
-package org.treez.results.atom.bar;
+import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+export default class Xy extends PagedGraphicsAtom {
 
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.treeView;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.results.Activator;
-import org.treez.results.atom.axis.Axis;
-import org.treez.results.atom.graph.Graph;
-import org.treez.results.atom.graphicsPage.GraphicsPropertiesPage;
-import org.treez.results.atom.legend.LegendContributor;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Bar extends GraphicsPropertiesPage implements LegendContributor {
-
-	//#region ATTRIBUTES
-
-	public Data data;
-
-	public Fill fill;
-
-	public Line line;
-
-	//public Label label;
-	//public ErrorBar errorBar;
-
-	private Selection barSelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Bar(String name) {
+	constructor(name){
 		super(name);
+		this.image = 'bar.png'
+		this.__barSelection=undefined;
 	}
 
-	//#end region
+	createPageFactories() {
 
-	//#region METHODS
+		var factories = [];
+		
+		this.data = new Data();
+		factories.push(this.data);
 
-	@Override
-	protected void createPropertyPageFactories() {
+		this.fill = new Fill();
+		factories.push(this.fill);
 
-		data = new Data();
-		propertyPageFactories.add(data);
-
-		fill = new Fill();
-		propertyPageFactories.add(fill);
-
-		line = new Line();
-		propertyPageFactories.add(line);
+		this.line = new Line();
+		factories.push(this.line);
 
 		//label = new Label();
 		//errorBar = new ErrorBar();
+		
+		return factories;
 
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("bar.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		// no actions available right now
-		return actions;
-	}
-
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
-		treeView = refreshable;
-	}
-
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection graphOrBarSeriesSelection,
-			Selection graphRectSelection,
-			FocusChangingRefreshable refreshable) {
-		Objects.requireNonNull(d3);
-		this.treeView = refreshable;
+	plot(dTreez, graphOrBarSeriesSelection, graphRectSelection, treeView) {
+		
+		this.__treeView = treeView;
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //
-				.select("#" + name) //
+				.select('#' + name) //
 				.remove();
 
 		//create new axis group
 		barSelection = graphOrBarSeriesSelection //
-				.insert("g", ".axis") //
-				.attr("class", "bar") //
-				.onClick(this);
-		bindNameToId(barSelection);
+				.insert('g', '.axis') //
+				.className('bar') //
+				.onClick(()=>this.handleMouseClick());
+		
+		
+		this.bindString(()=>this.name, xySelection, 'id');
 
-		updatePlotWithD3(d3);
+		this.__updatePlot(dTreez);
 
 		return barSelection;
 	}
 
-	@Override
-	public void updatePlotWithD3(D3 d3) {
-		contributeDataForAutoScale(d3);
-		plotPageModels(d3);
+	updatePlot(dTreez) {
+		this.__contributeDataForAutoScale(dTreez);
+		this.plotWithPages(dTreez);
 	}
 
-	private void contributeDataForAutoScale(D3 d3) {
+	__contributeDataForAutoScale(dTreez) {
 
-		boolean horizontalScaleChanged = false;
-		boolean verticalScaleChanged = false;
+		var horizontalScaleChanged = false;
+		var verticalScaleChanged = false;
 
-		boolean isVerticalBar = data.barDirection.get().isVertical();
+		var isVerticalBar = data.barDirection.isVertical;
 		if (isVerticalBar) {
-			horizontalScaleChanged = contributePositionValuesToHorizontalAxis();
-			verticalScaleChanged = contributeLengthValuesToVerticalAxis();
+			horizontalScaleChanged = this.__contributePositionValuesToHorizontalAxis();
+			verticalScaleChanged = this.__contributeLengthValuesToVerticalAxis();
 		} else {
-			horizontalScaleChanged = contributeLengthValuesToHorizontalAxis();
-			verticalScaleChanged = contributePositionValuesToVerticalAxis();
+			horizontalScaleChanged = this.__contributeLengthValuesToHorizontalAxis();
+			verticalScaleChanged = this.__contributePositionValuesToVerticalAxis();
 		}
 
-		if (horizontalScaleChanged || verticalScaleChanged) {
-			Graph graph = getGraph();
-			graph.updatePlotForChangedScales(d3);
+		if (horizontalScaleChanged || verticalScaleChanged) {			
+			this.graph.updatePlotForChangedScales(dTreez);
 		}
 
 	}
 
-	private boolean contributePositionValuesToHorizontalAxis() {
+	__contributePositionValuesToHorizontalAxis() {
+		
+		if (this.horizontalAxis.isQuantitative) {			
 
-		Axis horizontalAxis = getHorizontalAxis();
-		boolean horizontalAxisIsQuantitative = horizontalAxis.isQuantitative();
-		if (horizontalAxisIsQuantitative) {
+			var oldHorizontalLimits = horizontalAxis.quantitativeLimits;
+			horizontalAxis.includeDataForAutoScale(this.quantitativePositions);			
+			var horizontalLimits = horizontalAxis.quantitativeLimits;
 
-			List<Double> positionValues = getQuantitativePositions();
-
-			Double[] oldHorizontalLimits = horizontalAxis.getQuantitativeLimits();
-			horizontalAxis.includeDataForAutoScale(positionValues);
-			Double[] horizontalLimits = horizontalAxis.getQuantitativeLimits();
-
-			boolean horizontalScaleChanged = !Arrays.equals(horizontalLimits, oldHorizontalLimits);
+			var horizontalScaleChanged = ('' + oldHorizontalLimits) !== ('' + horizontalLimits);
 			return horizontalScaleChanged;
 
-		} else {
+		} else {		
 
-			List<String> positionValues = getOrdinalPositions();
+			var oldNumberOfValues = horizontalAxis.numberOfValues;
+			horizontalAxis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
+			var numberOfValues = horizontalAxis.numberOfValues;
 
-			int oldNumberOfValues = horizontalAxis.getNumberOfValues();
-			horizontalAxis.includeOrdinalValuesForAutoScale(positionValues);
-			int numberOfValues = horizontalAxis.getNumberOfValues();
-
-			boolean horizontalScaleChanged = numberOfValues != oldNumberOfValues;
+			var horizontalScaleChanged = numberOfValues != oldNumberOfValues;
 			return horizontalScaleChanged;
 
 		}
 
 	}
 
-	private boolean contributeLengthValuesToVerticalAxis() {
+	__contributeLengthValuesToVerticalAxis() {
 
-		Axis verticalAxis = getVerticalAxis();
-		boolean verticalAxisIsQuantitative = verticalAxis.isQuantitative();
-		if (verticalAxisIsQuantitative) {
+		var verticalAxis = this.verticalAxis;		
+		if (verticalAxis.isQuantitative) {
+			var oldVerticalLimits = verticalAxis.quantitativeLimits;
+			verticalAxis.includeDataForAutoScale(this.quantitativeLengths);
+			var verticalLimits = verticalAxis.quantitativeLimits;
 
-			List<Double> lengthValues = getQuantitativeLengths();
-
-			Double[] oldVerticalLimits = verticalAxis.getQuantitativeLimits();
-			verticalAxis.includeDataForAutoScale(lengthValues);
-			Double[] verticalLimits = verticalAxis.getQuantitativeLimits();
-
-			boolean verticalScaleChanged = !Arrays.equals(verticalLimits, oldVerticalLimits);
+			var verticalScaleChanged = ('' + verticalLimits) !== ('' + oldVerticalLimits);
 			return verticalScaleChanged;
 
 		} else {
+			var oldNumberOfValues = verticalAxis.numberOfValues;
+			verticalAxis.includeOrdinalValuesForAutoScale(this.ordinalLengths);
+			var numberOfValues = verticalAxis.numberOfValues;
 
-			List<String> lengthValues = getOrdinalLengths();
-
-			int oldNumberOfValues = verticalAxis.getNumberOfValues();
-			verticalAxis.includeOrdinalValuesForAutoScale(lengthValues);
-			int numberOfValues = verticalAxis.getNumberOfValues();
-
-			boolean verticalScaleChanged = numberOfValues != oldNumberOfValues;
+			var verticalScaleChanged = numberOfValues !== oldNumberOfValues;
 			return verticalScaleChanged;
+		}
+	}
 
+	__contributePositionValuesToVerticalAxis() {
+
+		var verticalAxis = this.verticalAxis;		
+		if (verticalAxis.isQuantitative) {
+			var oldVerticalLimits = verticalAxis.getQuantitativeLimits();
+			verticalAxis.includeDataForAutoScale(this.quantitativePositions);
+			var verticalLimits = verticalAxis.getQuantitativeLimits();
+
+			var verticalScaleChanged = ('' + verticalLimits) !== ('' + oldVerticalLimits);
+			return verticalScaleChanged;
+		} else {
+			var oldNumberOfValues = verticalAxis.numberOfValues;
+			verticalAxis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
+			var numberOfValues = verticalAxis.numberOfValues;
+
+			var verticalScaleChanged = numberOfValues != oldNumberOfValues;
+			return verticalScaleChanged;
 		}
 
 	}
 
-	private boolean contributePositionValuesToVerticalAxis() {
+	__contributeLengthValuesToHorizontalAxis() {
 
-		Axis verticalAxis = getVerticalAxis();
-		boolean verticalAxisIsQuantitative = verticalAxis.isQuantitative();
-		if (verticalAxisIsQuantitative) {
+		var horizontalAxis = this.horizontalAxis;		
+		if (horizontalAxis.isQuantitative) {
+			var oldHorizontalLimits = horizontalAxis.getQuantitativeLimits();
+			horizontalAxis.includeDataForAutoScale(this.quantitativeLengths);
+			var horizontalLimits = horizontalAxis.getQuantitativeLimits();
 
-			List<Double> positionValues = getQuantitativePositions();
-
-			Double[] oldVerticalLimits = verticalAxis.getQuantitativeLimits();
-			verticalAxis.includeDataForAutoScale(positionValues);
-			Double[] verticalLimits = verticalAxis.getQuantitativeLimits();
-
-			boolean verticalScaleChanged = !Arrays.equals(verticalLimits, oldVerticalLimits);
-			return verticalScaleChanged;
-
-		} else {
-
-			List<String> positionValues = getOrdinalPositions();
-
-			int oldNumberOfValues = verticalAxis.getNumberOfValues();
-			verticalAxis.includeOrdinalValuesForAutoScale(positionValues);
-			int numberOfValues = verticalAxis.getNumberOfValues();
-
-			boolean verticalScaleChanged = numberOfValues != oldNumberOfValues;
-			return verticalScaleChanged;
-
-		}
-
-	}
-
-	private boolean contributeLengthValuesToHorizontalAxis() {
-
-		Axis horizontalAxis = getHorizontalAxis();
-		boolean horizontalAxisIsQuantitative = horizontalAxis.isQuantitative();
-		if (horizontalAxisIsQuantitative) {
-
-			List<Double> lengthValues = getQuantitativeLengths();
-
-			Double[] oldHorizontalLimits = horizontalAxis.getQuantitativeLimits();
-			horizontalAxis.includeDataForAutoScale(lengthValues);
-			Double[] horizontalLimits = horizontalAxis.getQuantitativeLimits();
-
-			boolean horizontalScaleChanged = !Arrays.equals(horizontalLimits, oldHorizontalLimits);
+			var horizontalScaleChanged = ('' + horizontalLimits) !== ('' + oldHorizontalLimits);
 			return horizontalScaleChanged;
 
-		} else {
+		} else {			
+			var oldNumberOfValues = horizontalAxis.numberOfValues;
+			horizontalAxis.includeOrdinalValuesForAutoScale(this.ordinalLength);
+			var numberOfValues = horizontalAxis.numberOfValues;
 
-			List<String> lengthValues = getOrdinalLengths();
-
-			int oldNumberOfValues = horizontalAxis.getNumberOfValues();
-			horizontalAxis.includeOrdinalValuesForAutoScale(lengthValues);
-			int numberOfValues = horizontalAxis.getNumberOfValues();
-
-			boolean horizontalScaleChanged = numberOfValues != oldNumberOfValues;
+			var horizontalScaleChanged = numberOfValues != oldNumberOfValues;
 			return horizontalScaleChanged;
 		}
 	}
 
-	private Graph getGraph() {
-		AbstractAtom<?> parent = getParentAtom();
-		boolean parentIsGraph = Graph.class.isAssignableFrom(parent.getClass());
+	get graph() {
+		
+		var parentIsGraph = this.parent instanceof Graph;
 		if (parentIsGraph) {
-			return (Graph) parent;
+			return this.parent;
 		} else {
-			AbstractAtom<?> grandParent = parent.getParentAtom();
-			return (Graph) grandParent;
+			return this.parent.parent;			
 		}
 	}
 
-	private void plotPageModels(D3 d3) {
-		for (GraphicsPropertiesPageFactory pageModel : propertyPageFactories) {
-			barSelection = pageModel.plotWithD3(d3, barSelection, null, this);
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.pageFactories) {
+			pageFactory.plot(dTreez, this.__barSelection, null, this);
 		}
 	}
 
-	@Override
-	public void addLegendContributors(List<LegendContributor> legendContributors) {
-		if (providesLegendEntry()) {
+	addLegendContributors(legendContributors) {
+		if (this.providesLegendEntry) {
 			legendContributors.add(this);
 		}
 	}
 
-	@Override
-	public boolean providesLegendEntry() {
-		return !getLegendText().isEmpty();
+	get  providesLegendEntry() {
+		return !this.lengendText.length > 0;
 	}
 
-	@Override
-	public String getLegendText() {
-		return data.legendText.get();
+	get legendText() {
+		return this.data.legendText;
 	}
 
-	@Override
-	public
-			Selection
-			createLegendSymbolGroup(D3 d3, Selection parentSelection, int symbolLengthInPx, Refreshable refreshable) {
-		Selection symbolSelection = parentSelection //
-				.append("rect") //
-				.classed("bar-legend-entry-symbol", true);
+	createLegendSymbolGroup(dTreez, parentSelection, symbolLengthInPx, treeView) {
+		var symbolSelection = parentSelection //
+				.append('rect') //
+				.classed('bar-legend-entry-symbol', true);
 
 		this.fill.formatLegendSymbol(symbolSelection, symbolLengthInPx);
 		this.line.formatLegendSymbolLine(symbolSelection, refreshable);
@@ -300,94 +204,95 @@ public class Bar extends GraphicsPropertiesPage implements LegendContributor {
 		return symbolSelection;
 	}
 
-	public String getBarDataString(boolean positionAxisIsOrdinal, boolean lengthAxisIsOrdinal) {
-
-		List<Object> lengthDataValues = getLengthData();
-		List<Object> positionDataValues = getPositionData();
-
-		int lengthSize = lengthDataValues.size();
-		int positionSize = positionDataValues.size();
-		assertEqualSizes(lengthSize, positionSize);
+	getBarDataString(positionAxisIsOrdinal, lengthAxisIsOrdinal) {
+		
+		var lengthDataValues = this.lengthDataValues;
+        var positionDataValues = this.positionDataValues;
+        
+		var lengthSize = lengthDataValues.length;
+		var positionSize = positionDataValues.length;
+		this.__assertEqualSizes(lengthSize, positionSize);
 
 		if (lengthSize == 0) {
-			return "[]";
+			return '[]';
 		}
 
-		Object firstPosition = positionDataValues.get(0);
-		boolean positionsAreOrdinal = firstPosition instanceof String;
+		var firstPosition = positionDataValues[0];
+		var positionsAreOrdinal = firstPosition instanceof String;
 
-		Object firstLength = lengthDataValues.get(0);
-		boolean lengthsAreOrdinal = firstLength instanceof String;
+		var firstLength = lengthDataValues[0];
+		var lengthsAreOrdinal = firstLength instanceof String;
 
-		List<String> rowList = new java.util.ArrayList<>();
-		for (int rowIndex = 0; rowIndex < lengthSize; rowIndex++) {
+		var rowList = [];
+		for (var rowIndex = 0; rowIndex < lengthSize; rowIndex++) {
 
-			Object positionDatum = positionDataValues.get(rowIndex);
-			String position = positionDatum.toString();
+			var positionDatum = positionDataValues[rowIndex];
+			
+			var position = '' + positionDatum;
 			if (positionsAreOrdinal) {
 				if (positionAxisIsOrdinal) {
-					position = "'" + position + "'";
+					position = '"' + position + '"';
 				} else {
-					position = "" + (positionDataValues.indexOf(positionDatum) + 1);
+					position = '' + (positionDataValues.indexOf(positionDatum) + 1);
 				}
 
 			}
 
-			Object lengthDatum = lengthDataValues.get(rowIndex);
-			String length = lengthDatum.toString();
+			var lengthDatum = lengthDataValues[rowIndex];
+			var length = '' + lengthDatum;
 			if (lengthsAreOrdinal) {
 				if (lengthAxisIsOrdinal) {
-					length = "'" + length + "'";
+					length = '"' + length + '"';
 				} else {
-					length = "" + (lengthDataValues.indexOf(lengthDatum) + 1);
+					length = '' + (lengthDataValues.indexOf(lengthDatum) + 1);
 				}
 
 			}
 
-			String rowString = "[" + position + "," + length + "]";
-			rowList.add(rowString);
+			var rowString = '[' + position + ',' + length + ']';
+			rowList.push(rowString);
 		}
-		String dataString = "[" + String.join(",", rowList) + "]";
-		return dataString;
+		
+		return '[' + rowList.join(',') + ']';
+		
 	}
 
-	private void assertEqualSizes(int lengthSize, int positionSize) {
-		boolean sizesAreOk = lengthSize == positionSize;
+	__assertEqualSizes(lengthSize, positionSize) {
+		var sizesAreOk = lengthSize === positionSize;
 		if (!sizesAreOk) {
-			String message = "The length and position data has to be of equal size but size of length data is "
-					+ lengthSize + " and size of position data is " + positionSize;
-			throw new IllegalStateException(message);
+			var message = 'The length and position data has to be of equal size but size of length data is '
+					+ lengthSize + ' and size of position data is ' + positionSize;
+			throw new Error(message);
 		}
 	}
 
-	public int getNumberOfPositionValues() {
-		List<Object> positionDataValues = getPositionData();
-		return positionDataValues.size();
+	get numberOfPositionValues() {
+		return this.positionData.length;		
 	}
 
-	public double getSmallestPositionDistance() {
+	get smallestPositionDistance() {
 
-		double smallestDistance = Double.MAX_VALUE;
+		var smallestDistance = Number.MAX_VALUE;
 
-		List<Object> positionDataValues = getPositionData();
-		int positionSize = positionDataValues.size();
+		var positionDataValues = this.positionData;
+		var positionSize = positionDataValues.length;
 
 		if (positionSize > 1) {
 
-			Object firstPosition = positionDataValues.get(0);
-			boolean isOrdinal = firstPosition instanceof String;
+			var firstPosition = positionDataValues[0];
+			var isOrdinal = firstPosition instanceof String;
 			if (isOrdinal) {
 				return 1;
 			}
 
-			for (int positionIndex = 1; positionIndex < positionSize; positionIndex++) {
-				Object leftPositionObj = positionDataValues.get(positionIndex - 1);
-				Double leftPosition = Double.parseDouble(leftPositionObj.toString());
+			for (var positionIndex = 1; positionIndex < positionSize; positionIndex++) {
+				var leftPositionObj = positionDataValues[positionIndex - 1];
+				var leftPosition = parseFloat('' +leftPositionObj);
 
-				Object rightPositionObj = positionDataValues.get(positionIndex);
-				Double rightPosition = Double.parseDouble(rightPositionObj.toString());
+				var rightPositionObj = positionDataValues[positionIndex];
+				var rightPosition = parseFloat('' + rightPositionObj);
 
-				double distance = Math.abs(rightPosition - leftPosition);
+				var distance = Math.abs(rightPosition - leftPosition);
 				if (distance < smallestDistance) {
 					smallestDistance = distance;
 				}
@@ -399,128 +304,102 @@ public class Bar extends GraphicsPropertiesPage implements LegendContributor {
 
 	}
 
-	public Scale<?> getHorizontalScale() {
-		Axis horizontalAxisAtom = getHorizontalAxis();
-		if (horizontalAxisAtom == null) {
+	get horizontalScale() {
+		return this.horizontalAxis
+			?this.horizontalAxis.scale
+			:null;		
+	}
+
+	get verticalScale() {
+		return this.verticalAxis
+		?this.verticalAxis.scale
+		:null;
+
+	}
+
+	get horizontalAxis() {	
+		if (!this.data.horizontalAxis) {
 			return null;
 		}
-		return horizontalAxisAtom.getScale();
+		return this.getChildFromRoot(this.data.horizontalAxis);		
 	}
-
-	public Scale<?> getVerticalScale() {
-		Axis verticalAxisAtom = getVerticalAxis();
-		if (verticalAxisAtom == null) {
+	
+	get verticalAxis() {	
+		if (!this.data.verticalAxis) {
 			return null;
 		}
-		return verticalAxisAtom.getScale();
-
+		return this.getChildFromRoot(this.data.verticalAxis);		
 	}
 
-	public Axis getHorizontalAxis() {
-		String horizontalAxisPath = data.horizontalAxis.get();
-		if (horizontalAxisPath == null || horizontalAxisPath.isEmpty()) {
-			return null;
+	get lengthData() {		
+		if (!this.data.barLength) {
+			return [];
 		}
-		Axis horizontalAxisAtom = getChildFromRoot(horizontalAxisPath);
-		return horizontalAxisAtom;
+		var lengthDataColumn = this.getChildFromRoot(this.data.barLength);
+		return lengthDataColumn.values;		
 	}
 
-	public Axis getVerticalAxis() {
-		String verticalAxisPath = data.verticalAxis.get();
-		if (verticalAxisPath == null || verticalAxisPath.isEmpty()) {
-			return null;
+	get positionData() {
+		if (!this.data.barPositions) {
+			return [];
 		}
-		Axis verticalAxisAtom = getChildFromRoot(verticalAxisPath);
-		return verticalAxisAtom;
+		var positionDataColumn = this.getChildFromRoot(this.data.barPositions);
+		return positionDataColumn.values;	
 	}
 
-	private List<Object> getLengthData() {
-		String lengthDataPath = data.barLengths.get();
-		if (lengthDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get quantitativePositions() {		
+		if (!this.data.barPositions) {
+			return[];
 		}
-		org.treez.data.column.Column lengthDataColumn = getChildFromRoot(lengthDataPath);
-		List<Object> lengthDataValues = lengthDataColumn.getValues();
-		return lengthDataValues;
-	}
-
-	private List<Object> getPositionData() {
-		String positionDataPath = data.barPositions.get();
-		if (positionDataPath.isEmpty()) {
-			return new ArrayList<>();
-		}
-		org.treez.data.column.Column positionDataColumn = getChildFromRoot(positionDataPath);
-		List<Object> positionDataValues = positionDataColumn.getValues();
-		return positionDataValues;
-	}
-
-	private List<Double> getQuantitativePositions() {
-		String positionDataPath = data.barPositions.get();
-		if (positionDataPath.isEmpty()) {
-			return new ArrayList<>();
-		}
-		org.treez.data.column.Column positionDataColumn = getChildFromRoot(positionDataPath);
-
-		boolean isNumericColumn = positionDataColumn.isNumeric();
-		if (isNumericColumn) {
-			List<Double> positionValues = positionDataColumn.getDoubleValues();
-			return positionValues;
+		
+		var positionColumn = this.getChildFromRoot(this.data.barPositions);		
+		if (positionColumn.isNumeric) {
+			return positionDataColumn.doubleValues;			
 		} else {
-			List<String> ordinalPositionValues = positionDataColumn.getStringValues();
-			List<Double> positionValues = new ArrayList<>();
-
-			for (Double position = 1.0; position <= ordinalPositionValues.size(); position++) {
-				positionValues.add(position);
+			var ordinalPositionValues = positionColumn.stringValues;
+			
+			var positionValues = [];
+			for (var position = 1.0; position <= ordinalPositionValues.length; position++) {
+				positionValues.push(position);
 			}
 			return positionValues;
 		}
-
 	}
 
-	private List<String> getOrdinalPositions() {
-		String positionDataPath = data.barPositions.get();
-		if (positionDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get ordinalPositions() {		
+		if (!this.data.barPositions) {
+			return [];
 		}
-		org.treez.data.column.Column positionDataColumn = getChildFromRoot(positionDataPath);
-		List<String> positionDataValues = positionDataColumn.getStringValues();
-		return positionDataValues;
+		var positionColumn = this.getChildFromRoot(this.data.barPositions);
+		return positionColumn.stringValues;		
 	}
 
-	private List<Double> getQuantitativeLengths() {
-		String lengthDataPath = data.barLengths.get();
-		if (lengthDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get quantitativeLengths() {		
+		if (!this.data.barLengths) {
+			return [];
 		}
 
-		org.treez.data.column.Column lengthDataColumn = getChildFromRoot(lengthDataPath);
-
-		boolean isNumericColumn = lengthDataColumn.isNumeric();
-		if (isNumericColumn) {
-			List<Double> lengthValues = lengthDataColumn.getDoubleValues();
-			return lengthValues;
+		var lengthColumn = this.getChildFromRoot(this.data.barLengths);		
+		if (lengthColumn.isNumeric) {
+			return lengthColumn.doubleValues;			
 		} else {
-			List<String> ordinalLengthValues = lengthDataColumn.getStringValues();
-			List<Double> lengthValues = new ArrayList<>();
-
-			for (Double position = 1.0; position <= ordinalLengthValues.size(); position++) {
-				lengthValues.add(position);
+			var ordinalLengthValues = lengthDataColumn.stringValues;
+			
+			var lengthValues = [];
+			for (var position = 1.0; position <= ordinalLengthValues.length; position++) {
+				lengthValues.push(position);
 			}
 			return lengthValues;
 		}
 
 	}
 
-	private List<String> getOrdinalLengths() {
-		String lengthDataPath = data.barLengths.get();
-		if (lengthDataPath.isEmpty()) {
-			return new ArrayList<>();
+	get ordinalLengths() {		
+		if (!this.data.barLengths) {
+			return [];
 		}
-		org.treez.data.column.Column lengthDataColumn = getChildFromRoot(lengthDataPath);
-		List<String> lengthDataValues = lengthDataColumn.getStringValues();
-		return lengthDataValues;
-	}
-
-	//#end region
+		var lengthColumn = this.getChildFromRoot(this.data.barLengths);
+		return lengthColumn.stringValues;		r
+	}	
 
 }

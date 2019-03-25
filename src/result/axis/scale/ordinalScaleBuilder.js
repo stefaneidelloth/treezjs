@@ -1,13 +1,13 @@
 export default class OrdinalScaleBuilder {
 
 	constructor() {
-		this.__scale=undefnied;
+		this.__scale = undefined;
 		this.__ordinalValues = new Set();
 	}
 
 	
-	createScale(scales, isHorizontal, graphWidthInPx, graphHeightInPx) {
-		this.__scale = scales.ordinal();
+	createScale(scaleFactory, isHorizontal, graphWidthInPx, graphHeightInPx) {
+		this.__scale = scaleFactory.ordinal();
 		this.__createRange(isHorizontal, graphWidthInPx, graphHeightInPx);
 		this.__updateDomain();
 	}
@@ -21,30 +21,30 @@ export default class OrdinalScaleBuilder {
 	}
 
 	__updateDomain() {
-		if (this.__scale != null) {			
+		if (this.__scale) {			
 			this.__scale.domain(this.__ordinalValues);
 		}
 	}
 
-	getScale() {
+	get scale() {
 		return this.__scale;
 	}
 
-	getNumberOfValues() {
-		return this.__scale.domain().sizes().get(0);
+	get numberOfValues() {
+		return this.__scale.domain().sizes()[0];
 	}
 
-	getValues() {
+	get values() {
 		return this.__ordinalValues;
 	}
 
-	includeDomainValuesForAutoScale(ordinalValues) {
-		this.__ordinalValues = this.__ordinalValues.concat(ordinalValues);
+	includeDomainValuesForAutoScale(ordinalValuesToInlcude) {
+		this.__ordinalValues = new Set([...this.__ordinalValues, ...ordinalValuesToInlcude]);
 		this.__updateDomain();
 	}
 
-	removeDomainValue(ordinalValue) {
-		this.__ordinalValues.remove(ordinalValue); //todo implement remove
+	removeDomainValue(ordinalValueToRemove) {	
+		this.__ordinalValues.delete(ordinalValueToRemove); 		
 		this.__updateDomain();
 	}
 	

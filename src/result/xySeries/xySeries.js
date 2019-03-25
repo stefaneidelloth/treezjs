@@ -1,229 +1,163 @@
-package org.treez.results.atom.xySeries;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.List;
+export default class XySeries extends GraphicsAtom {
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.Adaptable;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.core.color.ColorBrewer;
-import org.treez.core.treeview.treeView;
-import org.treez.data.column.Column;
-import org.treez.data.column.Columns;
-import org.treez.data.table.nebula.Table;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.results.Activator;
-import org.treez.results.atom.axis.Axis;
-import org.treez.results.atom.axis.Direction;
-import org.treez.results.atom.graph.Graph;
-import org.treez.results.atom.legend.Legend;
-import org.treez.results.atom.legend.LegendContributor;
-import org.treez.results.atom.legend.LegendContributorProvider;
-import org.treez.results.atom.xy.Xy;
-
-/**
- * Represents a series of xy plots that references a table
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class XySeries extends AbstractGraphicsAtom implements LegendContributorProvider {
-
-	private static final Logger LOG = Logger.getLogger(XySeries.class);
-
-	//#region ATTRIBUTES
-
-	public final Attribute<String> sourceTable = new Wrap<>();
-
-	public final Attribute<String> domainLabel = new Wrap<>();
-
-	public final Attribute<String> rangeLabel = new Wrap<>();
-
-	public final Attribute<String> colorMap = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	private Selection seriesGroupSelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public XySeries(String name) {
+	constructor(name){
 		super(name);
-		setRunnable();
-		createModel();
-	}
+		this.image = 'xySeries.png';		
+		this.isRunnable=true;
+		
+		this.sourceTable = '';	
+		this.domainLabel = '';	
+		this.rangeLabel = '';	
+		this.colorMap = ColorMap.blue;	
+		this.isHidden = false;		
+		
+		this.__seriesGroupSelection;
+	}	
 
-	//#end region
+	createComponentControl(tabFolder){  		
+	     
+		const page = tabFolder.append('treez-tab')
+			.label('Page'); 
+		
+		const section = page.append('treez-section')
+    		.label('XySeries');		
+		
+		section.append('treez-section-action')
+			.image('run.png')
+			.label('Build XySeries')
+			.addAction(()=> this.execute(this.__treeView)
+					.catch(error => {
+					   	console.error('Could not build XySeries  "' + this.name + '"!', error);            					   
+				   })
+			)			
+		
+		var sectionContent = section.append('div');
 
-	//#region METHODS
+		
+		section.createModelPath(sourceTable, this, '', Table.class, this) //
+				.setLabel('Source table');
 
-	private void createModel() {
+		section.createTextField(domainLabel, this).setLabel('Domain label');
 
-		//root
-		AttributeRoot root = new AttributeRoot("root");
+		section.createTextField(rangeLabel, this).setLabel('Range label');
 
-		//page
-		org.treez.core.atom.attribute.attributeContainer.Page page = root.createPage("page");
-
-		//section
-		Section section = page.createSection("section");
-		section.setLabel("XySeries");
-
-		Runnable runAction = () -> execute(treeView);
-		section.createSectionAction("action", "Build XySeries", runAction);
-
-		section.createModelPath(sourceTable, this, "", Table.class, this) //
-				.setLabel("Source table");
-
-		section.createTextField(domainLabel, this).setLabel("Domain label");
-
-		section.createTextField(rangeLabel, this).setLabel("Range label");
-
-		section.createColorMap(colorMap, this).setLabel("Color map");
+		section.createColorMap(colorMap, this).setLabel('Color map');
 
 		section.createCheckBox(hide, this);
 
-		setModel(root);
+		
 
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("xySeries.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		return actions;
-	}
-
-	@Override
-	public void addLegendContributors(List<LegendContributor> legendContributors) {
-		List<AbstractAtom<?>> children = getChildAtoms();
-		for (AbstractAtom<?> child : children) {
-			boolean isLegendContributorProvider = child instanceof LegendContributorProvider;
-			if (isLegendContributorProvider) {
-				LegendContributorProvider provider = (LegendContributorProvider) child;
-				provider.addLegendContributors(legendContributors);
+	addLegendContributors(legendContributors) {		
+		for (var child of children) {			
+			if (child.addLegendContributors) {				
+				child.addLegendContributors(legendContributors);
 			}
 		}
 	}
 
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
-		treeView = refreshable;
+	execute(treeView) {		
+		
+		if (this.sourceTable) {
+			var foundSourceTable = this.getChildFromRoot(this.sourceTable);
 
-		String sourceTablePath = sourceTable.get();
-		boolean sourceIsSpecified = sourceTablePath != null && !"".equals(sourceTablePath);
-		if (sourceIsSpecified) {
-			Table foundSourceTable = this.getChildFromRoot(sourceTablePath);
-
-			Axis domainAxis = updateDomainAxis(foundSourceTable);
-			Axis rangeAxis = updateRangeAxis(foundSourceTable);
-			removeAllChildren();
-			createNewXyChildren(sourceTablePath, domainAxis, rangeAxis);
-			createLegendForParentGraphIfNotExists();
+			var domainAxis = this.__updateDomainAxis(foundSourceTable);
+			var rangeAxis = this.__updateRangeAxis(foundSourceTable);
+			this.__removeAllChildren();
+			this.__createNewXyChildren(sourceTablePath, domainAxis, rangeAxis);
+			this.__createLegendForParentGraphIfNotExists();
 		} else {
-			LOG.warn("The xy series '" + this.name + "' has no source table.");
+			console.warn('The xy series "' + this.name + '" has no source table.');
 		}
 	}
 
-	private void createLegendForParentGraphIfNotExists() {
-		Graph graph = (Graph) this.getParentAtom();
-
+	__createLegendForParentGraphIfNotExists() {
+		var graph = this.parent;
 		try {
-			graph.getChildByClass(Legend.class);
-		} catch (IllegalArgumentException exception) {
-			Legend legend = new Legend("legend");
+			graph.getChildByClass(Legend);
+		} catch (error) {
+			var legend = new Legend('legend');
 			graph.addChild(legend);
 		}
 
 	}
 
-	private void createNewXyChildren(String sourceTablePath, Axis domainAxis, Axis rangeAxis) {
-		Table foundSourceTable = this.getChildFromRoot(sourceTablePath);
-		int numberOfColumns = foundSourceTable.getNumberOfColumns();
-		int numberOfPlots = numberOfColumns - 1;
+	__createNewXyChildren(sourceTablePath, domainAxis, rangeAxis) {
+		var foundSourceTable = this.getChildFromRoot(sourceTablePath);
+		var numberOfColumns = foundSourceTable.numberOfColumns;
+		var numberOfPlots = numberOfColumns - 1;
 
-		final int smallMapSize = 10;
-		final int largeMapSize = 20;
+		var smallMapSize = 10;
+		var largeMapSize = 20;
 
-		int colorMapSize = smallMapSize;
+		var colorMapSize = smallMapSize;
 		if (numberOfPlots > smallMapSize) {
 			colorMapSize = largeMapSize;
 		}
 		if (numberOfPlots > largeMapSize) {
-			String message = "XySeries only supports up to " + largeMapSize + " plots. It can't create " + numberOfPlots
-					+ " plots.";
-			throw new IllegalStateException(message);
+			var message = 'XySeries only supports up to ' + largeMapSize + ' plots. It cant create ' + numberOfPlots + ' plots.';
+			throw new Error(message);
 		}
 
-		String[] seriesColors = ColorBrewer.Category.get(colorMapSize);
+		var seriesColors = ColorBrewer.Category.get(colorMapSize); //TODO
 
-		Columns columns = foundSourceTable.getColumns();
-		String columnsName = columns.getName();
-		List<String> columnHeaders = columns.getHeaders();
-		String domainColumnName = columnHeaders.get(0);
-		for (int rangeColumnIndex = 1; rangeColumnIndex <= numberOfPlots; rangeColumnIndex++) {
-			String rangeColumnName = columnHeaders.get(rangeColumnIndex);
-			Column rangeColumn = columns.getColumn(rangeColumnName);
-			String rangeLegend = rangeColumn.header.get();
-			String color = seriesColors[rangeColumnIndex - 1];
-			createNewXyChild(sourceTablePath, columnsName, domainAxis, domainColumnName, rangeAxis, rangeColumnName,
-					rangeLegend, color);
+		var columnFolder = foundSourceTable.columnFolder;
+		var columnFolderName = columnFolder.name;
+		var columnHeaders = columnFolder.headers;
+		var domainColumnName = columnHeaders[0];
+		for (var rangeColumnIndex = 1; rangeColumnIndex <= numberOfPlots; rangeColumnIndex++) {
+			var rangeColumnName = columnHeaders[rangeColumnIndex];
+			var rangeColumn = columnFolder.column(rangeColumnName);
+			var rangeLegend = rangeColumn.header;
+			var color = seriesColors[rangeColumnIndex - 1];
+			this.__createNewXyChild(sourceTablePath, columnsName, domainAxis, domainColumnName, rangeAxis, rangeColumnName, rangeLegend, color);
 		}
 	}
 
-	private Axis updateDomainAxis(Table sourceTable) {
-		List<Axis> axisList = getAllAxisFromParentGraph();
+	__updateDomainAxis(sourceTable) {
+		var axisList = this.__getAllAxisFromParentGraph();
 
-		Axis domainAxis;
+		var domainAxis;
 		if (axisList.size() > 0) {
-			domainAxis = axisList.get(0);
-			double[] domainAxisLimits = getDomainLimits(sourceTable);
-			domainAxis.data.min.set(domainAxisLimits[0]);
-			domainAxis.data.max.set(domainAxisLimits[1]);
+			domainAxis = axisList[0];
+			var domainAxisLimits = this.__getDomainLimits(sourceTable);
+			domainAxis.data.min = domainAxisLimits[0];
+			domainAxis.data.max = domainAxisLimits[1];
 		} else {
-			Graph graph = (Graph) this.getParentAtom();
-			domainAxis = graph.createAxis("xAxis");
+			var graph = this.parent;
+			domainAxis = graph.createAxis('xAxis');
 		}
 
-		domainAxis.data.label.set(domainLabel.get());
+		domainAxis.data.label = this.domainLabel;
 
 		return domainAxis;
 	}
 
-	private static double[] getDomainLimits(Table sourceTable) {
-		Columns columns = sourceTable.getColumns();
-		int numberOfColumns = columns.getNumberOfColumns();
+	getDomainLimits(sourceTable) {
+		var columnFolder = sourceTable.columnFolder;
+		var numberOfColumns = columnFolder.numberOfColumns;
 		if (numberOfColumns > 0) {
-			Column domainColumn = sourceTable.getColumns().getColumnByIndex(0);
-			List<Double> domainValues = domainColumn.getDoubleValues();
-			return getLimits(domainValues, Double.MAX_VALUE, Double.MIN_VALUE);
+			var domainColumn = sourceTable.columnfolder.getColumnByIndex(0);
+			var domainValues = domainColumn.doubleValues;
+			return this.__getLimits(domainValues, Double.MAX_VALUE, Double.MIN_VALUE); //TODO
 		} else {
-			double[] limits = { 0, 1 };
-			return limits;
+			return [0, 1];			
 		}
 
 	}
 
-	private static double[] getLimits(List<Double> domainValues, double initialMin, double initialMax) {
+	__getLimits(domainValues, initialMin, initialMax) {
 
-		if (domainValues.isEmpty()) {
-			double[] limits = { 0, 1 };
-			return limits;
+		if (domainValues.length < 1) {
+			return [0, 1];			
 		}
 
-		double min = initialMin;
-		double max = initialMax;
-		for (Double value : domainValues) {
+		var min = initialMin;
+		var max = initialMax;
+		for (var value of domainValues) {
 			if (value < min) {
 				min = value;
 			}
@@ -232,128 +166,105 @@ public class XySeries extends AbstractGraphicsAtom implements LegendContributorP
 				max = value;
 			}
 		}
-
-		double[] limits = { min, max };
-		return limits;
+		return [min, max];		
 	}
 
-	private Axis updateRangeAxis(Table sourceTable) {
-		List<Axis> axisList = getAllAxisFromParentGraph();
-		Axis rangeAxis;
-		if (axisList.size() > 1) {
-			rangeAxis = axisList.get(1);
+	__updateRangeAxis(sourceTable) {
+		var axisList = this.__getAllAxisFromParentGraph();
+		var rangeAxis;
+		if (axisList.length > 1) {
+			rangeAxis = axisList[1];
 
 		} else {
-			Graph graph = (Graph) this.getParentAtom();
-			rangeAxis = graph.createAxis("yAxis");
+			var graph = this.parent;
+			rangeAxis = graph.createAxis('yAxis');
 
-			rangeAxis.data.direction.set(Direction.VERTICAL);
-			double[] rangeAxisLimits = getRangeLimits(sourceTable);
-			rangeAxis.data.min.set(rangeAxisLimits[0]);
-			rangeAxis.data.max.set(rangeAxisLimits[1]);
+			rangeAxis.data.direction = Direction.vertical;
+			var rangeAxisLimits = this.__getRangeLimits(sourceTable);
+			rangeAxis.data.min = rangeAxisLimits[0];
+			rangeAxis.data.max = rangeAxisLimits[1];
 		}
 
-		rangeAxis.data.label.set(rangeLabel.get());
+		rangeAxis.data.label = this.rangeLabel;
 		return rangeAxis;
 	}
 
-	private static double[] getRangeLimits(Table sourceTable) {
-
-		Columns columns = sourceTable.getColumns();
-		int numberOfColumns = columns.getNumberOfColumns();
+	__getRangeLimits(sourceTable) {		
+		var numberOfColumns = sourceTable.numberOfColumns;
 		if (numberOfColumns > 1) {
-			double[] limits = { Double.MAX_VALUE, Double.MIN_VALUE };
-			for (int columnIndex = 1; columnIndex < numberOfColumns; columnIndex++) {
-				Column rangeColumn = columns.getColumnByIndex(columnIndex);
-				List<Double> rangeValues = rangeColumn.getDoubleValues();
-				limits = getLimits(rangeValues, limits[0], limits[1]);
+			var limits = [ Double.MAX_VALUE, Double.MIN_VALUE ]; //TODO
+			for (var columnIndex = 1; columnIndex < numberOfColumns; columnIndex++) {
+				var rangeColumn = sourceTable.getColumnByIndex(columnIndex);
+				var rangeValues = rangeColumn.doubleValues;
+				limits = this.__getLimits(rangeValues, limits[0], limits[1]);
 			}
 			return limits;
 		} else {
-			double[] limits = { 0, 1 };
-			return limits;
+			return [0, 1];			
 		}
 	}
 
-	private List<Axis> getAllAxisFromParentGraph() {
-		Graph graph = (Graph) this.getParentAtom();
-		List<Axis> childAxis = graph.getChildrenByClass(Axis.class);
-		return childAxis;
+	__getAllAxisFromParentGraph() {
+		var graph = this.parent;
+		return graph.getChildrenByClass(Axis);		
 	}
 
-	@SuppressWarnings("checkstyle:parameternumber")
-	private void createNewXyChild(
-			String sourceTablePath,
-			String columnsName,
-			Axis domainAxis,
-			String domainColumnName,
-			Axis rangeAxis,
-			String rangeColumnName,
-			String rangeLegend,
-			String color) {
+	createNewXyChild(
+			 sourceTablePath,
+			 columnsName,
+			 domainAxis,
+			 domainColumnName,
+			 rangeAxis,
+			 rangeColumnName,
+			 rangeLegend,
+			 color) {
 
-		Xy xy = new Xy(rangeColumnName);
-
-		String xAxisPath = domainAxis.createTreeNodeAdaption().getTreePath();
-		xy.data.xAxis.set(xAxisPath);
-
-		String xValuePath = sourceTablePath + "." + columnsName + "." + domainColumnName;
-		xy.data.xData.set(xValuePath);
-
-		String yAxisPath = rangeAxis.createTreeNodeAdaption().getTreePath();
-		xy.data.yAxis.set(yAxisPath);
-
-		String yValuePath = sourceTablePath + "." + columnsName + "." + rangeColumnName;
-		xy.data.yData.set(yValuePath);
-
-		xy.data.legendText.set(rangeLegend);
-
-		xy.line.color.set(color);
-		xy.symbol.fillColor.set(color);
-		xy.symbol.hideLine.set(true);
+		var xy = new Xy(rangeColumnName);		
+		xy.data.xAxis = domainAxis.getTreePath();		
+		xy.data.xData = sourceTablePath + '.' + columnsName + '.' + domainColumnName;		
+		xy.data.yAxis = rangeAxis.getTreePath();	
+		xy.data.yData = sourceTablePath + '.' + columnsName + '.' + rangeColumnName;
+		xy.data.legendText = this.rangeLegend;
+		xy.line.color = color;
+		xy.symbol.fillColor = color;
+		xy.symbol.isHiddenLine = true;
 
 		this.addChild(xy);
 
 	}
 
-	public Selection plotWithD3(D3 d3, Selection graphSelection, FocusChangingRefreshable refreshable) {
-		this.treeView = refreshable;
+	plot(dTreez, graphSelection, treeView) {
+		this.__treeView = treeView;
 
 		//remove old series group if it already exists
-		graphSelection //
-				.select("#" + name).remove();
+		graphSelection.select('#' + name) //
+					  .remove();
 
 		//create new series group
 		seriesGroupSelection = graphSelection //
-				.append("g") //
+				.append('g') //
 				.onClick(this);
-		bindNameToId(seriesGroupSelection);
+		
+		this.bindString(()=>this.name, seriesGroupSelection,'id');
+		
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, seriesGroupSelection);		
 
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hidePage", seriesGroupSelection, hide);
-
-		updatePlotWithD3(d3);
+		this.updatePlot(d3);
 
 		return graphSelection;
 	}
 
-	public void updatePlotWithD3(D3 d3) {
+	updatePlot(dTreez) {
 
-		for (Adaptable child : children) {
-			Boolean isXy = child.getClass().equals(Xy.class);
-			if (isXy) {
-				Xy xy = (Xy) child;
-				xy.plotWithD3(d3, seriesGroupSelection, null, this.treeView);
-
+		for (var child of children) {			
+			if (child instanceof Xy) {			
+				child.plot(dTreez, seriesGroupSelection, null, this.__treeView);
 			}
 		}
 	}
 
-	public Xy createXy(String name) {
-		Xy xy = new Xy(name);
-		addChild(xy);
-		return xy;
-	}
-
-	//#end region
+	createXy(name) {
+		return this.createChild(Xy, name);		
+	}	
 
 }

@@ -10,9 +10,13 @@
             class TreezFont extends TreezComboBox {     
 				
                 constructor(){
-                    super();  
-                    this.options=this.getAvailableFonts();
+                    super();                   
                 } 
+
+                connectedCallback() {
+                	 this.options=this.getAvailableFonts();
+                	super.connectedCallback();
+                }
                 
                 getAvailableFonts(){
                 	return 'serif,sans-serif,cursive,fantasy,monospace';                   

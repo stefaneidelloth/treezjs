@@ -1,208 +1,218 @@
-export default class AxisLabel {
+import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Length from './../graphics/length.js';
 
-	constructor(){
-		
-		this.font = undefined;
-		this.size = undefined;
-		this.color = undefined;
-		this.italic = undefined;
-		this.bold = undefined;
-		this. underline = undefined;
+export default class AxisLabel extends GraphicsAtom {
+
+	constructor(){	
+		super();	
+		this.font = 'sans-serif';
+		this.size = '22';
+		this.color = 'black';
+		this.isItalic = false;
+		this.isBold = false;
+		this.hasUnderline = false;
 		//this.atEdge = undefined;
-		this. rotate = undefined;
-		this.labelOffset = undefined;
-		this.position = undefined;
-		this.hide = undefined;
-	}
-
-	
+		this.rotation = '0';
+		this.labelOffset = '4';
+		this.position = 'centre';
+		this.isHidden = false;
+	}	
 
 	createPage(root, parent) {
 
-		Page axisLabelPage = root.createPage("axisLabel", "   Axis label   ");
+		var page = root.append('treez-tab')
+			.label('Axis label');
+		
+		var section = page.append('treez-section')
+			.label('Axis label');
 
-		Section axisLabel = axisLabelPage.createSection("axisLabel", "Axis label");
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-font')
+			.label('Font')
+			.bindValue(this, ()=>this.font);
+		
+		sectionContent.append('treez-text-field')
+			.label('Size')
+			.bindValue(this, ()=>this.size);
 
-		axisLabel.createFont(font, this);
+		sectionContent.append('treez-color')
+			.label('Color')
+			.bindValue(this, ()=>this.color);
+		
+		sectionContent.append('treez-check-box')
+			.label('Italic')
+			.bindValue(this, ()=>this.isItalic);
+		
+		sectionContent.append('treez-check-box')
+			.label('Bold')
+			.bindValue(this, ()=>this.isBold);
+		
+		sectionContent.append('treez-check-box')
+			.label('Has underline')
+			.bindValue(this, ()=>this.hasUnderline);
 
-		axisLabel.createTextField(size, this, "22");
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')
+			.bindValue(this, ()=>this.isHidden);
+		
+		//sectionContent.append('treez-check-box')
+		//	.label('At edge')
+		//	.bindValue(this, ()=>this.isAtEdge);
+					
+		sectionContent.append('treez-combo-box')
+			.label('Rotation')
+			.attr('options','-180,-135,-90,-45,0,45,90,135,180')
+			.bindValue(this, ()=>this.rotation);
+		
+		sectionContent.append('treez-text-field')
+			.label('Label offset')		
+			.bindValue(this, ()=>this.labelOffset);
 
-		axisLabel.createColorChooser(color, this, "black");
-
-		axisLabel.createCheckBox(italic, this);
-
-		axisLabel.createCheckBox(bold, this);
-
-		axisLabel.createCheckBox(underline, this);
-
-		axisLabel.createCheckBox(hide, this);
-
-		//CheckBox atEdgeCheck = axisLabel.createCheckBox(atEdge, "atEdge");
-		//atEdgeCheck.setLabel("At edge");
-
-		axisLabel.createComboBox(rotate, this, "-180,-135,-90,-45,0,45,90,135,180", "0");
-
-		TextField offsetField = axisLabel.createTextField(labelOffset, this, "4");
-		offsetField.setLabel("Label offset");
-
-		axisLabel.createComboBox(position, this, "at-minimum,centre,at-maximum", "centre");
-
+		sectionContent.append('treez-combo-box')
+			.label('Position')
+			.attr('options','at-minimum,centre,at-maximum')
+			.bindValue(this, ()=>this.position);
 	}
 
 	plot(dTreez, axisSelection, rectSelection, axis) {
 
-		
-
 		//remove label group if it already exists
 		axisSelection //
-				.select("#axis-label").remove();
+				.select('#axis-label').remove();
 
 		//create new label
-		var label = axisSelection//
-				.append("g").attr("id", "axis-label").append("text");
+		var labelSelection = axisSelection//
+				.append('g') //
+				.attr('id', 'axis-label') //
+				.append('text');
 
-		var geometryConsumer = () -> {
+		var geometryConsumer = () => {
 			var graph = axis.parent;
-			this.__updateLabelGeometry(axis, label, graph);
+			this.__updateLabelGeometry(axis, labelSelection, graph);
 		};
 
-		position.addModificationConsumer("position", geometryConsumer);
-		rotate.addModificationConsumer("position", geometryConsumer);
-		labelOffset.addModificationConsumer("position", geometryConsumer);
+		this.addListener(()=>this.position, geometryConsumer);
+		this.addListener(()=>this.rotation, geometryConsumer);
+		this.addListener(()=>this.labelOffset, geometryConsumer);
+		
+		geometryConsumer();
 
-		geometryConsumer.consume();
-
-		var labelAttribute = axis.data.label;
-		AbstractGraphicsAtom.bindText(label, labelAttribute);
-		AbstractGraphicsAtom.bindStringAttribute(label, "font-family", font);
-		AbstractGraphicsAtom.bindStringAttribute(label, "font-size", size);
-		AbstractGraphicsAtom.bindStringAttribute(label, "fill", color);
-		AbstractGraphicsAtom.bindFontItalicStyle(label, italic);
-		AbstractGraphicsAtom.bindFontBoldStyle(label, bold);
-		AbstractGraphicsAtom.bindFontUnderline(label, underline);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(label, hide);
+		var data = axis.data;
+		
+		data.bindText(()=>data.label, labelSelection);
+		
+		this.bindString(()=>this.font, labelSelection, 'font-family');
+		this.bindString(()=>this.size, labelSelection, 'font-size');
+		this.bindString(()=>this.color, labelSelection, 'fill');
+		
+		this.bindFontItalicStyle(()=>this.isItalic, labelSelection);
+		this.bindFontBoldStyle(()=>this.isBold, labelSelection);
+		this.bindFontUnderline(()=>this.hasUnderline, labelSelection);
+		this.bindBooleanToTransparency(()=>this.isHidden, null, labelSelection);		
 
 		return axisSelection;
 	}
 
-	__updateLabelGeometry(axis, label, graph) {
+	__updateLabelGeometry(axis, labelSelection, graph) {
 
-		var positionString = position.get();
-		setTextAnchor(label, positionString);
+		
+		this.__setTextAnchor(labelSelection);
 
-		var rotation = getRotation();
+		var rotation = this.__parseRotation();
 
 		//initial transformation
-		applyTransformation(label, 0, 0, rotation);
+		this.__applyTransformation(labelSelection, 0, 0, rotation);
 
 		//get actual text geometry and update transformation
-		Element labelNode = label.node().getParentElement(); //label group
-		BoundingBox boundingBox = labelNode.getBBox();
-		double labelHeight = determineLabelHeight(boundingBox);
+		var labelNode = labelSelection.node().parentElement; //label group
+		var boundingBox = labelNode.getBBox();
+		var labelHeight = this.__determineLabelHeight(boundingBox);
 
-		boolean isHorizontal = axis.data.isHorizontal();
+		var isHorizontal = axis.data.isHorizontal;
 		if (isHorizontal) {
-			applyTransformationForHorizontalOrientation(graph, axis, label, positionString, rotation, labelHeight);
+			this.__applyTransformationForHorizontalOrientation(graph, axis, labelSelection, rotation, labelHeight);
 		} else {
-			applyTransformationForVerticalOrientation(graph, axis, label, positionString, rotation, labelHeight);
+			this.__applyTransformationForVerticalOrientation(graph, axis, labelSelection, rotation, labelHeight);
 		}
 	}
 
-	__setTextAnchor(label, positionString) {
-		if (positionString.equals("at-minimum")) {
-			label.attr("text-anchor", "start");
-		} else if (positionString.equals("centre")) {
-			label.attr("text-anchor", "middle");
+	__setTextAnchor(labelSelection) {
+		if (this.position === 'at-minimum') {
+			labelSelection.attr('text-anchor', 'start');
+		} else if (this.position === 'centre') {
+			labelSelection.attr('text-anchor', 'middle');
 		} else {
-			label.attr("text-anchor", "end");
+			labelSelection.attr('text-anchor', 'end');
 		}
 	}
 
-	getRotation() {
-		String angleString = rotate.get();
-		double rotation = 0;
+	__parseRotation() {
+		
+		var rotation = 0.0;
 		try {
-			rotation = -Double.parseDouble(angleString);
-		} catch (NumberFormatException exception) {}
+			rotation = -parseFloat(this.rotation);
+		} catch (error) {
+			
+		}
 		return rotation;
 	}
 
-	applyTransformationForVerticalOrientation(
-			Graph graph,
-			Axis axis,
-			Selection label,
-			String positionString,
-			double rotation,
-			double labelHeight) {
+	__applyTransformationForVerticalOrientation(graph, axis, labelSelection, rotation, labelHeight) {
 
-		double offset = getPxLength(labelOffset);
-		double tickOffset = getPxLength(axis.tickLabels.offset);
-		double graphHeight = getPxLength(graph.data.height);
+		var offset = Length.toPx(this.labelOffset);
+		var tickOffset = Length.toPx(axis.tickLabels.offset);
+		var graphHeight = Length.toPx(graph.data.height);
 
-		Double tickLabelWidth = axis.tickLabels.getTickLabelWidth();
-		final int extraVerticalRotation = -90;
-		double verticalRotation = rotation + extraVerticalRotation;
+		var tickLabelWidth = axis.tickLabels.tickLabelWidth;
+		var extraVerticalRotation = -90;
+		var verticalRotation = rotation + extraVerticalRotation;
 
-		double x = -(tickOffset + tickLabelWidth + offset + labelHeight);
-		double y = graphHeight;
-		if (positionString.equals("centre")) {
+		var x = -(tickOffset + tickLabelWidth + offset + labelHeight);
+		var y = graphHeight;
+		if (this.position === 'centre') {
 			y = graphHeight / 2;
-		} else if (positionString.equals("at-maximum")) {
+		} else if (this.position === 'at-maximum') {
 			y = 0;
 		}
-		applyTransformation(label, x, y, verticalRotation);
+		this.__applyTransformation(labelSelection, x, y, verticalRotation);
 	}
 
-	applyTransformationForHorizontalOrientation(
-			Graph graph,
-			Axis axis,
-			Selection label,
-			String positionString,
-			double rotation,
-			double labelHeight) {
+	__applyTransformationForHorizontalOrientation(graph, axis, labelSelection, rotation, labelHeight) {
 
-		double offset = getPxLength(labelOffset);
-		double tickOffset = getPxLength(axis.tickLabels.offset);
+		var offset = Length.toPx(this.labelOffset);
+		var tickOffset = Length.toPx(axis.tickLabels.offset);
 
-		double graphWidth = getPxLength(graph.data.width);
-		double graphHeight = getPxLength(graph.data.height);
+		var graphWidth = Length.toPx(graph.data.width);
+		var graphHeight = Length.toPx(graph.data.height);
 
-		Double tickLabelHeight = axis.tickLabels.getTickLabelHeight();
+		var tickLabelHeight = axis.tickLabels.tickLabelHeight;
 
-		double x = 0.0;
-		if (positionString.equals("centre")) {
+		var x = 0.0;
+		if (this.position === 'centre') {
 			x = graphWidth / 2;
-		} else if (positionString.equals("at-maximum")) {
+		} else if (positionString === 'at-maximum') {
 			x = graphWidth;
 		}
 
-		double y = graphHeight + tickOffset + tickLabelHeight + offset + labelHeight;
-		applyTransformation(label, x, y, rotation);
+		var y = graphHeight + tickOffset + tickLabelHeight + offset + labelHeight;
+		this.__applyTransformation(labelSelection, x, y, rotation);
 	}
 
-	determineLabelHeight(BoundingBox boundingBox) {
-		double svgLabelHeight = boundingBox.getHeight();
+	__determineLabelHeight(boundingBox) {
+		var svgLabelHeight = boundingBox.height;
 
-		String fontName = font.get();
-		String fontSizeString = size.get();
-		int fontSize = (int) Double.parseDouble(fontSizeString);
-		double awtTextHeight = AbstractGraphicsAtom.estimateTextHeight(fontName, fontSize);
+		var fontSize = parseFloat(this.size);
+		var awtTextHeight = fontSize; //TODO AbstractGraphicsAtom.estimateTextHeight(fontName, fontSize);
 
-		double height = Math.max(svgLabelHeight, awtTextHeight);
+		var height = Math.max(svgLabelHeight, awtTextHeight);
 		return height;
 	}
 
-	applyTransformation(Selection tickLabels, double x, double y, double rotation) {
-		String transformString = "translate(" + x + "," + y + "),rotate(" + rotation + ")";
-		tickLabels.attr("transform", transformString);
+	__applyTransformation(tickLabels, x, y, rotation) {
+		var transformString = 'translate(' + x + ',' + y + '),rotate(' + rotation + ')';
+		tickLabels.attr('transform', transformString);
 	}
-
-	getPxLength(Attribute<String> attribute) {
-		String stringValue = attribute.get();
-		Double doubleValue = Length.toPx(stringValue);
-		return doubleValue;
-	}
-
-	//#end region
+	
 
 }

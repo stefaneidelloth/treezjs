@@ -1,56 +1,23 @@
-package org.treez.results.atom.legend;
-
-public enum VerticalPosition {
-
-	//#region VALUES
-
-	TOP("top"),
-	CENTRE("centre"),
-	BOTTOM("bottom"),
-	MANUAL("manual");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	VerticalPosition(String label) {
-		this.value = label;
+export default class VerticalPosition extends Enum{
+	
+	get isTop(){
+		return this === VerticalPosition.top;
 	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
+	
+	get isCentre(){
+		return this === VerticalPosition.centre;
 	}
-
-	//#end region
-
-	//#region ACCESSORS
-
-	public boolean isTop() {
-		return this.equals(VerticalPosition.TOP);
+	
+	get isBottom(){
+		return this === VerticalPosition.bottom;
 	}
-
-	public boolean isCentre() {
-		return this.equals(VerticalPosition.CENTRE);
+	
+	get isManual(){
+		return this === VerticalPosition.manual;
 	}
-
-	public boolean isBottom() {
-		return this.equals(VerticalPosition.BOTTOM);
-	}
-
-	public boolean isManual() {
-		return this.equals(VerticalPosition.MANUAL);
-	}
-
-	//#end region
 }
+
+VerticalPosition.top = new VerticalPosition('top');
+VerticalPosition.centre = new VerticalPosition('centre');
+VerticalPosition.bottom = new VerticalPosition('bottom');
+VerticalPosition.manual = new VerticalPosition('manual');

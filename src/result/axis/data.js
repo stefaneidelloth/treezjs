@@ -1,230 +1,261 @@
-package org.treez.results.atom.axis;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
+import AxisMode from './axisMode.js';
+import BorderMode from './borderMode.js';
+import Direction from './direction.js';
+import Length from './../graphics/length.js';
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.checkBox.CheckBox;
-import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.results.atom.graph.Graph;
+export default class Data extends GraphicsAtom {
+	
+	constructor(){
+		super();
+		this.label = '';
+		this.mode = AxisMode.quantitative;
+		this.direction = Direction.horizontal;
+		
+		this.isMirroring = true; //If true, the axis is mirrored to the other side of the graph: a second axis is shown.
+		this.isHidden = false;
+		
+		this.hasAutoMin = true;
+		this.borderMin = BorderMode.two;
+		this.min = '0';
 
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Data implements GraphicsPropertiesPageFactory {
+		//this.minTime = 
 
-	//#region ATTRIBUTES
+		this.hasAutoMax = true;
+		this.borderMax = BorderMode.two;
+		this.max = '1';
 
-	public final Attribute<String> label = new Wrap<>();
+		//this.maxTime = 
+		//this.timeFormat = 
+		//this.timeZone =
 
-	public final Attribute<AxisMode> mode = new Wrap<>();
+		this.isLog = false;
 
-	public final Attribute<Direction> direction = new Wrap<>();
+		this.__domainSectionSelection = undefined;
+		this.__borderMinSelection = undefined;
+		
+		this.__borderMaxSelection = undefined;
+		this.__primaryDTreezAxis = undefined;	
+	}
+	
+	createPage(root) {
 
-	/**
-	 * If true, the axis is mirrored to the other side of the graph: a second axis is shown.
-	 */
-	public Attribute<Boolean> autoMirror = new Wrap<>();
-
-	public Attribute<Boolean> hide = new Wrap<>();
-
-	public Attribute<Boolean> autoMin = new Wrap<>();
-
-	public final Attribute<BorderMode> borderMin = new Wrap<>();
-
-	public final Attribute<Double> min = new Wrap<>();
-
-	//public final Attribute<String> minTime = new Wrap<>();
-
-	public Attribute<Boolean> autoMax = new Wrap<>();
-
-	public final Attribute<BorderMode> borderMax = new Wrap<>();
-
-	public final Attribute<Double> max = new Wrap<>();
-
-	//public final Attribute<String> maxTime = new Wrap<>();
-
-	//public final Attribute<String> timeFormat = new Wrap<>();
-
-	//public final Attribute<String> timeZone = new Wrap<>();
-
-	public final Attribute<Boolean> log = new Wrap<>();
-
-	private org.treez.javafxd3.d3.svg.Axis primaryD3Axis;
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page dataPage = root.createPage("data");
-		dataPage.setTitle("   Data   ");
-
-		createGeneralSection(dataPage);
-		createDomainSection(dataPage);
+		var page = root.append('treez-tab')
+			.label('Data');
+		
+		this.__createGeneralSection(page);
+		this.__createDomainSection(page);
 	}
 
-	private void createGeneralSection(Page dataPage) {
-		Section general = dataPage.createSection("general");
+	__createGeneralSection(page) {
+		var section = page.append('treez-section')
+			.label('General');
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Label')
+			.bindValue(this,()=>this.label);
 
-		general.createTextField(label, this);
+		sectionContent.append('treez-enum-combo-box')			
+			.label('Mode')
+			.nodeAttr('options', AxisMode)	
+			.onChange(()=>this.__axisModeChanged())
+			.bindValue(this,()=>this.mode);
 
-		EnumComboBox<AxisMode> modeCombo = general.createEnumComboBox(mode, this, AxisMode.QUANTITATIVE);
-		modeCombo.createDisableTarget("disableDomainSection", AxisMode.ORDINAL, "data.domain");
+		sectionContent.append('treez-enum-combo-box')			
+			.label('Direction')
+			.nodeAttr('options', Direction)				
+			.bindValue(this,()=>this.direction);
+		
 
-		general.createEnumComboBox(direction, this, Direction.HORIZONTAL);
+		sectionContent.append('treez-check-box')
+			.label('Auto mirror')
+			.bindValue(this, ()=>this.isMirroring);
 
-		CheckBox autoMirrorCheck = general.createCheckBox(autoMirror, this, true);
-		autoMirrorCheck.setLabel("Auto mirror");
-
-		general.createCheckBox(hide, this);
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')
+			.bindValue(this, ()=>this.isHidden);
+		
 	}
+	
+	
 
-	private void createDomainSection(Page dataPage) {
-		Section domain = dataPage.createSection("domain");
+	__createDomainSection(page) {
+		var section = page.append('treez-section')
+			.label('Domain');
+		
+		this.__domainSectionSelection = section;
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-check-box')
+			.label('Auto min')
+			.onChange(()=>this.__autoMinChanged())
+			.bindValue(this, ()=>this.hasAutoMin);
 
-		CheckBox autoMinCheckBox = domain.createCheckBox(autoMin, this, true) //
-				.setLabel("Auto min");
-		autoMinCheckBox.createEnableTarget("enableBorderMin", "data.domain.borderMin");
-		autoMinCheckBox.createDisableTarget("disableMin", "data.domain.min");
-
-		domain.createEnumComboBox(borderMin, this, BorderMode.TWO);
-
-		domain.createDoubleVariableField(min, this, 0.0).setEnabled(false);
-		//domain.createTextField(minTime, this, "0") //
-		//		.setLabel("Min time") //
-		//		.setEnabled(false);
-
-		CheckBox autoMaxCheckBox = domain.createCheckBox(autoMax, this, true) //
-				.setLabel("Auto max");
-		autoMaxCheckBox.createEnableTarget("enableBorderMax", "data.domain.borderMax");
-		autoMaxCheckBox.createDisableTarget("disableMax", "data.domain.max");
-
-		domain.createEnumComboBox(borderMax, this, BorderMode.TWO);
-
-		domain.createDoubleVariableField(max, this, 1.0) //
-				.setEnabled(false);
+		this.__borderMinSelection = sectionContent.append('treez-enum-combo-box')			
+			.label('Border min')
+			.nodeAttr('options', BorderMode)				
+			.bindValue(this,()=>this.borderMin);
+		
+		this.__minSelection = sectionContent.append('treez-text-field')
+			.label('Min')			
+			.bindValue(this, ()=>this.min)
+			.hide();
+		
+		//this.__minTimeSelection = sectionContent.append('treez-text-field')
+		//	.label('Min time')			
+		//	.bindValue(this, ()=>this.minTime)
+		//	.hide();
+		
+		sectionContent.append('treez-check-box')
+			.label('Auto max')
+			.onChange(()=>this.__autoMaxChanged())
+			.bindValue(this, ()=>this.hasAutoMax);
+	
+		this.__borderMaxSelection = sectionContent.append('treez-enum-combo-box')			
+			.label('Border max')
+			.nodeAttr('options', BorderMode)				
+			.bindValue(this,()=>this.borderMax);
+		
+		this.__maxSelection = sectionContent.append('treez-text-field')
+			.label('Max')			
+			.bindValue(this, ()=>this.max)
+			.hide();
+			
 		/*
-		domain.createTextField(maxTime, this, "1") //
-				.setLabel("Max time") //
+		domain.createTextField(maxTime, this, '1') //
+				.setLabel('Max time') //
 				.setEnabled(false);
 
-		domain.createTextField(timeFormat, this, "%a %d") //
-				.setLabel("Time format") //
+		domain.createTextField(timeFormat, this, '%a %d') //
+				.setLabel('Time format') //
 				.setEnabled(false);
 
-		domain.createTextField(timeZone, this, "%a %d") //
-				.setLabel("Time zone") //
+		domain.createTextField(timeZone, this, '%a %d') //
+				.setLabel('Time zone') //
 				.setEnabled(false);
 		*/
 
-		domain.createCheckBox(log, this);
+		sectionContent.append('treez-check-box')
+			.label('Log')			
+			.bindValue(this, ()=>this.isLog);
+
+		
+	}
+	
+	
+	
+	__axisModeChanged(){
+		if(this.mode.isOrdinal){
+			this.__domainSection.hide();
+		} else {
+			this.__domainSeleciton.show();
+		}
+	}
+	
+	__autoMinChanged(){
+		if(this.hasAutoMin){
+			this.__borderMinSelection.hide();
+			this.__minSelection.hide();
+		} else {
+			this.__borderMinSelection.show();
+			this.__minSelection.show();
+		}		
+	}
+	
+	__autoMaxChanged(){
+		if(this.hasAutoMax){
+			this.__borderMaxSelection.hide();
+			this.__maxSelection.hide();
+		} else {
+			this.__borderMaxSelection.show();
+			this.__maxSelection.show();
+		}		
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection axisSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	plot(dTreez, axisSelection, rectSelection, axis) {
+		
+		var graph = axis.parent;
 
-		Axis parentAxis = (Axis) parent;
-		Graph graph = (Graph) parentAxis.getParentAtom();
+		this.__addUpdateListeners(dTreez, graph);
 
-		addUpdateListeners(d3, graph);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, axisSelection)
+		
+		var graphWidthInPx = Length.toPx(graph.data.width);
+		var graphHeightInPx = Length.toPx(graph.data.height);
 
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideAxis", axisSelection, hide);
-
-		Double graphWidthInPx = Length.toPx(graph.data.width.get());
-		Double graphHeightInPx = Length.toPx(graph.data.height.get());
-
-		parentAxis.createScale(graphWidthInPx, graphHeightInPx);
-		plotAxisWithD3(d3, axisSelection, parentAxis, graphWidthInPx, graphHeightInPx);
+		axis.createScale(graphWidthInPx, graphHeightInPx);
+		this.__plotAxis(dTreez, axisSelection, axis, graphWidthInPx, graphHeightInPx);
 
 		return axisSelection;
 	}
 
-	private void addUpdateListeners(D3 d3, Graph graph) {
-		Consumer replotGraph = () -> {
-			graph.updatePlotWithD3(d3);
-		};
-
-		mode.addModificationConsumer("replotAxis", replotGraph);
-		direction.addModificationConsumer("replotAxis", replotGraph);
-		autoMirror.addModificationConsumer("replotAxis", replotGraph);
-
-		autoMin.addModificationConsumer("replotAxis", replotGraph);
-		borderMin.addModificationConsumer("replotAxis", replotGraph);
-		min.addModificationConsumer("replotAxis", replotGraph);
-
-		autoMax.addModificationConsumer("replotAxis", replotGraph);
-		borderMax.addModificationConsumer("replotAxis", replotGraph);
-		max.addModificationConsumer("replotAxis", replotGraph);
-
-		log.addModificationConsumer("replotAxis", replotGraph);
+	__addUpdateListeners(dTreez, graph) {
+		var replotGraph = () => graph.updatePlot(dTreez);
+		
+		this.addListener(()=>this.mode, replotGraph);
+		this.addListener(()=>this.direction, replotGraph);
+		this.addListener(()=>this.isMirroring, replotGraph);
+		
+		this.addListener(()=>this.hasAutoMin, replotGraph);
+		this.addListener(()=>this.borderMin, replotGraph);
+		this.addListener(()=>this.min, replotGraph);
+		
+		this.addListener(()=>this.hasAutoMax, replotGraph);
+		this.addListener(()=>this.borderMax, replotGraph);
+		this.addListener(()=>this.max, replotGraph);
+		
+		this.addListener(()=>this.isLog, replotGraph);			
 	}
 
-	private Selection plotAxisWithD3(
-			D3 d3,
-			Selection axisSelection,
-			Axis axis,
-			Double graphWidthInPx,
-			Double graphHeightInPx) {
+	__plotAxis(dTreez, axisSelection, axis, graphWidthInPx, graphHeightInPx) {
 
-		axisSelection.selectAll(".primary").remove();
-		plotPrimaryAxis(d3, axis, axisSelection, graphHeightInPx);
+		axisSelection.selectAll('.primary').remove();
+		this.__plotPrimaryAxis(dTreez, axis, axisSelection, graphHeightInPx);
 
-		axisSelection.selectAll(".secondary").remove();
-		if (autoMirror.get()) {
-			plotSecondaryAxis(d3, axis, axisSelection, graphWidthInPx);
+		axisSelection.selectAll('.secondary').remove();
+		if (this.isMirroring) {
+			this.__plotSecondaryAxis(dTreez, axis, axisSelection, graphWidthInPx);
 		}
 
 		return axisSelection;
 	}
 
-	private Selection plotPrimaryAxis(D3 d3, Axis axisAtom, Selection axisSelection, Double graphHeightInPx) {
+	__plotPrimaryAxis(dTreez, axis, axisSelection, graphHeightInPx) {
 
-		Selection primaryAxisSelection = axisSelection //
-				.append("g") //
-				.attr("id", "primary")
-				.attr("class", "primary");
+		var primaryAxisSelection = axisSelection //
+				.append('g') //
+				.attr('id', 'primary') //
+				.className('primary');
 
-		AxisMode axisMode = mode.get();
-		switch (axisMode) {
-		case QUANTITATIVE:
-			primaryD3Axis = createPrimaryQuantitativeD3Axis(d3, axisAtom, primaryAxisSelection, graphHeightInPx);
+		
+		switch (this.mode) {
+		case AxisMode.quantitative:
+			this.__primaryDTreezAxis = this.__createPrimaryQuantitativeD3Axis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
 			break;
-		case ORDINAL:
-			primaryD3Axis = createPrimaryOrdinalD3Axis(d3, axisAtom, primaryAxisSelection, graphHeightInPx);
+		case AxisMode.ordinal:
+			this.__primaryDTreezAxis = this.__createPrimaryOrdinalD3Axis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
 			break;
 		//case TIME:
-		//	throw new IllegalStateException("not yet implemented");
+		//	throw new Error('not yet implemented');
 		default:
-			throw new IllegalStateException("not yet implemented");
+			throw new Error('Not yet implemented');
 		}
 
-		setAxisDirection(primaryD3Axis);
-		primaryD3Axis.apply(primaryAxisSelection);
+		//primaryAxisSelection.call(this.__primaryDTreezAxis);		
 		return primaryAxisSelection;
 	}
 
-	@SuppressWarnings("checkstyle:magicnumber")
-	private org.treez.javafxd3.d3.svg.Axis createPrimaryQuantitativeD3Axis(
-			D3 d3,
-			Axis axisAtom,
-			Selection axisSelection,
-			Double graphHeightInPx) {
-		int numberOfTicksAimedFor = Integer.parseInt(axisAtom.majorTicks.number.get());
-		String tickFormat = axisAtom.tickLabels.format.get();
+	__createPrimaryQuantitativeD3Axis(dTreez, axis, axisSelection, graphHeightInPx) {
+		var numberOfTicksAimedFor = parseInt(axis.majorTicks.number);
+		var tickFormat = axis.tickLabels.format;
 
 		//set translation and tick padding
-		double tickPadding;
-		if (isHorizontal()) {
-			axisSelection.attr("transform", "translate(0," + graphHeightInPx + ")");
+		var tickPadding;
+		if (this.isHorizontal) {
+			axisSelection.attr('transform', 'translate(0,' + graphHeightInPx + ')');
 			tickPadding = -6.0;
 		} else {
 			tickPadding = -12.0;
@@ -232,166 +263,143 @@ public class Data implements GraphicsPropertiesPageFactory {
 
 		//create tick format expression
 		//also see https://github.com/mbostock/d3/wiki/Formatting#d3_format
-		String formatFunctionExpression = createFormatFunctionExpression(tickFormat);
+		var formatFunction = this.__createFormatFunction(dTreez, tickFormat);
 
 		//create d3 axis
-		org.treez.javafxd3.d3.svg.Axis axis = d3 //
-				.svg() //
-				.axis() //
-				.scale(axisAtom.getScale()) //
-				.outerTickSize(0.0) //
+		var dTreezAxis = this.isHorizontal
+							?dTreez.axisBottom()
+							:dTreez.axisLeft();		
+								
+		dTreezAxis.scale(axis.scale) //
+				.tickSizeOuter(0.0) //
 				.tickPadding(tickPadding);
 
-		if (log.get()) {
+		if (this.isLog) {
 			//for log axis only the number of tick labels will be influenced, not the number of tick lines
-			axis.ticksExpression(numberOfTicksAimedFor, formatFunctionExpression);
+			dTreezAxis.ticksExpression(numberOfTicksAimedFor, formatFunctionExpression);
 		} else {
-			axis.ticks(numberOfTicksAimedFor);
-			axis.tickFormatExpression(formatFunctionExpression);
+			dTreezAxis.ticks(numberOfTicksAimedFor);
+			dTreezAxis.tickFormat(formatFunction);
 		}
-		return axis;
+		return dTreezAxis;
 	}
 
-	private String createFormatFunctionExpression(String tickFormat) {
-		String formatString = tickFormat;
-		if (formatString.equals("")) {
-			if (log.get()) {
-				formatString = "log";
+	__createFormatFunction(dTreez, tickFormat) {
+		var formatString = tickFormat;
+		if (!formatString) {
+			if (this.isLog) {
+				formatString = 'log';
 			} else {
-				formatString = "g";
+				formatString = 'g';
 			}
 		}
-		String formatFunctionExpression = "d3.format('" + formatString + "')"; //"function (d) { return d; }";
-
-		if (formatString.equals("log")) {
+		
+		if (formatString === 'log') {
 
 			//use unicode characters to create exponent notation 10^0, 10^1, ...
-			formatFunctionExpression = "function(d){" //
-					+ " var superscript = '\u2070\u00B9\u00B2\u00B3\u2074" // super script numbers in
-					+ "\u2075\u2076\u2077\u2078\u2079';" // unicode from 0 to 9
-					+ " function formatPower (d){" //
-					+ "  return (d + \"\").split(\"\").map(function(c) { return superscript[c]; }).join(\"\");" //
-					+ " }" //
-					+ " var power = formatPower(Math.round(Math.log(d) / Math.LN10));"
-					+ " var displayString = '10' + power;" //
-					+ " return displayString;" //
-					+ "}";
+			return function(d){
+					var superscript = "\u2070\u00B9\u00B2\u00B3\u2074" // super script numbers in
+					                   + "\u2075\u2076\u2077\u2078\u2079"; // unicode from 0 to 9
+					 function formatPower (d){
+					 	return (d + "\\").split("\\")
+					 		.map(function(c) { 
+					 			return superscript[c]; 
+					 		}).join("\\");
+					 }
+					 var power = formatPower(Math.round(Math.log(d) / Math.LN10));
+					 var displayString = '10' + power;
+					 return displayString;
+			};
 
+		} else {
+			dTreez.format(formatString);
 		}
-		return formatFunctionExpression;
+		
 	}
 
-	@SuppressWarnings("checkstyle:magicnumber")
-	private org.treez.javafxd3.d3.svg.Axis createPrimaryOrdinalD3Axis(
-			D3 d3,
-			Axis axisAtom,
-			Selection axisSelection,
-			Double graphHeightInPx) {
+	__createPrimaryOrdinalD3Axis(dTreez, axis, axisSelection, graphHeightInPx) {
 
 		//set translation and tick padding
-		double tickPadding;
-		if (isHorizontal()) {
-			axisSelection.attr("transform", "translate(0," + graphHeightInPx + ")");
+		var tickPadding;
+		if (this.isHorizontal) {
+			axisSelection.attr('transform', 'translate(0,' + graphHeightInPx + ')');
 			tickPadding = -6.0;
 		} else {
 			tickPadding = -12.0;
 		}
 
 		//create d3 axis
-		org.treez.javafxd3.d3.svg.Axis axis = d3 //
+		return d3 //
 				.svg() //
 				.axis() //
-				.scale(axisAtom.getScale()) //
+				.scale(axisAtom.scale) //
 				.outerTickSize(0.0) //
-				.ticks(axisAtom.getNumberOfValues())
-				.tickPadding(tickPadding);
-
-		return axis;
+				.ticks(axisAtom.numberOfValues)
+				.tickPadding(tickPadding);		
 	}
 
-	private void setAxisDirection(org.treez.javafxd3.d3.svg.Axis axis) {
-		if (isHorizontal()) {
-			axis.orient(org.treez.javafxd3.d3.svg.Axis.Orientation.BOTTOM);
-		} else {
-			axis.orient(org.treez.javafxd3.d3.svg.Axis.Orientation.LEFT);
-		}
-	}
+	
 
-	private Selection plotSecondaryAxis(D3 d3, Axis axisAtom, Selection axisSelection, Double graphWidthInPx) {
+	__plotSecondaryAxis(dTreez, axis, axisSelection, graphWidthInPx) {
 
-		Selection secondaryAxisSelection = axisSelection //
-				.append("g") //
-				.attr("id", "secondary")
-				.attr("class", "secondary");
+		var secondaryAxisSelection = axisSelection //
+				.append('g') //
+				.attr('id', 'secondary') //
+				.className('secondary');
 
-		if (!isHorizontal()) {
-			secondaryAxisSelection.attr("transform", "translate(" + graphWidthInPx + ",0)");
+		if (!this.isHorizontal) {
+			secondaryAxisSelection.attr('transform', 'translate(' + graphWidthInPx + ',0)');
 		}
 
-		org.treez.javafxd3.d3.svg.Axis axis;
-		AxisMode axisMode = mode.get();
-		switch (axisMode) {
-		case QUANTITATIVE:
-			axis = createSecondaryQuantitativeD3Axis(d3, axisAtom);
+		var dTreezAxis;
+		
+		switch (this.axisMode) {
+		case AxisMode.quantitiative:
+			dTreezAxis = this.__createSecondaryQuantitativeDTreezAxis(dTreez, axis);
 			break;
-		case ORDINAL:
-			axis = createSecondaryOrdinalD3Axis(d3, axisAtom);
+		case AxisMode.ordinal:
+			dTreezAxis = createSecondaryOrdinalDTreezAxis(dTreez, axis);
 			break;
 		//case TIME:
-		//	throw new IllegalStateException("not yet implemented");
+		//	throw new Error('Not yet implemented');
 		default:
-			throw new IllegalStateException("not yet implemented");
+			throw new Error('Not yet implemented');
 		}
 
-		setAxisDirection(axis);
+		
 
-		axis.apply(secondaryAxisSelection);
+		//TODO dTreezAxis.apply(secondaryAxisSelection);
 		return secondaryAxisSelection;
 	}
 
-	private static org.treez.javafxd3.d3.svg.Axis createSecondaryQuantitativeD3Axis(D3 d3, Axis axisAtom) {
-		int numberOfTicksAimedFor = Integer.parseInt(axisAtom.majorTicks.number.get());
-
-		org.treez.javafxd3.d3.svg.Axis axis = d3 //
-				.svg() //
-				.axis() //
-				.scale(axisAtom.getScale()) //
-				.outerTickSize(0.0) //
+	__createSecondaryQuantitativeDTreezAxis(dTreez, axis) {
+		var numberOfTicksAimedFor = parseInt(axis.majorTicks.number);
+		return dTreez //
+				.axisRight() //
+				.scale(axis.scale) //
+				.tickSizeOuter(0.0) //
 				.ticks(numberOfTicksAimedFor) //for log axis only the tick labels will be influenced
-				.tickFormatExpression("function (d) { return ''; }"); //hides the tick labels
-		return axis;
+				.tickFormat(function (d) { return ''; }); //hides the tick labels		
 	}
 
-	private static org.treez.javafxd3.d3.svg.Axis createSecondaryOrdinalD3Axis(D3 d3, Axis axisAtom) {
-
-		org.treez.javafxd3.d3.svg.Axis axis = d3 //
-				.svg() //
-				.axis() //
-				.scale(axisAtom.getScale()) //
+	__createSecondaryOrdinalDTreezAxis(dTreez, axis) {
+		return dTreez //
+				.axisRight() //				
+				.scale(axis.scale) //
 				.outerTickSize(0.0) //
-				.tickFormatExpression("function (d) { return ''; }"); //hides the tick labels
-		return axis;
+				.tickFormat(function (d) { return ''; }); //hides the tick labels		
+	}	
+
+	get isHorizontal() {
+		return this.direction.isHorizontal;		
 	}
 
-	//#end region
-
-	//#region ACCESSORS
-
-	public boolean isHorizontal() {
-		boolean isHorizontal = direction.get().isHorizontal();
-		return isHorizontal;
+	get isQuantitative() {		
+		return this.mode === AxisMode.quantitative;
 	}
 
-	public boolean isQuantitative() {
-		AxisMode axisMode = mode.get();
-		return axisMode.equals(AxisMode.QUANTITATIVE);
-	}
-
-	public boolean isOrdinal() {
-		AxisMode axisMode = mode.get();
-		return axisMode.equals(AxisMode.ORDINAL);
-	}
-
-	//#end region
+	get isOrdinal() {
+		return this.mode === AxisMode.ordinal;
+	}	
 
 }

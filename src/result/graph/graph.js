@@ -2,17 +2,15 @@ import PagedGraphicsAtom  from './../graphics/pagedGraphicsAtom.js';
 import Data from './data.js';
 import Background from './../graphics/background.js';
 import Border from './../graphics/border.js';
+import Axis from './../axis/axis.js';
+import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 
 export default class Graph extends PagedGraphicsAtom {
 
 	constructor(name) {		
 		super(name);
 		this.image='graph.png';
-		
-		this.data = undefined;
-		this.background = undefined;
-		this.border = undefined;
-
+				
 		this.__graphGroupSelection = undefined;
 		this.__rectSelection = undefined;		
 	}	
@@ -34,7 +32,7 @@ export default class Graph extends PagedGraphicsAtom {
 	
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		/*
+		
 		actions.push(new AddChildAtomTreeViewAction(
 				Axis,
 				"axis",
@@ -43,7 +41,7 @@ export default class Graph extends PagedGraphicsAtom {
 				this,
 				treeView));	
 		
-		
+		/*
 		Action addXySeries = new AddChildAtomTreeViewAction(
 				XySeries.class,
 				"xySeries",
@@ -142,8 +140,10 @@ export default class Graph extends PagedGraphicsAtom {
 	}
 
 	__plotChildrenInSpecificOrder(dTreez) {
-		/*
+		
 		this.__plotChildren(Axis, dTreez);
+		
+		/*
 		this.__plotChildren(Contour, dTreez);
 		this.__plotChildren(XySeries, dTreez);
 		this.__plotChildren(Xy, dTreez);
@@ -156,7 +156,7 @@ export default class Graph extends PagedGraphicsAtom {
 	__plotChildren(clazz, dTreez){
 		for (var child of this.children) {			
 			if (child instanceof clazz) {				
-				child.plot(dTreez, gthis.graphGroupSelection, this.rectSelection, this.treeView);
+				child.plot(dTreez, this.__graphGroupSelection, this.__rectSelection, this.treeView);
 			}
 		}
 	}

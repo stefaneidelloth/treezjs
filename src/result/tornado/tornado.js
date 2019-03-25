@@ -1,164 +1,103 @@
-package org.treez.results.atom.tornado;
+import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
 
-import java.util.List;
-import java.util.Objects;
-
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.treeview.treeView;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.results.Activator;
-import org.treez.results.atom.graph.Graph;
-import org.treez.results.atom.graphicsPage.GraphicsPropertiesPage;
-import org.treez.results.atom.legend.LegendContributor;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Tornado extends GraphicsPropertiesPage implements LegendContributor {
-
-	//#region ATTRIBUTES
-
-	public Data data;
-
-	public Fill fill;
-
-	public Line line;
-
-	public Labels labels;
-
-	private Selection tornadoSelection;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public Tornado(String name) {
+export default class Tornado extends PagedGraphicsAtom {
+	
+	constructor(name){
 		super(name);
+		this.image = 'tornado.png';
+		this.__tornadoSelection = undefined;		
 	}
 
-	//#end region
+	createPageFactories() {
 
-	//#region METHODS
+		var factories = [];
+		
+		this.data = new Data(this);
+		factories.push(this.data);
 
-	@Override
-	protected void createPropertyPageFactories() {
+		this.fill = new Fill(this);
+		factories.push(this.fill);
 
-		data = new Data();
-		propertyPageFactories.add(data);
+		line = new Line(this);
+		factories.push(this.line);
 
-		fill = new Fill();
-		propertyPageFactories.add(fill);
-
-		line = new Line();
-		propertyPageFactories.add(line);
-
-		labels = new Labels();
-		propertyPageFactories.add(labels);
+		labels = new Labels(this);
+		factories.push(this.labels);
+		
+		return factories;
 
 	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("tornado.png");
-	}
-
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		// no actions available right now
-		return actions;
-	}
-
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
-		treeView = refreshable;
-	}
-
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection graphOrBarSeriesSelection,
-			Selection graphRectSelection,
-			FocusChangingRefreshable refreshable) {
-		Objects.requireNonNull(d3);
-		this.treeView = refreshable;
+	plot(dTreez, graphOrBarSeriesSelection, graphRectSelection, treeView) {
+	
+		this.__treeView = treeView;
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //
-				.select("#" + name) //
+				.select('#' + name) //
 				.remove();
 
 		//create new axis group
-		tornadoSelection = graphOrBarSeriesSelection //
-				.insert("g", ".axis") //
-				.attr("class", "tornado") //
+		this.__tornadoSelection = graphOrBarSeriesSelection //
+				.insert('g', '.axis') //
+				.className('tornado') //
 				.onClick(this);
-		bindNameToId(tornadoSelection);
-
-		updatePlotWithD3(d3);
+		
+		this.bindString(()=>this.name, this.__tornadoSelection, 'id');
+		
+		this.__updatePlot(dTreez);
 
 		return tornadoSelection;
 	}
 
-	@Override
-	public void updatePlotWithD3(D3 d3) {
-		plotPageModels(d3);
+	__updatePlot(dTreez) {
+		this.__plotWithPages(dTreez);
 	}
+	
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__tornadoSelection, null, this);
+		}
+	}
+	
 
-	private void plotPageModels(D3 d3) {
-		for (GraphicsPropertiesPageFactory pageModel : propertyPageFactories) {
-			tornadoSelection = pageModel.plotWithD3(d3, tornadoSelection, null, this);
+	addLegendContributors(legendContributors) {
+		if (this.providesLegendEntry) {
+			legendContributors.push(this);
 		}
 	}
 
-	@Override
-	public void addLegendContributors(List<LegendContributor> legendContributors) {
-		if (providesLegendEntry()) {
-			legendContributors.add(this);
-		}
+	get providesLegendEntry() {
+		return this.legendText.length > 0;
 	}
 
-	@Override
-	public boolean providesLegendEntry() {
-		return !getLegendText().isEmpty();
+	get legendText() {
+		return data.legendText;
 	}
 
-	@Override
-	public String getLegendText() {
-		return data.leftLegendText.get();
-	}
+	createLegendSymbolGroup(dTreez, parentSelection, symbolLengthInPx, legend) {
+		var symbolSelection = parentSelection //
+				.append('rect') //
+				.classed('tornado-legend-entry-symbol', true);
 
-	@Override
-	public Selection createLegendSymbolGroup(
-			D3 d3,
-			Selection parentSelection,
-			int symbolLengthInPx,
-			Refreshable refreshable) {
-		Selection symbolSelection = parentSelection //
-				.append("rect") //
-				.classed("tornado-legend-entry-symbol", true);
-
+		//TODO
+		/*
 		this.fill.formatLegendSymbol(symbolSelection, symbolLengthInPx);
 		this.line.formatLegendSymbolLine(symbolSelection, refreshable);
+		*/
 
 		return symbolSelection;
 	}
 
-	public Graph getGraph() {
-		AbstractAtom<?> grandParent = getParentAtom();
-		Graph graph;
-		boolean isGraph = Graph.class.isAssignableFrom(grandParent.getClass());
-		if (isGraph) {
-			graph = (Graph) grandParent;
+	get graph() {		
+		if (this.parent instanceof Graph) {
+			return this.parent;
 		} else {
-			AbstractAtom<?> greatGrandParent = grandParent.getParentAtom();
-			graph = (Graph) greatGrandParent;
+			var grandParent = this.parent.parent;
+			return grandParent;
 		}
-		return graph;
 	}
 
-	//#end region
+	
 
 }

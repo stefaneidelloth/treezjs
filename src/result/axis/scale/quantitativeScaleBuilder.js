@@ -3,25 +3,51 @@ export default class QuantitativeScaleBuilder {
 	constructor(parent) {
 		this.__parent = parent;
 		this.__scale = undefined;
-		this.__dataForAutoScale = new Set();
+		this.__dataForAutoScale = [];
 	}
 
 	createScale(scaleFactory, graphWidthInPx, graphHeightInPx) {
 
-		if (this.__parent.data.log) {
+		if (this.__parent.data.isLog) {
 			this.__scale = scaleFactory //
 					.log() //
 					.clamp(true);
 
 		} else {
-			this.__scale = scaleFactory //
-					.linear() //
+			this.__scale = scaleFactory //					
 					.clamp(true);
 		}
 
 		this.__createRange(graphWidthInPx, graphHeightInPx);
 		this.__updateManualLimits();
 		this.__updateAutoLimits();
+	}
+	
+	includeDomainValuesForAutoScale(dataForAutoScale) {
+		var minAndMax = this.__getMinAndMax(dataForAutoScale);
+		this.dataForAutoScale = this.dataForAutoScale.concat(minAndMax).sort();
+		this.__updateAutoLimits();
+	}
+
+	includeForAutoScale(valueToInclude) {
+		var added = this.__dataForAutoScale.push(valueToInclude);  //todo check if this works
+		if (added) {
+			this.__dataForAutoScale = this.__dataForAutoScale.sort();
+			this.__updateAutoLimits();
+		}
+	}
+
+	clearDataForAutoScale() {
+		this.__dataForAutoScale.length = 0;
+		this.__updateAutoLimits();
+	}
+
+	excludeForAutScale(valueToExclude) {
+		var removeIndex = this.__dataForAutoScale.indexOf(valueToExclude);
+		if(removeIndex >-1){
+			this.__dataForAutoScale.splice(remvoeIndex,1);
+			this.__updateAutoLimits();
+		}		
 	}
 
 	__createRange(graphWidthInPx, graphHeightInPx) {
@@ -37,13 +63,13 @@ export default class QuantitativeScaleBuilder {
 			return;
 		}
 
-		if (!parent.data.autoMin) {
-			var minValue = this.__correctMinIfLogScaleAndZero(parent.data.min);
-			this.__setMinScaleValue(minValue);
+		if (!this.__parent.data.autoMin) {
+			var minValue = this.__correctMinIfLogScaleAndZero(parseFloat(this.__parent.data.min));
+			this.__minScaleValue = minValue;
 		}
 
-		if (!parent.data.autoMax) {
-			this.__setMaxScaleValue(parent.data.max);
+		if (!this.__parent.data.autoMax) {
+			this.__maxScaleValue = parseFloat(this.__parent.data.max);
 		}
 	}
 
@@ -52,35 +78,57 @@ export default class QuantitativeScaleBuilder {
 			return;
 		}
 
-		if (parent.data.autoMin) {
+		if (this.__parent.data.autoMin) {
 			this.__updateAutoMinValue();
 		}
 
-		if (parent.data.autoMax) {
+		if (this.__parent.data.autoMax) {
 			this.__updateAutoMaxValue();
+		}
+	}	
+
+	__updateAutoMinValue() {		
+		this.__minScaleValue = this.autoMinValue;
+	}	
+
+	__updateAutoMaxValue() {		
+		this.__maxScaleValue = this.autoMaxValue;
+	}	
+
+	__correctMinIfLogScaleAndZero(value) {
+		if (!this.__parent.data.isLog) {
+			return value;
+		} else {
+			if (!value) {
+				var smallValueNextToZero = 1e-10;
+				return smallValueNextToZero;
+			} else {
+				return value;
+			}
 		}
 	}
 
-	__setMinScaleValue(min) {
-		var oldDomain = this.__scale.domain();
-		var oldMax = oldDomain.get(1, Value).asDouble();
-		this.__scale.domain(min, oldMax);
+	__getMinAndMax(dataForAutoScale) {
+		var sortedList = dataForAutoScale.sort();		
+		return [sortedList.first(), sortedList.last()];
+	}	
 
+	
+	
+	get scale() {
+		return this.__scale;
 	}
 
-	setMaxScaleValue(max) {
-		var oldDomain = scale.domain();
-		var oldMin = oldDomain.get(0, Value).asDouble();
-		this.__scale.domain(oldMin, max);
-
+	set dataForAutoScale(dataForAutoScale) {
+		var minAndMax = this.__getMinAndMax(dataForAutoScale);
+		this.__dataForAutoScale.length = 0;
+		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort();
+		this.__updateAutoLimits();
 	}
 
-	__updateAutoMinValue() {
-		var correctedMin = this.__getAutoMinValue();
-		this.__setMinScaleValue(correctedMin);
-	}
-
-	__determineAutoMinValue() {
+	get autoMinValue() {
+		
+		var min = 0.0
 		var autoDataExists = this.__dataForAutoScale.length > 0;
 		if (autoDataExists) {
 			var minValue = this.__dataForAutoScale.first();
@@ -89,17 +137,13 @@ export default class QuantitativeScaleBuilder {
 			var minBorderMode = parent.data.borderMin;
 			var borderFactor = minBorderMode.getFactor();
 			var autoMinValue = minValue - borderFactor * delta;
-			return autoMinValue;
-		}
-		return 0.0;
+			min = autoMinValue;
+		}		
+		
+		return this.__correctMinIfLogScaleAndZero(min);		
 	}
 
-	__updateAutoMaxValue() {
-		var autoMaxValue = this.__determineAutoMaxValue();
-		this.__setMaxScaleValue(autoMaxValue);
-	}
-
-	__determineAutoMaxValue() {
+	get autoMaxValue() {
 		var autoDataExists = this.__dataForAutoScale.length > 0;
 		if (autoDataExists) {
 			var minValue = dataForAutoScale.first();
@@ -112,76 +156,21 @@ export default class QuantitativeScaleBuilder {
 		}
 		return 0.0;
 	}
-
-	__correctMinIfLogScaleAndZero(value) {
-		if (!parent.data.log) {
-			return value;
-		} else {
-			if (value === null || value.compareTo(0.0) === 0) {
-				var smallValueNextToZero = 1e-10;
-				return smallValueNextToZero;
-			} else {
-				return value;
-			}
-		}
+	
+	set __minScaleValue(min) {
+		var oldDomain = this.__scale.domain();
+		var oldMax = oldDomain.length> 1
+						?oldDomain[1]
+						:1;
+		this.__scale.domain(min, oldMax);
 	}
 
-	__getMinAndMax(dataForAutoScale) {
-		var treeSet = new Set();  //TODO implement tree set
-		treeSet.addAll(dataForAutoScale);
-		return [treeSet.first(), treeSet.last()];
+	set __maxScaleValue(max) {
+		var oldDomain = this.__scale.domain();
+		var oldMin = oldDomain.length>0
+			?oldDomain[0]
+			:0;
+		this.__scale.domain(oldMin, max);
 	}
-
-	//#end region
-
-	//#region ACCESSORS
-
-	getScale() {
-		return this.__scale;
-	}
-
-	setDataForAutoScale(dataForAutoScale) {
-		var minAndMax = this.__getMinAndMax(dataForAutoScale);
-		this.__dataForAutoScale.length = 0;
-		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax);
-		this.__updateAutoLimits();
-	}
-
-	includeDomainValuesForAutoScale(dataForAutoScale) {
-		var minAndMax = this.__getMinAndMax(dataForAutoScale);
-		this.dataForAutoScale = this.dataForAutoScale.concat(minAndMax);
-		this.__updateAutoLimits();
-	}
-
-	includeForAutoScale(valueToInclude) {
-		var added = this.__dataForAutoScale.push(valueToInclude);  //todo check if this works
-		if (added) {
-			this.__updateAutoLimits();
-		}
-	}
-
-	clearDataForAutoScale() {
-		this.__dataForAutoScale.length = 0;
-		this.__updateAutoLimits();
-	}
-
-	excludeForAutScale(valueToExclude) {
-		var removed = this.dataForAutoScale.remove(valueToExclude); //todo
-		if (removed) {
-			this.__updateAutoLimits();
-		}
-	}
-
-	getAutoMinValue() {
-		var autoMinValue = this.__determineAutoMinValue();
-		var correctedMin = this.__correctMinIfLogScaleAndZero(autoMinValue);
-		return correctedMin;
-	}
-
-	getAutoMaxValue() {
-		return this.__determineAutoMaxValue();
-	}
-
-	//#end region
 
 }

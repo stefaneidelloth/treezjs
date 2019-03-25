@@ -25,11 +25,7 @@ export default class DTreezSelection {
 		}
 		this.__d3Selection.attr(name, value);
 		return this;
-	}
-	
-	
-
-	
+	}	
 	
 	bindValue(parentObject, lambdaExpressionIdentifyingProperty){
 		var bindFunction = this.__d3Selection.node().bindValue
@@ -39,6 +35,11 @@ export default class DTreezSelection {
 			throw new Error("(Custom) html element does not yet implement bindValue function.");
 		}
 		return this;
+	}
+	
+	call(callBack){
+		let selection = this.__d3Selection.call(callBack);
+		return new DTreezSelection(selection);
 	}
 	
 	classed(className, flag){
@@ -53,8 +54,8 @@ export default class DTreezSelection {
 		return this;
 	}
 	
-	data(data){
-		var selection = this.__d3Selection.data(data);
+	data(data, callBack){
+		var selection = this.__d3Selection.data(data, callBack);
 		return new DTreezSelection(selection);
 	}
 	
@@ -85,6 +86,11 @@ export default class DTreezSelection {
 	
 	image(imageName){
 		this.__d3Selection.attr('image', imageName);		
+		return this;
+	}
+
+	insert(foo, baa){
+		this.__d3Selection.insert(foo, baa);	
 		return this;
 	}
 	

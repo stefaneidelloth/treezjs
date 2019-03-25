@@ -1,56 +1,23 @@
-package org.treez.results.atom.legend;
-
-public enum HorizontalPosition {
-
-	//#region VALUES
-
-	LEFT("left"),
-	CENTRE("centre"),
-	RIGHT("right"),
-	MANUAL("manual");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	HorizontalPosition(String label) {
-		this.value = label;
+export default class HorizontalPosition extends Enum{
+	
+	get isLeft(){
+		return this === HorizontalPosition.left;
 	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
+	
+	get isCentre(){
+		return this === HorizontalPosition.centre;
 	}
-
-	//#end region
-
-	//#region ACCESSORS
-
-	public boolean isLeft() {
-		return this.equals(HorizontalPosition.LEFT);
+	
+	get isRight(){
+		return this === HorizontalPosition.right;
 	}
-
-	public boolean isCentre() {
-		return this.equals(HorizontalPosition.CENTRE);
+	
+	get isManual(){
+		return this === HorizontalPosition.manual;
 	}
-
-	public boolean isRight() {
-		return this.equals(HorizontalPosition.RIGHT);
-	}
-
-	public boolean isManual() {
-		return this.equals(HorizontalPosition.MANUAL);
-	}
-
-	//#end region
 }
+
+HorizontalPosition.left = new HorizontalPosition('left');
+HorizontalPosition.centre = new HorizontalPosition('centre');
+HorizontalPosition.right = new HorizontalPosition('right');
+HorizontalPosition.manual = new HorizontalPosition('manual');

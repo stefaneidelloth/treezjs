@@ -1,43 +1,14 @@
-package org.treez.results.atom.axis;
 
-public enum Direction {
-
-	//#region VALUES
-
-	VERTICAL("vertical"),
-
-	HORIZONTAL("horizontal");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	Direction(String directionString) {
-		this.value = directionString;
+export default class Direction extends Enum {
+	
+	get isVertical(){
+		return this === Direction.vertical;
 	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
+	
+	get isHorizontal(){
+		return this === Direction.horizontal;
 	}
-
-	public boolean isVertical() {
-		return this.equals(VERTICAL);
-	}
-
-	public boolean isHorizontal() {
-		return this.equals(HORIZONTAL);
-	}
-
-	//#end region
 }
+
+Direction.vertical = new Direction('vertical');
+Direction.horizontal = new Direction('horizontal');

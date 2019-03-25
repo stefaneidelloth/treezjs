@@ -1,96 +1,17 @@
-package org.treez.results.atom.xy;
 
-/**
- * Interpolation mode as used in D3.js
- */
-public enum InterpolationMode {
+export default class InterpolationMode extends Enum {}
 
-	//#region VALUES
+InterpolationMode.linear = new InterpolationMode('linear'); //piecewise linear segments, as in a polyline.
+InterpolationMode.linearClosed = new InterpolationMode('linear-closed'); //close the linear segments to form a polygon.
 
-	/**
-	 * piecewise linear segments, as in a polyline.
-	 */
-	LINEAR("linear"),
-
-	/**
-	 * close the linear segments to form a polygon.
-	 */
-	LINEAR_CLOSED("linear-closed"),
-
-	/**
-	 * alternate between horizontal and vertical segments, as in a step function
-	 */
-	STEP("step"),
-	/**
-	 * alternate between vertical and horizontal segments, as in a step function.
-	 */
-	STEP_BEFORE("step-before"),
-
-	/**
-	 * alternate between horizontal and vertical segments, as in a step function
-	 */
-	STEP_AFTER("step-after"),
-
-	/**
-	 * a B-spline, with control point duplication on the ends.
-	 */
-	BASIS("basis"),
-	/**
-	 * an open B-spline; may not intersect the start or end.
-	 */
-	BASIS_OPEN("basis-open"),
-	/**
-	 * a closed B-spline, as in a loop.
-	 */
-	BASIS_CLOSED("basis-closed"),
-	/**
-	 * equivalent to basis, except the tension parameter is used to straighten the spline.
-	 */
-	BUNDLE("bundle"),
-	/**
-	 * a Cardinal spline, with control point duplication on the ends.
-	 */
-	CARDINAL("cardinal"),
-	/**
-	 * an open Cardinal spline; may not intersect the start or end, but will intersect other control points.
-	 */
-	CARDINAL_OPEN("cardinal-open"),
-	/**
-	 * a closed Cardinal spline, as in a loop.
-	 */
-	CARDINAL_CLOSED("cardinal-closed"),
-	/**
-	 * cubic interpolation that preserves monotonicity in y.
-	 */
-	MONOTONE("monotone");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private final String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	InterpolationMode(final String value) {
-		this.value = value;
-	}
-
-	//#end region
-
-	//#region METHODS
-
-	public static InterpolationMode fromValue(final String value) {
-		return valueOf(value.toUpperCase().replace('-', '_'));
-	}
-
-	@Override
-	public String toString() {
-		return value;
-	}
-
-	//#end region
-
-}
+InterpolationMode.step = new InterpolationMode('step'); //alternate between horizontal and vertical segments, as in a step function
+InterpolationMode.stepBefore = new InterpolationMode('step-before'); //alternate between vertical and horizontal segments, as in a step function.
+InterpolationMode.stepAfter = new InterpolationMode('step-after'); //alternate between horizontal and vertical segments, as in a step function
+InterpolationMode.basis = new InterpolationMode('basis'); //a B-spline, with control point duplication on the ends.
+InterpolationMode.basisOpen = new InterpolationMode('basis-open'); //an open B-spline; may not intersect the start or end.
+InterpolationMode.basisClosed = new InterpolationMode('basis-closed'); //a closed B-spline, as in a loop.
+InterpolationMode.bundle = new InterpolationMode('bundle'); //equivalent to basis, except the tension parameter is used to straighten the spline.
+InterpolationMode.cardinal = new InterpolationMode('cardinal'); //a Cardinal spline, with control point duplication on the ends.
+InterpolationMode.cardinalOpen = new InterpolationMode('cardinal-open'); //an open Cardinal spline; may not intersect the start or end, but will intersect other control points.
+InterpolationMode.cardinalClosed = new InterpolationMode('cardinal-closed'); //a closed Cardinal spline, as in a loop.
+InterpolationMode.monotone = new InterpolationMode('monotone'); //cubic interpolation that preserves monotonicity in y.

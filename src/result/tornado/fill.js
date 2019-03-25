@@ -1,296 +1,257 @@
-package org.treez.results.atom.tornado;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+export default class Fill extends GraphicsAtom {
+	
+	constructor(){
+		super();
 
-import org.apache.log4j.Logger;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.JsEngine;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.functions.data.attribute.AttributeStringDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleInversedSizeDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleInversedValueDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleKeyDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleSizeDataFunction;
-import org.treez.javafxd3.d3.functions.data.axis.AxisScaleValueDataFunction;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.results.atom.graph.Graph;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Fill implements GraphicsPropertiesPageFactory {
-
-	Logger LOG = Logger.getLogger(Fill.class);
-
-	//#region ATTRIBUTES
-
-	private static final double GRAPHICS_TO_BAR_RATIO_FOR_SINGLE_BAR = 3;
-
-	public final Attribute<String> leftColor = new Wrap<>();
-
-	public final Attribute<Double> leftTransparency = new Wrap<>();
-
-	public final Attribute<Boolean> leftHide = new Wrap<>();
-
-	public final Attribute<String> rightColor = new Wrap<>();
-
-	public final Attribute<Double> rightTransparency = new Wrap<>();
-
-	public final Attribute<Boolean> rightHide = new Wrap<>();
-
-	private Selection rectsLeftSelection;
-
-	private Selection rectsRightSelection;
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page symbolPage = root.createPage("fill", "   Fill   ");
-
-		Section leftSection = symbolPage.createSection("left");
-
-		leftSection.createColorChooser(leftColor, this, "grey").setLabel("Color");
-
-		leftSection.createDoubleVariableField(leftTransparency, this, 0.0);
-
-		leftSection.createCheckBox(leftHide, this).setLabel("Hide");
-
-		Section rightSection = symbolPage.createSection("right");
-
-		rightSection.createColorChooser(rightColor, this, "green").setLabel("Color");
-
-		rightSection.createDoubleVariableField(rightTransparency, this, 0.0);
-
-		rightSection.createCheckBox(rightHide, this).setLabel("Hide");
-
+		this.__graphicsToBarRatioForSingleBar = 3;
+		
+		this.leftColor = Color.grey;	
+		this.leftTransparency = '0';	
+		this.isLeftHidden = false;
+	
+		this.rightColor = Color.green;	
+		this.rightTransparency = '0';	
+		this.isRightHidden = false;
+	
+		this.__rectsLeftSelection = undefined;	
+		this.__rectsRightSelection = undefined;	
 	}
 
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection tornadoSelection,
-			Selection rectSelection,
-			AbstractGraphicsAtom parent) {
+	createPage(root) {
+		var page = root.append('treez-tab')
+			.label('Fill');
+		
+		this.__createLeftSection(page);
+		this.__createRightSection(page);		
+	}
+	
+	__createLeftSection(page){
+		var section = page.append('treez-section')
+			.label('Left');	
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-color')
+			.label('Color mode')	
+			.bindValue(this, ()=>this.leftColor);	
+			
+		sectionContent.append('treez-text-field')
+			.label('Transparency')	
+			.bindValue(this, ()=>this.leftTransparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.leftIsHideen);
+	}
+	
+	__createRightSection(page){
+		var section = page.append('treez-section')
+			.label('Right');	
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-color')
+			.label('Color mode')	
+			.bindValue(this, ()=>this.rightColor);	
+			
+		sectionContent.append('treez-text-field')
+			.label('Transparency')	
+			.bindValue(this, ()=>this.rightTransparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.rightIsHideen);
+	}
 
-		String parentName = parent.getName();
 
-		String clipPathId = "bar-rects-" + parentName + "-clip-path";
+	plot(dTreez, tornadoSelection, rectSelection, tornado) {		
+
+		var clipPathId = 'bar-rects-' + tornado.name + '-clip-path';
 
 		//remove old groups and clip path if they already exist
 		tornadoSelection //
-				.select(".bar-rects-left") //
+				.select('.bar-rects-left') //
 				.remove();
 
 		tornadoSelection //
-				.select(".bar-rects-right") //
+				.select('.bar-rects-right') //
 				.remove();
 
-		tornadoSelection.select(clipPathId).remove();
+		tornadoSelection //
+				.select(clipPathId) //
+				.remove();
 
 		//create new groups
-		rectsLeftSelection = tornadoSelection //
-				.append("g") //
-				.attr("id", "bar-rects-left") //
-				.attr("class", "bar-rects-left") //
-				.attr("clip-path", "url(#" + clipPathId);
+		this.__rectsLeftSelection = tornadoSelection //
+				.append('g') //
+				.attr('id', 'bar-rects-left') //
+				.className('bar-rects-left') //
+				.attr('clip-path', 'url(#' + clipPathId);
 
-		rectsRightSelection = tornadoSelection //
-				.append("g") //
-				.attr("id", "bar-rects-right") //
-				.attr("class", "bar-rects-right") //
-				.attr("clip-path", "url(#" + clipPathId);
+		this.__rectsRightSelection = tornadoSelection //
+				.append('g') //
+				.attr('id', 'bar-rects-right') //
+				.className('bar-rects-right') //
+				.attr('clip-path', 'url(#' + clipPathId);
 
 		//create clipping path that ensures that the bars are only
 		//shown within the bounds of the graph
-		Graph graph = getGraph(parent);
+		var graph = tornado.graph;
 
-		double width = Length.toPx(graph.data.width.get());
-		double height = Length.toPx(graph.data.width.get());
-		tornadoSelection.append("clipPath") //
-				.attr("id", clipPathId) //
-				.append("rect") //
-				.attr("x", 0) //
-				.attr("y", 0) //
-				.attr("width", width) //
-				.attr("height", height);
+		var width = Length.toPx(graph.data.width);
+		var height = Length.toPx(graph.data.width);
+		tornadoSelection.append('clipPath') //
+				.attr('id', clipPathId) //
+				.append('rect') //
+				.attr('x', 0) //
+				.attr('y', 0) //
+				.attr('width', width) //
+				.attr('height', height);
 
 		//bind attributes
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideLeftRects", rectsLeftSelection, leftHide);
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideRightRects", rectsRightSelection, rightHide);
-
-		Consumer replotRects = () -> {
-			rePlotRects(parent, d3);
-		};
-
-		//initially plot rects
-		replotRects.consume();
+		this.bindBooleanToNegatingDisplay(()=>this.isLeftHidden, this.__rectsLeftSelection);
+		this.bindBooleanToNegatingDisplay(()=>this.isRightHidden, this.__rectsRightSelection);
+				
+		this.__replotRects(tornado, dTreez);
 
 		return tornadoSelection;
 	}
 
-	private static Graph getGraph(AbstractGraphicsAtom parent) {
-		Tornado tornado = (Tornado) parent;
-		return tornado.getGraph();
-	}
+	
 
-	private void rePlotRects(AbstractGraphicsAtom parent, D3 d3) {
-		removeOldRects();
-		plotNewRects(parent, d3);
+	__rePlotRects(tornado, dTreez) {
+		this.__removeOldRects();
+		this.__plotNewRects(tornado, dTreez);
 
 	}
 
-	private void removeOldRects() {
-		rectsLeftSelection.selectAll("rect") //
+	__removeOldRects() {
+		this.__rectsLeftSelection.selectAll('rect') //
 				.remove();
-		rectsRightSelection.selectAll("rect") //
+		
+		this.__rectsRightSelection.selectAll('rect') //
 				.remove();
 	}
 
-	private void plotNewRects(AbstractGraphicsAtom parent, D3 d3) {
+	__plotNewRects(tornado, dTreez) {
+		
+		var graph = tornado.graph;
+		var graphHeight = Length.toPx(graph.data.height);
+		var graphWidth = Length.toPx(graph.data.width);
 
-		Tornado tornado = (Tornado) parent;
-		Graph graph = tornado.getGraph();
-		double graphHeight = Length.toPx(graph.data.height.get());
-		double graphWidth = Length.toPx(graph.data.width.get());
+		var inputAxis = tornado.data.inputAxis;		
+		var inputScale = tornado.data.inputScale;
 
-		org.treez.results.atom.axis.Axis inputAxis = tornado.data.getInputAxis();
-		boolean inputAxisIsOrdinal = inputAxis.isOrdinal();
-		boolean inputAxisIsHorizontal = inputAxis.isHorizontal();
-		Scale<?> inputScale = tornado.data.getInputScale();
+		var outputAxis = tornado.data.outputAxis;		
+		var outputScale = tornado.data.outputScale;
 
-		org.treez.results.atom.axis.Axis outputAxis = tornado.data.getOutputAxis();
-		boolean outputAxisIsOrdinal = outputAxis.isOrdinal();
-		boolean outputAxisIsHorizontal = outputAxis.isHorizontal();
-		Scale<?> outputScale = tornado.data.getOutputScale();
+		var barFillRatio = tornado.data.barFillRatio;
 
-		Double barFillRatio = tornado.data.barFillRatio.get();
+		var leftDataString = tornado.data.leftBarDataString;
+		var rightDataString = tornado.data.rghtBarDataString;
+		var numberOfBars = tornado.data.dataSize;
 
-		String leftDataString = tornado.data.getLeftBarDataString();
-		String rightDataString = tornado.data.getRightBarDataString();
-		int numberOfBars = tornado.data.getDataSize();
-
-		boolean inputScaleChanged = false;
+		var inputScaleChanged = false;
 		if (inputAxisIsOrdinal) {
-			List<Object> labelData = tornado.data.getInputLabelData();
+			var labelData = tornado.data.inputLabelData;
 
-			List<String> labels = labelData.stream() //
-					.map((labelObj) -> labelObj.toString()) //
-					.collect(Collectors.toList());
-
-			int oldNumberOfValues = inputAxis.getNumberOfValues();
+			var labels = labelData.map((labelObj) => '' + labelObj); //
+					
+			var oldNumberOfValues = inputAxis.numberOfValues;
 			inputAxis.includeOrdinalValuesForAutoScale(labels);
-			int numberOfValues = inputAxis.getNumberOfValues();
-			inputScaleChanged = numberOfValues != oldNumberOfValues;
+			var numberOfValues = inputAxis.numberOfValues;
+			inputScaleChanged = numberOfValues !== oldNumberOfValues;
 
 		} else {
 			//TODO
 			//inputAxis.includeDataForAutoScale(inputData);
 		}
 
-		List<Double> allOutputData = tornado.data.getAllBarData();
-		Double[] oldOutputLimits = outputAxis.getQuantitativeLimits();
+		var allOutputData = tornado.data.allBarData;
+		var oldOutputLimits = outputAxis.quantitativeLimits;
 		outputAxis.includeDataForAutoScale(allOutputData);
-		Double[] outputLimits = outputAxis.getQuantitativeLimits();
-		boolean outputScaleChanged = !Arrays.equals(outputLimits, oldOutputLimits);
+		var outputLimits = outputAxis.quantitativeLimits;
+		
+		var outputScaleChanged = ('' + outputLimits) !== ('' + oldOutputLimits);
 
 		if (inputScaleChanged || outputScaleChanged) {
-			graph.updatePlotForChangedScales(d3);
-		}
+			graph.updatePlotForChangedScales(dTreez);
+		}		
 
-		JsEngine engine = rectsLeftSelection.getJsEngine();
+		if (outputAxis.isHorizontal) {
 
-		if (outputAxisIsHorizontal) {
+			var barHeight = this.__determineBarHeight(graphHeight, inputScale, numberOfBars, barFillRatio, inputAxis.isOrdinal);
 
-			double barHeight = determineBarHeight(graphHeight, inputScale, numberOfBars, barFillRatio,
-					inputAxisIsOrdinal);
-
-			rectsLeftSelection.selectAll("rect") //
+			this.__rectsLeftSelection.selectAll('rect') //
 					.data(leftDataString) //
 					.enter() //
-					.append("rect")
-					.attr("x", new AxisScaleValueDataFunction(engine, outputScale))
-					.attr("y", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("height", barHeight)
-					.attr("transform", "translate(0,-" + barHeight / 2 + ")")
-					.attr("width", new AxisScaleSizeDataFunction(engine, outputScale));
+					.append('rect')
+					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
+					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('height', barHeight)
+					.attr('transform', 'translate(0,-' + barHeight / 2 + ')')
+					.attr('width', new AxisScaleSizeDataFunction(engine, outputScale));
 
-			rectsLeftSelection.selectAll("text") //
+			this.__rectsLeftSelection.selectAll('text') //
 					.data(leftDataString) //
 					.enter() //
-					.append("text")
-					.attr("x", new AxisScaleValueDataFunction(engine, outputScale))
-					.attr("y", new AxisScaleKeyDataFunction(engine, inputScale))
-					.style("fill", "black")
-					.text(new AttributeStringDataFunction(engine, "input"));
+					.append('text')
+					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
+					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.style('fill', 'black')
+					.text(new AttributeStringDataFunction(engine, 'input'));
 
-			rectsRightSelection.selectAll("rect") //
+			this.__rectsRightSelection.selectAll('rect') //
 					.data(rightDataString) //
 					.enter() //
-					.append("rect")
-					.attr("x", new AxisScaleValueDataFunction(engine, outputScale))
-					.attr("y", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("height", barHeight)
-					.attr("transform", "translate(0,-" + barHeight / 2 + ")")
-					.attr("width", new AxisScaleSizeDataFunction(engine, outputScale));
+					.append('rect')
+					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
+					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('height', barHeight)
+					.attr('transform', 'translate(0,-' + barHeight / 2 + ')')
+					.attr('width', new AxisScaleSizeDataFunction(engine, outputScale));
 		} else {
 
-			double barWidth = determineBarWidth(graphWidth, inputScale, numberOfBars, barFillRatio, inputAxisIsOrdinal);
+			var barWidth = this.__determineBarWidth(graphWidth, inputScale, numberOfBars, barFillRatio, inputAxis.isOrdinal);
 
-			rectsLeftSelection.selectAll("rect") //
+			this.__rectsLeftSelection.selectAll('rect') //
 					.data(leftDataString) //
 					.enter() //
-					.append("rect")
-					.attr("x", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("y", new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
-					.attr("width", barWidth)
-					.attr("transform", "translate(-" + barWidth / 2 + ",0)")
-					.attr("height", new AxisScaleInversedSizeDataFunction(engine, outputScale));
+					.append('rect')
+					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('width', barWidth)
+					.attr('transform', 'translate(-' + barWidth / 2 + ',0)')
+					.attr('height', new AxisScaleInversedSizeDataFunction(engine, outputScale));
 
-			rectsRightSelection.selectAll("rect") //
+			this.__rectsRightSelection.selectAll('rect') //
 					.data(rightDataString) //
 					.enter() //
-					.append("rect")
-					.attr("x", new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr("y", new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
-					.attr("width", barWidth)
-					.attr("transform", "translate(-" + barWidth / 2 + ",0)")
-					.attr("height", new AxisScaleInversedSizeDataFunction(engine, outputScale));
+					.append('rect')
+					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('width', barWidth)
+					.attr('transform', 'translate(-' + barWidth / 2 + ',0)')
+					.attr('height', new AxisScaleInversedSizeDataFunction(engine, outputScale));
 
 		}
 
 		//bind attributes
-		AbstractGraphicsAtom.bindStringAttribute(rectsLeftSelection, "fill", leftColor);
-		AbstractGraphicsAtom.bindTransparency(rectsLeftSelection, leftTransparency);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(rectsLeftSelection, leftHide, leftTransparency);
+		this.bindString(()=>this.leftColor, this.__rectsLeftSelection, 'fill');
+		this.bindTransparency(()=>this.leftTransparency, this.__rectsLeftSelection);
+		this.bindBooleanToTransparency(()=>this.leftIsHidden, ()=>this.leftTransparency, this.__rectsLeftSelection);
 
-		AbstractGraphicsAtom.bindStringAttribute(rectsRightSelection, "fill", rightColor);
-		AbstractGraphicsAtom.bindTransparency(rectsRightSelection, rightTransparency);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(rectsRightSelection, rightHide, rightTransparency);
+		this.bindString(()=>this.rightColor, this.__rectsRightSelection, 'fill');
+		this.bindTransparency(()=>this.rightTransparency, this.__rectsRightSelection);
+		this.bindBooleanToTransparency(()=>this.rightIsHidden, ()=>this.rightTransparency, this.__rectsRightSelection);
 
 	}
 
-	private static double determineBarWidth(
-			double graphWidth,
-			Scale<?> xScale,
-			int dataSize,
-			double barFillRatio,
-			boolean axisIsOrdinal) {
+	__determineBarWidth(graphWidth, xScale, dataSize, barFillRatio, axisIsOrdinal) {
 
-		double defaultBarWidth;
+		var defaultBarWidth;
 		if (dataSize > 1) {
 			if (axisIsOrdinal) {
 				defaultBarWidth = graphWidth / dataSize;
@@ -298,20 +259,15 @@ public class Fill implements GraphicsPropertiesPageFactory {
 				defaultBarWidth = xScale.apply(1).asDouble();
 			}
 		} else {
-			defaultBarWidth = graphWidth / GRAPHICS_TO_BAR_RATIO_FOR_SINGLE_BAR;
+			defaultBarWidth = graphWidth / this.__graphicsToBarRatioForSingleBar;
 		}
-		double barWidth = defaultBarWidth * barFillRatio;
+		var barWidth = defaultBarWidth * barFillRatio;
 		return barWidth;
 	}
 
-	private static double determineBarHeight(
-			double graphHeight,
-			Scale<?> yScale,
-			int dataSize,
-			double barFillRatio,
-			boolean axisIsOrdinal) {
+	__determineBarHeight(graphHeight, yScale, dataSize, barFillRatio, axisIsOrdinal) {
 
-		double defaultBarHeight;
+		var defaultBarHeight;
 		if (dataSize > 1) {
 			if (axisIsOrdinal) {
 				defaultBarHeight = graphHeight / dataSize;
@@ -319,27 +275,24 @@ public class Fill implements GraphicsPropertiesPageFactory {
 				defaultBarHeight = graphHeight - yScale.apply(1).asDouble();
 			}
 		} else {
-			defaultBarHeight = graphHeight / GRAPHICS_TO_BAR_RATIO_FOR_SINGLE_BAR;
+			defaultBarHeight = graphHeight / this.__graphicsToBarRatioForSingleBar;
 		}
-		double barHeight = defaultBarHeight * barFillRatio;
+		var barHeight = defaultBarHeight * barFillRatio;
 		return barHeight;
 	}
 
-	public Selection formatLegendSymbol(Selection symbolSelection, int symbolSize) {
+	formatLegendSymbol(symbolSelection, symbolSize) {
 
-		symbolSelection.attr("width", symbolSize);
-		symbolSelection.attr("height", "10");
-
-		AbstractGraphicsAtom.bindStringAttribute(symbolSelection, "fill", leftColor);
-		AbstractGraphicsAtom.bindTransparency(symbolSelection, leftTransparency);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(symbolSelection, leftHide, leftTransparency);
-
-		//refreshable.refresh();
+		symbolSelection.attr('width', symbolSize);
+		symbolSelection.attr('height', '10');
+		
+		this.bindString(()=>this.leftColor, symbolSelection, 'fill');
+		this.bindTransparency(()=>this.leftTransparency, symbolSelection);
+		this.bindBooleanToTransparency(()=>this.leftIsHidden, ()=>this.leftTransparency, symbolSelection);
 
 		return symbolSelection;
 
 	}
 
-	//#end region
 
 }

@@ -1,37 +1,6 @@
-package org.treez.results.atom.tornado;
+export default class SortingMode extends Enum{}
 
-public enum SortingMode {
-
-	//#region VALUES
-
-	LARGEST_DIFFERENCE("largestDifference"), //
-	SMALLEST_DIFFERENCE("smallestDifference"), //
-	LABEL("label"), //
-	UNSORTED("unsorted");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	SortingMode(String value) {
-		this.value = value;
-	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
-	}
-
-	//#end region
-
-}
+SortingMode.largestDifference = new SortingMode('largestDifference');
+SortingMode.smallestDifference = new SortingMode('smallestDifference');
+SortingMode.label = new SortingMode('label');
+SortingMode.unsorted = new SortingMode('unsorted');

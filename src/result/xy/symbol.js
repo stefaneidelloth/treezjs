@@ -1,304 +1,276 @@
-package org.treez.results.atom.xy;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.List;
-
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.symbolType.SymbolStyleValue;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.JsEngine;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.functions.data.axis.AxisTransformPointDataFunction;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.javafxd3.d3.svg.SymbolType;
-import org.treez.results.atom.graph.Graph;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Symbol implements GraphicsPropertiesPageFactory {
-
-	//#region ATTRIBUTES
-
-	Selection symbolsSelection;
-
-	public final Attribute<String> symbolType = new Wrap<>();
-
-	public final Attribute<String> size = new Wrap<>();
-
-	/**
-	 * If this is larger than 1, one the nth symbols will be shown
-	 */
-	//public final Attribute<String> thinMarkers = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//public final Attribute<String> errorStyle = new Wrap<>();
-
-	public final Attribute<String> fillColor = new Wrap<>();
-
-	//public final Attribute<String> fillStyle = new Wrap<>();
-
-	public final Attribute<Double> fillTransparency = new Wrap<>();
-
-	public final Attribute<Boolean> hideFill = new Wrap<>();
-
-	public final Attribute<String> lineColor = new Wrap<>();
-
-	public final Attribute<String> lineWidth = new Wrap<>();
-
-	public final Attribute<String> lineStyle = new Wrap<>();
-
-	public final Attribute<Double> lineTransparency = new Wrap<>();
-
-	public final Attribute<Boolean> hideLine = new Wrap<>();
-
-	//public final Attribute<String> colorMap = new Wrap<>();
-
-	//public final Attribute<Boolean> invertMap = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page symbolPage = root.createPage("symbol", "   Symbol   ");
-
-		//#region marker section
-
-		Section symbol = symbolPage.createSection("symbol");
-
-		symbol.createSymbolType(symbolType, this, "Symbol", "circle");
-
-		symbol.createTextField(size, this, "64");
-
-		//symbol.createTextField(thinMarkers, "thinMarkers", "Thin markers", "1");
-
-		symbol.createCheckBox(hide, this).setLabel("Hide");
-
-		//symbol.createErrorBarStyle(errorStyle, "errorStyle", "Error style");
-
-		//#end region
-
-		//#region symbol fill section
-
-		Section fill = symbolPage.createSection("fill", true);
-
-		fill.createColorChooser(fillColor, this, "black").setLabel("Color");
-
-		//fill.createFillStyle(fillStyle, "style", "Style");
-
-		fill.createDoubleVariableField(fillTransparency, this, 0.0).setLabel("Transparency");
-
-		fill.createCheckBox(hideFill, this).setLabel("Hide");
-
-		//markerFill.createColorMap(colorMap, this, "Color map");
-
-		//markerFill.createCheckBox(invertMap, this, "Invert map");
-
-		//#end region
-
-		//#region symbol line section
-
-		Section markerBorder = symbolPage.createSection("line", true);
-
-		markerBorder.createColorChooser(lineColor, this, "black");
-
-		markerBorder.createTextField(lineWidth, this, "0.5");
-
-		markerBorder.createLineStyle(lineStyle, this, "solid");
-
-		markerBorder.createDoubleVariableField(lineTransparency, this, 0.0).setLabel("Transparency");
-
-		markerBorder.createCheckBox(hideLine, this).setLabel("Hide");
-
-		//#end region
+export default class Symbol extends GraphicsAtom {
+	
+	constructor(){
+		super();
+		this.type = SymbolType.circle;	
+		this.size = '64';	
+		this.isHidden = false;	
+		
+		//this.errorStyle = new Wrap<>();	
+		this.fillColor = Color.black;
+		//this.fillStyle = new Wrap<>();	
+		this.fillTransparency = '0';
+		this.isHiddenFill = false;
+		
+		this.lineColor = Color.black;	
+		this.lineWidth = '0.5';	
+		this.lineStyle = LineStyle.solid;
+		this.lineTransparency = '0';
+		this.isHiddenLine = false;	
+		
+		//this.colorMap = new Wrap<>();	
+		//this.invertMap = new Wrap<>();
+		
+		this.__symbolsSelection;	
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection xySelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	createPage(root) {
 
-		String parentName = parent.getName();
-		String id = "symbols_" + parentName;
-		String clipPathId = id + "_clip-path";
+		var page = root.append('treez-tab')
+		.label('Symbol');
+		
+		this.__createSymbolSection(page);		
+		this.__createFillSection(page);		
+		this.__createLineSection(page);		
+	}
+	
+	__createSymbolSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Symbol');	
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-symbol-type')
+			.label('Type')
+			.bindValue(this,()=>this.symbolType);
+		
+
+		sectionContent.append('treez-text-field')
+			.label('Size')
+			.bindValue(this, ()=>this.size);		
+
+		//symbol.createTextField(thinMarkers, 'thinMarkers', 'Thin markers', '1');		
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.isHidden);
+
+		//symbol.createErrorBarStyle(errorStyle, 'errorStyle', 'Error style');
+		
+	}	
+	
+	__createFillSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Fill');	
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-color')
+			.label('Color')	
+			.bindValue(this, ()=>this.fillColor);
+
+		//fill.createFillStyle(fillStyle, 'style', 'Style');	
+
+		sectionContent.append('treez-text-field')
+			.label('Transparency')
+			.bindValue(this, ()=>this.fillTransparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.fillIsHidden);
+
+		//markerFill.createColorMap(colorMap, this, 'Color map');
+
+		//markerFill.createCheckBox(invertMap, this, 'Invert map');
+		
+	}	
+	
+	__createLineSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Line');	
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-color')
+			.label('Color')	
+			.bindValue(this, ()=>this.lineColor);
+
+		sectionContent.append('treez-text-field')
+			.label('Width')
+			.bindValue(this, ()=>this.lineWidth);
+		
+		sectionContent.append('treez-line-style')
+			.label('Style')
+			.bindValue(this, ()=>this.lineStyle);		
+
+		sectionContent.append('treez-text-field')
+			.label('Transparency')
+			.bindValue(this, ()=>this.lineTransparency);
+
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.lineIsHidden);
+		
+	}	
+
+	plot(dTreez, xySelection, rectSelection, xy) {
+		
+		var id = 'symbols_' + parent.name;
+		var clipPathId = id + '_clip-path';
 
 		//remove old symbols group if it already exists
 		xySelection //
-				.select("#" + id) //
+				.select('#' + id) //
 				.remove();
 
 		//create new symbols group
 		symbolsSelection = xySelection //
-				.append("g") //
-				.attr("id", id) //
-				.attr("class", "symbols") //
-				.attr("clip-path", "url(#" + clipPathId);
+				.append('g') //
+				.attr('id', id) //
+				.attr('class', 'symbols') //
+				.attr('clip-path', 'url(#' + clipPathId);
 
 		//create clipping path that ensures that the symbols are only
 		//shown within the bounds of the graph
-		Graph graph = getGraph(parent);
+		var graph = this.__getGraph(xy);
 
-		double width = Length.toPx(graph.data.width.get());
-		double height = Length.toPx(graph.data.width.get());
-		symbolsSelection.append("clipPath") //
-				.attr("id", clipPathId) //
-				.append("rect") //
-				.attr("x", 0) //
-				.attr("y", 0) //
-				.attr("width", width) //
-				.attr("height", height);
+		var width = Length.toPx(graph.data.width);
+		var height = Length.toPx(graph.data.width);
+		symbolsSelection.append('clipPath') //
+				.attr('id', clipPathId) //
+				.append('rect') //
+				.attr('x', 0) //
+				.attr('y', 0) //
+				.attr('width', width) //
+				.attr('height', height);
 
 		//bind attributes
-		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideSymbols", symbolsSelection, hide);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, symbolsSelection);
 
-		Consumer replotSymbols = () -> {
-			rePlotSymbols(d3, parent);
-		};
-		symbolType.addModificationConsumer("replotSymbols", replotSymbols);
-		size.addModificationConsumer("replotSymbols", replotSymbols);
-
-		//initially plot symbols
-		replotSymbols.consume();
-
-		//see method replotWithD3
+		var updateSymbols = () => this.__replotSymbols(dTeez, xy);
+		
+		this.addListener(()=>this.symbolType, updateSymbols);
+		this.addListener(()=>this.size, updateSymbols);	
+				
+		this.__replotSymbols(dTreez, xy);
+		
 		return xySelection;
 	}
 
-	private static Graph getGraph(AbstractGraphicsAtom parent) {
-		AbstractAtom<?> grandParent = parent.getParentAtom();
-		Graph graph;
-		boolean isGraph = Graph.class.isAssignableFrom(grandParent.getClass());
-		if (isGraph) {
-			graph = (Graph) grandParent;
+	__getGraph(xy) {
+		var grandParent = xy.parent;	
+		
+		if (grandParent instanceof Graph) {
+			return grandParent;
 		} else {
-			AbstractAtom<?> greatGrandParent = grandParent.getParentAtom();
-			graph = (Graph) greatGrandParent;
+			return grandParent.parent;			
 		}
 		return graph;
 	}
 
-	private void rePlotSymbols(D3 d3, AbstractGraphicsAtom parent) {
+	__replotSymbols(dTreez, xy) {
 
 		//remove old symbols
-		symbolsSelection.selectAll("path") //
+		symbolsSelection.selectAll('path') //
 				.remove();
 
 		//get symbol type and plot new symbols
-		String symbolTypeString = symbolType.get();
-		boolean isNoneSymbol = symbolTypeString.equals(SymbolStyleValue.NONE.toString());
+		var isNoneSymbol = this.symbolType === SymbolType.none;
 		if (!isNoneSymbol) {
 			//plot new symbols
-			plotNewSymbols(d3, symbolTypeString, parent);
+			this.__plotNewSymbols(dTeez, xy);
 		}
 	}
 
-	private void plotNewSymbols(D3 d3, String symbolTypeString, AbstractGraphicsAtom parent) {
-
-		SymbolType symbolTypeValue = SymbolType.fromString(symbolTypeString);
-		int symbolSquareSize = Integer.parseInt(size.get());
+	__plotNewSymbols(d3, xy) {
+		
+		var symbolSquareSize = parseInt(this.size);
 
 		//symbol path generator
-		org.treez.javafxd3.d3.svg.Symbol symbol = d3 //
+		var symbol = d3 //
 				.svg() //
 				.symbol() //
 				.size(symbolSquareSize) //
-				.type(symbolTypeValue);
-		String symbolDString = symbol.generate();
+				.type(this.type);
+		
+		var symbolDString = symbol.generate();
 
-		//create symbols
-		Xy xy = (Xy) parent;
-
-		Scale<?> xScale = xy.getXScale();
-		Scale<?> yScale = xy.getYScale();
-		List<Object> xData = xy.getXValues();
-		List<Object> yData = xy.getYValues();
-
-		String xyDataString = xy.createXyDataString(xData, yData);
-
-		JsEngine engine = symbolsSelection.getJsEngine();
-
-		symbolsSelection.selectAll("path") //
+			
+		var xyDataString = xy.createXyDataString(xy.xData, xy.yData);
+		
+		symbolsSelection.selectAll('path') //
 				.data(xyDataString) //
 				.enter() //
-				.append("path") //
-				.attr("transform", new AxisTransformPointDataFunction(engine, xScale, yScale)) //
-				.attr("d", symbolDString);
+				.append('path') //
+				.attr('transform', new AxisTransformPointDataFunction(engine, xy.xScale, xy.yScale)) //
+				.attr('d', symbolDString);
 
 		//bind attributes
-		AbstractGraphicsAtom.bindStringAttribute(symbolsSelection, "fill", fillColor);
-		AbstractGraphicsAtom.bindTransparency(symbolsSelection, fillTransparency);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(symbolsSelection, hideFill, fillTransparency);
-
-		AbstractGraphicsAtom.bindStringAttribute(symbolsSelection, "stroke", lineColor);
-		AbstractGraphicsAtom.bindLineTransparency(symbolsSelection, lineTransparency);
-		AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(symbolsSelection, hideLine, lineTransparency);
-
-		AbstractGraphicsAtom.bindLineStyle(symbolsSelection, lineStyle);
-
-		AbstractGraphicsAtom.bindStringAttribute(symbolsSelection, "stroke-width", lineWidth);
+		this.bindString(()=>this.fillColor, symbolsSelection, 'fill');
+		this.bindTransparency(()=>this.fillTransparency, symbolsSelection);
+		this.bindBooleanToTransparency(()=>this.isHiddenFill, ()=>this.fillTransparency, symbolsSelection);
+		
+		this.bindString(()=>this.lineColor, symbolsSelection, 'stroke');
+		this.bindString(()=>this.lineWidth, symbolsSelection, 'stroke-width');
+		this.bindLineTransparency(()=>this.lineTransparency, symbolsSelection);
+		this.bindBooleanToLineTransparency(()=>this.isHiddenLine, ()=>this.lineTransparency, symbolsSelection);
+		
+		this.bindLineStyle(()=>this.lineStyle, symbolsSelection);
+	
 	}
 
-	public void plotLegendSymbolWithD3(D3 d3, Selection parentSelection, int xSymbol, Refreshable refreshable) {
-
-		symbolType.addModificationConsumer("replotLegendSymbol", () -> refreshable.refresh());
-		size.addModificationConsumer("replotLegendSymbol", () -> refreshable.refresh());
-		plotLegendSymbols(d3, parentSelection, xSymbol);
+	__plotLegendSymbol(dTreez, parentSelection, xSymbol, refreshable) {
+		this.addListener(()=>this.symbolType, ()=>refreshable.refresh());
+		this.addListener(()=>this.size, ()=>refreshable.refresh());
+		this.__plotLegendSymbols(d3, parentSelection, xSymbol);
 	}
 
-	private void plotLegendSymbols(D3 d3, Selection parentSelection, int xSymbol) {
+	__plotLegendSymbols(dTreez, parentSelection, xSymbol) {
 
 		parentSelection //
-				.select(".legend-symbol") //
+				.select('.legend-symbol') //
 				.remove();
 
-		String symbolTypeString = symbolType.get();
-		boolean isNoneSymbol = symbolTypeString.equals(SymbolStyleValue.NONE.toString());
+		
+		var isNoneSymbol = this.symbolType === SymbolType.none;
 		if (!isNoneSymbol) {
-
-			SymbolType symbolTypeValue = SymbolType.fromString(symbolTypeString);
-			int symbolSquareSize = Integer.parseInt(size.get());
+			
+			var symbolSquareSize = parseInt(this.size);
 
 			//symbol path generator
-			org.treez.javafxd3.d3.svg.Symbol symbol = d3 //
+			var symbol = d3 //
 					.svg() //
 					.symbol() //
 					.size(symbolSquareSize) //
-					.type(symbolTypeValue);
+					.type(this.type);
 
-			String symbolDString = symbol.generate();
+			var symbolDString = symbol.generate();
 
 			//create symbol
-			Selection legendSymbol = parentSelection //
-					.append("path") //
-					.classed("legend-symbol", true) //
-					.attr("transform", "translate(" + xSymbol + ",0)") //
-					.attr("d", symbolDString);
+			var legendSymbol = parentSelection //
+					.append('path') //
+					.classed('legend-symbol', true) //
+					.attr('transform', 'translate(' + xSymbol + ',0)') //
+					.attr('d', symbolDString);
 
 			//bind attributes
-			AbstractGraphicsAtom.bindStringAttribute(legendSymbol, "fill", fillColor);
-			AbstractGraphicsAtom.bindTransparency(legendSymbol, fillTransparency);
-			AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(legendSymbol, hideFill, fillTransparency);
-
-			AbstractGraphicsAtom.bindStringAttribute(legendSymbol, "stroke", lineColor);
-			AbstractGraphicsAtom.bindLineTransparency(legendSymbol, lineTransparency);
-			AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(legendSymbol, hideLine, lineTransparency);
-
-			AbstractGraphicsAtom.bindLineStyle(legendSymbol, lineStyle);
-
-			AbstractGraphicsAtom.bindStringAttribute(legendSymbol, "stroke-width", lineWidth);
-
+			
+			this.bindString(()=>this.fillColor, legendSymbol, 'fill');
+			this.bindTransparency(()=>this.fillTransparency, legendSymbol);
+			this.bindBooleanToTransparency(()=>this.isHiddenFill, ()=>this.fillTransparency, legendSymbol);
+			
+			this.bindString(()=>this.lineColor, legendSymbol, 'stroke');
+			this.bindString(()=>this.lineWidth, legendSymbol, 'stroke-width');
+			this.bindLineTransparency(()=>this.lineTransparency, legendSymbol);
+			this.bindBooleanToLineTransparency(()=>this.isHiddenLine, ()=>this.lineTransparency, legendSymbol);
+			
+			this.bindLineStyle(()=>this.lineStyle, legendSymbol);
 		}
-	}
-
-	//#end region
+	}	
 
 }

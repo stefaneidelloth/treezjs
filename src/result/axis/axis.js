@@ -1,45 +1,58 @@
-export default class Axis extends GraphicsPropertiesPage {
+import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import QuantitativeScaleBuilder from './scale/quantitativeScaleBuilder.js';
+import OrdinalScaleBuilder from './scale/ordinalScaleBuilder.js';
+
+import Data from './data.js';
+import AxisLine from './axisLine.js';
+import MajorTicks from './majorTicks.js';
+import MinorTicks from './minorTicks.js';
+import TickLabels from './tickLabels.js';
+import AxisLabel from './axisLabel.js';
+
+import AxisMode from './axisMode.js';
+
+
+
+export default class Axis extends PagedGraphicsAtom {
 
 	
 	constructor(name, direction) {
 		super(name);
-		this.image = 'axis.png';
-		
-		this.data = undefined;
-		this.axisLine= undefined;
-		this. majorTicks= undefined;
-		this.minorTicks= undefined;
-		this.tickLabels= undefined;
-		this. axisLabel= undefined;
-
+		this.image = 'axis.png';		
+				
 		this.__axisSelection= undefined;		
 		this.__quantitativeScaleBuilder = new QuantitativeScaleBuilder(this);
 		this.__ordinalScaleBuilder = new OrdinalScaleBuilder();
 		
-		//TODO data?
-		data.direction = direction;
+		//data has been created createPropertyPageFactories, which is called from super constructor
+		if(direction){
+			this.data.direction = direction;
+		}
+		
 	}
 
-	createPropertyPageFactories() {
+	createPageFactories() {
 
+        var factories = []
 		this.data = new Data();
-		this.propertyPageFactories.add(this.data);
+		factories.push(this.data);
 
 		this.axisLine = new AxisLine();
-		this.propertyPageFactories.add(this.axisLine);
+		factories.push(this.axisLine);
 
 		this.majorTicks = new MajorTicks();
-		this.propertyPageFactories.add(this.majorTicks);
+		factories.push(this.majorTicks);
 
 		this.minorTicks = new MinorTicks();
-		this.propertyPageFactories.add(this.minorTicks);
+		factories.push(this.minorTicks);
 
 		this.tickLabels = new TickLabels();
-		propertyPageFactories.add(this.tickLabels);
+		factories.push(this.tickLabels);
 
 		this.axisLabel = new AxisLabel();
-		propertyPageFactories.add(this.axisLabel);
+		factories.push(this.axisLabel);
 
+		return factories;
 	}
 
 	
@@ -57,20 +70,22 @@ export default class Axis extends GraphicsPropertiesPage {
 
 	__removeOldAxisGroupIfAlreadyExists(graphSelection) {
 		graphSelection //
-				.select('#' + name) //
+				.select('#' + this.name) //
 				.remove(); //
 	}
 
 	__createNewAxisGroup(graphSelection) {
-		axisSelection = graphSelection //
+		this.__axisSelection = graphSelection //
 				.append('g') //
 				.className('axis') //
-				.onClick(this);
-		bindNameToId(axisSelection);
+				.onClick(this);		
+		
+		this.bindString(()=>this.name, this.__axisSelection, 'id');
+		
 	}
 
-	updatePlot(dTreez) {
-		this.__plotPageModels(dTreez);
+	__updatePlot(dTreez) {
+		this.__plotWithPages(dTreez);
 	}
 
 	update() {
@@ -78,31 +93,30 @@ export default class Axis extends GraphicsPropertiesPage {
 			this.__updatePlot(this.__dTreez);
 		}
 	}
-
-	plotPageModels(dTreez) {
-		this.__propertyPageFactories.forEach(pageFactory=>{
-			this.axisSelection = pageModel.plotWithD3(dTreez, this.axisSelection, null, this);
-		});
-		
+	
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__axisSelection, null, this);
+		}
 	}
+
+	
 
 	createScale(graphWidthInPx, graphHeightInPx) {
 
-		var scaleFactory = this.__dTreez //
-				.scale();
-
-		var axisMode = this.__getAxisMode();
-		switch (axisMode) {
-		case QUANTITATIVE:
-			this.__quantitativeScaleBuilder.createScale(scaleFactory, this.graphWidthInPx, this.graphHeightInPx);
+		var scaleFactory = this.__dTreez.scaleLinear();
+		
+		switch (this.data.mode) {
+		case AxisMode.quantitative:
+			this.__quantitativeScaleBuilder.createScale(scaleFactory, graphWidthInPx, graphHeightInPx);
 			break;
-		case ORDINAL:
-			this.__ordinalScaleBuilder.createScale(scaleFactory, this.isHorizontal, this.graphWidthInPx, this.graphHeightInPx);
+		case AxisMode.ordinal:
+			this.__ordinalScaleBuilder.createScale(scaleFactory, this.isHorizontal, graphWidthInPx, graphHeightInPx);
 			break;
 		//case TIME:
 		//	throw new IllegalStateException("not yet implemented");
 		default:
-			throw new Error('not yet implemented');
+			throw new Error('not yet implemented ' + this.__axisMode);
 		}
 	}
 
@@ -118,22 +132,18 @@ export default class Axis extends GraphicsPropertiesPage {
 		this.__ordinalScaleBuilder.includeDomainValuesForAutoScale(ordinalValues);
 	}
 
-	//#end region
-
-	//#region ACCESSORS
-
-	getAxisMode() {
+	
+	get axisMode() {
 		return this.data.mode;
 	}
 
-	getScale() {
-
-		var axisMode = this.getAxisMode();
-		switch (axisMode) {
-		case QUANTITATIVE:
-			return this.__quantitativeScaleBuilder.getScale();
-		case ORDINAL:
-			return this.__ordinalScaleBuilder.getScale();
+	get scale() {
+		
+		switch (this.axisMode) {
+		case AxisMode.quantitative:
+			return this.__quantitativeScaleBuilder.scale;
+		case AxisMode.ordinal:
+			return this.__ordinalScaleBuilder.scale;
 		//case TIME:
 		//	throw new IllegalStateException("not yet implemented");
 		default:
@@ -141,13 +151,13 @@ export default class Axis extends GraphicsPropertiesPage {
 		}
 	}
 
-	getNumberOfValues() {
+	get numberOfValues() {
 		var axisMode = getAxisMode();
-		switch (axisMode) {
-		case QUANTITATIVE:
+		switch (this.axisMode) {
+		case AxisMode.quantitative:
 			throw new Error('not yet implemented');
-		case ORDINAL:
-			return this.__ordinalScaleBuilder.getNumberOfValues();
+		case AxisMode.ordinal:
+			return this.__ordinalScaleBuilder.numberOfValues;
 		//case TIME:
 		//	throw new IllegalStateException("not yet implemented");
 		default:
@@ -155,42 +165,41 @@ export default class Axis extends GraphicsPropertiesPage {
 		}
 	}
 
-	isQuantitative() {
+	get isQuantitative() {
 		return this.data.isQuantitative;
 		
 	}
 
-	isOrdinal() {
+	get isOrdinal() {
 		return this.data.isOrdinal;
 	}
 
-	isHorizontal() {
+	get isHorizontal() {
 		var direction = data.direction;
 		return direction.isHorizontal;
 	}
 
-	getQuantitativeLimits() {
+	get quantitativeLimits() {
 
-		if (this.isQuantitative()) {
+		if (this.isQuantitative) {
 			var min = data.min;
 			var isAutoMin = data.autoMin;
 			if (isAutoMin) {
-				min = this.__quantitativeScaleBuilder.getAutoMinValue();
+				min = this.__quantitativeScaleBuilder.autoMinValue;
 			}
 
 			var max = data.max;
 			var isAutoMax = data.autoMax;
 			if (isAutoMax) {
-				max = this.__quantitativeScaleBuilder.getAutoMaxValue();
+				max = this.__quantitativeScaleBuilder.autoMaxValue;
 			}
 
 			return [min, max];
 		} else {
-			var numberOfValues = 0.0 + this.getNumberOfValues();
+			var numberOfValues = 0.0 + this.numberOfValues;
 			return [1.0, numberOfValues];
 		}
 	}
 
-	//#end region
 
 }

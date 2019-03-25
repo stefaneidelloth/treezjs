@@ -1,51 +1,16 @@
-package org.treez.results.atom.axis;
-
-public enum BorderMode {
-
-	//#region VALUES
-
-	NONE("none", 0.0), //
-	TWO("2%", 0.02), //
-	FIVE("5%", 0.05), //
-	TEN("10%", 0.1), //
-	FIVETEEN("15%", 0.15),
-	TWENTY("20%", 0.2),
-	TWENTY_FIVE("25%", 0.25); //
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String value;
-
-	private Double factor;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	BorderMode(String value, Double factor) {
-		this.value = value;
+export default class BorderMode extends Enum {
+	
+	constructor(name, label, factor){
+		super(name);
+		this.label = label;
 		this.factor = factor;
 	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return value;
-	}
-
-	//#end region
-
-	//#region ACCESSORS
-
-	public Double getFactor() {
-		return factor;
-	}
-
-	//#end region
-
 }
+
+BorderMode.none =       new BorderMode('none', '0', 0.0);
+BorderMode.two =        new BorderMode('two', '2%', 0.02);
+BorderMode.five =       new BorderMode('five', '5%', 0.05);
+BorderMode.ten =        new BorderMode('ten', '10%', 0.1);
+BorderMode.fiveteen =   new BorderMode('fiveteen', '15%', 0.15);
+BorderMode.twenty =     new BorderMode('twenty', '20%', 0.2);
+BorderMode.twentyfive = new BorderMode('twentyFive', '25%', 0.25);

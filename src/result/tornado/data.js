@@ -1,420 +1,371 @@
-package org.treez.results.atom.tornado;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.ArrayList;
-import java.util.List;
+export default class Data extends GraphicsAtom {
+	
+	constructor(tornado){
+		super();
+		
+		this.__tornado = tornado;
 
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.data.table.nebula.Table;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.scales.Scale;
-import org.treez.results.atom.axis.Axis;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Data implements GraphicsPropertiesPageFactory {
-
-	//#region ATTRIBUTES
-
-	//#region GENERAL
-
-	public final Attribute<DataMode> dataMode = new Wrap<>();
-
-	public final Attribute<String> tablePath = new Wrap<>();
-
-	public final Attribute<String> leftLegendText = new Wrap<>();
-
-	public final Attribute<String> rightLegendText = new Wrap<>();
-
-	public final Attribute<Double> barFillRatio = new Wrap<>();
-
-	//#end region
-
-	//#region INPUT
-
-	public final Attribute<String> inputLabel = new Wrap<>();
-
-	public final Attribute<String> inputBase = new Wrap<>();
-
-	public final Attribute<String> inputLeft = new Wrap<>();
-
-	public final Attribute<String> inputRight = new Wrap<>();
-
-	public final Attribute<String> inputUnit = new Wrap<>();
-
-	public final Attribute<String> inputAxis = new Wrap<>();
-
-	//#end region
-
-	//#region OUTPUT
-
-	public final Attribute<String> outputBase = new Wrap<>();
-
-	public final Attribute<String> outputLeft = new Wrap<>();
-
-	public final Attribute<String> outputRight = new Wrap<>();
-
-	public final Attribute<String> outputUnit = new Wrap<>();
-
-	public final Attribute<String> outputAxis = new Wrap<>();
-
-	public final Attribute<SortingMode> sortingMode = new Wrap<>();
-
-	//#end region
-
-	private Tornado tornado;
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-		Page dataPage = root.createPage("data", "   Data   ");
-		createGeneralSection(parent, dataPage);
-		createInputSection(parent, dataPage);
-		createOutputSection(parent, dataPage);
+		this.dataMode = DataMode.table;
+		this.tablePath = 'root.data.table';
+		this.leftLegendText = 'left legend text';
+		this.rightLegendText = 'right legend text';		
+		this.sortingMode = SortingMode.largestDifferenc;
+		this.barFillRatio = '0.75';
+		
+	
+		this.inputLabel = 'root.data.table.columns.inputLabel';
+		
+		this.inputBase = 'root.data.table.columns.inputBase';
+		this.inputLeft = 'root.data.table.columns.inputLeft';
+		this.inputRight = 'root.data.table.columns.inputRight';
+		this.inputUnit = 'root.data.table.columns.unit';		
+	
+		this.outputBase = 'root.data.table.columns.outputBase';
+		this.outputLeft = 'root.data.table.columns.outputLeft';
+		this.outputRight = 'root.data.table.columns.outputRight';
+		this.outputUnit = 'root.data.table.columns.outputUnit';			
 
 	}
 
-	private void createGeneralSection(AbstractAtom<?> parent, Page dataPage) {
-		Section generalSection = dataPage.createSection("general");
-
-		EnumComboBox<DataMode> dataModeBox = generalSection.createEnumComboBox(dataMode, this, DataMode.TABLE);
-		dataModeBox.createEnableTarget("enableTablePath", DataMode.TABLE, "data.general.tablePath");
-		dataModeBox.createDisableTarget("disableInputColumns", DataMode.TABLE, "data.input");
-		dataModeBox.createDisableTarget("disableOutputColumns", DataMode.TABLE, "data.output");
-
-		generalSection.createModelPath(tablePath, this, "", Table.class).setLabel("Table");
-
-		Class<?> targetClass = org.treez.results.atom.axis.Axis.class;
-		generalSection //
-				.createModelPath(inputAxis, this, "", targetClass, parent) //
-				.setLabel("Input axis");
-
-		generalSection //
-				.createModelPath(outputAxis, this, "", targetClass, parent) //
-				.setLabel("Output axis");
-
-		generalSection.createTextField(outputUnit, this).setLabel("Unit");
-
-		generalSection.createEnumComboBox(sortingMode, this, SortingMode.LARGEST_DIFFERENCE) //
-				.setLabel("Sorting mode");
-
-		generalSection.createTextField(leftLegendText, this).setLabel("Left legend text");
-		generalSection.createTextField(rightLegendText, this).setLabel("Right legend text");
-
-		final double defaultBarFillRatio = 0.75;
-		generalSection.createDoubleVariableField(barFillRatio, this, defaultBarFillRatio);
-	}
-
-	private void createInputSection(AbstractAtom<?> parent, Page dataPage) {
-		Section inputSection = dataPage.createSection("input");
-		inputSection.setLabel("Input columns");
-
-		Class<?> targetClass = org.treez.data.column.Column.class;
-		String defaultValue = "root.data.table.columns.inputLabel";
-		inputSection.createModelPath(inputLabel, this, defaultValue, targetClass, parent) //
-				.setLabel("Label");
-
-		defaultValue = "root.data.table.columns.inputBase";
-		inputSection.createModelPath(inputBase, this, defaultValue, targetClass, parent) //
-				.setLabel("Base");
-
-		defaultValue = "root.data.table.columns.inputLeft";
-		inputSection.createModelPath(inputLeft, this, defaultValue, targetClass, parent) //
-				.setLabel("Left");
-
-		defaultValue = "root.data.table.columns.inputRight";
-		inputSection.createModelPath(inputRight, this, defaultValue, targetClass, parent) //
-				.setLabel("Right");
-
-		defaultValue = "root.data.table.columns.inputUnit";
-		inputSection.createModelPath(inputUnit, this, defaultValue, targetClass, parent) //
-				.setLabel("Unit");
+	createPage(root) {
+		
+		var page = root.append('treez-tab')
+			.label('Data');
+		
+		this.__createGeneralSection(page);
+		this.__createInputSection(page);
+		this.__createOutputSection(page);
 
 	}
 
-	private void createOutputSection(AbstractAtom<?> parent, Page dataPage) {
-		Class<?> targetClass;
-		String defaultValue;
-		Section outputSection = dataPage.createSection("output");
-		outputSection.setLabel("Output columns");
+	__createGeneralSection(page) {
+		
+		var section = page.append('treez-section')
+			.label('General');	
+		
+		var sectionContent = section.append('div');	
+		
+		sectionContent.append('treez-enum-combo-box')
+			.label('Data mode')
+			.nodeAttr('options', DataMode)
+			.onChange(()=>this.__dataModeChanged())
+			.bindValue(this, ()=>this.dataMode);
+		
+		sectionContent.append('treez-model-path')
+			.label('Table')
+			.nodeAttr('atomClasses',[Table])
+			.bindValue(this,()=>this.tablePath);
+		
+		sectionContent.append('treez-model-path')
+			.label('Input axis')
+			.nodeAttr('atomClasses',[Axis])
+			.bindValue(this,()=>this.inputAxis);
+		
+		sectionContent.append('treez-model-path')
+			.label('Output axis')
+			.nodeAttr('atomClasses',[Axis])
+			.bindValue(this,()=>this.outputAxis);
 
-		targetClass = org.treez.data.column.Column.class;
-		defaultValue = "root.data.table.columns.outputBase";
-		outputSection.createModelPath(outputBase, this, defaultValue, targetClass, parent) //
-				.setLabel("Base");
+		sectionContent.append('treez-text-field')
+			.label('Unit')
+			.bindValue(this, ()=>this.outputUnit);
 
-		defaultValue = "root.data.table.columns.outputLeft";
-		outputSection.createModelPath(outputLeft, this, defaultValue, targetClass, parent) //
-				.setLabel("Left");
+		sectionContent.append('treez-enum-combo-box')
+			.label('Sorting mode')
+			.nodeAttr('options', SortingMode)			
+			.bindValue(this, ()=>this.sortingMode);
 
-		defaultValue = "root.data.table.columns.outputRight";
-		outputSection.createModelPath(outputRight, this, defaultValue, targetClass, parent) //
-				.setLabel("Right");
+		sectionContent.append('treez-text-field')
+			.label('Left legend text')
+			.bindValue(this, ()=>this.leftLegendText);
+		
+		sectionContent.append('treez-text-field')
+			.label('Right legend text')
+			.bindValue(this, ()=>this.rightLegendText);
+
+		sectionContent.append('treez-text-field')
+			.label('Bar fill ratio')
+			.bindValue(this, ()=>this.barFillRatio);
+		
+	}
+	
+	__dataModeChanged(){
+		
+		//TODO
+		//dataModeBox.createEnableTarget('enableTablePath', DataMode.TABLE, 'data.general.tablePath');
+		//dataModeBox.createDisableTarget('disableInputColumns', DataMode.TABLE, 'data.input');
+		//dataModeBox.createDisableTarget('disableOutputColumns', DataMode.TABLE, 'data.output');
+	}
+
+	__createInputSection(page) {		
+		
+		var section = page.append('treez-section')
+			.label('Input columns');	
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-model-path')
+			.label('Label')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.inputLabel);
+		
+		sectionContent.append('treez-model-path')
+			.label('Base')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.inputBase);
+		
+		sectionContent.append('treez-model-path')
+			.label('Left')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.inputLeft);
+		
+		sectionContent.append('treez-model-path')
+			.label('Right')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.inputRight);
+		
+		sectionContent.append('treez-model-path')
+			.label('Unit')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.inputRight);	
 
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection xySelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	__createOutputSection(page) {			
+		
+		var section = page.append('treez-section')
+			.label('Output columns');	
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-model-path')
+			.label('Base')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.outputBase);
+		
+		sectionContent.append('treez-model-path')
+			.label('Left')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.outputLeft);
+		
+		sectionContent.append('treez-model-path')
+			.label('Right')
+			.nodeAttr('atomClasses',[Column])
+			.bindValue(this,()=>this.outputRight);		
 
-		tornado = (Tornado) parent;
-		Consumer dataChangedConsumer = () -> {
-			tornado.updatePlotWithD3(d3);
-		};
-		inputLabel.addModificationConsumer("replot", dataChangedConsumer);
-		inputBase.addModificationConsumer("replot", dataChangedConsumer);
-		inputLeft.addModificationConsumer("replot", dataChangedConsumer);
-		inputRight.addModificationConsumer("replot", dataChangedConsumer);
-		inputUnit.addModificationConsumer("replot", dataChangedConsumer);
-		inputAxis.addModificationConsumer("replot", dataChangedConsumer);
-
-		outputBase.addModificationConsumer("replot", dataChangedConsumer);
-		outputLeft.addModificationConsumer("replot", dataChangedConsumer);
-		outputRight.addModificationConsumer("replot", dataChangedConsumer);
-		outputUnit.addModificationConsumer("replot", dataChangedConsumer);
-		outputAxis.addModificationConsumer("replot", dataChangedConsumer);
-
-		// legendText
-		leftLegendText.addModificationConsumer("replot", dataChangedConsumer);
-		rightLegendText.addModificationConsumer("replot", dataChangedConsumer);
-		sortingMode.addModificationConsumer("replot", dataChangedConsumer);
-		barFillRatio.addModificationConsumer("replot", dataChangedConsumer);
-
-		return xySelection;
 	}
 
-	public String getLeftBarDataString() {
-		List<Object> inputLabelData = getInputLabelData();
-		List<Object> inputLeftData = getInputLeftData();
-		List<Object> outputBaseData = getOutputBaseData();
-		List<Object> outputLeftData = getOutputLeftData();
-		int dataSize = outputBaseData.size();
+	plot(dTreez, parentSelection, rectSelection, tornado) {
+		
+		var replotListener = () => tornado.updatePlot(dTreez);
+		
+		this.addListener(()=>this.inputLabel, replotListener);
+		this.addListener(()=>this.inputBase, replotListener);
+		this.addListener(()=>this.inputLeft, replotListener);
+		this.addListener(()=>this.inputUnit, replotListener);
+		this.addListener(()=>this.inputAxis, replotListener);
+		
+		this.addListener(()=>this.outputBase, replotListener);
+		this.addListener(()=>this.outputLeft, replotListener);
+		this.addListener(()=>this.outputRight, replotListener);
+		this.addListener(()=>this.outputUnit, replotListener);
+		this.addListener(()=>this.outputAxis, replotListener);
+		
+		this.addListener(()=>this.leftLegendText, replotListener);
+		this.addListener(()=>this.rightLegendText, replotListener);
+		this.addListener(()=>this.sortingMode, replotListener);
+		this.addListener(()=>this.barFillRatio, replotListener);		
 
-		boolean inputAxisIsOrdinal = getInputAxis().isOrdinal();
+		return parentSelection;
+	}
 
-		List<String> rowList = new java.util.ArrayList<>();
-		for (int rowIndex = 0; rowIndex < dataSize; rowIndex++) {
+	get leftBarDataString() {
+		var inputLabelData = this.inputLabelData;
+		var inputLeftData = this.inputLeftData;
+		var outputBaseData = this.outputBaseData;
+		var outputLeftData = this.outputLeftData;
+		
+		var dataSize = outputBaseData.length;
 
-			String inputLeftString = inputLeftData.get(rowIndex).toString();
-			Double inputLeftValue = Double.parseDouble(inputLeftString);
+		var inputAxisIsOrdinal = this.inputAxis.isOrdinal;
 
-			String outputBaseString = outputBaseData.get(rowIndex).toString();
-			Double outputBaseValue = Double.parseDouble(outputBaseString);
+		var rowList = [];
+		for (var rowIndex = 0; rowIndex < dataSize; rowIndex++) {
 
-			String outputLeftString = outputLeftData.get(rowIndex).toString();
-			Double outputLeftValue = Double.parseDouble(outputLeftString);
+			
+			var inputLeftValue = parseFloat('' + inputLeftData[rowIndex]);			
+			var outputBaseValue = parseFloat('' +outputBaseData[rowIndex]);			
+			var outputLeftValue = parseFloat('' + outputLeftData[rowIndex] );
 
-			Double difference = outputBaseValue - outputLeftValue;
+			var difference = outputBaseValue - outputLeftValue;
 
-			Double position = outputLeftValue;
-			Double size = difference;
+			var position = outputLeftValue;
+			var size = difference;
 			if (difference < 0) {
 				position = outputBaseValue;
 				size = -difference;
 			}
 
-			String inputValue;
+			var inputValue;
 			if (inputAxisIsOrdinal) {
-				inputValue = "'" + inputLabelData.get(rowIndex).toString() + "'";
+				inputValue = '"' + inputLabelData[rowIndex] + '"';
 			} else {
-				inputValue = "" + (rowIndex + 1);
+				inputValue = '' + (rowIndex + 1);
 			}
 
-			String rowString = "{key:" + inputValue + //
-					", input:" + inputLeftValue + //
-					", value:" + position + //
-					", size:" + size + //
-
-					"}";
-			rowList.add(rowString);
+			var rowString = '{key:' + inputValue + //
+					', input:' + inputLeftValue + //
+					', value:' + position + //
+					', size:' + size + //
+					'}';
+			rowList.push(rowString);
 		}
-		String dataString = "[" + String.join(",", rowList) + "]";
-		return dataString;
+		
+		return '[' + rowList.join(',') + ']';		
 	}
 
-	public String getRightBarDataString() {
-		List<Object> inputLabelData = getInputLabelData();
-		List<Object> inputRightData = getInputLeftData();
-		List<Object> outputBaseData = getOutputBaseData();
-		List<Object> outputRightData = getOutputRightData();
-		int dataSize = outputBaseData.size();
+	get rightBarDataString() {
+		var inputLabelData = this.inputLabelData;
+		var inputRightData = this.inputLeftData;
+		var outputBaseData = this.outputBaseData;
+		var outputRightData = this.outputRightData;
+		
+		var dataSize = outputBaseData.length;
 
-		boolean inputAxisIsOrdinal = getInputAxis().isOrdinal();
+		var inputAxisIsOrdinal = this.inputAxis.isOrdinal;
 
-		List<String> rowList = new java.util.ArrayList<>();
-		for (int rowIndex = 0; rowIndex < dataSize; rowIndex++) {
+		var rowList = [];
+		for (var rowIndex = 0; rowIndex < dataSize; rowIndex++) {
 
-			String inputRightString = inputRightData.get(rowIndex).toString();
-			Double inputRightValue = Double.parseDouble(inputRightString);
+			
 
-			String outputBaseString = outputBaseData.get(rowIndex).toString();
-			Double outputBaseValue = Double.parseDouble(outputBaseString);
+			var inputRightValue = parseFloat('' + inputRightData[rowIndex]);
+			var outputBaseValue = parseFloat('' + outputBaseData[rowIndex]);
+			var outputRightValue = parseFloat('' + outputRightData[rowIndex]);			
 
-			String outputRightString = outputRightData.get(rowIndex).toString();
-			Double outputRightValue = Double.parseDouble(outputRightString);
-
-			Double difference = outputRightValue - outputBaseValue;
-			Double position = outputBaseValue;
-			Double size = difference;
+			var difference = outputRightValue - outputBaseValue;
+			var position = outputBaseValue;
+			var size = difference;
 			if (difference < 0) {
 				position = outputRightValue;
 				size = -difference;
 			}
 
-			String key;
+			var key;
 			if (inputAxisIsOrdinal) {
-				key = "'" + inputLabelData.get(rowIndex).toString() + "'";
+				key = '"' + inputLabelData[rowIndex] + '"';
 			} else {
-				key = "" + (rowIndex + 1);
+				key = '' + (rowIndex + 1);
 			}
 
-			String rowString = "{key:" + key + //
-					", input:" + inputRightValue + //
-					",value:" + position + //
-					",size:" + size + //
-					"}";
-			rowList.add(rowString);
+			var rowString = '{key:' + key + //
+					', input:' + inputRightValue + //
+					',value:' + position + //
+					',size:' + size + //
+					'}';
+			rowList.push(rowString);
 		}
-		String dataString = "[" + String.join(",", rowList) + "]";
-		return dataString;
+		return '[' + rowList.join(',') + ']';
+		
 	}
 
-	public List<Double> getAllBarData() {
+	get allBarData() {
 
-		List<Object> rangeBaseData = getOutputBaseData();
-		List<Object> rangeLeftData = getOutputLeftData();
-		List<Object> rangeRightData = getOutputRightData();
-		int dataSize = rangeBaseData.size();
-		List<Double> allData = new java.util.ArrayList<>();
-		for (int rowIndex = 0; rowIndex < dataSize; rowIndex++) {
+		var rangeBaseData = this.outputBaseData;
+		var rangeLeftData = this.outputLeftData;
+		var rangeRightData = this.outputRightData;
+		
+		var dataSize = rangeBaseData.length;
+		
+		var allData = [];
+		for (var rowIndex = 0; rowIndex < dataSize; rowIndex++) {
 
-			Double base = parseDouble(rangeBaseData.get(rowIndex));
+			var base = parseFloat(rangeBaseData[rowIndex]);
 			if (base != null) {
-				allData.add(base);
+				allData.push(base);
 			}
 
-			Double left = parseDouble(rangeLeftData.get(rowIndex));
+			var left = parseFloat(rangeLeftData[rowIndex]);
 			if (left != null) {
-				allData.add(left);
+				allData.push(left);
 			}
 
-			Double right = parseDouble(rangeRightData.get(rowIndex));
+			var right = parseFloat(rangeRightData[rowIndex]);
 			if (right != null) {
-				allData.add(right);
+				allData.push(right);
 			}
-
 		}
 
 		return allData;
 	}
+	
 
-	private static Double parseDouble(Object object) {
-		try {
-			return Double.parseDouble(object.toString());
-		} catch (NumberFormatException exception) {
+	get inputLabelData() {		
+		return this.__getValuesWithColumnPath(this.inputLabel);
+	}
+
+	get inputBaseData() {
+		return this.__getValuesWithColumnPath(this.inputBase);
+	}
+
+	get inputLeftData() {
+		return this.__getValuesWithColumnPath(this.inputLeft);
+	}
+
+	get inputRightData() {
+		return this.__getValuesWithColumnPath(this.inputRight);
+	}
+
+	get outputBaseData() {
+		return this.__getValuesWithColumnPath(this.outputBase);
+	}
+
+	get outputLeftData() {
+		return this.__getValuesWithColumnPath(this.outputLeft);
+	}
+
+	get outputRightData() {
+		return this.__getValuesWithColumnPath(this.outputRight);
+	}
+
+	__getValuesWithColumnPath(dataPath) {
+		if (!dataPath) {
+			return [];
+		}
+		var dataColumn = this.getChildFromRoot(dataPath);
+		return dataColumn.values;		
+	}	
+
+	get inputScale() {
+		return this.inputAxisAtom
+			?this.inputAxis.scale
+			:null;		
+	}
+
+	get outputScale() {
+		return this.outputAxisAtom
+		?this.outputAxis.scale
+		:null;
+	}
+
+	get dataSize() {
+		return this.inputBaseData.length;		
+	}
+
+	get inputAxisAtom() {		
+		if (!this.inputAxis) {
 			return null;
 		}
+		return this.__tornado.getChildFromRoot(this.inputAxis);		
 	}
 
-	public List<Object> getInputLabelData() {
-		String dataPath = inputLabel.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getInputBaseData() {
-		String dataPath = inputBase.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getInputLeftData() {
-		String dataPath = inputLeft.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getInputRightData() {
-		String dataPath = inputRight.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getOutputBaseData() {
-		String dataPath = outputBase.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getOutputLeftData() {
-		String dataPath = outputLeft.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getOutputRightData() {
-		String dataPath = outputRight.get();
-		return getValuesWithColumnPath(dataPath);
-	}
-
-	private List<Object> getValuesWithColumnPath(String dataPath) {
-		if (dataPath.isEmpty()) {
-			return new ArrayList<>();
-		}
-		org.treez.data.column.Column dataColumn = tornado.getChildFromRoot(dataPath);
-		List<Object> dataValues = dataColumn.getValues();
-		return dataValues;
-	}
-
-	//#end region
-
-	//#region ACCESSORS
-
-	public Scale<?> getInputScale() {
-		Axis inputAxisAtom = getInputAxis();
-		if (inputAxisAtom == null) {
+	get outputAxisAtom() {		
+		if (!this.outputAxis) {
 			return null;
 		}
-		Scale<?> scale = inputAxisAtom.getScale();
-		return scale;
-	}
-
-	public Scale<?> getOutputScale() {
-		Axis outputAxisAtom = getOutputAxis();
-		if (outputAxisAtom == null) {
-			return null;
-		}
-		Scale<?> scale = outputAxisAtom.getScale();
-		return scale;
-	}
-
-	public int getDataSize() {
-		List<Object> domainBaseData = getInputBaseData();
-		return domainBaseData.size();
-	}
-
-	public Axis getInputAxis() {
-		String xAxisPath = inputAxis.get();
-		if (xAxisPath == null || xAxisPath.isEmpty()) {
-			return null;
-		}
-		Axis xAxisAtom = tornado.getChildFromRoot(xAxisPath);
-		return xAxisAtom;
-	}
-
-	public Axis getOutputAxis() {
-		String yAxisPath = outputAxis.get();
-		if (yAxisPath == null || yAxisPath.isEmpty()) {
-			return null;
-		}
-		Axis yAxisAtom = tornado.getChildFromRoot(yAxisPath);
-		return yAxisAtom;
-	}
-
-	//#end region
+		return this.__tornado.getChildFromRoot(this.outputAxis);		
+	}	
 
 }

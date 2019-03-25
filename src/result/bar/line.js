@@ -1,85 +1,75 @@
-package org.treez.results.atom.bar;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Line implements GraphicsPropertiesPageFactory {
-
-	//#region ATTRIBUTES
-
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<String> width = new Wrap<>();
-
-	public final Attribute<String> style = new Wrap<>();
-
-	public final Attribute<Double> transparency = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page linePage = root.createPage("line", "   Line    ");
-
-		Section line = linePage.createSection("line");
-
-		line.createColorChooser(color, this, "black");
-
-		line.createTextField(width, this, "3");
-
-		line.createLineStyle(style, this, "solid");
-
-		line.createDoubleVariableField(transparency, this, 0.0);
-
-		line.createCheckBox(hide, this);
+export default class Line extends GraphicsAtom {
+	
+	constructor(){
+		this.color = Color.black;
+		this.width = '3';
+		this.style = LineStyle.solid;
+		this.transparency = '0';
+		this.isHiden = false;	
 	}
 
-	@Override
-	public Selection plotWithD3(D3 d3, Selection barSelection, Selection rectSelection, AbstractGraphicsAtom parent) {
+	createPage(root) {
 
-		Selection rectsSelection = barSelection //
+		var page = root.append('treez-tab')
+			.label('Line');
+	
+		var section = page.append('treez-section')
+			.label('Line');	
+		
+		var sectionContent = section.append('div');
+
+		sectionContent.append('treez-color')
+			.label('Color mode')	
+			.bindValue(this, ()=>this.color);	
+		
+		sectionContent.append('treez-text-field')
+			.label('Width')	
+			.bindValue(this, ()=>this.width);	
+		
+		sectionContent.append('treez-line-style')
+			.label('Style')	
+			.bindValue(this, ()=>this.style);
+		
+		sectionContent.append('treez-text-field')
+			.label('Transparency')	
+			.bindValue(this, ()=>this.transparency);
+		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.isHideen);
+	}
+
+	plot(dTreez, barSelection, rectSelection, bar) {
+
+		var rectsSelection = barSelection //
 				.select(".bar-rects") //
 				.selectAll("rect");
 
-		AbstractGraphicsAtom.bindStringAttribute(rectsSelection, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(rectsSelection, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineStyle(rectsSelection, style);
-		AbstractGraphicsAtom.bindLineTransparency(rectsSelection, transparency);
-		AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(rectsSelection, hide, transparency);
+		this.bindString(()=>this.color,rectsSelection, 'stroke');
+		this.bindString(()=>this.width,rectsSelection, 'stroke-width');		
+		this.bindLineStyle(()=>this.style, rectsSelection);
+		this.bindLineTransparency(()=>this.transparency, rectsSelection)
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, rectsSelection)		
 
 		return barSelection;
 	}
 
-	public Selection formatLegendSymbolLine(Selection symbolSelection, Refreshable refreshable) {
+	formatLegendSymbolLine(symbolSelection, legend) {
+		
+		this.bindString(()=>this.color,symbolSelection, 'stroke');
+		this.bindString(()=>this.width,symbolSelection, 'stroke-width');		
+		this.bindLineStyle(()=>this.style, symbolSelection);
+		this.bindLineTransparency(()=>this.transparency, symbolSelection)
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, symbolSelection)	
 
-		AbstractGraphicsAtom.bindStringAttribute(symbolSelection, "stroke", color);
-		AbstractGraphicsAtom.bindStringAttribute(symbolSelection, "stroke-width", width);
-		AbstractGraphicsAtom.bindLineStyle(symbolSelection, style);
-		AbstractGraphicsAtom.bindLineTransparency(symbolSelection, transparency);
-		AbstractGraphicsAtom.bindLineTransparencyToBooleanAttribute(symbolSelection, hide, transparency);
-
-		Consumer replotLegend = () -> refreshable.refresh();
-		width.addModificationConsumer("lineWidthLegendSymbol", replotLegend);
+		var replotLegend = () => legend.refresh();
+		this.addListener(()=>this.width, replotLegend);		
 
 		return symbolSelection;
 	}
 
-	//#end region
+	
 
 }

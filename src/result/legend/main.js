@@ -1,85 +1,49 @@
-package org.treez.results.atom.legend;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import java.util.ArrayList;
-import java.util.List;
+export default class Main extends GraphicsAtom {
+	
+	constructor(legend){
+		super();
 
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.atom.graphics.length.Length;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.behaviour.Drag;
-import org.treez.javafxd3.d3.coords.Coords;
-import org.treez.javafxd3.d3.core.Selection;
-import org.treez.javafxd3.d3.core.Transform;
-import org.treez.javafxd3.d3.functions.DragFunction;
-import org.treez.results.atom.graph.Graph;
-
-import javafx.geometry.BoundingBox;
-
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refreshable {
-
-	//#region ATTRIBUTES
-
-	private static final int MARGIN_AROUND_LEGEND_IN_PX = 20;
-
-	private static final int HORIZONTAL_SPACING_IN_PX = 10;
-
-	private static final int VERTICAL_SPACING_IN_PX = 5;
-
-	public final Attribute<PositionReference> positionReference = new Wrap<>();
-
-	public final Attribute<HorizontalPosition> horizontalPosition = new Wrap<>();
-
-	public final Attribute<VerticalPosition> verticalPosition = new Wrap<>();
-
-	public final Attribute<Integer> manualHorizontalPosition = new Wrap<>();
-
-	public final Attribute<Integer> manualVerticalPosition = new Wrap<>();
-
-	public final Attribute<Integer> marginSize = new Wrap<>();
-
-	public final Attribute<Integer> numberOfColumns = new Wrap<>();
-
-	public final Attribute<Integer> keyLength = new Wrap<>();
-
-	public final Attribute<Boolean> swapSymbol = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	private D3 d3;
-
-	private Legend legend;
-
-	private Graph graph;
-
-	private Selection legendSelection;
-
-	private Selection contentSelection;
-
-	private Selection rectSelection;
-
-	private EnumComboBox<PositionReference> positionReferenceBox;
-
-	private EnumComboBox<HorizontalPosition> horizontalPositionBox;
-
-	private EnumComboBox<VerticalPosition> verticalPositionBox;
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
+		this.__marginAroundLegendInPx = 20;
+		this.__horizontalSpacingInPx = 10;
+		this.__verticalSpacingInPx = 5;
+	
+		this.positionReference = PositionReference.graph;	
+		this.horizontalPosition = HorizontalPosition.right;	
+		this.verticalPosition = VerticalPosition.top;
+	
+		this.isManualHorizontalPosition = false;	
+		this.isManualVerticalPosition = false;
+	
+		this.marginSize = this.__horizontalSpacingInPx;
+	
+		this.numberOfColumns = '1';
+	
+		this.keyLength = '25';
+	
+		this.isSwappingSymbol = false;
+	
+		this.isHidden = false;
+	
+		this.__dTreez = undefined;
+	
+		this.__legend = legend;
+	
+		this.__graph = legend.parent;
+	
+		this.__legendSelection = undefined;
+	
+		this.__contentSelection = undefined;
+	
+		this.__rectSelection = unefined;
+		
+		this.__positionReferenceSelection = undefined;
+		this.__horizontalPositionSeleciton = undefined;
+		this.__verticalPositionSelection = undefined;
+	}
+	
+	createPage(root) {
 
 		Page mainPage = root.createPage("main");
 
@@ -116,49 +80,48 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 
 	}
 
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection legendSelection,
-			Selection rectSelection,
-			AbstractGraphicsAtom parent) {
+	plot(dTreez,  legendSelection, rectSelection, legend) {
 
-		this.d3 = d3;
-		this.legendSelection = legendSelection;
-		this.rectSelection = rectSelection;
-		this.legend = (Legend) parent;
-		this.graph = (Graph) legend.getParentAtom();
+		this.__dTreez = dTreez;
+		this.__legendSelection = legendSelection;
+		this.__rectSelection = rectSelection;
+		this.__legend = legend;
+		this.__graph = legend.parent;
 
-		Drag drag = d3.behavior().drag().onDrag(this);
-		legendSelection.call(drag);
+		//TODO
+		//Drag drag = d3.behavior().drag().onDrag(this);
+		//legendSelection.call(drag);
 
-		replotLegendContentAndUpdateRect();
+		this.__replotLegendContentAndUpdateRect();
 
-		listenForChanges(d3);
+		this.__listenForChanges(dTreez);
 
 		return legendSelection;
 	}
+	
+	refresh() {
+		this.__replotLegendContentAndUpdateRect();
+	}
+	
 
-	private void replotLegendContentAndUpdateRect() {
+	__replotLegendContentAndUpdateRect() {
+		
 		legendSelection //
 				.select(".legend-content") //
 				.remove();
 
-		contentSelection = legendSelection //
+		var contentSelection = legendSelection //
 				.append("g") //
 				.classed("legend-content", true);
 
-		createLegendEntries();
-		setRectSize();
-		setLegendPosition();
+		this.__createLegendEntries();
+		this.__updateRectSize();
+		this.__updateLegendPosition();
 	}
 
-	@Override
-	public void refresh() {
-		replotLegendContentAndUpdateRect();
-	}
+	
 
-	private void setRectSize() {
+	__updateRectSize() {
 		BoundingBox bounds = contentSelection.node().getBBox();
 		Integer margin = marginSize.get();
 		if (margin == null) {
@@ -182,7 +145,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 
 	}
 
-	private void setLegendPosition() {
+	__updateLegendPosition() {
 		PositionReference positionReferenceEnum = positionReferenceBox.get();
 		HorizontalPosition horizontalPositionEnum = horizontalPositionBox.get();
 		VerticalPosition verticalPositionEnum = verticalPositionBox.get();
@@ -202,7 +165,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		}
 	}
 
-	private void listenForChanges(D3 d3) {
+	__listenForChanges(dTreez) {
 
 		AbstractGraphicsAtom.bindDisplayToBooleanAttribute("hideGraph", legendSelection, hide);
 
@@ -226,13 +189,13 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		swapSymbol.addModificationConsumer("replotGraph", replotLegend);
 	}
 
-	private void createLegendEntries() {
+	__createLegendEntries() {
 		List<LegendContributor> legendContributors = getLegendContributors();
 		List<Selection> legendEntrySelections = createLegendEntries(legendContributors);
 		setLegendEntryPositions(legendEntrySelections);
 	}
 
-	private List<Selection> createLegendEntries(List<LegendContributor> legendContributors) {
+	__createLegendEntries(List<LegendContributor> legendContributors) {
 		removeOldLegendEntries();
 		List<Selection> legendEntrySelections = new ArrayList<>();
 		for (LegendContributor contributor : legendContributors) {
@@ -242,13 +205,13 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return legendEntrySelections;
 	}
 
-	private void removeOldLegendEntries() {
+	__removeOldLegendEntries() {
 		contentSelection //
 				.selectAll(".legend-entry") //
 				.remove();
 	}
 
-	private Selection createLegendEntry(LegendContributor contributor) {
+	__createLegendEntry(contributor) {
 
 		int symbolLengthInPx = keyLength.get();
 
@@ -269,7 +232,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return entrySelection;
 	}
 
-	private Selection createLegendLabel(Selection entrySelection, LegendContributor contributor) {
+	__createLegendLabel(Selection entrySelection, LegendContributor contributor) {
 		String legendText = contributor.getLegendText();
 		Selection labelSelection = entrySelection //
 				.append("text") //
@@ -282,7 +245,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return labelSelection;
 	}
 
-	private static void positionSymbolBeforeLabel(Selection symbolSelection, Selection labelSelection) {
+	__positionSymbolBeforeLabel(Selection symbolSelection, Selection labelSelection) {
 
 		BoundingBox symbolBounds = symbolSelection.node().getBBox();
 		BoundingBox labelBounds = labelSelection.node().getBBox();
@@ -305,7 +268,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		labelSelection.attr("transform", "translate(" + labelX + "," + labelY + ")");
 	}
 
-	private static void positionLabelBeforeSymbol(Selection symbolSelection, Selection labelSelection) {
+	__positionLabelBeforeSymbol(Selection symbolSelection, Selection labelSelection) {
 
 		BoundingBox symbolBounds = symbolSelection.node().getBBox();
 		BoundingBox labelBounds = labelSelection.node().getBBox();
@@ -328,7 +291,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		symbolSelection.attr("transform", "translate(" + symbolX + "," + symbolY + ")");
 	}
 
-	private void setLegendEntryPositions(List<Selection> legendEntrySelections) {
+	__setLegendEntryPositions(List<Selection> legendEntrySelections) {
 		int numberOfLegendEntries = legendEntrySelections.size();
 		int numOfColumns = numberOfColumns.get();
 		int numberOfEntriesPerColumn = numberOfLegendEntries / numOfColumns;
@@ -365,7 +328,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		}
 	}
 
-	private static double[] getColumnWidths(
+	__getColumnWidths(
 			List<Selection> entrySelections,
 			int numberOfColumns,
 			int numberOfEntriesPerColumn) {
@@ -394,7 +357,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return columnWidths;
 	}
 
-	private static double getMaxEntryHeight(List<Selection> legendEntrySelections) {
+	__getMaxEntryHeight(List<Selection> legendEntrySelections) {
 		double maxHeight = 0;
 		for (Selection legendEntry : legendEntrySelections) {
 			BoundingBox entryBounds = legendEntry.node().getBBox();
@@ -406,7 +369,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return maxHeight;
 	}
 
-	private List<LegendContributor> getLegendContributors() {
+	get __legendContributors() {
 		List<LegendContributor> legendContributors = new ArrayList<>();
 		List<AbstractAtom<?>> graphChildren = graph.getChildAtoms();
 		for (AbstractAtom<?> graphChild : graphChildren) {
@@ -419,7 +382,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return legendContributors;
 	}
 
-	private void convertManualPositions() {
+	__convertManualPositions() {
 		int x = manualHorizontalPosition.get();
 		int y = manualVerticalPosition.get();
 
@@ -442,12 +405,12 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		}
 	}
 
-	private void applyManualHorizontalPosition(PositionReference positionReference) {
+	__applyManualHorizontalPosition(PositionReference positionReference) {
 		int x = manualHorizontalPosition.get();
 		setXPosition(positionReference, x);
 	}
 
-	private void applyAutomaticHorizontalPosition(
+	__applyAutomaticHorizontalPosition(
 			HorizontalPosition horizontalPosition,
 			PositionReference positionReference) {
 		int x;
@@ -470,21 +433,21 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		setXPosition(positionReference, x);
 	}
 
-	private int getHorizontalPositionForCentreAlignment(PositionReference positionReference) {
+	__getHorizontalPositionForCentreAlignment(PositionReference positionReference) {
 		int xRightBorder = getRightBorderX(positionReference);
 		int rectWidth = Length.toPx(rectSelection.attr("width")).intValue();
 		int x = xRightBorder / 2 - rectWidth / 2;
 		return x;
 	}
 
-	private int getHorizontalPositionForRightAlignment(PositionReference positionReference) {
+	__getHorizontalPositionForRightAlignment(PositionReference positionReference) {
 		int xRightBorder = getRightBorderX(positionReference);
 		int rectWidth = Length.toPx(rectSelection.attr("width")).intValue();
 		int x = xRightBorder - MARGIN_AROUND_LEGEND_IN_PX - rectWidth;
 		return x;
 	}
 
-	private int getRightBorderX(PositionReference positionReference) {
+	__getRightBorderX(PositionReference positionReference) {
 		int xRightBorder;
 		boolean isPageReference = positionReference.isPage();
 		if (isPageReference) {
@@ -496,7 +459,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return xRightBorder;
 	}
 
-	private void setXPosition(PositionReference positionReference, int x) {
+	__setXPosition(PositionReference positionReference, int x) {
 		Transform oldTransform = d3.transform(legendSelection.attr("transform"));
 		Double oldY = oldTransform.translate().get(1, Double.class);
 
@@ -510,12 +473,12 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		}
 	}
 
-	private void applyManualVerticalPosition(PositionReference positionReference) {
+	__applyManualVerticalPosition(PositionReference positionReference) {
 		int y = manualVerticalPosition.get();
 		setYPosition(positionReference, y);
 	}
 
-	private void applyAutomaticVerticalPosition(
+	__applyAutomaticVerticalPosition(
 			VerticalPosition verticalPosition,
 			PositionReference positionReference) {
 		int y;
@@ -538,21 +501,21 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		setYPosition(positionReference, y);
 	}
 
-	private int getVerticalPositionForBottomAlignment(PositionReference positionReference) {
+	__getVerticalPositionForBottomAlignment(PositionReference positionReference) {
 		int yBottomBorder = getBottomBorderY(positionReference);
 		int rectHeight = Length.toPx(rectSelection.attr("height")).intValue();
 		int y = yBottomBorder - MARGIN_AROUND_LEGEND_IN_PX - rectHeight;
 		return y;
 	}
 
-	private int getVerticalPositionForCentreAlignment(PositionReference positionReference) {
+	__getVerticalPositionForCentreAlignment(PositionReference positionReference) {
 		int yBottomBorder = getBottomBorderY(positionReference);
 		int rectHeight = Length.toPx(rectSelection.attr("height")).intValue();
 		int y = yBottomBorder / 2 - rectHeight / 2;
 		return y;
 	}
 
-	private int getBottomBorderY(PositionReference positionReference) {
+	__getBottomBorderY(PositionReference positionReference) {
 		int yBottomBorder;
 		boolean isPageReference = positionReference.isPage();
 		if (isPageReference) {
@@ -564,7 +527,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		return yBottomBorder;
 	}
 
-	private void setYPosition(PositionReference positionReference, int y) {
+	__setYPosition(PositionReference positionReference, int y) {
 
 		Transform oldTransform = d3.transform(legendSelection.attr("transform"));
 		Double oldX = oldTransform.translate().get(0, Double.class);
@@ -579,8 +542,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		}
 	}
 
-	@Override
-	public synchronized void handleDrag(final Object context, final Object d, final int index) {
+	handleDrag(final Object context, final Object d, final int index) {
 
 		Transform oldTransform = d3.transform(legendSelection.attr("transform"));
 		Double oldX = oldTransform.translate().get(0, Double.class);
@@ -605,8 +567,16 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 				.attr("transform", "translate(" + x + "," + y + ")");
 
 	}
+	
+	handleDragStart(final Object context, final Object d, final int index) {
+		//not used here
+	}
 
-	private void setNewManualXPosition(Double x) {
+	handleDragEnd(final Object context, final Object d, final int index) {
+		//not used here
+	}
+
+	__setNewManualXPosition(Double x) {
 		horizontalPosition.set(HorizontalPosition.MANUAL);
 		Integer intValue = x.intValue();
 
@@ -619,7 +589,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		manualHorizontalPosition.set(intValue);
 	}
 
-	private void setNewManualYPosition(Double y) {
+	__setNewManualYPosition(Double y) {
 		verticalPosition.set(VerticalPosition.MANUAL);
 		Integer intValue = y.intValue();
 
@@ -632,16 +602,7 @@ public class Main implements GraphicsPropertiesPageFactory, DragFunction, Refres
 		manualVerticalPosition.set(intValue);
 	}
 
-	@Override
-	public void handleDragStart(final Object context, final Object d, final int index) {
-		//not used here
-	}
+	
 
-	@Override
-	public void handleDragEnd(final Object context, final Object d, final int index) {
-		//not used here
-	}
-
-	//#end region
 
 }

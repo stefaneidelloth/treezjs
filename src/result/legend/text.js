@@ -1,102 +1,85 @@
-package org.treez.results.atom.legend;
+import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-import org.treez.core.adaptable.Refreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.graphics.AbstractGraphicsAtom;
-import org.treez.core.atom.graphics.GraphicsPropertiesPageFactory;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Consumer;
-import org.treez.core.attribute.Wrap;
-import org.treez.javafxd3.d3.D3;
-import org.treez.javafxd3.d3.core.Selection;
+export default class Text extends GraphicsAtom {
+	
+	constructor(){
+		super();
 
-/**
- * Represents the label for an axis
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class Text implements GraphicsPropertiesPageFactory {
+		this.font = 'serif';
+		this.size = '14';
+		this. color = Color.black;
+		this.isItalic = false;
+		this.isBold = false;
+		this.hasUnderline = false;
+		this.isHidden = false;
+	}
+	
+	createPage(root) {
+		
+		var page = root.append('treez-tab')
+			.label('Text');
+	
+		var section = page.append('treez-section')
+			.label('Text');	
+	
+		var sectionContent = section.append('div');
 
-	//#region ATTRIBUTES
+		sectionContent.append('treez-font')
+			.label('Font')
+			.bindValue(this, ()=>this.font);
 
-	public final Attribute<String> font = new Wrap<>();
+		sectionContent.append('treez-text-field')
+			.label('Size')
+			.bindValue(this, ()=>this.size);
+		
+		sectionContent.append('treez-color')
+			.label('Color mode')	
+			.bindValue(this, ()=>this.color);	
 
-	public final Attribute<Integer> size = new Wrap<>();
+		sectionContent.append('treez-check-box')
+			.label('Italic')	
+			.bindValue(this, ()=>this.isItalic);
+		
+		sectionContent.append('treez-check-box')
+			.label('Bold')	
+			.bindValue(this, ()=>this.isBold);
+		
+		sectionContent.append('treez-check-box')
+			.label('Underline')	
+			.bindValue(this, ()=>this.hasUnderline);
 
-	public final Attribute<String> color = new Wrap<>();
-
-	public final Attribute<Boolean> italic = new Wrap<>();
-
-	public final Attribute<Boolean> bold = new Wrap<>();
-
-	public final Attribute<Boolean> underline = new Wrap<>();
-
-	public final Attribute<Boolean> hide = new Wrap<>();
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public void createPage(AttributeRoot root, AbstractAtom<?> parent) {
-
-		Page textPage = root.createPage("text");
-
-		Section text = textPage.createSection("text");
-
-		text.createFont(font, this);
-
-		final int defaultFontSize = 14;
-		text.createIntegerVariableField(size, this, defaultFontSize) //
-				.setLabel("Size");
-
-		text.createColorChooser(color, this, "black");
-
-		text.createCheckBox(italic, this);
-
-		text.createCheckBox(bold, this);
-
-		text.createCheckBox(underline, this);
-
-		text.createCheckBox(hide, this);
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')	
+			.bindValue(this, ()=>this.isHideen);
 
 	}
 
-	@Override
-	public Selection plotWithD3(
-			D3 d3,
-			Selection legendSelection,
-			Selection rectSelection,
-			AbstractGraphicsAtom parent) {
-
+	plot(dTreez, legendSelection, rectSelection, legend) {
 		//not needed here since text formatting is called while creating the legend entries
-
 		return legendSelection;
 	}
 
-	public Selection formatText(Selection textSelection, Refreshable main) {
+	formatText(textSelection, main) {
 
-		AbstractGraphicsAtom.bindStringAttribute(textSelection, "font-family", font);
-		AbstractGraphicsAtom.bindIntegerAttribute(textSelection, "font-size", size);
-		AbstractGraphicsAtom.bindStringAttribute(textSelection, "fill", color);
-		AbstractGraphicsAtom.bindFontItalicStyle(textSelection, italic);
-		AbstractGraphicsAtom.bindFontBoldStyle(textSelection, bold);
-		AbstractGraphicsAtom.bindFontUnderline(textSelection, underline);
-		AbstractGraphicsAtom.bindTransparencyToBooleanAttribute(textSelection, hide);
+		this.bindString(()=>this.font, textSelection, 'font-family');
+		this.bindString(()=>this.size, textSelection, 'font-size');
+		this.bindString(()=>this.color, textSelection, 'fill');
+				
+		this.bindFontItalicStyle(()=>this.isItalic, textSelection);
+		this.bindFontBoldStyle(()=>this.isBold, textSelection);
+		this.bindFontUnderline(()=>this.hasUnderline, textSelection);
+		this.bindBooleanToTransparency(()=>this.isHidden, ()=>this.transparency, textSelection);		
 
-		Consumer refreshLegendLayout = () -> main.refresh();
-		font.addModificationConsumer("font", refreshLegendLayout);
-		size.addModificationConsumer("font", refreshLegendLayout);
-		color.addModificationConsumer("font", refreshLegendLayout);
-		italic.addModificationConsumer("font", refreshLegendLayout);
-		bold.addModificationConsumer("font", refreshLegendLayout);
-		underline.addModificationConsumer("font", refreshLegendLayout);
+		var refreshLegend = () => main.refresh();
+		
+		this.addListener(()=>this.font, refreshLegend);
+		this.addListener(()=>this.size, refreshLegend);
+		this.addListener(()=>this.color, refreshLegend);
+		this.addListener(()=>this.isItalic, refreshLegend);
+		this.addListener(()=>this.isBold, refreshLegend);
+		this.addListener(()=>this.hasUnderline, refreshLegend);		
 
 		return textSelection;
-	}
-
-	//#end region
+	}	
 
 }
