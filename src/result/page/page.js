@@ -87,11 +87,13 @@ export default class Page extends GraphicsAtom {
 		var svg = dTreez.select('#treez-svg');
 						
 		this.bindString(()=>this.width, svg, 'width');
-		this.bindString(()=>this.height, svg, 'height');		
+		this.bindString(()=>this.height, svg, 'height');
+
+		treeView.provideGraphicsView().setFocus();		
 
 		this.plot(dTreez, svg, treeView);
 
-		treeView.provideGraphicsView().setFocus();
+		
 		
 	}
 
@@ -116,8 +118,8 @@ export default class Page extends GraphicsAtom {
 		this.bindString(()=>this.width, this.__rectSelection, 'width');
 		this.bindString(()=>this.height, this.__rectSelection, 'height');
 		
-		this.updatePlot(dTreez);	
-
+		this.updatePlot(dTreez);
+		
 		return page;
 	}
 

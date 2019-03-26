@@ -11,20 +11,20 @@ export default class DTreez {
 		this.event = new DTreezEvent(d3);
 	}
 
-	axisLeft(){
-		return this.__d3.axisLeft();
+	axisLeft(scale){
+		return this.__d3.axisLeft(scale);
 	}
 
-	axisRight(){
-		return this.__d3.axisRight();
+	axisRight(scale){
+		return this.__d3.axisRight(scale);
 	}
 
-	axisTop(){
-		return this.__d3.axisTopt();
+	axisTop(scale){
+		return this.__d3.axisTop(scale);
 	}
 
-	axisBottom(){
-		return this.__d3.axisBottom();
+	axisBottom(scale){
+		return this.__d3.axisBottom(scale);
 	}
 
 	format(formatter){

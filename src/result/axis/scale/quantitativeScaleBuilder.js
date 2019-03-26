@@ -1,23 +1,23 @@
 export default class QuantitativeScaleBuilder {
 
-	constructor(parent) {
-		this.__parent = parent;
+	constructor(axis) {
+		this.__axis = axis;
 		this.__scale = undefined;
 		this.__dataForAutoScale = [];
 	}
 
-	createScale(scaleFactory, graphWidthInPx, graphHeightInPx) {
+	createScale(dTreez, graphWidthInPx, graphHeightInPx) {
 
-		if (this.__parent.data.isLog) {
-			this.__scale = scaleFactory //
+		if (this.__axis.data.isLog) {
+			this.__scale = dTreez.scaleLog() //
 					.log() //
 					.clamp(true);
 
 		} else {
-			this.__scale = scaleFactory //					
+			this.__scale = dTreez.scaleLinear() //					
 					.clamp(true);
 		}
-
+		
 		this.__createRange(graphWidthInPx, graphHeightInPx);
 		this.__updateManualLimits();
 		this.__updateAutoLimits();
@@ -51,10 +51,10 @@ export default class QuantitativeScaleBuilder {
 	}
 
 	__createRange(graphWidthInPx, graphHeightInPx) {
-		if (this.__parent.data.isHorizontal) {
-			this.__scale.range(0.0, graphWidthInPx);
-		} else {
-			this.__scale.range(graphHeightInPx, 0.0);
+		if (this.__axis.data.isHorizontal) {			
+			this.__scale.range([0.0, graphWidthInPx]);
+		} else {		
+			this.__scale.range([graphHeightInPx, 0.0]);
 		}
 	}
 
@@ -63,13 +63,13 @@ export default class QuantitativeScaleBuilder {
 			return;
 		}
 
-		if (!this.__parent.data.autoMin) {
-			var minValue = this.__correctMinIfLogScaleAndZero(parseFloat(this.__parent.data.min));
+		if (!this.__axis.data.hasAutoMin) {
+			var minValue = this.__correctMinIfLogScaleAndZero(parseFloat(this.__axis.data.min));
 			this.__minScaleValue = minValue;
 		}
 
-		if (!this.__parent.data.autoMax) {
-			this.__maxScaleValue = parseFloat(this.__parent.data.max);
+		if (!this.__axis.data.hasAutoMax) {
+			this.__maxScaleValue = parseFloat(this.__axis.data.max);
 		}
 	}
 
@@ -78,13 +78,15 @@ export default class QuantitativeScaleBuilder {
 			return;
 		}
 
-		if (this.__parent.data.autoMin) {
+		if (this.__axis.data.hasAutoMin) {
 			this.__updateAutoMinValue();
 		}
 
-		if (this.__parent.data.autoMax) {
+		if (this.__axis.data.hasAutoMax) {
 			this.__updateAutoMaxValue();
 		}
+
+		
 	}	
 
 	__updateAutoMinValue() {		
@@ -96,7 +98,7 @@ export default class QuantitativeScaleBuilder {
 	}	
 
 	__correctMinIfLogScaleAndZero(value) {
-		if (!this.__parent.data.isLog) {
+		if (!this.__axis.data.isLog) {
 			return value;
 		} else {
 			if (!value) {
@@ -154,7 +156,7 @@ export default class QuantitativeScaleBuilder {
 			var autoMaxValue = maxValue + borderFactor * delta;
 			return autoMaxValue;
 		}
-		return 0.0;
+		return 1.0;
 	}
 	
 	set __minScaleValue(min) {
@@ -162,7 +164,7 @@ export default class QuantitativeScaleBuilder {
 		var oldMax = oldDomain.length> 1
 						?oldDomain[1]
 						:1;
-		this.__scale.domain(min, oldMax);
+		this.__scale.domain([min, oldMax]);
 	}
 
 	set __maxScaleValue(max) {
@@ -170,7 +172,7 @@ export default class QuantitativeScaleBuilder {
 		var oldMin = oldDomain.length>0
 			?oldDomain[0]
 			:0;
-		this.__scale.domain(oldMin, max);
+		this.__scale.domain([oldMin, max]);
 	}
 
 }

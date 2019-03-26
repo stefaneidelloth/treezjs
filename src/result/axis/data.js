@@ -46,6 +46,24 @@ export default class Data extends GraphicsAtom {
 		this.__createGeneralSection(page);
 		this.__createDomainSection(page);
 	}
+	
+	plot(dTreez, axisSelection, rectSelection, axis) {
+			
+		var graph = axis.parent;
+
+		this.__addUpdateListeners(dTreez, graph);
+
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, axisSelection)
+		
+		var graphWidthInPx = Length.toPx(graph.data.width);
+		var graphHeightInPx = Length.toPx(graph.data.height);
+
+		axis.createScale(graphWidthInPx, graphHeightInPx);
+		
+		this.__plotAxis(dTreez, axisSelection, axis, graphWidthInPx, graphHeightInPx);
+
+		return axisSelection;
+	}
 
 	__createGeneralSection(page) {
 		var section = page.append('treez-section')
@@ -66,8 +84,7 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-enum-combo-box')			
 			.label('Direction')
 			.nodeAttr('options', Direction)				
-			.bindValue(this,()=>this.direction);
-		
+			.bindValue(this,()=>this.direction);		
 
 		sectionContent.append('treez-check-box')
 			.label('Auto mirror')
@@ -75,8 +92,7 @@ export default class Data extends GraphicsAtom {
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
-			.bindValue(this, ()=>this.isHidden);
-		
+			.bindValue(this, ()=>this.isHidden);		
 	}
 	
 	
@@ -140,18 +156,16 @@ export default class Data extends GraphicsAtom {
 
 		sectionContent.append('treez-check-box')
 			.label('Log')			
-			.bindValue(this, ()=>this.isLog);
-
-		
+			.bindValue(this, ()=>this.isLog);		
 	}
 	
 	
 	
 	__axisModeChanged(){
 		if(this.mode.isOrdinal){
-			this.__domainSection.hide();
+			this.__domainSelection.hide();
 		} else {
-			this.__domainSeleciton.show();
+			this.__domainSelection.show();
 		}
 	}
 	
@@ -173,24 +187,7 @@ export default class Data extends GraphicsAtom {
 			this.__borderMaxSelection.show();
 			this.__maxSelection.show();
 		}		
-	}
-
-	plot(dTreez, axisSelection, rectSelection, axis) {
-		
-		var graph = axis.parent;
-
-		this.__addUpdateListeners(dTreez, graph);
-
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, axisSelection)
-		
-		var graphWidthInPx = Length.toPx(graph.data.width);
-		var graphHeightInPx = Length.toPx(graph.data.height);
-
-		axis.createScale(graphWidthInPx, graphHeightInPx);
-		this.__plotAxis(dTreez, axisSelection, axis, graphWidthInPx, graphHeightInPx);
-
-		return axisSelection;
-	}
+	}	
 
 	__addUpdateListeners(dTreez, graph) {
 		var replotGraph = () => graph.updatePlot(dTreez);
@@ -229,29 +226,27 @@ export default class Data extends GraphicsAtom {
 				.append('g') //
 				.attr('id', 'primary') //
 				.className('primary');
-
 		
 		switch (this.mode) {
 		case AxisMode.quantitative:
-			this.__primaryDTreezAxis = this.__createPrimaryQuantitativeD3Axis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
+			this.__primaryDTreezAxis = this.__createPrimaryQuantitativeDTreezAxis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
 			break;
 		case AxisMode.ordinal:
-			this.__primaryDTreezAxis = this.__createPrimaryOrdinalD3Axis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
+			this.__primaryDTreezAxis = this.__createPrimaryOrdinalDTreezAxis(dTreez, axis, primaryAxisSelection, graphHeightInPx);
 			break;
 		//case TIME:
 		//	throw new Error('not yet implemented');
 		default:
 			throw new Error('Not yet implemented');
 		}
-
-		//primaryAxisSelection.call(this.__primaryDTreezAxis);		
+		
+		primaryAxisSelection.call(this.__primaryDTreezAxis);
+				
 		return primaryAxisSelection;
 	}
 
-	__createPrimaryQuantitativeD3Axis(dTreez, axis, axisSelection, graphHeightInPx) {
-		var numberOfTicksAimedFor = parseInt(axis.majorTicks.number);
-		var tickFormat = axis.tickLabels.format;
-
+	__createPrimaryQuantitativeDTreezAxis(dTreez, axis, axisSelection, graphHeightInPx) {
+		
 		//set translation and tick padding
 		var tickPadding;
 		if (this.isHorizontal) {
@@ -259,28 +254,21 @@ export default class Data extends GraphicsAtom {
 			tickPadding = -6.0;
 		} else {
 			tickPadding = -12.0;
-		}
+		}		
 
-		//create tick format expression
-		//also see https://github.com/mbostock/d3/wiki/Formatting#d3_format
-		var formatFunction = this.__createFormatFunction(dTreez, tickFormat);
-
-		//create d3 axis
+		//create dTreez axis
 		var dTreezAxis = this.isHorizontal
-							?dTreez.axisBottom()
-							:dTreez.axisLeft();		
+							?dTreez.axisBottom(axis.scale)
+							:dTreez.axisLeft(axis.scale);		
 								
-		dTreezAxis.scale(axis.scale) //
-				.tickSizeOuter(0.0) //
-				.tickPadding(tickPadding);
-
-		if (this.isLog) {
-			//for log axis only the number of tick labels will be influenced, not the number of tick lines
-			dTreezAxis.ticksExpression(numberOfTicksAimedFor, formatFunctionExpression);
-		} else {
-			dTreezAxis.ticks(numberOfTicksAimedFor);
-			dTreezAxis.tickFormat(formatFunction);
-		}
+		dTreezAxis.tickSizeOuter(0) //
+				  .tickPadding(tickPadding);
+		
+		//create tick format expression
+		//also see https://github.com/mbostock/d3/wiki/Formatting#d3_format		
+		var formatFunction = this.__createFormatFunction(dTreez, axis.tickLabels.format);
+		
+		dTreezAxis.ticks(axis.majorTicks.numberOfTicksAimedFor, formatFunction);
 		return dTreezAxis;
 	}
 
@@ -298,8 +286,8 @@ export default class Data extends GraphicsAtom {
 
 			//use unicode characters to create exponent notation 10^0, 10^1, ...
 			return function(d){
-					var superscript = "\u2070\u00B9\u00B2\u00B3\u2074" // super script numbers in
-					                   + "\u2075\u2076\u2077\u2078\u2079"; // unicode from 0 to 9
+					var superscript = "\u2070\u00B9\u00B2\u00B3\u2074" // super script numbers in unicode from 0 to 9
+					                   + "\u2075\u2076\u2077\u2078\u2079";  
 					 function formatPower (d){
 					 	return (d + "\\").split("\\")
 					 		.map(function(c) { 
@@ -312,12 +300,12 @@ export default class Data extends GraphicsAtom {
 			};
 
 		} else {
-			dTreez.format(formatString);
+			return dTreez.format(formatString);
 		}
 		
 	}
 
-	__createPrimaryOrdinalD3Axis(dTreez, axis, axisSelection, graphHeightInPx) {
+	__createPrimaryOrdinalDTreezAxis(dTreez, axis, axisSelection, graphHeightInPx) {
 
 		//set translation and tick padding
 		var tickPadding;
@@ -327,15 +315,17 @@ export default class Data extends GraphicsAtom {
 		} else {
 			tickPadding = -12.0;
 		}
+		
+		var dTreezAxis = this.isHorizontal
+			?dTreez.axisBottom(axis.scale)
+			:dTreez.axisLeft(axis.scale);
 
-		//create d3 axis
-		return d3 //
-				.svg() //
-				.axis() //
-				.scale(axisAtom.scale) //
-				.outerTickSize(0.0) //
-				.ticks(axisAtom.numberOfValues)
-				.tickPadding(tickPadding);		
+		dTreezAxis
+				.tickSizeOuter(0) //
+				.ticks(axis.numberOfValues)
+				.tickPadding(tickPadding);
+		
+		return dTreezAxis;
 	}
 
 	
@@ -364,30 +354,39 @@ export default class Data extends GraphicsAtom {
 		//	throw new Error('Not yet implemented');
 		default:
 			throw new Error('Not yet implemented');
-		}
+		}			
 
-		
-
-		//TODO dTreezAxis.apply(secondaryAxisSelection);
+		secondaryAxisSelection.call(dTreezAxis);		
 		return secondaryAxisSelection;
 	}
 
 	__createSecondaryQuantitativeDTreezAxis(dTreez, axis) {
 		var numberOfTicksAimedFor = parseInt(axis.majorTicks.number);
-		return dTreez //
-				.axisRight() //
-				.scale(axis.scale) //
-				.tickSizeOuter(0.0) //
+		
+		
+		var dTreezAxis = this.isHorizontal
+							?dTreez.axisTop(axis.scale)
+							:dTreez.axisRight(axis.scale);	
+		
+		dTreezAxis //				
+				.tickSizeOuter(0) //
 				.ticks(numberOfTicksAimedFor) //for log axis only the tick labels will be influenced
 				.tickFormat(function (d) { return ''; }); //hides the tick labels		
+		
+		return dTreezAxis;
 	}
 
 	__createSecondaryOrdinalDTreezAxis(dTreez, axis) {
-		return dTreez //
-				.axisRight() //				
-				.scale(axis.scale) //
-				.outerTickSize(0.0) //
-				.tickFormat(function (d) { return ''; }); //hides the tick labels		
+		
+		var dTreezAxis = this.isHorizontal
+							?dTreez.axisTop(axis.scale)
+							:dTreez.axisRight(axis.scale);	
+
+		dTreezAxis //	
+				.tickSizeOuter(0) //
+				.tickFormat(function (d) { return ''; }); //hides the tick labels	
+		
+		return dTreezAxis;
 	}	
 
 	get isHorizontal() {

@@ -16,7 +16,7 @@ export default class MinorTicks extends GraphicsAtom {
 
 	createPage(root) {
 		
-		var page = root.append('treez-section')
+		var page = root.append('treez-tab')
 		.label('Minor ticks');
 	
 		var section = page.append('treez-section')
@@ -54,8 +54,8 @@ export default class MinorTicks extends GraphicsAtom {
 
 	}
 
-	plot(dTreez, axisSelection, rectSelection, parent) {
-		this.addListenerAndRun(()=>this.number, ()=>this.__replotMinorTicks(axisSelection, parent));		
+	plot(dTreez, axisSelection, rectSelection, axis) {
+		this.addListenerAndRun(()=>this.number, ()=>this.__replotMinorTicks(axisSelection, axis));		
 		return axisSelection;
 	}
 
@@ -64,39 +64,45 @@ export default class MinorTicks extends GraphicsAtom {
 		if (axis.data.isOrdinal) {
 			return; //ordinal axis has no minor ticks
 		}
-
-		var scale = axis.scale;
+		
 		var isHorizontal = axis.data.direction.isHorizontal;
 		var isLog = axis.data.isLog;
+
+		
 
 		var minorTickLineSelections;
 		if (isLog) {
 			minorTickLineSelections = this.__createMinorTickLinesForLogScale(axisSelection, isHorizontal);
 		} else {
-			minorTickLineSelections = this.__createMinorTickLinesForLinearScale(axisSelection, scale, isHorizontal);
+			minorTickLineSelections = this.__createMinorTickLinesForLinearScale(axisSelection, axis, isHorizontal);
 		}
+				
 		
-		this.addListener(()=>this.length, () => {
+		this.addListenerAndRun(()=>this.length, () => {
 			var axisIsHorizontal = axis.data.direction.isHorizontal;
 			if (axisIsHorizontal) {
-				minorTickLineSelections.primary.attr('y2', '-' + length.get());
-				minorTickLineSelections.secondary.attr('y2', length.get());
+				minorTickLineSelections.primary.attr('y2', '-' + this.length);
+				minorTickLineSelections.secondary.attr('y2', this.length);
 			} else {
-				minorTickLineSelections.primary.attr('x2', length.get());
-				minorTickLineSelections.secondary.attr('x2', '-' + length.get());
+				minorTickLineSelections.primary.attr('x2', this.length);
+				minorTickLineSelections.secondary.attr('x2', '-' + this.length);
 			}
-		});
+		});			
 
 		
 		var allMinorTickLines = axisSelection.selectAll('g') //
 										     .selectAll('.minor') //
-										     .selectAll('line');
+										     .selectAll('line')
+										     .style('stroke-linecap', 'butt'); //
+											 //.style('shape-rendering', 'geometricPrecistion');
 		
 		this.bindString(()=>this.color, allMinorTickLines, 'stroke');
 		this.bindString(()=>this.width, allMinorTickLines, 'stroke-width');
 		this.bindLineStyle(()=>this.style, allMinorTickLines);
 		this.bindLineTransparency(()=>this.transparency, allMinorTickLines);
-		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, allMinorTickLines);		
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, allMinorTickLines);	
+
+		
 	}
 
 	__createMinorTickLinesForLogScale(axisSelection, isHorizontal) {
@@ -123,62 +129,64 @@ export default class MinorTicks extends GraphicsAtom {
 		
 		minorTickLineSelections.secondary = secondaryMinorTickLines;
 		if (isHorizontal) {
-			primaryMinorTickLines.attr('y2', '-' + length.get());
-			secondaryMinorTickLines.attr('y2', length.get());
+			primaryMinorTickLines.attr('y2', '-' + this.length);
+			secondaryMinorTickLines.attr('y2', this.length);
 		} else {
-			primaryMinorTickLines.attr('x2', length.get());
-			secondaryMinorTickLines.attr('x2', '-' + length.get());
+			primaryMinorTickLines.attr('x2', this.length);
+			secondaryMinorTickLines.attr('x2', '-' + this.length);
 		}
 
 		return minorTickLineSelections;
 	}
 
-	__createMinorTickLinesForLinearScale(axisSelection, linearScale, isHorizontal) {
+	__createMinorTickLinesForLinearScale(axisSelection, axis, isHorizontal) {
 		var minorTickLineSelections = new PrimaryAndSecondarySelection();
 
 		//remove old minor ticks
 		axisSelection.selectAll('.minor').remove();
 
 		//recreate minor ticks
-		var numberOfTicksAimedFor = this.numberOfTicksAimedFor;		
-		var tickData = linearScale.ticks(numberOfTicksAimedFor);
+		var minorTickData = this.__createMinorTickData(axis);		
 
 		var primaryMinorTicks = axisSelection //
 				.selectAll('.primary') //
 				.selectAll('.tick') //
-				.data(tickData, function(d) { return d; }) //
+				.data(minorTickData, function(d) {
+					 return d; 
+					 }) //
 				.enter() //
 				.insert('g', '.domain') //insert instead of append to ensure that tick lines are not on top in 'z-order'
 				.classed('minor', true);
 
 		var primaryMinorTickLines = primaryMinorTicks //
-				.append('line') //
-				.attr('stroke', 'black');
+				.append('line');
 		minorTickLineSelections.primary = primaryMinorTickLines;
 
 		var secondaryMinorTicks = axisSelection //
 				.selectAll('.secondary') //
 				.selectAll('tick') //
-				.data(tickData, function(d) { return d; }) //
+				.data(minorTickData, function(d) { return d; }) //
 				.enter() //
 				.insert('g', '.domain') //insert instead of append to ensure that tick lines are not on top in 'z-order'
 				.classed('minor', true);
 
 		var secondaryMinorTickLines = secondaryMinorTicks //
-				.append('line') //
-				.attr('stroke', 'black');
+				.append('line');
 		minorTickLineSelections.secondary = secondaryMinorTickLines;
 
 		//set tick line geometry
+		
+		var scale = axis.scale;
+		
 		if (isHorizontal) {
 			primaryMinorTickLines //
-					.attr('x1', linearScale) //
-					.attr('x2', linearScale)
+					.attr('x1', scale) //
+					.attr('x2', scale)
 					.attr('y1', '0') //
 					.attr('y2', '-' + this.length); //
 			secondaryMinorTickLines //
-					.attr('x1', linearScale) //
-					.attr('x2', linearScale) //
+					.attr('x1', scale) //
+					.attr('x2', scale) //
 					.attr('y1', '0') //
 					.attr('y2', this.length);
 
@@ -186,25 +194,39 @@ export default class MinorTicks extends GraphicsAtom {
 			primaryMinorTickLines //
 					.attr('x1', '0') //
 					.attr('x2', this.length) //
-					.attr('y1', linearScale) //
-					.attr('y2', linearScale);
+					.attr('y1', scale) //
+					.attr('y2', scale);
 			secondaryMinorTickLines //
 					.attr('x1', '0') //
 					.attr('x2', '-' + this.length) //
-					.attr('y1', linearScale) //
-					.attr('y2', linearScale);
-		}
+					.attr('y1', scale) //
+					.attr('y2', scale);
+		}		
 
 		return minorTickLineSelections;
 	}
 
-	get numberOfTicksAimedFor() {
-		var numberOfTicks = 0;
-		try {
-			numberOfTicks = parseInt(this.number);
-		} catch (error) {			
+	__createMinorTickData(axis){
+
+		var scale = axis.scale;
+		var existingTickData = scale.ticks(axis.majorTicks.numberOfTicksAimedFor);		
+		var tickData = scale.ticks(this.numberOfTicksAimedFor);
+
+		for (var tickValue of existingTickData){
+			var index = tickData.indexOf(tickValue);
+			if(index > -1){
+				tickData.splice(index,1);
+			}
 		}
-		return numberOfTicks;
+		return tickData;
+	}
+
+	get numberOfTicksAimedFor() {		
+		try {
+			return parseInt(this.number);
+		} catch (error) {
+			return 0;	
+		}		
 	}	
 
 }

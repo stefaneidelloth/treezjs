@@ -50,8 +50,8 @@ export default class DTreezSelection {
 	}
 
 	className(className){
-		this.__d3Selection.attr('class', className);		
-		return this;
+		let selection = this.__d3Selection.attr('class', className);		
+		return new DTreezSelection(selection);
 	}
 	
 	data(data, callBack){
@@ -90,8 +90,8 @@ export default class DTreezSelection {
 	}
 
 	insert(foo, baa){
-		this.__d3Selection.insert(foo, baa);	
-		return this;
+		let selection = this.__d3Selection.insert(foo, baa);	
+		return new DTreezSelection(selection);
 	}
 	
 	label(label){

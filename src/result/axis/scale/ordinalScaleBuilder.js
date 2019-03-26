@@ -6,8 +6,8 @@ export default class OrdinalScaleBuilder {
 	}
 
 	
-	createScale(scaleFactory, isHorizontal, graphWidthInPx, graphHeightInPx) {
-		this.__scale = scaleFactory.ordinal();
+	createScale(dTreez, isHorizontal, graphWidthInPx, graphHeightInPx) {
+		this.__scale = dTreez.scaleOrdinal();
 		this.__createRange(isHorizontal, graphWidthInPx, graphHeightInPx);
 		this.__updateDomain();
 	}

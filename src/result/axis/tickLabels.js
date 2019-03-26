@@ -22,8 +22,8 @@ export default class TickLabels extends GraphicsAtom {
 
 	createPage(root) {
 		
-		var page = root.append('treez-section')
-		.label('Tick labels');
+		var page = root.append('treez-tab')
+			.label('Tick labels');
 	
 		var section = page.append('treez-section')
 			.label('Tick labels');
@@ -94,11 +94,7 @@ export default class TickLabels extends GraphicsAtom {
 			this.__updateLabelGeometry(tickLabels, isHorizontal);
 		};
 		
-		this.addListener(()=>this.rotation, geometryConsumer);
-		this.addListener(()=>this.offset, geometryConsumer);
-		this.addListener(()=>this.size, geometryConsumer);		
-
-		geometryConsumer();
+		
 
 		//bind attributes
 		this.bindString(()=>this.font, tickLabels, 'font-family');
@@ -110,13 +106,17 @@ export default class TickLabels extends GraphicsAtom {
 		this.bindBooleanToTransparency(()=>this.isHidden, null, tickLabels);
 
 		this.addListener(()=>this.format, ()=>axis.updatePlot(dTreez));		
+		this.addListener(()=>this.rotation, geometryConsumer);
+		this.addListener(()=>this.offset, geometryConsumer);
+		this.addListener(()=>this.size, geometryConsumer);		
+
+		geometryConsumer();		
 
 		return axisSelection;
 	}
 
 	__updateLabelGeometry(tickLabels, isHorizontal) {
 		var tickOffset = Length.toPx(this.offset);
-
 		
 		var rotation = 0;
 		try {
@@ -132,18 +132,17 @@ export default class TickLabels extends GraphicsAtom {
 		var x = 0;
 		var y = 0;
 
-		if (this.isHorizontal) {
+		if (isHorizontal) {
 			this.tickLabelHeight = this.__determineTickLabelHeight(tickLabels);
 			y += this.tickLabelHeight + tickOffset;
 		} else {
 
-			var firstNode = tickLabels.node();
-			if (firstNode != null) {
-				var tickNode = firstNode.getParentElement();
-				var boundingBox = tickNode.getBBox();
-				this.tickLabelWidth = boundingBox.getWidth();
-				var deltaX = -boundingBox.getMaxX();
-				x += deltaX - tickOffset;
+			var firstNode = tickLabels.node();			
+			if (firstNode != null) {							
+				var boundingBox = firstNode.getBBox();
+				this.tickLabelWidth = boundingBox.width;
+				var xMax = boundingBox.x + boundingBox.width;				
+				x -= (xMax + tickOffset);
 			}
 
 		}
@@ -157,8 +156,8 @@ export default class TickLabels extends GraphicsAtom {
 			return 0.0;
 		}
 		var boundingBox = firstNode.getBBox();
-		var svgTickLabelHeight = boundingBox.getHeight();
-		var fontName = font.get();
+		var svgTickLabelHeight = boundingBox.height;
+		var fontName = this.font;
 		
 		var fontSize = parseInt(this.size);
 		var awtTextHeight = fontSize; //TODO AbstractGraphicsAtom.estimateTextHeight(fontName, fontSize);

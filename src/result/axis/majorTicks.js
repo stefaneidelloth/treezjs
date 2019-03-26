@@ -4,7 +4,7 @@ export default class MajorTicks extends GraphicsAtom {
 	
 	constructor(){	
 		super();	
-		this.number = '6'; //Number of minor ticks aimed for
+		this.number = '6'; 
 		this.color = Color.black;
 		this.width = '2'
 		this.length = '10';
@@ -15,7 +15,7 @@ export default class MajorTicks extends GraphicsAtom {
 
 	createPage(root) {
 		
-		var page = root.append('treez-section')
+		var page = root.append('treez-tab')
 			.label('Major ticks');
 		
 		var section = page.append('treez-section')
@@ -72,18 +72,18 @@ export default class MajorTicks extends GraphicsAtom {
 
 		var secondaryMajorTickLines = secondary //
 				.selectAll('.major') //
-				.selectAll('line')
-				.style('fill', 'none') //
-				.style('shape-rendering', 'geometricPrecision');
+				.selectAll('line');				
 
 		var majorTickLines = axisSelection //
 				.selectAll('g') //
 				.selectAll('.major') //
-				.selectAll('line');
+				.selectAll('line')
+				.style('stroke-linecap', 'butt'); //
+				//.style('shape-rendering', 'geometricPrecision');;
 		
 		this.addListener(()=>this.number, () => axis.updatePlot(dTreez))
 
-		this.addListener(()=>this.length, () => {
+		this.addListenerAndRun(()=>this.length, () => {
 			var isHorizontal = axis.data.direction.isHorizontal;
 			if (isHorizontal) {
 				primaryMajorTickLines.attr('y2', '-' + this.length);
@@ -102,6 +102,8 @@ export default class MajorTicks extends GraphicsAtom {
 
 		return axisSelection;
 	}
+
+	
 
 	__markMajorTicksWithCssClass(axis, primary, secondary) {
 
@@ -131,6 +133,14 @@ export default class MajorTicks extends GraphicsAtom {
 				.classed('major', true);
 
 	}
+
+	get numberOfTicksAimedFor() {		
+		try {
+			return parseInt(this.number);
+		} catch (error) {
+			return 0;	
+		}		
+	}	
 
 	
 

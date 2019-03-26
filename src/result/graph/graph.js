@@ -112,7 +112,8 @@ export default class Graph extends PagedGraphicsAtom {
 				.append("rect") //
 				.onClick(this);
 
-		this.updatePlot(dTreez);		
+		this.updatePlot(dTreez);
+			
 	}
 
 	updatePlot(dTreez) {

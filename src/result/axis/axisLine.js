@@ -48,8 +48,8 @@ export default class AxisLine extends GraphicsAtom {
 		var axisDomainLine = axisSelection //
 				.selectAll('.domain') //
 				.style('fill', 'none') //
-				.style('stroke-linecap', 'square') //
-				.style('shape-rendering', 'geometricPrecision');
+				.style('stroke-linecap', 'butt'); //
+				//.style('shape-rendering', 'geometricPrecision');
 
 		this.bindString(()=>this.color, axisDomainLine, 'stroke');
 		this.bindString(()=>this.width, axisDomainLine, 'stroke-width');

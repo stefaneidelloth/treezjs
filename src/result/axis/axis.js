@@ -44,13 +44,13 @@ export default class Axis extends PagedGraphicsAtom {
 		factories.push(this.majorTicks);
 
 		this.minorTicks = new MinorTicks();
-		factories.push(this.minorTicks);
-
-		this.tickLabels = new TickLabels();
-		factories.push(this.tickLabels);
+		factories.push(this.minorTicks);		
 
 		this.axisLabel = new AxisLabel();
 		factories.push(this.axisLabel);
+
+		this.tickLabels = new TickLabels();
+		factories.push(this.tickLabels);
 
 		return factories;
 	}
@@ -64,8 +64,41 @@ export default class Axis extends PagedGraphicsAtom {
 		
 		this.__removeOldAxisGroupIfAlreadyExists(graphSelection);
 		this.__createNewAxisGroup(graphSelection);
-		this.__updatePlot(dTreez);
+		this.updatePlot(dTreez);		
+		
 		return graphSelection;
+	}
+	
+	updatePlot(dTreez) {
+		this.__plotWithPages(dTreez);
+	}
+
+	update() {
+		if (this.__dTreez) {
+			this.updatePlot(this.__dTreez);
+		}
+	}
+	
+	createScale(graphWidthInPx, graphHeightInPx) {		
+		
+		switch (this.data.mode) {
+		case AxisMode.quantitative:
+			this.__quantitativeScaleBuilder.createScale(this.__dTreez, graphWidthInPx, graphHeightInPx);
+			break;
+		case AxisMode.ordinal:
+			this.__ordinalScaleBuilder.createScale(this.__dTreez, this.isHorizontal, graphWidthInPx, graphHeightInPx);
+			break;
+		//case TIME:
+		//	throw new IllegalStateException("not yet implemented");
+		default:
+			throw new Error('not yet implemented ' + this.__axisMode);
+		}
+	}
+	
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__axisSelection, null, this);
+		}
 	}
 
 	__removeOldAxisGroupIfAlreadyExists(graphSelection) {
@@ -82,43 +115,7 @@ export default class Axis extends PagedGraphicsAtom {
 		
 		this.bindString(()=>this.name, this.__axisSelection, 'id');
 		
-	}
-
-	__updatePlot(dTreez) {
-		this.__plotWithPages(dTreez);
-	}
-
-	update() {
-		if (this.__dTreez) {
-			this.__updatePlot(this.__dTreez);
-		}
-	}
-	
-	__plotWithPages(dTreez) {
-		for (var pageFactory of this.__pageFactories) {
-			pageFactory.plot(dTreez, this.__axisSelection, null, this);
-		}
-	}
-
-	
-
-	createScale(graphWidthInPx, graphHeightInPx) {
-
-		var scaleFactory = this.__dTreez.scaleLinear();
-		
-		switch (this.data.mode) {
-		case AxisMode.quantitative:
-			this.__quantitativeScaleBuilder.createScale(scaleFactory, graphWidthInPx, graphHeightInPx);
-			break;
-		case AxisMode.ordinal:
-			this.__ordinalScaleBuilder.createScale(scaleFactory, this.isHorizontal, graphWidthInPx, graphHeightInPx);
-			break;
-		//case TIME:
-		//	throw new IllegalStateException("not yet implemented");
-		default:
-			throw new Error('not yet implemented ' + this.__axisMode);
-		}
-	}
+	}	
 
 	includeDataForAutoScale(dataForAutoScale) {
 		this.__quantitativeScaleBuilder.includeDomainValuesForAutoScale(dataForAutoScale);
@@ -130,16 +127,11 @@ export default class Axis extends PagedGraphicsAtom {
 
 	includeOrdinalValuesForAutoScale(ordinalValues) {
 		this.__ordinalScaleBuilder.includeDomainValuesForAutoScale(ordinalValues);
-	}
-
-	
-	get axisMode() {
-		return this.data.mode;
-	}
+	}	
 
 	get scale() {
 		
-		switch (this.axisMode) {
+		switch (this.data.mode) {
 		case AxisMode.quantitative:
 			return this.__quantitativeScaleBuilder.scale;
 		case AxisMode.ordinal:
@@ -151,9 +143,8 @@ export default class Axis extends PagedGraphicsAtom {
 		}
 	}
 
-	get numberOfValues() {
-		var axisMode = getAxisMode();
-		switch (this.axisMode) {
+	get numberOfValues() {		
+		switch (this.data.mode) {
 		case AxisMode.quantitative:
 			throw new Error('not yet implemented');
 		case AxisMode.ordinal:
@@ -166,38 +157,32 @@ export default class Axis extends PagedGraphicsAtom {
 	}
 
 	get isQuantitative() {
-		return this.data.isQuantitative;
-		
+		return this.data.isQuantitative;		
 	}
 
 	get isOrdinal() {
 		return this.data.isOrdinal;
 	}
 
-	get isHorizontal() {
-		var direction = data.direction;
-		return direction.isHorizontal;
+	get isHorizontal() {		
+		return this.data.direction.isHorizontal;
 	}
 
 	get quantitativeLimits() {
-
 		if (this.isQuantitative) {
-			var min = data.min;
-			var isAutoMin = data.autoMin;
-			if (isAutoMin) {
+			var min = parseFloat(this.data.min);			
+			if (this.data.hasAutoMin) {
 				min = this.__quantitativeScaleBuilder.autoMinValue;
 			}
 
-			var max = data.max;
-			var isAutoMax = data.autoMax;
-			if (isAutoMax) {
+			var max = parseFloat(this.data.max);			
+			if (this.data.hasAutoMax) {
 				max = this.__quantitativeScaleBuilder.autoMaxValue;
 			}
 
 			return [min, max];
-		} else {
-			var numberOfValues = 0.0 + this.numberOfValues;
-			return [1.0, numberOfValues];
+		} else {			
+			return [1.0, this.numberOfValues];
 		}
 	}
 

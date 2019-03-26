@@ -3,7 +3,15 @@ class Color extends Enum {
 	constructor(name, hexString){
 		super(name);
 		this.hexString = hexString;
-	}	
+	}
+	
+	toString(){
+		if(this.name !== 'custom'){
+			return this.name;
+		} else {
+			return this.hexString;
+		}		
+	}
 	
 }
 
