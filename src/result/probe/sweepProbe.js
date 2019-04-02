@@ -38,8 +38,8 @@ export default class SweepProbe extends Probe {
 
 		this.sweepOutputPath = '';
 		this.firstProbeTablePath = '';
-		this.probeColumnIndex = 0;
-		this.probeRowIndex = 0;
+		this.columnIndex = 0;
+		this.rowIndex = 0;
 
 		this.__firstProbeTableSelection = undefined;
 	}
@@ -138,11 +138,11 @@ export default class SweepProbe extends Probe {
 
 		sectionContent.append('treez-text-field')
 			.label('Column index')
-			.bindValue(this, ()=>this.probeColumnIndex);
+			.bindValue(this, ()=>this.columnIndex);
 
 		sectionContent.append('treez-text-field')
 			.label('Row index')
-			.bindValue(this, ()=>this.probeRowIndex);		
+			.bindValue(this, ()=>this.rowIndex);		
 	}
 
 	__sweepOutputPathChanged(){
@@ -160,7 +160,7 @@ export default class SweepProbe extends Probe {
 		monitor.info('Creating table columns...');
 
 		//create column blueprints
-		var columnBlueprints = [];
+		var columnBlueprints = [];		
 
 		//domain column----------------------------------------			
 		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType));
@@ -184,16 +184,16 @@ export default class SweepProbe extends Probe {
 						var extendedColumnName = columnName + NAME_SEPARATOR + secondFamilyIndex;
 						
 						var extendedLegendText = legendText + ', ' + secondFamilyLabelString + ': ' + secondFamilyRangeValue;
-						columnBlueprints.push(new ColumnBlueprint(extendedColumnName, probeColumnType, extendedLegendText));
+						columnBlueprints.push(new ColumnBlueprint(extendedColumnName, extendedLegendText, probeColumnType));
 						secondFamilyIndex++;
 					}
 				} else {
-					columnBlueprints.push(new ColumnBlueprint(columnName, probeColumnType, legendText));
+					columnBlueprints.push(new ColumnBlueprint(columnName, legendText, probeColumnType));
 				}
 				firstFamilyIndex++;
 			}
 		} else {			
-			columnBlueprints.push(new ColumnBlueprint(this.probeLabel, probeColumnType, ''));
+			columnBlueprints.push(new ColumnBlueprint(this.probeLabel, '', probeColumnType));
 		}
 
 		//create columns
@@ -214,7 +214,7 @@ export default class SweepProbe extends Probe {
 
 	get __probeColumnType() {
 		var probeTable = this.getChildFromRoot(this.firstProbeTablePath);
-		var columnIndex = parseInt(this.probeColumnIndex);
+		var columnIndex = parseInt(this.columnIndex);
 		var probeColumn = probeTable.columns[columnIndex];
 		return probeColumn.type;
 	}
@@ -272,8 +272,8 @@ export default class SweepProbe extends Probe {
 
 	__fillProbeTable(table, domainRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix) {
 		
-		var probeRowIndex = parseInt(this.probeRowIndex);		
-		var probeColumnIndex = parseInt(this.probeColumnIndex);
+		var probeRowIndex = parseInt(this.rowIndex);		
+		var columnIndex = parseInt(this.columnIndex);
 
 		var sweepIndex = 1;
 		for (var rowIndex = 0; rowIndex < domainRangeValues.length; rowIndex++) {
@@ -290,7 +290,7 @@ export default class SweepProbe extends Probe {
 			for (var columnIndex = 1; columnIndex < columnNames.length; columnIndex++) {
 				var columnName = columnNames[columnIndex];
 				var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
-				var value = this.getProbeValue(tablePath, probeRowIndex, probeColumnIndex);
+				var value = this.getProbeValue(tablePath, probeRowIndex, columnIndex);
 				row.setEntry(columnName, value);				
 				sweepIndex++;
 			}
@@ -333,6 +333,12 @@ export default class SweepProbe extends Probe {
 		var table = this.getChildFromRoot(probeTablePath);		
 		var columnHeader = table.headers[columnIndex];
 		var row = table.row(rowIndex);
+		if(!row){
+			var maxIndex = table.rows.length-1;
+			var message = 'Could not get probe row with zero based index '+ rowIndex +' from table "' 
+							+ probeTablePath + '" (max index: ' + maxIndex + ' rows).'; 
+			throw new Error(message)
+		}
 		return row.entry(columnHeader);		
 	}	
 

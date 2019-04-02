@@ -23,9 +23,12 @@
 				}  		
 				
                 constructor(){
-                    super();  
-                    this.options=ColorMap.names;
+                    super();                     
                 }  
+
+                beforeConnectedCallbackHook(){
+                	 this.options=ColorMap.names;
+            	} 
                                      
             }
             window.customElements.define('treez-color-map', TreezColorMap);                    

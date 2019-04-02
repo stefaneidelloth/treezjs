@@ -167,7 +167,7 @@ export default class TableImport extends Model {
 		
 		this.__isFilteringforJobIdSelection = sectionContent.append('treez-check-box')
 			.label('Filter rows with JobId')			
-			.bindValue(this, ()=>this.isFilteringforJob)
+			.bindValue(this, ()=>this.isFilteringforJobId)
 			.onChange(()=>this.__showAndHideJobComponents());		
 
 		this.__customJobIdSelection = sectionContent.append('treez-text-field')
@@ -472,7 +472,8 @@ export default class TableImport extends Model {
 		}
 		
 		for (var rowEntries of tableData.rowData) {
-			table.createRow(rowEntries);
+			var doubleEntries = rowEntries.map((valueString)=>parseFloat(valueString));
+			table.createRow(doubleEntries);
 		}
 
 		return table;
@@ -502,7 +503,7 @@ export default class TableImport extends Model {
 			}
 
 			for (var header of headers) {
-				columnFolder.createColumn(header, ColumnType.string);
+				columnFolder.createColumn(header, ColumnType.double);
 			}
 		}
 	}	

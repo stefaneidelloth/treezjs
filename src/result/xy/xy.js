@@ -1,4 +1,9 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import Data from './data.js';
+import Area from './area.js';
+import Line from './line.js';
+import Symbol from './symbol.js';
+import Graph from './../graph/graph.js';
 
 export default class Xy extends PagedGraphicsAtom {
 
@@ -12,7 +17,7 @@ export default class Xy extends PagedGraphicsAtom {
 
 		var factories = [];
 		
-		this.data = new Data();
+		this.data = new Data(this);
 		factories.push(this.data);
 
 		this.area = new Area();
@@ -36,20 +41,20 @@ export default class Xy extends PagedGraphicsAtom {
 
 		//remove old xy group if it already exists
 		graphOrXySeriesSelection //
-				.select('#' + name) //
+				.select('#' + this.name) //
 				.remove();
 
 		//create new axis group
 		this.__xySelection = graphOrXySeriesSelection //
 				.insert('g', '.axis') //
 				.className('xy') //
-				.onClick(this);
+				.onClick(()=>this.handleMouseClick());
 		
 		this.bindString(()=>this.name, this.__xySelection, 'id');
 		
 		this.__updatePlot(dTreez);
 
-		return xySelection;
+		return this.__xySelection;
 	}
 
 	__updatePlot(dTreez) {
@@ -73,17 +78,17 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	__contributeDataForXAxis() {
-		var xScaleChanged = false;		
-		var xAxisIsOrdinal = this.xAxis.isOrdinal();
-		if (xAxisIsOrdinal) {
-			var oldNumberOfXValues = xAxis.numberOfValues;			
-			xAxis.includeOrdinalValuesForAutoScale(this.ordinalXValues);			
+		var xScaleChanged = false;	
+		var axis = this.xAxis;			
+		if (axis.isOrdinal) {
+			var oldNumberOfXValues = axis.numberOfValues;			
+			axis.includeOrdinalValuesForAutoScale(this.ordinalXValues);			
 			xScaleChanged = this.numberOfXValues != oldNumberOfXValues;
 
 		} else {
-			var oldXLimits = xAxis.quantitativeLimits;
-			xAxis.includeDataForAutoScale(this.quantitativeXValues);
-			var xLimits = xAxis.quantitativeLimits;
+			var oldXLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativeXValues);
+			var xLimits = axis.quantitativeLimits;
 			if(xLimits[0] !== oldXLimits[0]){
 				xScaleChanged = true;
 			}
@@ -95,17 +100,17 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 	
 	__contributeDataForYAxis() {
-		var yScaleChanged = false;		
-		var yAxisIsOrdinal = this.yAxis.isOrdinal();
-		if (yAxisIsOrdinal) {
-			var oldNumberOfYValues = yAxis.numberOfValues;			
-			yAxis.includeOrdinalValuesForAutoScale(this.ordinalYValues);			
+		var yScaleChanged = false;
+		var axis = this.yAxis;			
+		if (axis.isOrdinal) {
+			var oldNumberOfYValues = axis.numberOfValues;			
+			axis.includeOrdinalValuesForAutoScale(this.ordinalYValues);			
 			yScaleChanged = this.numberOfYValues != oldNumberOfYValues;
 
 		} else {
-			var oldYLimits = yAxis.quantitativeLimits;
-			yAxis.includeDataForAutoScale(this.quantitativeYValues);
-			var yLimits = yAxis.quantitativeLimits;
+			var oldYLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativeYValues);
+			var yLimits = axis.quantitativeLimits;
 			if(yLimits[0] !== oldYLimits[0]){
 				yScaleChanged = true;
 			}
@@ -150,8 +155,11 @@ export default class Xy extends PagedGraphicsAtom {
 		return symbolSelection;
 	}
 
-	createXyDataString(xDataValues, yDataValues) {
+	get xyData() {
 
+		var xDataValues = this.xValues;
+		var yDataValues = this.yValues;
+		
 		var xLength = xDataValues.length;
 		var yLength = yDataValues.length;
 		var lengthsAreOk = xLength == yLength;
@@ -162,48 +170,46 @@ export default class Xy extends PagedGraphicsAtom {
 		}
 
 		if (xLength == 0) {
-			return '[]';
+			return [];
 		}
 
 		var firstXObject = xDataValues[0];
-		var xIsOrdinal = firstXObject instanceof String;
+		var xIsOrdinal = (typeof firstXObject === 'string' || firstXObject instanceof String); 
 
 		var xAxisIsOrdinal = this.xAxis.isOrdinal;
 
 		var firstYObject = yDataValues[0];
-		var yIsOrdinal = firstYObject instanceof String;
+		var yIsOrdinal = (typeof firstYObject === 'string' || firstYObject instanceof String); 
 
 		var yAxisIsOrdinal = this.yAxis.isOrdinal;
 
 		var rowList =[];
 		for (var rowIndex = 0; rowIndex < xLength; rowIndex++) {
-
+			
 			var xObj = xDataValues[rowIndex];
-			var x = xObj.toString();
+			var x = xObj;
 			if (xIsOrdinal) {
-				if (xAxisIsOrdinal) {
-					x = '"' + x + '"';
-				} else {
-					x = '' + (xDataValues.indexOf(xObj) + 1);
+				if (!xAxisIsOrdinal) {					
+					x = rowIndex + 1;
 				}
-
 			}
 
 			var yObj = yDataValues[rowIndex];
-			var y = yObj.toString();
+			var y = yObj;
 			if (yIsOrdinal) {
-				if (yAxisIsOrdinal) {
-					y = '"' + y + '"';
-				} else {
-					y = '' + (yDataValues.indexOf(xObj) + 1);
+				if (!yAxisIsOrdinal) {
+					try{
+						y = parseFloat(yObj);
+					} catch(error){
+						y = rowIndex + 1;
+					}				
+					
 				}
 			}
 
-			var rowString = '[' + x + ',' + y + ']';
-			rowList.add(rowString);
-		}
-		var xyDataString = '[' + rowList.join(',') + ']';
-		return xyDataString;
+			rowList.push([x,y]);
+		}		
+		return rowList;
 	}
 
 	get xScale() {	
@@ -219,7 +225,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get xAxis() {
-		var xAxisPath = data.xAxis;
+		var xAxisPath = this.data.xAxis;
 		if (!xAxisPath) {
 			return null;
 		}
@@ -227,7 +233,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get yAxis() {
-		var yAxisPath = data.yAxis;
+		var yAxisPath = this.data.yAxis;
 		if (!yAxisPath) {
 			return null;
 		}
@@ -235,7 +241,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get xValues() {
-		var xDataPath = data.xData;
+		var xDataPath = this.data.xData;
 		if (!xDataPath) {
 			return [];
 		}
@@ -244,7 +250,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 	
 	get yValues() {
-		var yDataPath = data.yData;
+		var yDataPath = this.data.yData;
 		if (!yDataPath) {
 			return [];
 		}
@@ -253,14 +259,13 @@ export default class Xy extends PagedGraphicsAtom {
 	}	
 
 	get quantitativeXValues() {
-		var xDataPath = data.xData;
+		var xDataPath = this.data.xData;
 		if (!xDataPath) {
 			return [];
 		}
-		var xDataColumn = this.getChildFromRoot(xDataPath);
-		var isQuantitative = xDataColumn.isNumeric();
-		if (isQuantitative) {
-			return xDataColumn.doubleValues;			
+		var xDataColumn = this.getChildFromRoot(xDataPath);	
+		if (xDataColumn.isNumeric) {
+			return xDataColumn.numericValues;			
 		} else {
 			var ordinalValues = xDataColumn.stringValues;
 			var xValues = [];
@@ -272,14 +277,13 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get quantitativeYValues() {
-		var yDataPath = data.yData;
+		var yDataPath = this.data.yData;
 		if (!yDataPath) {
 			return [];
 		}
-		var yDataColumn = this.getChildFromRoot(yDataPath);
-		var isQuantitative = yDataColumn.isNumeric();
-		if (isQuantitative) {
-			return yDataColumn.doubleValues;			
+		var yDataColumn = this.getChildFromRoot(yDataPath);		
+		if (yDataColumn.isNumeric) {
+			return yDataColumn.numericValues;			
 		} else {
 			var ordinalValues = yDataColumn.stringValues;
 			var yValues = [];
@@ -291,7 +295,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get ordinalXValues() {
-		var xDataPath = data.xData;
+		var xDataPath = this.data.xData;
 		if (!xDataPath) {
 			return [];
 		}
@@ -300,7 +304,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get ordinalYValues() {
-		var yDataPath = data.yData;
+		var yDataPath = this.data.yData;
 		if (!yDataPath) {
 			return [];
 		}

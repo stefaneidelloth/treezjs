@@ -11,6 +11,10 @@ export default class DTreez {
 		this.event = new DTreezEvent(d3);
 	}
 
+	area(){
+		return this.__d3.area();
+	}
+
 	axisLeft(scale){
 		return this.__d3.axisLeft(scale);
 	}
@@ -31,6 +35,10 @@ export default class DTreez {
 		return this.__d3.format(formatter);
 	}
 
+	line(){
+		return this.__d3.line();
+	}
+
 	scaleLinear(){
 		return this.__d3.scaleLinear();
 	}
@@ -43,6 +51,14 @@ export default class DTreez {
 	selectAll(selector){
 		let selection = this.__d3.selectAll(selector);
 		return new DTreezSelection(selection);
+	}
+
+	symbol(){
+		return this.__d3.symbol();
+	}
+
+	get symbols(){
+		return this.__d3.symbols;
 	}
 
 	

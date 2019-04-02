@@ -100,7 +100,7 @@ export default class Column extends ComponentAtom {
 		var values = [];
 		
 		for (var row of rows) {
-			var entry = row.getEntry(this.header);
+			var entry = row.entry(this.header);
 			values.push(entry);
 		}
 		return values;
@@ -108,12 +108,12 @@ export default class Column extends ComponentAtom {
 
 	get numericValues() {
 		var valueObjects = this.values;
-		switch (this.type) {
-		case ColumnType.integer:
+		switch (this.type.name) {
+		case ColumnType.integer.name:
 			return this.values;
-		case ColumnType.double:
+		case ColumnType.double.name:
 			return this.values;
-		case ColumnType.string:
+		case ColumnType.string.name:
 			return valueObjects.map(element => {
 				return parseFloat(element);
 			});

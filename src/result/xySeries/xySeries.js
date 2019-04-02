@@ -1,4 +1,6 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Table from './../../data/table/table.js';
+import Axis from './../axis/axis.js';
 
 export default class XySeries extends GraphicsAtom {
 
@@ -35,19 +37,26 @@ export default class XySeries extends GraphicsAtom {
 		
 		var sectionContent = section.append('div');
 
+		sectionContent.append('treez-model-path')
+			.label('Source table')
+			.nodeAttr('atomClasses',[Table])
+			.bindValue(this, ()=>this.sourceTable);
 		
-		section.createModelPath(sourceTable, this, '', Table.class, this) //
-				.setLabel('Source table');
+		sectionContent.append('treez-text-field')
+			.label('Domain label')			
+			.bindValue(this, ()=>this.domainLabel);
 
-		section.createTextField(domainLabel, this).setLabel('Domain label');
+		sectionContent.append('treez-text-field')
+			.label('Range label')			
+			.bindValue(this, ()=>this.rangeLabel);
 
-		section.createTextField(rangeLabel, this).setLabel('Range label');
+		sectionContent.append('treez-color-map')
+			.label('Color map')			
+			.bindValue(this, ()=>this.colorMap);
 
-		section.createColorMap(colorMap, this).setLabel('Color map');
-
-		section.createCheckBox(hide, this);
-
-		
+		sectionContent.append('treez-check-box')
+			.label('IsHidden')			
+			.bindValue(this, ()=>this.isHidden);		
 
 	}
 

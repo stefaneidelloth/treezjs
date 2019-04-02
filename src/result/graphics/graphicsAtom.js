@@ -101,7 +101,7 @@ export default class GraphicsAtom extends ComponentAtom {
 			} else {
 				if(transparencyPropertyName){
 					var transparency = parseFloat(self[transparencyPropertyName]);
-					var opacity = 1 - transparencyValue;
+					var opacity = 1 - transparency;
 					return '' + opacity;
 				} else {
 					return '1';

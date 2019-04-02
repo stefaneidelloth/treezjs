@@ -2,8 +2,11 @@ import PagedGraphicsAtom  from './../graphics/pagedGraphicsAtom.js';
 import Data from './data.js';
 import Background from './../graphics/background.js';
 import Border from './../graphics/border.js';
-import Axis from './../axis/axis.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import Axis from './../axis/axis.js';
+import Xy from './../xy/xy.js';
+import XySeries from './../xySeries/xySeries.js';
+
 
 export default class Graph extends PagedGraphicsAtom {
 
@@ -35,52 +38,62 @@ export default class Graph extends PagedGraphicsAtom {
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				Axis,
-				"axis",
-				"axis.png",
+				'axis',
+				'axis.png',
 				parentSelection,
 				this,
-				treeView));	
-		
-		/*
-		Action addXySeries = new AddChildAtomTreeViewAction(
-				XySeries.class,
-				"xySeries",
-				Activator.getImage("xySeries.png"),
-				this,
-				treeViewer);
-		actions.add(addXySeries);
+				treeView)
+		);	
 
-		Action addXy = new AddChildAtomTreeViewAction(Xy.class, "xy", Activator.getImage("xy.png"), this, treeViewer);
-		actions.add(addXy);
+		actions.push(new AddChildAtomTreeViewAction(
+				Xy, 
+				'xy', 
+				'xy.png',
+				parentSelection,
+				this, 
+				treeView)
+		);		
+		
+		actions.push(new AddChildAtomTreeViewAction(
+				XySeries,
+				'xySeries',
+				'xySeries.png',
+				parentSelection,
+				this,
+				treeView)
+		);
+
+		/*
+		
 
 		Action addBar = new AddChildAtomTreeViewAction(
 				Bar.class,
-				"bar",
-				Activator.getImage("bar.png"),
+				'bar',
+				Activator.getImage('bar.png'),
 				this,
 				treeViewer);
 		actions.add(addBar);
 
 		Action addTornado = new AddChildAtomTreeViewAction(
 				Tornado.class,
-				"tornado",
-				Activator.getImage("tornado.png"),
+				'tornado',
+				Activator.getImage('tornado.png'),
 				this,
 				treeViewer);
 		actions.add(addTornado);
 
 		Action addContour = new AddChildAtomTreeViewAction(
 				Contour.class,
-				"contour",
-				Activator.getImage("contour.png"),
+				'contour',
+				Activator.getImage('contour.png'),
 				this,
 				treeViewer);
 		actions.add(addContour);
 
 		Action addLegend = new AddChildAtomTreeViewAction(
 				Legend.class,
-				"legend",
-				Activator.getImage("legend.png"),
+				'legend',
+				Activator.getImage('legend.png'),
 				this,
 				treeViewer);
 		actions.add(addLegend);
@@ -99,17 +112,17 @@ export default class Graph extends PagedGraphicsAtom {
 			
 		//remove old graph group if it already exists
 		pageSelection //
-				.select("#" + this.name) //
+				.select('#' + this.name) //
 				.remove();
 
 		//create new graph group
 		this.__graphGroupSelection = pageSelection //
-				.append("g");
+				.append('g');
 		
 		this.bindString(()=>this.name, this.__graphGroupSelection, 'id');	
 	
 		this.__rectSelection = this.__graphGroupSelection //
-				.append("rect") //
+				.append('rect') //
 				.onClick(this);
 
 		this.updatePlot(dTreez);
@@ -147,7 +160,11 @@ export default class Graph extends PagedGraphicsAtom {
 		/*
 		this.__plotChildren(Contour, dTreez);
 		this.__plotChildren(XySeries, dTreez);
+		*/
+		
 		this.__plotChildren(Xy, dTreez);
+		
+		/*
 		this.__plotChildren(Bar, dTreez);
 		this.__plotChildren(Tornado, dTreez);
 		this.__plotChildren(Legend, dTreez);

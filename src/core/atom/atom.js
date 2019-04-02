@@ -620,9 +620,13 @@ export default class Atom {
 
 	
 	getTreePath() {
+		try{
 		return this.parent
 			? this.parent.getTreePath() + '.' + this.name
 			: this.name;
+		} catch (error){
+			return '';
+		}
 	}
 
 	delete() {		

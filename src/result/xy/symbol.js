@@ -1,10 +1,12 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Graph from './../graph/graph.js';
+import Length from './../graphics/length.js';
 
 export default class Symbol extends GraphicsAtom {
 	
 	constructor(){
 		super();
-		this.type = SymbolType.circle;	
+		this.style = SymbolStyle.circle;	
 		this.size = '64';	
 		this.isHidden = false;	
 		
@@ -43,10 +45,9 @@ export default class Symbol extends GraphicsAtom {
 	
 		var sectionContent = section.append('div');
 		
-		sectionContent.append('treez-symbol-type')
+		sectionContent.append('treez-symbol-style')
 			.label('Type')
-			.bindValue(this,()=>this.symbolType);
-		
+			.bindValue(this,()=>this.style);		
 
 		sectionContent.append('treez-text-field')
 			.label('Size')
@@ -81,7 +82,7 @@ export default class Symbol extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.fillIsHidden);
+			.bindValue(this, ()=>this.isHiddenFill);
 
 		//markerFill.createColorMap(colorMap, this, 'Color map');
 
@@ -114,7 +115,7 @@ export default class Symbol extends GraphicsAtom {
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.lineIsHidden);
+			.bindValue(this, ()=>this.isHiddenLine);
 		
 	}	
 
@@ -129,7 +130,7 @@ export default class Symbol extends GraphicsAtom {
 				.remove();
 
 		//create new symbols group
-		symbolsSelection = xySelection //
+		this.__symbolsSelection = xySelection //
 				.append('g') //
 				.attr('id', id) //
 				.attr('class', 'symbols') //
@@ -141,7 +142,7 @@ export default class Symbol extends GraphicsAtom {
 
 		var width = Length.toPx(graph.data.width);
 		var height = Length.toPx(graph.data.width);
-		symbolsSelection.append('clipPath') //
+		this.__symbolsSelection.append('clipPath') //
 				.attr('id', clipPathId) //
 				.append('rect') //
 				.attr('x', 0) //
@@ -150,11 +151,11 @@ export default class Symbol extends GraphicsAtom {
 				.attr('height', height);
 
 		//bind attributes
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, symbolsSelection);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.__symbolsSelection);
 
-		var updateSymbols = () => this.__replotSymbols(dTeez, xy);
+		var updateSymbols = () => this.__replotSymbols(dTreez, xy);
 		
-		this.addListener(()=>this.symbolType, updateSymbols);
+		this.addListener(()=>this.style, updateSymbols);
 		this.addListener(()=>this.size, updateSymbols);	
 				
 		this.__replotSymbols(dTreez, xy);
@@ -176,51 +177,54 @@ export default class Symbol extends GraphicsAtom {
 	__replotSymbols(dTreez, xy) {
 
 		//remove old symbols
-		symbolsSelection.selectAll('path') //
+		this.__symbolsSelection.selectAll('path') //
 				.remove();
 
 		//get symbol type and plot new symbols
-		var isNoneSymbol = this.symbolType === SymbolType.none;
+		var isNoneSymbol = this.style === SymbolStyle.none;
 		if (!isNoneSymbol) {
 			//plot new symbols
-			this.__plotNewSymbols(dTeez, xy);
+			this.__plotNewSymbols(dTreez, xy);
 		}
 	}
 
-	__plotNewSymbols(d3, xy) {
+	__plotNewSymbols(dTreez, xy) {
 		
 		var symbolSquareSize = parseInt(this.size);
 
 		//symbol path generator
-		var symbol = d3 //
-				.svg() //
+		var symbol = dTreez //				
 				.symbol() //
 				.size(symbolSquareSize) //
-				.type(this.type);
+				.type(this.style.d3Symbol(dTreez));
 		
-		var symbolDString = symbol.generate();
+		var symbolDString = symbol();
+		
+		var xScale = xy.xScale;
+		var yScale = xy.yScale;
 
-			
-		var xyDataString = xy.createXyDataString(xy.xData, xy.yData);
+		var selection = this.__symbolsSelection;
 		
-		symbolsSelection.selectAll('path') //
-				.data(xyDataString) //
+		selection.selectAll('path') //
+				.data(xy.xyData) //
 				.enter() //
 				.append('path') //
-				.attr('transform', new AxisTransformPointDataFunction(engine, xy.xScale, xy.yScale)) //
+				.attr('transform', (row)=>{					
+					return 'translate('+xScale(row[0])+','+yScale(row[1])+')';
+				}) //
 				.attr('d', symbolDString);
 
 		//bind attributes
-		this.bindString(()=>this.fillColor, symbolsSelection, 'fill');
-		this.bindTransparency(()=>this.fillTransparency, symbolsSelection);
-		this.bindBooleanToTransparency(()=>this.isHiddenFill, ()=>this.fillTransparency, symbolsSelection);
+		this.bindString(()=>this.fillColor, selection, 'fill');
+		this.bindTransparency(()=>this.fillTransparency, selection);
+		this.bindBooleanToTransparency(()=>this.isHiddenFill, ()=>this.fillTransparency, selection);
 		
-		this.bindString(()=>this.lineColor, symbolsSelection, 'stroke');
-		this.bindString(()=>this.lineWidth, symbolsSelection, 'stroke-width');
-		this.bindLineTransparency(()=>this.lineTransparency, symbolsSelection);
-		this.bindBooleanToLineTransparency(()=>this.isHiddenLine, ()=>this.lineTransparency, symbolsSelection);
+		this.bindString(()=>this.lineColor, selection, 'stroke');
+		this.bindString(()=>this.lineWidth, selection, 'stroke-width');
+		this.bindLineTransparency(()=>this.lineTransparency, selection);
+		this.bindBooleanToLineTransparency(()=>this.isHiddenLine, ()=>this.lineTransparency, selection);
 		
-		this.bindLineStyle(()=>this.lineStyle, symbolsSelection);
+		this.bindLineStyle(()=>this.lineStyle, selection);
 	
 	}
 
@@ -247,7 +251,7 @@ export default class Symbol extends GraphicsAtom {
 					.svg() //
 					.symbol() //
 					.size(symbolSquareSize) //
-					.type(this.type);
+					.type(this.style);
 
 			var symbolDString = symbol.generate();
 

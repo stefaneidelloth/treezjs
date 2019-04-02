@@ -14,7 +14,7 @@ export default class Area extends GraphicsAtom {
 		this.belowColor = Color.white; 		
 		//this.belowFillStyle = 'solid';
 		this.belowTransparency = '0';
-		this.belowisHidden = true;		
+		this.belowIsHidden = true;		
 		//this.belowHideErrorFill = true;		
 	}
 
@@ -75,16 +75,16 @@ export default class Area extends GraphicsAtom {
 
 
 	plot(dTreez, xySelection, rectSelection, xy) {		
-		var xyDataString = xy.createXyDataString(xy.xValues, xy.yValues);		
+		var xyData = xy.xyData;		
 		var interpolationMode = xy.line.interpolation;
 
-		this.__plotAboveArea(d3, xy.name, xySelection, xyDataString, xy.xScale, xy.yScale, interpolationMode);
-		this.__plotBelowArea(d3, xy.name, xySelection, xyDataString, xy.xScale, xy.yScale, interpolationMode);
+		this.__plotAboveArea(dTreez, xy.name, xySelection, xyData, xy.xScale, xy.yScale, interpolationMode);
+		this.__plotBelowArea(dTreez, xy.name, xySelection, xyData, xy.xScale, xy.yScale, interpolationMode);
 
 		return xySelection;
 	}
 
-	__plotAboveArea(dTreez, parentName, xySelection, xyDataString, xScale, yScale, interpolationMode) {
+	__plotAboveArea(dTreez, parentName, xySelection, xyData, xScale, yScale, interpolationMode) {
 
 		var id = 'area-above_' + parentName;
 
@@ -99,23 +99,22 @@ export default class Area extends GraphicsAtom {
 				.attr('class', 'area-above');
 
 		
-		var areaAbovePathGenerator = d3 //
-				.svg()//
+		var areaAbovePathGenerator = dTreez //
 				.area() //
-				.x(new AxisScaleFirstDataFunction(engine, xScale)) //
-				.y1(new AxisScaleSecondDataFunction(engine, yScale))//
-				.interpolate(interpolationMode);
+				.x((row)=>xScale(row[0])) //
+				.y1((row)=>xScale(row[1]));//
+				//.curve(interpolationMode); //TODO
 
 		var aboveArea = areaAboveSelection //
 				.append('path') //
-				.attr('d', areaAbovePathGenerator.generate(xyDataString));
+				.attr('d', areaAbovePathGenerator(xyData));
 
 		this.bindString(()=>this.aboveColor, aboveArea, 'fill');
 		this.bindTransparency(()=>this.aboveTransparency, aboveArea);
 		this.bindBooleanToNegatingDisplay(()=>this.aboveIsHidden, aboveArea);
 	}
 
-	__plotBelowArea(dTreez, parentName, xySelection, xyDataString, xScale, yScale, interpolationMode) {
+	__plotBelowArea(dTreez, parentName, xySelection, xyData, xScale, yScale, interpolationMode) {
 
 		var id = 'area-below_' + parentName;
 
@@ -129,19 +128,18 @@ export default class Area extends GraphicsAtom {
 				.attr('id', id) //
 				.attr('class', 'area-below');
 
-		var yMin = yScale.apply(0.0).asDouble();
+		var yMin = yScale(0.0);
 
-		var areaBelowPathGenerator = d3 //
-				.svg()//
+		var areaBelowPathGenerator = dTreez //				
 				.area() //
-				.x(new AxisScaleFirstDataFunction(engine, xScale)) //
+				.x((row)=>xScale(row[0])) //
 				.y0(yMin) //
-				.y1(new AxisScaleSecondDataFunction(engine, yScale))//
-				.interpolate(mode);
+				.y1((row)=>yScale(row[1]));//
+				//.curve(mode); //TODO
 
 		var belowArea = areaBelowSelection //
 				.append('path') //
-				.attr('d', areaBelowPathGenerator.generate(xyDataString));
+				.attr('d', areaBelowPathGenerator(xyData));
 
 		this.bindString(()=>this.belowColor, belowArea, 'fill');
 		this.bindTransparency(()=>this.belowTransparency, belowArea);

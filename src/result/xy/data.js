@@ -1,10 +1,12 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Column from './../../data/column/column.js';
+import Axis from './../axis/axis.js'
 
 export default class Data extends GraphicsAtom {
 	
-	constructor(){
+	constructor(xy){
 		super();
-
+		this.parent=xy;
 		this.xData = 'root.data.table.columns.x';	
 		this.yData = 'root.data.table.columns.y';	
 		this.legendText = '';	
@@ -48,12 +50,12 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-model-path')
 			.label('X axis')
 			.nodeAttr('atomClasses',[Axis])
-			.bindValue(this, ()=>this.xData);
+			.bindValue(this, ()=>this.xAxis);
 		
 		sectionContent.append('treez-model-path')
 			.label('Y axis')
 			.nodeAttr('atomClasses',[Axis])
-			.bindValue(this, ()=>this.yData);		
+			.bindValue(this, ()=>this.yAxis);		
 
 		//data.createTextField(colorMarkers, "colorMarkers", "Color markers", "");
 

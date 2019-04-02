@@ -1,12 +1,24 @@
-class SymbolStyle extends Enum {}                 
+class SymbolStyle extends Enum {
 
-SymbolStyle.none = new SymbolStyle('none');                    
-SymbolStyle.circle = new SymbolStyle('circle');                    
-SymbolStyle.cross = new SymbolStyle('cross');                    
-SymbolStyle.diamond = new SymbolStyle('diamond');                    
-SymbolStyle.square = new SymbolStyle('square');                    
-SymbolStyle.triangleDown = new SymbolStyle('triangle-down');                    
-SymbolStyle.triangleUp = new SymbolStyle('triangle-up');                    
+  constructor(name, index){
+      super(name);
+      this.index=index;
+  }
+
+  d3Symbol(dTreez){
+      return dTreez.symbols[this.index];
+  }
+
+}                 
+
+SymbolStyle.none = new SymbolStyle('none',-1);                    
+SymbolStyle.circle = new SymbolStyle('circle',0);                    
+SymbolStyle.cross = new SymbolStyle('cross',1);                    
+SymbolStyle.diamond = new SymbolStyle('diamond',2);                    
+SymbolStyle.square = new SymbolStyle('square',3);  
+SymbolStyle.star = new SymbolStyle('star',4);                   
+SymbolStyle.triangle = new SymbolStyle('triangle',5);                    
+SymbolStyle.why = new SymbolStyle('why',6);                    
            	
 
 

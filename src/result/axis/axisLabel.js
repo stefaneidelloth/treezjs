@@ -168,7 +168,7 @@ export default class AxisLabel extends GraphicsAtom {
 		var extraVerticalRotation = -90;
 		var verticalRotation = rotation + extraVerticalRotation;
 
-		var x = -(tickOffset + tickLabelWidth + offset + labelHeight);
+		var x = -(tickOffset + tickLabelWidth + offset + 2*labelHeight);
 		var y = graphHeight;
 		if (this.position === 'centre') {
 			y = graphHeight / 2;

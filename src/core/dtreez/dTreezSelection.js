@@ -202,6 +202,14 @@ export default class DTreezSelection {
 		this.__d3Selection.attr('title', title);		
 		return this;
 	}
+
+	type(type){
+		if (type === undefined){
+			return this.__d3Selection.attr('type');
+		}
+		this.__d3Selection.attr('type', type);		
+		return this;
+	}
 	
 	value(value){
 		if (value === undefined){

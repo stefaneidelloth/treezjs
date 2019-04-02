@@ -25,7 +25,7 @@ export default class QuantitativeScaleBuilder {
 	
 	includeDomainValuesForAutoScale(dataForAutoScale) {
 		var minAndMax = this.__getMinAndMax(dataForAutoScale);
-		this.dataForAutoScale = this.dataForAutoScale.concat(minAndMax).sort();
+		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort();
 		this.__updateAutoLimits();
 	}
 
@@ -64,12 +64,27 @@ export default class QuantitativeScaleBuilder {
 		}
 
 		if (!this.__axis.data.hasAutoMin) {
-			var minValue = this.__correctMinIfLogScaleAndZero(parseFloat(this.__axis.data.min));
+
+            var min = parseFloat(this.__axis.data.min);
+
+            if (isNaN(min)){
+            	min =0;
+            }
+            
+
+			var minValue = this.__correctMinIfLogScaleAndZero(min);
 			this.__minScaleValue = minValue;
 		}
 
 		if (!this.__axis.data.hasAutoMax) {
-			this.__maxScaleValue = parseFloat(this.__axis.data.max);
+
+
+			var max = parseFloat(this.__axis.data.min);
+			if(isNaN(max)){
+				max=1;
+			}           
+            
+			this.__maxScaleValue = max;
 		}
 	}
 
@@ -112,7 +127,7 @@ export default class QuantitativeScaleBuilder {
 
 	__getMinAndMax(dataForAutoScale) {
 		var sortedList = dataForAutoScale.sort();		
-		return [sortedList.first(), sortedList.last()];
+		return [sortedList[0], sortedList[sortedList.length-1]];
 	}	
 
 	
@@ -133,13 +148,17 @@ export default class QuantitativeScaleBuilder {
 		var min = 0.0
 		var autoDataExists = this.__dataForAutoScale.length > 0;
 		if (autoDataExists) {
-			var minValue = this.__dataForAutoScale.first();
-			var maxValue = dataForAutoScale.last();
+			var minValue = this.__dataForAutoScale[0];
+			var maxValue = this.__dataForAutoScale[this.__dataForAutoScale.length-1];
 			var delta = maxValue - minValue;
-			var minBorderMode = parent.data.borderMin;
-			var borderFactor = minBorderMode.getFactor();
-			var autoMinValue = minValue - borderFactor * delta;
-			min = autoMinValue;
+			var minBorderMode = this.__axis.data.borderMin;
+			var borderFactor = minBorderMode.factor;
+			if(delta===0){
+				min = minValue *(1- borderFactor);
+			} else {
+				min = minValue - borderFactor * delta;
+			}	
+			
 		}		
 		
 		return this.__correctMinIfLogScaleAndZero(min);		
@@ -148,31 +167,54 @@ export default class QuantitativeScaleBuilder {
 	get autoMaxValue() {
 		var autoDataExists = this.__dataForAutoScale.length > 0;
 		if (autoDataExists) {
-			var minValue = dataForAutoScale.first();
-			var maxValue = dataForAutoScale.last();
-			var delta = maxValue - minValue;
-			var maxBorderMode = parent.data.borderMax;
-			var borderFactor = maxBorderMode.getFactor();
-			var autoMaxValue = maxValue + borderFactor * delta;
-			return autoMaxValue;
+			var minValue = this.__dataForAutoScale[0];
+			var maxValue = this.__dataForAutoScale[this.__dataForAutoScale.length-1];
+			var delta = maxValue - minValue;			
+			var maxBorderMode = this.__axis.data.borderMax;
+			var borderFactor = maxBorderMode.factor;
+
+			if(delta === 0){
+				return maxValue * (1+borderFactor);
+			} else {
+				return maxValue + borderFactor * delta
+			}
+			
 		}
 		return 1.0;
 	}
 	
 	set __minScaleValue(min) {
 		var oldDomain = this.__scale.domain();
-		var oldMax = oldDomain.length> 1
-						?oldDomain[1]
-						:1;
-		this.__scale.domain([min, oldMax]);
+
+		if(oldDomain.length>1){
+			var oldMin = oldDomain[0];
+			if(min === oldMin){
+				return;
+			}
+			var oldMax = oldDomain[1];
+
+			this.__scale.domain([min, oldMax]);
+		} else {
+			this.__scale.domain([min, 1]);
+		}		
 	}
 
 	set __maxScaleValue(max) {
 		var oldDomain = this.__scale.domain();
-		var oldMin = oldDomain.length>0
-			?oldDomain[0]
-			:0;
-		this.__scale.domain([oldMin, max]);
+
+		if(oldDomain.length>1){			
+
+			var oldMax = oldDomain[1];
+			if(max === oldMax){
+				return;
+			}
+
+			var oldMin = oldDomain[0];			
+			
+			this.__scale.domain([oldMin, max]);
+		} else {
+			this.__scale.domain([0, max]);
+		}		
 	}
 
 }

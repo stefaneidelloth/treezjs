@@ -1,4 +1,5 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import InterpolationMode from './interpolationMode.js';
 
 export default class Line extends GraphicsAtom {
 	
@@ -48,7 +49,7 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.isHideen);
+			.bindValue(this, ()=>this.isHidden);
 		
 	}
 
@@ -67,19 +68,18 @@ export default class Line extends GraphicsAtom {
 				.attr('id', id) //
 				.attr('class', 'lines');		
 
-		var linePathGenerator = d3 //
-				.svg()//
+        var xScale = xy.xScale;
+        var yScale = xy.yScale;
+		var linePathGenerator = dTreez //				
 				.line()
-				.x(new AxisScaleFirstDataFunction(engine, xy.xScale))
-				.y(new AxisScaleSecondDataFunction(engine, xy.yScale))//
-				.interpolate(this.interpolationMode);
+				.x((row)=>xScale(row[0]))
+				.y((row)=>yScale(row[1]));//
+				//.curve(this.interpolationMode); //TODO
 
-		//plot new lines		
-		var xyDataString = xy.createXyDataString(xy.xValues, xy.yValues);
-
+		//plot new lines
 		var lines = linesSelection //
 				.append('path') //
-				.attr('d', linePathGenerator.generate(xyDataString))
+				.attr('d', linePathGenerator(xy.xyData))
 				.attr('fill', 'none');
 
 		//bind attributes
