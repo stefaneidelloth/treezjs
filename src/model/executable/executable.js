@@ -253,7 +253,7 @@ export default class Executable extends Model {
         section.append('treez-section-action')
             .image('run.png')
             .label('Run external executable')
-            .addAction(()=>this.execute(this.treeView)
+            .addAction(()=>this.execute(this.__treeView)
             				   .catch(error => {
             					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
             				   })

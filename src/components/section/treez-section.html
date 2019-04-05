@@ -15,8 +15,12 @@
             class TreezSectionAction extends HTMLElement {
 
  				static get observedAttributes() {
-                    return ['image'];
+                    return ['image','label'];
                 }
+
+                get actions(){
+					return this.__actions;
+				}
 
                 get image() {
 				  return this.getAttribute('image');
@@ -25,11 +29,15 @@
 				set image(image) {
 				  this.setAttribute('image', image);
 				}
-				
-				get actions(){
-					return this.__actions;
+
+				 get label() {
+				  return this.getAttribute('label');
 				}
 
+				set label(label) {
+				  this.setAttribute('label', label);
+				}
+				
                 constructor(){
                     super();  
                     this.__actions = [];                  
@@ -163,7 +171,7 @@
                 	
                 	let img = document.createElement('img');
                 	img.classList.add('treez-section-action');
-                	img.title = sectionAction.title;                	
+                	img.title = sectionAction.label;                	
                 	img.onclick = (event)=> {
                 		event.stopPropagation();
                 		sectionAction.actions.forEach(
@@ -175,7 +183,7 @@
                 		img.src="/icons/" + sectionAction.image;
                 	} else {
                 		img.src="/icons/root.png";
-                		console.warn('Section action has no image! (title: "'+ sectionAction.title +'")')
+                		console.warn('Section action has no image! (label: "'+ sectionAction.label +'")')
                 	}             	
                 	
                 	toolbar.appendChild(img);

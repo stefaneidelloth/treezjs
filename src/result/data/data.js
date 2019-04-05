@@ -17,6 +17,15 @@ export default class Data extends ComponentAtom {
 		
 		const section = page.append('treez-section')
     		.label('Data');
+
+    	section.append('treez-section-action')
+            .image('run.png')
+            .label('Run executable children')
+            .addAction(()=>this.execute(this.__treeView)
+            				   .catch(error => {
+            					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
+            				   })
+        );
 	
 		section.append('treez-text-label')
 			.value('This atom represents data.');		

@@ -20,7 +20,16 @@ export default class Models extends Model {
             .label('Data');		
 
 		const section = page.append('treez-section')
-        	.label('Models');   
+        	.label('Models');  
+
+        section.append('treez-section-action')
+            .image('run.png')
+            .label('Run models')
+            .addAction(()=>this.execute(this.__treeView)
+            				   .catch(error => {
+            					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
+            				   })
+            );   
 
 	    const sectionContent = section.append('div'); 	     
 

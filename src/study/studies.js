@@ -23,7 +23,16 @@ export default class Studies extends ComponentAtom {
             .label('Data');		
 
 		const section = page.append('treez-section')
-        	.label('Studies');   
+        	.label('Studies'); 
+
+        section.append('treez-section-action')
+            .image('run.png')
+            .label('Run studies')
+            .addAction(()=>this.execute(this.__treeView)
+            				   .catch(error => {
+            					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
+            				   })
+            );  
 
 	    const sectionContent = section.append('div'); 	     
 
