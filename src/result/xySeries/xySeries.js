@@ -71,7 +71,7 @@ export default class XySeries extends GraphicsAtom {
 	execute(treeView) {		
 		
 		if (this.sourceTable) {
-			var foundSourceTable = this.getChildFromRoot(this.sourceTable);
+			var foundSourceTable = this.childFromRoot(this.sourceTable);
 
 			var domainAxis = this.__updateDomainAxis(foundSourceTable);
 			var rangeAxis = this.__updateRangeAxis(foundSourceTable);
@@ -86,7 +86,7 @@ export default class XySeries extends GraphicsAtom {
 	__createLegendForParentGraphIfNotExists() {
 		var graph = this.parent;
 		try {
-			graph.getChildByClass(Legend);
+			graph.childByClass(Legend);
 		} catch (error) {
 			var legend = new Legend('legend');
 			graph.addChild(legend);
@@ -95,7 +95,7 @@ export default class XySeries extends GraphicsAtom {
 	}
 
 	__createNewXyChildren(sourceTablePath, domainAxis, rangeAxis) {
-		var foundSourceTable = this.getChildFromRoot(sourceTablePath);
+		var foundSourceTable = this.childFromRoot(sourceTablePath);
 		var numberOfColumns = foundSourceTable.numberOfColumns;
 		var numberOfPlots = numberOfColumns - 1;
 
@@ -215,7 +215,7 @@ export default class XySeries extends GraphicsAtom {
 
 	__getAllAxisFromParentGraph() {
 		var graph = this.parent;
-		return graph.getChildrenByClass(Axis);		
+		return graph.childrenByClass(Axis);		
 	}
 
 	createNewXyChild(
@@ -229,9 +229,9 @@ export default class XySeries extends GraphicsAtom {
 			 color) {
 
 		var xy = new Xy(rangeColumnName);		
-		xy.data.xAxis = domainAxis.getTreePath();		
+		xy.data.xAxis = domainAxis.treePath;		
 		xy.data.xData = sourceTablePath + '.' + columnsName + '.' + domainColumnName;		
-		xy.data.yAxis = rangeAxis.getTreePath();	
+		xy.data.yAxis = rangeAxis.treePath;	
 		xy.data.yData = sourceTablePath + '.' + columnsName + '.' + rangeColumnName;
 		xy.data.legendText = this.rangeLegend;
 		xy.line.color = color;

@@ -330,7 +330,7 @@ public class CustomSensitivity extends AbstractParameterVariation {
 			String variableModelPath = sourceModelPath + "." + variableName;
 			VariableField<?, ?> variableField;
 			try {
-				variableField = this.getChildFromRoot(variableModelPath);
+				variableField = this.childFromRoot(variableModelPath);
 			} catch (IllegalArgumentException exception) {
 				String message = "Could not find variable atom '" + variableModelPath + "'.";
 				Utils.showErrorMessage(message);
@@ -379,7 +379,7 @@ public class CustomSensitivity extends AbstractParameterVariation {
 
 		//get sweep output atom
 		String studyOutputAtomPath = getStudyOutputAtomPath();
-		AbstractAtom<?> studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
+		AbstractAtom<?> studyOutputAtom = this.childFromRoot(studyOutputAtomPath);
 
 		//remove all old children if they exist
 		studyOutputAtom.removeAllChildren();
@@ -417,7 +417,7 @@ public class CustomSensitivity extends AbstractParameterVariation {
 		boolean pickingOutputAtomExists = this.rootHasChild(pickingPutputAtomPath);
 		if (!pickingOutputAtomExists) {
 			OutputAtom pickingOutputAtom = new OutputAtom(pickingOutputAtomName, provideImage());
-			AbstractAtom<?> data = this.getChildFromRoot(dataAtomPath);
+			AbstractAtom<?> data = this.childFromRoot(dataAtomPath);
 			data.addChild(pickingOutputAtom);
 			LOG.info("Created " + pickingPutputAtomPath + " for picking output.");
 		}

@@ -39,7 +39,7 @@ export default class ColumnFolder extends ComponentAtom {
 	}
 
 	get columns(){
-		return this.getChildrenByClass(Column);
+		return this.childrenByClass(Column);
 	}
 
 	
@@ -78,7 +78,7 @@ export default class ColumnFolder extends ComponentAtom {
 	
 	column(header) {
 		try {
-			return this.getChild(header);			
+			return this.child(header);			
 		} catch (error) {
 			throw new Error('Could not get column "' + header + '".');
 		}

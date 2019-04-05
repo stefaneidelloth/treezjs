@@ -1,7 +1,9 @@
 import ComponentAtom from "./../core/component/componentAtom.js";
+import Monitor from './../core/monitor/monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import Study from './study.js';
 import Sweep from './sweep/sweep.js';
+
 //import Picking from './picking/picking.js';
 //import Sensitivity from './sensitivity/sensitivity.js';
 //import Probability from './probability/probability.js';
@@ -29,23 +31,6 @@ export default class Studies extends ComponentAtom {
 			.text('This atom represents studies.');
     }
 	
-	async execute(treeView, monitor){
-		if(!monitor){
-			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
-			monitor = new Monitor(monitorTitle, treeView);
-			monitor.showInMonitorView();
-		}
-		
-		for(const child of this.children){
-			var isStudy = child instanceof Study;
-			if (isStudy) {
-				var subMonitor = monitor.createChild();
-				await child.execute(treeView, subMonitor);				
-			}
-		}
-		
-		monitor.done();
-	}
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		

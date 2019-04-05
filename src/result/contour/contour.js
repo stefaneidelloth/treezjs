@@ -309,7 +309,7 @@ export default class Contour extends PagedGraphicsAtom {
 		if (!this.data.xData) {
 			return [];
 		}
-		var xDataColumn = this.getChildFromRoot(this.data.xData);
+		var xDataColumn = this.childFromRoot(this.data.xData);
 		return xDataColumn.doubleValues;	
 	}
 
@@ -317,7 +317,7 @@ export default class Contour extends PagedGraphicsAtom {
 		if (!this.data.yData) {
 			return [];
 		}
-		var yDataColumn = this.getChildFromRoot(this.data.yData);
+		var yDataColumn = this.childFromRoot(this.data.yData);
 		return yDataColumn.doubleValues;
 	}
 
@@ -325,7 +325,7 @@ export default class Contour extends PagedGraphicsAtom {
 		if (!this.data.zData) {
 			return [];
 		}
-		var zDataColumn = this.getChildFromRoot(this.data.zData);
+		var zDataColumn = this.childFromRoot(this.data.zData);
 		return zDataColumn.doubleValues;
 	}
 
@@ -345,14 +345,14 @@ export default class Contour extends PagedGraphicsAtom {
 		if (!this.data.xAxis) {
 			return null;
 		}
-		return this.getChildFromRoot(this.data.xAxis);		
+		return this.childFromRoot(this.data.xAxis);		
 	}
 	
 	get yAxis() {		
 		if (!this.data.yAxis) {
 			return null;
 		}
-		return this.getChildFromRoot(this.data.yAxis);		
+		return this.childFromRoot(this.data.yAxis);		
 	}	
 
 }

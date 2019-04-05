@@ -87,7 +87,7 @@ export default class SweepModelInputGenerator {
 					//check if corresponding variable is also enabled					
 					var variable;
 					try {
-						variable = this.sweep.getChildFromRoot(child.variablePath);
+						variable = this.sweep.childFromRoot(child.variablePath);
 					} catch (error) {
 						var message = 'Could not find variable atom "' + child.variablePath + '".';
 						throw new Error(message + error);
@@ -171,7 +171,7 @@ export default class SweepModelInputGenerator {
 
 	
 	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId) {
-		var sweepModelPath = this.sweep.getTreePath();
+		var sweepModelPath = this.sweep.treePath;
 		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId);
 		initialInput.add(variableModelPath, value);
 		return initialInput;

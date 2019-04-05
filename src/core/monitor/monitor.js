@@ -2,32 +2,7 @@ import MonitorConsole from './monitorConsole.js';
 
 export default class Monitor {
 
-	get isDone() {
-		if (this.__totalWork === undefined) {
-			return false;
-		}
-
-		return this.__finishedWork >= this.__totalWork;
-	}
 	
-	get isChildCanceled() {
-		var result = false;
-		this.__children.every((child)=>{
-			if (child.isCanceled) {
-				result=true
-				return false; //stops every loop
-			}
-			
-			if (child.isChildCanceled) {
-				result=true
-				return false; //stops every loop
-			}
-			
-			return true; //continues every loop
-		});
-		
-		return result;
-	}	
 	
 	
 	constructor(title, treeView, id, coveredWorkOfParentMonitor, totalWork, parentMonitor) {		
@@ -250,16 +225,16 @@ export default class Monitor {
 		this.__console.error(message, error);
 	}
 
-	setDescription(description) {
+	set description(description) {
 		this.__description = description;	
 		this.__triggerPropertyChangedListeners();
 	}
 
-	getDescription() {
+	get description() {
 		return this.__description;
 	}
 
-	setTotalWork(totalWork) {
+	set totalWork(totalWork) {
 		if (this.__totalWork === undefined) {
 			this.__totalWork = totalWork;
 			this.__triggerPropertyChangedListeners();
@@ -268,7 +243,7 @@ export default class Monitor {
 		}
 	}	
 
-	getProgressInPercent() {
+	get progressInPercent() {
 
 		if (this.__totalWork === undefined || this.__totalWork === 0) {
 			return 0;
@@ -277,13 +252,40 @@ export default class Monitor {
 		return Math.floor(progressInPercent);
 	}
 
-	getChildren() {
+	get children() {
 		return this.__children;
 	}
 
+	get isDone() {
+		if (this.__totalWork === undefined) {
+			return false;
+		}
+
+		return this.__finishedWork >= this.__totalWork;
+	}
+	
+	get isChildCanceled() {
+		var result = false;
+		this.__children.every((child)=>{
+			if (child.isCanceled) {
+				result=true
+				return false; //stops every loop
+			}
+			
+			if (child.isChildCanceled) {
+				result=true
+				return false; //stops every loop
+			}
+			
+			return true; //continues every loop
+		});
+		
+		return result;
+	}	
+
 	
 
-	getOutputStream() {
+	get outputStream() {
 		return this.__console.newOutputStream();
 	}
 

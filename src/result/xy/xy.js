@@ -229,7 +229,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!xAxisPath) {
 			return null;
 		}
-		return this.getChildFromRoot(xAxisPath);		
+		return this.childFromRoot(xAxisPath);		
 	}
 
 	get yAxis() {
@@ -237,7 +237,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!yAxisPath) {
 			return null;
 		}
-		return this.getChildFromRoot(yAxisPath);		
+		return this.childFromRoot(yAxisPath);		
 	}
 
 	get xValues() {
@@ -245,7 +245,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!xDataPath) {
 			return [];
 		}
-		var xDataColumn = this.getChildFromRoot(xDataPath);
+		var xDataColumn = this.childFromRoot(xDataPath);
 		return xDataColumn.values;
 	}
 	
@@ -254,7 +254,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!yDataPath) {
 			return [];
 		}
-		var yDataColumn = this.getChildFromRoot(yDataPath);
+		var yDataColumn = this.childFromRoot(yDataPath);
 		return yDataColumn.values;
 	}	
 
@@ -263,7 +263,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!xDataPath) {
 			return [];
 		}
-		var xDataColumn = this.getChildFromRoot(xDataPath);	
+		var xDataColumn = this.childFromRoot(xDataPath);	
 		if (xDataColumn.isNumeric) {
 			return xDataColumn.numericValues;			
 		} else {
@@ -281,7 +281,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!yDataPath) {
 			return [];
 		}
-		var yDataColumn = this.getChildFromRoot(yDataPath);		
+		var yDataColumn = this.childFromRoot(yDataPath);		
 		if (yDataColumn.isNumeric) {
 			return yDataColumn.numericValues;			
 		} else {
@@ -299,7 +299,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!xDataPath) {
 			return [];
 		}
-		var xDataColumn = this.getChildFromRoot(xDataPath);
+		var xDataColumn = this.childFromRoot(xDataPath);
 		return xDataColumn.stringValues;
 	}
 
@@ -308,7 +308,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!yDataPath) {
 			return [];
 		}
-		var yDataColumn = this.getChildFromRoot(yDataPath);
+		var yDataColumn = this.childFromRoot(yDataPath);
 		return yDataColumn.stringValues;
 	}
 

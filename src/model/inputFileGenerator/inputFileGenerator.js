@@ -84,7 +84,7 @@ export default class InputFileGenerator extends Model  {
 													monitor.error(error);
 												 });
 
-		var sourceModelAtom = this.getChildFromRoot(this.sourceModelPath);	
+		var sourceModelAtom = this.childFromRoot(this.sourceModelPath);	
 		
 		var inputFileString = this.__applyTemplateToSourceModel(template, sourceModelAtom);
 
@@ -177,7 +177,7 @@ export default class InputFileGenerator extends Model  {
 	__getModifiedInputPath(){
 		var inputModification = null;
 		try{
-			inputModification = this.getChildByClass(InputModification);
+			inputModification = this.childByClass(InputModification);
 		} catch(error){			
 		}		
 		

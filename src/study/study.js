@@ -96,7 +96,7 @@ export default class Study extends ComponentAtom {
 		monitor.title = studyTitle;
 
 		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
-		monitor.setTotalWork(numberOfSimulations);
+		monitor.totalWork = numberOfSimulations;
 				
 		monitor.info("Number of total simulations: " + numberOfSimulations);
 
@@ -112,7 +112,7 @@ export default class Study extends ComponentAtom {
 
 		//get sweep output atom
 		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
-		var studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
+		var studyOutputAtom = this.childFromRoot(studyOutputAtomPath);
 
 		//remove all old children if they exist
 		studyOutputAtom.removeAllChildren();
@@ -146,7 +146,7 @@ export default class Study extends ComponentAtom {
 			
 			this.isCanceled = true;
 			monitor.markIssue();
-			monitor.setDescription('Canceled!');
+			monitor.description = 'Canceled!';
 			this.__logAndShowCancelMessage(monitor);
 			treeView.refresh();			
 		}
@@ -158,7 +158,7 @@ export default class Study extends ComponentAtom {
 
 			this.executeRunnableChildren(treeView, monitor);
 
-			monitor.setDescription('Finished!');
+			monitor.description = 'Finished!';
 
 			if (monitor.isChildCanceled) {
 				monitor.cancel();
@@ -240,8 +240,8 @@ export default class Study extends ComponentAtom {
 		var jobId = modelInput.getJobId();
 		var jobTitle = "Sweep Job '" + jobId + "'";
 
-		var pathForModelToRun = model.getTreePath();
-		var root = outputAtom.getRoot();
+		var pathForModelToRun = model.treePath;
+		var root = outputAtom.root;
 
 		//create snapshot of root as blueprint for shadow roots
 		//(The actual root tree will be modified during execution and it would be a bad idea
@@ -262,7 +262,7 @@ export default class Study extends ComponentAtom {
 				var shadowRoot = rootSnapshot.copy();
 
 				//run shadow model
-				var shadowModelToRun = shadowRoot.getChildFromRoot(pathForModelToRun);
+				var shadowModelToRun = shadowRoot.childFromRoot(pathForModelToRun);
 
 				var jobMonitor = monitor.createChild(jobTitle, jobId, 1);
 				
@@ -325,7 +325,7 @@ export default class Study extends ComponentAtom {
 			var jobTitle = 'Job #' + jobId ;
 			var jobMonitor = monitor.createChild(jobTitle, treeView, jobId, 1);
 			
-			monitor.setDescription('=>' + jobTitle);
+			monitor.description = '=>' + jobTitle;
 
 			var modelOutput = await model.runModel(modelInput, treeView, jobMonitor);
 			if(modelOutput){
@@ -359,7 +359,7 @@ export default class Study extends ComponentAtom {
 		var studyOutputAtomExists = this.rootHasChild(studyOutputAtomPath);
 		if (!studyOutputAtomExists) {
 			var studyOutput = this.createStudyOutputAtom(studyOutputAtomName);
-			var data = this.getChildFromRoot(dataAtomPath);
+			var data = this.childFromRoot(dataAtomPath);
 			data.addChild(studyOutput);			
 			monitor.info('Created ' + studyOutputAtomPath + ' for study output.');
 		}
@@ -374,9 +374,8 @@ export default class Study extends ComponentAtom {
 	__createResultsAtomIfNotExists(monitor) {
 		var resultAtomPath = "root.results";
 		var resultAtomExists = this.rootHasChild(resultAtomPath);
-		if (!resultAtomExists) {			
-			var root = this.getRoot();
-			root.createResults();			
+		if (!resultAtomExists) {
+			this.root.createResults();			
 			monitor.info('Created ' + resultAtomPath + ' for study output.');
 		}
 	}
@@ -387,7 +386,7 @@ export default class Study extends ComponentAtom {
 		var dataAtomPath = this.__createDataOutputAtomPath();
 		var dataAtomExists = this.rootHasChild(dataAtomPath);
 		if (!dataAtomExists) {			
-			var results = this.getChildFromRoot(resultAtomPath);
+			var results = this.childFromRoot(resultAtomPath);
 			results.createData();
 			monitor.info('Created ' + dataAtomPath + ' for study output.');
 		}
@@ -408,7 +407,7 @@ export default class Study extends ComponentAtom {
 
 	__getControlledModel() {		
 		try {
-			return this.getChildFromRoot(this.controlledModelPath);
+			return this.childFromRoot(this.controlledModelPath);
 			
 		} catch (error) {
 			var message = 'The model path "' + this.controlledModelPath + '" does not point to a valid model.';
@@ -421,7 +420,7 @@ export default class Study extends ComponentAtom {
 			return null;
 		}
 		try{
-			return this.getChildFromRoot(this.sourceModelPath);			
+			return this.childFromRoot(this.sourceModelPath);			
 		} catch (error) {
 			var message = 'The model path "' + sourcePath + '" does not point to a valid model.';
 			throw new Error(message, error);

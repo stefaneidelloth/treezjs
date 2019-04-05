@@ -12,15 +12,22 @@ export default class Probe extends ComponentAtom {
 	}
 
 	async execute(treeView, monitor) {
+
+		var hasMainMonitor = false;
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
+			hasMainMonitor=true;
 		}	
 		
 		this.afterCreateControlAdaptionHook();
 			
 		await this.runProbe(treeView, monitor);
+
+		if(hasMainMonitor){
+			monitor.done();
+		}
 	}
 	
 

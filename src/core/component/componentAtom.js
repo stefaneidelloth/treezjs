@@ -1,7 +1,8 @@
-import Atom from '../atom/atom.js';
+import Atom from './../atom/atom.js';
 import ComponentAtomCodeAdaption from './componentAtomCodeAdaption.js';
-import ActionSeparator from '../actionSeparator.js';
-import TreeViewAction from '../treeview/TreeViewAction.js';
+import ActionSeparator from './../actionSeparator.js';
+import TreeViewAction from './../treeview/TreeViewAction.js';
+import Monitor from './../monitor/monitor.js';
 
 export default class ComponentAtom extends Atom {
 
@@ -73,7 +74,7 @@ export default class ComponentAtom extends Atom {
 		
 		const pathInfo = parent.append('div')
 			.className('treez-properties-path-info')
-			.text(this.getTreePath());	
+			.text(this.treePath);	
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
 		const tabFolder = treeView.dTreez.select(tabFolderElement);
@@ -138,6 +139,31 @@ export default class ComponentAtom extends Atom {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		return actions;
+	}
+
+	async execute(treeView, monitor) {
+		this.__treeView = treeView;
+		
+		var hasMainMonitor = false;		
+		if(!monitor){
+			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
+			monitor = new Monitor(monitorTitle, treeView);
+			monitor.showInMonitorView();
+			hasMainMonitor = true;
+		}
+
+		monitor.totalWork = this.numberOfRunnableChildren;		
+		for(const child of this.children){			
+			if (child.isRunnable) {
+				var subMonitor = monitor.createChild(child.name, treeView, child.name, 1);
+				await child.execute(treeView, subMonitor);				
+			}
+		}
+
+		if(hasMainMonitor){
+			monitor.done();	
+		}		
+		
 	}
 
 }

@@ -5,7 +5,7 @@ export default class AtomTreeNodeAdapter {
 
 	static createTreeNode(parentSelection,treeView,atom){		
 		
-		if(atom.hasChildren()){
+		if(atom.hasChildren){
             return this.createExpandableNodeWithChildren(parentSelection,treeView,atom);
 		} else {
 			return this.crateLeafeNode(parentSelection,treeView,atom);

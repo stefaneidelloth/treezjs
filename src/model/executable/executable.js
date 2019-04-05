@@ -107,11 +107,11 @@ export default class Executable extends Model {
 
 		//initialize progress monitor
 		const totalWork = 3;
-		monitor.setTotalWork(totalWork);
+		monitor.totalWork = totalWork;
 
 		await this.__deleteOldOutputAndLogFilesIfExist();
 
-		monitor.setDescription('Running InputFileGenerator children if exist.');
+		monitor.description = 'Running InputFileGenerator children if exist.';
 
 		//execute input file generator child(ren) if exist		
 		
@@ -125,7 +125,7 @@ export default class Executable extends Model {
 
 		//update progress monitor
 		monitor.worked(1);
-		monitor.setDescription('Executing system command.');
+		monitor.description = 'Executing system command.';
 
 		//create command
 		const command = this.__buildCommand();
@@ -159,7 +159,7 @@ export default class Executable extends Model {
 					}
 					
 					const errorTitle = 'Executing system command failed:\n';
-					monitor.setDescription(errorTitle);
+					monitor.description = errorTitle;
 					monitor.error(errorTitle + message);
 					monitor.cancel();
 					
@@ -183,7 +183,7 @@ export default class Executable extends Model {
     	    		
 			// update progress monitor
 			monitor.worked(1);
-			monitor.setDescription('=>Post processing model output.');
+			monitor.description = '=>Post processing model output.';
 
 			const modelOutput = this.__createEmptyModelOutput();
 
@@ -212,7 +212,7 @@ export default class Executable extends Model {
 			this.__increaseJobId();
 
 			// inform progress monitor to be done
-			monitor.setDescription('finished\n');
+			monitor.description = 'finished\n';
 			monitor.done();
 
 			return modelOutput;	
@@ -487,7 +487,7 @@ export default class Executable extends Model {
 		
 		var inputModification = null;
 		try{
-			inputModification = this.getChildByClass(InputModification);
+			inputModification = this.childByClass(InputModification);
 		} catch(error){			
 		}		
 		
@@ -499,7 +499,7 @@ export default class Executable extends Model {
 	__getModifiedOutputPath() {
 		var outputModification = null;
 		try{
-			outputModification= this.getChildByClass(OutputModification);
+			outputModification= this.childByClass(OutputModification);
 		} catch(error){			
 		}
 		
@@ -525,7 +525,7 @@ export default class Executable extends Model {
 		
 		var loggingArguments = null;
 		try{
-			loggingArguments = this.getChildByClass(LoggingArguments);
+			loggingArguments = this.childByClass(LoggingArguments);
 		} catch(error){			
 		}		
 		

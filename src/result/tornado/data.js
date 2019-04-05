@@ -334,7 +334,7 @@ export default class Data extends GraphicsAtom {
 		if (!dataPath) {
 			return [];
 		}
-		var dataColumn = this.getChildFromRoot(dataPath);
+		var dataColumn = this.childFromRoot(dataPath);
 		return dataColumn.values;		
 	}	
 
@@ -358,14 +358,14 @@ export default class Data extends GraphicsAtom {
 		if (!this.inputAxis) {
 			return null;
 		}
-		return this.__tornado.getChildFromRoot(this.inputAxis);		
+		return this.__tornado.childFromRoot(this.inputAxis);		
 	}
 
 	get outputAxisAtom() {		
 		if (!this.outputAxis) {
 			return null;
 		}
-		return this.__tornado.getChildFromRoot(this.outputAxis);		
+		return this.__tornado.childFromRoot(this.outputAxis);		
 	}	
 
 }

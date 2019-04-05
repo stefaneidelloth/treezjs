@@ -40,7 +40,7 @@ export default class Table extends ComponentAtom {
 		
 		const pathInfo = parent.append('div')
 			.className('treez-properties-path-info')
-			.text(this.getTreePath());	
+			.text(this.treePath);	
 
 		const tableContainer = parent.append('div')
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
@@ -556,13 +556,13 @@ export default class Table extends ComponentAtom {
 	get columnFolder() {
 
 		try {
-			return this.getChildByClass(ColumnFolder);			
+			return this.childByClass(ColumnFolder);			
 		} catch (error) {
 
 			if (this.isLinkedToSource) {
 				this.reload();
 				try {
-					return this.getChildByClass(ColumnFolder);					
+					return this.childByClass(ColumnFolder);					
 				} catch (error) {
 					return null;
 				}

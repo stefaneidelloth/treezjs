@@ -189,7 +189,7 @@ public class PickingModelInputGenerator implements ModelInputGenerator {
 			int timeIndex,
 			Number timeValue) {
 
-		String pickingModelPath = picking.createTreeNodeAdaption().getTreePath();
+		String pickingModelPath = picking.createTreeNodeAdaption().treePath;
 
 		ModelInput modelInput = new HashMapModelInput(pickingModelPath, studyId, studyDescription);
 
@@ -224,7 +224,7 @@ public class PickingModelInputGenerator implements ModelInputGenerator {
 			ModelInput
 			createModelInputFromSample(String sourceModelPath, String studyId, String studyDescription, Sample sample) {
 
-		String pickingModelPath = picking.createTreeNodeAdaption().getTreePath();
+		String pickingModelPath = picking.createTreeNodeAdaption().treePath;
 		ModelInput modelInput = new HashMapModelInput(pickingModelPath, studyId, studyDescription);
 		Map<String, VariableField<?, ?>> variableData = sample.getVariableData();
 		for (String variableName : variableData.keySet()) {

@@ -451,7 +451,7 @@ export default class TableImport extends Model {
 
 	__linkTargetTableToSource(tableSource) {
 		this.__createTableIfNotExists();		
-		var table = this.getChildByClass(Table);
+		var table = this.childByClass(Table);
 		table.removeChildrenByClass(TableSource);
 		
 		var newTableSource = new TableSource(tableSource);
@@ -463,7 +463,7 @@ export default class TableImport extends Model {
 
 	__writeDataToTargetTable(tableData, tableModelPath, appendData) {
 		this.__createTableIfNotExists();		
-		var table = this.getChildByClass(Table);
+		var table = this.childByClass(Table);
 		
 		TableImport.__checkAndPrepareColumnsIfRequired(tableData, table);
 		

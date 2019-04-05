@@ -8,8 +8,6 @@ import TreeView from './../../views/treeView.js';
 
 export default class Atom {		
 
-   
-
 	constructor(name) {	
 		
 		/**
@@ -120,7 +118,7 @@ export default class Atom {
 					);
 
 		//move up
-		var canBeMovedUp = this.canBeMovedUp();
+		var canBeMovedUp = this.canBeMovedUp;
 		if (canBeMovedUp) {
 			actions.push(new TreeViewAction(
 							'Move up',
@@ -131,7 +129,7 @@ export default class Atom {
 		}
 
 		//move down
-		var canBeMovedDown = this.canBeMovedDown();
+		var canBeMovedDown = this.canBeMovedDown;
 		if (canBeMovedDown) {
 			actions.push(new TreeViewAction(
 							'Move down',
@@ -155,7 +153,7 @@ export default class Atom {
 	/**
 	 * Returns true if this atom can be moved up in the children of its parent
 	 */
-	canBeMovedUp() {		
+	get canBeMovedUp() {		
 		if (this.parent != null) {
 			var currentChildren = parent.children;
 			var childrenExist = currentChildren != null && currentChildren.length > 1;
@@ -205,7 +203,7 @@ export default class Atom {
 	/**
 	 * Returns true if this atom can be moved down in the children of its parent
 	 */
-	canBeMovedDown() {		
+	get canBeMovedDown() {		
 		if (this.parent != null) {
 			var currentChildren = this.parent.children;
 			var childrenExist = currentChildren != null && currentChildren.length > 1;
@@ -269,7 +267,7 @@ export default class Atom {
 
 	//#region child operations
 
-	hasChildren() {
+	get hasChildren() {
 	  return this.children.length > 0;	  	
 	}
 	
@@ -280,6 +278,26 @@ export default class Atom {
 			}
 		}
 		return false;
+	}
+
+	numberOfChildrenByClass(clazz){
+		var numberOfChildren=0;		
+		for(var child of this.children){
+			if(child instanceof clazz){
+				numberOfChildren++;
+			}
+		}
+		return numberOfChildren;
+	}
+	
+	get numberOfRunnableChildren(){
+		var numberOfChildren=0;		
+		for(var child of this.children){
+			if(child.isRunnable){
+				numberOfChildren++;
+			}
+		}
+		return numberOfChildren;
 	}
 
 	/**
@@ -307,7 +325,7 @@ export default class Atom {
 	/**
 	 * Get child atom with given child name/sub model path. Throws an Error if the child could not be found.
 	 */
-	getChild(childPath) {
+	child(childPath) {
 
 		var isPath = childPath.indexOf('.') > -1;
 
@@ -315,23 +333,23 @@ export default class Atom {
 			//iterate through path to get wanted child
 			var childNames = childPath.split('.');
 			var firstName = childNames[0];
-			var child = this.getChildByName(firstName);
+			var child = this.childByName(firstName);
 			//go to the wanted child in a loop; each iteration
 			//overrides the previous parent atom in the loop
 			for (var index = 1; index < childNames.length; index++) {
-				child = child.getChildByName(childNames[index]);
+				child = child.childByName(childNames[index]);
 			}
 			return child;
 		} else {			
 			var childName = childPath;
-			return this.getChildByName(childName);
+			return this.childByName(childName);
 		}
 	}
 
 	/**
 	 * Get child atom with given child tree path. Throws an Error if the child tree path can not be found.
 	 */
-	getChildFromRoot(childPathStartingWithRoot) {
+	childFromRoot(childPathStartingWithRoot) {
 
 		var rootLength = 5; //'root.'
 		var isTooShort = childPathStartingWithRoot.length < rootLength + 1;
@@ -344,8 +362,8 @@ export default class Atom {
 		if (startsWithRoot) {
 			var length = childPathStartingWithRoot.length;
 			var childPath = childPathStartingWithRoot.substring(rootLength, length);
-			var root = this.getRoot();
-			var child = root.getChild(childPath);
+			var root = this.root;
+			var child = root.child(childPath);
 			if (child == null) {
 				return null;
 			}
@@ -382,9 +400,9 @@ export default class Atom {
 
 	rootHasChild(childPathStartingWithRoot) {
 		try {
-			getChildFromRoot(childPathStartingWithRoot);
+			this.childFromRoot(childPathStartingWithRoot);
 			return true;
-		} catch (exception) {
+		} catch (error) {
 			return false;
 		}
 	}
@@ -393,7 +411,7 @@ export default class Atom {
 	 * Gets the first child atom with the given name. Throws an Error if the child could not be
 	 * found.
 	 */
-	getChildByName(childName) {
+	childByName(childName) {
 
 		var wantedChild = undefined;
 
@@ -419,7 +437,7 @@ export default class Atom {
 	 * Gets the first child atom with the given class. Throws an Error if the child could not be
 	 * found.
 	 */
-	getChildByClass(clazz) {
+	childByClass(clazz) {
 
 		for(var child of this.children){
 			if(child instanceof clazz){
@@ -435,7 +453,7 @@ export default class Atom {
 	 * Gets a list of all child atoms with the given class. Returns an empty list if no child with the given class could
 	 * be found.
 	 */
-	getChildrenByClass(clazz) {
+	childrenByClass(clazz) {
 		var wantedChildren = [];
         this.children.forEach(child => {
 			var isWantedChild = child instanceof clazz;
@@ -497,7 +515,7 @@ export default class Atom {
 	removeChildIfExists(childName) {
 
 		try{
-			var childToRemove = this.getChildByName();
+			var childToRemove = this.childByName();
 			this.removeChild(childToRemove);
 		} catch(error){
 
@@ -531,7 +549,7 @@ export default class Atom {
 
 	//#region parent operations
 
-	hasParent() {
+	get hasParent() {
 		
 		if (!this.parent) {
 			return false;
@@ -550,7 +568,7 @@ export default class Atom {
 	/**
 	 * Returns the root atom of the tree this atom is included in. Returns null if the parent node of this atom is null.
 	 */
-	getRoot() {
+	get root() {
 
 		if (this.name === 'root') {
 			return this;
@@ -563,66 +581,15 @@ export default class Atom {
 			if (parentIsRoot) {
 				return this.parent;
 			} else {				
-				return this.parent.getRoot();
+				return this.parent.root;
 			}
 		}
 	}
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	/**
-	 * Helper method that extracts a wrapped Attribute from a Wrap
-	 */
-	static getWrappedAttribute(wrappingAttribute) {
-		return wrappingAttribute.getAttribute();		
-	}
-
-	/**
-	 * Adds a modification listener to the attribute that is wrapped by the given wrapping attribute.
-	 */
-	addModificationConsumer(key, wrappingAttribute, consumer) {
-		var wrappedAttribute = this.getWrappedAttribute(wrappingAttribute);
-		wrappedAttribute.addModificationConsumer(key, consumer);
-		return this;
-	}
-
-	static addModificationConsumerStatic(key, wrappingAttribute, consumer) {
-		var wrappedAttribute = this.getWrappedAttribute(wrappingAttribute);
-		wrappedAttribute.addModificationConsumer(key, consumer);
-	}
-
-	/**
-	 * Adds a modification listener to the attribute that is wrapped by the given wrapping attribute and executes it
-	 * once
-	 */
-	static addModificationConsumerAndRun(key, wrappingAttribute, consumer) {
-		var wrappedAttribute = this.getWrappedAttribute(wrappingAttribute);
-		wrappedAttribute.addModificationConsumerAndRun(key, consumer);
-	}
-
-	//#end region
-
-	//#end region
-
-	setName(name) {
-		var isDifferentName = (name != null && !(name === this.name)) || (name == null && this.name != null);
-		if (isDifferentName) {
-			this.name = name;
-			this.triggerNameChangedConsumers(name);
-		}
-		return this;
-	}	
-
-	//#end region
-
-
-	
-	getTreePath() {
+		
+	get treePath() {
 		try{
 		return this.parent
-			? this.parent.getTreePath() + '.' + this.name
+			? this.parent.treePath + '.' + this.name
 			: this.name;
 		} catch (error){
 			return '';
@@ -649,11 +616,7 @@ export default class Atom {
 		for(var child of children){
 			this.removeChild(child);
 		}
-	}
-
-	
-
-	
+	}	
 
 	/**
 	 * Expands the tree node in the tree viewer
@@ -671,7 +634,7 @@ export default class Atom {
 		var nextNameAndNumber;
 		var goOn = true;
 		while (goOn) {
-			nextNameAndNumber = this.getNextDummyChildNameAndNumber(currentNameAndNumber);
+			nextNameAndNumber = this.__getNextDummyChildNameAndNumber(currentNameAndNumber);
 			var currentNameIsOk = nextNameAndNumber.equals(currentNameAndNumber);
 			if (currentNameIsOk) {
 				goOn = false;
@@ -687,7 +650,7 @@ export default class Atom {
 	 * Checks if a child atom with a name that corresponds to the given NameAndNumber already exists and returns a new
 	 * NameAndNumber
 	 */
-	getNextDummyChildNameAndNumber(startNameAndNumber) {
+	__getNextDummyChildNameAndNumber(startNameAndNumber) {
 		var nextNameAndNumber = startNameAndNumber.copy();
 		var childWithSameNameAlreadyExists = false;
 		var currentName = startNameAndNumber.getFullName();
@@ -768,6 +731,6 @@ export default class Atom {
 	}
 	
 	
-	//#end region	
+	
 
 }

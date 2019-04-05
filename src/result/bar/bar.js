@@ -321,21 +321,21 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!this.data.horizontalAxis) {
 			return null;
 		}
-		return this.getChildFromRoot(this.data.horizontalAxis);		
+		return this.childFromRoot(this.data.horizontalAxis);		
 	}
 	
 	get verticalAxis() {	
 		if (!this.data.verticalAxis) {
 			return null;
 		}
-		return this.getChildFromRoot(this.data.verticalAxis);		
+		return this.childFromRoot(this.data.verticalAxis);		
 	}
 
 	get lengthData() {		
 		if (!this.data.barLength) {
 			return [];
 		}
-		var lengthDataColumn = this.getChildFromRoot(this.data.barLength);
+		var lengthDataColumn = this.childFromRoot(this.data.barLength);
 		return lengthDataColumn.values;		
 	}
 
@@ -343,7 +343,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!this.data.barPositions) {
 			return [];
 		}
-		var positionDataColumn = this.getChildFromRoot(this.data.barPositions);
+		var positionDataColumn = this.childFromRoot(this.data.barPositions);
 		return positionDataColumn.values;	
 	}
 
@@ -352,7 +352,7 @@ export default class Xy extends PagedGraphicsAtom {
 			return[];
 		}
 		
-		var positionColumn = this.getChildFromRoot(this.data.barPositions);		
+		var positionColumn = this.childFromRoot(this.data.barPositions);		
 		if (positionColumn.isNumeric) {
 			return positionDataColumn.doubleValues;			
 		} else {
@@ -370,7 +370,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!this.data.barPositions) {
 			return [];
 		}
-		var positionColumn = this.getChildFromRoot(this.data.barPositions);
+		var positionColumn = this.childFromRoot(this.data.barPositions);
 		return positionColumn.stringValues;		
 	}
 
@@ -379,7 +379,7 @@ export default class Xy extends PagedGraphicsAtom {
 			return [];
 		}
 
-		var lengthColumn = this.getChildFromRoot(this.data.barLengths);		
+		var lengthColumn = this.childFromRoot(this.data.barLengths);		
 		if (lengthColumn.isNumeric) {
 			return lengthColumn.doubleValues;			
 		} else {
@@ -398,7 +398,7 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!this.data.barLengths) {
 			return [];
 		}
-		var lengthColumn = this.getChildFromRoot(this.data.barLengths);
+		var lengthColumn = this.childFromRoot(this.data.barLengths);
 		return lengthColumn.stringValues;		r
 	}	
 

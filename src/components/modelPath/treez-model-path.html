@@ -39,7 +39,7 @@
     				}
 
     				if(this.__parentAtom){
-    					return this.__parentAtom.getRoot();
+    					return this.__parentAtom.root;
     				}
 
     				return null;    								
@@ -47,7 +47,7 @@
 
     			get rootPath(){
     				if(this.root){
-    					return this.root.getTreePath();
+    					return this.root.treePath;
     				} else {
     					return '';
     				}
@@ -220,7 +220,7 @@
                 __updateRelativeRootLabel(){
                 	
 					if(this.isUsingRelativeRoot){
-						this.__relativeRootLabel.textContent = this.root.getTreePath();
+						this.__relativeRootLabel.textContent = this.root.treePath;
 						this.__relativeRootLabel.style.display='inline-block';
 					} else {
 						this.__relativeRootLabel.textContent ='';
@@ -248,7 +248,7 @@
                 __getAvailableModelPaths(atom, classes, hasToBeEnabled, filterDelegate){ 
                 	
                 	
-                	var rootPath = this.root.getTreePath();
+                	var rootPath = this.root.treePath;
                 	            		            		
             		var availablePaths = [];
             		
@@ -272,7 +272,7 @@
 								}
 							}          				
 
-							var path = child.getTreePath();
+							var path = child.treePath;
 
 							if(this.isUsingRelativeRoot){                					
 								var relativePath = path.substring(rootPath.length);

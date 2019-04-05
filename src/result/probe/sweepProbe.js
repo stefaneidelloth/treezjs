@@ -148,7 +148,7 @@ export default class SweepProbe extends Probe {
 	__sweepOutputPathChanged(){
 		var relativeRoot = null;
 		try{
-			relativeRoot = this.getChildFromRoot(this.sweepOutputPath);
+			relativeRoot = this.childFromRoot(this.sweepOutputPath);
 		} catch(error){
 
 		}
@@ -205,7 +205,7 @@ export default class SweepProbe extends Probe {
 	
 	get __domainColumnType() {		
 		if (this.domainRangePath) {
-			var rangeAtom = this.getChildFromRoot(this.domainRangePath);
+			var rangeAtom = this.childFromRoot(this.domainRangePath);
 			return rangeAtom.columnType;
 		} else {
 			return null;
@@ -213,7 +213,7 @@ export default class SweepProbe extends Probe {
 	}
 
 	get __probeColumnType() {
-		var probeTable = this.getChildFromRoot(this.firstProbeTablePath);
+		var probeTable = this.childFromRoot(this.firstProbeTablePath);
 		var columnIndex = parseInt(this.columnIndex);
 		var probeColumn = probeTable.columns[columnIndex];
 		return probeColumn.type;
@@ -221,7 +221,7 @@ export default class SweepProbe extends Probe {
 
 	get __firstFamilyRangeValues() {				
 		if (this.firstFamilyRangePath) {
-			var rangeAtom = this.getChildFromRoot(this.firstFamilyRangePath);
+			var rangeAtom = this.childFromRoot(this.firstFamilyRangePath);
 			return rangeAtom.values;
 		} else {
 			return null;
@@ -230,7 +230,7 @@ export default class SweepProbe extends Probe {
 
 	get __secondFamilyRangeValues() {
 		if (this.firstFamilyRangePath) {
-			var rangeAtom = this.getChildFromRoot(this.firstFamilyRangePath);
+			var rangeAtom = this.childFromRoot(this.firstFamilyRangePath);
 			return rangeAtom.values;
 		} else {
 			return null;
@@ -247,7 +247,7 @@ export default class SweepProbe extends Probe {
 
 		var domainRangeValues = null;
 		if (this.domainRangePath) {
-			var rangeAtom = this.getChildFromRoot(this.domainRangePath);
+			var rangeAtom = this.childFromRoot(this.domainRangePath);
 			domainRangeValues = rangeAtom.values;
 		}
 				
@@ -330,7 +330,7 @@ export default class SweepProbe extends Probe {
 	}
 
 	getProbeValue(probeTablePath, rowIndex, columnIndex) {		
-		var table = this.getChildFromRoot(probeTablePath);		
+		var table = this.childFromRoot(probeTablePath);		
 		var columnHeader = table.headers[columnIndex];
 		var row = table.row(rowIndex);
 		if(!row){

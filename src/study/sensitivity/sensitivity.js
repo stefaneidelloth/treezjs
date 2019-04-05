@@ -228,7 +228,7 @@ export default class Sensitivity extends Study {
 			String variableModelPath = sourceModelPath + "." + variableName;
 			VariableField<?, ?> variableField;
 			try {
-				variableField = this.getChildFromRoot(variableModelPath);
+				variableField = this.childFromRoot(variableModelPath);
 			} catch (IllegalArgumentException exception) {
 				String message = "Could not find variable atom '" + variableModelPath + "'.";
 				Utils.showErrorMessage(message);
@@ -277,7 +277,7 @@ export default class Sensitivity extends Study {
 
 		//get sweep output atom
 		String studyOutputAtomPath = getStudyOutputAtomPath();
-		AbstractAtom<?> studyOutputAtom = this.getChildFromRoot(studyOutputAtomPath);
+		AbstractAtom<?> studyOutputAtom = this.childFromRoot(studyOutputAtomPath);
 
 		//remove all old children if they exist
 		studyOutputAtom.removeAllChildren();
@@ -317,7 +317,7 @@ export default class Sensitivity extends Study {
 		boolean pickingOutputAtomExists = this.rootHasChild(pickingPutputAtomPath);
 		if (!pickingOutputAtomExists) {
 			OutputAtom pickingOutputAtom = new OutputAtom(pickingOutputAtomName, provideImage());
-			AbstractAtom<?> data = this.getChildFromRoot(dataAtomPath);
+			AbstractAtom<?> data = this.childFromRoot(dataAtomPath);
 			data.addChild(pickingOutputAtom);
 			LOG.info("Created " + pickingPutputAtomPath + " for picking output.");
 		}

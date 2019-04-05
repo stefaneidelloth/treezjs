@@ -1,8 +1,8 @@
 import ComponentAtom from './../core/component/componentAtom.js';
+import Monitor from './../core/monitor/monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import Data from './data/data.js';
 import Page from './page/page.js'
-
 
 export default class Results extends ComponentAtom {
    
@@ -44,13 +44,6 @@ export default class Results extends ComponentAtom {
 
 		return actions;
 	}
-
-	async execute(treeView, monitor) {
-		this.__treeView = treeView;
-		await this.executeChildren(Data, treeView, monitor);
-		await this.executeChildren(Page, treeView, monitor);
-	}
-	
 		
 	createData(name) {
 		return this.createChild(Data, name);		

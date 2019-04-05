@@ -147,7 +147,7 @@ public class SensitivityModelInputGenerator implements ModelInputGenerator {
 			int timeIndex,
 			Number timeValue) {
 
-		String pickingModelPath = sensitivity.createTreeNodeAdaption().getTreePath();
+		String pickingModelPath = sensitivity.createTreeNodeAdaption().treePath;
 
 		ModelInput modelInput = new HashMapModelInput(pickingModelPath, studyId, studyDescription);
 
@@ -182,7 +182,7 @@ public class SensitivityModelInputGenerator implements ModelInputGenerator {
 			ModelInput
 			createModelInputFromSample(String sourceModelPath, String studyId, String studyDescription, Sample sample) {
 
-		String pickingModelPath = sensitivity.createTreeNodeAdaption().getTreePath();
+		String pickingModelPath = sensitivity.createTreeNodeAdaption().treePath;
 		ModelInput modelInput = new HashMapModelInput(pickingModelPath, studyId, studyDescription);
 		Map<String, VariableField<?, ?>> variableData = sample.getVariableData();
 		for (String variableName : variableData.keySet()) {

@@ -34,7 +34,7 @@ export default class MonitorView {
 			return;
 		}		
 
-		var subMonitors = self.__monitor.getChildren();
+		var subMonitors = self.__monitor.children;
 
 		var div = self.__progressPanel.append('div');
 
@@ -93,8 +93,8 @@ export default class MonitorView {
 		
 		var self=this;
 		var title = monitor.title;
-		var progressInPercent = monitor.getProgressInPercent();
-		var description = monitor.getDescription();
+		var progressInPercent = monitor.progressInPercent;
+		var description = monitor.description;
 
 		header.onClick(() => {
 			monitor.showLogMessages();
@@ -170,7 +170,7 @@ export default class MonitorView {
 				titleLabel.text(currentTitle);
 
 				//update description
-				var currentDescription = monitor.getDescription();
+				var currentDescription = monitor.description;
 				if (currentDescription === '') {
 					descriptionLabel.text('');
 				} else {
@@ -178,7 +178,7 @@ export default class MonitorView {
 				}
 
 				//update progress
-				var currentProgressInPercent = monitor.getProgressInPercent();
+				var currentProgressInPercent = monitor.progressInPercent;
 				progressLabel.text('' + currentProgressInPercent + ' %');
 				progress.style('width', currentProgressInPercent + '%');
 
@@ -209,7 +209,7 @@ export default class MonitorView {
 		
 		var self = this;
 
-		var subMonitors = monitor.getChildren();
+		var subMonitors = monitor.children;
 
 		var div = parentSelection.append('div');
 

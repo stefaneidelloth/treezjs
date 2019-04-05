@@ -58,14 +58,24 @@ export default class Model extends ComponentAtom {
 
 	
 	async execute(treeView, monitor) {
+
+
+		this.__treeView = treeView;
 		
+		var hasMainMonitor = false;		
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
-		}			
-		
+			hasMainMonitor = true;
+		}
+
 		await this.doRunModel(treeView, monitor);		
+
+		if(hasMainMonitor){
+			monitor.done();	
+		}	
+			
 	}
 
 	/**
@@ -89,18 +99,22 @@ export default class Model extends ComponentAtom {
 	 */
 	async doRunModel(treeView, monitor) {
 
-
 		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');
-
-		const modelOutput = this.__createEmptyModelOutput();
+		monitor.totalWork = this.numberOfRunnableChildren;		
 		
-
+		const modelOutput = this.__createEmptyModelOutput();
 		for (const child of this.children){
-			if(child instanceof Model){
-				var childModelOutput = await child.doRunModel(treeView, monitor);
-				if (childModelOutput) {
-					modelOutput.addChild(childModelOutput);
+
+			if(child.isRunnable){
+				var subMonitor = monitor.createChild(child.name, treeView, child.name, 1);
+				if(child instanceof Model){				
+					var childModelOutput = await child.doRunModel(treeView, subMonitor);
+					if (childModelOutput) {
+						modelOutput.addChild(childModelOutput);
+					}
 				}
+			} else {	
+				await child.execute(treeView, subMonitor);
 			}
 		}
 		
@@ -108,7 +122,7 @@ export default class Model extends ComponentAtom {
 			return modelOutput; 		
 		} else {
 			return null;
-		}			
+		}		
 
 		
 	}
@@ -131,7 +145,7 @@ export default class Model extends ComponentAtom {
 
 		let variableAtom = null;
 		try {
-			variableAtom = this.getChildFromRoot(variableModelPath);
+			variableAtom = this.childFromRoot(variableModelPath);
 			return variableAtom;
 		} catch (exception) {
 			const message = 'Could not find a variable field for the model path "' + variableModelPath + '".';

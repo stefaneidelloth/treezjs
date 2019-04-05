@@ -72,7 +72,7 @@ export default class VariableRange extends ComponentAtom {
 	protected void assignRealtiveRootToSourceVariablePath() {
 		Objects.requireNonNull(sourceModelModelPath, "Source model path must not be null when calling this function.");
 		data.setLabel("Data for " + sourceModelModelPath);
-		AbstractAtom<?> relativeRootAtom = this.getChildFromRoot(sourceModelModelPath);
+		AbstractAtom<?> relativeRootAtom = this.childFromRoot(sourceModelModelPath);
 		AttributeWrapper<String> pathWrapper = (AttributeWrapper<String>) sourceVariableModelPath;
 		ModelPath modelPath = (ModelPath) pathWrapper.getAttribute();
 		modelPath.setModelRelativeRoot(relativeRootAtom);
