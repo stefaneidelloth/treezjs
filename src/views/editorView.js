@@ -1,58 +1,37 @@
 export default class EditorView {
 
 	constructor(mainViewModel, dTreez){	
-		this.__mainViewModel = mainViewModel;
+		this.__mainViewModel = mainViewModel;	
 		this.__dTreez = dTreez;
 			
 		this.content = undefined;		
 		this.model = undefined;	
-		this.fileInput = undefined;	
-		
+		this.fileInput = undefined;			
 	}
 
-	buildView(){
+	buildView(editorFactory){
 
         var self = this;
 
 		var parentSelection = this.__dTreez.select('#treez-editor');
 
 		var toolbar = parentSelection.append('div')
-			.attr('id','editor-toolbar')
+			.attr('id','treez-editor-toolbar')
 			.attr('class','treez-editor-toolbar');
 
        	var content = parentSelection.append('div')
-			.attr('id','editorContent')
+			.attr('id','treez-editor-content')
 			.attr('class','treez-editor-content');	
 
-		
-		
-			
-		require(['orion/codeEdit', 'orion/Deferred'], function(CodeEdit, Deferred) {
-
-			var code = "import Root from './src/root/root.js';\n"+		
-				
-				"\n"+
-				"window.createModel = function(){\n"+
-				"\n"+
-				"	var root = new Root();\n"+	
-				"	var models = root.createModels();\n"+
-				"	var genericInput = models.createGenericInput();\n"+
-				"	return root;\n"+
-				"};\n";
-
-			var codeEdit = new CodeEdit();			
-			codeEdit.create({parent: 'editorContent'}).then(function(editorViewer) {
-					editorViewer.setContents(code, 'application/javascript');
-					self.__mainViewModel.setEditorViewer(editorViewer);					
-					
-					self.fileInput =self.createHiddenFileInputElement(editorViewer);
-					self.fillEditorToolbar(toolbar, editorViewer);
-				});
-		});       
+		editorFactory((editor)=>{
+			this.__mainViewModel.editor = editor;	
+			this.fileInput = this.createHiddenFileInputElement(editor);
+			this.fillEditorToolbar(toolbar, editor);
+		});	   
 
 	}
 
-    fillEditorToolbar(toolbar, editorViewer){
+    fillEditorToolbar(toolbar, editor){
 
 		this.createButton(
 			toolbar, 
@@ -65,21 +44,21 @@ export default class EditorView {
 			toolbar, 
 			'save.png',
 			'Save as ...', 
-			()=>{this.save(editorViewer);}
+			()=>{this.save(editor);}
 		);
 
 		this.createButton(
 			toolbar, 
 			'openFromLocalStorage.png',
 			'Open from local storage', 
-			()=>{this.openFromLocalStorage(editorViewer);}
+			()=>{this.openFromLocalStorage(editor);}
 		);
 
 		this.createButton(
 			toolbar, 
 			'saveToLocalStorage.png',
 			'Save to local storage', 
-			()=>{this.saveToLocalStorage(editorViewer);}
+			()=>{this.saveToLocalStorage(editor);}
 		);
 
 	}
@@ -88,46 +67,34 @@ export default class EditorView {
 			parent
 			.append("img")
 			.className('treez-editor-tool-icon')				
-			.src('./icons/' + imageName)
+			.src(window.treezHome + '/icons/' + imageName)
 			.title(tooltip)
 			.onClick(action);
     }  
 
-    openFromLocalStorage(editorViewer){
+    openFromLocalStorage(editor){
 		var code = localStorage.getItem('treezEditorContent');
 		if(code){
-				this.setEditorContentAndUpdateTree(code, editorViewer);		
+				this.setEditorContentAndUpdateTree(code, editor);		
 		} else {
 			alert('Local storage does not yet contain code.')
 		}	
 
     }
 
-    setEditorContentAndUpdateTree(code, editorViewer){
-    	editorViewer.setContents(code, 'application/javascript').then(()=>{
-				this.__mainViewModel.getTreeView().toTree();
-			});
+    setEditorContentAndUpdateTree(code, editor){
+    	editor.setText(code, ()=>{
+    		this.__mainViewModel.treeView.toTree();
+    	});
     }
 
-    saveToLocalStorage(editorViewer){
-    	var self = this;
-    	var editor = editorViewer.editor;
-    	var editorContext = editor.getEditorContext();
-    	editorContext.getText().then(function(text){    		
-    		localStorage.setItem('treezEditorContent', text);			
-    	}); 
+    saveToLocalStorage(editor){    	
+    	editor.processText((text)=>localStorage.setItem('treezEditorContent', text));    	
     }
 
-    save(editorViewer){
-    	var self = this;
-    	var editor = editorViewer.editor;
-    	var editorContext = editor.getEditorContext();
-    	editorContext.getText().then(function(text){    		
-    		self.download(text, 'treezEditorContent.js');			
-    	});    	
+    save(editor){
+    	editor.processText((text)=>this.download(text, 'treezEditorContent.js'));    	
     }
-
-
 
     download(text, filename) {
 		var file = new Blob([text], {type: 'text/javascript'});				
@@ -144,7 +111,7 @@ export default class EditorView {
 				
 	}
 
-	createHiddenFileInputElement(editorViewer){
+	createHiddenFileInputElement(editor){
 		var input = document.createElement('input');		
 		input.setAttribute('type','file');
 		input.onchange = (event)=>{	
@@ -154,7 +121,7 @@ export default class EditorView {
 					var file = files[0]; 	
 					var fileReader = new FileReader();
 					fileReader.onloadend = ()=>{
-						this.setEditorContentAndUpdateTree(fileReader.result, editorViewer);						
+						this.setEditorContentAndUpdateTree(fileReader.result, editor);						
 					}; 									      
 					fileReader.readAsText(file);
 				}

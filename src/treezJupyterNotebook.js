@@ -1,69 +1,64 @@
-import TreeView from './views/treeView.js';
-import EditorView from './views/editorView.js';
-import MonitorView from './views/monitorView.js';
-import GraphicsView from './views/graphicsView.js';
-import TreezTerminal from './treezTerminal.js'; 
-import DTreez from './core/dtreez/dTreez.js'; 
-
-
-var self = {
-	getTreeView: getTreeView,
-	getEditorView: getEditorView,
-	setEditorViewer: setEditorViewer,
-	getMonitorView: getMonitorView,
-	getGraphicsView: getGraphicsView,
-	graphicsContainer: undefined,
-	__editorViewer: undefined,	
-	__treeView: undefined,
-	__monitorView: undefined,
-	__graphicsView: undefined
-}
-
-requirejs.config({
-			baseUrl : '..',
-			paths : {
-				'd3' : 'bower_components/d3/d3.min',				
-				'jquery' : 'bower_components/jquery/dist/jquery.min',
-				'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min'				
-			},
-			bundles : {
-				'lib/orion/code_edit/built-codeEdit-amd' : ['orion/codeEdit', 'orion/Deferred']
-			}
-});
+import Treez from './treez.js'; 
 
 require([
-	'golden-layout',
-	'd3'	
+	'../notebooks/treezjs/bower_components/golden-layout/dist/goldenlayout.min',
+	'../notebooks/treezjs/bower_components/d3/d3.min'	
 ], function(
 	 GoldenLayout,
 	 d3	
-) {		
+) {	
 
-	var dTreez = new DTreez(d3);  
-	
-	createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez);
-	
-	self.__treeView = new TreeView(self, dTreez);
-	self.__treeView.buildView();
+	var editorFactory = (handleCreatedEditor)=>{
+		
+		var editorContent = document.getElementById('treez-editor-content');
 
-	self.__monitorView = new MonitorView(self, dTreez);
-	self.__monitorView.buildView();
-	
-	self.__graphicsView = new GraphicsView(self, dTreez);
-	self.__graphicsView.buildView();
-	
-	self.__editorView = new EditorView(self, dTreez);
-	self.__editorView.buildView(); //calls setEditorViewer to set the editor viewer of the editor view
-	
-	window.treezTerminal = new TreezTerminal();	
+		var site = document.getElementById('site');		
+		editorContent.appendChild(site);
+		
+    	var editor = {
+				setText: function(code, finishedHandler){
+					//TODO
+					finishedHandler();
+					
+				},
+				processText: function(textHandler){	
+					//TODO					
+			    	textHandler('Hello World from treez text editor');
+				}
+		};
+		
+		handleCreatedEditor(editor);
+    };
 
+    var terminalFactory = (handleCreatedTerminal)=>{
+    	handleCreatedTerminal(null); //TODO
+    }
+   
+    createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
+	
+	var treezHome = '../notebooks/treezjs';
+	Treez.initialize(d3, editorFactory, terminalFactory, treezHome); 
+
+	//golden layout
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');		
 });
 
 
 
-function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){	
+
+/*
+Defines container DOM elements that are used/filled by Treez:
+#treez-tree, 
+#treez-properties, 
+#treez-editor
+#treez-graphics,
+#treez-progress, 
+#treez-log
+*/
+function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, containerElement){	
 	
-	var myLayout = createGoldenLayout(GoldenLayout); //Also see http://golden-layout.com/docs/Config.html
+	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
 
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
@@ -111,11 +106,12 @@ function createLayoutAndRegisterLayoutCompoments(GoldenLayout, dTreez){
 	myLayout.init();
 }
 
-function createGoldenLayout(GoldenLayout){
+function createGoldenLayout(GoldenLayout, containerElement){
 	
 	var firstColumn = {
 			type : 'component',
-			componentName : 'Tree'			
+			componentName : 'Tree',
+			width: 15			
 	};
 
 	var secondColumnUpper = {
@@ -155,7 +151,8 @@ function createGoldenLayout(GoldenLayout){
 			content : [ 
 				secondColumnUpper, 
 				secondColumnLower
-			]
+			],
+			width: 25
 		};
 	
 	var thirdColumn = {
@@ -170,25 +167,6 @@ function createGoldenLayout(GoldenLayout){
 		} ]
 	};	
 
-	return new GoldenLayout(goldenLayoutConfig);
+	return new GoldenLayout(goldenLayoutConfig, containerElement);
 }
 
-function getTreeView(){
-	return self.__treeView;
-}
-
-function getEditorView(){
-	return self.__editorViewer.editor.getTextView();
-}
-
-function setEditorViewer(editorViewer){
-	return self.__editorViewer = editorViewer;
-}
-
-function getMonitorView(){
-	return self.__monitorView;
-}
-
-function getGraphicsView(){
-	return self.__graphicsView;
-}

@@ -5,23 +5,14 @@ export default class TreeView {
 	constructor(mainViewModel, dTreez){
 		this.__mainViewModel = mainViewModel;
 		this.dTreez = dTreez;
-		this.content = undefined;
-		this.provideEditorView = undefined;	
-		this.provideMonitorView = undefined;	
-			
+		this.content = undefined;		
 	}
 
-	buildView(){ 
-       
-		this.provideEditorView = this.__mainViewModel.getEditorView;
-		this.provideMonitorView = this.__mainViewModel.getMonitorView;
-		this.provideGraphicsView = this.__mainViewModel.getGraphicsView;
-
-		
+	buildView(){		
 		var parentSelection = this.dTreez.select('#treez-tree');
 		this.buildToolBar(parentSelection);
 		this.buildContent(parentSelection);
-	}
+	}	
 
     buildToolBar(parentSelection){
 		var toolbar = parentSelection.append("div");
@@ -63,7 +54,7 @@ export default class TreeView {
     	parent
 		.append("img")
 		.className("treez-tool-icon")				
-		.src("./icons/" + imageName)
+		.src(window.treezHome + '/icons/' + imageName)
 		.title(tooltip)
 		.onClick(action);
     }
@@ -82,24 +73,24 @@ export default class TreeView {
     toTree(){
 
     	this.clearPropertiesView();
-		this.clearMonitoringView();
+		this.clearMonitoringView(); 
 
-        var self = this;
-    	var editor = self.provideEditorView();    		   	
-        var sourceCode =  editor.getText(); 
-
-        window.scriptLoadedHook = function(){
-        	window.scriptLoadedHook = undefined;
-			self.model = window.createModel();
-			self.refresh(); 			
-		};
+		 window.scriptLoadedHook = ()=>{
+				window.scriptLoadedHook = undefined;
+				this.model = window.createModel();
+				this.refresh(); 			
+		};   
 
 		var body = document.getElementsByTagName('body')[0];
 		var script = document.createElement('script');
-		script.type = 'module';
-		script.innerHTML = sourceCode + "\n" + 
-						   "if(window.scriptLoadedHook){window.scriptLoadedHook();}"; 			
-		body.appendChild(script); 
+		script.type = 'module';   
+    	 		   	
+        this.editor.processText((sourceCode)=>{
+			
+			script.innerHTML = sourceCode + "\n" + 
+							   "if(window.scriptLoadedHook){window.scriptLoadedHook();}"; 			
+			body.appendChild(script); 
+        });     
 
 		
     }
@@ -136,5 +127,21 @@ export default class TreeView {
     	var propertiesView = this.dTreez.select('#treez-properties');
     	atom.createControlAdaption(propertiesView, this);
     }
+
+    get editorView(){
+		return this.__mainViewModel.editorView;
+	}
+
+	get editor(){
+		return this.__mainViewModel.editor;
+	}
+
+	get monitorView(){
+		return this.__mainViewModel.monitorView;
+	}
+
+	get graphicsView(){
+		return this.__mainViewModel.graphicsView;
+	}
 
 }

@@ -87,12 +87,12 @@ export default class AtomTreeNodeAdapter {
 
 		iconFolder.append('img')	
 			.className('treez-node-icon')		
-			.attr('src','./icons/' + atom.image);
+			.attr('src', window.treezHome + '/icons/' + atom.image);
 
 		if(atom.overlayImage){
 			iconFolder.append('img')	
 			.className('treez-node-overlay-icon')		
-			.attr('src','./icons/' + atom.overlayImage);
+			.attr('src', window.treezHome + '/icons/' + atom.overlayImage);
 		}		
 
 		var label = parentSelection.append('label')
@@ -151,7 +151,7 @@ export default class AtomTreeNodeAdapter {
           
           button.append('img')
           	.className('treez-menu-button-icon')          	
-          	.src('./icons/' + imageName);
+          	.src(window.treezHome + '/icons/' + imageName);
 
           button.append('label')
           	.className('treez-menu-button-label')          	

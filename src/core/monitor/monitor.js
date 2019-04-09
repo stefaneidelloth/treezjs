@@ -38,7 +38,7 @@ export default class Monitor {
 	}
 
 	showInMonitorView() {		
-		var monitorView = this.__treeView.provideMonitorView();
+		var monitorView = this.__treeView.monitorView;
 		monitorView.setMonitor(this);
 	}
 
@@ -184,7 +184,7 @@ export default class Monitor {
 
 	__createConsole(title, treeView, id) {
 		
-		var monitorView = treeView.provideMonitorView();
+		var monitorView = treeView.monitorView;
 		
 		var loggingPanel = monitorView.getLoggingPanel();
 		
