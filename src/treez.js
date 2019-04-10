@@ -33,13 +33,15 @@ export default class Treez {
 		window.treezHome = treezHome;	
 		
 		//component enums
-		//Treez.importHtml('/src/components/enum.html');
+		Treez.importHtml('/src/components/enum.html');
+		/*
 		Treez.importHtml('/src/components/color/color.html');
 		Treez.importHtml('/src/components/colorMap/color-map.html');
 		Treez.importHtml('/src/components/errorBarStyle/error-bar-style.html');
 		Treez.importHtml('/src/components/fillStyle/fill-style.html');
 		Treez.importHtml('/src/components/lineStyle/line-style.html');
 		Treez.importHtml('/src/components/symbolStyle/symbol-style.html');
+		*/
 			
 		//view stylesheets
 		Treez.importCssStyleSheet('/src/views/treeView.css');
@@ -68,6 +70,10 @@ export default class Treez {
 		link.setAttribute('rel','import');
 		link.setAttribute('href',window.treezHome + href);
 		document.head.appendChild(link);
+	}
+	
+	static imagePath(imageName){
+		return window.treezHome + '/icons/' + imageName;
 	}
 
 	get treeView(){

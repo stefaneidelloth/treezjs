@@ -1,5 +1,6 @@
-import DTreez from "../dTreez/dTreez.js";
-import ActionSeparator from "../actionSeparator.js";
+import DTreez from './../dTreez/dTreez.js';
+import ActionSeparator from './../actionSeparator.js';
+import Treez from './../../treez.js';
 
 export default class AtomTreeNodeAdapter {	
 
@@ -87,12 +88,12 @@ export default class AtomTreeNodeAdapter {
 
 		iconFolder.append('img')	
 			.className('treez-node-icon')		
-			.attr('src', window.treezHome + '/icons/' + atom.image);
+			.attr('src', Treez.imagePath(atom.image));
 
 		if(atom.overlayImage){
 			iconFolder.append('img')	
 			.className('treez-node-overlay-icon')		
-			.attr('src', window.treezHome + '/icons/' + atom.overlayImage);
+			.attr('src', Treez.imagePath(atom.overlayImage));
 		}		
 
 		var label = parentSelection.append('label')
@@ -151,7 +152,7 @@ export default class AtomTreeNodeAdapter {
           
           button.append('img')
           	.className('treez-menu-button-icon')          	
-          	.src(window.treezHome + '/icons/' + imageName);
+          	.src(Treez.imagePath(imageName));
 
           button.append('label')
           	.className('treez-menu-button-label')          	

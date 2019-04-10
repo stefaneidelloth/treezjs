@@ -3,6 +3,7 @@ import ComponentAtomCodeAdaption from './componentAtomCodeAdaption.js';
 import ActionSeparator from './../actionSeparator.js';
 import TreeViewAction from './../treeview/TreeViewAction.js';
 import Monitor from './../monitor/monitor.js';
+import Treez from './../../treez.js';
 
 export default class ComponentAtom extends Atom {
 
@@ -20,48 +21,47 @@ export default class ComponentAtom extends Atom {
     }
 
     static initializeComponents(){
-	    const head = $('head');
+    	
+    	Treez.importHtml('/src/components/checkBox/treez-check-box.html');
+    	
+    	Treez.importHtml('/src/components/color/treez-color.html');
+    	Treez.importHtml('/src/components/color/color.html');
+		
+    	Treez.importHtml('/src/components/colorMap/treez-color-map.html');
+    	Treez.importHtml('/src/components/colorMap/color-map.html');
+		
+    	Treez.importHtml('/src/components/comboBox/treez-combo-box.html');
+    	Treez.importHtml('/src/components/comboBox/treez-enum-combo-box.html');
+		
+    	Treez.importHtml('/src/components/errorBarStyle/treez-error-bar-style.html');
+    	Treez.importHtml('/src/components/errorBarStyle/error-bar-style.html');
 
-		head.append('<link rel="import" id="treez-check-box" href="./src/components/checkBox/treez-check-box.html"/>');
-		
-		head.append('<link rel="import" id="treez-color" href="./src/components/color/treez-color.html"/>');
-		head.append('<link rel="import" id="color" href="./src/components/color/color.html"/>');
-		
-		head.append('<link rel="import" id="treez-color-map" href="./src/components/colorMap/treez-color-map.html"/>');
-		head.append('<link rel="import" id="color-map" href="./src/components/colorMap/color-map.html"/>');
-		
-		head.append('<link rel="import" id="treez-combo-box" href="./src/components/comboBox/treez-combo-box.html"/>');
-		head.append('<link rel="import" id="treez-enum-combo-box" href="./src/components/comboBox/treez-enum-combo-box.html"/>');
-		
-		head.append('<link rel="import" id="treez-error-bar-style" href="./src/components/errorBarStyle/treez-error-bar-style.html"/>');
-		head.append('<link rel="import" id="error-bar-style" href="./src/components/errorBarStyle/error-bar-style.html"/>');
-
-	    head.append('<link rel="import" id="treez-file-or-directory-path" href="./src/components/file/treez-file-or-directory-path.html"/>');
-	    head.append('<link rel="import" id="treez-file-path" href="./src/components/file/treez-file-path.html"/>');
+    	Treez.importHtml('/src/components/file/treez-file-or-directory-path.html');
+    	Treez.importHtml('/src/components/file/treez-file-path.html');
 	    
-	    head.append('<link rel="import" id="treez-fill-style" href="./src/components/fillStyle/treez-fill-style.html"/>');
-	    head.append('<link rel="import" id="fill-style" href="./src/components/fillStyle/fill-style.html"/>');
+    	Treez.importHtml('/src/components/fillStyle/treez-fill-style.html');
+    	Treez.importHtml('/src/components/fillStyle/fill-style.html');
 	    
-	    head.append('<link rel="import" id="treez-font" href="./src/components/font/treez-font.html"/>');
+    	Treez.importHtml('/src/components/font/treez-font.html');
 	    
-	    head.append('<link rel="import" id="treez-image-combo-box" href="./src/components/imageComboBox/treez-image-combo-box.html"/>');		
+    	Treez.importHtml('/src/components/imageComboBox/treez-image-combo-box.html');	
 		
-		head.append('<link rel="import" id="treez-line-style" href="./src/components/lineStyle/treez-line-style.html"/>');
-		head.append('<link rel="import" id="line-style" href="./src/components/lineStyle/line-style.html"/>');
+    	Treez.importHtml('/src/components/lineStyle/treez-line-style.html');
+    	Treez.importHtml('/src/components/lineStyle/line-style.html');
 		
-		head.append('<link rel="import" id="treez-model-path" href="./src/components/modelPath/treez-model-path.html"/>');
+    	Treez.importHtml('/src/components/modelPath/treez-model-path.html');
        
-        head.append('<link rel="import" id="treez-section" href="./src/components/section/treez-section.html"/>');        
-        head.append('<link rel="import" id="treez-size" href="./src/components/size/treez-size.html"/>');        
-        head.append('<link rel="import" id="treez-string-list" href="./src/components/list/treez-string-list.html"/>');
+    	Treez.importHtml('/src/components/section/treez-section.html');
+    	Treez.importHtml('/src/components/size/treez-size.html');  
+    	Treez.importHtml('/src/components/list/treez-string-list.html');
         
-        head.append('<link rel="import" id="treez-symbol-style" href="./src/components/symbolStyle/treez-symbol-style.html"/>');
-        head.append('<link rel="import" id="symbol-style" href="./src/components/symbolStyle/symbol-style.html"/>');
+    	Treez.importHtml('/src/components/symbolStyle/treez-symbol-style.html');
+    	Treez.importHtml('/src/components/symbolStyle/symbol-style.html');;
       
-        head.append('<link rel="import" id="treez-tab-folder" href="./src/components/tabs/treez-tab-folder.html"/>');
-        head.append('<link rel="import" id="treez-text-area" href="./src/components/text/area/treez-text-area.html"/>');
-        head.append('<link rel="import" id="treez-text-field" href="./src/components/text/field/treez-text-field.html"/>');
-        head.append('<link rel="import" id="treez-text-label" href="./src/components/text/label/treez-text-label.html"/>'); 
+    	Treez.importHtml('/src/components/tabs/treez-tab-folder.html');
+    	Treez.importHtml('/src/components/text/area/treez-text-area.html');
+    	Treez.importHtml('/src/components/text/field/treez-text-field.html');
+    	Treez.importHtml('/src/components/text/label/treez-text-label.html');
       
     }
 	

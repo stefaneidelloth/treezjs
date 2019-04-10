@@ -1,29 +1,41 @@
 import Treez from './treez.js'; 
 
 require([
+	'base/js/namespace',
 	'../notebooks/treezjs/bower_components/golden-layout/dist/goldenlayout.min',
 	'../notebooks/treezjs/bower_components/d3/d3.min'	
 ], function(
+	 Jupyter,
 	 GoldenLayout,
 	 d3	
 ) {	
+	
+	createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
 
 	var editorFactory = (handleCreatedEditor)=>{
 		
 		var editorContent = document.getElementById('treez-editor-content');
-
+		
 		var site = document.getElementById('site');		
 		editorContent.appendChild(site);
 		
     	var editor = {
 				setText: function(code, finishedHandler){
-					//TODO
-					finishedHandler();
-					
+					var notebook = Jupyter.notebook;
+					var firstCell = notebook.get_cells()[0];
+
+					var jupyterText = '%%javascript\n' + code;
+					firstCell.set_text(jupyterText);					
+					finishedHandler();					
 				},
 				processText: function(textHandler){	
-					//TODO					
-			    	textHandler('Hello World from treez text editor');
+					var notebook = Jupyter.notebook;
+					var firstCell = notebook.get_cells()[0];
+					var jupyterText = firstCell.get_text();
+
+                    var text = jupyterText.replace('%%javascript','').replace('%%js','');
+													
+			    	textHandler(text);
 				}
 		};
 		
@@ -32,14 +44,11 @@ require([
 
     var terminalFactory = (handleCreatedTerminal)=>{
     	handleCreatedTerminal(null); //TODO
-    }
-   
-    createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
+    }  	
 	
-	var treezHome = '../notebooks/treezjs';
-	Treez.initialize(d3, editorFactory, terminalFactory, treezHome); 
+	Treez.initialize(d3, editorFactory, terminalFactory, '../notebooks/treezjs'); 
 
-	//golden layout
+	//import golden layout stylesheets
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');		
 });
@@ -56,7 +65,7 @@ Defines container DOM elements that are used/filled by Treez:
 #treez-progress, 
 #treez-log
 */
-function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, containerElement){	
+function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerElement){	
 	
 	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
 

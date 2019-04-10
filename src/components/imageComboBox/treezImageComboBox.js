@@ -130,8 +130,12 @@ class TreezImageComboBox extends TreezComboBox {
         var trimmedName = this.constructor.name.substring(5);
 
         var folderName = trimmedName[0].toLowerCase() + trimmedName.substring(1);
+        
+        var urlPrefix = window.treezHome
+	        				?window.treezHome
+	        				:'';
 
-		return 'src/components/' + folderName + '/' + name + this.__imageFormat()
+		return urlPrefix + '/src/components/' + folderName + '/' + name + this.__imageFormat()
 	}		
 
 	__imageFormat(){

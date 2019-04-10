@@ -180,9 +180,9 @@
                 		
                 	};  
                 	if(sectionAction.image){
-                		img.src="/icons/" + sectionAction.image;
+                		img.src= window.treezHome + '/icons/' + sectionAction.image;
                 	} else {
-                		img.src="/icons/root.png";
+                		img.src=window.treezHome + '/icons/root.png';
                 		console.warn('Section action has no image! (label: "'+ sectionAction.label +'")')
                 	}             	
                 	

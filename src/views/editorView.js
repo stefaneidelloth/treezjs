@@ -1,3 +1,5 @@
+import Treez from './../treez.js';
+
 export default class EditorView {
 
 	constructor(mainViewModel, dTreez){	
@@ -67,7 +69,7 @@ export default class EditorView {
 			parent
 			.append("img")
 			.className('treez-editor-tool-icon')				
-			.src(window.treezHome + '/icons/' + imageName)
+			.src(Treez.imagePath(imageName))
 			.title(tooltip)
 			.onClick(action);
     }  

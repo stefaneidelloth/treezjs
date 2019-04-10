@@ -1,5 +1,7 @@
 import DTreez from '../core/dtreez/dTreez.js';
 
+import Treez from './../treez.js'
+
 export default class TreeView {
 
 	constructor(mainViewModel, dTreez){
@@ -54,7 +56,7 @@ export default class TreeView {
     	parent
 		.append("img")
 		.className("treez-tool-icon")				
-		.src(window.treezHome + '/icons/' + imageName)
+		.src(Treez.imagePath(imageName))
 		.title(tooltip)
 		.onClick(action);
     }
