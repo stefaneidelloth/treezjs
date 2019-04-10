@@ -1,3 +1,5 @@
+import Enum from './../../components/enum.js';
+
 export default class HorizontalPosition extends Enum{
 	
 	get isLeft(){

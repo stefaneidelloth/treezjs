@@ -1,10 +1,12 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 export default class AxisLine extends GraphicsAtom {
 
 	constructor(){
 		super();
-		this.color = 'black';
+		this.color = Color.black;
 		this.width = '2';
 		this.style = LineStyle.solid;
 		this.transparency = '0'

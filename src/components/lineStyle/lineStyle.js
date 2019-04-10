@@ -1,4 +1,6 @@
-class LineStyle extends Enum {
+import Enum from './../enum.js';
+
+export default class LineStyle extends Enum {
 	
 	constructor(name, dashArrayString){
 		super(name);

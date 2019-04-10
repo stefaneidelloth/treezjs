@@ -1,3 +1,5 @@
+import Enum from './../../components/enum.js';
+
 export default class BorderMode extends Enum {
 	
 	constructor(name, label, factor){

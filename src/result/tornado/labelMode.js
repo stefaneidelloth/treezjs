@@ -1,3 +1,5 @@
+import Enum from './../../components/enum.js';
+
 export default class LabelMode extends Enum{}
 
 LabelMode.absolute = new LabelMode('absolute');

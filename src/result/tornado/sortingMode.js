@@ -1,3 +1,5 @@
+import Enum from './../../components/enum.js';
+
 export default class SortingMode extends Enum{}
 
 SortingMode.largestDifference = new SortingMode('largestDifference');

@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+	<head>		
+		<link type="text/css" rel="stylesheet" href="./treezTabFolder.css" />
+	</head>
+
+	<body>	
+
+		<script type="module"> 
+			import TreezTab from './treezTab.js';
+			import TreezTabFolder from './treezTabFolder.js';		
+			
+		</script>
+	
+		<treez-tab-folder id="root">
+			<treez-tab label="First tab">
+				<div>           
+				First tab content
+				</div>
+			</treez-tab>
+
+			<treez-tab label="Second tab" >
+				<div style="{ 'background-color': color  }">
+				Second tab content
+				</div>
+			</treez-tab>
+		</treez-tab-folder>
+		
+	
+		<script type="module"> 		
+
+		    var root = document.getElementById('root');
+			  
+            var treezTab = document.createElement('treez-tab');
+			treezTab.label = 'Third tab';
+			root.appendChild(treezTab);
+
+			var content = document.createElement('div');
+			content.innerText = 'Third tab content';
+			treezTab.appendChild(content);
+		</script>
+		
+	</body>
+</html>

@@ -1,4 +1,6 @@
-class ColorMap extends Enum {}
+import Enum from './../enum.js';
+
+export default class ColorMap extends Enum {}
 
 ColorMap.blank = new ColorMap('blank');                    
 ColorMap.blue = new ColorMap('blue');                    

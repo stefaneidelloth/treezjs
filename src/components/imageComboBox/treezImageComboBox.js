@@ -1,4 +1,6 @@
-class TreezImageComboBox extends TreezComboBox {                
+import TreezComboBox from './../comboBox/treezComboBox.js';
+
+export default class TreezImageComboBox extends TreezComboBox {                
 				
     constructor(){
         super();  
@@ -203,8 +205,7 @@ class TreezImageComboBox extends TreezComboBox {
 		if (optionItems.length > 0 ){								
 			this.setAttribute('value_', optionItems[0]);
 		}	
-	}						
-
-                         
+	}                         
 }
-window.customElements.define('treez-image-combo-box', TreezImageComboBox);     
+
+window.customElements.define('treez-image-combo-box', TreezImageComboBox);    

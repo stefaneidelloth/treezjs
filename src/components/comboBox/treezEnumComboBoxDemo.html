@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="treezComboBox.css" />
+	</head>
+
+	<body>
+		<treez-enum-combo-box label="ComboBox:" id="enumComboBox">
+			
+		</treez-enum-combo-box>	
+
+		<script type="module">
+			import TreezEnumComboBox from './treezEnumComboBox.js';
+            import Enum from './../enum.js';
+		
+		   class MyEnum extends Enum {}		   
+		   MyEnum.firstValue = new MyEnum('firstValue');
+		   MyEnum.secondValue = new MyEnum('secondValue');
+		   	  	  
+
+           var enumComboBox = document.getElementById('enumComboBox');
+           
+           enumComboBox.label = 'Hallo';
+           enumComboBox.options = MyEnum;
+           enumComboBox.value = MyEnum.SecondValue;
+           
+           console.info('Name of current combo box value: ' + enumComboBox.value.name);    
+           
+		</script>
+	</body>
+</html>

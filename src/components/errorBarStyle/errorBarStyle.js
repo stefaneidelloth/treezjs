@@ -1,4 +1,6 @@
-class ErrorBarStyle extends Enum {}
+import Enum from './../enum.js';
+
+export default class ErrorBarStyle extends Enum {}
 
 ErrorBarStyle.bar = new ErrorBarStyle('bar');                    
 ErrorBarStyle.barBox = new ErrorBarStyle('barbox');                    

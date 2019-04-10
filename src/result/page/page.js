@@ -2,6 +2,7 @@ import GraphicsAtom from './../graphics/graphicsAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import Monitor from './../../core/monitor/monitor.js';
 import Graph from './../graph/graph.js';
+import Color from './../../components/color/color.js';
 
 export default class Page extends GraphicsAtom {
    

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="treezColor.css" />		
+	</head>
+
+	<body>	
+	
+		<treez-color label="Color: " id="color"></treez-color>
+
+		<script type = "module">
+		    import Color from './color.js';	
+		    import TreezColor from './treezColor.js';	
+
+			var treezColor = document.getElementById('color');          
+           	treezColor.value = Color.blue;    
+		</script>	
+
+		
+	</body>
+</html>

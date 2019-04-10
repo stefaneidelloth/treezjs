@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./../imageComboBox/treezImageComboBox.css" />
+	</head>
+
+	<body>	
+	
+		<treez-error-bar-style label="Error bar style:" id="errorBarStyle">
+			
+		</treez-error-bar-style>	
+
+		<script type="module">
+            import TreezErrorBarStyle from './treezErrorBarStyle.js';
+			import ErrorBarStyle from './errorbarStyle.js';
+
+            var errorBarStyle = document.getElementById('errorBarStyle'); 
+          
+            errorBarStyle.value = ErrorBarStyle.box;          
+           
+		</script>
+	</body>
+</html>

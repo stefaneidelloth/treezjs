@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezStringList.css" />
+	</head>
+
+	<body>	
+	
+		<treez-string-list id="stringList" label="Title" value="a,b,c"></treez-string-list>	
+
+		<script type="module">
+			import TreezStringList from './treezStringList.js';
+
+            var stringList = document.getElementById('stringList'); 
+            stringList.value = 'a,b,c,d'; 
+		</script>
+		
+	</body>
+</html>

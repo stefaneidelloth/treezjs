@@ -1,4 +1,5 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Color from './../../components/color/color.js';
 
 export default class Area extends GraphicsAtom {
 	

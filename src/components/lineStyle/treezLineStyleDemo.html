@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./../imageComboBox/treezImageComboBox.css" />
+	</head>
+	
+	<body>	
+	
+		<treez-line-style label="Line style:" id="lineStyle">
+			
+		</treez-line-style>	
+
+		<script type="module">
+           import TreezLineStyle from './treezLineStyle.js';
+           import LineStyle from './lineStyle.js';
+
+           var lineStyle = document.getElementById('lineStyle');
+           lineStyle.value = LineStyle.solid;  
+		</script>
+		
+	</body>
+</html>

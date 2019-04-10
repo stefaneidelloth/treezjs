@@ -1,0 +1,21 @@
+<!doctype html>
+<html>	
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="treezDirectoryPath.css" />
+	</head>
+
+	<body>
+		<treez-directory-path label="Directory path:" id="directoryPath">
+			
+		</treez-directory-path>	
+
+		<script type="module">	
+            import TreezDirectoryPath from './treezDirectoryPath.js';
+			
+            var directoryPath = document.getElementById('directoryPath');           
+            directoryPath.label = 'Directory:';
+            directoryPath.value = 'C:\\';
+		</script>
+	</body>
+</html>

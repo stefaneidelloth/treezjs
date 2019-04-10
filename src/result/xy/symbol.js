@@ -1,6 +1,9 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import Graph from './../graph/graph.js';
 import Length from './../graphics/length.js';
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
+import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';
 
 export default class Symbol extends GraphicsAtom {
 	

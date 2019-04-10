@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezTextField.css" />
+	</head>
+	
+	<body>
+		<treez-text-field label="Text field:" id="textField">
+			
+		</treez-text-field>	
+
+		<script type="module">
+			import TreezTextField from './treezTextField.js';
+
+            var textField = document.getElementById('textField');
+            textField.label = 'Label:';
+            textField.value = 'Text field value';
+		</script>
+		
+	</body>
+</html>

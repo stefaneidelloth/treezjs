@@ -1,4 +1,6 @@
-class SymbolStyle extends Enum {
+import Enum from './../enum.js';
+
+export default class SymbolStyle extends Enum {
 
   constructor(name, index){
       super(name);

@@ -30,20 +30,8 @@ export default class Treez {
 	
 	static initialize(d3, editorFactory, terminalFactory, treezHome){
 
-		window.treezHome = treezHome;	
-		
-		//component enums
-		Treez.importHtml('/src/components/enum.html');
-		/*
-		Treez.importHtml('/src/components/color/color.html');
-		Treez.importHtml('/src/components/colorMap/color-map.html');
-		Treez.importHtml('/src/components/errorBarStyle/error-bar-style.html');
-		Treez.importHtml('/src/components/fillStyle/fill-style.html');
-		Treez.importHtml('/src/components/lineStyle/line-style.html');
-		Treez.importHtml('/src/components/symbolStyle/symbol-style.html');
-		*/
-			
-		//view stylesheets
+		window.treezHome = treezHome;			
+	
 		Treez.importCssStyleSheet('/src/views/treeView.css');
 		Treez.importCssStyleSheet('/src/views/editorView.css');
 		Treez.importCssStyleSheet('/src/views/propertyView.css');
@@ -63,14 +51,7 @@ export default class Treez {
 		link.setAttribute('rel','stylesheet');
 		link.setAttribute('href',window.treezHome + href);
 		document.head.appendChild(link);
-	}
-
-	static importHtml(href){
-		var link = document.createElement('link');	
-		link.setAttribute('rel','import');
-		link.setAttribute('href',window.treezHome + href);
-		document.head.appendChild(link);
-	}
+	}	
 	
 	static imagePath(imageName){
 		return window.treezHome + '/icons/' + imageName;

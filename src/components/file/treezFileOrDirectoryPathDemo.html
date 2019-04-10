@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="treezFileOrDirectoryPath.css" />
+	</head>
+
+	<body>
+		<treez-file-or-directory-path label="File or directory path:" id="fileOrDirectoryPath">
+			
+		</treez-file-or-directory-path>	
+
+		<script type="module">
+            import TreezFileOrDirectoryPath from './treezFileOrDirectoryPath.js';
+            
+			var fileOrDirectoryPath = document.getElementById('fileOrDirectoryPath');           
+            fileOrDirectoryPath.label = 'File or directory path:';
+            fileOrDirectoryPath.value = 'C:\\test.txt';
+           
+		</script>
+	</body>
+</html>

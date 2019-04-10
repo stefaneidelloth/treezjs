@@ -1,10 +1,12 @@
-class LabeledTreezElement extends TreezElement {
+import TreezElement from './treezElement.js';
+
+export default class LabeledTreezElement extends TreezElement {
 
 	static get observedAttributes() {
 		return TreezElement.observedAttributes.concat(['label']);                    
     } 
 
-	 get label() {
+	get label() {
 		 return this.getAttribute('label');
 	}
 
@@ -17,7 +19,7 @@ class LabeledTreezElement extends TreezElement {
 		this.__label=undefined; //should be created by inheriting class
 	} 				           
 
-	 attributeChangedCallback(attr, oldStringValue, newStringValue) {
+	attributeChangedCallback(attr, oldStringValue, newStringValue) {
     	super.attributeChangedCallback(attr, oldStringValue, newStringValue)                	     	      
     	
         if(attr==='label'){

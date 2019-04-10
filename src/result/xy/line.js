@@ -1,5 +1,7 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import InterpolationMode from './interpolationMode.js';
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 export default class Line extends GraphicsAtom {
 	

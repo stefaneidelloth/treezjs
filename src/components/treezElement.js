@@ -1,4 +1,4 @@
-class TreezElement extends HTMLElement {
+export default class TreezElement extends HTMLElement {
 
 	static get observedAttributes() {
         return ['value', 'disabled', 'hidden', 'width'];
@@ -115,10 +115,7 @@ class TreezElement extends HTMLElement {
     	element.style.display = booleanValue
 				         			?'none'
 				         			:null;
-    }
-
-	
-   
+    }   
 
     //we want to avoid hard coded strings to pass/identify properties
     //therefore a lambda expression is passed to identify the property
@@ -164,12 +161,9 @@ class TreezElement extends HTMLElement {
 
 		let self = this;
 
-		let propertyDescriptor = Object.getOwnPropertyDescriptor(parentAtom, propertyName);
-
-		
+		let propertyDescriptor = Object.getOwnPropertyDescriptor(parentAtom, propertyName);		
 
 		let privateValue = parentAtom[propertyName];
-		
 
 		Object.defineProperty(
 		   parentAtom, 
@@ -178,11 +172,9 @@ class TreezElement extends HTMLElement {
 			get: __getPropertyValueProxy,
 			set: __setPropertyValueProxy,
 			configurable: true					
-		   },
-
-		);	
+		   }
+		);
 	
-
 		function __getPropertyValueProxy(){
 			let propertyAlreadyHasAGetter = propertyDescriptor && (propertyDescriptor.get !== undefined);
 			if(propertyAlreadyHasAGetter){
@@ -194,17 +186,16 @@ class TreezElement extends HTMLElement {
 
 		function __setPropertyValueProxy(newValue){
 			   
-				let oldValue = privateValue;
-				if(newValue != oldValue){
-					let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
-					 if(propertyAlreadyHasASetter){
-						propertyDescriptor.set(newValue);
-					 } 
-					 privateValue = newValue;
-					 self.value = newValue;																		         
-				}     
+			let oldValue = privateValue;
+			if(newValue != oldValue){
+				let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
+				 if(propertyAlreadyHasASetter){
+					propertyDescriptor.set(newValue);
+				 } 
+				 privateValue = newValue;
+				 self.value = newValue;																		         
+			}     
 		}	
-
 				
 	}
 
@@ -237,11 +228,7 @@ class TreezElement extends HTMLElement {
 				this.updateWidth(newStringValue);							
 			}
          }                 
-    }
-
-	
-
-			
+    }		
 
 	dispatchInputEvent(){
 		var event = new Event(

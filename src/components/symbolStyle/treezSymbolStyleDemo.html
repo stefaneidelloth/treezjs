@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+	<body>	
+	
+		<head>
+			<link type="text/css" rel="stylesheet" href="./../imageComboBox/treezImageComboBox.css" />
+		</head>
+	
+		<treez-symbol-style label="Symbol style:" id="symbolStyle"></treez-symbol-style>	
+
+		<script type="module">
+           import TreezSymbolStyle from './treezSymbolStyle.js';
+           import SymbolStyle from './symbolStyle.js';
+
+           var symbolStyle = document.getElementById('symbolStyle');           
+           symbolStyle.value = SymbolStyle.cross;   
+		</script>
+		
+	</body>
+</html>

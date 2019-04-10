@@ -1,4 +1,6 @@
-class FillStyle extends Enum {}
+import Enum from './../enum.js';
+
+export default class FillStyle extends Enum {}
   
 FillStyle.solid = new FillStyle('solid');                    
 FillStyle.vertical = new FillStyle('vertical');                    

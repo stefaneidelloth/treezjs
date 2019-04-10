@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezTextArea.css" />
+	</head>
+
+	<body>
+		<treez-text-area label="Text area:" id="textArea">
+			
+		</treez-text-area>	
+
+		<script type="module">
+			import TreezTextArea from './treezTextArea.js';
+
+            var textArea = document.getElementById('textArea');
+            textArea.label = 'New Label:';
+            textArea.value = 'Contant of text\narea';
+		</script>
+		
+	</body>
+</html>

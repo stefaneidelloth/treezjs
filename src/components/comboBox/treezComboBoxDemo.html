@@ -1,0 +1,27 @@
+<!doctype html>
+<html>	
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="treezComboBox.css" />
+	</head>
+
+	<body>
+		<treez-combo-box label="ComboBox:" id="comboBox">
+			
+		</treez-combo-box>	
+
+		<script type="module">
+			import TreezComboBox from './treezComboBox.js';
+
+           var comboBox = document.getElementById('comboBox');
+           
+           comboBox.label = "Hallo";
+		   comboBox.options = "A,B,C";
+           comboBox.value = "B";
+
+           comboBox.options = "C,D";
+           comboBox.value = "D";
+           
+		</script>
+	</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>		
+			<link type="text/css" rel="stylesheet" href="treezFilePath.css" />			
+	</head>
+
+	<body>
+		<treez-file-path label="File path:" id="filePath">
+			
+		</treez-file-path>	
+
+		<script type="module">			
+            import TreezFilePath from './treezFilePath.js';
+
+            var filePath = document.getElementById('filePath');           
+            filePath.label = 'File path';
+            filePath.value = 'C:\\test.txt';
+		</script>
+	</body>
+	
+</html>

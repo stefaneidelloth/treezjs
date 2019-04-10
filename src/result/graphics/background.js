@@ -1,4 +1,5 @@
 import GraphicsAtom from './graphicsAtom.js';
+import Color from './../../components/color/color.js';
 
 export default class Background extends GraphicsAtom {
 

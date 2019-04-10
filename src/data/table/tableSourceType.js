@@ -1,3 +1,4 @@
+import Enum from './../../components/enum.js';
 
 export default class TableSourceType extends Enum {}
 

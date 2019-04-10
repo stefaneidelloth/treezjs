@@ -1,4 +1,6 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 export default class MajorTicks extends GraphicsAtom {
 	

@@ -1,4 +1,4 @@
-class Enum {
+export default class Enum {
 
 	static get values(){
 		return Object.values(this);
@@ -25,5 +25,3 @@ class Enum {
 		return this.name;
 	}
 }
-
-

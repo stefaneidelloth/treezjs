@@ -1,4 +1,7 @@
-class TreezColor extends LabeledTreezElement {
+import LabeledTreezElement from './../labeledTreezElement.js';
+import Color from './color.js';
+
+export default class TreezColor extends LabeledTreezElement {
             		
 	get value() {
 	  var stringValue = this.getAttribute('value');

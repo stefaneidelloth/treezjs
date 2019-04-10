@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+
+	<head>			
+		 <link type="text/css" rel="stylesheet" href="treezCheckBox.css" />
+	</head>
+
+	<body>
+		<treez-check-box label="checkBox:" id="checkBox"></treez-check-box>		
+
+		<script type="module">
+		   import TreezCheckBox from './treezCheckBox.js';
+
+           var checkBox = document.getElementById('checkBox');
+           checkBox.disabled = true;
+           checkBox.hidden = false;          
+           
+           checkBox.label = "Hallo";
+           checkBox.value = true;
+
+           var currentValue = checkBox.value
+
+           checkBox.value = false;
+
+           currentValue = checkBox.value
+
+           checkBox.value = "true"
+
+           currentValue = checkBox.value
+
+           checkBox.value = "false"
+
+           currentValue = checkBox.value  
+
+		</script>
+	</body>
+</html>

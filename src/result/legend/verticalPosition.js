@@ -1,3 +1,5 @@
+import Enum from './../../components/enum.js';
+
 export default class VerticalPosition extends Enum{
 	
 	get isTop(){

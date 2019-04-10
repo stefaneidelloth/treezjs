@@ -1,4 +1,6 @@
-class Color extends Enum {
+import Enum from './../enum.js';
+
+export default class Color extends Enum {
 	
 	constructor(name, hexString){
 		super(name);

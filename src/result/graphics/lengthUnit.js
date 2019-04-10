@@ -1,3 +1,4 @@
+import Enum from './../../components/enum.js';
 
 // The possible units for geometric length that are used with treez graphics
 export default class LengthUnit extends Enum {

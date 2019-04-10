@@ -1,5 +1,7 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import PrimaryAndSecondarySelection from './primaryAndSecondarySelection.js';
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 export default class MinorTicks extends GraphicsAtom {
 	

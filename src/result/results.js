@@ -15,10 +15,11 @@ export default class Results extends ComponentAtom {
 	
 	createComponentControl(tabFolder){    
 	     
-		const page = tabFolder.append('treez-tab'); 
+		const page = tabFolder.append('treez-tab')
+			.label('Data'); 
 		
 		const section = page.append('treez-section')
-    		.label('Results');
+    		.label('Results');	
 
     	section.append('treez-section-action')
             .image('run.png')
@@ -28,8 +29,10 @@ export default class Results extends ComponentAtom {
             					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
             				   })
             );
+    	
+    	const sectionContent = section.append('div');
 	
-		section.append('treez-text-label')
+    	sectionContent.append('treez-text-label')
 			.value('This atom represents results.');		
 	}	
 	

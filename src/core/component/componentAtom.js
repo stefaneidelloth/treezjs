@@ -5,6 +5,47 @@ import TreeViewAction from './../treeview/TreeViewAction.js';
 import Monitor from './../monitor/monitor.js';
 import Treez from './../../treez.js';
 
+import TreezCheckBox from './../../components/checkBox/treezCheckBox.js';
+
+import TreezColor from './../../components/color/treezColor.js';
+import Color from './../../components/color/color.js';
+
+import TreezColorMap from './../../components/colorMap/treezColorMap.js';
+import ColorMap from './../../components/colorMap/colorMap.js';
+
+import TreezComboBox from './../../components/comboBox/treezComboBox.js';
+import TreezEnumComboBox from './../../components/comboBox/treezEnumComboBox.js';
+
+import TreezErrorBarStyle from './../../components/errorBarStyle/treezErrorBarStyle.js';
+import ErrorBarStyle from './../../components/errorBarStyle/errorBarStyle.js';
+
+import TreezFileOrDirectoryPath from './../../components/file/treezFileOrDirectoryPath.js';
+import TreezFilePath from './../../components/file/treezFilePath.js';
+
+import TreezFillStyle from './../../components/fillStyle/treezFillStyle.js';
+import FillStyle from './../../components/fillStyle/fillStyle.js';
+
+import TreezFont from './../../components/font/treezFont.js';
+
+import TreezImageComboBox from './../../components/imageComboBox/treezImageComboBox.js';	
+
+import TreezLineStyle from './../../components/lineStyle/treezLineStyle.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
+
+import TreezModelPath from './../../components/modelPath/treezModelPath.js';
+
+import TreezSection from './../../components/section/treezSection.js';
+import TreezSize from './../../components/size/treezSize.js';  
+import TreezStringList from './../../components/list/treezStringList.js';
+
+import TreezSymbolStyle from './../../components/symbolStyle/treezSymbolStyle.js';
+import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;
+
+import TreezTabFolder from './../../components/tabs/treezTabFolder.js';
+import TreezTextArea from './../../components/text/area/treezTextArea.js';
+import TreezTextField from './../../components/text/field/treezTextField.js';
+import TreezTextLabel from './../../components/text/label/treezTextLabel.js';
+
 export default class ComponentAtom extends Atom {
 
 	constructor(name) {
@@ -20,49 +61,26 @@ export default class ComponentAtom extends Atom {
         ComponentAtom.componentsAreInitialized = true;
     }
 
-    static initializeComponents(){
-    	
-    	Treez.importHtml('/src/components/checkBox/treez-check-box.html');
-    	
-    	Treez.importHtml('/src/components/color/treez-color.html');
-    	Treez.importHtml('/src/components/color/color.html');
-		
-    	Treez.importHtml('/src/components/colorMap/treez-color-map.html');
-    	Treez.importHtml('/src/components/colorMap/color-map.html');
-		
-    	Treez.importHtml('/src/components/comboBox/treez-combo-box.html');
-    	Treez.importHtml('/src/components/comboBox/treez-enum-combo-box.html');
-		
-    	Treez.importHtml('/src/components/errorBarStyle/treez-error-bar-style.html');
-    	Treez.importHtml('/src/components/errorBarStyle/error-bar-style.html');
+    static initializeComponents(){    	
+    	Treez.importCssStyleSheet('/src/components/checkBox/treezCheckBox.css');    	
+    	Treez.importCssStyleSheet('/src/components/color/treezColor.css'); 		
+    	Treez.importCssStyleSheet('/src/components/comboBox/treezComboBox.css');    		
 
-    	Treez.importHtml('/src/components/file/treez-file-or-directory-path.html');
-    	Treez.importHtml('/src/components/file/treez-file-path.html');
+    	Treez.importCssStyleSheet('/src/components/file/treezFileOrDirectoryPath.css');
+    	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    
-    	Treez.importHtml('/src/components/fillStyle/treez-fill-style.html');
-    	Treez.importHtml('/src/components/fillStyle/fill-style.html');
-	    
-    	Treez.importHtml('/src/components/font/treez-font.html');
-	    
-    	Treez.importHtml('/src/components/imageComboBox/treez-image-combo-box.html');	
+    	Treez.importCssStyleSheet('/src/components/imageComboBox/treezImageComboBox.css');	
+    	
+    	Treez.importCssStyleSheet('/src/components/list/treezStringList.css');
 		
-    	Treez.importHtml('/src/components/lineStyle/treez-line-style.html');
-    	Treez.importHtml('/src/components/lineStyle/line-style.html');
-		
-    	Treez.importHtml('/src/components/modelPath/treez-model-path.html');
+    	Treez.importCssStyleSheet('/src/components/modelPath/treezModelPath.css');
        
-    	Treez.importHtml('/src/components/section/treez-section.html');
-    	Treez.importHtml('/src/components/size/treez-size.html');  
-    	Treez.importHtml('/src/components/list/treez-string-list.html');
-        
-    	Treez.importHtml('/src/components/symbolStyle/treez-symbol-style.html');
-    	Treez.importHtml('/src/components/symbolStyle/symbol-style.html');;
+    	Treez.importCssStyleSheet('/src/components/section/treezSection.css');
       
-    	Treez.importHtml('/src/components/tabs/treez-tab-folder.html');
-    	Treez.importHtml('/src/components/text/area/treez-text-area.html');
-    	Treez.importHtml('/src/components/text/field/treez-text-field.html');
-    	Treez.importHtml('/src/components/text/label/treez-text-label.html');
-      
+    	Treez.importCssStyleSheet('/src/components/tabs/treezTabFolder.css');
+    	Treez.importCssStyleSheet('/src/components/text/area/treezTextArea.css');
+    	Treez.importCssStyleSheet('/src/components/text/field/treezTextField.css');
+    	Treez.importCssStyleSheet('/src/components/text/label/treezTextLabel.css');      
     }
 	
     createControlAdaption(parent, treeView) {
