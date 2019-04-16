@@ -6,9 +6,10 @@
 
 .treez-check-box-input {   
     with: auto; 
-    vertical-align: middle;  
+    vertical-align: baseline;     
 }
 
 .treez-check-box-label {  
+ 	padding-left:3px;
      vertical-align: middle;	    
 }

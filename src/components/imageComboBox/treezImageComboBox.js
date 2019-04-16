@@ -133,8 +133,8 @@ export default class TreezImageComboBox extends TreezComboBox {
 
         var folderName = trimmedName[0].toLowerCase() + trimmedName.substring(1);
         
-        var urlPrefix = window.treezHome
-	        				?window.treezHome
+        var urlPrefix = window.treezConfig
+	        				?window.treezConfig.home
 	        				:'';
 
 		return urlPrefix + '/src/components/' + folderName + '/' + name + this.__imageFormat()

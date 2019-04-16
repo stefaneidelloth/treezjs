@@ -11,7 +11,6 @@ treez-file-path {
 }
 
 .treez-file-path-browse-button {
-	background: url('/icons/browse.png');
 	background-repeat: no-repeat;
 	border: none;
 	width:16px;
@@ -20,16 +19,13 @@ treez-file-path {
 	vertical-align: middle;
 }
 
-.treez-file-path-play-button {
-	background: url('/icons/run_triangle.png');
+.treez-file-path-play-button {	
 	background-repeat: no-repeat;
 	border: none;
 	width:16px;	
 	color:transparent;
 	vertical-align: middle;
 }
-
-
 
 .treez-file-path-text-field {   
     width: 90%;      

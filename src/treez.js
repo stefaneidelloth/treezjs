@@ -28,9 +28,11 @@ export default class Treez {
 		this.__editorView.buildView(editorFactory); //also calls setEditorViewer to set the editor viewer of the editor view
 	}
 	
-	static initialize(d3, editorFactory, terminalFactory, treezHome){
-
-		window.treezHome = treezHome;			
+	static config(treezConfig){
+		window.treezConfig = treezConfig;
+	}
+	
+	static initialize(d3, editorFactory, terminalFactory){			
 	
 		Treez.importCssStyleSheet('/src/views/treeView.css');
 		Treez.importCssStyleSheet('/src/views/editorView.css');
@@ -49,12 +51,12 @@ export default class Treez {
 		var link = document.createElement('link');
 		link.setAttribute('type','text/css');
 		link.setAttribute('rel','stylesheet');
-		link.setAttribute('href',window.treezHome + href);
+		link.setAttribute('href',window.treezConfig.home + href);
 		document.head.appendChild(link);
 	}	
 	
 	static imagePath(imageName){
-		return window.treezHome + '/icons/' + imageName;
+		return window.treezConfig.home + '/icons/' + imageName;
 	}
 
 	get treeView(){

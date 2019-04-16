@@ -59,18 +59,17 @@ export default class Model extends ComponentAtom {
 	
 	async execute(treeView, monitor) {
 
-
 		this.__treeView = treeView;
 		
 		var hasMainMonitor = false;		
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
-			monitor.showInMonitorView();
+			monitor.showInMonitorView();						
 			hasMainMonitor = true;
 		}
 
-		await this.doRunModel(treeView, monitor);		
+		await this.doRunModel(treeView, monitor); //total work must be set inside this method		
 
 		if(hasMainMonitor){
 			monitor.done();	
@@ -99,9 +98,9 @@ export default class Model extends ComponentAtom {
 	 */
 	async doRunModel(treeView, monitor) {
 
-		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');
-		monitor.totalWork = this.numberOfRunnableChildren;		
+		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');			
 		
+		monitor.totalWork = this.numberOfRunnableChildren;	
 		const modelOutput = this.__createEmptyModelOutput();
 		for (const child of this.children){
 

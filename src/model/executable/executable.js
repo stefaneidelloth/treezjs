@@ -284,7 +284,7 @@ export default class Executable extends Model {
             .bindValue(this,()=>this.inputArguments); 
 
 		sectionContent.append('treez-file-or-directory-path')
-            .label('Input file or folder')            
+            .label('Input file or directory')            
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.inputPath);            
 	}   
@@ -301,7 +301,7 @@ export default class Executable extends Model {
             .bindValue(this,()=>this.outputArguments); 
 
        sectionContent.append('treez-file-or-directory-path')
-            .label('Output file or folder')            
+            .label('Output file or directory')            
             .onChange(()=>this.__refreshStatus())           
             .bindValue(this,()=>this.outputPath); 
 

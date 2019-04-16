@@ -128,10 +128,15 @@ export default class TreezSection extends HTMLElement {
     		);
     		
     	};  
+    	
+    	var urlPrefix = window.treezConfig
+    						?window.treezConfig.home
+    						:'';
+    	
     	if(sectionAction.image){
-    		img.src= window.treezHome + '/icons/' + sectionAction.image;
+    		img.src= urlPrefix + '/icons/' + sectionAction.image;
     	} else {
-    		img.src=window.treezHome + '/icons/root.png';
+    		img.src= urlPrefix + '/icons/root.png';
     		console.warn('Section action has no image! (label: "'+ sectionAction.label +'")')
     	}             	
     	

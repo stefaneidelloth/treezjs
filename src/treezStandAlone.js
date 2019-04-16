@@ -1,5 +1,5 @@
 import Treez from './treez.js';
-import TreezTerminal from './treezTerminal.js'; 
+import StandAloneTerminal from './standAloneTerminal.js'; 
 
 requirejs.config({
 		baseUrl : '..',
@@ -24,6 +24,13 @@ require([
 	 OrionCodeEdit, 
 	 OrionDeferred
 ) {		
+	
+	Treez.config('.');	
+	
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
+	Treez.importCssStyleSheet('/lib/orion/code_edit/built-codeEdit.css');
+	
 	createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);		
 		
 	 var editorFactory = (handleCreatedEditor)=>{
@@ -31,17 +38,10 @@ require([
 	 }
 	
 	 var terminalFactory = (handleCreatedTerminal)=>{
-		 handleCreatedTerminal(new TreezTerminal());
+		 handleCreatedTerminal(new StandAloneTerminal());
 	 };
 	
-	Treez.initialize(d3, editorFactory, terminalFactory, '.'); 	
-
-	//golden layout
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
-
-	//orion code editor
-	Treez.importCssStyleSheet('/lib/orion/code_edit/built-codeEdit.css');	
+	Treez.initialize(d3, editorFactory, terminalFactory); 		
 });
 
 

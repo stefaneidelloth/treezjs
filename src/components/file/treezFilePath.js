@@ -35,21 +35,29 @@ export default class TreezFilePath extends LabeledTreezElement {
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
-            container.appendChild(rightSpan); 
+            container.appendChild(rightSpan);
+            
+            var urlPrefix = window.treezConfig
+								?window.treezConfig.home
+								:'';
 
 		    var browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;	
 		    browseButton.className='treez-file-path-browse-button';					   
 		    browseButton.type='button';
 		    browseButton.title=' ';
+		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
+		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFilePath();				   
             rightSpan.appendChild(browseButton);   
 
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
             executeButton.className='treez-file-path-play-button';	
-            executeButton.type="button";
-            executeButton.title="execute";
+            executeButton.type = 'button';
+            executeButton.title = 'execute';
+            executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
+            executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.__execute();   
             rightSpan.appendChild(executeButton);                    		
         }
@@ -93,15 +101,16 @@ export default class TreezFilePath extends LabeledTreezElement {
     	this.value = this.__textField.value;                	             	
     }
 
-    __browseFilePath(){                  
-        window.treezTerminal.browseFilePath(this.getDirectory(), (newValue)=>{
-            if(newValue){
-            	var oldValue = this.value;
-                this.value = newValue;
-        	    this.__textField.value = newValue;
-        	    this.dispatchEvent(new Event('change'));  
-            }                    	
-        }); 
+    __browseFilePath(){    
+       window.treezTerminal.browseFilePath(this.getDirectory()).then((filePath)=>{
+       	 if(filePath){
+			var oldValue = this.value;
+			this.value = filePath;
+			this.__textField.value = filePath;
+			this.dispatchEvent(new Event('change'));  
+       	 }  
+       });              	
+        
     }
     
     getDirectory(){

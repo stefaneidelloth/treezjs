@@ -90,11 +90,9 @@ export default class Page extends GraphicsAtom {
 		this.bindString(()=>this.width, svg, 'width');
 		this.bindString(()=>this.height, svg, 'height');
 
-		treeView.provideGraphicsView().setFocus();		
+		treeView.graphicsView.setFocus();		
 
 		this.plot(dTreez, svg, treeView);
-
-		
 		
 	}
 

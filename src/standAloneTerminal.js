@@ -1,4 +1,4 @@
-export default class TreezTerminal {
+export default class StandAloneTerminal {
 
 	constructor(){
 

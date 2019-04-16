@@ -345,7 +345,7 @@ export default class TableImport extends Model {
 
 	async doRunModel(treeView, monitor) {
 
-		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');		
+		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '".');		
 
 		var table;		
 		if (this.isLinkingToSource) {
@@ -362,7 +362,7 @@ export default class TableImport extends Model {
 		var outputTable = table.copy();
 		outputTable.name = outputTableName;		
 
-		monitor.info(this.constructor.name + ' "' + this.name + ' finished.');
+		monitor.info(this.constructor.name + ' "' + this.name + '" finished.');
 
 		//return model output
 		return outputTable;

@@ -11,9 +11,7 @@ treez-directory-path {
     margin-bottom:10px;
 }
 
-.treez-directory-path-browse-button {
-	background: url('/icons/browse.png');
-	background-repeat: no-repeat;
+.treez-directory-path-browse-button {		
 	border: none;
 	width:16px;
 	color:transparent;
@@ -21,9 +19,7 @@ treez-directory-path {
 	vertical-align: middle;
 }
 
-.treez-directory-path-play-button {
-	background: url('/icons/run_triangle.png');
-	background-repeat: no-repeat;
+.treez-directory-path-play-button {		
 	border: none;
 	width:16px;
 	color:transparent;

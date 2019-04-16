@@ -9,6 +9,7 @@ export default class TreezFileOrDirectoryPath extends LabeledTreezElement {
         this.__textField = undefined;
         this.__browseButton = undefined;
         this.__executeButton = undefined;
+        this.__isFile = true;
     }            	
 
     connectedCallback() {
@@ -26,8 +27,14 @@ export default class TreezFileOrDirectoryPath extends LabeledTreezElement {
             this.appendChild(container);  
 
             var leftSpan = document.createElement('span');
-            container.appendChild(leftSpan);                    
+            leftSpan.className = 'treez-file-or-directory-path-left-span';
+            container.appendChild(leftSpan);     
 
+             var urlPrefix = window.treezConfig
+								?window.treezConfig.home
+								:'';
+
+          
             var textField = document.createElement('input');
             this.__textField = textField; 
             textField.type='text'  
@@ -36,21 +43,52 @@ export default class TreezFileOrDirectoryPath extends LabeledTreezElement {
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
+            rightSpan.style.verticalAlign = 'middle';
             container.appendChild(rightSpan); 
+
+              var isFileButton = document.createElement('input');
+			isFileButton.type='button';
+			isFileButton.onclick = ()=>{
+				if(this.__isFile){
+					this.__isFile = false;
+					isFileButton.style.background = 'url("' + urlPrefix + '/icons/directoryToggle.png")';
+					 this.__browseButton.style.background = 'url("' + urlPrefix + '/icons/browseDirectory.png")';
+					  this.__browseButton.title='browse directory path';	
+				} else {
+					this.__isFile = true;
+					isFileButton.style.background = 'url("' + urlPrefix + '/icons/fileToggle.png")';
+					 this.__browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';		
+					 this.__browseButton.title='browse file path';			
+				}
+				isFileButton.style.backgroundRepeat = 'no-repeat';
+				this.__browseButton.style.backgroundRepeat = 'no-repeat';
+				
+			};
+			isFileButton.title='toggle file <=> directory';
+			isFileButton.className='treez-file-or-directory-path-is-file-button';	
+			isFileButton.style.background = 'url("' + urlPrefix + '/icons/fileToggle.png")';
+			isFileButton.style.backgroundRepeat = 'no-repeat';
+			
+			rightSpan.appendChild(isFileButton);                
+
 
 		    var browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;						   
 		    browseButton.type='button';
 		    browseButton.className='treez-file-or-directory-path-browse-button';	
-		    browseButton.title=' ';
+		    browseButton.title='browse file path';
+		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
+		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFileOrDirectoryPath();				   
             rightSpan.appendChild(browseButton);   
             
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
-            executeButton.type="button";
+            executeButton.type = 'button';
             executeButton.className='treez-file-or-directory-path-play-button';	
-            executeButton.title="execute";
+            executeButton.title = 'execute';
+            executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
+            executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.__execute();   
             rightSpan.appendChild(executeButton); 
         }
@@ -94,15 +132,28 @@ export default class TreezFileOrDirectoryPath extends LabeledTreezElement {
     	this.value = this.__textField.value;                	          	
     }
 
-    __browseFileOrDirectoryPath(){                  
-        window.treezTerminal.browseFileOrDirectoryPath(this.getDirectory(), (newValue)=>{
-            if(newValue){
-               var oldValue = this.value;
-                this.value = newValue;
-        	    this.__textField.value = newValue;	
-        	    this.dispatchEvent(new Event('change'));                	                	   
-            }                    	
-        }); 
+    __browseFileOrDirectoryPath(){  
+
+       if(this.__isFile){
+			window.treezTerminal.browseFilePath(this.getDirectory()).then((newValue)=>{
+				if(newValue){
+				   var oldValue = this.value;
+					this.value = newValue;
+					this.__textField.value = newValue;	
+					this.dispatchEvent(new Event('change'));                	                	   
+				}                    	
+			}); 
+       } else {
+			window.treezTerminal.browseDirectoryPath(this.getDirectory()).then((newValue)=>{
+				if(newValue){
+				   var oldValue = this.value;
+					this.value = newValue;
+					this.__textField.value = newValue;	
+					this.dispatchEvent(new Event('change'));                	                	   
+				}                    	
+			}); 
+       }               
+        
     }
     
     getDirectory(){

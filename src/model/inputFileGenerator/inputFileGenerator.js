@@ -73,7 +73,7 @@ export default class InputFileGenerator extends Model  {
 
 	async doRunModel(treeView, monitor){
 				
-		monitor.info("Executing InputFileGenerator '" + this.name + "'");
+		monitor.info('Executing InputFileGenerator "' + this.name + '"');
 
 		var modifiedInputPath = this.__getModifiedInputPath();				
 		        
@@ -114,9 +114,8 @@ export default class InputFileGenerator extends Model  {
 	        .addAction(
 	        ()=>this.execute(this.__treeView)
 	                .catch(error => {
-	                	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);
-	                	monitor.done();
-			  })
+	                	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);	                	
+			  		})
 	        ); 
 	    
 	    var sectionContent = section.append('div'); 

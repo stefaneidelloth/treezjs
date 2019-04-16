@@ -37,20 +37,28 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
 
             var rightSpan = document.createElement('span');
             container.appendChild(rightSpan); 
+            
+            var urlPrefix = window.treezConfig
+            					?window.treezConfig.home
+            					:'';
 
 		    var browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;	
 		    browseButton.className='treez-directory-path-browse-button';					   
 		    browseButton.type='button';
 		    browseButton.title=' ';
+		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
+		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFilePath();				   
             rightSpan.appendChild(browseButton);   
 
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
             executeButton.className='treez-directory-path-play-button';	
-            executeButton.type="button";
-            executeButton.title="execute";
+            executeButton.type='button';
+            executeButton.title='execute';
+            executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
+            executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.__execute();   
             rightSpan.appendChild(executeButton);                    		
         }
@@ -95,7 +103,7 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
     }
 
     __browseFilePath(){                  
-        window.treezTerminal.browseDirectoryPath(this.getDirectory(), (result)=>{
+        window.treezTerminal.browseDirectoryPath(this.getDirectory()).then((result)=>{
             if(result){
                 this.value = result;
         	    this.__textField.value = result;

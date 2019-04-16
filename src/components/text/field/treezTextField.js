@@ -22,7 +22,7 @@ export default class TreezTextField extends LabeledTreezElement {
             this.__textField = textField;
             this.appendChild(textField); 
             textField.setAttribute('class','treez-text-field')                
-            textField.onchange = ()=>this.__textFieldChanged(); 
+            textField.onchange = ()=>this.__textFieldChanged();
         }
 
         if(!this.width){

@@ -22,6 +22,8 @@ export default class Probe extends ComponentAtom {
 		}	
 		
 		this.afterCreateControlAdaptionHook();
+
+		monitor.totalWork=1;
 			
 		await this.runProbe(treeView, monitor);
 

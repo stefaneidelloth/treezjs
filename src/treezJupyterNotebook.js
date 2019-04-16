@@ -1,4 +1,5 @@
 import Treez from './treez.js'; 
+import JupyterTerminal from './jupyterTerminal.js';
 
 require([
 	'base/js/namespace',
@@ -10,7 +11,23 @@ require([
 	 d3	
 ) {	
 	
+	Treez.config({
+		home: '../notebooks/treezjs'
+	});
+
+
+
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
+	
 	createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
+
+	var propertiesElement = document.getElementById('treez-properties');
+	propertiesElement.onfocusin = () => {
+		//disable jupyter keyboard shortcuts to be able to corretly enter text in html elements
+		Jupyter.keyboard_manager.disable();		
+	}
+
 
 	var editorFactory = (handleCreatedEditor)=>{
 		
@@ -42,18 +59,13 @@ require([
 		handleCreatedEditor(editor);
     };
 
-    var terminalFactory = (handleCreatedTerminal)=>{
-    	handleCreatedTerminal(null); //TODO
-    }  	
+    var terminalFactory = (handleCreatedTerminal)=>{    	
+    	handleCreatedTerminal(new JupyterTerminal(Jupyter)); 
+    };  	
 	
-	Treez.initialize(d3, editorFactory, terminalFactory, '../notebooks/treezjs'); 
-
-	//import golden layout stylesheets
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');		
+	Treez.initialize(d3, editorFactory, terminalFactory); 	
+		
 });
-
-
 
 
 /*
