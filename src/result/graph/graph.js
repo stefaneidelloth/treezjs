@@ -13,6 +13,7 @@ export default class Graph extends PagedGraphicsAtom {
 	constructor(name) {		
 		super(name);
 		this.image='graph.png';
+		this.isRunnable=true;
 				
 		this.__graphGroupSelection = undefined;
 		this.__rectSelection = undefined;		
@@ -103,10 +104,6 @@ export default class Graph extends PagedGraphicsAtom {
 		return actions
 	}
 
-
-	async execute(treeView, monitor) {
-		//await this.executeChildren(XySeries, treeView, monitor);		
-	}
 
 	plot(dTreez, pageSelection, pageRectSelection, treeView) {
 			

@@ -30,6 +30,9 @@ export default class MonitorConsole {
 	}
 	
 	showMessages(){
+		this.__parent.selectAll('div') //
+					 .remove();
+					 
 		for(var logMessage of this.__logMessages){
 			 this.__appendLogMessageToParent(logMessage);
 		}			

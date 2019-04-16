@@ -73,15 +73,18 @@ export default class Page extends GraphicsAtom {
 
 
 	async execute(treeView, monitor) {
+		
+		this.__treeView = treeView;
+		
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
-			monitor.showInMonitorView();
-		}	
-		
-		this.__treeView = treeView;
+			monitor.showInMonitorView();			
+		}			
 
-		await this.executeChildren(Graph, treeView, monitor);
+		monitor.totalWork = 1 + this.numberOfRunnableChildren;	
+		
+		await this.executeRunnableChildren(treeView, monitor);
 
 		var dTreez = treeView.dTreez;
 		
@@ -94,7 +97,10 @@ export default class Page extends GraphicsAtom {
 
 		this.plot(dTreez, svg, treeView);
 		
+		monitor.done();			
+		
 	}
+
 
 	plot(dTreez, svg, treeView) {
 		this.__treeView = treeView;

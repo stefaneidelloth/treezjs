@@ -19,9 +19,7 @@ export default class GraphicsView {
 	}
 
 	setFocus(){
-		var graphicsContainer = this.__mainViewModel.graphicsContainer;
-		var graphics = graphicsContainer.parent;
-        graphics.parent.setActiveContentItem(graphics);
+		this.__mainViewModel.focusGraphicsView();		
 	}
 	
 	async saveSvg(){

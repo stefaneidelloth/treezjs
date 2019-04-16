@@ -8,7 +8,7 @@ import DTreez from './core/dtreez/dTreez.js';
 export default class Treez {
 	
 	//Do not use this construtor directly but the static method initialize.
-	constructor(d3, editorFactory){		
+	constructor(d3, editorFactory, focusManager){		
 		
 		var dTreez = new DTreez(d3);  
 		
@@ -26,13 +26,15 @@ export default class Treez {
 		
 		this.__editorView = new EditorView(this, dTreez);
 		this.__editorView.buildView(editorFactory); //also calls setEditorViewer to set the editor viewer of the editor view
+
+		this.__focusManager = focusManager;
 	}
 	
 	static config(treezConfig){
 		window.treezConfig = treezConfig;
 	}
 	
-	static initialize(d3, editorFactory, terminalFactory){			
+	static initialize(d3, editorFactory, terminalFactory, focusManager){			
 	
 		Treez.importCssStyleSheet('/src/views/treeView.css');
 		Treez.importCssStyleSheet('/src/views/editorView.css');
@@ -44,7 +46,7 @@ export default class Treez {
 			window.treezTerminal = terminal;
 		});			
 		
-		new Treez(d3, editorFactory);			
+		new Treez(d3, editorFactory, focusManager);			
 	}
 	
 	static importCssStyleSheet(href){
@@ -57,6 +59,10 @@ export default class Treez {
 	
 	static imagePath(imageName){
 		return window.treezConfig.home + '/icons/' + imageName;
+	}
+
+	focusGraphicsView(){		
+		this.__focusManager.focusGraphicsView();
 	}
 
 	get treeView(){

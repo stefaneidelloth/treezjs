@@ -344,6 +344,8 @@ export default class TableImport extends Model {
 	}
 
 	async doRunModel(treeView, monitor) {
+		
+		monitor.totalWork = 2;
 
 		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '".');		
 
@@ -354,6 +356,8 @@ export default class TableImport extends Model {
 			var tableData = await this.__importTableData();			
 			table = this.__writeDataToTargetTable(tableData);
 		}
+		
+		monitor.worked(1);
 
 		treeView.refresh();
 
@@ -362,6 +366,7 @@ export default class TableImport extends Model {
 		var outputTable = table.copy();
 		outputTable.name = outputTableName;		
 
+		monitor.done();
 		monitor.info(this.constructor.name + ' "' + this.name + '" finished.');
 
 		//return model output

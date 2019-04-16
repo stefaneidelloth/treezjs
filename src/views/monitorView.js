@@ -39,9 +39,9 @@ export default class MonitorView {
 		var div = self.__progressPanel.append('div');
 
 		var details = div.append('details') //expandable for progress that has children (might be hidden)
-			.attr('open','');
+			.attr('open',null); //'');
 		
-		var collapsibleHeader = details.append('summary');		
+		var collapsibleHeader = details.append('summary');	
 
 		var collapsibleContent = details
 				.append('div') //
@@ -76,7 +76,6 @@ export default class MonitorView {
 	}
 
 	__appendChildMonitor( monitor, nonExpandableHeader, expandableHeader, content, details, newChildMonitor) {
-
 		
 		var headerDisplay = expandableHeader.style('display');
 				
@@ -96,13 +95,14 @@ export default class MonitorView {
 		var progressInPercent = monitor.progressInPercent;
 		var description = monitor.description;
 
-		header.onClick(() => {
+		
+		header.onClick((event) => {	
 			monitor.showLogMessages();
 		});
-
+		
 		var titleLabel = header
 				.append('label') //
-				.className('treez-monitor-progress-title')				
+				.className('treez-monitor-progress-title')											
 				.text(title);
 
 		if (details != null) {
@@ -118,7 +118,7 @@ export default class MonitorView {
 		}
 
 		var descriptionLabel = header //
-				.append('label') //
+				.append('label') //				
 				.className('treez-monitor-progress-description');
 				
 
@@ -198,11 +198,7 @@ export default class MonitorView {
 				if (currentProgressInPercent == 100.0) {
 					cancelButton.style('display', 'none');
 				}
-
-			
-
 		});
-
 	}
 	
 	__createProgressNodes(parentSelection, monitor) {
@@ -241,19 +237,11 @@ export default class MonitorView {
 				self.__createProgressNodes(collapsibleContent, subMonitor);
 			});
 		}
-
-	}
-
-	
+	}	
 	
 	getLoggingPanel(){
 		return this.__loggingPanel;
 	}
 
-	
-
-	
-
-	//#end region
 
 }

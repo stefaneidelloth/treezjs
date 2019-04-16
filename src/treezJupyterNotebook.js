@@ -20,7 +20,7 @@ require([
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
 	
-	createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
+	var focusManager = createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
 
 	var propertiesElement = document.getElementById('treez-properties');
 	propertiesElement.onfocusin = () => {
@@ -50,7 +50,7 @@ require([
 					var firstCell = notebook.get_cells()[0];
 					var jupyterText = firstCell.get_text();
 
-                    var text = jupyterText.replace('%%javascript','').replace('%%js','');
+                    var text = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
 													
 			    	textHandler(text);
 				}
@@ -63,7 +63,7 @@ require([
     	handleCreatedTerminal(new JupyterTerminal(Jupyter)); 
     };  	
 	
-	Treez.initialize(d3, editorFactory, terminalFactory); 	
+	Treez.initialize(d3, editorFactory, terminalFactory, focusManager); 	
 		
 });
 
@@ -81,6 +81,16 @@ function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerE
 	
 	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
 
+	var focusManager = {
+		__graphicsContainer: undefined,
+		focusGraphicsView: undefined
+	};
+	
+	focusManager['focusGraphicsView'] = ()=>{
+		var graphics = focusManager.__graphicsContainer.parent;
+		graphics.parent.setActiveContentItem(graphics);		
+	};
+
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
 		element.attr('id','treez-tree');		
@@ -93,7 +103,7 @@ function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerE
 
 	myLayout.registerComponent('Progress', function(container) {		
 		var element = container.getElement();
-		element.attr('id','trez-progress');
+		element.attr('id','treez-progress');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
@@ -110,7 +120,7 @@ function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerE
 	});
 
 	myLayout.registerComponent('Graphics', function(container) {
-		self.graphicsContainer = container;
+		focusManager.__graphicsContainer = container;
 		var element = container.getElement();
 		element.attr('id','treez-graphics');
 
@@ -125,6 +135,8 @@ function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerE
 	});
 
 	myLayout.init();
+
+	return focusManager;
 }
 
 function createGoldenLayout(GoldenLayout, containerElement){

@@ -1,9 +1,6 @@
 import MonitorConsole from './monitorConsole.js';
 
 export default class Monitor {
-
-	
-	
 	
 	constructor(title, treeView, id, coveredWorkOfParentMonitor, totalWork, parentMonitor) {		
 		this.id = id;
@@ -103,6 +100,12 @@ export default class Monitor {
 
 		this.__assertWorkIncrementIsNotTooLarge(workIncrement);
 
+		//this considers rounding issues.
+		var delta = this.__totalWork - (this.__finishedWork + workIncrement);
+		if(delta < 1e-6){
+			workIncrement = this.__totalWork - this.__finishedWork;			
+		}
+
 		this.__finishedWork += workIncrement;
 
 		this.__incrementParentWork(workIncrement);
@@ -119,9 +122,9 @@ export default class Monitor {
 	}
 
 	__incrementParentWork(workIncrement) {
-		var workIncrementForParent = 1.0 * this.workIncrement / this.__totalWork * this.__coveredWorkOfParentMonitor;
 
 		if (this.__parent) {
+			var workIncrementForParent = 1.0 * workIncrement / this.__totalWork * this.__coveredWorkOfParentMonitor;
 			this.__parent.worked(workIncrementForParent);
 		} 
 	}	

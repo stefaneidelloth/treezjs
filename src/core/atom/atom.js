@@ -76,14 +76,18 @@ export default class Atom {
 	}
 
 	
-	async executeChildren(wantedClass, treeView, optionalMonitor){	
+	async executeChildren(wantedClass, treeView, monitor){		
+		
+		var monitorId = wantedClass.name + 's';
+		var subMonitor = monitor.createChild(monitorId, treeView, monitorId, 1);
+		subMonitor.totalWork = this.numberOfChildrenByClass(wantedClass);
 
-		for(const child of this.children){
-			
+		for(const child of this.children){			
 			var hasWantedClass = child instanceof wantedClass;
 			if (hasWantedClass) {
 				try {
-					await child.execute(treeView, optionalMonitor);
+					var subSubMonitor = subMonitor.createChild(child.name, treeView, child.name, 1);
+					await child.execute(treeView, subSubMonitor);
 				} catch (exception) {
 					var message = 'Could not execute child "' + child.name + '" of "' + this.name + '".';
 					console.error(message, exception);
@@ -92,10 +96,11 @@ export default class Atom {
 		};		
 	}
 	
-	async executeRunnableChildren(treeView, optionalMonitor) {
+	async executeRunnableChildren(treeView, monitor) {
 		for(const child of this.children){
-			if (child.isRunnable) {				
-				await child.execute(treeView, optionalMonitor);
+			if (child.isRunnable) {	
+				var subMonitor = monitor.createChild(child.name, treeView, child.name, 1);			
+				await child.execute(treeView, subMonitor);
 			}
 		};		
 	}

@@ -166,18 +166,15 @@ export default class Study extends ComponentAtom {
 				monitor.done();
 			}
 
-			this.__logAndShowEndMessage(monitor);
 			treeView.refresh();
 
-
+			this.__logAndShowEndMessage(monitor);
 		}
 	}
 
 	__executeTargetModelConcurrently(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
 
-		var self = this;
-		
-		
+		var self = this;	
 		
 		var currentDateString = new Date().toLocaleString();	
 		var message = '-- ' + currentDateString + ' --- Starting ' + numberOfSimulations + ' simulations ----------';

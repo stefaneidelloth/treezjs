@@ -1,5 +1,6 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import Length from './length.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 
 export default class GraphicsAtom extends ComponentAtom {

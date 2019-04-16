@@ -111,9 +111,10 @@ export default class Model extends ComponentAtom {
 					if (childModelOutput) {
 						modelOutput.addChild(childModelOutput);
 					}
+				} else {	
+					await child.execute(treeView, subMonitor);
 				}
-			} else {	
-				await child.execute(treeView, subMonitor);
+				
 			}
 		}
 		
@@ -156,13 +157,14 @@ export default class Model extends ComponentAtom {
 	/**
 	 * Runs the first child model with the given constructor and returns its ModelOutput
 	 */
-	runChildModel(wantedConstructor, refreshable, monitor) {
+	runChildModel(wantedConstructor, treeView, monitor) {
 	    let modelOutput = null;
         for (var child of this.children) {
             const hasWantedClass = child.constructor === wantedConstructor;
             if (hasWantedClass) {
                 if (child instanceof Model) {
-                    return  child.doRunModel(refreshable, monitor);
+                	var subMonitor = monitor.createChild(child.name, treeView, child.name, 1);
+                    return  child.doRunModel(treeView, subMonitor);
                 } else {
                     throw new Error('The found child "' + child.name + '" is not a model.');
                 }
@@ -171,7 +173,6 @@ export default class Model extends ComponentAtom {
 
         const message = 'Could not find a child of wanted class "' + wantedConstructor.name + '".';
         throw new Error(message);
-
 	}
 
 

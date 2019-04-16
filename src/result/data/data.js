@@ -13,7 +13,8 @@ export default class Data extends ComponentAtom {
 	
 	createComponentControl(tabFolder){    
 	     
-		const page = tabFolder.append('treez-tab'); 
+		const page = tabFolder.append('treez-tab')
+			.label('Data'); 
 		
 		const section = page.append('treez-section')
     		.label('Data');

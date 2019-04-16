@@ -31,7 +31,7 @@ require([
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
 	Treez.importCssStyleSheet('/lib/orion/code_edit/built-codeEdit.css');
 	
-	createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);		
+	var focusManager = createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);		
 		
 	 var editorFactory = (handleCreatedEditor)=>{
 		 createEditor(handleCreatedEditor, OrionCodeEdit);
@@ -41,7 +41,7 @@ require([
 		 handleCreatedTerminal(new StandAloneTerminal());
 	 };
 	
-	Treez.initialize(d3, editorFactory, terminalFactory); 		
+	Treez.initialize(d3, editorFactory, terminalFactory, focusManager); 		
 });
 
 
@@ -91,6 +91,14 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 	
 	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
 
+	var focusManager = {
+		__graphicsContainer: undefined,
+		focusGraphicsView: ()=>{
+			var graphics = this.__graphicsContainer.parent;
+        	graphics.parent.setActiveContentItem(graphics);
+		}
+	}
+
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
 		element.attr('id','treez-tree');		
@@ -103,7 +111,7 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 
 	myLayout.registerComponent('Progress', function(container) {		
 		var element = container.getElement();
-		element.attr('id','trez-progress');
+		element.attr('id','treez-progress');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
@@ -120,7 +128,7 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 	});
 
 	myLayout.registerComponent('Graphics', function(container) {
-		self.graphicsContainer = container;
+		focusManager.__graphicsContainer = container;
 		var element = container.getElement();
 		element.attr('id','treez-graphics');
 
@@ -135,6 +143,8 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 	});
 
 	myLayout.init();
+
+	return focusManager;
 }
 
 function createGoldenLayout(GoldenLayout, containerElement){

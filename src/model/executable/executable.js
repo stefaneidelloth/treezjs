@@ -122,20 +122,24 @@ export default class Executable extends Model {
 			monitor.cancel();
 			return this.__createEmptyModelOutput();			
 		}
-
-		//update progress monitor
-		monitor.worked(1);
-		monitor.description = 'Executing system command.';
+		
 
 		//create command
+		monitor.description = 'Executing system command.';
 		const command = this.__buildCommand();
 		monitor.info('Executing ' + command);
 
 		//execute command
-		await this.__executeCommand(command, monitor);			
+		await this.__executeCommand(command, monitor);
+
+		monitor.worked(1);			
 		
 		//post process execution results
-		return await this.__postProcessExecution(treeView, monitor)
+		var modelOutput = await this.__postProcessExecution(treeView, monitor)
+
+		monitor.done();
+
+		return modelOutput;
     }  
     
     async __executeCommand(command, monitor){
@@ -181,8 +185,7 @@ export default class Executable extends Model {
     
     async __postProcessExecution(treeView, monitor){
     	    		
-			// update progress monitor
-			monitor.worked(1);
+			// update progress monitor		
 			monitor.description = '=>Post processing model output.';
 
 			const modelOutput = this.__createEmptyModelOutput();
@@ -212,8 +215,7 @@ export default class Executable extends Model {
 			this.__increaseJobId();
 
 			// inform progress monitor to be done
-			monitor.description = 'finished\n';
-			monitor.done();
+			monitor.description = 'finished\n';			
 
 			return modelOutput;	
 	}

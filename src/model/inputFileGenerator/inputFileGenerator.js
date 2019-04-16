@@ -72,6 +72,8 @@ export default class InputFileGenerator extends Model  {
 	}
 
 	async doRunModel(treeView, monitor){
+
+		monitor.totalWork = 2;
 				
 		monitor.info('Executing InputFileGenerator "' + this.name + '"');
 
@@ -84,6 +86,8 @@ export default class InputFileGenerator extends Model  {
 													monitor.error(error);
 												 });
 
+		monitor.worked(1);
+
 		var sourceModelAtom = this.childFromRoot(this.sourceModelPath);	
 		
 		var inputFileString = this.__applyTemplateToSourceModel(template, sourceModelAtom);
@@ -94,7 +98,9 @@ export default class InputFileGenerator extends Model  {
 			monitor.warn(message);
 		}
 
-		await window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString);			
+		await window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString);	
+
+		monitor.done();		
 				
 	}	
 
