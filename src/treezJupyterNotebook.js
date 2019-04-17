@@ -16,11 +16,12 @@ require([
 	});
 
 
-
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
+	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
 	
-	var focusManager = createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);
+	var layoutContainer = __createLayoutContainer(GoldenLayout);	
+	var focusManager = __createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, layoutContainer);
+	
 
 	var propertiesElement = document.getElementById('treez-properties');
 	propertiesElement.onfocusin = () => {
@@ -67,6 +68,22 @@ require([
 		
 });
 
+function __createLayoutContainer(GoldenLayout){
+	var container = document.createElement('div');
+
+	var style= container.style;
+	//style.backgroundColor='red';
+	style.position= 'absolute';
+	style.top='110px';
+	style.bottom = 0;
+	style.left=0;
+	style.right=0;	
+	style.padding=0;
+	style.margin=0;
+	document.body.appendChild(container);	
+	return container;
+}
+
 
 /*
 Defines container DOM elements that are used/filled by Treez:
@@ -77,9 +94,14 @@ Defines container DOM elements that are used/filled by Treez:
 #treez-progress, 
 #treez-log
 */
-function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerElement){	
+function __createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerElement){	
 	
-	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
+	var myLayout = __createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
+
+	window.onresize = ()=>{
+		var rect = containerElement.getBoundingClientRect();
+		myLayout.updateSize(rect.width, rect.height);
+	};
 
 	var focusManager = {
 		__graphicsContainer: undefined,
@@ -139,7 +161,7 @@ function createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, containerE
 	return focusManager;
 }
 
-function createGoldenLayout(GoldenLayout, containerElement){
+function __createGoldenLayout(GoldenLayout, containerElement){
 	
 	var firstColumn = {
 			type : 'component',

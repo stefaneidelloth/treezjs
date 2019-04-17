@@ -5,15 +5,19 @@
 	font-size: 12px;
 	padding: 2px;
 	overflow:auto;
+	width:100% !important;
+	height:100% !important;
 }
 
 .treez-monitor-logging-panel {
 	background-color: white;
 	font-family: Consolas;
 	font-size: 12px;
-	padding: 2px;		
+	padding: 2px;
 	white-space: nowrap;
 	overflow:auto;
+	height:98% !important;
+	width:100% !important;
 }
 
 .treez-monitor-progress-collapsible-header {
