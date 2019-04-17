@@ -168,7 +168,7 @@ export default class Study extends ComponentAtom {
 
 			treeView.refresh();
 
-			this.__logAndShowEndMessage(monitor);
+			this.__logEndMessage(monitor);
 		}
 	}
 
@@ -441,15 +441,12 @@ export default class Study extends ComponentAtom {
 
 	}
 
-	__logAndShowEndMessage(monitor) {		
+	__logEndMessage(monitor) {		
 		var date =new Date();		
 		var currentDateString = date.toLocaleString();	
 			
 		var message = "-- " + currentDateString + " -------- Finished! --------------------------------";
-		monitor.info(message);
-		
-		var alertMessage = 'Finished ' + this.constructor.name + ' "' + this.name + '"!'
-		alert(alertMessage);
+		monitor.info(message);		
 	}
 
 	__logAndShowCancelMessage(monitor) {		

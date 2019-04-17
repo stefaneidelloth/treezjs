@@ -48,6 +48,7 @@ export default class LogMessage {
 	}
 
 	constructor(text, level, stackTrace){
+		this.time = Date.now();
 		this.text = text;
 		this.level = level;
 		this.color = this.__determineColor(level);

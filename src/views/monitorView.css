@@ -17,11 +17,22 @@
 }
 
 .treez-monitor-progress-collapsible-header {
-	text-size: 14px;
+	position: relative;
+	font-size: 12px;	
+	vertical-align: middle;
+	height:25px;	
+	padding:0;
+}
+
+.treez-monitor-progress-collapsible-symbol {	
+	position:absolute;	
+	top:-10px;	
+	font-size: 24px;		
 }
 
 .treez-monitor-progress-title {
-	color: black;
+	color: black;	
+	padding-left:15px;		
 }
 
 .treez-monitor-progress-description {
@@ -55,7 +66,9 @@
 
 .treez-monitor-progress-background {
 	background-color: lightgray;
-	height: 3px;		
+	height: 3px;	
+	padding:0;
+	margin-top:-3px;
 }
 
 .treez-monitor-progress-bar {	
@@ -68,12 +81,17 @@
 	display: block;
 }
 
-.treez-titled {
+.treez-monitor-progress-collapsible-content.collapsed {
+	padding-left: 10px;
+	display: none;
+}
+
+.treez-monitor-titled {
 	border-bottom: 1px solid lightgrey;
 	position:relative;
 }
 
-.treez-titled .treez-title {	
+.treez-monitor-titled .treez-monitor-title {	
   visibility: hidden; 
   background-color: #e0e8f1;
   color:black;
@@ -88,12 +106,12 @@
 
 
 
-.treez-titled:hover .treez-title {
+.treez-monitor-titled:hover .treez-title {
   visibility: visible;
   opacity: 1;
 }
 
-.treez-title:hover {
+.treez-monitor-title:hover {
   visibility: visible;
   opacity: 1;
 }

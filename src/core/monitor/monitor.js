@@ -115,6 +115,11 @@ export default class Monitor {
 
 	__assertWorkIncrementIsNotTooLarge(workIncrement) {
 		if (this.__finishedWork + workIncrement > this.__totalWork) {
+			var delta = this.__totalWork - (this.__finishedWork + workIncrement);
+			if(delta<1e-6){
+				return;
+			}
+			
 			var message = "The work increment " + workIncrement + " is too large. The finished work "
 					+ (this.__finishedWork + workIncrement) + " would be greater than the total work " + this.__totalWork;
 			throw new Error(message);
@@ -131,6 +136,10 @@ export default class Monitor {
 	
 
 	done() {
+		if(this.isCanceled){
+			return;
+		}
+
 		this.__assertTotalWorkHasBeenSet();
 
 		var workIncrement = this.__totalWork - this.__finishedWork;
@@ -151,7 +160,7 @@ export default class Monitor {
 	cancelAll() {
 		this.cancel();
 		if (this.__parent) {
-			this.__parent.cancel();
+			this.__parent.cancelAll();
 		}
 	}
 
@@ -167,17 +176,19 @@ export default class Monitor {
 		if(this.isCanceled){
 			return;
 		}
+
+		this.isCanceled = true;
+		this.__triggerPropertyChangedListeners();
 		
 		if (this.isDone) {
 			return;
-		}
+		}		
 		
-		this.isCanceled = true;
 		this.__children.forEach(
 			(child)=>child.cancel()
 		);
 				
-		this.__triggerPropertyChangedListeners();
+		
 	}
 
 	markIssue() {
@@ -191,7 +202,7 @@ export default class Monitor {
 		
 		var loggingPanel = monitorView.getLoggingPanel();
 		
-		var monitorConsole = new MonitorConsole(loggingPanel);		
+		var monitorConsole = new MonitorConsole(this, loggingPanel);		
 				
 		return monitorConsole;
 	}
@@ -257,6 +268,10 @@ export default class Monitor {
 
 	get children() {
 		return this.__children;
+	}
+	
+	get console() {
+		return this.__console;
 	}
 
 	get isDone() {

@@ -46,7 +46,8 @@ export default class DTreezSelection {
 		if (flag === undefined){
 			return this.__d3Selection.classed(className);
 		}
-		return this.__d3Selection.classed(className, flag);
+		let selection = this.__d3Selection.classed(className, flag);
+		return new DTreezSelection(selection);
 	}
 
 	className(className){

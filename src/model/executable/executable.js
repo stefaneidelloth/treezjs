@@ -135,9 +135,9 @@ export default class Executable extends Model {
 		monitor.worked(1);			
 		
 		//post process execution results
-		var modelOutput = await this.__postProcessExecution(treeView, monitor)
-
-		monitor.done();
+		var modelOutput = await this.__postProcessExecution(treeView, monitor);
+		
+		monitor.done();				
 
 		return modelOutput;
     }  
@@ -196,7 +196,7 @@ export default class Executable extends Model {
 				modelOutput.addChild(dataImportOutput);
 			} catch (exception) {
 				monitor.error('Could not import results of ' + this.name, exception);
-				monitor.cancel();
+				monitor.cancelAll();				
 				return modelOutput;
 			}
 
