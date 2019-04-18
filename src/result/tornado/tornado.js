@@ -12,16 +12,16 @@ export default class Tornado extends PagedGraphicsAtom {
 
 		var factories = [];
 		
-		this.data = new Data(this);
+		this.data = Data.create(this);
 		factories.push(this.data);
 
-		this.fill = new Fill(this);
+		this.fill = Fill.create(this);
 		factories.push(this.fill);
 
-		line = new Line(this);
+		line = Line.create(this);
 		factories.push(this.line);
 
-		labels = new Labels(this);
+		labels = Labels.create(this);
 		factories.push(this.labels);
 		
 		return factories;
@@ -30,7 +30,7 @@ export default class Tornado extends PagedGraphicsAtom {
 
 	plot(dTreez, graphOrBarSeriesSelection, graphRectSelection, treeView) {
 	
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //

@@ -43,8 +43,11 @@ require([
 					var firstCell = notebook.get_cells()[0];
 
 					var jupyterText = '%%javascript\n' + code;
-					firstCell.set_text(jupyterText);					
-					finishedHandler();					
+					firstCell.set_text(jupyterText);
+					if(finishedHandler){
+						finishedHandler();	
+					}					
+									
 				},
 				processText: function(textHandler){	
 					var notebook = Jupyter.notebook;

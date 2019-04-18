@@ -1,4 +1,5 @@
 import ComponentAtom from './../core/component/componentAtom.js';
+import Atom from './../core/atom/atom.js';
 import Models from './../model/models.js';
 import Studies from './../study/studies.js';
 import Results from './../result/results.js';
@@ -6,12 +7,10 @@ import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewA
 
 export default class Root extends ComponentAtom {	
    
-
-	constructor(name) {		
+	constructor(name) {			
 		super(name);
-		this.image = 'root.png';
+		this.image = 'root.png';		
 	}
-
 		
 	createComponentControl(tabFolder){    
 	     
@@ -59,9 +58,7 @@ export default class Root extends ComponentAtom {
 				parentSelection,
 				this,
 				treeView);
-		actions.push(addResults);
-		
-		
+		actions.push(addResults);		
 		
 		return actions;
 	}

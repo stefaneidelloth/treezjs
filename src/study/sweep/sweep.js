@@ -7,10 +7,9 @@ import DoubleRange from './../range/doubleRange.js';
 export default class Sweep extends Study {	
 		
 	constructor(name) {		
-		super(name);
-		this.isCanceled = false;
-		this.inputGenerator = new SweepModelInputGenerator(this);
+		super(name);		
 		this.image = 'sweep.png';
+		this.inputGenerator = new SweepModelInputGenerator(this);		
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
@@ -110,36 +109,36 @@ export default class Sweep extends Study {
 
 	
 
-	createDoubleRange(name) {
-		return this.createChild(DoubleRange, name);		
+	createDoubleRange(name, values) {
+		return this.createChild(DoubleRange, name, values);		
 	}
 
-	createIntegerRange(name) {
-		return this.createChild(IntegerRange, name);	
+	createIntegerRange(name, values) {
+		return this.createChild(IntegerRange, name, values);	
 	}
 
-	createBooleanRange(name) {
-		return this.createChild(BooleanRange, name);	
+	createBooleanRange(name, values) {
+		return this.createChild(BooleanRange, name, values);	
 	}
 
-	createStringRange(name) {
-		return this.createChild(StringRange, name);	
+	createStringRange(name, values) {
+		return this.createChild(StringRange, name, values);	
 	}
 
-	createStringItemRange(name) {
-		return this.createChild(StringItemRange, name);	
+	createStringItemRange(name, values) {
+		return this.createChild(StringItemRange, name, values);	
 	}
 
-	createFilePathRange(name) {
-		return this.createChild(FilePathRange, name);	
+	createFilePathRange(name, values) {
+		return this.createChild(FilePathRange, name, values);	
 	}
 
-	createDirectoryPathRange(name) {
-		return this.createChild(DirectoryPathRange, name);	
+	createDirectoryPathRange(name, values) {
+		return this.createChild(DirectoryPathRange, name, values);	
 	}
 
-	createQuantityRange(name) {
-		return this.createChild(QuantityRange, name);	
+	createQuantityRange(name, values) {
+		return this.createChild(QuantityRange, name, values);	
 	}
 
 	createStudyInfoExport(name) {

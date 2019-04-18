@@ -2,8 +2,8 @@ import Variable from './../variable.js';
 
 export default class QuantityVariable extends Variable {
 	
-	constructor(name){
-		super(name);
+	constructor(name, value){
+		super(name, value);
 		this.image='quantityVariable.png';
 	}
 	

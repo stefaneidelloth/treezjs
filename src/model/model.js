@@ -13,20 +13,20 @@ export default class Model extends ComponentAtom {
          * Is true if the Model is a manual Model. That means that the model is not remotely executed by a Study
          * but will be skipped.
          */
-        this.isManualModel = false;
+        this.__isManualModel = false;
 
         /**
          * If the execution of the model is part of a study, this holds the id of the study.
          */
-        this._studyId = undefined;
+        this.__studyId = undefined;
 
-        this._studyDescription = '';
+        this.__studyDescription = '';
 
         /**
          * The id for the last execution of the model. This might be the id from a model input while executing a study (e.g.
          * sweep). It might also be an id from a manual execution that has been set by the model itself.
          */
-        this._jobId = 1;
+        this.__jobId = 1;
 	}
 
 
@@ -59,7 +59,7 @@ export default class Model extends ComponentAtom {
 	
 	async execute(treeView, monitor) {
 
-		this.__treeView = treeView;
+		this.treeView = treeView;
 		
 		var hasMainMonitor = false;		
 		if(!monitor){
@@ -188,11 +188,11 @@ export default class Model extends ComponentAtom {
 	}
 
 	get jobId(){
-	    return this._jobId;
+	    return this.__jobId;
     }
 
 	set jobId(jobId) {
-		this._jobId = jobId;
+		this.__jobId = jobId;
         for (var child of this.children) {
 			if (child instanceof Model) {
 				child.jobId = jobId;
@@ -201,7 +201,7 @@ export default class Model extends ComponentAtom {
 	}
 
     get studyId(){
-        return this._studyId;
+        return this.__studyId;
     }
 
 	set studyId(studyId) {
@@ -215,11 +215,11 @@ export default class Model extends ComponentAtom {
 
 
     get studyDescription(){
-        return this._studyDescription;
+        return this.__studyDescription;
     }
 
 	set studyDescription(studyDescription) {
-		this._studyDescription = studyDescription;
+		this.__studyDescription = studyDescription;
         for (var child of this.children) {
             if (child instanceof Model) {
                 child.studyDescription = studyDescription;

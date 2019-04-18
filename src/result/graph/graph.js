@@ -22,13 +22,13 @@ export default class Graph extends PagedGraphicsAtom {
 	createPageFactories() {
 
 		var pageFactories =  [];
-		this.data = new Data();
+		this.data = Data.create();
 		pageFactories.push(this.data);
 		
-		this.background = new Background();
+		this.background = Background.create();
 		pageFactories.push(this.background);
 
-		this.border = new Border();
+		this.border = Border.create();
 		pageFactories.push(this.border);	
 
 		return pageFactories;	

@@ -2,8 +2,8 @@ import Variable from './../variable.js';
 
 export default class DoubleVariable extends Variable {
 	
-	constructor(name){
-		super(name);
+	constructor(name, value){
+		super(name, value);
 		this.image='doubleVariable.png';
 	}
 	

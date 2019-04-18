@@ -10,6 +10,7 @@ import DoubleVariable from './../variable/field/doubleVariable.js';
 import FilePathVariable from './../variable/field/filePathVariable.js';
 import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
+import GenericInputCodeAdaption from './genericInputCodeAdaption.js';
 
 export default class GenericInput extends Model {
 

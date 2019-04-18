@@ -4,6 +4,10 @@ export default class Utils {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
+    static firstToLowerCase(text){
+        return text.charAt(0).toLowerCase() + text.slice(1);
+    }
+
     static extractParentFolder(path) {
         const fileName = Utils.extractFileName(path);
         const endIndex = path.length - fileName.length - 1;

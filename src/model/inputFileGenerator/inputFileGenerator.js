@@ -12,30 +12,25 @@ import QuantityVariable from './../variable/field/quantityVariable.js';
  */
 export default class InputFileGenerator extends Model  {
 
-
-
 	constructor(name) {		
 		super(name);
 		this.image = 'inputFile.png';
-		
-		this.nameTag = '<name>';		
-		this.valueTag = '<value>';
-		this.unitTag = '<unit>';
-		
 		this.isRunnable=true;
+		
+		this.__nameTag = '<name>';		
+		this.__valueTag = '<value>';
+		this.__unitTag = '<unit>';		
 		
 		this.templatePath = 'C:/template.txt';       
         
 		this.sourceModelPath = 'root.models.genericInput';
-        this.nameExpression = '{$' + this.nameTag + '$}';
-        this.valueExpression = this.valueTag + ' [' + this.unitTag + ']'; 
+        this.nameExpression = '{$' + this.__nameTag + '$}';
+        this.valueExpression = this.valueTag + ' [' + this.__unitTag + ']'; 
         
         this.inputPath = 'C:/generated_input_file.txt';
-        this.inputPathInfo = undefined;
-        
-        this.isDeletingUnassignedRows = false;
-        
-       
+        this.__inputPathInfo = undefined;
+
+        this.isDeletingUnassignedRows = false;  
 	}
 
 	
@@ -169,14 +164,14 @@ export default class InputFileGenerator extends Model  {
 		sectionContent.append('treez-text-area')
 			.label('Resulting input file path')
 			.disable() 
-			.bindValue(this, ()=>this.inputPathInfo);	
+			.bindValue(this, ()=>this.__inputPathInfo);	
 		
 		this.__refreshStatus();
 
 	}
 
 	__refreshStatus() {			
-		this.inputPathInfo = this.__getModifiedInputPath();	
+		this.__inputPathInfo = this.__getModifiedInputPath();	
 	}
 	
 	__getModifiedInputPath(){
@@ -248,23 +243,23 @@ export default class InputFileGenerator extends Model  {
 		}
 
 		var injectedExpression;
-		injectedExpression = this.valueExpression.replace(this.valueTag, correctedValueString);
+		injectedExpression = this.valueExpression.replace(this.__valueTag, correctedValueString);
 		if (unitString != null) {
-			injectedExpression = injectedExpression.replace(this.unitTag, unitString);
+			injectedExpression = injectedExpression.replace(this.__unitTag, unitString);
 		} else {
 			//remove unit tag
-			injectedExpression = injectedExpression.replace(this.unitTag, '');
+			injectedExpression = injectedExpression.replace(this.__unitTag, '');
 		}
 		return injectedExpression;
 	}
 
 	 __createPlaceHolderExpression(variableName) {
 		var placeholderExpression;
-		var containsName = this.nameExpression.indexOf(this.nameTag) > -1;
+		var containsName = this.nameExpression.indexOf(this.__nameTag) > -1;
 		if (containsName) {
-			placeholderExpression = this.nameExpression.replace(this.nameTag, variableName);
+			placeholderExpression = this.nameExpression.replace(this.__nameTag, variableName);
 		} else {
-			var message = 'The placeholder must contain a ' + this.nameTag + ' tag.';
+			var message = 'The placeholder must contain a ' + this.__nameTag + ' tag.';
 				throw new Error(message);
 		}
 		return placeholderExpression;
@@ -313,11 +308,7 @@ export default class InputFileGenerator extends Model  {
 
 	extendContextMenuActions(actions, treeViewer) {
 		return actions;
-	}
-
-	createCodeAdaption() {
-		return new ComponentAtomCodeAdaption(this);
-	}
+	}	
 
 	getJobId(){
 		if(this.parent){

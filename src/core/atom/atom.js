@@ -1,53 +1,66 @@
 import NameAndNumber from './../nameAndNumber.js';
 import AtomTreeNodeAdapter from './atomTreeNodeAdapter.js';
-import AtomCodeAdaption from './atomCodeAdaption.js';
+import AtomCodeAdaption from './../code/atomCodeAdaption.js';
 import AtomGraphicsAdaption from './atomGraphicsAdaption.js';
 import TreeViewAction from './../treeview/treeViewAction.js';
 import TreeView from './../../views/treeView.js';
+import VariableNameRegistry from './../code/variableNameRegistry.js';
 
 
 export default class Atom {		
 
-	constructor(name) {	
+	//Important note: Except for the root atom, users should not create an atom directly with the constructor but 
+	//with the method createChild of its parent atom (or with the static create method).
+	//That work flow includes an initialization routine, that is called after the construction has been finished.
+	//Using the constructur directly would mean that the initialization routine is not called. 
+	constructor(name) {			
 		
 		/**
 		 * In order to be able to identify an Atom by its tree path, this name should only be used once for all children of the parent
 		 * Atom. The name might also be used in code for saving the tree structure. It is recommended to use lower case names.
 		 */
-		this.name = name
+		this.__name = name
 						?name
-						:this.__getDefaultName();			
+						:this.__defaultName;
 		
-		this.nameChangedConsumers = [];
+		this.__treezProperties = {};
 		
-		this.parent = undefined;		
-				
-		this.children = [];	
+		this.__image = 'tree.png';
+		this.__overlayImage = undefined;
 		
-		this.contextMenuActions = [];		
+		this.__nameChangedConsumers = [];		
+		this.__parent = undefined;
+		this.__children = [];			
+		this.__contextMenuActions = [];				
+		this.__helpId = undefined;			
+		this.__isExpanded=true;
+		this.__expandedNodes = [];		
+		this.__isRunnable = false;
+	}	
+	
+	//#region METHODS
+	
+	static create(name, value){
+		return Atom.__createAtom(this, name, value);
+	}
+
+	__initializeProperties(){
+		var propertyNames = Object.getOwnPropertyNames(this);		
+		var publicPropertyNames =  propertyNames.filter((name)=>{
+			return !name.startsWith('__')
+		});
 		
-		this.helpId = undefined;	
-		
-		this.image = 'tree.png'
-		this.overlayImage = undefined;
-			
-		this.isExpanded=true;
-		
-		this.isRunnable = false;
-	}		
+		//store initial values of treez properties to be able to know if a value 
+		//has been modified from its initial state
+		for(var propertyName of publicPropertyNames){
+			this.__treezProperties[propertyName] = this[propertyName];
+		}		
+	}
 
 	copy() {
 		return Atom.__deepCopy(this);		
-	}
-
-	__getDefaultName(){
-		var className = this.constructor.name;
-		var firstLetter = className[0].toLowerCase();
-		return firstLetter  + className.substring(1);
-	}
+	}	
 	
-	
-
 	createControlAdaption(propertiesView, treeView){
 		
 		treeView.clearPropertiesView();
@@ -55,7 +68,15 @@ export default class Atom {
 		propertiesView.append('div') //
 		.html('The control for this type of atom is not yet implemented; should be overridden by inheriting class!');
 		
-	}	
+	}
+	
+	createCode(){
+		VariableNameRegistry.reset();
+		var codeAdaption = this.createCodeAdaption();
+		var rootContainer = codeAdaption.buildRootCodeContainer(this);		
+		var codeContainer = codeAdaption.buildCodeContainer(rootContainer);
+		return codeContainer.buildCode();		
+	}
 
 	createCodeAdaption() {
 	   return new AtomCodeAdaption(this);
@@ -67,14 +88,11 @@ export default class Atom {
 
 	createTreeNodeAdaption(parentSelection, treeView){		
 		return AtomTreeNodeAdapter.createTreeNode(parentSelection,treeView,this);		
-	}	
-
-	//#region actions
+	}		
 
 	async execute(treeView, optionalMonitor) {		
 		alert('Execute of atom not yet implemented!');
 	}
-
 	
 	async executeChildren(wantedClass, treeView, monitor){		
 		
@@ -104,7 +122,6 @@ export default class Atom {
 			}
 		};		
 	}
-
 
 	createContextMenuActions(parentSelection, treeView) {
 
@@ -156,23 +173,6 @@ export default class Atom {
 	}
 
 	/**
-	 * Returns true if this atom can be moved up in the children of its parent
-	 */
-	get canBeMovedUp() {		
-		if (this.parent != null) {
-			var currentChildren = parent.children;
-			var childrenExist = currentChildren != null && currentChildren.length > 1;
-			if (childrenExist) {
-				var currentIndex = currentChildren.indexOf(this);
-				if (currentIndex > 0) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Moves the atom up in the children of the parent atom
 	 */
 	moveUp() {
@@ -203,24 +203,7 @@ export default class Atom {
 			this.tryToRefreshAtom(parent);
 		}
 		return this;
-	}
-
-	/**
-	 * Returns true if this atom can be moved down in the children of its parent
-	 */
-	get canBeMovedDown() {		
-		if (this.parent != null) {
-			var currentChildren = this.parent.children;
-			var childrenExist = currentChildren != null && currentChildren.length > 1;
-			if (childrenExist) {
-				var currentIndex = currentChildren.indexOf(this);
-				if (currentIndex < currentChildren.length - 1) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	}	
 
 	moveDown() {		
 		if (this.canBeMovedDown()) {			
@@ -240,11 +223,7 @@ export default class Atom {
 		if (atom.refresh) {
 			atom.refresh();
 		}
-	}
-
-	//#end region
-
-	//#region name	
+	}	
 
 	rename() {
 		var newName = prompt('Please enter the new name:', this.name); 
@@ -263,18 +242,7 @@ export default class Atom {
 		this.nameChangedConsumers.forEach(function(nameChangedConsumer){
 			nameChangedConsumer.consume(newName);
 		});		
-	}
-
-	//#end region
-	
-
-	
-
-	//#region child operations
-
-	get hasChildren() {
-	  return this.children.length > 0;	  	
-	}
+	}	
 	
 	hasChildByClass(clazz){
 		for(var child of this.children){
@@ -293,17 +261,7 @@ export default class Atom {
 			}
 		}
 		return numberOfChildren;
-	}
-	
-	get numberOfRunnableChildren(){
-		var numberOfChildren=0;		
-		for(var child of this.children){
-			if(child.isRunnable){
-				numberOfChildren++;
-			}
-		}
-		return numberOfChildren;
-	}
+	}	
 
 	/**
 	 * Add the given Atom as a child and removes it from the old parent if an old parent exists.
@@ -380,12 +338,20 @@ export default class Atom {
 	}
 
 	createChild(atomClass, name, value) {
-		var child = new atomClass(name);
-		if(value!==undefined){
-			child.value=value;
-		}
+		var child = Atom.__createAtom(atomClass, name, value);
 		this.addChild(child);
 		return child;
+	}
+	
+	static __createAtom(atomClass, name, value){
+		var atom;
+		if(value !== undefined){
+			atom = new atomClass(name, value);
+		} else {
+			atom = new atomClass(name)
+		}
+		atom.__initializeProperties();
+		return atom;
 	}
 
 	createChildWithNamePrefix(atomClass, namePrefix) {
@@ -434,8 +400,7 @@ export default class Atom {
 			throw new Error('Could not find child "' + childName + '" in "' + name + '".');
 		}
 		
-		return wantedChild;
-		
+		return wantedChild;		
 	}
 
 	/**
@@ -450,8 +415,7 @@ export default class Atom {
 			}
 		}
 		
-        throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');
-        		
+        throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');        		
 	}
 
 	/**
@@ -542,65 +506,6 @@ export default class Atom {
 		});
 	}
 
-	//#end region
-
-	//#region expansion state
-
-	setExpandedNodes(expandedNodesString) {		
-		this.expandedNodes = expandedNodesString.split(',');		
-	}
-
-	//#end region
-
-	//#region parent operations
-
-	get hasParent() {
-		
-		if (!this.parent) {
-			return false;
-		}
-		
-		var parentName = this.parent.name;
-		if (parentName) {
-			if (parentName.equals('invisibleRoot')) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Returns the root atom of the tree this atom is included in. Returns null if the parent node of this atom is null.
-	 */
-	get root() {
-
-		if (this.name === 'root') {
-			return this;
-		}
-		
-		if (!this.parent) {
-			throw new Error('The Atom "' + this.name + '" has no parent. Could not get root.');
-		} else {			
-			var parentIsRoot = (this.parent.name === 'root');
-			if (parentIsRoot) {
-				return this.parent;
-			} else {				
-				return this.parent.root;
-			}
-		}
-	}
-		
-	get treePath() {
-		try{
-		return this.parent
-			? this.parent.treePath + '.' + this.name
-			: this.name;
-		} catch (error){
-			return '';
-		}
-	}
-
 	delete() {		
 		this.children.forEach(child =>{
 			child.delete();
@@ -623,16 +528,10 @@ export default class Atom {
 		}
 	}	
 
-	/**
-	 * Expands the tree node in the tree viewer
-	 */
 	expand(treeViewer) {
 		treeViewer.setExpandedState(this, true);
 	}	
 
-	/**
-	 * Determines a new name for the next child to be created
-	 */
 	createChildNameStartingWith(defaultName) {
 
 		var currentNameAndNumber = new NameAndNumber(defaultName, 0);
@@ -735,7 +634,168 @@ export default class Atom {
 	    return Object.assign(result, ...keys.map(key => ({ [key]: Atom.__deepCopy(obj[key], result, hash) }) ));
 	}
 	
+	//#end region
 	
+	//#region ACCESSORS
+	
+	get __defaultName(){
+		var className = this.constructor.name;
+		var firstLetter = className[0].toLowerCase();
+		return firstLetter  + className.substring(1);
+	}
+	
+	get name(){
+		return this.__name;
+	}
+	
+	get parent(){
+		return this.__parent;
+	}
+
+	set parent(parent){
+		this.__parent = parent;
+	}
+	
+	get children(){
+		return this.__children;
+	}
+	
+	get image(){
+		return this.__image;
+	}
+
+	set image(image){
+		this.__image = image;
+	}
+	
+	get overlayImage(){
+		return this.__overlayImage;
+	}
+
+	set overlayImage(overlayImage){
+		this.__overlayImage = overlayImage;
+	}
+	
+	get isExpanded(){
+		return this.__isExpanded;
+	}
+
+	set isExpanded(isExpanded){
+		this.__isExpanded = isExpanded;
+	}
+	
+	get isRunnable(){
+		return this.__isRunnable;
+	}
+	
+	set isRunnable(isRunnable){
+		this.__isRunnable = isRunnable;
+	}
+
+	set expandedNodes(expandedNodesString) {		
+		this.__expandedNodes = expandedNodesString.split(',');		
+	}
+
+	get expandedNodes(){
+		return this.__expandedNodes; 
+	}
+
+	get hasParent() {
+		
+		if (!this.parent) {
+			return false;
+		}
+		
+		var parentName = this.parent.name;
+		if (parentName) {
+			if (parentName === 'invisibleRoot') {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Returns the root atom of the tree this atom is included in. Returns null if the parent node of this atom is null.
+	 */
+	get root() {
+
+		if (this.name === 'root') {
+			return this;
+		}
+		
+		if (!this.parent) {
+			throw new Error('The Atom "' + this.name + '" has no parent. Could not get root.');
+		} else {			
+			var parentIsRoot = (this.parent.name === 'root');
+			if (parentIsRoot) {
+				return this.parent;
+			} else {				
+				return this.parent.root;
+			}
+		}
+	}
+		
+	get treePath() {
+		try{
+		return this.parent
+			? this.parent.treePath + '.' + this.name
+			: this.name;
+		} catch (error){
+			return '';
+		}
+	}
+	
+	/**
+	 * Returns true if this atom can be moved down in the children of its parent
+	 */
+	get canBeMovedDown() {		
+		if (this.parent != null) {
+			var currentChildren = this.parent.children;
+			var childrenExist = currentChildren != null && currentChildren.length > 1;
+			if (childrenExist) {
+				var currentIndex = currentChildren.indexOf(this);
+				if (currentIndex < currentChildren.length - 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	get hasChildren() {
+		  return this.children.length > 0;	  	
+		}
+		
+		get numberOfRunnableChildren(){
+			var numberOfChildren=0;		
+			for(var child of this.children){
+				if(child.isRunnable){
+					numberOfChildren++;
+				}
+			}
+			return numberOfChildren;
+		}
+		
+	/**
+	 * Returns true if this atom can be moved up in the children of its parent
+	 */
+	get canBeMovedUp() {		
+		if (this.parent != null) {
+			var currentChildren = parent.children;
+			var childrenExist = currentChildren != null && currentChildren.length > 1;
+			if (childrenExist) {
+				var currentIndex = currentChildren.indexOf(this);
+				if (currentIndex > 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//#end region
 	
 
 }

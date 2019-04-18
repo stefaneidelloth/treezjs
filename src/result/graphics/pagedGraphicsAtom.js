@@ -1,5 +1,6 @@
 
 import GraphicsAtom from './graphicsAtom.js';
+import PagedGraphicsAtomCodeAdaption from './pagedGraphicsAtomCodeAdaption.js';
 
 export default class PagedGraphicsAtom extends GraphicsAtom {
 
@@ -17,6 +18,10 @@ export default class PagedGraphicsAtom extends GraphicsAtom {
 	//should be overridden by inheriting classes
 	createPageFactories(){
 		return [];
+	}
+
+	createCodeAdaption(){
+		return new PagedGraphicsAtomCodeAdaption(this);
 	}
 
 

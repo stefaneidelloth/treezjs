@@ -74,7 +74,7 @@ export default class Page extends GraphicsAtom {
 
 	async execute(treeView, monitor) {
 		
-		this.__treeView = treeView;
+		this.treeView = treeView;
 		
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
@@ -103,7 +103,7 @@ export default class Page extends GraphicsAtom {
 
 
 	plot(dTreez, svg, treeView) {
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		//remove old page group if it already exists
 		svg.select('#' + this.name).remove();

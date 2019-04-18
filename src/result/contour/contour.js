@@ -14,19 +14,19 @@ export default class Contour extends PagedGraphicsAtom {
 		
 		var factories = [];
 
-		this.data = new Data();
+		this.data =  Data.create();
 		factories.push(this.data);
 
-		this.fill = new Fill();
+		this.fill =  Fill.create();
 		factories.push(this.fill);
 
-		this.lines = new Lines();
+		this.lines =  Lines.create();
 		factories.push(this.lines);
 
-		this.colorbar = new ColorBar();
+		this.colorbar =  ColorBar.create();
 		factories.push(this.colorbar);
 
-		//label = new Label();
+		//label = Label.create();
 		
 		return factories;
 
@@ -34,7 +34,7 @@ export default class Contour extends PagedGraphicsAtom {
 
 	plot(dTreez, graphSelection, graphRectSelection, treeView) {
 		
-		this.__treeView = treeView;
+		this.treeView = treeView;
 		this.__graphSelection = graphSelection;
 		
 		//this.__plotly = new Plotly(engine);

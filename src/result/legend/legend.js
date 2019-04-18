@@ -30,7 +30,7 @@ export default class Legend extends PagedGraphicsAtom {
 
 	plot(dTreez, graphSelection, graphRectSelection, treeView) {
 		
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		graphSelection //
 				.select('#' + name) //

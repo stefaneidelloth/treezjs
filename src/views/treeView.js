@@ -1,4 +1,5 @@
-import DTreez from '../core/dtreez/dTreez.js';
+import DTreez from './../core/dtreez/dTreez.js';
+import Root from './../root/root.js';
 
 import Treez from './../treez.js'
 
@@ -68,8 +69,9 @@ export default class TreeView {
  		this.content = content;
     }
 
-    createRoot(){
-    	console.log("create root");
+    createRoot(){    	
+    	this.model = new Root();
+		this.refresh();
     }
 
     toTree(){
@@ -117,8 +119,9 @@ export default class TreeView {
     	this.model.createTreeNodeAdaption(this.content, this);
     }
 
-    fromTree(){
-    	console.log("from tree");
+    fromTree(){    	
+    	var sourceCode = this.model.createCode();    		
+    	this.editor.setText(sourceCode);    	    	
     }
 
     showHelp(){

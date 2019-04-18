@@ -1,8 +1,10 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import Data from './data/data.js';
 import Page from './page/page.js'
+
 
 export default class Results extends ComponentAtom {
    
@@ -11,7 +13,6 @@ export default class Results extends ComponentAtom {
 		this.image = 'results.png';
 		this.isRunnable=true;		
 	}
-
 	
 	createComponentControl(tabFolder){    
 	     
@@ -55,6 +56,10 @@ export default class Results extends ComponentAtom {
 				treeView));		
 
 		return actions;
+	}
+
+	createCodeAdaption(){
+		return new RegionsAtomCodeAdaption(this);
 	}
 		
 	createData(name) {

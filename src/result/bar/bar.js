@@ -12,16 +12,16 @@ export default class Xy extends PagedGraphicsAtom {
 
 		var factories = [];
 		
-		this.data = new Data();
+		this.data = Data.create();
 		factories.push(this.data);
 
-		this.fill = new Fill();
+		this.fill = Fill.create();
 		factories.push(this.fill);
 
-		this.line = new Line();
+		this.line = Line.create();
 		factories.push(this.line);
 
-		//label = new Label();
+		//label = Label.create();
 		//errorBar = new ErrorBar();
 		
 		return factories;
@@ -30,7 +30,7 @@ export default class Xy extends PagedGraphicsAtom {
 
 	plot(dTreez, graphOrBarSeriesSelection, graphRectSelection, treeView) {
 		
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //

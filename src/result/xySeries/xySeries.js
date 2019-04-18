@@ -243,7 +243,7 @@ export default class XySeries extends GraphicsAtom {
 	}
 
 	plot(dTreez, graphSelection, treeView) {
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		//remove old series group if it already exists
 		graphSelection.select('#' + name) //

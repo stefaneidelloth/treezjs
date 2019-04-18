@@ -1,3 +1,4 @@
+
 export default class Enum {
 
 	static get values(){
@@ -18,10 +19,22 @@ export default class Enum {
 	}
 		
 	constructor(name){
-		this.name = name;		
+		this.name = name;
+		if(!this.constructor.importLocation){
+			this.constructor.importLocation = this.determineImportLocation();
+		}						
 	}
 	
 	toString(){
 		return this.name;
 	}
+
+	determineImportLocation(){
+		var stack = new Error().stack;
+		var lastLine = stack.split('\n').pop();
+		var startIndex = lastLine.indexOf('/src/');
+		var endIndex = lastLine.indexOf('.js:') + 3;
+		return lastLine.substring(startIndex, endIndex);
+	}
+
 }

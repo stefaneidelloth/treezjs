@@ -84,9 +84,8 @@ export default class ComponentAtom extends Atom {
     }
 	
     createControlAdaption(parent, treeView) {
-
-		const self = this;
-		self.__treeView = treeView;
+		
+		this.treeView = treeView;
 		parent.selectAll('treez-tab-folder').remove();	
 		parent.selectAll('div').remove();
 		
@@ -96,10 +95,10 @@ export default class ComponentAtom extends Atom {
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
 		const tabFolder = treeView.dTreez.select(tabFolderElement);
-		self.createComponentControl(tabFolder);				
+		this.createComponentControl(tabFolder);				
 		parent.appendChild(tabFolderElement);					
 	
-        self.afterCreateControlAdaptionHook();
+        this.afterCreateControlAdaptionHook();
  		
 	}	
 
@@ -160,7 +159,7 @@ export default class ComponentAtom extends Atom {
 	}
 
 	async execute(treeView, monitor) {
-		this.__treeView = treeView;
+		this.treeView = treeView;
 		
 		var hasMainMonitor = false;		
 		if(!monitor){
@@ -182,6 +181,14 @@ export default class ComponentAtom extends Atom {
 			monitor.done();	
 		}		
 		
+	}
+
+	get treeView(){
+		return this.__treeView;
+	}
+
+	set treeView(treeView){
+		this.__treeView = treeView;
 	}
 
 }

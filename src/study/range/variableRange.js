@@ -2,6 +2,7 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import TreeViewAction from './../../core/treeView/TreeViewAction.js';
 import ColumnType from './../../data/column/columnType.js';
+import VariableRangeCodeAdaption from './variableRangeCodeAdaption.js';
 
 export default class VariableRange extends ComponentAtom {
 
@@ -14,21 +15,20 @@ export default class VariableRange extends ComponentAtom {
 		this.rangeString = '[' + array + ']';		
 	}
 	
-	constructor(name) {
+	constructor(name, values) {
 		super(name);
+		this.rangeString = undefined;
+		this.values = values;
 		this.isEnabled = true;		
 		this.variablePath = undefined;
-		this.columnType = ColumnType.string;
-		
+		this.columnType = ColumnType.string;		
 	}
 	
 	createComponentControl(tabFolder){    
 		
 	}
 	
-	extendContextMenuActions(actions, parentSelection, treeView) {
-		
-		
+	extendContextMenuActions(actions, parentSelection, treeView) {				
 
 		if(this.isEnabled){
 			actions.push(new TreeViewAction(							
@@ -60,6 +60,10 @@ export default class VariableRange extends ComponentAtom {
 	getSourceModelPath(){
 		var study = this.parent;
 		return study.sourceModelPath;	
+	}
+	
+	createCodeAdaption(){
+		return new VariableRangeCodeAdaption(this);
 	}
 	
 	/*

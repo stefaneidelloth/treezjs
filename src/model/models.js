@@ -1,8 +1,10 @@
 import Model from "./model.js";
+
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import GenericInput from './genericInput/genericInput.js';
 import Executable from './executable/executable.js';
 import JavaExecutable from './executable/javaExecutable.js';
+import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 
 export default class Models extends Model {
 

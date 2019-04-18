@@ -1,5 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
-
+import VariableCodeAdaption from './variableCodeAdaption.js';
 
 export default class Variable extends ComponentAtom {
 	
@@ -11,12 +11,11 @@ export default class Variable extends ComponentAtom {
 		this.__isEnabled=value;
 	}
 	
-	constructor(name) {
+	constructor(name, value) {
 		super(name);
-		this.value=undefined		
+		this.value=value;		
 		this.__isEnabled=true;
-	}
-	
+	}	
 	
     createComponentControl(tabFolder){    
      
@@ -36,6 +35,10 @@ export default class Variable extends ComponentAtom {
     
     createVariableControl(parent, dTreez){
     	throw new Error('Must be overridden by inheriting variable class.')
+    }
+
+    createCodeAdaption(){
+    	return new VariableCodeAdaption(this);
     }
 
 }

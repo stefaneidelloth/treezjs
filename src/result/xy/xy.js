@@ -17,27 +17,27 @@ export default class Xy extends PagedGraphicsAtom {
 
 		var factories = [];
 		
-		this.data = new Data(this);
+		this.data = Data.create(this);
 		factories.push(this.data);
 
-		this.area = new Area();
+		this.area = Area.create();
 		factories.push(this.area);
 
-		this.line = new Line();
+		this.line = Line.create();
 		factories.push(this.line);
 
-		this.symbol = new Symbol();
+		this.symbol = Symbol.create();
 		factories.push(this.symbol);
 
-		//errorBar = new ErrorBar();
-		//label = new Label();
+		//errorBar = ErrorBar.create();
+		//label = Label.create();
 		
 		return factories;
 	}
 
 	plot(dTreez, graphOrXySeriesSelection, graphRectSelection, treeView) {
 		
-		this.__treeView = treeView;
+		this.treeView = treeView;
 
 		//remove old xy group if it already exists
 		graphOrXySeriesSelection //

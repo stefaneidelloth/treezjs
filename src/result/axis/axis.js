@@ -34,22 +34,22 @@ export default class Axis extends PagedGraphicsAtom {
 	createPageFactories() {
 
         var factories = []
-		this.data = new Data();
+		this.data = Data.create();
 		factories.push(this.data);
 
-		this.axisLine = new AxisLine();
+		this.axisLine = AxisLine.create();
 		factories.push(this.axisLine);
 
-		this.majorTicks = new MajorTicks();
+		this.majorTicks = MajorTicks.create();
 		factories.push(this.majorTicks);
 
-		this.minorTicks = new MinorTicks();
+		this.minorTicks = MinorTicks.create();
 		factories.push(this.minorTicks);		
 
-		this.axisLabel = new AxisLabel();
+		this.axisLabel = AxisLabel.create();
 		factories.push(this.axisLabel);
 
-		this.tickLabels = new TickLabels();
+		this.tickLabels = TickLabels.create();
 		factories.push(this.tickLabels);
 
 		return factories;
@@ -60,7 +60,7 @@ export default class Axis extends PagedGraphicsAtom {
 	plot(dTreez, graphSelection, graphRectSelection, treeView) {
 		
 		this.__dTreez = dTreez;
-		this.__treeView = treeView;
+		this.treeView = treeView;
 		
 		this.__removeOldAxisGroupIfAlreadyExists(graphSelection);
 		this.__createNewAxisGroup(graphSelection);

@@ -25,9 +25,9 @@ export default class Executable extends Model {
         this.outputPath = undefined;
         this.isCopyingInputFileToOutputFolder = false; 
         
-        this.commandInfo = undefined;
-        this.executionStatusInfo = 'Not yet executed.';
-        this.jobIdInfo = '1';
+        this.__commandInfo = undefined;
+        this.__executionStatusInfo = 'Not yet executed.';
+        this.__jobIdInfo = '1';
         
         this.treeView=undefined;
 	}
@@ -326,25 +326,25 @@ export default class Executable extends Model {
        sectionContent.append('treez-text-area')
             .label('Resulting command') 
             .disable() 
-            .bindValue(this,()=>this.commandInfo);  
+            .bindValue(this,()=>this.__commandInfo);  
      
        sectionContent.append('treez-text-area')
             .label('Execution status') 
             .disable()
-            .bindValue(this,()=>this.executionStatusInfo);       
+            .bindValue(this,()=>this.__executionStatusInfo);       
      
        sectionContent.append('treez-text-area')
             .label('Next job index') 
             .disable() 
-            .bindValue(this,()=>this.jobIdInfo); 
+            .bindValue(this,()=>this.__jobIdInfo); 
    }   
 
    
 
    __refreshStatus() {
-		this.commandInfo = this.__buildCommand();
-		this.executionStatusInfo = 'Not yet executed';
-		this.jobIdInfo = ''+ this.jobId;
+		this.__commandInfo = this.__buildCommand();
+		this.__executionStatusInfo = 'Not yet executed';
+		this.__jobIdInfo = ''+ this.jobId;
 	}	
 
 	/**

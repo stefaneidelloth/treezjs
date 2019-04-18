@@ -18,20 +18,21 @@ export default class Study extends ComponentAtom {
 		
 		this.isConcurrent = false;
 		
-		this.inputGenerator = undefined;
+		this.__inputGenerator = undefined;
 		
-		this.page = undefined;
-		this.sectionContent = undefined;
+		this.__page = undefined;
+		this.__sectionContent = undefined;
 
-		this.numberOfRemainingModelJobs = undefined;
+		this.__numberOfRemainingModelJobs = undefined;
+		this.__isCanceled = false;
 	}
 	
 	createComponentControl(tabFolder){   
 	     
-		this.page = tabFolder.append('treez-tab')
+		this.__page = tabFolder.append('treez-tab')
             .label('Data');		
 
-		const section = this.page.append('treez-section')
+		const section = this.__page.append('treez-section')
         	.label(this.constructor.name); 
 		
 		section.append('treez-section-action')
@@ -40,28 +41,28 @@ export default class Study extends ComponentAtom {
 	        .addAction(()=>this.execute(this.__treeView));		
 		
 
-		this.sectionContent = section.append('div'); 	     
+		this.__sectionContent = section.append('div'); 	     
 
-		this.sectionContent.append('treez-text-field')
+		this.__sectionContent.append('treez-text-field')
         	.label('Id')
         	.bindValue(this, ()=>this.id);
         
-		this.sectionContent.append('treez-text-field')
+		this.__sectionContent.append('treez-text-field')
 	    	.label('Description')
 	    	.bindValue(this, ()=>this.description);
 	   
-		this.sectionContent.append('treez-model-path')
+		this.__sectionContent.append('treez-model-path')
         	.label('Model to run')
         	.nodeAttr('atomClasses', [Model])
         	.bindValue(this, ()=>this.controlledModelPath);
 		
-		this.sectionContent.append('treez-model-path')
+		this.__sectionContent.append('treez-model-path')
 	    	.label('Variable source model (provides variables)')
 	    	.nodeAttr('atomClasses', [Model])	    	
 	    	.bindValue(this, ()=>this.sourceModelPath);
 		
 
-		this.sectionContent.append('treez-check-box')
+		this.__sectionContent.append('treez-check-box')
 			.label('Concurrent execution')
 			.bindValue(this, ()=>this.isConcurrent);
 	    
@@ -81,21 +82,21 @@ export default class Study extends ComponentAtom {
 	}	
 	
 	async __doExecute(treeView, monitor){
-		this.__treeView = treeView;
-		this.isCanceled = false;
+		this.treeView = treeView;
+		this.__isCanceled = false;
 		
 		var className = this.constructor.name;
 
 		var startMessage = 'Executing ' + className + ' "' + this.name + '"';
 		monitor.info(startMessage);
 		
-		var numberOfRanges = this.inputGenerator.getNumberOfEnabledRanges();
+		var numberOfRanges = this.__inputGenerator.getNumberOfEnabledRanges();
 		monitor.info('Number of (enabled) ranges: ' + numberOfRanges);
 	
 		var studyTitle = "Running " + className;
 		monitor.title = studyTitle;
 
-		var numberOfSimulations = this.inputGenerator.getNumberOfSimulations();
+		var numberOfSimulations = this.__inputGenerator.getNumberOfSimulations();
 		monitor.totalWork = numberOfSimulations;
 				
 		monitor.info("Number of total simulations: " + numberOfSimulations);
@@ -104,7 +105,7 @@ export default class Study extends ComponentAtom {
 		ModelInput.resetIdCounter();
 
 		//create model inputs
-		var modelInputs = this.inputGenerator.createModelInputs();
+		var modelInputs = this.__inputGenerator.createModelInputs();
 
 		//prepare result structure
 		this.__prepareResultStructure(monitor);
@@ -118,7 +119,7 @@ export default class Study extends ComponentAtom {
 		studyOutputAtom.removeAllChildren();
 
 		//execute target model for all model inputs
-		this.numberOfRemainingModelJobs = numberOfSimulations;
+		this.__numberOfRemainingModelJobs = numberOfSimulations;
 
 		if (!monitor.isCanceled) {
 			var jobFinishedHook = () => this.__finishOrCancelIfDone(treeView, monitor);
@@ -134,7 +135,7 @@ export default class Study extends ComponentAtom {
 	
 	__finishOrCancelIfDone(treeView, monitor) {
 
-		if (this.isCanceled) {
+		if (this.__isCanceled) {
 				return;
 		}
 
@@ -144,15 +145,15 @@ export default class Study extends ComponentAtom {
 
 		if (monitor.isCanceled) {			
 			
-			this.isCanceled = true;
+			this.__isCanceled = true;
 			monitor.markIssue();
 			monitor.description = 'Canceled!';
 			this.__logAndShowCancelMessage(monitor);
 			treeView.refresh();			
 		}
 
-		var numberOfRemainingJobs = this.numberOfRemainingModelJobs-1;
-		this.numberOfRemainingModelJobs = numberOfRemainingJobs;
+		var numberOfRemainingJobs = this.__numberOfRemainingModelJobs-1;
+		this.__numberOfRemainingModelJobs = numberOfRemainingJobs;
 
 		if (numberOfRemainingJobs === 0) {
 
@@ -482,6 +483,10 @@ export default class Study extends ComponentAtom {
 			var date = new Date(timeInMilliseconds);
 			return date.toLocaleString();
 		}
+	}
+	
+	set inputGenerator(inputGenerator){
+		this.__inputGenerator = inputGenerator;
 	}
 
 

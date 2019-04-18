@@ -1,23 +1,15 @@
-import AdjustableAtomCodeAdaption from "../../../core/adjustable/adjustableAtomCodeAdaption";
+import AtomCodeAdaption from './../../core/code/atomCodeAdaption.js';
+import CodeContainer from './../../core/code/codeContainer.js';
 
 
-export default class GenericInputModelCodeAdaption extends AdjustableAtomCodeAdaption {
-
+export default class GenericInputModelCodeAdaption extends AtomCodeAdaption {
 
 	constructor(atom) {
 		super(atom);
 	}
 
-
-
-	/**
-	 * Builds the code for setting attribute values of the atom. Might be overridden by inheriting classes.
-	 */
-
-	 buildCodeContainerForAttributes() {
+    buildCodeContainerForAttributes() {
 		return new CodeContainer();
-	}
-
-	//#end region
+	}	
 
 }

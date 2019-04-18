@@ -4,8 +4,8 @@ import ColumnType from './../../data/column/columnType.js';
 
 export default class DoubleRange extends VariableRange {
 
-	constructor(name) {
-		super(name);
+	constructor(name, values) {
+		super(name, values);
 		this.image = 'doubleRange.png';		
 		this.columnType = ColumnType.double;
 	}
@@ -37,7 +37,5 @@ export default class DoubleRange extends VariableRange {
 	    	.bindValue(this, ()=>this.isEnabled);
 				
     }	
-
-	
 
 }

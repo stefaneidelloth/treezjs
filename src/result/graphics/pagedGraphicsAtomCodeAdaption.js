@@ -1,56 +1,32 @@
+import AtomCodeAdaption from './../../core/code/atomCodeAdaption.js';
 
-
-
-export default class PagedGraphicsAtomCodeAdaption extends AdjustableAtomCodeAdaption {
+export default class PagedGraphicsAtomCodeAdaption extends AtomCodeAdaption {
 
 	constructor(atom) {
 		super(atom);
 	}
 
-	
+	extendCodeForProperty(propertyContainer, propertyName, propertyValue, propertyParentName) {		
 
-	/**
-	 * Builds the code for setting attribute values of the atom. Might be overridden by inheriting classes.
-	 */
-	@Override
-	protected CodeContainer buildCodeContainerForAttributes() {
-
-		AdjustableAtom adjustableAtom = initializeModelIfRequired();
-
-		AbstractAtom<?> model = adjustableAtom.getModel();
-		if (model != null) {
-			CodeContainer codeContainer = createCodeForAttributesFromModel(adjustableAtom);
-			//codeContainer = addCodeForPropertyPages(codeContainer);
-			return codeContainer;
+		if(propertyParentName){
+			this.createImportsForValue(propertyContainer, propertyValue);
+			var propertyValueString = this.valueString(propertyValue); 
+			var additionalLine = this.indent + this.__variableNamePlaceholder + '.' + propertyParentName + '.' + propertyName + ' = ' + propertyValueString + ';';	
+			propertyContainer.extendBulk(additionalLine);
 		} else {
-			throw new IllegalStateException(
-					"Could not create attribute code because the underlying model could not be initialized.");
-		}
+			var page = propertyValue; 
+
+			var subPropertyContainer = super.buildCodeContainerForProperties(page, page.name);
+			var hasEmptyPropertyBulk = subPropertyContainer.hasEmptyBulk;
+			if (!hasEmptyPropertyBulk) {
+				subPropertyContainer.makeBulkEndWithSingleEmptyLine();
+			}	
+
+			propertyContainer.extend(subPropertyContainer);		
+			
+		}				
+		
+		return propertyContainer;
 	}
-
-	/**
-	 * Builds the code for setting attribute values using the underlying model.
-	 */
-	@Override
-	protected CodeContainer createCodeForAttributesFromModel(AdjustableAtom parentAtom) {
-
-		List<TreeNodeAdaption> pageNodes = getPageNodes(parentAtom);
-
-		CodeContainer attributeContainer = new CodeContainer(scriptType);
-		for (TreeNodeAdaption pageNode : pageNodes) {
-
-			assertPageNodeIsPage(pageNode);
-			Page page = (Page) pageNode.getAdaptable();
-
-			//extend code with attribute code for page
-			AttributeParentCodeAdaption codeAdaption = page.createCodeAdaption(scriptType);
-			AbstractAtom<?> intermediateAtom = page;
-			attributeContainer = codeAdaption.extendAttributeCodeContainerForModelParent(parentAtom, intermediateAtom,
-					attributeContainer);
-		}
-
-		return attributeContainer;
-	}
-
 	
 }
