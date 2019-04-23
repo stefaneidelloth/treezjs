@@ -53,6 +53,10 @@ export default class Probe extends ComponentAtom {
 			}				
 		}
 	}
+	
+	createTable(name){
+		return this.createChild(Table, name);
+	}
 
 	reCreateTable(monitor) {
 		
@@ -61,7 +65,7 @@ export default class Probe extends ComponentAtom {
 		}
 		
 		var probeTableName = this.name + 'Table';
-		var table = this.createChild(Table, probeTableName);		
+		var table = this.createTable(probeTableName);		
 		this.createTableColumns(table, monitor);
 
 		return table;

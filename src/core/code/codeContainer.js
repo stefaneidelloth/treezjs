@@ -8,7 +8,7 @@ export default class CodeContainer {
 	
 	constructor() {
 		this.headerLines = [];
-		this.importLines = [];
+		this.importLines = new Set();
 		this.openingLines = [];
 		this.bulkLines = [];
 		this.closingLines = [];	
@@ -27,7 +27,11 @@ export default class CodeContainer {
 	}
 	
 	__joinLines(lines) {
-		return lines.join('\n');		
+		if(lines.join){
+			return lines.join('\n');
+		} else {
+			return Array.from(lines).join('\n');
+		}				
 	}
 
 	extend(codeContainer) {
@@ -36,7 +40,7 @@ export default class CodeContainer {
 		}
 				
 		this.headerLines = this.headerLines.concat(codeContainer.headerLines);		
-		this.importLines = this.importLines.concat(codeContainer.importLines);		
+		this.importLines = new Set([...this.importLines, ...codeContainer.importLines]);		
 		this.openingLines = this.openingLines.concat(codeContainer.openingLines);		
 		this.bulkLines = this.bulkLines.concat(codeContainer.bulkLines);		
 		this.closingLines = this.closingLines.concat(codeContainer.closingLines);
@@ -57,7 +61,7 @@ export default class CodeContainer {
 		if (this.__isBlank(importString)) {
 			throw new Error('Extended code must not be empty.');
 		}
-		this.importLines.push(importString);
+		this.importLines.add(importString);
 	}	
 
 	extendImportWithEmptyLine() {

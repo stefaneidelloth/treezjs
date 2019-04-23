@@ -301,7 +301,7 @@ export default class SweepProbe extends Probe {
 	}
 
 	getProbeTablePrefix(firstPrefix) {
-		var idSeparator = '#';
+		var idSeparator = '_';
 		var prefixItems = firstPrefix.split(idSeparator);
 		var prefix = prefixItems[0] + idSeparator;
 		return prefix;

@@ -21,7 +21,7 @@ export default class TextImporter extends Importer {
 		
 		var headerData = isUsingCustomColumnHeaders
 							?customColumnHeaders
-							:lineData[0];
+							:this.trimHeaderData(lineData[0]);
 							
 		var rowData = isUsingCustomColumnHeaders
 						?lineData
@@ -41,6 +41,10 @@ export default class TextImporter extends Importer {
 		}			
 
 		return tableData;
+	}
+
+	static trimHeaderData(headerData){
+		return headerData.map((entry)=>entry.trim());
 	}
 
 

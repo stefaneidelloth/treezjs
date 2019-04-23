@@ -1,4 +1,5 @@
 import AtomCodeAdaption from './../../core/code/atomCodeAdaption.js';
+import GraphicsAtom from './graphicsAtom.js';
 
 export default class PagedGraphicsAtomCodeAdaption extends AtomCodeAdaption {
 
@@ -15,6 +16,10 @@ export default class PagedGraphicsAtomCodeAdaption extends AtomCodeAdaption {
 			propertyContainer.extendBulk(additionalLine);
 		} else {
 			var page = propertyValue; 
+
+			if (!(page instanceof GraphicsAtom)){
+				throw new Error('Property must be GraphisAtom');
+			}
 
 			var subPropertyContainer = super.buildCodeContainerForProperties(page, page.name);
 			var hasEmptyPropertyBulk = subPropertyContainer.hasEmptyBulk;

@@ -13,6 +13,26 @@ export default class VariableCodeAdaption extends AtomCodeAdaption {
 		return propertyNames.filter((name)=>{
 			return name !== 'value'; //the value property is already considered by the code for creating the atom
 		});
+	}	
+
+	buildCreationCodeContainerWithVariableName(variableName, codeContainer) {
+
+		if(!codeContainer){
+			codeContainer = new CodeContainer();
+		}
+
+		var name = this.__atom.name;	
+		var className = this.__atom.constructor.name;		
+		var hasParent = this.__atom.hasParent;
+		var variableValueString = this.valueString(this.__atom.value);		
+		
+		if (hasParent) {
+			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+					+ className + "('" + name + "', " + variableValueString + ");");
+		} else {		
+			throw new Error('The atom "'+ name+'" has no parent atom.');			
+		}
+		return codeContainer;
 	}
 	
 	buildCreationCodeContainerWithoutVariableName(codeContainer) {
@@ -33,31 +53,6 @@ export default class VariableCodeAdaption extends AtomCodeAdaption {
 					+ '" has no parent atom and no code to create children or set properties. '
 					+ 'Creating it would be useless. If it is a root atom wihout children create a custom code adaption for it.';
 			console.warn(message);
-		}
-		return codeContainer;
-	}
-
-	buildCreationCodeContainerWithVariableName(variableName, codeContainer) {
-
-		if(!codeContainer){
-			codeContainer = new CodeContainer();
-		}
-
-		var name = this.__atom.name;	
-		var className = this.__atom.constructor.name;		
-		var hasParent = this.__atom.hasParent;
-		var variableValueString = this.valueString(this.__atom.value);		
-		
-		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
-					+ className + "('" + name + "', " + variableValueString + ");");
-		} else {
-			
-			
-			//TODO import of class
-			
-			codeContainer.extendBulkWithEmptyLine();
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = new ' + className + "('" + name + ", " + variableValueString + "');");
 		}
 		return codeContainer;
 	}

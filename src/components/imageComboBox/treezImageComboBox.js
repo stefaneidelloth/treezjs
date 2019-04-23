@@ -160,8 +160,11 @@ export default class TreezImageComboBox extends TreezComboBox {
 			optionImage.title = option;
 			optionElement.appendChild(optionImage);	
 
-		 	let optionImageUrl = this.__nameToImageUrl(option);
-		 	optionImage.src=optionImageUrl;					 	
+			if(option){
+				let optionImageUrl = this.__nameToImageUrl(option);
+		 		optionImage.src=optionImageUrl;	
+			}
+		 					 	
 
 		 	optionElement.onclick = ()=>{
 		 		self.setAttribute('value', option);

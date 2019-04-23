@@ -6,4 +6,8 @@ export default class SweepOutput extends OutputAtom {
 		super(name,'sweep.png');		
 	}	
 
+	createOutputAtom(name) {
+		return this.createChild(OutputAtom, name, 'sweep.png');		
+	}
+
 }

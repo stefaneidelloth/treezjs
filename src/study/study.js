@@ -327,7 +327,7 @@ export default class Study extends ComponentAtom {
 
 			var modelOutput = await model.runModel(modelInput, treeView, jobMonitor);
 			if(modelOutput){
-				var modelOutputName = '#' + modelInput.jobId;
+				var modelOutputName = 'output_' + modelInput.jobId;
 				modelOutput.name = modelOutputName;
 				outputAtom.addChild(modelOutput);
 			}			

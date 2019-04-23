@@ -11,7 +11,7 @@ export default class AbstractAtomCodeAdaption {
 		
 		this.__atom = atom;
 		this.__variableNamePlaceholder = '{#VariableName#}';
-		this.__parentVariableNamePlaceHolder = '{#ParentVariableName#}';				
+		this.__parentVariableNamePlaceholder = '{#ParentVariableName#}';			  
 	}
 
 	buildCodeContainer(parentCodeContainer, injectedChildCodeContainer) {
@@ -73,7 +73,7 @@ export default class AbstractAtomCodeAdaption {
 			//create current container
 			//Instead of actual variable names place holders will be used. Those
 			//place holders need to be replaced after the actual variable names are known.
-			currentContainer = this.buildCreationCodeContainerWithoutVariableName();
+			currentContainer = this.buildCreationCodeContainerWithoutVariableName();			
 		}
 		
 		currentContainer.extend(propertyContainer);

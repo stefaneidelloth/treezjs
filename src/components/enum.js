@@ -2,11 +2,16 @@
 export default class Enum {
 
 	static get values(){
-		return Object.values(this);
+		var keys = Object.keys(this).filter(key=>!key.startsWith('__'));		
+		return keys.map(key=>this[key]);
 	}	
 
 	static get names(){
 		return this.values.map((value)=>value.name);
+	}
+
+	static get importLocation(){
+		return this.__importLocation;
 	}
 
 	static forName(name){
@@ -20,8 +25,8 @@ export default class Enum {
 		
 	constructor(name){
 		this.name = name;
-		if(!this.constructor.importLocation){
-			this.constructor.importLocation = this.determineImportLocation();
+		if(!this.constructor.__importLocation){
+			this.constructor.__importLocation = this.determineImportLocation();
 		}						
 	}
 	

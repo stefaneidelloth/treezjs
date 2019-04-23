@@ -2,6 +2,7 @@ import ComponentAtom from './../../core/component/componentAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import Table from './../../data/table/table.js';
 import SweepProbe from './../probe/sweepProbe.js';
+import SweepOutput from './../../study/sweep/sweepOutput.js';
 
 export default class Data extends ComponentAtom {
    
@@ -91,16 +92,14 @@ export default class Data extends ComponentAtom {
 		return actions;
 		
 
-	}
-	
-	
+	}	
 
 	createTable(name) {
 		return this.createChild(Table, name);		
-	}
-	
-	createOutputAtom(name) {
-		return this.createChild(OutputAtom, name);		
+	}	
+
+	createSweepOutput(name) {
+		return this.createChild(SweepOutput, name);		
 	}
 	
 	createSweepProbe(name) {

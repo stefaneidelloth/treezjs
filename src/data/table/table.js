@@ -4,6 +4,7 @@ import ColumnFolder from './../column/columnFolder.js';
 import TreeViewAction from './../../core/treeview/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import TableSource from './tableSource.js';
+import TableCodeAdaption from './tableCodeAdaption.js';
 import Row from './../row/row.js';
 
 export default class Table extends ComponentAtom {
@@ -80,7 +81,11 @@ export default class Table extends ComponentAtom {
 					 ));      
 
 		return actions;
-	}	
+	}
+	
+	createCodeAdaption(){
+		return new TableCodeAdaption(this);
+	}
 	
 	createColumn(header, type) {
 		this.__initializeColumns();

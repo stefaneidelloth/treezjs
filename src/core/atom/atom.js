@@ -267,12 +267,12 @@ export default class Atom {
 	 * Add the given Atom as a child and removes it from the old parent if an old parent exists.
 	 */
 	addChild(child) {		
-		var oldParent = child.parent;
-		child.parent = this;
+		var oldParent = child.parent;		
 		this.children.push(child);
 		if (oldParent !== undefined) {			
 			oldParent.removeChild(child);
 		}
+		child.parent = this;
 	}
 
 	/**
@@ -610,7 +610,7 @@ export default class Atom {
 						 : obj.constructor ? new obj.constructor() 
 						 : Object.create(null);
 		} catch (error){
-			
+			console.error('Could not copy object "'+ obj +'": ' + error);
 		}
 	                 
 	    hash.set(obj, result);
@@ -625,13 +625,29 @@ export default class Atom {
 	    if (parentIndex >-1){
 	    	keys.splice(parentIndex,1);
 	    	
-	    	var itemWithAssignedAttributes = Object.assign(result, ...keys.map(key => ({ [key]: Atom.__deepCopy(obj[key], result, hash) }) ));
+	    	var itemWithAssignedAttributes = Object.assign(result, ...keys.map(
+				key => ({ 
+							[key]: Atom.__deepCopy(obj[key], result, hash) 
+						}) 
+			));
 	    	itemWithAssignedAttributes['parent'] = parent;
 	    	return itemWithAssignedAttributes;
 	    }
+		
+		var values = keys.map(
+			key => {
+				var value = Atom.__deepCopy(obj[key], result, hash);
+				return ({ 
+					[key]: value
+				});
+			}					
+		);
 	  
-	    
-	    return Object.assign(result, ...keys.map(key => ({ [key]: Atom.__deepCopy(obj[key], result, hash) }) ));
+	    try{
+			return Object.assign(result, ...values);
+		} catch(error){
+			var foo =1;
+		}
 	}
 	
 	//#end region
@@ -646,6 +662,10 @@ export default class Atom {
 	
 	get name(){
 		return this.__name;
+	}
+
+	set name(name){
+		this.__name = name;
 	}
 	
 	get parent(){

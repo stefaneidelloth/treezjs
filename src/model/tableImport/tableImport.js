@@ -486,8 +486,12 @@ export default class TableImport extends Model {
 	
 	__createTableIfNotExists(){
 		if(this.children.length < 1){
-			this.createChild(Table,'table');
+			this.createTable('table');
 		}
+	}
+
+	createTable(name){
+		return this.createChild(Table,name);
 	}
 
 	static __checkAndPrepareColumnsIfRequired(tableData, table) {

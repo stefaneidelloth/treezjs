@@ -2,6 +2,7 @@ import AbstractAtomCodeAdaption from './abstractAtomCodeAdaption.js';
 import CodeContainer from './codeContainer.js';
 import RootCodeContainer from './rootCodeContainer.js';
 import Enum from './../../components/enum.js';
+import Root from './../../root/root.js';
 
 /**
  * CodeAdaption for AbstractAtoms: used to create java code from the tree. The creation of the code is separated in two
@@ -28,6 +29,31 @@ import Enum from './../../components/enum.js';
 			allChildrenCodeContainer.makeBulkEndWithSingleEmptyLine();
 		}
 		return allChildrenCodeContainer;
+	}	
+
+	buildCreationCodeContainerWithVariableName(variableName, codeContainer) {
+
+		if(!codeContainer){
+			codeContainer = new CodeContainer();
+		}
+
+		var name = this.__atom.name;	
+		var className = this.__atom.constructor.name;		
+		var hasParent = this.__atom.hasParent;		
+		
+		if (hasParent) {
+			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+					+ className + "('" + name + "');");
+		} else {			
+			
+			if(!this.__atom instanceof Root){
+				throw new Error('The atom "'+ name+'" has no parent atom.');
+			}
+			
+			codeContainer.extendBulkWithEmptyLine();
+			codeContainer.extendBulk(this.indent +	'var ' + variableName + ' = new ' + className + "('" + name + "');");
+		}
+		return codeContainer;
 	}
 
 	buildCreationCodeContainerWithoutVariableName(codeContainer) {
@@ -47,30 +73,6 @@ import Enum from './../../components/enum.js';
 					+ '" has no parent atom and no code to create children or set properties. '
 					+ 'Creating it would be useless. If it is a root atom wihout children create a custom code adaption for it.';
 			console.warn(message);
-		}
-		return codeContainer;
-	}
-
-	buildCreationCodeContainerWithVariableName(variableName, codeContainer) {
-
-		if(!codeContainer){
-			codeContainer = new CodeContainer();
-		}
-
-		var name = this.__atom.name;	
-		var className = this.__atom.constructor.name;		
-		var hasParent = this.__atom.hasParent;		
-		
-		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
-					+ className + "('" + name + "');");
-		} else {
-			
-			
-			//TODO import of class
-			
-			codeContainer.extendBulkWithEmptyLine();
-			codeContainer.extendBulk(this.indent +	'var ' + variableName + ' = new ' + className + "('" + name + "');");
 		}
 		return codeContainer;
 	}

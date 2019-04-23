@@ -110,7 +110,7 @@
 
 
 
-.treez-monitor-titled:hover .treez-title {
+.treez-monitor-titled:hover .treez-monitor-title {
   visibility: visible;
   opacity: 1;
 }

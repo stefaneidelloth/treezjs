@@ -15,24 +15,8 @@ export default class Row {
 	}	
 
 	toString() {
-		var rowCommand = 'addRow(';
-		
-		var valueAdded = false;
-		for (var value of this.__entryMap.values()) {
-			valueAdded = true;
-			var isString = value instanceof String;
-			if (isString) {
-				rowCommand += '"' + value + '", ';
-			} else {
-				rowCommand += value.toString() + ', ';
-			}
-		}
-
-		if (valueAdded) {
-			rowCommand = rowCommand.substring(0, rowCommand.length - 2);
-		}
-		rowCommand += ');';
-		return rowCommand;
+        var values = Object.values(this.__entryMap);
+		return '[' + values.join(', ') + ']';		
 	}
 
 	get isEmpty() {

@@ -31,6 +31,8 @@ export default class LogMessage {
 
 				var shortUrl = url.replace('http://localhost:8080','');
 
+				shortUrl = shortUrl.replace('http://localhost:8888/files','');
+
 				var shortLocation = shortUrl + ':' + lineNumberString + ':' + columnNumberString;
 
 				var openCommand = "'start notepad++ ." + shortUrl + " -n" + lineNumberString+ " -c" + columnNumberString + "'"
