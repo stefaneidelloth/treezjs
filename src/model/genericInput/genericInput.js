@@ -7,6 +7,7 @@
 import Model from './../model.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
+import IntegerVariable from './../variable/field/integerVariable.js';
 import FilePathVariable from './../variable/field/filePathVariable.js';
 import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';

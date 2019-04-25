@@ -231,7 +231,7 @@ export default class TableImport extends Model {
 			this.__showAndHideCompontentsForMySql();
 			break;
 		default:
-			var message = 'The TableSourceType ' + this.sourceType + ' is not yet implemented.';
+			var message = 'The TableSourceType "' + this.sourceType + '" is not yet implemented.';
 			throw new Error(message);
 		}
 	}
@@ -376,9 +376,6 @@ export default class TableImport extends Model {
 	async __importTableData() {			
 		switch (this.sourceType) {
 		case TableSourceType.csv:	
-			
-					
-			
 			return await TextImporter.importData(
 				this.sourcePath, 
 				this.numberOfHeaderLinesToSkip, 
@@ -413,7 +410,7 @@ export default class TableImport extends Model {
 				 rowOffset);
 			
 		default:
-			throw new Error('The TableSourceType "' + tableSourceType + '" is not yet implemented.');
+			throw new Error('The TableSourceType "' + this.sourceType + '" is not yet implemented.');
 		}
 	}
 	

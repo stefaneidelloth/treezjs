@@ -195,7 +195,7 @@ export default class Executable extends Model {
 				const dataImportOutput = await this.__runDataImports(treeView, monitor);
 				modelOutput.addChild(dataImportOutput);
 			} catch (exception) {
-				monitor.error('Could not import results of ' + this.name, exception);
+				monitor.error('Could not import results of "' + this.name + '": ', exception);
 				monitor.cancelAll();				
 				return modelOutput;
 			}

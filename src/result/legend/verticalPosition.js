@@ -19,7 +19,13 @@ export default class VerticalPosition extends Enum{
 	}
 }
 
-VerticalPosition.top = new VerticalPosition('top');
-VerticalPosition.centre = new VerticalPosition('centre');
-VerticalPosition.bottom = new VerticalPosition('bottom');
-VerticalPosition.manual = new VerticalPosition('manual');
+if(window.VerticalPosition){
+	VerticalPosition = window.VerticalPosition;
+} else {
+	VerticalPosition.top = new VerticalPosition('top');
+	VerticalPosition.centre = new VerticalPosition('centre');
+	VerticalPosition.bottom = new VerticalPosition('bottom');
+	VerticalPosition.manual = new VerticalPosition('manual');
+	
+	window.VerticalPosition = VerticalPosition;
+}

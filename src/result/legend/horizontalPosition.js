@@ -19,7 +19,14 @@ export default class HorizontalPosition extends Enum{
 	}
 }
 
-HorizontalPosition.left = new HorizontalPosition('left');
-HorizontalPosition.centre = new HorizontalPosition('centre');
-HorizontalPosition.right = new HorizontalPosition('right');
-HorizontalPosition.manual = new HorizontalPosition('manual');
+
+if(window.HorizontalPosition){
+	HorizontalPosition = window.HorizontalPosition;
+} else {
+	HorizontalPosition.left = new HorizontalPosition('left');
+	HorizontalPosition.centre = new HorizontalPosition('centre');
+	HorizontalPosition.right = new HorizontalPosition('right');
+	HorizontalPosition.manual = new HorizontalPosition('manual');
+	
+	window.HorizontalPosition = HorizontalPosition;
+}

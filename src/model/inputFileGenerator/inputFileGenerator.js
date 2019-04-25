@@ -81,6 +81,10 @@ export default class InputFileGenerator extends Model  {
 													monitor.error(error);
 												 });
 
+		if(!template){
+			throw new Error('Could not read template at ' + this.templatePath);
+		}
+
 		monitor.worked(1);
 
 		var sourceModelAtom = this.childFromRoot(this.sourceModelPath);	

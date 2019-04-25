@@ -21,7 +21,7 @@ export default class JupyterTerminal {
 
 		pythonCode = pythonCode + 'print(tempdir)\n';				
 
-		return await this.__executePythonCode(pythonCode);		 
+		return await this.__executePythonCode(pythonCode, true);		 
     }	
 
    
@@ -41,27 +41,35 @@ export default class JupyterTerminal {
 
 		pythonCode = pythonCode + 'print(tempdir)\n';
 		
-		return await this.__executePythonCode(pythonCode);	
+		return await this.__executePythonCode(pythonCode, true);	
     }
   
 
     async readTextFile(filePath){
 		var pythonCode = '%%python\n'
-			+ 'file = open("' + filePath + '", "r")\n' 
+			+ 'file = open("' + filePath + '", "r", encoding="utf-8")\n' 
             + 'print(file.read())\n';	
 		
-		return await this.__executePythonCode(pythonCode);	 
+		return await this.__executePythonCode(pythonCode, true);	 
 	}
     
     async writeTextFile(filePath, text){
-		var textString = text.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
+
+		var textString = this.escapeSpecialCharacters(text);		
 
 		var pythonCode = '%%python\n'
-			+ 'file = open("' + filePath + '", "w")\n' 
+			+ 'file = open("' + filePath + '", "w", encoding="utf-8")\n' 
             + 'file.write("' + textString + '")\n'
             + 'file.close()\n';	
 		
-		return this.__executePythonCode(pythonCode);
+		return this.__executePythonCode(pythonCode, false);
+	}
+
+	escapeSpecialCharacters(text){
+		var textWithSlashes = text.replace(/\\/g,'\\\\');
+		var textWithLineBreaks =  textWithSlashes.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
+		var textWithQuotationMarks = textWithLineBreaks.replace(/"/g, '\\"');
+		return textWithQuotationMarks;
 	}
 
     async deleteFile(filePath){	
@@ -70,7 +78,7 @@ export default class JupyterTerminal {
 			+ 'if os.path.exists("' + filePath +'"):\n'
 			+ '    os.remove("' + filePath + '")\n';           
 		
-		return this.__executePythonCode(pythonCode);		
+		return this.__executePythonCode(pythonCode, false);		
 	}	
 	
 	execute(command, messageHandler, errorHandler, finishedHandler){		
@@ -128,19 +136,22 @@ export default class JupyterTerminal {
 		
 	}	
 
-	 async __executePythonCode(pythonCode){
+	 async __executePythonCode(pythonCode, isExpectingOutput){
 	 	
 	 	var self=this;
 
     	return new Promise(function(resolve, reject) {  
+    		
 			    
 			var callbacks = {
 					shell : {
 							reply : (data)=>{
 								var content = data.content
 								switch(content.status){
-									case 'ok':						
-										resolve();
+									case 'ok':			
+									   	if(!isExpectingOutput){
+									   		resolve();
+									   	}										
 										break;
 									case 'error':
 										reject(content.evalue)
@@ -155,10 +166,10 @@ export default class JupyterTerminal {
 			                 output : (data)=>{			                	 
 			                	var content = data.content;
 			                    switch(content.name){
-			                    	case 'stderr':				                    		
+			                    	case 'stderr':	            		
 			                    		reject(content.text);
 			                    		break;
-			                    	case 'stdout':
+			                    	case 'stdout':			                    		
 			                    		resolve(content.text);				                    			                    		
 			                    		break;				                    		
 			                    	case undefined:

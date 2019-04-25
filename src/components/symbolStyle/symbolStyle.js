@@ -11,16 +11,22 @@ export default class SymbolStyle extends Enum {
       return dTreez.symbols[this.index];
   }
 
-}                 
+}    
 
-SymbolStyle.none = new SymbolStyle('none',-1);                    
-SymbolStyle.circle = new SymbolStyle('circle',0);                    
-SymbolStyle.cross = new SymbolStyle('cross',1);                    
-SymbolStyle.diamond = new SymbolStyle('diamond',2);                    
-SymbolStyle.square = new SymbolStyle('square',3);  
-SymbolStyle.star = new SymbolStyle('star',4);                   
-SymbolStyle.triangle = new SymbolStyle('triangle',5);                    
-SymbolStyle.why = new SymbolStyle('why',6);                    
+if(window.SymbolStyle){
+	SymbolStyle = window.SymbolStyle;
+} else {
+	SymbolStyle.none = new SymbolStyle('none',-1);                    
+	SymbolStyle.circle = new SymbolStyle('circle',0);                    
+	SymbolStyle.cross = new SymbolStyle('cross',1);                    
+	SymbolStyle.diamond = new SymbolStyle('diamond',2);                    
+	SymbolStyle.square = new SymbolStyle('square',3);  
+	SymbolStyle.star = new SymbolStyle('star',4);                   
+	SymbolStyle.triangle = new SymbolStyle('triangle',5);                    
+	SymbolStyle.why = new SymbolStyle('why',6);
+	
+	window.SymbolStyle = SymbolStyle;
+}
            	
 
 

@@ -11,5 +11,11 @@ export default class Direction extends Enum {
 	}
 }
 
-Direction.vertical = new Direction('vertical');
-Direction.horizontal = new Direction('horizontal');
+if(window.Direction){
+	Direction = window.Direction;
+} else {
+	Direction.vertical = new Direction('vertical');
+	Direction.horizontal = new Direction('horizontal');
+	
+	window.Direction = Direction;
+}

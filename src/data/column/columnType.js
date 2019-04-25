@@ -12,7 +12,13 @@ export default class ColumnType extends Enum {
 	}
 }
 
-ColumnType.integer = new ColumnType('number', Number);
-ColumnType.double = new ColumnType('double', Number);
-ColumnType.string = new ColumnType('string', String);
+if(window.ColumnType){
+	ColumnType = window.ColumnType;
+} else {
+	ColumnType.integer = new ColumnType('number', Number);
+	ColumnType.double = new ColumnType('double', Number);
+	ColumnType.string = new ColumnType('string', String);
+	
+	window.ColumnType = ColumnType;
+}
 
