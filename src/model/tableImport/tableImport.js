@@ -27,8 +27,8 @@ export default class TableImport extends Model {
 
         this.numberOfHeaderLinesToSkip=0;
 
-        this.password = 'password';
-        this.port = 'port';
+        this.password = '';
+        this.port = '';
        
         this.rowLimit = 1000;
 
@@ -492,7 +492,7 @@ export default class TableImport extends Model {
 	}
 
 	static __checkAndPrepareColumnsIfRequired(tableData, table) {
-		var headers = tableData.headerData;		
+		var headers = tableData.headers;		
 		if (table.hasColumns) {			
 			var columnNamesAreOk = table.checkHeaders(headers);
 			if (!columnNamesAreOk) {

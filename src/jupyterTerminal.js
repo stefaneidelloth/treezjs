@@ -1,3 +1,5 @@
+import TableData from './data/database/tableData.js';
+
 export default class JupyterTerminal {
 
 	constructor(jupyter){			
@@ -55,7 +57,7 @@ export default class JupyterTerminal {
     
     async writeTextFile(filePath, text){
 
-		var textString = this.escapeSpecialCharacters(text);		
+		var textString = this.__escapeSpecialCharacters(text);		
 
 		var pythonCode = '%%python\n'
 			+ 'file = open("' + filePath + '", "w", encoding="utf-8")\n' 
@@ -65,7 +67,7 @@ export default class JupyterTerminal {
 		return this.__executePythonCode(pythonCode, false);
 	}
 
-	escapeSpecialCharacters(text){
+	__escapeSpecialCharacters(text){
 		var textWithSlashes = text.replace(/\\/g,'\\\\');
 		var textWithLineBreaks =  textWithSlashes.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
 		var textWithQuotationMarks = textWithLineBreaks.replace(/"/g, '\\"');
@@ -136,7 +138,52 @@ export default class JupyterTerminal {
 		
 	}	
 
-	 async __executePythonCode(pythonCode, isExpectingOutput){
+	do(){
+
+		var connectionString = 'D:/forecast4/trunk/databases/Demo/demo.sqlite';
+		var query = 'SELECT * from Calculated_ModelParameter_TimeSeries_Result';
+
+		this.sqLiteQuery(connectionString, query, true).then(
+		(result)=>{
+			var foo = 1;			
+		});
+	}
+
+
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {
+
+		var pythonCode = '%%python\n'
+			+ 'import sqlite3\n'
+			+ 'import pandas\n'	
+			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
+            + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
+            + 'print(dataFrame.to_csv())\n';			
+
+		if(isExpectingOutput){
+			var text = await this.__executePythonCode(pythonCode, true);
+			return TableData.parseTableTextTo2DArray(text, ',');
+		} else {
+			return this.__executePythonCode(pythonCode, false);
+		}
+	}
+
+	async sqLiteQueryTypes(connectionString, query) {
+
+		var pythonCode = '%%python\n'
+			+ 'import sqlite3\n'
+			+ 'import pandas\n'	
+			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
+            + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
+            + 'for dtype in dataFrame.dtypes.values:\n'
+            + '    print(dtype)\n';		
+		
+		var text = await this.__executePythonCode(pythonCode, true);
+		return TableData.parseTableTextTo2DArray(text, ',');		
+	}
+
+	
+
+	async __executePythonCode(pythonCode, isExpectingOutput){
 	 	
 	 	var self=this;
 

@@ -273,27 +273,55 @@ export default class SweepProbe extends Probe {
 	__fillProbeTable(table, domainRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix) {
 		
 		var probeRowIndex = parseInt(this.rowIndex);		
-		var columnIndex = parseInt(this.columnIndex);
+		var probeColumnIndex = parseInt(this.columnIndex);
+
+
+		var firstFamilyRangeValues = this.__firstFamilyRangeValues;
+		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
+
+        var secondFamilyRangeValues = this.__secondFamilyRangeValues;
+        var secondFamilyIsSpecified = secondFamilyRangeValues !== null;	
+			
 
 		var sweepIndex = 1;
 		for (var rowIndex = 0; rowIndex < domainRangeValues.length; rowIndex++) {
 
 			var row = new Row(table);
-			
+
+			var columnIndex = 0;
+						
 			var domainValue = domainRangeValues[rowIndex];
 			var isQuantity = domainValue instanceof Quantity;
 			if (isQuantity) {				
 				domainValue = domainValue.value;
 			}
-			row.setEntry(columnNames[0], domainValue);
-			
-			for (var columnIndex = 1; columnIndex < columnNames.length; columnIndex++) {
+			var columnName = columnNames[columnIndex];
+			row.setEntry(columnName, domainValue);
+			columnIndex++;
+
+			//first family
+			if(firstFamilyIsSpecified){
 				var columnName = columnNames[columnIndex];
-				var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
-				var value = this.getProbeValue(tablePath, probeRowIndex, columnIndex);
-				row.setEntry(columnName, value);				
-				sweepIndex++;
+				var firstFamilyValue = null; //TODO
+				row.setEntry(columnName, firstFamilyValue);
+				columnIndex++;
 			}
+
+			//second family
+			if(secondFamilyIsSpecified){
+				var columnName = columnNames[columnIndex];
+				var secondFamilyValue = null; //TODO
+				row.setEntry(columnName, secondFamilyValue);
+				columnIndex++;
+			}
+
+			//probe value			
+			var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
+			var probeValue = this.getProbeValue(tablePath, probeRowIndex, probeColumnIndex);
+
+			var columnName = columnNames[columnIndex];
+			row.setEntry(columnName, probeValue);				
+			sweepIndex++;			
 			
 			table.addRow(row);
 

@@ -1,177 +1,131 @@
 import Importer from './../importer.js';
+import ColumnBlueprint from './../../column/columnBlueprint.js';
+import TableData from './../tableData.js';
+import SqLiteColumnTypeConverter from './sqLiteColumnTypeConverter.js';
 
 export default class SqLiteImporter extends Importer {
 
 	constructor() {
 		
+	}		
+
+	static async importData(
+			 filePath,
+			 password,
+			 tableName,
+			 filterRowsByJobId,
+			 jobId,
+			 rowLimit,
+			 rowOffset) {
+
+		var columnBlueprints = await this.__readTableStructure(filePath, password, tableName);
+
+		var data = await this.__readData(filePath, password, tableName, filterRowsByJobId, jobId, rowLimit, rowOffset, columnBlueprints);
+
+		return new TableData(columnBlueprints, data);		
+	}
+
+	static async importDataWithCustomQuery(filePath, password, customQuery, jobId, rowLimit, rowOffset) {
+
+		var columnBlueprints = await this.__readTableStructureWithCustomQuery(filePath, password, customQuery, jobId);
+
+		var data = await this.__readDataWithCustomQuery(filePath, password, customQuery, jobId, rowLimit, rowOffset, columnBlueprints);
+
+		return new TableData(columnBlueprints, data);		
 	}
 	
-	/*
+	static async numberOfRows(filePath, tableName) {
+			
+		var sizeQuery = "SELECT COUNT(*) FROM '" + tableName + "';";
+		
+		var data = await window.treezTerminal.sqLiteQuery(filePath, sizeQuery, true);
+		
+		return data[1][1];
 
-	//#end region
+	}
 
-	//#region METHODS
+	static async numberOfRowsForCustomQuery(filePath, customQuery, jobId) {
+		
+		var subQuery = this.__removeTrailingSemicolon(customQuery);
+		subQuery = this.__injectJobIdIfIncludesPlaceholder(subQuery, jobId);
+		var sizeQuery = 'SELECT COUNT(*) FROM (' + subQuery + ');';
+		
+		var data = await window.treezTerminal.sqLiteQuery(filePath, sizeQuery, true);
 
-	public static int getNumberOfRows(String filePath, String tableName) {
+		return data[1][1];
 
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		String sizeQuery = "SELECT COUNT(*) FROM " + tableName + ";";
+	}
 
-		int[] size = { 0 };
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			resultSet.getFetchSize();
-			while (resultSet.next()) {
-				int result = resultSet.getInt("COUNT(*)");
-				size[0] = result;
-				return;
+	static async __readTableStructure(filePath, password, tableName) {
+		
+		var structureQuery = "PRAGMA table_info('" + tableName + "');";
+		
+		var data = await window.treezTerminal.sqLiteQuery(filePath, structureQuery, true);
+
+		var tableStructure = [];		
+
+		var isLinkedToSource = false;
+
+		data.shift();
+		
+		for(var line of data){
+			var name = line[1]; //available columns: cid, name, type, notnull, dflt_value, pk
+			var type = SqLiteColumnTypeConverter.convert(line[2]);
+			var isNullable = line[3] !== '0';			
+			var defaultValueString = line[4];
+			if(defaultValueString === 'NULL'){
+				defaultValueString = null;
 			}
-		};
-		database.executeAndProcess(sizeQuery, processor);
+			var isPrimaryKey = line[5] !== '0';
+			var legend = name;
 
-		return size[0];
-
-	}
-
-	public static int getNumberOfRowsForCustomQuery(String filePath, String customQuery, String jobId) {
-
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-
-		String subQuery = removeTrailingSemicolon(customQuery);
-		subQuery = injectJobIdIfIncludesPlaceholder(subQuery, jobId);
-		String sizeQuery = "SELECT COUNT(*) FROM (" + subQuery + ");";
-
-		int[] size = { 0 };
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			resultSet.getFetchSize();
-			while (resultSet.next()) {
-				int result = resultSet.getInt("COUNT(*)");
-				size[0] = result;
-				return;
-			}
-		};
-		database.executeAndProcess(sizeQuery, processor);
-
-		return size[0];
-
-	}
-
-	public static TableData importData(
-			String filePath,
-			String password,
-			String tableName,
-			boolean filterRowsByJobId,
-			String jobId,
-			Integer rowLimit,
-			Integer rowOffset) {
-
-		List<ColumnBlueprint> columnBlueprints = readTableStructure(filePath, password, tableName);
-
-		List<List<Object>> data = readData(filePath, password, tableName, filterRowsByJobId, jobId, rowLimit, rowOffset,
-				columnBlueprints);
-
-		TableData tableData = new TableData(columnBlueprints, data);
-
-		return tableData;
-	}
-
-	public static TableData importDataWithCustomQuery(
-			String filePath,
-			String password,
-			String customQuery,
-			String jobId,
-			Integer rowLimit,
-			Integer rowOffset) {
-
-		List<ColumnBlueprint> columnBlueprints = readTableStructureWithCustomQuery(filePath, password, customQuery,
-				jobId);
-
-		List<List<Object>> data = readDataWithCustomQuery(filePath, password, customQuery, jobId, rowLimit, rowOffset,
-				columnBlueprints);
-
-		TableData tableData = new TableData(columnBlueprints, data);
-
-		return tableData;
-	}
-
-	public static List<ColumnBlueprint> readTableStructure(String filePath, String password, String tableName) {
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		String structureQuery = "PRAGMA table_info('" + tableName + "');";
-
-		List<ColumnBlueprint> tableStructure = new ArrayList<>();
-
-		ColumnTypeConverter columnTypeConverter = new SqLiteColumnTypeConverter();
-
-		boolean isLinkedToSource = true;
-
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			while (resultSet.next()) {
-				String name = resultSet.getString("name"); //available columns: cid, name, notnull, dflt_value, pk
-
-				ColumnType type = columnTypeConverter.getType(resultSet.getString("type"));
-				boolean isNullable = !resultSet.getBoolean("notnull");
-				boolean isPrimaryKey = resultSet.getBoolean("pk");
-				Object defaultValue = resultSet.getObject("dflt_value");
-				String legend = name;
-
-				tableStructure.add(new ColumnBlueprint(
-						name,
-						type,
-						isNullable,
-						isPrimaryKey,
-						defaultValue,
-						legend,
-						isLinkedToSource));
-			}
-		};
-		database.executeAndProcess(structureQuery, processor);
+			tableStructure.push(new ColumnBlueprint(
+					name,
+					type,
+					isNullable,
+					isPrimaryKey,
+					defaultValueString,
+					legend,
+					isLinkedToSource)
+			);
+		}				
 
 		return tableStructure;
 	}
 
-	public static List<ColumnBlueprint> readTableStructureWithCustomQuery(
-			String filePath,
-			String password,
-			String customQuery,
-			String jobId) {
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-
-		int length = customQuery.length();
+	static async __readTableStructureWithCustomQuery(filePath, password, customQuery, jobId) {
+		
+		var length = customQuery.length();
 		if (length < 1) {
-			throw new IllegalStateException("Custom query must not be empty");
+			throw new Error('Custom query must not be empty');
 		}
 
-		String firstLineQuery = customQuery;
-		firstLineQuery = removeTrailingSemicolon(customQuery);
-		firstLineQuery = injectJobIdIfIncludesPlaceholder(firstLineQuery, jobId);
+		var firstLineQuery = customQuery;
+		firstLineQuery = this.__removeTrailingSemicolon(customQuery);
+		firstLineQuery = this.__injectJobIdIfIncludesPlaceholder(firstLineQuery, jobId);
 		firstLineQuery += " LIMIT 1;";
 
-		List<ColumnBlueprint> tableStructure = new ArrayList<>();
+		var data = await window.treezTerminal.sqLiteQuery(filePath, firstLineQuery, true);
+		var headers = data[0];
+		
+		var dataTypes = await window.treezTerminal.sqLiteQueryTypes(filePath, firstLineQuery, true);
+		
+		var tableStructure = [];	
+		for(var columnIndex =0; columnIndex < headers.length; columnIndex++){
 
-		ColumnTypeConverter columnTypeConverter = new SqLiteColumnTypeConverter();
-
-		boolean isLinkedToSource = true;
-
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			resultSet.next();
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			int numberOfColumns = metaData.getColumnCount();
-			for (int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++) {
-
-				String name = metaData.getColumnName(columnIndex);
-				ColumnType type = columnTypeConverter.getType(metaData.getColumnTypeName(columnIndex));
-				boolean isNullable = metaData.isNullable(columnIndex) == 1;
-				String legend = metaData.getColumnLabel(columnIndex);
-
-				tableStructure.add(new ColumnBlueprint(name, type, isNullable, legend, isLinkedToSource));
-			}
-
-		};
-		database.executeAndProcess(firstLineQuery, processor);
+			var name = headers[columnIndex];			
+			var type = SqLiteColumnTypeConverter.convert(dataTypes[columnIndex]);
+			var isNullable = true;
+			var legend = name;
+			var isLinkedToSource = false;
+			
+			tableStructure.add(new ColumnBlueprint(name, type, isNullable, legend, isLinkedToSource));
+		}
 
 		return tableStructure;
 	}
 
-	public static List<ForeignKeyBlueprint> readForeignKeys(String filePath, String password, String tableName) {
+	static async readForeignKeys(filePath, password, tableName) {
 
 		//TODO:
 		//PRAGMA foreign_key_list('table_name')
@@ -187,7 +141,7 @@ export default class SqLiteImporter extends Importer {
 		return null;
 	}
 
-	public static List<IndexBlueprint> readIndices(String filePath, String password, String tableName) {
+	static async readIndices(filePath, password, tableName) {
 
 		//TODO:
 		//select * from sqlite_master where type='index' and tbl_name = 'table_name'
@@ -197,54 +151,41 @@ export default class SqLiteImporter extends Importer {
 
 	}
 
-	public static ColumnType getColumnType(String filePath, String password, String tableName, String columnName) {
+	static async readColumnType(filePath, password, tableName, columnName) {
+		
+		var structureQuery = "PRAGMA table_info('" + tableName + "');";
 
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		String structureQuery = "PRAGMA table_info('" + tableName + "');";
+		var data = await window.treezTerminal.sqLiteQuery(filePath, structureQuery, true);	
 
-		List<ColumnType> columnTypeContainer = new ArrayList<>();
-		ColumnTypeConverter columnTypeConverter = new SqLiteColumnTypeConverter();
-
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			while (resultSet.next()) {
-				String currentColumnName = resultSet.getString("name"); //available columns: cid, name, type, notnull, dflt_value, pk
-				boolean isWantedColumn = columnName.equals(currentColumnName);
-				if (isWantedColumn) {
-					String type = resultSet.getString("type");
-					ColumnType columnType = columnTypeConverter.getType(type);
-					columnTypeContainer.add(columnType);
-					return;
-				}
+		for(var row of data){
+			var currentColumnName = row[3];
+			if(currentColumnName === columnName){
+				SqLiteColumnTypeConverter.convert(row[4]);
 			}
-		};
-		database.executeAndProcess(structureQuery, processor);
-
-		if (columnTypeContainer.isEmpty()) {
-			return null;
-		} else {
-			return columnTypeContainer.get(0);
 		}
 
+		throw new Error('Could not determine type for column "' + columnName + '" of table"' + tableName + '"');
 	}
 
-	private static List<List<Object>> readData(
-			String filePath,
-			String password,
-			String tableName,
-			boolean filterRowsByJobId,
-			String jobId,
-			Integer rowLimit,
-			Integer rowOffset,
-			List<ColumnBlueprint> columnBlueprints) {
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		String dataQuery = "SELECT * FROM '" + tableName + "'";
+	static async __readData(
+		 filePath,
+		 password,
+		 tableName,
+		 filterRowsByJobId,
+		 jobId,
+		 rowLimit,
+		 rowOffset,
+		 columnBlueprints
+	) {
+		
+		var dataQuery = "SELECT * FROM '" + tableName + "'";
 
-		boolean applyFilter = filterRowsByJobId && jobId != null;
+		var applyFilter = filterRowsByJobId && (jobId != null);
 		if (applyFilter) {
 			dataQuery += " WHERE job_id = '" + jobId + "'";
 		}
 
-		int offset = 0;
+		var offset = 0;
 		if (rowOffset != null) {
 			offset = rowOffset;
 		}
@@ -253,50 +194,42 @@ export default class SqLiteImporter extends Importer {
 		//http://stackoverflow.com/questions/14468586/efficient-paging-in-sqlite-with-millions-of-records
 		dataQuery += " LIMIT " + rowLimit + " OFFSET " + offset + ";";
 
-		List<List<Object>> data = new ArrayList<>();
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			while (resultSet.next()) {
-				List<Object> rowData = new ArrayList<>();
-				for (ColumnBlueprint columnBlueprint : columnBlueprints) {
-					Object entry = resultSet.getObject(columnBlueprint.getName());
-					rowData.add(entry);
-				}
-				data.add(rowData);
-			}
-		};
-		database.executeAndProcess(dataQuery, processor);
+		var data = await window.treezTerminal.sqLiteQuery(filePath, dataQuery, true);
 
-		if (data.isEmpty()) {
-			String message = "Could not find any rows";
+		data.shift(); //removes header row
+		
+		if (data.length < 1) {
+			var message = 'Could not find any rows';
 			if (applyFilter) {
-				message += " for jobId '" + jobId + "'";
+				message += ' for jobId "' + jobId + '"';
 			}
-			LOG.warn(message);
-
+			console.warn(message);
 		}
+
+		var dataWithoutIndex
 
 		return data;
 	}
 
-	private static List<List<Object>> readDataWithCustomQuery(
-			String filePath,
-			String password,
-			String customQuery,
-			String jobId,
-			Integer rowLimit,
-			Integer rowOffset,
-			List<ColumnBlueprint> columnBlueprints) {
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
+	static async __readDataWithCustomQuery(
+		 filePath,
+		 password,
+		 customQuery,
+		 jobId,
+		 rowLimit,
+		 rowOffset,
+		 columnBlueprints
+	) {		
 
-		int length = customQuery.length();
+		var length = customQuery.length();
 		if (length < 1) {
-			throw new IllegalStateException("Custom query must not be empty");
+			throw new Error('Custom query must not be empty');
 		}
 
-		String dataQuery = removeTrailingSemicolon(customQuery);
-		dataQuery = injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
+		var dataQuery = this.__removeTrailingSemicolon(customQuery);
+		dataQuery = this.__injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
 
-		int offset = 0;
+		var offset = 0;
 		if (rowOffset != null) {
 			offset = rowOffset;
 		}
@@ -305,88 +238,71 @@ export default class SqLiteImporter extends Importer {
 		//http://stackoverflow.com/questions/14468586/efficient-paging-in-sqlite-with-millions-of-records
 		dataQuery += " LIMIT " + rowLimit + " OFFSET " + offset + ";";
 
-		List<List<Object>> data = new ArrayList<>();
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			while (resultSet.next()) {
-				List<Object> rowData = new ArrayList<>();
-				for (ColumnBlueprint columnBlueprint : columnBlueprints) {
-					Object entry = resultSet.getObject(columnBlueprint.getName());
-					rowData.add(entry);
-				}
-				data.add(rowData);
-			}
-		};
-		database.executeAndProcess(dataQuery, processor);
+		var data = await window.treezTerminal.sqLiteQuery(filePath, structureQuery, true);
 
-		if (data.isEmpty()) {
-			String message = "Could not find any rows with query " + dataQuery;
-			LOG.warn(message);
+		array.shift(); //removes header row
+		
+		if (data.length < 1) {
+			var message = 'Could not find any rows with query "' + dataQuery + '"';
+			console.warn(message);
 		}
 
 		return data;
 	}
 
-	public static Row readRow(
-			String filePath,
-			String password,
-			String tableName,
-			boolean filterRowsByJobId,
-			String jobId,
-			int rowIndex,
-			TreezTable table) {
+	static async readRow(
+		 filePath,
+		 password,
+		 tableName,
+		 filterRowsByJobId,
+		 jobId,
+		 rowIndex,
+		 table
+	) {
+		
+		var dataQuery = "SELECT * FROM '" + tableName + "'";
 
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		String dataQuery = "SELECT * FROM '" + tableName + "'";
-
-		boolean applyFilter = filterRowsByJobId && jobId != null;
+		var applyFilter = filterRowsByJobId && jobId != null;
 		if (applyFilter) {
 			dataQuery += " WHERE job_id = '" + jobId + "'";
 		}
 
 		dataQuery += " LIMIT 1 OFFSET " + rowIndex + ";";
-		return readRow(table, database, dataQuery);
+		return this.__readRow(filePath, password, dataQuery, table);
 	}
 
-	public static Row readRowWithCustomQuery(
-			String filePath,
-			String password,
-			String customQuery,
-			String jobId,
-			int rowIndex,
-			TreezTable table) {
-
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-
-		int length = customQuery.length();
-		if (length < 1) {
-			throw new IllegalStateException("Custom query must not be empty");
+	static async readRowWithCustomQuery(
+		filePath,
+		password,
+		customQuery,
+		jobId,
+		rowIndex,
+		table
+	) {
+				
+		if (customQuery.length < 1) {
+			throw new Error('Custom query must not be empty');
 		}
 
-		String dataQuery = removeTrailingSemicolon(customQuery);
-		dataQuery = injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
+		var dataQuery = this.__removeTrailingSemicolon(customQuery);
+		dataQuery = this.__injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
 		dataQuery += " LIMIT 1 OFFSET " + rowIndex + ";";
 
-		return readRow(table, database, dataQuery);
+		return this.__readRow(filePath, password, dataQuery, table);
 	}
 
-	private static Row readRow(TreezTable table, SqLiteDatabase database, String dataQuery) {
-		Row row = new Row(table);
-		ResultSetProcessor processor = (ResultSet resultSet) -> {
-			while (resultSet.next()) {
-				ResultSetMetaData metaData = resultSet.getMetaData();
-				int columnCount = metaData.getColumnCount();
-				for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-					String columnName = metaData.getColumnName(columnIndex);
-					Object value = resultSet.getObject(columnIndex);
+	static async __readRow(filePath, password, dataQuery, table) {
+		var row = new Row(table);
+
+		var data = await window.treezTerminal.sqLiteQuery(filePath, dataQuery, true);
+
+		for (var columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+					var columnName = data[0][columnIndex];
+					var value = data[1][columnIndex];
 					row.setEntry(columnName, value);
-				}
-			}
-		};
-		database.executeAndProcess(dataQuery, processor);
+		}		
 
 		return row;
-	}
-
-	*/
+	}	
 
 }

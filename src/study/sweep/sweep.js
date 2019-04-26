@@ -3,6 +3,7 @@ import SweepOutput from './sweepOutput.js';
 import SweepModelInputGenerator from './sweepModelInputGenerator.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleRange from './../range/doubleRange.js';
+import IntegerRange from './../range/integerRange.js';
 
 export default class Sweep extends Study {	
 		
@@ -34,7 +35,7 @@ export default class Sweep extends Study {
 				treeView);
 		actions.push(addDoubleRange);
 		
-		/*
+		
 		const addIntegerRange = new AddChildAtomTreeViewAction(
 				IntegerRange,
 				"integerrange",
@@ -43,6 +44,8 @@ export default class Sweep extends Study {
 				this,
 				treeView);
 		actions.push(addIntegerRange);
+
+		/*
 		
 		const addBooleanRange = new AddChildAtomTreeViewAction(
 				BooleanRange,

@@ -28,21 +28,7 @@ export default class ModelInput {
 		ModelInput.nextId = 1;
 	}
 	
-	static copyMap(mapToCopy) {
-		var map = {};
-		
-		for(var key in mapToCopy){
-			
-			var value = mapToCopy[key];
-			
-			var copiedValue = value.copy
-				?value.copy()
-				:value;
-				
-			map[key] = copiedValue;
-		};
-		return map;		
-	}
+	
 
 	increaseJobId() {
 		this.jobId = ModelInput.getNextId();
@@ -51,6 +37,7 @@ export default class ModelInput {
 	copy() {
 		var jobId = ModelInput.getNextId();
 		var modelInput = new ModelInput(this.studyModelPath, this.studyId, this.studyDescription, jobId);
+		modelInput.__variableModelPathToValueMap = this.__copyMap(this.__variableModelPathToValueMap);
 		return modelInput;
 	}
 
@@ -70,6 +57,22 @@ export default class ModelInput {
 	getAll() {
 		return Object.keys(this.__variableModelPathToValueMap);
 	}	
+
+	__copyMap(mapToCopy) {
+		var map = {};
+		
+		for(var key in mapToCopy){
+			
+			var value = mapToCopy[key];
+			
+			var copiedValue = value.copy
+				?value.copy()
+				:value;
+				
+			map[key] = copiedValue;
+		};
+		return map;		
+	}
 
 }
 
