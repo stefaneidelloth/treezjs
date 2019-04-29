@@ -18,7 +18,7 @@ export default class SqLiteImporter extends Importer {
 			 rowLimit,
 			 rowOffset) {
 
-		var columnBlueprints = await this.__readTableStructure(filePath, password, tableName);
+		var columnBlueprints = await this.readTableStructure(filePath, password, tableName);
 
 		var data = await this.__readData(filePath, password, tableName, filterRowsByJobId, jobId, rowLimit, rowOffset, columnBlueprints);
 
@@ -27,7 +27,7 @@ export default class SqLiteImporter extends Importer {
 
 	static async importDataWithCustomQuery(filePath, password, customQuery, jobId, rowLimit, rowOffset) {
 
-		var columnBlueprints = await this.__readTableStructureWithCustomQuery(filePath, password, customQuery, jobId);
+		var columnBlueprints = await this.readTableStructureWithCustomQuery(filePath, password, customQuery, jobId);
 
 		var data = await this.__readDataWithCustomQuery(filePath, password, customQuery, jobId, rowLimit, rowOffset, columnBlueprints);
 
@@ -55,8 +55,22 @@ export default class SqLiteImporter extends Importer {
 		return data[1][1];
 
 	}
+	
+	static async tableNames(filePath, password){
+		
+		var query = "SELECT name FROM sqlite_master WHERE type='table'";
+		
+		var data = await window.treezTerminal.sqLiteQuery(filePath, query, true);
+		
+		var tableNames= data.map(row => row[0]);
 
-	static async __readTableStructure(filePath, password, tableName) {
+		tableNames.shift();  //removes header row
+
+		return tableNames;
+		
+	}
+
+	static async readTableStructure(filePath, password, tableName) {
 		
 		var structureQuery = "PRAGMA table_info('" + tableName + "');";
 		
@@ -64,6 +78,7 @@ export default class SqLiteImporter extends Importer {
 
 		var tableStructure = [];		
 
+        var isVirtual = false;
 		var isLinkedToSource = false;
 
 		data.shift();
@@ -81,19 +96,21 @@ export default class SqLiteImporter extends Importer {
 
 			tableStructure.push(new ColumnBlueprint(
 					name,
+					legend,
 					type,
+					defaultValueString,
 					isNullable,
 					isPrimaryKey,
-					defaultValueString,
-					legend,
+					isVirtual,					
 					isLinkedToSource)
 			);
+
 		}				
 
 		return tableStructure;
 	}
 
-	static async __readTableStructureWithCustomQuery(filePath, password, customQuery, jobId) {
+	static async readTableStructureWithCustomQuery(filePath, password, customQuery, jobId) {
 		
 		var length = customQuery.length();
 		if (length < 1) {
@@ -192,14 +209,22 @@ export default class SqLiteImporter extends Importer {
 
 		//if OFFSET is not efficient enough, also see
 		//http://stackoverflow.com/questions/14468586/efficient-paging-in-sqlite-with-millions-of-records
-		dataQuery += " LIMIT " + rowLimit + " OFFSET " + offset + ";";
+		if(rowLimit){
+			dataQuery += " LIMIT " + rowLimit; 
+		}
+		
+		if(offset){
+			dataQuery += " OFFSET " + offset; 
+		}
 
+		dataQuery += ";";
+		
 		var data = await window.treezTerminal.sqLiteQuery(filePath, dataQuery, true);
 
 		data.shift(); //removes header row
 		
 		if (data.length < 1) {
-			var message = 'Could not find any rows';
+			var message = 'Could not find any rows to read from table "' + tableName + '"';
 			if (applyFilter) {
 				message += ' for jobId "' + jobId + '"';
 			}
@@ -304,5 +329,52 @@ export default class SqLiteImporter extends Importer {
 
 		return row;
 	}	
+
+	static async createTableIfNotExists(filePath, password, tableName, columnBlueprints){
+
+        var columnDefinitions = [];
+		for(var blueprint of columnBlueprints){
+			var columnDefinition = "'" + blueprint.name + "'";			
+			columnDefinition += " " + SqLiteColumnTypeConverter.convertBack(blueprint.type);
+			if(blueprint.isPrimaryKey){
+				columnDefinition += " PRIMARY KEY"
+			}
+			if(!blueprint.isNullable){
+				columnDefinition += " NOT NULL"
+			}
+			columnDefinitions.push(columnDefinition);		 
+		}
+
+		var query = "CREATE TABLE IF NOT EXISTS '" + tableName + "' (" + columnDefinitions.join(', ') + ")";
+
+		await window.treezTerminal.sqLiteQuery(filePath, query, false)
+	}
+
+	static async appendData(filePath, password, tableName, columnBlueprints, tableData){
+		if(tableData.rowData.length < 1){
+			return;
+		}
+
+		var rowValues = [];
+		for(var row of tableData.rowData){
+
+			var cellValues = [];
+
+			for(var columnIndex=0; columnIndex < columnBlueprints.length; columnIndex++){
+				var blueprint = columnBlueprints[columnIndex];
+				var value = row[columnIndex];
+				if(blueprint.isString){
+					cellValues.push("'" + value + "'");
+				} else {
+					cellValues.push(value);
+				}
+			}
+			rowValues.push("(" + cellValues.join(", ") + ")")
+		}
+
+		var query = "INSERT INTO '" + tableName + "' ('" + tableData.headers.join("', '") + "') VALUES " + rowValues.join(", ");
+
+		await window.treezTerminal.sqLiteQuery(filePath, query, false)
+	}
 
 }

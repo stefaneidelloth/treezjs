@@ -316,7 +316,7 @@ export default class InputFileGenerator extends Model  {
 
 	getJobId(){
 		if(this.parent){
-			return this.parent.getJobId();
+			return this.parent.gobId;
 		} else {
 			return '{unknownJobId}';
 		}

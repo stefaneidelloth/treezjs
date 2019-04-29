@@ -6,6 +6,7 @@ import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
 import DatabaseModifier from './../databaseModifier/databaseModifier.js';
+import SqLiteAppender from './../sqLiteAppender/sqLiteAppender.js';
 
 
 export default class Executable extends Model {   
@@ -101,6 +102,14 @@ export default class Executable extends Model {
 				parentSelection,
 				this,
 				treeView));
+		
+		actions.push(new AddChildAtomTreeViewAction(
+				SqLiteAppender,
+				'sqLiteAppender',
+				'databaseAppender.png',
+				parentSelection,
+				this,
+				treeView));	
 
 		return actions;
 	}
@@ -248,6 +257,10 @@ export default class Executable extends Model {
 	createLoggingArguments(name) {
 		return this.createChild(LoggingArguments, name);
 	}
+	
+	createSqLiteAppender(name){
+    	return this.createChild(SqLiteAppender, name);
+    }
 
 	createTableImport(name) {
 		return this.createChild(TableImport, name);
@@ -407,7 +420,7 @@ export default class Executable extends Model {
 		const inputPathIsFilePath = Utils.isFilePath(inputPathString);
 		if (inputPathIsFilePath) {
 			const inputFileName = Utils.extractFileName(inputPathString);
-			const newInputFileName = Utils.includeNumberInFileName(inputFileName, '#' + getJobId());
+			const newInputFileName = Utils.includeNumberInFileName(inputFileName, '#' + this.jobId);
 			const destinationPath = folderPath + '/' + newInputFileName;
 			return destinationPath;
 		} else {
@@ -555,13 +568,7 @@ export default class Executable extends Model {
 	__resetJobId(){
 		this.jobId = 1;
 		this.__refreshStatus();
-	}
-	
-	getJobId(){
-		return this.jobId;
-	}
-
-	
+	}	
 
 }
 

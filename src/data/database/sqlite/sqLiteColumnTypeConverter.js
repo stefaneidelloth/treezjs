@@ -24,4 +24,17 @@ export default class SqLiteColumnTypeConverter {
 		}
 	}	
 
+	static convertBack(columnType){
+		switch(columnType){
+			case ColumnType.integer:
+				return 'INTEGER'
+			case ColumnType.string:
+				return 'TEXT'
+			case ColumnType.double:
+				return 'REAL'
+			default:
+				throw new Error('Not yet implemented');
+		}
+	}
+
 }

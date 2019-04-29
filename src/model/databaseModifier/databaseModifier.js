@@ -55,10 +55,6 @@ export default class DatabaseModifier extends Model {
         this.__createStatusSection(page);
 	}
 
-	provideFilePath() {
-		return this.__getModifiedOutputPath();		
-	}
-
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		return actions;
 	}

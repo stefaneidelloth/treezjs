@@ -22,6 +22,10 @@ export default class ColumnBlueprint {
 		this.isLinkedToSource = isLinkedToSource;
 	}
 
+	get isString(){
+		return this.type === ColumnType.string;
+	}
+
 	
 
 }
