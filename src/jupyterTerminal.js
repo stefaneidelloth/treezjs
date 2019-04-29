@@ -152,17 +152,28 @@ export default class JupyterTerminal {
 
 	async sqLiteQuery(connectionString, query, isExpectingOutput) {
 
-		var pythonCode = '%%python\n'
+			
+
+		if(isExpectingOutput){
+
+			var pythonCode = '%%python\n'
 			+ 'import sqlite3\n'
 			+ 'import pandas\n'	
 			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
             + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
-            + 'print(dataFrame.to_csv())\n';			
+            + 'print(dataFrame.to_csv())\n';		
 
-		if(isExpectingOutput){
 			var text = await this.__executePythonCode(pythonCode, true);
 			return TableData.parseTableTextTo2DArray(text, ',');
 		} else {
+
+			var pythonCode = '%%python\n'
+			+ 'import sqlite3\n'
+			+ 'import pandas\n'	
+			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
+			+ '    cursor = connection.cursor()\n'
+			+ '    cursor.execute("' + query + '")\n';
+
 			return this.__executePythonCode(pythonCode, false);
 		}
 	}

@@ -9,8 +9,7 @@ export default class TreezTextArea extends LabeledTreezElement {
         this.__textArea = undefined;                            
     }            	
 
-    connectedCallback() {
-    	
+    connectedCallback() {    	
 
         if(!this.__label){                     
 

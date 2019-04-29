@@ -5,6 +5,7 @@ import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
+import DatabaseModifier from './../databaseModifier/databaseModifier.js';
 
 
 export default class Executable extends Model {   
@@ -52,6 +53,14 @@ export default class Executable extends Model {
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		this.treeView=treeView;
+				
+		actions.push(new AddChildAtomTreeViewAction(
+				DatabaseModifier,
+				'databaseModifier',
+				'databaseModifier.png',
+				parentSelection,
+				this,
+				treeView));	
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				InputFileGenerator,
@@ -220,7 +229,9 @@ export default class Executable extends Model {
 			return modelOutput;	
 	}
 
-    
+    createDatabaseModifier(name){
+    	return this.createChild(DatabaseModifier, name);
+    }
 
 	createInputFileGenerator(name) {
 		return this.createChild(InputFileGenerator, name);		
