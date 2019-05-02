@@ -124,7 +124,7 @@ export default class Executable extends Model {
 		monitor.info(startMessage);
 
 		//initialize progress monitor
-		const totalWork = 3;
+		const totalWork = 4;
 		monitor.totalWork = totalWork;
 
 		await this.__deleteOldOutputAndLogFilesIfExist();
@@ -217,6 +217,16 @@ export default class Executable extends Model {
 				monitor.cancelAll();				
 				return modelOutput;
 			}
+			
+			// execute SqLiteAppender child(ren) if exist
+			try {
+				await await this.executeChildren(SqLiteAppender, treeView, monitor);			
+			} catch (exception) {
+				monitor.error('Could not append SqLite database for "' + this.name + '": ', exception);
+				monitor.cancelAll();				
+				return modelOutput;
+			}
+			
 
 			// copy input file to output folder (modifies input file name)
 			try {
@@ -433,6 +443,8 @@ export default class Executable extends Model {
 	async __runInputFileGenerators(refreshable, monitor){
 		await this.executeChildren(InputFileGenerator, refreshable, monitor);
 	}
+	
+	
 
 	
 	__runDataImports(refreshable, monitor){

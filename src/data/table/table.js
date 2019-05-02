@@ -580,7 +580,7 @@ export default class Table extends ComponentAtom {
 		if (this.isLinkedToSource) {			
 			return DatabasePageResultLoader.getColumnType(this.tableSource, columnHeader);
 		} else {
-			return this.columnFolder.columnType(columnHeader);			
+			return this.columnFolder.type(columnHeader);			
 		}
 	}
 
@@ -598,7 +598,7 @@ export default class Table extends ComponentAtom {
 		}
 	}	
 
-	setColumn(header, columnData) {
+	setColumnValues(header, columnData) {
 
 		var associatedClass = this.columnType(header).getAssociatedClass();
 
@@ -616,6 +616,10 @@ export default class Table extends ComponentAtom {
 		}
 		return this;
 	}	
+	
+	getColumnValues(header){
+		return this.rows.map(row=>row.entry(header));				
+	}
 
 	get rows() {		
 		return this.__rows;

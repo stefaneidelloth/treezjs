@@ -44,7 +44,7 @@ export default class Monitor {
 	createChild(title, treeView, id, coveredWorkOfParentMonitor, totalWork) {
 
 		this.__assertTotalWorkHasBeenSet();
-		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor);
+		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor, title);
 
 		this.__workCoveredByChildren += coveredWorkOfParentMonitor;
 		
@@ -60,7 +60,7 @@ export default class Monitor {
 	createChildWithoutTotal(title, treeView, id, coveredWorkOfParentMonitor) {
 
 		this.__assertTotalWorkHasBeenSet();
-		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor);
+		this.__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor, title);
 
 		//TODO
 		//Add Id to logging context, also see http://www.baeldung.com/java-logging-ndc-log4j
@@ -73,19 +73,19 @@ export default class Monitor {
 		return subMonitor;
 	}
 
-	__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor) {
+	__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor, title) {
 
 		var workNotCoveredByChildren = this.__totalWork - this.__workCoveredByChildren;
 		if (coveredWorkOfParentMonitor > workNotCoveredByChildren) {
-			var message = "The parent monitor does not have enough uncovered work to create the child ("
-					+ this.__coveredWorkOfParentMonitor + " > " + workNotCoveredByChildren + ")";
+			var message = 'The parent monitor "' + this.id + '" does not have enough uncovered work to create the child "' + title + '" ('
+					+ this.__coveredWorkOfParentMonitor + ' > ' + workNotCoveredByChildren + ')';
 			throw new Error(message);
 		}
 
 		var freeWork = this.__totalWork - this.__finishedWork;
 		if (coveredWorkOfParentMonitor > freeWork) {
-			var message = "The parent monitor does not have enough free work to create the child ("
-					+ coveredWorkOfParentMonitor + " > " + freeWork + ")";
+			var message = 'The parent monitor "' + this.id + '" does not have enough free work to create the child "' + title + '" ('
+					+ coveredWorkOfParentMonitor + ' > ' + freeWork + ')';
 			throw new Error(message);
 		}
 	}

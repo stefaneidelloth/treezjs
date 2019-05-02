@@ -107,6 +107,9 @@ export default class SweepModelInputGenerator {
 	
 	__createModelInputs(variableRanges) {
 		var self=this;
+		
+		var totalNumberOfJobs = this.__numberOfJobs(variableRanges);
+		
 		var modelInputs = [];
 		if (variableRanges.length > 0) {
 			var firstRange = variableRanges[0];
@@ -121,7 +124,7 @@ export default class SweepModelInputGenerator {
 			firstRange.values.forEach(value=>{
 				//create model input that initially contains the current value
 				var dummyJobId = -1;
-				var initialInput = self.__createInitialModelInput(variableModelPath, studyId, studyDescription, value, dummyJobId);
+				var initialInput = self.__createInitialModelInput(variableModelPath, studyId, studyDescription, value, dummyJobId, totalNumberOfJobs);
 
 				//copy and extended the initial model input using the remaining variable values
 				var modelInputsWithCurrentValue = self.__extendModelInputs(initialInput, remainingRanges);
@@ -133,6 +136,19 @@ export default class SweepModelInputGenerator {
 
 	}
 	
+	__numberOfJobs(variableRanges){
+		
+		if(variableRanges.length < 1){
+			return 0;
+		}
+		
+		var numberOfJobs = 1;
+		
+		for(var range of variableRanges){
+			numberOfJobs = numberOfJobs * range.values.length;
+		}		
+		return numberOfJobs;		
+	}	
 	
 
 	__extendModelInputs(initialInput, variableRanges) {
@@ -170,9 +186,9 @@ export default class SweepModelInputGenerator {
 	}
 
 	
-	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId) {
+	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId, totalNumberOfJobs) {
 		var sweepModelPath = this.sweep.treePath;
-		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId);
+		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
 		initialInput.add(variableModelPath, value);
 		return initialInput;
 	}

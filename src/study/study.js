@@ -2,6 +2,8 @@ import ComponentAtom from './../core/component/componentAtom.js';
 import Model from './../model/model.js';
 import ModelInput from './../model/input/modelInput.js';
 import Monitor from './../core/monitor/Monitor.js';
+import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import PythonExport from './pythonExport/pythonExport.js';
 
 
 export default class Study extends ComponentAtom {
@@ -67,6 +69,19 @@ export default class Study extends ComponentAtom {
 			.bindValue(this, ()=>this.isConcurrent);
 	    
     }
+	
+extendContextMenuActions(actions, parentSelection, treeView) {
+				
+		actions.push(new AddChildAtomTreeViewAction(
+				PythonExport,
+				"pythonExport",
+				"pythonExport.png",
+				parentSelection,
+				this,
+				treeView));
+	
+		return actions;
+	}
 	
 	async execute(treeView, monitor) {
 		if(!monitor){
@@ -155,9 +170,7 @@ export default class Study extends ComponentAtom {
 		var numberOfRemainingJobs = this.__numberOfRemainingModelJobs-1;
 		this.__numberOfRemainingModelJobs = numberOfRemainingJobs;
 
-		if (numberOfRemainingJobs === 0) {
-
-			this.executeRunnableChildren(treeView, monitor);
+		if (numberOfRemainingJobs === 0) {			
 
 			monitor.description = 'Finished!';
 
@@ -307,9 +320,14 @@ export default class Study extends ComponentAtom {
 		var model = this.__getControlledModel();
 		var startTime = new Date().valueOf();		
 		
+		var pythonExport = this.childByClass(PythonExport);
+		
+		if(pythonExport){
+			pythonExport.deleteStructureFromPythonContextIfExists();
+		}		
+		
 		var jobCounter = 1;
-
-
+		
 		for(const modelInput of modelInputs){
 			
 			if(monitor.isCanceled){
@@ -330,6 +348,10 @@ export default class Study extends ComponentAtom {
 				var modelOutputName = 'output_' + modelInput.jobId;
 				modelOutput.name = modelOutputName;
 				outputAtom.addChild(modelOutput);
+				
+				if(pythonExport){
+					pythonExport.exportTablesToPythonContext(modelInput, modelOutput);
+				}
 			}			
 
 			jobFinishedHook();			
@@ -487,6 +509,10 @@ export default class Study extends ComponentAtom {
 	
 	set inputGenerator(inputGenerator){
 		this.__inputGenerator = inputGenerator;
+	}
+	
+	createPythonExport(name){
+		this.createChild(PythonExport, name);
 	}
 
 

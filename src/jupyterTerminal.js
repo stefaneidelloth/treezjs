@@ -23,7 +23,7 @@ export default class JupyterTerminal {
 
 		pythonCode = pythonCode + 'print(tempdir)\n';				
 
-		return await this.__executePythonCode(pythonCode, true);		 
+		return await this.executePythonCode(pythonCode, true);		 
     }	
 
    
@@ -43,7 +43,7 @@ export default class JupyterTerminal {
 
 		pythonCode = pythonCode + 'print(tempdir)\n';
 		
-		return await this.__executePythonCode(pythonCode, true);	
+		return await this.executePythonCode(pythonCode, true);	
     }
   
 
@@ -52,7 +52,7 @@ export default class JupyterTerminal {
 			+ 'file = open("' + filePath + '", "r", encoding="utf-8")\n' 
             + 'print(file.read())\n';	
 		
-		return await this.__executePythonCode(pythonCode, true);	 
+		return await this.executePythonCode(pythonCode, true);	 
 	}
     
     async writeTextFile(filePath, text){
@@ -64,7 +64,7 @@ export default class JupyterTerminal {
             + 'file.write("' + textString + '")\n'
             + 'file.close()\n';	
 		
-		return this.__executePythonCode(pythonCode, false);
+		return this.executePythonCode(pythonCode, false);
 	}
 
 	__escapeSpecialCharacters(text){
@@ -80,7 +80,7 @@ export default class JupyterTerminal {
 			+ 'if os.path.exists("' + filePath +'"):\n'
 			+ '    os.remove("' + filePath + '")\n';           
 		
-		return this.__executePythonCode(pythonCode, false);		
+		return this.executePythonCode(pythonCode, false);		
 	}	
 	
 	execute(command, messageHandler, errorHandler, finishedHandler){		
@@ -163,7 +163,7 @@ export default class JupyterTerminal {
             + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
             + 'print(dataFrame.to_csv())\n';		
 
-			var text = await this.__executePythonCode(pythonCode, true);
+			var text = await this.executePythonCode(pythonCode, true);
 			return TableData.parseTableTextTo2DArray(text, ',');
 		} else {
 
@@ -174,7 +174,7 @@ export default class JupyterTerminal {
 			+ '    cursor = connection.cursor()\n'
 			+ '    cursor.execute("' + query + '")\n';
 
-			return this.__executePythonCode(pythonCode, false);
+			return this.executePythonCode(pythonCode, false);
 		}
 	}
 
@@ -188,13 +188,12 @@ export default class JupyterTerminal {
             + 'for dtype in dataFrame.dtypes.values:\n'
             + '    print(dtype)\n';		
 		
-		var text = await this.__executePythonCode(pythonCode, true);
+		var text = await this.executePythonCode(pythonCode, true);
 		return TableData.parseTableTextTo2DArray(text, ',');		
 	}
-
 	
 
-	async __executePythonCode(pythonCode, isExpectingOutput){
+	async executePythonCode(pythonCode, isExpectingOutput){
 	 	
 	 	var self=this;
 

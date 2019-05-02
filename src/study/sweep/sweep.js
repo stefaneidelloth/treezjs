@@ -14,36 +14,42 @@ export default class Sweep extends Study {
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
+		
+		actions = super.extendContextMenuActions(actions, parentSelection, treeView);
 
 		/*
-		const addQuantityRange = new AddChildAtomTreeViewAction(
+	
+		actions.push(new AddChildAtomTreeViewAction(
 				QuantityRange,
 				"quantityRange",
 				"quantityRange.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addQuantityRange);
+				treeView));
 		*/
 		
-		const addDoubleRange = new AddChildAtomTreeViewAction(
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				DoubleRange,
 				"doubleRange",
 				"doubleRange.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addDoubleRange);
+				treeView
+			)
+		);		
 		
-		
-		const addIntegerRange = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				IntegerRange,
 				"integerrange",
 				"integerrange.png",
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addIntegerRange);
+				treeView
+			)
+		);
 
 		/*
 		
