@@ -36,10 +36,12 @@ export default class Monitor {
 
 	showInMonitorView() {		
 		var monitorView = this.__treeView.monitorView;
-		monitorView.setMonitor(this);
-	}
-
+		monitorView.setMonitor(this);		
+	}	
 	
+	clear(){
+		this.__console.clear();
+	}
 
 	createChild(title, treeView, id, coveredWorkOfParentMonitor, totalWork) {
 

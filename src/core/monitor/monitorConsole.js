@@ -29,6 +29,11 @@ export default class MonitorConsole {
 		this.__appendMessageToParentSelection(logMessage);
 	}
 	
+	clear(){
+		this.__parentSelection.selectAll('div') //
+		 .remove();	
+	}
+	
 	showMessages(){
 		this.__parentSelection.selectAll('div') //
 					 .remove();		

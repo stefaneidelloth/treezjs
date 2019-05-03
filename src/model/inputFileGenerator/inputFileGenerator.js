@@ -146,7 +146,7 @@ export default class InputFileGenerator extends Model  {
 
 	    sectionContent.append('treez-file-path')
 	    	.label('Input file to generate')	    	
-	    	.onChange(()=>this.__refreshStatus())	
+	    	.onChange(()=>this.refreshStatus())	
 	    	.bindValue(this,()=>this.inputPath);
 
 	    sectionContent.append('treez-check-box')
@@ -170,11 +170,11 @@ export default class InputFileGenerator extends Model  {
 			.disable() 
 			.bindValue(this, ()=>this.__inputPathInfo);	
 		
-		this.__refreshStatus();
+		this.refreshStatus();
 
 	}
 
-	__refreshStatus() {			
+	refreshStatus() {			
 		this.__inputPathInfo = this.__getModifiedInputPath();	
 	}
 	

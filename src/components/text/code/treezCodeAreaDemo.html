@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezCodeArea.css" />
+	</head>
+
+	<body>
+		<treez-code-area label="Code area:" id="codeArea">
+			
+		</treez-code-area>	
+
+		<script type="module">
+			import TreezCodeArea from './treezCodeArea.js';
+
+            var codeArea = document.getElementById('codeArea');
+            codeArea.label = 'New Label:';
+            codeArea.value = 'alert("Hello world!");';
+		</script>
+		
+	</body>
+</html>

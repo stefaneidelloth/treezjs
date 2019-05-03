@@ -1,10 +1,11 @@
 import Treez from './treez.js'; 
 import JupyterTerminal from './jupyterTerminal.js';
 
+
 require([
 	'base/js/namespace',
 	'../notebooks/treezjs/bower_components/golden-layout/dist/goldenlayout.min',
-	'../notebooks/treezjs/bower_components/d3/d3.min'	
+	'../notebooks/treezjs/bower_components/d3/d3.min'
 ], function(
 	 Jupyter,
 	 GoldenLayout,
@@ -18,6 +19,7 @@ require([
 
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
+	
 	
 	var layoutContainer = __createLayoutContainer(GoldenLayout);	
 	var focusManager = __createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, layoutContainer);

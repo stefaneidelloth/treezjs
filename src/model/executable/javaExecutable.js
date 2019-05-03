@@ -38,7 +38,7 @@ export default class JavaExecutable extends Executable {
 
 	        sectionContent.append('treez-file-path')
 	            .label('Path to java.exe')           
-	            .onChange(()=>this.__refreshStatus())           
+	            .onChange(()=>this.refreshStatus())           
 	            .bindValue(this,()=>this.executablePath);            
 		}  
 	 
@@ -61,12 +61,12 @@ export default class JavaExecutable extends Executable {
 		
 		sectionContent.append('treez-file-or-directory-path')
 			.label('Class path (e. g. path to jar file that provides main class)')
-			.onChange(()=>this.__refreshStatus())
+			.onChange(()=>this.refreshStatus())
 			.bindValue(this,()=>this.classPath);        
 			
 		sectionContent.append('treez-text-field')
 			.label('Full name of main class')
-			.onChange(()=>this.__refreshStatus())
+			.onChange(()=>this.refreshStatus())
 			.bindValue(this,()=>this.fullClassName);
 		
 	}
@@ -82,7 +82,7 @@ export default class JavaExecutable extends Executable {
 		
 		sectionContent.append('treez-text-area')
 			.label('Arguments for tweaking Java Virtual Maschine')
-			.onChange(()=>this.__refreshStatus())
+			.onChange(()=>this.refreshStatus())
 			.bindValue(this,()=>this.jvmArguments);	
 
 	}

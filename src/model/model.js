@@ -65,7 +65,8 @@ export default class Model extends ComponentAtom {
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
-			monitor.showInMonitorView();						
+			monitor.showInMonitorView();
+			monitor.clear();
 			hasMainMonitor = true;
 		}
 
@@ -122,11 +123,8 @@ export default class Model extends ComponentAtom {
 			return modelOutput; 		
 		} else {
 			return null;
-		}		
-
-		
+		}			
 	}
-
 	
 
 	/**
@@ -198,7 +196,17 @@ export default class Model extends ComponentAtom {
 				child.jobId = jobId;
 			}
 		}
+        
+        this.refreshStatus();
 	}
+	
+	resetJobId(){
+		this.jobId = 1;		
+	}
+	
+	refreshStatus(){
+		//might be overridden by inheriting class
+	};
 
     get studyId(){
         return this.__studyId;
@@ -211,6 +219,8 @@ export default class Model extends ComponentAtom {
                 child.studyId = studyId;
             }
         }
+        
+        this.refreshStatus();
 	}
 
 
@@ -225,6 +235,8 @@ export default class Model extends ComponentAtom {
                 child.studyDescription = studyDescription;
             }
         }
+        
+        this.refreshStatus();
 	}
 
 }

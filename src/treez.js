@@ -40,7 +40,7 @@ export default class Treez {
 		Treez.importCssStyleSheet('/src/views/editorView.css');
 		Treez.importCssStyleSheet('/src/views/propertyView.css');
 		Treez.importCssStyleSheet('/src/views/monitorView.css');
-		Treez.importCssStyleSheet('/src/views/graphicsView.css');
+		Treez.importCssStyleSheet('/src/views/graphicsView.css');		
 		
 		terminalFactory((terminal)=>{
 			window.treezTerminal = terminal;
@@ -55,6 +55,12 @@ export default class Treez {
 		link.setAttribute('rel','stylesheet');
 		link.setAttribute('href',window.treezConfig.home + href);
 		document.head.appendChild(link);
+	}	
+
+	static importScript(src){
+		var script = document.createElement('script');
+		script.setAttribute('src', window.treezConfig.home + src);		
+		document.head.appendChild(script);
 	}	
 	
 	static imagePath(imageName){

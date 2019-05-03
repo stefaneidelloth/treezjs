@@ -5,7 +5,7 @@ import TableImport from './../tableImport/tableImport.js';
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
-import DatabaseModifier from './../databaseModifier/databaseModifier.js';
+import DatabaseModifier from './../code/databaseModifier.js';
 import SqLiteAppender from './../sqLiteAppender/sqLiteAppender.js';
 
 
@@ -115,7 +115,7 @@ export default class Executable extends Model {
 	}
 
 	afterCreateControlAdaptionHook() {
-       this.__refreshStatus();
+       this.refreshStatus();
     }	
 
     async doRunModel(treeView, monitor) {
@@ -279,12 +279,12 @@ export default class Executable extends Model {
     __createExecutableSection(tab) {
 
 		const section = tab.append('treez-section')
-            .label('Executable');
+            .label('Executable'); 
 
-        section.append('treez-section-action')
-            .image('resetjobId.png')
-            .label('Reset jobId to 1')
-            .addAction(()=>this.__resetJobId());
+		section.append('treez-section-action')
+	        .image('resetjobId.png')
+	        .label('Reset jobId to 1')
+	        .addAction(()=>this.resetJobId());
 
         section.append('treez-section-action')
             .image('run.png')
@@ -299,7 +299,7 @@ export default class Executable extends Model {
 
         sectionContent.append('treez-file-path')
             .label('Executable')           
-            .onChange(()=>this.__refreshStatus())           
+            .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.executablePath);            
 	}  
     
@@ -316,12 +316,12 @@ export default class Executable extends Model {
 
         sectionContent.append('treez-text-area')
             .label('Input arguments')           
-            .onChange(()=>this.__refreshStatus())           
+            .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.inputArguments); 
 
 		sectionContent.append('treez-file-or-directory-path')
             .label('Input file or directory')            
-            .onChange(()=>this.__refreshStatus())           
+            .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.inputPath);            
 	}   
   
@@ -333,18 +333,18 @@ export default class Executable extends Model {
 
        sectionContent.append('treez-text-area')
             .label('Output arguments')           
-            .onChange(()=>this.__refreshStatus())          
+            .onChange(()=>this.refreshStatus())          
             .bindValue(this,()=>this.outputArguments); 
 
        sectionContent.append('treez-file-or-directory-path')
             .label('Output file or directory')            
-            .onChange(()=>this.__refreshStatus())           
+            .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.outputPath); 
 
        sectionContent.append('treez-check-box')
 		   .label('Copy input file to output folder')
 		   .value(false)
-		   .onChange(()=>this.__refreshStatus())		  
+		   .onChange(()=>this.refreshStatus())		  
 		   .bindValue(this,()=>this.isCopyingInputFileToOutputFolder);       
    }  
 
@@ -375,7 +375,7 @@ export default class Executable extends Model {
 
    
 
-   __refreshStatus() {
+   refreshStatus() {
 		this.__commandInfo = this.__buildCommand();
 		this.__executionStatusInfo = 'Not yet executed';
 		this.__jobIdInfo = ''+ this.jobId;
@@ -573,13 +573,7 @@ export default class Executable extends Model {
 	}
 
 	__increaseJobId() {		
-		this.jobId = this.jobId+1;
-		this.__refreshStatus();
-	}
-
-	__resetJobId(){
-		this.jobId = 1;
-		this.__refreshStatus();
+		this.jobId = this.jobId+1;		
 	}	
 
 }

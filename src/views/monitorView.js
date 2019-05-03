@@ -268,6 +268,10 @@ export default class MonitorView {
 	getLoggingPanel(){
 		return this.__loggingPanel;
 	}
+	
+	__clearLoggingPanel(){
+		this.__loggingPanel
+	}
 
 
 }

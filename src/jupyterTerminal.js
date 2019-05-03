@@ -2,8 +2,9 @@ import TableData from './data/database/tableData.js';
 
 export default class JupyterTerminal {
 
-	constructor(jupyter){			
-		this.__kernel = jupyter.notebook.kernel;
+	constructor(jupyter){		
+		this.__notebook = jupyter.notebook;
+		this.__kernel = this.__notebook.kernel;
 	}
 	
 	async browseFilePath(initialDirectory){  
@@ -240,6 +241,56 @@ export default class JupyterTerminal {
 			};                
 
 		 	self.__kernel.execute(pythonCode, callbacks);
+		}); 	
+    }
+	
+	async executePythonCodeWithCell(pythonCode){
+	 	
+	 	var self=this;
+
+    	return new Promise(function(resolve, reject) {  
+    		
+			var cell = self.__notebook.insert_cell_below();
+			cell.element[0].style.display = 'none';
+
+			
+
+			cell.set_text(pythonCode);
+
+			cell.events.on('finished_execute.CodeCell', (event, data)=>{				
+				var finishedCell = data.cell;
+
+				if(finishedCell !== cell){
+					return;
+				}
+
+				var outputContainer = cell.output_area.element[0];
+				
+				var htmlArray = [];
+				
+				for(var outputArea of outputContainer.children){
+					outputArea.children[0].style.display = 'none';	
+					outputArea.children[1].style.display = 'none';				
+					htmlArray.push(outputArea.innerHTML);
+				}	
+
+				var cellIndex = self.__notebook.get_cells().indexOf(finishedCell);			
+				
+				try{
+					self.__notebook.delete_cell(cellIndex);
+				} catch(error){
+
+				}					
+				
+				resolve(htmlArray);
+			});
+
+			try{
+				cell.execute();
+			} catch(error){
+				reject(error);
+			}   		
+    		
 		}); 	
     }
   

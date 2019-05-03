@@ -41,12 +41,12 @@ export default class LoggingArguments extends ComponentAtom {
 
         sectionContent.append('treez-text-area')
              .title('Log arguments')           
-             .onChange(()=>this.__refreshStatus())          
+             .onChange(()=>this.refreshStatus())          
              .bindValue(this,()=>this.logArguments); 
 
         sectionContent.append('treez-file-path')
              .title('Log file')            
-             .onChange(()=>this.__refreshStatus())          
+             .onChange(()=>this.refreshStatus())          
              .bindValue(this,()=>this.logFilePath);
        
     }

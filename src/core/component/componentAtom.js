@@ -42,6 +42,7 @@ import TreezSymbolStyle from './../../components/symbolStyle/treezSymbolStyle.js
 import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;
 
 import TreezTabFolder from './../../components/tabs/treezTabFolder.js';
+import TreezCodeArea from './../../components/text/code/treezCodeArea.js';
 import TreezTextArea from './../../components/text/area/treezTextArea.js';
 import TreezTextField from './../../components/text/field/treezTextField.js';
 import TreezTextLabel from './../../components/text/label/treezTextLabel.js';
@@ -78,6 +79,7 @@ export default class ComponentAtom extends Atom {
     	Treez.importCssStyleSheet('/src/components/section/treezSection.css');
       
     	Treez.importCssStyleSheet('/src/components/tabs/treezTabFolder.css');
+    	Treez.importCssStyleSheet('/src/components/text/code/treezCodeArea.css');
     	Treez.importCssStyleSheet('/src/components/text/area/treezTextArea.css');
     	Treez.importCssStyleSheet('/src/components/text/field/treezTextField.css');
     	Treez.importCssStyleSheet('/src/components/text/label/treezTextLabel.css');      
