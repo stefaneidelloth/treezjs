@@ -98,7 +98,7 @@ export default class TreezElement extends HTMLElement {
 
     //can be overriden by inheriting classes
     updateWidth(width){
-		this.style.width = width;
+		this.style.width = width + ' !important';
     }	
 
     //should be overridden by inheriting classes

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezDouble.css" />
+	</head>
+	
+	<body>
+	
+		<treez-double label="Double:" id="double" value="5.0"> </treez-double>	
+
+		<script type="module">
+			import TreezDouble from './treezDouble.js';
+
+            var double = document.getElementById('double');
+            double.label = 'Label:';
+            double.value = 4;          
+           
+		</script>
+		
+	</body>
+</html>

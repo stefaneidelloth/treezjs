@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezInteger.css" />
+	</head>
+	
+	<body>
+	
+		<treez-integer label="Integer:" id="integer" value="5"> </treez-integer>	
+
+		<script type="module">
+			import TreezInteger from './treezInteger.js';
+
+            var integer = document.getElementById('integer');
+            integer.label = 'Label:';
+            integer.value = 4;          
+           
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,11 @@
+.treez-integer-label {
+	margin-right:5px;	
+}
+
+.treez-integer {
+    font-family: Consolas;
+    font-size: 12px;   
+    resize:vertical;
+    margin-bottom:10px;
+    margin-right:5px;
+}

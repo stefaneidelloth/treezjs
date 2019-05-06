@@ -1,15 +1,15 @@
 import Variable from './../variable.js';
 
-export default class IntegerVariable extends Variable {
+export default class BooleanVariable extends Variable {
 	
 	constructor(name, value){
 		super(name, value);
-		this.image='integerVariable.png';
+		this.image='booleanVariable.png';
 	}
 		
 	createVariableControl(parent, dTreez){
 
-		var textField = parent.append('treez-text-field')
+		var checkBox = parent.append('treez-check-box')
 			.label(this.name)
 			.bindValue(this, ()=>this.value);	
     	

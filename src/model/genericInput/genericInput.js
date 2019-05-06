@@ -7,9 +7,12 @@
 import Model from './../model.js';
 import TreeViewAction from './../../core/treeview/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import ActionSeparator from './../../core/actionSeparator.js';
 import Variable from './../variable/variable.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
 import IntegerVariable from './../variable/field/integerVariable.js';
+import QuantityVariable from './../variable/field/quantityVariable.js';
+import BooleanVariable from './../variable/field/booleanVariable.js';
 import FilePathVariable from './../variable/field/filePathVariable.js';
 import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
@@ -86,86 +89,97 @@ export default class GenericInput extends Model {
 				)
             );
 		}
-
-		/*
-		const addQuantityVariable = new AddChildAtomTreeViewAction(
+		
+		actions.push(new ActionSeparator());
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				QuantityVariable,
 				'quantityVariable',
 				'quantityVariable.png',
+				parentSelection,
 				this,
-				treeViewer);
-		actions.push(addQuantityVariable);
-     	 */
-		
+				treeView
+			)
+		);
        
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				DoubleVariable,
 				'doubleVariable',
 				'doubleVariable.png',
 				parentSelection,
 				this,
-				treeView));
-		
-		/*
-
-        const addIntegerVariableField = new AddChildAtomTreeViewAction(
+				treeView
+			)
+		);
+		       
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				IntegerVariable,
 				'integerVariable',
 				'integerVariable.png',
+				parentSelection,
 				this,
-				treeViewer);
-		actions.push(addIntegerVariableField);
-
-        const addBooleanVariableField = new AddChildAtomTreeViewAction(
+				treeView
+			)
+		);
+       
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				BooleanVariable,
 				'booleanVariable',
 				'booleanVariable.png',
+				parentSelection,
 				this,
-				treeViewer);
-		actions.push(addBooleanVariableField);
-		
-		*/
-
+				treeView
+			)
+		);
        
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				StringVariable,
 				'stringVariable',
 				'stringVariable.png',
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);		
 		
-		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				FilePathVariable,
 				'filePathVariable',
 				'filePathVariable.png',
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);		
 		
-		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				DirectoryPathVariable,
 				'directoryPathVariable',
 				'directoryPathVariable.png',
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
 		
 		/*
-
-        const addStringItemVariableField = new AddChildAtomTreeViewAction(
+      
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				StringItemVariable,
 				'stringItemVariable',
 				'stringItemVariable.png',
 				this,
-				treeViewer);
-		actions.push(addStringItemVariableField);
-
-       
-
-       
+				treeViewer
+			)
+		);       
 		
 		*/
 
@@ -207,7 +221,6 @@ export default class GenericInput extends Model {
 	createDoubleVariable(name, value) {
 		return this.createChild(DoubleVariable, name, value); 		
 	}
-
 	
 	createIntegerVariable(name, value) {
 		return this.createChild(IntegerVariable, name, value);	
@@ -220,7 +233,6 @@ export default class GenericInput extends Model {
 	createStringVariable(name, value) {		
         return this.createChild(StringVariable, name, value);       
 	}
-
 	
 	createFilePathVariable(name, value) {
 		return this.createChild(FilePathVariable, name, value); 
