@@ -19,43 +19,14 @@ export default class VariableRange extends ComponentAtom {
 		super(name);
 		this.rangeString = undefined;
 		this.values = values;
-		this.isEnabled = true;		
+		this.isDisableable = true;		
 		this.variablePath = undefined;
 		this.columnType = ColumnType.string;		
 	}
 	
 	createComponentControl(tabFolder){    
 		
-	}
-	
-	extendContextMenuActions(actions, parentSelection, treeView) {				
-
-		if(this.isEnabled){
-			actions.push(new TreeViewAction(							
-							'Disable',					
-							'disable.png',							
-							treeView,
-							() => {
-								this.isEnabled=false; 
-								treeView.refresh();
-							}
-						));
-			
-		} else {
-			actions.push(new TreeViewAction(					
-					'Enable',					
-					"enable.png",
-					treeView,
-					() => {
-						this.isEnabled=true; 
-						treeView.refresh();
-					}
-				));
-		}
-		
-	
-		return actions;
-	}
+	}	
 	
 	getSourceModelPath(){
 		var study = this.parent;

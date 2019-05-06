@@ -359,7 +359,7 @@ export default class TableImport extends Model {
 		
 		monitor.worked(1);
 
-		treeView.refresh();
+		treeView.refresh(this);
 
 		//create a copy of the target table to be able to conserve it as a model output for the current run
 		var outputTableName = this.name + 'Output';

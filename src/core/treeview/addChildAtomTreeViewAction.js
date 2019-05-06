@@ -8,7 +8,7 @@ export default class AddChildAtomTreeViewAction extends TreeViewAction {
     }
 
     constructor(atomConstructor, namePrefix, imageName, parentSelection, parentAtom, treeView) {
-    	super(AddChildAtomTreeViewAction.createLabel(namePrefix), imageName, treeView, null);
+    	super(AddChildAtomTreeViewAction.createLabel(namePrefix), imageName, parentAtom, treeView, null);
         var self = this;
     	this.action = ()=>{
     		//create child

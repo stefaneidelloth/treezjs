@@ -8,7 +8,8 @@ export default class TreeView {
 	constructor(mainViewModel, dTreez){
 		this.__mainViewModel = mainViewModel;
 		this.dTreez = dTreez;
-		this.content = undefined;		
+		this.content = undefined;	
+		this.__lastAtomShownInPropertiesView = undefined;
 	}
 
 	buildView(){		
@@ -18,45 +19,45 @@ export default class TreeView {
 	}	
 
     buildToolBar(parentSelection){
-		var toolbar = parentSelection.append("div");
+		var toolbar = parentSelection.append('div');
 
 		this.createButton(
 			toolbar, 
-			"root.png",
-			"Create an empty root atom.\n"+
-			"The current content of the tree viewer will be overwridden.", 
+			'root.png',
+			'Create an empty root atom.\n'+
+			'The current content of the tree viewer will be overwridden.', 
 			()=>this.createRoot()
 		);
 
 		this.createButton(
 			toolbar, 
-			"toTree.png",
-			"Build a tree from the code document that is currently opened in the text editor.\n" +
-			"The current content of the tree viewer will be overwritten.", 
+			'toTree.png',
+			'Build a tree from the code document that is currently opened in the text editor.\n' +
+			'The current content of the tree viewer will be overwritten.', 
 			()=>this.toTree()
 		);
 
 		this.createButton(
 			toolbar, 
-			"fromTree.png",
-			"Build code from the tree.\n" +
-			"The code will be written to currently opend document in the text editor.\n" +
-			"The currently opened document will be overwritten.", 
+			'fromTree.png',
+			'Build code from the tree.\n' +
+			'The code will be written to currently opend document in the text editor.\n' +
+			'The currently opened document will be overwritten.', 
 			()=>this.fromTree()
 		);
 
 		this.createButton(
 			toolbar, 
-			"help.png",
-			"Show the Treez help.", 
+			'help.png',
+			'Show the Treez help.', 
 			()=>this.showHelp()
 		);	
     }
 
     createButton(parent, imageName, tooltip, action){
     	parent
-		.append("img")
-		.className("treez-tool-icon")				
+		.append('img')
+		.className('treez-tool-icon')				
 		.src(Treez.imagePath(imageName))
 		.title(tooltip)
 		.onClick(action);
@@ -64,8 +65,8 @@ export default class TreeView {
 
     buildContent(parentSelection){       
 
- 		var content = parentSelection.append("div")
- 			.className("treez-tree-content");
+ 		var content = parentSelection.append('div')
+ 			.className('treez-tree-content');
  		this.content = content;
     }
 
@@ -91,8 +92,8 @@ export default class TreeView {
     	 		   	
         this.editor.processText((sourceCode)=>{
 			
-			script.innerHTML = sourceCode + "\n" + 
-							   "if(window.scriptLoadedHook){window.scriptLoadedHook();}"; 			
+			script.innerHTML = sourceCode + '\n' + 
+							   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 			
 			body.appendChild(script); 
         });     
 
@@ -112,21 +113,31 @@ export default class TreeView {
 		var logView = this.dTreez.select('#treez-log');    	
 		logView.selectAll('div').remove();
     };
-
-    refresh(){
-    	this.content.selectAll("div").remove(); 
-    	this.content.selectAll("details").remove();   	
-    	this.model.createTreeNodeAdaption(this.content, this);
-    }
-
+    
     fromTree(){    	
     	var sourceCode = this.model.createCode();    		
     	this.editor.setText(sourceCode);    	    	
     }
 
+    refresh(sourceAtom){
+    	this.content.selectAll('div').remove(); 
+    	this.content.selectAll('details').remove();   	
+    	this.model.createTreeNodeAdaption(this.content, this);
+    	this.clearPropertiesView();
+    	if(this.__lastAtomShownInPropertiesView){
+			 this.showProperties(this.__lastAtomShownInPropertiesView);
+    	}
+    }   
+
     showHelp(){
-    	console.log("show help");
+    	console.log('show help');
     }
+
+    showProperties(atom){    	
+    	var propertiesView = this.dTreez.select('#treez-properties');    	
+    	atom.createControlAdaption(propertiesView, this);
+    	this.__lastAtomShownInPropertiesView=atom;
+    }  
     
     setFocus(atom){
     	var propertiesView = this.dTreez.select('#treez-properties');

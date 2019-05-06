@@ -12,11 +12,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
         this.__textArea = undefined;  
         this.__codeMirror = undefined;    
 
-		//Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');
-
 		Treez.importScript('/bower_components/codemirror/lib/codemirror.js');
 		Treez.importScript('/bower_components/codemirror/mode/sql/sql.js');
-      
         
                               
     }   
@@ -54,7 +51,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
               {
             	value: self.value,
             	mode: self.mode,
-                lineNumbers: true,
+                lineNumbers: false, //showing line numbers somehow misaligns the cursor position
                 matchBrackets: true,
                 continueComments: "Enter",
                 extraKeys: {"Ctrl-Q": "toggleComment"}

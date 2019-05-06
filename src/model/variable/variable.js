@@ -2,19 +2,11 @@ import ComponentAtom from './../../core/component/componentAtom.js';
 import VariableCodeAdaption from './variableCodeAdaption.js';
 
 export default class Variable extends ComponentAtom {
-	
-	get isEnabled(){
-		return this.__isEnabled;
-	}
-	
-	set isEnabled(value){
-		this.__isEnabled=value;
-	}
-	
+		
 	constructor(name, value) {
 		super(name);
 		this.value=value;		
-		this.__isEnabled=true;
+		this.isDisableable=true;
 	}	
 	
     createComponentControl(tabFolder){    
@@ -29,7 +21,7 @@ export default class Variable extends ComponentAtom {
 	
 	    sectionContent.append('treez-text-field')
 	        .label('Name') 
-	        .onChange(()=>this.__treeView.refresh())
+	        .onChange(()=>this.__treeView.refresh(this))
 	        .bindValue(this,()=>this.name);   
 	}
     

@@ -52,7 +52,9 @@ export default class ComponentAtom extends Atom {
 	constructor(name) {
 		super(name);	
 		this.__treeView = undefined;
-        ComponentAtom.initializeComponentsIfRequired()
+		this.__isDisableable = false;
+		this.__isEnabled = true;
+        ComponentAtom.initializeComponentsIfRequired();
 	}
 
 	static initializeComponentsIfRequired(){
@@ -135,6 +137,7 @@ export default class ComponentAtom extends Atom {
 			actions.push(new TreeViewAction(
 								'Run', 
 								'run.png',
+								this,
 								treeView,
 								() => this.execute(treeView)
 										  .catch(error => {
@@ -142,6 +145,30 @@ export default class ComponentAtom extends Atom {
 										  })
 							)
 			);
+		}
+        
+        if (this.isDisableable) {        	
+        	if(this.isEnabled){
+        		actions.push(
+        			new TreeViewAction(
+						'Disable', 
+						'disable.png',
+						this,
+						treeView,
+						() => this.disable()								  
+					)
+        		);
+        	} else {
+        		actions.push(
+        			new TreeViewAction(
+						'Enable', 
+						'enable.png',
+						this,
+						treeView,
+						() => this.enable()								 
+					)
+        		);
+        	}			
 		}
 		
 		actions.push(new ActionSeparator());
@@ -183,6 +210,41 @@ export default class ComponentAtom extends Atom {
 			monitor.done();	
 		}		
 		
+	}
+	
+	enable(){
+		this.__isEnabled=true;
+		this.__overlayImage = undefined;
+		if(this.__treeView){
+			this.__treeView.refresh(this);
+		}
+	}
+	
+	disable(){
+		if(!this.__isDisableable){
+			throw new Error('This atom is not disableable');
+		}
+		if(this.__overlayImage){
+			throw new Error('Currently only atoms without overlay image can be disabled. Otherwise the original overlay image would be removed.');
+		}		
+		
+		this.__isEnabled=false;
+		this.__overlayImage = 'disabled.png';
+		if(this.treeView){
+			this.treeView.refresh(this);
+		}
+	}
+	
+	get isEnabled(){
+		return this.__isEnabled;
+	}
+	
+	get isDisableable(){
+		return this.__isDisableable;
+	}
+	
+	set isDisableable(isDisableable){
+		this.__isDisableable = isDisableable;
 	}
 
 	get treeView(){

@@ -5,13 +5,16 @@
  * for the InputFileGenerator.
  */
 import Model from './../model.js';
+import TreeViewAction from './../../core/treeview/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import Variable from './../variable/variable.js';
 import DoubleVariable from './../variable/field/doubleVariable.js';
 import IntegerVariable from './../variable/field/integerVariable.js';
 import FilePathVariable from './../variable/field/filePathVariable.js';
 import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
 import GenericInputCodeAdaption from './genericInputCodeAdaption.js';
+
 
 export default class GenericInput extends Model {
 
@@ -48,41 +51,47 @@ export default class GenericInput extends Model {
 		
 		var sectionContent = this.__section.append('div'); 
 		
-		 this.children.forEach(
-		    		(child)=>child.createVariableControl(sectionContent, dTreez)
-		    );	
+		this.children.forEach(
+			 (child)=>{
+				 if(child.isEnabled){
+					 child.createVariableControl(sectionContent, dTreez);
+				 }
+			 }			    		
+		);	
 	}
-
-	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		var self=this;
 
 		//disable children
-		const hasChildren = this.children && !this.children.length === 0;
+		const hasChildren = this.children && (this.children.length > 0);
 		if (hasChildren) {
-			actions.push(new TreeViewAction(
-					"Disable all variable fields",
-					"disable.png",
+			actions.push(
+				new TreeViewAction(
+					'Disable all variables',
+					'disable.png',
 					treeView,
-					() => self.disableAllVariableFields())
+					() => self.__disableAllVariables()
+				)
             );
 
 			//enable children
-			actions.push(new TreeViewAction(
-					"Enable all variable fields",
-					"enable.png",
-					treeViewer,
-					() => self.enableAllVariableFields())
+			actions.push(
+				new TreeViewAction(
+					'Enable all variables',
+					'enable.png',
+					treeView,
+					() => self.__enableAllVariables()
+				)
             );
 		}
 
 		/*
 		const addQuantityVariable = new AddChildAtomTreeViewAction(
 				QuantityVariable,
-				"quantityVariable",
-				"quantityVariable.png",
+				'quantityVariable',
+				'quantityVariable.png',
 				this,
 				treeViewer);
 		actions.push(addQuantityVariable);
@@ -91,8 +100,8 @@ export default class GenericInput extends Model {
        
 		actions.push(new AddChildAtomTreeViewAction(
 				DoubleVariable,
-				"doubleVariable",
-				"doubleVariable.png",
+				'doubleVariable',
+				'doubleVariable.png',
 				parentSelection,
 				this,
 				treeView));
@@ -101,16 +110,16 @@ export default class GenericInput extends Model {
 
         const addIntegerVariableField = new AddChildAtomTreeViewAction(
 				IntegerVariable,
-				"integerVariable",
-				"integerVariable.png",
+				'integerVariable',
+				'integerVariable.png',
 				this,
 				treeViewer);
 		actions.push(addIntegerVariableField);
 
         const addBooleanVariableField = new AddChildAtomTreeViewAction(
 				BooleanVariable,
-				"booleanVariable",
-				"booleanVariable.png",
+				'booleanVariable',
+				'booleanVariable.png',
 				this,
 				treeViewer);
 		actions.push(addBooleanVariableField);
@@ -120,8 +129,8 @@ export default class GenericInput extends Model {
        
 		actions.push(new AddChildAtomTreeViewAction(
 				StringVariable,
-				"stringVariable",
-				"stringVariable.png",
+				'stringVariable',
+				'stringVariable.png',
 				parentSelection,
 				this,
 				treeView));
@@ -129,8 +138,8 @@ export default class GenericInput extends Model {
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				FilePathVariable,
-				"filePathVariable",
-				"filePathVariable.png",
+				'filePathVariable',
+				'filePathVariable.png',
 				parentSelection,
 				this,
 				treeView));
@@ -138,8 +147,8 @@ export default class GenericInput extends Model {
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				DirectoryPathVariable,
-				"directoryPathVariable",
-				"directoryPathVariable.png",
+				'directoryPathVariable',
+				'directoryPathVariable.png',
 				parentSelection,
 				this,
 				treeView));
@@ -148,8 +157,8 @@ export default class GenericInput extends Model {
 
         const addStringItemVariableField = new AddChildAtomTreeViewAction(
 				StringItemVariable,
-				"stringItemVariable",
-				"stringItemVariable.png",
+				'stringItemVariable',
+				'stringItemVariable.png',
 				this,
 				treeViewer);
 		actions.push(addStringItemVariableField);
@@ -163,34 +172,25 @@ export default class GenericInput extends Model {
 		return actions;
 	}
 
-
-	enableAllVariables() {
+	__enableAllVariables() {
 		this.children.forEach(
 				(child)=>{
 					if (child instanceof Variable) {
-						child.isEnabled = true;
+						child.enable();
 					}
 				}
 		);		
 	}
 
-	disableAllVariables() {
-		(child)=>{
-			if (child instanceof Variable) {
-				child.isEnabled = false;
+	__disableAllVariables() {
+		this.children.forEach(
+			(child)=>{
+				if (child instanceof Variable) {
+					child.disable();
+				}
 			}
-		}
-	}
-
-	getEnabledVariables(){
-		var enabledVariables = [];
-		this.children.forEach((child)=>{
-			if(child.isEnabled){
-				enabledVariables.push(child);
-			}
-		});
-		return enabledVariables;
-	}
+		);
+	}	
 
 	createCodeAdaption() {
 		return new GenericInputCodeAdaption(this);
@@ -239,14 +239,14 @@ export default class GenericInput extends Model {
 	}
 
 	getVariable(variableName) {
-		return this.getAttribute("root.data.data." + variableName);
+		return this.getAttribute('root.data.data.' + variableName);
 	}
 
 	setVariable(variableName, valueString) {
-		this.setAttribute("root.data.data." + variableName, valueString);
+		this.setAttribute('root.data.data.' + variableName, valueString);
 	}
 
-	getVariableFields() {
+	get variables() {
         const variableFields = [];
 		for (const child of this.children) {
 		    if(child instanceof VariableField){
@@ -256,17 +256,14 @@ export default class GenericInput extends Model {
 		return variableFields;
 	}
 
-	getEnabledVariableFields() {
-        const variableFields = [];
-        for (const child of this.children) {
-            if(child instanceof VariableField && child.isEnabled()){
-                variableFields.push(child);
-            }
-        }
-        return variableFields;
+	get enabledVariables(){
+		var enabledVariables = [];
+		this.children.forEach((child)=>{
+			if(child.isEnabled){
+				enabledVariables.push(child);
+			}
+		});
+		return enabledVariables;
 	}
-	
-	
-
 	
 }

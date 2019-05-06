@@ -35,27 +35,14 @@ export default class Atom {
 		this.__helpId = undefined;			
 		this.__isExpanded=true;
 		this.__expandedNodes = [];		
-		this.__isRunnable = false;
+		this.__isRunnable = false;		
 	}	
 	
 	//#region METHODS
 	
 	static create(name, value){
 		return Atom.__createAtom(this, name, value);
-	}
-
-	__initializeProperties(){
-		var propertyNames = Object.getOwnPropertyNames(this);		
-		var publicPropertyNames =  propertyNames.filter((name)=>{
-			return !name.startsWith('__')
-		});
-		
-		//store initial values of treez properties to be able to know if a value 
-		//has been modified from its initial state
-		for(var propertyName of publicPropertyNames){
-			this.__treezProperties[propertyName] = this[propertyName];
-		}		
-	}
+	}	
 
 	copy() {
 		return Atom.__deepCopy(this);		
@@ -135,6 +122,7 @@ export default class Atom {
 		actions.push(new TreeViewAction(
 						'Rename',
 						'rename.png',
+						this,
 						treeView,
 						()=>this.rename())
 					);
@@ -145,6 +133,7 @@ export default class Atom {
 			actions.push(new TreeViewAction(
 							'Move up',
 							'up.png',
+							this,
 							treeView,
 							()=>this.moveUp())
 						);
@@ -156,6 +145,7 @@ export default class Atom {
 			actions.push(new TreeViewAction(
 							'Move down',
 							'down.png',
+							this,
 							treeView,
 							()=>this.moveDown())
 						);
@@ -165,6 +155,7 @@ export default class Atom {
 		actions.push(new TreeViewAction(
 						'Delete',
 						'delete.png',
+						this,
 						treeView,
 						()=>this.delete())
 					);
@@ -469,6 +460,8 @@ export default class Atom {
 		//could not find any child that has the wanted type
 		return false;
 	}
+	
+	
 
 	/**
 	 * Removes all children of this atom
@@ -548,6 +541,19 @@ export default class Atom {
 
 		var fullName = currentNameAndNumber.getFullName();
 		return fullName;
+	}
+	
+	__initializeProperties(){
+		var propertyNames = Object.getOwnPropertyNames(this);		
+		var publicPropertyNames =  propertyNames.filter((name)=>{
+			return !name.startsWith('__')
+		});
+		
+		//store initial values of treez properties to be able to know if a value 
+		//has been modified from its initial state
+		for(var propertyName of publicPropertyNames){
+			this.__treezProperties[propertyName] = this[propertyName];
+		}		
 	}
 
 	/**
