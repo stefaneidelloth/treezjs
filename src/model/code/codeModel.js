@@ -170,7 +170,7 @@ export default class CodeModel extends Model {
 		
 			var sourceModel = this.childFromRoot(this.sourceModelPath);
 			
-			var variables = sourceModel.getEnabledVariables();
+			var variables = sourceModel.enabledVariables;
 			variables.forEach((variable)=>{
 				var variableName = variable.name;
 				var valueString = variable.value;			

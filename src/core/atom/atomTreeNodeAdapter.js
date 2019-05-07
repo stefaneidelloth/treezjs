@@ -16,6 +16,7 @@ export default class AtomTreeNodeAdapter {
 	static createExpandableNodeWithChildren(parentSelection,treeView,atom){
 		var expandableNode = parentSelection.append('details')
 		    					.className('treez-details')
+		    					.attr('id', atom.treePath)
 		    					.title(atom.constructor.name);
 
 		if(atom.isExpanded){
@@ -68,6 +69,7 @@ export default class AtomTreeNodeAdapter {
 	static crateLeafeNode(parentSelection,treeView,atom){
 		var leafNode = parentSelection.append('div')			
 			.className('treez-leaf-node')
+			.attr('id', atom.treePath)
 			.title(atom.constructor.name);
 
 		leafNode.onClick(()=>{
@@ -101,17 +103,17 @@ export default class AtomTreeNodeAdapter {
 			.text(atom.name);		
 	}
 
-	static createContextMenu(summary, parentSelection, atom, treeView){
+	static createContextMenu(selection, parentSelection, atom, treeView){
 		
 		var dTreez = treeView.dTreez;
 
-        var menu = summary.append('div')
+        var menu = selection.append('div')
           	.className('treez-context-menu');          	
 
-        var menuItems = atom.createContextMenuActions(parentSelection, treeView);
+        var menuItems = atom.createContextMenuActions(selection, parentSelection, treeView);
         var self=this;
         menuItems.forEach(function(item){
-        	self.createContextMenuItemOrSeparator(summary, dTreez, menu,item);
+        	self.createContextMenuItemOrSeparator(selection, dTreez, menu,item);
         });
          
 

@@ -110,7 +110,7 @@ export default class Atom {
 		};		
 	}
 
-	createContextMenuActions(parentSelection, treeView) {
+	createContextMenuActions(selection, parentSelection, treeView) {
 
 		if(!treeView){
 			throw Error('treeView is undefined')

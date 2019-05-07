@@ -3,7 +3,8 @@ import Monitor from './../core/monitor/monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import Data from './data/data.js';
-import Page from './page/page.js'
+import Page from './page/page.js';
+import PythonModel from './../model/code/pythonModel.js';
 
 
 export default class Results extends ComponentAtom {
@@ -39,21 +40,38 @@ export default class Results extends ComponentAtom {
 	
 	extendContextMenuActions(actions, parentSelection, treeView) {	
 
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				Data,
 				'data',
 				'data.png',
 				parentSelection,
 				this,
-				treeView));		
+				treeView
+			)
+		);		
 
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				Page,
 				'page',
 				'page.png',
 				parentSelection,
 				this,
-				treeView));		
+				treeView
+			)
+		);	
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				PythonModel,
+				"pythonModel",
+				"python.png",
+				parentSelection,
+				this,
+				treeView
+			)
+		);
 
 		return actions;
 	}
@@ -69,5 +87,9 @@ export default class Results extends ComponentAtom {
 	createPage(name) {
 		return this.createChild(Page, name);		
 	}	
+	
+	createPythonModel(name) {
+		return this.createChild(PythonModel, name);
+	}
 
 }

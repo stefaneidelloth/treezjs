@@ -1,13 +1,13 @@
-import TreeViewAction from "./TreeViewAction.js";
-import Utils from "../utils/utils.js";
+import TreeViewAction from './TreeViewAction.js';
+import Utils from '../utils/utils.js';
 
 export default class AddChildAtomTreeViewAction extends TreeViewAction {
 
     static createLabel(namePrefix) {
-        return "Add " + Utils.firstToUpperCase(namePrefix);
+        return 'Add ' + Utils.firstToUpperCase(namePrefix);
     }
 
-    constructor(atomConstructor, namePrefix, image, parentSelection, parentAtom, treeView) {
+    constructor(atomConstructor, namePrefix, image, grandParentSelection, parentAtom, treeView) {
     	super(AddChildAtomTreeViewAction.createLabel(namePrefix), image, parentAtom, treeView, null);
     	this.overlayImage = 'add_decoration.png';
         var self = this;
@@ -15,12 +15,19 @@ export default class AddChildAtomTreeViewAction extends TreeViewAction {
     		//create child
             parentAtom.createChildWithNamePrefix(atomConstructor, namePrefix);
             
-            parentSelection.selectAll(".treez-details").remove();
-    		parentSelection.selectAll(".treez-leaf-node").remove();
+           //recreate tree node adaption of parent atom to show child
+           var grandParentElement = grandParentSelection.node();
+           var parentElement = grandParentElement.children.namedItem(parentAtom.treePath);
+          
+           var details = parentAtom.createTreeNodeAdaption(grandParentSelection, treeView);           
 
-            //update tree node adaption of parent atom to show child
-            var details = parentAtom.createTreeNodeAdaption(parentSelection, treeView);
-            details.attr("open",true);           
+           var detailsElement = details.node();
+
+		   grandParentElement.insertBefore(detailsElement, parentElement);
+           parentElement.remove();  
+
+           details.attr('open', true);   
+                     
 		}
     }
 

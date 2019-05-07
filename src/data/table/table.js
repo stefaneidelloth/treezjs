@@ -60,7 +60,7 @@ export default class Table extends ComponentAtom {
 		} 		
 	}		
 
-	createContextMenuActions(parentSelection, treeView) {
+	createContextMenuActions(selection, parentSelection, treeView) {
 
         let actions = [];
 

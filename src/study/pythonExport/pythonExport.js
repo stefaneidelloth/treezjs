@@ -8,7 +8,8 @@ export default class PythonExport extends ComponentAtom {
 		this.image = 'pythonExport.png';
 		this.isRunnable=true;	
 
-		this.structureName = 'results';	     
+		this.structureName = 'results';	
+		this.__outcomeNames = {};
         
 	}	
 
@@ -81,7 +82,18 @@ export default class PythonExport extends ComponentAtom {
     		               + "    outcomes = dict()\n"
     		               + "    " + this.structureName + " = (experiments, outcomes)\n";
     		
+    		var key = 'job' + modelInput.jobId;
+    		if(!this.__outcomeNames[key]){
+    			this.__outcomeNames[key] = [];
+    		}
+    		
     		for(var outcomeName of table.headers){
+    			
+    			if(outcomeName in this.__outcomeNames[key]){
+    				console.warn('The outcome column "' + outcomeName + '" already has been written. The data is overridden and the old data is lost.');
+    			} else {
+    				this.__outcomeNames[key].push(outcomeName);
+    			}
     			
     			var columnValues = table.getColumnValues(outcomeName);
     						

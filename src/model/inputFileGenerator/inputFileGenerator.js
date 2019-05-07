@@ -199,7 +199,7 @@ export default class InputFileGenerator extends Model  {
 
 		var resultString = templateString;
 
-		var variables = sourceModel.getEnabledVariables();
+		var variables = sourceModel.enabledVariables;
 		variables.forEach((variable)=>{
 			var variableName = variable.name;
 			var valueString = variable.value;			

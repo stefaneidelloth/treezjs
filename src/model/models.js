@@ -61,7 +61,6 @@ export default class Models extends Model {
 				parentSelection,
 				this,
 				treeView));
-
        
 		actions.push(new AddChildAtomTreeViewAction(
 				Executable,
@@ -120,8 +119,6 @@ export default class Models extends Model {
 	
 	createPythonModel(name) {
 		return this.createChild(PythonModel, name);
-	}
-	
-	
+	}	
 
 }
