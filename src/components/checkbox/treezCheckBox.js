@@ -8,18 +8,7 @@ export default class TreezCheckBox extends LabeledTreezElement {
         this.__checkBox=undefined;   
         this.__label=undefined;                                   
     }
-    
-    convertFromStringValue(stringValue){
-		return !(stringValue === null);
-	}
-	
-	
-	convertToStringValue(booleanValue){
-		return booleanValue
-				?''
-				:null;						
-	}
-	
+        	
 	connectedCallback() {
     	
         if(!this.__checkBox){   
@@ -32,7 +21,8 @@ export default class TreezCheckBox extends LabeledTreezElement {
 			var checkBox = document.createElement('input');                       
 			this.__checkBox = checkBox;
 			checkBox.type='checkBox'	
-			checkBox.className = 'treez-check-box-input';						
+			checkBox.className = 'treez-check-box-input';
+			checkBox.onchange = () => this.__checkBoxChanged();
 			container.appendChild(checkBox); 
 
 			var label = document.createElement('label');
@@ -46,15 +36,27 @@ export default class TreezCheckBox extends LabeledTreezElement {
         this.updateElements(this.value);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
-    }     
-
+    } 
+		
     updateElements(booleanValue){
-    	if(this.__checkBox){                  	                 	                      	
-			if(this.__checkBox.checked !== booleanValue){
-				this.__checkBox.checked = booleanValue;
-			}; 						 
+    	if(this.__checkBox){  
+			this.__checkBox.checked = booleanValue;
     	}
     }	
+    
+    __checkBoxChanged(){
+    	this.value = this.__checkBox.checked;                	
+    }  
+    
+    convertFromStringValue(stringValue){
+		return !(stringValue === null);
+	}
+	
+	convertToStringValue(booleanValue){
+		return booleanValue
+				?''
+				:null;						
+	}
    
     disableElements(booleanValue){
     	if(this.__checkBox){   
@@ -66,21 +68,7 @@ export default class TreezCheckBox extends LabeledTreezElement {
     	if(this.__container){   
     		this.hide(this.__container, booleanValue);                		
     	}
-    }	       	
-
-   //overrides super methode to listen to checked property instead of value property
-    __addListenerToUpdatePropertyOnElementChanges(parent, propertyName){				
-
-		this.addEventListener('input', (event)=>{ 
-			  var oldValue = parent[propertyName];
-			  var newValue = event.target.checked; 
-			  if(newValue != oldValue){
-				parent[propertyName] = newValue;													     
-			  }    	
-		}); 					
-	}            
-
-               
+    }                
               
 }
 

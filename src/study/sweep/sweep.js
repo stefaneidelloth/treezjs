@@ -4,6 +4,12 @@ import SweepModelInputGenerator from './sweepModelInputGenerator.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import DoubleRange from './../range/doubleRange.js';
 import IntegerRange from './../range/integerRange.js';
+import BooleanRange from './../range/booleanRange.js';
+import QuantityRange from './../range/quantityRange.js';
+import StringRange from './../range/stringRange.js';
+import StringItemRange from './../range/stringItemRange.js';
+import FilePathRange from './../range/filePathRange.js';
+import DirectoryPathRange from './../range/directoryPathRange.js';
 
 export default class Sweep extends Study {	
 		
@@ -16,24 +22,14 @@ export default class Sweep extends Study {
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		actions = super.extendContextMenuActions(actions, parentSelection, treeView);
-
-		/*
 	
-		actions.push(new AddChildAtomTreeViewAction(
-				QuantityRange,
-				"quantityRange",
-				"quantityRange.png",
-				parentSelection,
-				this,
-				treeView));
-		*/
 		
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				DoubleRange,
-				"doubleRange",
-				"doubleRange.png",
+				'doubleRange',
+				'doubleRange.png',
 				parentSelection,
 				this,
 				treeView
@@ -43,80 +39,103 @@ export default class Sweep extends Study {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				IntegerRange,
-				"integerrange",
-				"integerrange.png",
+				'integerrange',
+				'integerrange.png',
 				parentSelection,
 				this,
 				treeView
 			)
 		);
-
-		/*
 		
-		const addBooleanRange = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				QuantityRange,
+				'quantityRange',
+				'quantityRange.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);	
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				BooleanRange,
-				"booleanRange",
-				"booleanRange.png",
+				'booleanRange',
+				'booleanRange.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addBooleanRange);
+				treeView
+			)
+		);		
 		
-		const addStringRange = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				StringRange,
-				"stringRange",
-				"stringRange.png",
+				'stringRange',
+				'stringRange.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addStringRange);
-
-		const addStringItemRange = new AddChildAtomTreeViewAction(
+				treeView
+			)
+		);		
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				StringItemRange,
-				"stringItemRange",
-				"stringItemRange.png",
+				'stringItemRange',
+				'stringItemRange.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addStringItemRange);
+				treeView
+			)
+		);		
 		
-		const addFilePathRange = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				FilePathRange,
-				"filePathRange",
-				"filePathRange.png",
+				'filePathRange',
+				'filePathRange.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addFilePathRange);
+				treeView
+			)
+		);		
 		
-		const addDirectoryPathRange = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				DirectoryPathRange,
-				"directoryPathRange",
-				"directoryPathRange.png",
+				'directoryPathRange',
+				'directoryPathRange.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addDirectoryPathRange);
+				treeView
+			)
+		);	
 		
-		const addStudyInfoExport = new AddChildAtomTreeViewAction(
+/*
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				StudyInfoExport,
-				"studyInfoExport",
-				"studyInfoExport.png",
+				'studyInfoExport',
+				'studyInfoExport.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addStudyInfoExport);
-
-		*/		
+				treeView
+			)
+		);		
+		
+		 */
+		
+		
 
 		return actions;
 	}
 	
 	createStudyOutputAtom(name){
 		return new SweepOutput(name);
-	}
-
-	
+	}	
 
 	createDoubleRange(name, values) {
 		return this.createChild(DoubleRange, name, values);		

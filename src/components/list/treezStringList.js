@@ -2,63 +2,30 @@ import TreezElement from './../treezElement.js';
 
 export default class TreezStringList extends TreezElement {
 
-	static get observedAttributes() {
+    constructor(){
+        super();                     
+        this.__labelElement=undefined; 
+        this.__table=undefined; 
+        this.__tableBody=undefined;
+        this.__selectedRowIndex=undefined;
+        this.__lastSelectedRowIndex=undefined;       
+    } 
+    
+    static get observedAttributes() {
 		return TreezElement.observedAttributes.concat(['label']);                    
     }
 
-    get label() {
-	  return this.getAttribute('label');
-	}
-
-	set label(newValue) {
-	  this.setAttribute('label', newValue);	
-	}  
-	
-	get value(){
-		return this.values.join(',');
-	}
-
-	set value(newValue) {
-
-		if(newValue === undefined){
-			throw new Error("Value for color must not be undefined!");
-		}
-		
-		this.values=newValue.split(',');
-		this.__recreateTableRows();	
-	}  			
-
-    constructor(){
-        super();                     
-        this.labelElement=undefined; 
-        this.table=undefined; 
-        this.tableBody=undefined;
-        this.selectedRowIndex=undefined;
-        this.lastSelectedRowIndex=undefined;
-        this.values=[];
-    }  
-
-    attributeChangedCallback(attr, oldValue, newValue) {
-    	super.attributeChangedCallback(attr, oldValue, newValue) 
-        if(attr==='label'){
-        	if(this.labelElement){
-        		 this.labelElement.innerText= newValue;   
-        	}                                           
-        } 					
-		
-    }  
-
-     connectedCallback() {
+    connectedCallback() {
     	var self = this;
 
-        if(!self.table){   
+        if(!self.__table){   
 
 			var container = document.createElement('div');  
 			container.setAttribute("class","treez-string-list-container");
 			self.appendChild(container);      
 
 			var labelElement = document.createElement('label');
-			this.labelElement = labelElement;
+			this.__labelElement = labelElement;
 			labelElement.className = 'treez-list-label'
 			labelElement.innerText = self.label;                                            
 			container.appendChild(labelElement); 
@@ -67,53 +34,77 @@ export default class TreezStringList extends TreezElement {
 
 			var table = document.createElement('table'); 
 			table.className = 'treez-list-table';
-			self.table = table;		
+			self.__table = table;		
 			container.appendChild(table); 
 
 			var tableBody = document.createElement('tbody')
-			this.tableBody = tableBody;
+			this.__tableBody = tableBody;
 			table.appendChild(tableBody);
 			
 			this.__recreateTableRows();						                                       
                                                   		
         }
-    }  		
+    }     	
 
-    updateElements(newValue){   
-    	this.values = newValue.split(',');
-    	if(this.table){
+    updateElements(stringArray){ 
+    	if(this.__table){
     		this.__recreateTableRows();
     	} 		    
-    }                   
-                
-    
-    __addRow(){
-    	if(this.lastSelectedRowIndex===undefined){
-    		this.__appendNewRow();
-    	} else {
-    		this.__duplicateRow(this.lastSelectedRowIndex);
-    	} 
-    	               	
-    }
-
-    __appendNewRow(){
-    	this.values.push(""); 
-    	this.__recreateTableRows();
-    	this.__selectRow(this.values.length-1);
-    }
+    } 
     
     __cellChanged(event){
     	let cell = event.currentTarget;
     	let newValue = cell.innerText;
-    	let rowIndex = cell.parentElement.rowIndex;                	
-    	this.values[rowIndex]=newValue;                	 
+    	let rowIndex = cell.parentElement.rowIndex;  
+
+    	var cursorPosition = window.getSelection().getRangeAt(0).startOffset; 	
+
+    	var valueArray = this.values;                	
+    	valueArray[rowIndex] = newValue;
+    	this.value = valueArray;
+    	
+    	this.__focusCell(rowIndex, cursorPosition);
+    }
+    
+    __focusCell(rowIndex, cursorPosition){
+    	var row = this.__tableBody.children[rowIndex];
+    	var cell = row.children[0];    	
+    	cell.focus();    	
+		var selection = window.getSelection();
+		selection.collapse(cell.lastChild, cursorPosition);
+    }
+    
+    convertFromStringValue(arrayString){
+		if(arrayString === undefined){
+			throw new Error('Array string must not be undefined!');
+		}		
+		return eval(arrayString);
+	}
+
+	convertToStringValue(stringArray){
+		return "['" + stringArray.join("','") + "']";
+	}                
+    
+    __addRow(){
+    	if(this.__lastSelectedRowIndex === undefined){
+    		this.__appendNewRow();
+    	} else {
+    		this.__duplicateRow(this.__lastSelectedRowIndex);
+    	}     	               	
     }
 
+    __appendNewRow(){
+    	var valueArray = this.values;
+    	valueArray.push('');
+    	this.value = valueArray;    	
+    	
+    	this.__recreateTableRows();
+    	this.__selectRow(this.values.length-1);
+    }    
+
      __cellLostFocus(event){ 
-    	this.selectedRowIndex=undefined;
+    	this.__selectedRowIndex=undefined;
     } 
-     
-    
 
     __createButtons(container){
     	let buttonContainer = document.createElement('div');
@@ -139,9 +130,13 @@ export default class TreezStringList extends TreezElement {
 		button.className = 'treez-list-button';
 		button.title = title;
 		
+		var urlPrefix = window.treezConfig
+			?window.treezConfig.home
+			:'';
+		
 		let image = document.createElement('img');
 		button.appendChild(image);
-		image.src = name + '.png';					
+		image.src = urlPrefix + '/icons/' + name + '.png';					
 		
 		return button;
     }
@@ -149,7 +144,7 @@ export default class TreezStringList extends TreezElement {
     __createRow(value){
     	var row = document.createElement('tr');
     	row.className = 'treez-list-tr'
-    	this.tableBody.appendChild(row);                	
+    	this.__tableBody.appendChild(row);                	
     	
     	row.onclick = (event)=>this.__rowClicked(event);
     	
@@ -157,14 +152,22 @@ export default class TreezStringList extends TreezElement {
     	cell.className = 'treez-list-td'
     	row.appendChild(cell);
     	
-    	cell.contentEditable=true;
+    	cell.contentEditable = true;
     	row.tabIndex=row.rowIndex;
     	cell.onkeyup = (event)=>this.__cellChanged(event);
     	cell.onblur = (event)=>this.__cellLostFocus(event);                	
     	                	
     	if(value){
-    		cell.innerText=value;
+    		this.setCellValue(cell, value);    		
     	}
+    }
+    
+    getCellValue(cell){
+    	return cell.innerText;
+    }
+    
+    setCellValue(cell, value){
+    	cell.innerText = value;
     }
     
 	__deleteRow(){
@@ -173,12 +176,14 @@ export default class TreezStringList extends TreezElement {
 			return;
 		} 					
 		
-		let indexOfRowToDelete = this.lastSelectedRowIndex; 					
+		let indexOfRowToDelete = this.__lastSelectedRowIndex; 					
 		if(indexOfRowToDelete === undefined){						
 			indexOfRowToDelete=0; 						
 		}
 		
-		this.values.splice(indexOfRowToDelete,1);	
+		var valueArray = this.values
+		valueArray.splice(indexOfRowToDelete,1);
+		this.value = valueArray;	
 
 		this.__recreateTableRows(); 					 
 
@@ -186,25 +191,28 @@ export default class TreezStringList extends TreezElement {
     }
 
      __deleteRows(){
-    	var body = this.tableBody;  
+    	var body = this.__tableBody;  
 		while (body.hasChildNodes()) {
 			body.removeChild(body.lastChild);
 		}
     }
 
     __duplicateRow(index){
-    	let oldRow = this.tableBody.children[index];
-    	let oldValue = oldRow.children[0].innerText;
+    	let oldRow = this.__tableBody.children[index];
+    	let oldValue = this.getCellValue(oldRow.children[0]);
 
-    	let currentValues = this.values;
-    	currentValues.splice(index,0, oldValue);
+    	let valueArray = this.values;
+    	valueArray.splice(index,0, oldValue);
+    	this.value = valueArray;
     	
     	this.__recreateTableRows();
     	this.__selectRow(index+1);
     }
+
+   
 	
 	__moveCurrentRowUp(){
-    	let index = this.lastSelectedRowIndex;
+    	let index = this.__lastSelectedRowIndex;
     	if(index){
     		this.__moveRowUp(index);
     	} else {
@@ -213,7 +221,7 @@ export default class TreezStringList extends TreezElement {
     }               
 	
 	__moveCurrentRowDown(){
-    	let index = this.lastSelectedRowIndex;
+    	let index = this.__lastSelectedRowIndex;
     	if(index){
     		this.__moveRowDown(index);
     	} else {
@@ -222,20 +230,22 @@ export default class TreezStringList extends TreezElement {
     }
 
     __moveRowUp(index){
-    	var values = this.values;
-    	if(values.length<2){
+    	var valueArray = this.values;
+    	if(valueArray.length<2){
     		return;
     	}
 
-    	var valueToMove = values[index];
+    	var valueToMove = valueArray[index];
 
-    	values.splice(index,1);
+    	valueArray.splice(index,1);
 
         var newIndex= index-1;
         if(newIndex < 0){
-        	newIndex = values.length;
+        	newIndex = valueArray.length;
         }
-		values.splice(newIndex,0,valueToMove);  
+		valueArray.splice(newIndex,0,valueToMove);
+
+		this.value = valueArray;  
 
 		this.__recreateTableRows(); 		                 
       
@@ -244,20 +254,21 @@ export default class TreezStringList extends TreezElement {
     }
 
     __moveRowDown(index){
-    	var values = this.values;
-    	if(values.length<2){
+    	var valueArray = this.values;
+    	if(valueArray.length<2){
     		return;
     	}
 
-    	var valueToMove = values[index];
+    	var valueToMove = valueArray[index];
 
-    	values.splice(index,1);
+    	valueArray.splice(index,1);
 
         var newIndex= index+1;
-        if(newIndex > values.length){
+        if(newIndex > valueArray.length){
         	newIndex = 0;
         }
-		values.splice(newIndex,0,valueToMove);  
+		valueArray.splice(newIndex,0,valueToMove);  
+		this.value = valueArray;
 
 		this.__recreateTableRows(); 		                 
        
@@ -273,19 +284,19 @@ export default class TreezStringList extends TreezElement {
     } 
 
     __rowCanBeDeleted(){
-    	return this.values.length>0; 					
+    	return this.values.length > 0; 					
 	} 				
 
     __rowClicked(event){  
         let rowIndex = event.currentTarget.rowIndex;            	 
-    	this.selectedRowIndex = rowIndex;
-    	this.lastSelectedRowIndex=rowIndex;                	
+    	this.__selectedRowIndex = rowIndex;
+    	this.__lastSelectedRowIndex = rowIndex;                	
     } 
 
     __selectRow(index){
-		this.selectedRowIndex = index;
-		this.lastSelectedRowIndex=index;   
-		let rowToSelect = this.tableBody.children[index]; 					
+		this.__selectedRowIndex = index;
+		this.__lastSelectedRowIndex = index;   
+		let rowToSelect = this.__tableBody.children[index]; 					
 		let cellToSelect = rowToSelect.children[0];
 		cellToSelect.focus(); 					
 	}
@@ -299,9 +310,31 @@ export default class TreezStringList extends TreezElement {
 				this.__selectRow(newIndex);	 						
 			}
 		} else {
-			this.selectedRowIndex=undefined;
+			this.__selectedRowIndex = undefined;
 		}
-	}                                 
+	} 
+	
+	attributeChangedCallback(attr, oldValue, newValue) {
+    	super.attributeChangedCallback(attr, oldValue, newValue) 
+        if(attr==='label'){
+        	if(this.labelElement){
+        		 this.labelElement.innerText= newValue;   
+        	}                                           
+        } 					
+		
+    } 	
+	
+	get label() {
+	  return this.getAttribute('label');
+	}
+
+	set label(newValue) {
+	  this.setAttribute('label', newValue);	
+	}
+	
+	get values(){
+		return this.value;
+	}
                            
 }
 

@@ -36,6 +36,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			comboBox.tabIndex=0; //required for onblur event to work
 			comboBox.onblur = () => this.__collapseComboBox();
 			
+			
 			var comboBoxDisplay = document.createElement('div');
 			comboBoxDisplay.setAttribute('class','treez-image-combo-box-display');	
 			comboBox.appendChild(comboBoxDisplay);
@@ -79,10 +80,13 @@ export default class TreezImageComboBox extends TreezComboBox {
 
     updateElements(newValue){                 	
     	if(this.__imageLabel){                    	
-			this.__updateImageLabel(); 
-			this.dispatchInputEvent();
+			this.__updateImageLabel(); 			
     	}					    
     } 
+    
+    __comboBoxChanged(option){
+    	this.value = option;    		
+    }
    
     disableElements(booleanValue){
     	if(this.__comboButton){                   		
@@ -163,11 +167,10 @@ export default class TreezImageComboBox extends TreezComboBox {
 			if(option){
 				let optionImageUrl = this.__nameToImageUrl(option);
 		 		optionImage.src=optionImageUrl;	
-			}
-		 					 	
+			}		 					 	
 
 		 	optionElement.onclick = ()=>{
-		 		self.setAttribute('value', option);
+		 		this.__comboBoxChanged(option);		 		
 		 		self.__collapseComboBox();
 		 	};
 		   

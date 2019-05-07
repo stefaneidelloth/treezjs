@@ -7,7 +7,7 @@ export default class TreezFont extends TreezComboBox {
     } 
 
     connectedCallback() {
-    	 this.options=this.getAvailableFonts();
+    	this.options=this.getAvailableFonts();
     	super.connectedCallback();
     }
     

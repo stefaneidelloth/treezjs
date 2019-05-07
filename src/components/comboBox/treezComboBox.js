@@ -2,50 +2,16 @@ import LabeledTreezElement from './../labeledTreezElement.js';
 
 export default class TreezComboBox extends LabeledTreezElement {
 
-	static get observedAttributes() {
-		return LabeledTreezElement.observedAttributes.concat(['options']);                    
-    }              
-
-	get options() {
-	  return this.getAttribute('options');
-	}
-
-	set options(newValue) {
-	  this.setAttribute('options', newValue);	
-	} 
-
-	get value(){
-		return super.value;
-	} 	
-
-	set value(newValue) {
-
-		if(newValue === undefined){
-			throw new Error("Value for combo box must not be undefined!");
-		}		
-		
-		let stringValue = newValue.toString();
-
-		var options = this.getAttribute('options');
-		if(options){
-			var optionEntries = options.split(',');
-			if (optionEntries.indexOf(stringValue) > -1){
-				this.setAttribute('value', stringValue);	
-			} else {
-				throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
-			}   
-		} else {
-			this.setAttribute('value', stringValue);
-		}		
-
-	}  			
-
     constructor(){
         super(); 
         this.__container = undefined;
         this.__comboBox = undefined;   
         this.__label = undefined;                         
-    }            	
+    }  
+    
+    static get observedAttributes() {
+		return LabeledTreezElement.observedAttributes.concat(['options']);                    
+    } 
 
     connectedCallback() {
     
@@ -65,7 +31,7 @@ export default class TreezComboBox extends LabeledTreezElement {
 			var comboBox = document.createElement('select');                       
 			this.__comboBox = comboBox;	
 			comboBox.className = 'treez-combo-box-select';
-			comboBox.onchange = (event)=>this.__comboBoxChanged(event);                                              
+			comboBox.onchange = () => this.__comboBoxChanged();                                              
 			container.appendChild(comboBox); 
 			
 			if(this.getAttribute('options')){
@@ -82,7 +48,13 @@ export default class TreezComboBox extends LabeledTreezElement {
     	if(this.__comboBox){                    	
 			this.__comboBox.value= '' + newValue; 
     	}	
-    }	
+    }
+    
+    __comboBoxChanged(){
+	    let index = this.__comboBox.selectedIndex;	
+	    let newInputValue = this.__comboBox.options[index].value; 				   	
+    	this.value =  this.convertFromStringValue(newInputValue);    	
+    } 
    
     disableElements(booleanValue){
     	if(this.__comboBox){   
@@ -94,13 +66,7 @@ export default class TreezComboBox extends LabeledTreezElement {
     	if(this.__container){   
     		this.hide(this.__container, booleanValue);                		
     	}
-    }	
-
-    __comboBoxChanged(event){
-	    let index = this.__comboBox.selectedIndex;	
-	    let newInputValue = this.__comboBox.options[index].value; 				   	
-    	this.value =  this.convertFromStringValue(newInputValue);    	
-    } 
+    }    
 
 	__recreateOptionTags(){
 	    var comboBox = this.__comboBox;
@@ -141,8 +107,40 @@ export default class TreezComboBox extends LabeledTreezElement {
         		 this.__recreateOptionTags();
         	}                                           
         } 
-    }  
+    }
+    
+  	get value(){
+  		return super.value;
+  	} 	
 
+  	set value(newValue) {
+
+  		if(newValue === undefined){
+  			throw new Error("Value for combo box must not be undefined!");
+  		}		
+  		
+  		let stringValue = newValue.toString();
+
+  		var options = this.getAttribute('options');
+  		if(options){
+  			var optionEntries = options.split(',');
+  			if (optionEntries.indexOf(stringValue) > -1){
+  				this.setAttribute('value', stringValue);	
+  			} else {
+  				throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
+  			}   
+  		} else {
+  			this.setAttribute('value', stringValue);
+  		}
+  	}  
+  	
+  	get options() {
+  		return this.getAttribute('options');
+    }
+
+    set options(newValue) {
+    	this.setAttribute('options', newValue);	
+    } 
                             
 }
 

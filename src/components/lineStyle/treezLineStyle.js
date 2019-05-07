@@ -2,8 +2,16 @@ import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
 import LineStyle from './lineStyle.js';
 
 export default class TreezLineStyle extends TreezImageComboBox {  
-            	
-	get value() {
+    	
+    constructor(){
+        super();                    
+    }  
+    
+    beforeConnectedCallbackHook(){
+    	 this.options=LineStyle.names;
+	}
+    
+    get value() {
 		 let stringValue = this.getAttribute('value');
 		 try{
 		 	return LineStyle.forName(stringValue);
@@ -14,15 +22,7 @@ export default class TreezLineStyle extends TreezImageComboBox {
 	
 	set value(lineStyle) {
 		super.value = lineStyle;	
-	}  		
-	
-    constructor(){
-        super();                    
-    }  
-    
-    beforeConnectedCallbackHook(){
-    	 this.options=LineStyle.names;
-	}
+	}  	
                          
 }
 

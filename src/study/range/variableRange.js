@@ -6,19 +6,17 @@ import VariableRangeCodeAdaption from './variableRangeCodeAdaption.js';
 
 export default class VariableRange extends ComponentAtom {
 
-
-	get values(){
-		return eval(this.rangeString);
-	}
-
-	set values(array){
-		this.rangeString = '[' + array + ']';		
-	}
 	
 	constructor(name, values) {
 		super(name);
-		this.rangeString = undefined;
-		this.values = values;
+		this.__rangeString = undefined;
+		
+		if(values){
+			this.values = values;
+		} else {
+			this.values = [];
+		}
+				
 		this.isDisableable = true;		
 		this.variablePath = undefined;
 		this.columnType = ColumnType.string;		
@@ -27,6 +25,14 @@ export default class VariableRange extends ComponentAtom {
 	createComponentControl(tabFolder){    
 		
 	}	
+	
+	get values(){
+		return eval(this.__rangeString);
+	}
+
+	set values(array){
+		this.__rangeString = '[' + array + ']';		
+	}
 	
 	getSourceModelPath(){
 		var study = this.parent;

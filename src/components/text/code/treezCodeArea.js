@@ -14,21 +14,12 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
 		Treez.importScript('/bower_components/codemirror/lib/codemirror.js');
 		Treez.importScript('/bower_components/codemirror/mode/sql/sql.js');
-        
-                              
+                                      
     }   
 
     static get observedAttributes() {
 		return LabeledTreezElement.observedAttributes.concat(['mode']);                    
-    } 
-
-	get mode() {
-		 return this.getAttribute('mode');
-	}
-
-	set mode(newValue) {
-		 this.setAttribute('mode', newValue);	
-	}          	
+    } 	   	
 
     connectedCallback() {    	
 
@@ -59,40 +50,14 @@ export default class TreezCodeArea extends LabeledTreezElement {
             );            
             
             this.__codeMirror.on('change', function(codeMirror, change){ 
-               var newValue = codeMirror.getValue();
-               self.value = newValue
-
-			   for(var listener of self.__listeners){
-					listener.atom[listener.propertyName] = newValue;
-			   } 
-
-			   self.__dispatchChangeEvent();
-                             
+               var newValue = codeMirror.getValue();               
+               self.value = newValue; 
             });
         }        
       
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
-    }
-
-    __dispatchChangeEvent(){
-    	var event = new Event(
-							  'change', 
-							  {
-								'bubbles': true,
-								'cancelable': true
-							  }
-							 );
-		this.dispatchEvent(event);
-    }
-
-    __addListenerToUpdatePropertyOnElementChanges(parentAtom, propertyName){	
-
-    	this.__listeners.push({
-    		atom: parentAtom,
-    		propertyName: propertyName
-    	})						
-	}    
+    }    
     
     updateElements(newValue){
     	if(this.__codeMirror){ 
@@ -123,7 +88,15 @@ export default class TreezCodeArea extends LabeledTreezElement {
         		 this.__codeMirror.setOption('mode', newStringValue);  
         	}                                           
         }	                   
-    }   
+    }  
+    
+    get mode() {
+		 return this.getAttribute('mode');
+	}
+
+	set mode(newValue) {
+		 this.setAttribute('mode', newValue);	
+	}       
                               
 }
 

@@ -15,7 +15,7 @@ export default class ColumnType extends Enum {
 if(window.ColumnType){
 	ColumnType = window.ColumnType;
 } else {
-	ColumnType.integer = new ColumnType('number', Number);
+	ColumnType.integer = new ColumnType('integer', Number);
 	ColumnType.double = new ColumnType('double', Number);
 	ColumnType.string = new ColumnType('string', String);
 	

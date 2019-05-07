@@ -1,13 +1,12 @@
 import VariableRange from './variableRange.js';
-import DoubleVariable from './../../model/variable/field/doubleVariable.js';
-import ColumnType from './../../data/column/columnType.js';
+import FilePathVariable from './../../model/variable/field/filePathVariable.js';
 
-export default class DoubleRange extends VariableRange {
+export default class FilePathRange extends VariableRange {
 
 	constructor(name, values) {
 		super(name, values);
-		this.image = 'doubleRange.png';		
-		this.columnType = ColumnType.double;		
+		this.image = 'filePathRange.png';
+		this.directoryList = [];
 	}
 
 	createComponentControl(tabFolder){    
@@ -22,13 +21,14 @@ export default class DoubleRange extends VariableRange {
 	    
 	    sectionContent.append('treez-model-path')
 	    	.label('Variable path')
-        	.nodeAttr('atomClasses', [DoubleVariable])
+        	.nodeAttr('atomClasses', [FilePathVariable])
         	.bindValue(this, ()=>this.variablePath);	   
 	    
-	    sectionContent.append('treez-text-field')
+	    sectionContent.append('treez-file-path-list')
 	    	.label('Range')
-	    	.bindValue(this, ()=>this.__rangeString);	  
-				
+	    	.bindValue(this, ()=>this.directoryList);	 
+	    
+	   				
     }	
 
 }

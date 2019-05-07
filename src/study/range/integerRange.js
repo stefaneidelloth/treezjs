@@ -19,22 +19,20 @@ export default class IntegerRange extends VariableRange {
         	.label('Data');   
 
 	    const sectionContent = section.append('div'); 
+
+	    //TODO apply source model path of study as origin and use
+	    //relative model paths for variable
 	    
 	    sectionContent.append('treez-model-path')
 	    	.label('Variable path')
         	.nodeAttr('atomClasses', [IntegerVariable])
         	.bindValue(this, ()=>this.variablePath);
-
-	    //TODO apply source model path as origin and use
-	    //relative model paths
-	    
+	    	    
 	    sectionContent.append('treez-text-field')
 	    	.label('Range')
-	    	.bindValue(this, ()=>this.rangeString);	 
+	    	.bindValue(this, ()=>this.__rangeString);	 
 	    
-	    sectionContent.append('treez-check-box')
-	    	.label('Enable')
-	    	.bindValue(this, ()=>this.isEnabled);
+	    
 				
     }	
 

@@ -2,8 +2,16 @@ import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
 import FillStyle from './fillStyle.js';
 
 export default class TreezFillStyle extends TreezImageComboBox {  
-            	
-	get value() {
+    	
+    constructor(){
+        super();                    
+    } 
+
+    beforeConnectedCallbackHook(){
+    	 this.options=FillStyle.names;
+	} 
+    
+    get value() {
 		 let stringValue = this.getAttribute('value');
 		 try{
 		 	return FillStyle.forName(stringValue);
@@ -14,15 +22,7 @@ export default class TreezFillStyle extends TreezImageComboBox {
 	
 	set value(fillStyle) {
 		super.value = fillStyle;	
-	}  		
-	
-    constructor(){
-        super();                    
-    } 
-
-    beforeConnectedCallbackHook(){
-    	 this.options=FillStyle.names;
-	} 
+	}  
                          
 }
 

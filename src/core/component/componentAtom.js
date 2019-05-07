@@ -40,6 +40,7 @@ import TreezModelPath from './../../components/modelPath/treezModelPath.js';
 import TreezSection from './../../components/section/treezSection.js';
 import TreezSize from './../../components/size/treezSize.js';  
 import TreezStringList from './../../components/list/treezStringList.js';
+import TreezStringItemList from './../../components/list/treezStringItemList.js';
 
 import TreezSymbolStyle from './../../components/symbolStyle/treezSymbolStyle.js';
 import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;

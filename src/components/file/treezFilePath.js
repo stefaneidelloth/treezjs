@@ -76,6 +76,10 @@ export default class TreezFilePath extends LabeledTreezElement {
             }											
 		}					    
     }    
+    
+    __textFieldChanged(){
+    	this.value = this.__textField.value;                	             	
+    }
    
     disableElements(booleanValue){
     	if(this.__textField){   
@@ -95,14 +99,10 @@ export default class TreezFilePath extends LabeledTreezElement {
     __execute(){
     	var command = this.__textField.value;
     	window.treezTerminal.execute(command, undefined, console.error);                     
-    }
-
-    __textFieldChanged(){
-    	this.value = this.__textField.value;                	             	
-    }
+    }  
 
     __browseFilePath(){    
-       window.treezTerminal.browseFilePath(this.getDirectory()).then((filePath)=>{
+       window.treezTerminal.browseFilePath(this.directory).then((filePath)=>{
        	 if(filePath){
 			var oldValue = this.value;
 			this.value = filePath;
@@ -113,7 +113,7 @@ export default class TreezFilePath extends LabeledTreezElement {
         
     }
     
-    getDirectory(){
+    get directory(){
        var fullPath = this.__textField.value;
        if(!fullPath){
        		return null;
@@ -127,17 +127,6 @@ export default class TreezFilePath extends LabeledTreezElement {
        var itemArray = items.slice(0, items.length-1);
        return itemArray.join('/');
        
-    }
-
-    updateElements(newValue){
-    	if(this.__textField){ 
-    		if(newValue !== undefined){
-            	this.__textField.value = newValue; 
-            } else {
-            	this.__textField.value = '';
-            }
-			
-		}					    
     }       
    
 }

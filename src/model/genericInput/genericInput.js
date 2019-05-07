@@ -16,6 +16,7 @@ import BooleanVariable from './../variable/field/booleanVariable.js';
 import FilePathVariable from './../variable/field/filePathVariable.js';
 import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
 import StringVariable from './../variable/field/stringVariable.js';
+import StringItemVariable from './../variable/field/stringItemVariable.js';
 import GenericInputCodeAdaption from './genericInputCodeAdaption.js';
 
 
@@ -26,9 +27,7 @@ export default class GenericInput extends Model {
 		this.image = 'genericInput.png';
 		
 		this.__section = undefined;
-	}
-
-	
+	}	
 	
 	createComponentControl(tabFolder){    
 	     
@@ -91,18 +90,7 @@ export default class GenericInput extends Model {
 		}
 		
 		actions.push(new ActionSeparator());
-		
-		actions.push(
-			new AddChildAtomTreeViewAction(
-				QuantityVariable,
-				'quantityVariable',
-				'quantityVariable.png',
-				parentSelection,
-				this,
-				treeView
-			)
-		);
-       
+				       
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				DoubleVariable,
@@ -119,6 +107,17 @@ export default class GenericInput extends Model {
 				IntegerVariable,
 				'integerVariable',
 				'integerVariable.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				QuantityVariable,
+				'quantityVariable',
+				'quantityVariable.png',
 				parentSelection,
 				this,
 				treeView
@@ -145,7 +144,18 @@ export default class GenericInput extends Model {
 				this,
 				treeView
 			)
-		);		
+		);			
+	      
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				StringItemVariable,
+				'stringItemVariable',
+				'stringItemVariable.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		); 		
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -169,19 +179,7 @@ export default class GenericInput extends Model {
 			)
 		);
 		
-		/*
-      
-		actions.push(
-			new AddChildAtomTreeViewAction(
-				StringItemVariable,
-				'stringItemVariable',
-				'stringItemVariable.png',
-				this,
-				treeViewer
-			)
-		);       
 		
-		*/
 
 		return actions;
 	}

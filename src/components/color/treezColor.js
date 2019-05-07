@@ -2,22 +2,6 @@ import LabeledTreezElement from './../labeledTreezElement.js';
 import Color from './color.js';
 
 export default class TreezColor extends LabeledTreezElement {
-            		
-	get value() {
-	  var stringValue = this.getAttribute('value');
-	  return this.convertFromStringValue(stringValue);
-	}
-
-	set value(value) {
-		
-	  var colorHexString;
-	  if(value instanceof Color){
-		colorHexString = this.convertToStringValue(value);
-	  }	else {
-		colorHexString = this.__getColorHexString(value);
-	  } 
-	  this.setAttribute('value', colorHexString);  				  
-	}			 			
 
     constructor(){
         super();
@@ -25,20 +9,7 @@ export default class TreezColor extends LabeledTreezElement {
         this.__label=undefined; 
         this.__colorPicker=undefined;  
     }
-    
-    convertFromStringValue(colorHexString){
-    	var color;
-    	try{
-    		return Color.forHexString(colorHexString);
-    	} catch (error){
-    		return new Color('custom', colorHexString);
-    	}                	
-    }
-
-    convertToStringValue(color){
-    	return color.hexString;                	
-    }
-    
+            
     connectedCallback() {
     	
         if(!this.__colorPicker){   
@@ -59,6 +30,7 @@ export default class TreezColor extends LabeledTreezElement {
 			container.appendChild(colorPicker); 
 			colorPicker.className = 'treez-color-input';
 			colorPicker.type='color';  
+			colorPicker.onchange = () => this.__colorChanged();
 			          		
         }
         
@@ -72,7 +44,24 @@ export default class TreezColor extends LabeledTreezElement {
 			this.__colorPicker.value= color.hexString; 
 			this.__colorPicker.title = color.hexString;
     	}
-    }	
+    }
+    
+    __colorChanged(){
+    	this.value = this.convertFromStringValue(this.__colorPicker.value);
+    }
+    
+    convertFromStringValue(colorHexString){
+    	var color;
+    	try{
+    		return Color.forHexString(colorHexString);
+    	} catch (error){
+    		return new Color('custom', colorHexString);
+    	}                	
+    }
+
+    convertToStringValue(color){
+    	return color.hexString;                	
+    }
    
     disableElements(booleanValue){
     	if(this.__colorPicker){   
@@ -99,6 +88,20 @@ export default class TreezColor extends LabeledTreezElement {
     	}                	
     	
     	throw new Error('Unknown color value ' + value);                	
-    }                         
+    }  
+    
+    get value() {
+      return super.value;  	  
+  	}
+
+  	set value(value) {
+  	  var colorHexString;
+  	  if(value instanceof Color){
+  		colorHexString = this.convertToStringValue(value);
+  	  }	else {
+  		colorHexString = this.__getColorHexString(value);
+  	  } 
+  	  this.setAttribute('value', colorHexString);  				  
+  	}	
 }
 window.customElements.define('treez-color', TreezColor);        

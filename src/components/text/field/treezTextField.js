@@ -22,7 +22,7 @@ export default class TreezTextField extends LabeledTreezElement {
             this.__textField = textField;
             this.appendChild(textField); 
             textField.setAttribute('class','treez-text-field')                
-            textField.onchange = ()=>this.__textFieldChanged();
+            textField.onchange = () => this.__textFieldChanged();
         }
 
         if(!this.width){
@@ -39,6 +39,10 @@ export default class TreezTextField extends LabeledTreezElement {
 			this.__textField.value= newValue; 
     	}					    
     }
+    
+    __textFieldChanged(){
+    	this.value = this.__textField.value;                	
+    }  
 
     updateWidth(width){
     	if(this.__textField){ 
@@ -57,11 +61,7 @@ export default class TreezTextField extends LabeledTreezElement {
     		this.hide(this.__label, booleanValue);
     		this.hide(this.__textField, booleanValue); 
     	}
-    }	  
-
-    __textFieldChanged(){
-    	this.value = this.__textField.value;                	
-    }  
+    }    
                           
 }
 

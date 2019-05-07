@@ -1,50 +1,7 @@
 import LabeledTreezElement from './../labeledTreezElement.js';
        
 export default class TreezModelPath extends LabeledTreezElement {
-            	 				
-	get atomClasses() {   				
-	  return this.__atomClasses
-	}
-
-	set atomClasses(value) {
-	  this.__atomClasses = value;	
-	  this.__updateOptionsAndRelativeRoot();  
-	} 
-
-	get relativeRootAtom(){
-		return this.__relativeRootAtom;
-	}
-
-	get isUsingRelativeRoot(){
-		return this.relativeRootAtom !== undefined && this.relativeRootAtom !== null;
-	}
-
-	set relativeRootAtom(atom){
-		this.__relativeRootAtom=atom;
-		this.__updateOptionsAndRelativeRoot(); 
-	}
-
-	get root(){
-
-		if(this.isUsingRelativeRoot){
-			return this.relativeRootAtom;
-		}
-
-		if(this.__parentAtom){
-			return this.__parentAtom.root;
-		}
-
-		return null;    								
-	}
-
-	get rootPath(){
-		if(this.root){
-			return this.root.treePath;
-		} else {
-			return '';
-		}
-	}
-
+       
     constructor(){
         super();   
         this.__label = undefined;  
@@ -77,18 +34,18 @@ export default class TreezModelPath extends LabeledTreezElement {
 
             var comboBox = document.createElement('input');
             this.__comboBox = comboBox;  
-            comboBox.setAttribute('type','text')
-            comboBox.setAttribute('list',uniqueOptionsId);
+            comboBox.setAttribute('type', 'text')
+            comboBox.setAttribute('list', uniqueOptionsId);
+            comboBox.onchange = () => this.__comboBoxChanged();
              
             comboBox.className='treez-model-path-select';                                            
             container.appendChild(comboBox);
 
             var comboBoxOptions = document.createElement('dataList');
             this.__comboBoxOptions = comboBoxOptions; 
-            comboBoxOptions.setAttribute('id',uniqueOptionsId);
+            comboBoxOptions.setAttribute('id', uniqueOptionsId);
             container.appendChild(comboBoxOptions);
            
-                         		
         }
         
         this.__updateOptionsAndRelativeRoot(); 
@@ -96,7 +53,27 @@ export default class TreezModelPath extends LabeledTreezElement {
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
     }
-
+    
+    updateElements(newValue){
+    	if(this.__comboBox){ 
+    		if(newValue){ 
+    		    var comboBoxValue = this.convertToStringValue(newValue);
+    			if(this.__comboBox.value !== comboBoxValue){
+    				this.__comboBox.value = comboBoxValue; 
+    			}  
+            	
+            } else {
+            	if(this.__comboBox.value){
+            		this.__comboBox.value = null;
+            	}                        	
+            }						
+		}					    
+    } 
+    
+    __comboBoxChanged(){
+    	this.value = this.convertFromStringValue(this.__comboBox.value);
+    }
+    
     convertFromStringValue(comboBoxValue){
     	if(!comboBoxValue){
 			return null;
@@ -125,22 +102,6 @@ export default class TreezModelPath extends LabeledTreezElement {
     		return absolutePath;	
     	}
     }
-    
-    updateElements(newValue){
-    	if(this.__comboBox){ 
-    		if(newValue){ 
-    		    var comboBoxValue = this.convertToStringValue(newValue);
-    			if(this.__comboBox.value !== comboBoxValue){
-    				this.__comboBox.value = comboBoxValue; 
-    			}  
-            	
-            } else {
-            	if(this.__comboBox.value){
-            		this.__comboBox.value = null;
-            	}                        	
-            }						
-		}					    
-    }                 
    
     disableElements(booleanValue){
     	if(this.__comboButton){                   		
@@ -169,15 +130,12 @@ export default class TreezModelPath extends LabeledTreezElement {
 		if(this.value !== newValue){
 			this.value = newValue;
 		}
-		
 
 		if(this.__comboBox){
 			this.__removeOptions();	
 			this.__createOptions(modelPaths);
 			this.__updateRelativeRootLabel();
-		}				     
-			                                                        
-
+		} 
     }
 
      __tryToGetUpdatedModelPath(newAvailableModelPaths){
@@ -210,7 +168,6 @@ export default class TreezModelPath extends LabeledTreezElement {
     }
 
     __updateRelativeRootLabel(){
-    	
 		if(this.isUsingRelativeRoot){
 			this.__relativeRootLabel.textContent = this.root.treePath;
 			this.__relativeRootLabel.style.display='inline-block';
@@ -218,10 +175,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 			this.__relativeRootLabel.textContent ='';
 			this.__relativeRootLabel.style.display='none';
 		}
-		
     }
-
-   
 
     __removeOptions(){
     	while (this.__comboBoxOptions.firstChild) {
@@ -238,8 +192,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     }
     
     __getAvailableModelPaths(atom, classes, hasToBeEnabled, filterDelegate){ 
-    	
-    	
+    	    	
     	var rootPath = this.root.treePath;
     	            		            		
 		var availablePaths = [];
@@ -272,19 +225,55 @@ export default class TreezModelPath extends LabeledTreezElement {
 				} else {
 					availablePaths.push(path);
 				}
-
 			}
 
 			availablePaths = availablePaths.concat(this.__getAvailableModelPaths(child, this.__atomClasses, hasToBeEnabled, filterDelegate));
 		}
-		
-		
-
 		return availablePaths;
-    	
     }
-  
-   
+    
+    get atomClasses() {   				
+  	  return this.__atomClasses
+  	}
+
+  	set atomClasses(value) {
+  	  this.__atomClasses = value;	
+  	  this.__updateOptionsAndRelativeRoot();  
+  	} 
+
+  	get relativeRootAtom(){
+  		return this.__relativeRootAtom;
+  	}
+
+  	get isUsingRelativeRoot(){
+  		return this.relativeRootAtom !== undefined && this.relativeRootAtom !== null;
+  	}
+
+  	set relativeRootAtom(atom){
+  		this.__relativeRootAtom=atom;
+  		this.__updateOptionsAndRelativeRoot(); 
+  	}
+
+  	get root(){
+
+  		if(this.isUsingRelativeRoot){
+  			return this.relativeRootAtom;
+  		}
+
+  		if(this.__parentAtom){
+  			return this.__parentAtom.root;
+  		}
+
+  		return null;    								
+  	}
+
+  	get rootPath(){
+  		if(this.root){
+  			return this.root.treePath;
+  		} else {
+  			return '';
+  		}
+  	}
    
 }
 window.customElements.define('treez-model-path', TreezModelPath);

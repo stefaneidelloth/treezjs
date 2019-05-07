@@ -39,7 +39,17 @@ export default class TreezDouble extends LabeledTreezElement {
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
     }
-
+    
+    updateElements(newValue){
+    	if(this.__numberInput){ 
+    		this.__numberInput.value= this.convertToStringValue(newValue); 
+    	}					    
+    }
+    
+    __numberInputChanged(){
+    	this.value = this.convertFromStringValue(this.__numberInput.value);                	
+    } 
+    
     convertFromStringValue(stringValue){
     	var number = Number(stringValue);
     	if(number > Number.MAX_SAFE_INTEGER){
@@ -58,12 +68,6 @@ export default class TreezDouble extends LabeledTreezElement {
     		?scientificNotation
     		:directNotation;    	
 	}
-    
-    updateElements(newValue){
-    	if(this.__numberInput){ 
-    		this.__numberInput.value= this.convertToStringValue(newValue); 
-    	}					    
-    }
 
     updateWidth(width){
     	if(this.__numberInput){ 
@@ -82,11 +86,7 @@ export default class TreezDouble extends LabeledTreezElement {
     		this.hide(this.__label, booleanValue);
     		this.hide(this.__numberInput, booleanValue); 
     	}
-    }	  
-
-    __numberInputChanged(){
-    	this.value = this.convertFromStringValue(this.__numberInput.value);                	
-    }  
+    }     
                           
 }
 

@@ -2,8 +2,16 @@ import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
 import ErrorBarStyle from './errorBarStyle.js';
 
 export default class TreezErrorBarStyle extends TreezImageComboBox {  
-            	
-	get value() {
+     	
+    constructor(){
+        super();                     
+    }  
+
+    beforeConnectedCallbackHook(){
+    	 this.options=ErrorBarStyle.names;
+	}
+    
+    get value() {
 		 let stringValue = this.getAttribute('value');
 		 try{
 		 	return ErrorBarStyle.forName(stringValue);
@@ -14,15 +22,7 @@ export default class TreezErrorBarStyle extends TreezImageComboBox {
 	
 	set value(errorBarStyle) {
 		super.value = errorBarStyle;	
-	}  		
-	
-    constructor(){
-        super();                     
-    }  
-
-    beforeConnectedCallbackHook(){
-    	 this.options=ErrorBarStyle.names;
-	} 
+	}  
                          
 }
 
