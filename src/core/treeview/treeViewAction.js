@@ -1,14 +1,14 @@
 export default class TreeViewAction {	
 
-	constructor(label, imageName, atom, treeView, action) {
-		var self=this;
-		self.label=label;
-		self.imageName=imageName;
-		self.atom = atom;
-		self.treeView=treeView;		
-		self.action=()=>{
+	constructor(label, image, atom, treeView, action) {		
+		this.label = label;
+		this.image = image;
+		this.overlayImage = undefined; 
+		this.atom = atom;
+		this.treeView = treeView;		
+		this.action = () => {
 			action();
-			self.treeView.refresh(atom);
+			this.treeView.refresh(atom);
 		}
 	}
 

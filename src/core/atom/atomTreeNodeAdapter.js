@@ -146,13 +146,22 @@ export default class AtomTreeNodeAdapter {
     	 var button = menu.append('div')    	 
     	     .append('button')
     	     .className('treez-menu-button') 
-          	 .onMouseDown(item.action) ;                   
+          	 .onMouseDown(item.action);
+    	 
+    	 var iconFolder = button.append('span')
+			.className('treez-node-icon-folder');
           
-          var imageName = item.imageName? item.imageName: 'error.png';
+          var imageName = item.image? item.image: 'error.png';
           
-          button.append('img')
+          iconFolder.append('img')
           	.className('treez-menu-button-icon')          	
           	.src(Treez.imagePath(imageName));
+          
+          if(item.overlayImage){
+        	  iconFolder.append('img')
+            	.className('treez-menu-button-overlay-icon')          	
+            	.src(Treez.imagePath(item.overlayImage));
+          }
 
           button.append('label')
           	.className('treez-menu-button-label')          	

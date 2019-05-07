@@ -7,8 +7,9 @@ export default class AddChildAtomTreeViewAction extends TreeViewAction {
         return "Add " + Utils.firstToUpperCase(namePrefix);
     }
 
-    constructor(atomConstructor, namePrefix, imageName, parentSelection, parentAtom, treeView) {
-    	super(AddChildAtomTreeViewAction.createLabel(namePrefix), imageName, parentAtom, treeView, null);
+    constructor(atomConstructor, namePrefix, image, parentSelection, parentAtom, treeView) {
+    	super(AddChildAtomTreeViewAction.createLabel(namePrefix), image, parentAtom, treeView, null);
+    	this.overlayImage = 'add_decoration.png';
         var self = this;
     	this.action = ()=>{
     		//create child

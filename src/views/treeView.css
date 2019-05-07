@@ -73,6 +73,13 @@
     float: left;
 }
 
+.treez-menu-button-overlay-icon {
+	vertical-align: middle;	
+	margin-bottom: 2px;
+	margin-left:-16px;
+	float: left;
+}
+
 .treez-menu-button-label {
 	margin-left: 5px;
 	float: left;	
