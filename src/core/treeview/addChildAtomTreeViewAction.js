@@ -7,13 +7,17 @@ export default class AddChildAtomTreeViewAction extends TreeViewAction {
         return 'Add ' + Utils.firstToUpperCase(namePrefix);
     }
 
-    constructor(atomConstructor, namePrefix, image, grandParentSelection, parentAtom, treeView) {
+    constructor(atomConstructor, namePrefix, image, grandParentSelection, parentAtom, treeView, postCreationHook) {
     	super(AddChildAtomTreeViewAction.createLabel(namePrefix), image, parentAtom, treeView, null);
     	this.overlayImage = 'add_decoration.png';
         var self = this;
     	this.action = ()=>{
     		//create child
-            parentAtom.createChildWithNamePrefix(atomConstructor, namePrefix);
+            var child = parentAtom.createChildWithNamePrefix(atomConstructor, namePrefix);
+            
+            if(postCreationHook){
+            	postCreationHook(child);
+            }
             
            //recreate tree node adaption of parent atom to show child
            var grandParentElement = grandParentSelection.node();

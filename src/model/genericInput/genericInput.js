@@ -246,20 +246,12 @@ export default class GenericInput extends Model {
 
 	createStringItemVariable(name, value) {
 		return this.createChild(StringItemVariable, name, value); 
-	}
-
-	getVariable(variableName) {
-		return this.getAttribute('root.data.data.' + variableName);
-	}
-
-	setVariable(variableName, valueString) {
-		this.setAttribute('root.data.data.' + variableName, valueString);
-	}
+	}	
 
 	get variables() {
         const variableFields = [];
 		for (const child of this.children) {
-		    if(child instanceof VariableField){
+		    if(child instanceof Variable){
                 variableFields.push(child);
             }
 		}
@@ -269,8 +261,10 @@ export default class GenericInput extends Model {
 	get enabledVariables(){
 		var enabledVariables = [];
 		this.children.forEach((child)=>{
-			if(child.isEnabled){
-				enabledVariables.push(child);
+			if(child instanceof Variable){
+				if(child.isEnabled){
+					enabledVariables.push(child);
+				}
 			}
 		});
 		return enabledVariables;

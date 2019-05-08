@@ -1,6 +1,7 @@
 import Model from "./model.js";
 
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import Path from './path/path.js';
 import GenericInput from './genericInput/genericInput.js';
 import Executable from './executable/executable.js';
 import JavaExecutable from './executable/javaExecutable.js';
@@ -53,52 +54,81 @@ export default class Models extends Model {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				Path,
+				"path",
+				"path.png",
+				parentSelection,
+				this,
+				treeView
+			)
+		);
 		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				GenericInput,
 				"genericInput",
 				"genericInput.png",
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
        
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				Executable,
 				"executable",
 				"run.png",
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
        
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				JavaExecutable,
 				"javaExecutable",
 				"java.png",
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
 		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				JavaScriptModel,
 				"javaSriptModel",
 				"javaScript.png",
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
 		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				PythonModel,
 				"pythonModel",
 				"python.png",
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
 
 		return actions;
 	}
 
 	createCodeAdaption() {
 		return new RegionsAtomCodeAdaption(this);
+	}
+
+	createPath(name) {
+		return this.createChild(Path, name);		
 	}
 
 	createGenericInput(name) {

@@ -1,17 +1,12 @@
-import LabeledTreezElement from './../labeledTreezElement.js';
+import TreezAbstractPath from './treezAbstractPath.js';
 
-export default class TreezDirectoryPath extends LabeledTreezElement {            	
+export default class TreezDirectoryPath extends TreezAbstractPath {            	
 
     constructor(){
-        super();     
-        this.__container = undefined;
-        this.__label = undefined;   
-        this.__textField = undefined;
-        this.__browseButton = undefined;   
-        this.__executeButton = undefined;
+        super(); 
     }            	
 
-    connectedCallback() {
+    connectedCallback() {    	
     	
         if(!this.__label){  
 
@@ -32,7 +27,9 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
             this.__textField = textField; 
             textField.type='text' 
             textField.className='treez-directory-path-text-field' 
-            textField.onchange = ()=>this.__textFieldChanged();                                              
+            textField.title = this.fullPath;
+            textField.onchange = ()=>this.textFieldChanged();             
+            
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
@@ -47,9 +44,9 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
 		    browseButton.className='treez-directory-path-browse-button';					   
 		    browseButton.type='button';
 		    browseButton.title=' ';
-		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
+		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browseDirectory.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
-		    browseButton.onclick = ()=>this.__browseFilePath();				   
+		    browseButton.onclick = ()=>this.__browseDirectoryPath();				   
             rightSpan.appendChild(browseButton);   
 
             var executeButton = document.createElement('input');
@@ -59,7 +56,7 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
             executeButton.title='execute';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
-            executeButton.onclick = ()=>this.__execute();   
+            executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton);                    		
         }
         
@@ -68,42 +65,9 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
 		this.hideElements(this.hidden); 
     }
     
-    updateElements(newValue){
-    	if(this.__textField){ 
-    	 	if(newValue !== undefined){
-            	this.__textField.value = newValue; 
-            }  else {
-            	this.__textField.value = '';
-            }											
-		}					    
-    } 
-    
-    __textFieldChanged(){
-    	this.value = this.__textField.value;                	             	
-    }
    
-    disableElements(booleanValue){
-    	if(this.__textField){   
-    		this.__textField.disabled = booleanValue;
-    		this.__browseButton.disabled = booleanValue;
-    		this.__executeButton.disabled = booleanValue;
-    	}
-    }	
-   
-    hideElements(booleanValue){
-    	if(this.__label){  
-    		this.hide(this.__label, booleanValue);
-    		this.hide(this.__container, booleanValue);                		
-    	}
-    }	
-
-    __execute(){
-    	var command = this.__textField.value;
-    	window.treezTerminal.execute(command, undefined, console.error);                     
-    }    
-
-    __browseFilePath(){                  
-        window.treezTerminal.browseDirectoryPath(this.directory).then((result)=>{
+    __browseDirectoryPath(){                  
+        window.treezTerminal.browseDirectoryPath(this.parentDirectory).then((result)=>{
             if(result){
                 this.value = result;
         	    this.__textField.value = result;
@@ -111,21 +75,36 @@ export default class TreezDirectoryPath extends LabeledTreezElement {
             }                    	
         }); 
     }
+
+    set pathMapProvider(provider){
+    	this.__pathMapProvider = provider;
+    	if(this.__textField){
+    	    this.__textField.title = this.fullPath;
+    	}
+    }
     
-    get directory(){
-       var fullPath = this.__textField.value;
-       if(!fullPath){
-       		return null;
-       }
-       
-       if(fullPath.endsWith('/')){
-       		return fullPath;
-       }
-                                             
-       var items = fullPath.split('/');
-       var itemArray = items.slice(0, items.length-1);
-       return itemArray.join('/');
-    }                          
+    get fullPath(){
+    	
+    	var fullPath = this.value;
+    	
+    	var pathMap = this.__pathMapProvider
+    							?this.__pathMapProvider.pathMap
+    							:[];
+    							
+    	for(var entry of pathMap.reverse()){
+    		var placeHolder = '{$' + entry.name + '$}';
+    		var path = entry.value;
+    		fullPath = fullPath.replace(placeHolder, path);
+    	}
+    	
+    	if(fullPath.includes('{$')){
+    		console.warn('File path including unknown path variable: "' + fullPath + '"');
+    	}
+    	
+    	return fullPath;
+    }
+    
+                           
    
 }
 window.customElements.define('treez-directory-path', TreezDirectoryPath);                    

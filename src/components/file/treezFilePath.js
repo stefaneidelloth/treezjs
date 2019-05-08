@@ -1,13 +1,9 @@
-import LabeledTreezElement from './../labeledTreezElement.js';
+import TreezAbstractPath from './treezAbstractPath.js';
 
-export default class TreezFilePath extends LabeledTreezElement {
+export default class TreezFilePath extends TreezAbstractPath {
             	
     constructor(){
-        super();                  
-        this.__label = undefined;   
-        this.__textField = undefined;
-        this.__browseButton = undefined;
-        this.__executeButton = undefined;
+        super(); 
     }            	
 
     connectedCallback() {
@@ -31,7 +27,8 @@ export default class TreezFilePath extends LabeledTreezElement {
             this.__textField = textField;                                            
             textField.type='text' 
             textField.className='treez-file-path-text-field'; 
-            textField.onchange = ()=>this.__textFieldChanged();                                              
+            textField.onchange = ()=>this.textFieldChanged();  
+            textField.title = this.fullPath;
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
@@ -58,51 +55,17 @@ export default class TreezFilePath extends LabeledTreezElement {
             executeButton.title = 'execute';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
-            executeButton.onclick = ()=>this.__execute();   
+            executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton);                    		
         }
         
         this.updateElements(this.value);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
-    }
-    
-    updateElements(newValue){
-    	if(this.__textField){ 
-    	 	if(newValue !== undefined){
-            	this.__textField.value = newValue; 
-            }  else {
-            	this.__textField.value = '';
-            }											
-		}					    
     }    
-    
-    __textFieldChanged(){
-    	this.value = this.__textField.value;                	             	
-    }
    
-    disableElements(booleanValue){
-    	if(this.__textField){   
-    		this.__textField.disabled = booleanValue;
-    		this.__browseButton.disabled = booleanValue;
-    		this.__executeButton.disabled = booleanValue;
-    	}
-    }	
-   
-    hideElements(booleanValue){
-    	if(this.__label){   
-    		this.hide(this.__label, booleanValue);
-    		this.hide(this.__container, booleanValue); 
-    	}
-    }	
-
-    __execute(){
-    	var command = this.__textField.value;
-    	window.treezTerminal.execute(command, undefined, console.error);                     
-    }  
-
     __browseFilePath(){    
-       window.treezTerminal.browseFilePath(this.directory).then((filePath)=>{
+       window.treezTerminal.browseFilePath(this.parentDirectory).then((filePath)=>{
        	 if(filePath){
 			var oldValue = this.value;
 			this.value = filePath;
@@ -111,23 +74,7 @@ export default class TreezFilePath extends LabeledTreezElement {
        	 }  
        });              	
         
-    }
-    
-    get directory(){
-       var fullPath = this.__textField.value;
-       if(!fullPath){
-       		return null;
-       }
-       
-       if(fullPath.endsWith('/')){
-       		return fullPath;
-       }
-                                             
-       var items = fullPath.split('/');
-       var itemArray = items.slice(0, items.length-1);
-       return itemArray.join('/');
-       
-    }       
+    }   
    
 }
 

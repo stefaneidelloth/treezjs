@@ -16,6 +16,7 @@ import ColorMap from './../../components/colorMap/colorMap.js';
 import TreezComboBox from './../../components/comboBox/treezComboBox.js';
 import TreezEnumComboBox from './../../components/comboBox/treezEnumComboBox.js';
 
+import TreezDirectoryPath from './../../components/file/treezDirectoryPath.js';
 import TreezDouble from './../../components/double/treezDouble.js';
 
 import TreezErrorBarStyle from './../../components/errorBarStyle/treezErrorBarStyle.js';
@@ -75,6 +76,7 @@ export default class ComponentAtom extends Atom {
     	
     	Treez.importCssStyleSheet('/src/components/double/treezDouble.css');	
 
+    	Treez.importCssStyleSheet('/src/components/file/treezDirectoryPath.css');  
     	Treez.importCssStyleSheet('/src/components/file/treezFileOrDirectoryPath.css');
     	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    

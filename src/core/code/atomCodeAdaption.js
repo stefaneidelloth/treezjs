@@ -38,7 +38,7 @@ import Root from './../../root/root.js';
 		}
 
 		var name = this.__atom.name;	
-		var className = this.__atom.constructor.name;		
+		var className = this.getClassName(this.__atom);		
 		var hasParent = this.__atom.hasParent;		
 		
 		if (hasParent) {
@@ -55,6 +55,10 @@ import Root from './../../root/root.js';
 		}
 		return codeContainer;
 	}
+	
+	getClassName(atom){
+		return atom.constructor.name;
+	}
 
 	buildCreationCodeContainerWithoutVariableName(codeContainer) {
 
@@ -63,7 +67,7 @@ import Root from './../../root/root.js';
 		}
 
 		var name = this.__atom.name;	
-		var className = this.__atom.constructor.name;		
+		var className = this.getClassName(this.__atom);		
 		var hasParent = this.__atom.hasParent;
 				
 		if (hasParent) {
