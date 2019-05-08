@@ -175,8 +175,7 @@ export default class Path extends Model {
 				if(child.isEnabled){
 					enabledVariables.push(child);
 				}
-			}
-			
+			}			
 		});
 		return enabledVariables;
 	}

@@ -1,32 +1,20 @@
-import Variable from './../variable.js';
+import AbstractPathVariable from './abstractPathVariable.js';
 
-export default class FilePathVariable extends Variable {
+export default class FilePathVariable extends AbstractPathVariable {
 	
 	constructor(name, value){
 		super(name, value);
-		this.image='filePathVariable.png';
-		
-		this.__pathMapProvider = undefined;
-		this.__filePathSelection = undefined;
+		this.image='filePathVariable.png';		
 	}
-	
 	
 	createVariableControl(parent, dTreez){
+		this.__pathSelection = parent.append('treez-file-path')
+			.label(this.name)			
+			.bindValue(this, ()=>this.value);
 
-		this.__filePathSelection = parent.append('treez-file-path')
-			.label(this.name)
-			.nodeAttr('pathMapProvider', this.__pathMapProvider)
-			.bindValue(this, ()=>this.value);		
-    	
-    }
-	
-	set pathMapProvider(pathMapProvider){
-		this.__pathMapProvider = pathMapProvider;
-		if(this.__filePathSelection){
-			this.__filePathSelection.nodeAttr('pathMapProvider', pathMapProvider);
+		if(this.__pathMapProvider){
+			this.__pathSelection.nodeAttr('pathMapProvider', this.__pathMapProvider)
 		}
-	}
-	
-	
+    }
 
 }

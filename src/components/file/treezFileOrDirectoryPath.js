@@ -100,8 +100,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 			window.treezTerminal.browseFilePath(this.directory).then((newValue)=>{
 				if(newValue){
 				   var oldValue = this.value;
-					this.value = newValue;
-					this.__textField.value = newValue;	
+					this.value = this.injectPathMap(newValue.trim());					
 					this.dispatchEvent(new Event('change'));                	                	   
 				}                    	
 			}); 
@@ -109,9 +108,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 			window.treezTerminal.browseDirectoryPath(this.directory).then((newValue)=>{
 				if(newValue){
 				   var oldValue = this.value;
-					this.value = newValue;
-					this.__textField.value = newValue;	
-					this.dispatchEvent(new Event('change'));                	                	   
+					this.value = this.injectPathMap(newValue.trim());	
 				}                    	
 			}); 
        }               

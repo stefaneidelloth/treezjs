@@ -18,6 +18,8 @@ import DirectoryPathVariable from './../variable/field/directoryPathVariable.js'
 import StringVariable from './../variable/field/stringVariable.js';
 import StringItemVariable from './../variable/field/stringItemVariable.js';
 import GenericInputCodeAdaption from './genericInputCodeAdaption.js';
+import AbstractPathVariable from './../variable/field/abstractPathVariable.js';
+import Path from './../path/path.js';
 
 
 export default class GenericInput extends Model {
@@ -164,7 +166,10 @@ export default class GenericInput extends Model {
 				'filePathVariable.png',
 				parentSelection,
 				this,
-				treeView
+				treeView,
+				(filePathVariable) => {
+					filePathVariable.pathMapProvider=this;
+				}
 			)
 		);		
 		
@@ -175,7 +180,10 @@ export default class GenericInput extends Model {
 				'directoryPathVariable.png',
 				parentSelection,
 				this,
-				treeView
+				treeView,
+				(directoryPathVariable) => {
+					directoryPathVariable.pathMapProvider=this;
+				}
 			)
 		);
 		
@@ -233,12 +241,16 @@ export default class GenericInput extends Model {
 	}
 	
 	createFilePathVariable(name, value) {
-		return this.createChild(FilePathVariable, name, value); 
+		var filePathVariable = this.createChild(FilePathVariable, name, value); 
+		filePathVariable.pathMapProvider = this;
+		return filePathVariable;
 	}
 
 	createDirectoryPathVariable(name, value) {
-		return this.createChild(DirectoryPathVariable, name, value);        
-	}
+		var directoryPathVariable = this.createChild(DirectoryPathVariable, name, value); 
+		directoryPathVariable.pathMapProvider = this;
+		return directoryPathVariable;
+	}	
 
 	createBooleanVariable(name, value) {
 		return this.createChild(BooleanVariable, name, value);  
@@ -268,6 +280,24 @@ export default class GenericInput extends Model {
 			}
 		});
 		return enabledVariables;
+	}
+	
+	get pathMap(){	
+		
+		var pathVariables = [];
+		
+		var pathAtoms = this.parent.childrenByClass(Path);
+		
+		for(var pathAtom of pathAtoms){
+			pathVariables = pathVariables.concat(pathAtom.pathMap);
+		}
+		
+		for(var variable of this.enabledVariables){
+			if(variable instanceof AbstractPathVariable){
+				pathVariables.push(variable);
+			}
+		}
+		return pathVariables;
 	}
 	
 }

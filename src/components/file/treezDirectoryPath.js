@@ -67,43 +67,12 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
     
    
     __browseDirectoryPath(){                  
-        window.treezTerminal.browseDirectoryPath(this.parentDirectory).then((result)=>{
+        window.treezTerminal.browseDirectoryPath(this.directory).then((result)=>{
             if(result){
-                this.value = result;
-        	    this.__textField.value = result;
-        	    this.dispatchEvent(new Event('change'));
+                this.value = this.injectPathMap(result.trim());
             }                    	
         }); 
-    }
-
-    set pathMapProvider(provider){
-    	this.__pathMapProvider = provider;
-    	if(this.__textField){
-    	    this.__textField.title = this.fullPath;
-    	}
-    }
-    
-    get fullPath(){
-    	
-    	var fullPath = this.value;
-    	
-    	var pathMap = this.__pathMapProvider
-    							?this.__pathMapProvider.pathMap
-    							:[];
-    							
-    	for(var entry of pathMap.reverse()){
-    		var placeHolder = '{$' + entry.name + '$}';
-    		var path = entry.value;
-    		fullPath = fullPath.replace(placeHolder, path);
-    	}
-    	
-    	if(fullPath.includes('{$')){
-    		console.warn('File path including unknown path variable: "' + fullPath + '"');
-    	}
-    	
-    	return fullPath;
-    }
-    
+    }   
                            
    
 }

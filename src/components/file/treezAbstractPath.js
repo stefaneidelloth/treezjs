@@ -18,7 +18,8 @@ export default class TreezAbstractPath extends LabeledTreezElement {
             	this.__textField.value = newValue; 
             }  else {
             	this.__textField.value = '';
-            }											
+            }	
+            this.__textField.title = this.fullPath;										
 		}					    
     }    
     
@@ -42,13 +43,43 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     }	
 
     execute(){
-    	var command = this.__textField.value;
+    	var command = this.fullPath;
     	window.treezTerminal.execute(command, undefined, console.error);                     
-    }  
+    } 
+    
+    injectPathMap(path){    	
+    	
+    	var pathMap = this.__pathMapProvider
+			?this.__pathMapProvider.pathMap
+			:[];
+		
+    	var entryToInject = undefined;
+		for(var entry of pathMap){
+
+			if(entry.name === this.label){
+					continue;
+			}
+			
+			if (path.includes(entry.fullPath)){
+				if(entryToInject){
+					if(entryToInject.fullPath.length < entry.fullPath.length){
+						entryToInject = entry;
+					}
+				} else {
+					entryToInject = entry;
+				}
+			}			
+		}
+		
+		return entryToInject
+				?path.replace(entryToInject.fullPath, '{$' + entryToInject.name + '$}')
+				:path;		
+		
+    }
 
         
-    get parentDirectory(){
-       var fullPath = this.__textField.value;
+    get directory(){
+       var fullPath = this.fullPath;
        if(!fullPath){
        		return null;
        }
@@ -73,6 +104,10 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     get fullPath(){
     	
     	var fullPath = this.value;
+
+    	if(!fullPath){
+    		return fullPath;
+    	}
     	
     	var pathMap = this.__pathMapProvider
     							?this.__pathMapProvider.pathMap
