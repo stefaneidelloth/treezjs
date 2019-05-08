@@ -1,5 +1,4 @@
 import LabeledTreezElement from './../../labeledTreezElement.js';
-//import CodeMirror from './../../../../bower_components/codemirror/src/codemirror.js';
 import Treez from './../../../treez.js';
 
 export default class TreezCodeArea extends LabeledTreezElement {    
@@ -10,10 +9,14 @@ export default class TreezCodeArea extends LabeledTreezElement {
         this.__label = undefined;  
         this.__container = undefined;
         this.__textArea = undefined;  
-        this.__codeMirror = undefined;    
+        this.__codeMirror = undefined; 
 
-		Treez.importScript('/bower_components/codemirror/lib/codemirror.js');
-		Treez.importScript('/bower_components/codemirror/mode/sql/sql.js');
+		if(!CodeMirror){
+			 Treez.importScript('/bower_components/codemirror/lib/codemirror.js');
+			 Treez.importScript('/bower_components/codemirror/mode/javascript/javascript.js');
+			 Treez.importScript('/bower_components/codemirror/mode/python/python.js');
+			 Treez.importScript('/bower_components/codemirror/mode/sql/sql.js');
+		}      		
                                       
     }   
 

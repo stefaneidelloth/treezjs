@@ -252,46 +252,42 @@ export default class JupyterTerminal {
     		
 			var cell = self.__notebook.insert_cell_below();
 			cell.element[0].style.display = 'none';
-
-			
-
 			cell.set_text(pythonCode);
-
-			cell.events.on('finished_execute.CodeCell', (event, data)=>{				
-				var finishedCell = data.cell;
-
-				if(finishedCell !== cell){
-					return;
-				}
-
-				var outputContainer = cell.output_area.element[0];
-				
-				var htmlArray = [];
-				
-				for(var outputArea of outputContainer.children){
-					outputArea.children[0].style.display = 'none';	
-					outputArea.children[1].style.display = 'none';				
-					htmlArray.push(outputArea.innerHTML);
-				}	
-
-				var cellIndex = self.__notebook.get_cells().indexOf(finishedCell);			
-				
-				try{
-					self.__notebook.delete_cell(cellIndex);
-				} catch(error){
-
-				}					
-				
-				resolve(htmlArray);
-			});
+			cell.events.on('finished_execute.CodeCell', (event, data) => self.__codeCellExecutionFinished(cell, data.cell, resolve));
 
 			try{
 				cell.execute();
 			} catch(error){
 				reject(error);
-			}   		
+			} 
     		
 		}); 	
+    }
+
+    __codeCellExecutionFinished(cell, finishedCell, resolve){
+	
+		if(finishedCell !== cell){
+			return;
+		}
+
+		var htmlArray = [];
+		
+		var outputContainer = cell.output_area.element[0];
+		for(var outputArea of outputContainer.children){
+			outputArea.children[0].style.display = 'none';	
+			outputArea.children[1].style.display = 'none';				
+			htmlArray.push(outputArea.innerHTML);
+		}	
+
+		var cells = this.__notebook.get_cells();
+		var cellIndex = cells.indexOf(finishedCell);
+
+		if(cellIndex>-1){
+			this.__notebook.delete_cell(cellIndex);
+		}				
+
+		resolve(htmlArray);
+		
     }
   
 }

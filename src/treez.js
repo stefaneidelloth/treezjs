@@ -62,6 +62,12 @@ export default class Treez {
 		script.setAttribute('src', window.treezConfig.home + src);		
 		document.head.appendChild(script);
 	}	
+
+	static importStaticScript(src){
+		var script = document.createElement('script');
+		script.setAttribute('src', src);		
+		document.head.appendChild(script);
+	}
 	
 	static imagePath(imageName){
 		return window.treezConfig.home + '/icons/' + imageName;
