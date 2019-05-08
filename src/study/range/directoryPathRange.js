@@ -26,9 +26,9 @@ export default class DirectoryPathRange extends VariableRange {
 	   
 	    sectionContent.append('treez-directory-path-list')
 	    	.label('Range')
+	    	.nodeAttr('pathMapProvider', this)
 	    	.bindValue(this, ()=>this.directoryList);
-	    
-	   
+	    	   
     }	
 
 }

@@ -1,6 +1,7 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
 import OutputAtom from './../core/output/outputAtom.js';
+import AbstractPathVariable from './variable/field/abstractPathVariable.js';
 
 
 export default class Model extends ComponentAtom {	
@@ -184,6 +185,21 @@ export default class Model extends ComponentAtom {
         }
         return false;
 	}
+	
+	providePathMap(){	
+		
+		var pathVariables = [];
+		
+		if(this.enabledVariables){
+			for(var variable of this.enabledVariables){
+				if(variable instanceof AbstractPathVariable){
+					pathVariables.push(variable);
+				}
+			}
+		}		
+		
+		return pathVariables;
+	}
 
 	get jobId(){
 	    return this.__jobId;
@@ -238,5 +254,7 @@ export default class Model extends ComponentAtom {
         
         this.refreshStatus();
 	}
+	
+	
 
 }

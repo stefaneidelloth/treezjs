@@ -5,6 +5,7 @@ import TreeViewAction from './../treeview/TreeViewAction.js';
 import Monitor from './../monitor/monitor.js';
 import Treez from './../../treez.js';
 
+import TreezAbstractPath from './../../components/file/treezAbstractPath.js';
 import TreezCheckBox from './../../components/checkBox/treezCheckBox.js';
 
 import TreezColor from './../../components/color/treezColor.js';
@@ -51,6 +52,7 @@ import TreezCodeArea from './../../components/text/code/treezCodeArea.js';
 import TreezTextArea from './../../components/text/area/treezTextArea.js';
 import TreezTextField from './../../components/text/field/treezTextField.js';
 import TreezTextLabel from './../../components/text/label/treezTextLabel.js';
+
 
 export default class ComponentAtom extends Atom {
 
@@ -244,6 +246,10 @@ export default class ComponentAtom extends Atom {
 		}
 	}
 	
+	fullPath(pathIncludingVariables){
+		return TreezAbstractPath.replacePathVariables(pathIncludingVariables, this.pathMap);
+	}
+	
 	get isEnabled(){
 		return this.__isEnabled;
 	}
@@ -262,6 +268,28 @@ export default class ComponentAtom extends Atom {
 
 	set treeView(treeView){
 		this.__treeView = treeView;
+	}
+	
+	get pathMap(){	
+		
+		var pathVariables = [];
+		
+		var models = this.childFromRoot('root.models');
+		
+		if(models){			
+			for(var child of models.children){
+				
+				if(child === this){
+					continue;
+				}
+				
+				if(child.providePathMap){
+					pathVariables = pathVariables.concat(child.providePathMap());
+				}				
+			}
+		}
+		
+		return pathVariables;
 	}
 
 }

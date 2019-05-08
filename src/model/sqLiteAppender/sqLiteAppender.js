@@ -41,10 +41,12 @@ export default class SqLiteAppender extends Model {
 
 		sectionContent.append('treez-file-path')
 	        .label('Source') 
+	        .nodeAttr('pathMapProvider', this)
 	        .bindValue(this,()=>this.sourceFilePath);  
 		
 		sectionContent.append('treez-file-path')
 	        .label('Target') 
+	        .nodeAttr('pathMapProvider', this)
 	        .bindValue(this,()=>this.targetFilePath); 		
 	}
 	
@@ -58,7 +60,7 @@ export default class SqLiteAppender extends Model {
 		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
 		monitor.info(startMessage);
 
-		var tableNames = await SqLiteImporter.tableNames(this.sourceFilePath, this.password);		
+		var tableNames = await SqLiteImporter.tableNames(this.fullPath(this.sourceFilePath), this.password);		
 		monitor.totalWork = tableNames.length;			
 		
 		for(var tableName of tableNames){
@@ -73,15 +75,15 @@ export default class SqLiteAppender extends Model {
     
     async __appendTable(tableName){
 
-    	var columnBlueprints = await SqLiteImporter.readTableStructure(this.sourceFilePath, this.password, tableName);
+    	var columnBlueprints = await SqLiteImporter.readTableStructure(this.fullPath(this.sourceFilePath), this.password, tableName);
 		columnBlueprints = this.__insertStudyIdAndJobIdColumns(columnBlueprints);
     	
-    	await SqLiteImporter.createTableIfNotExists(this.targetFilePath, this.password, tableName, columnBlueprints);
+    	await SqLiteImporter.createTableIfNotExists(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints);
 
-    	var tableData = await SqLiteImporter.importData(this.sourceFilePath, this.password, tableName);
+    	var tableData = await SqLiteImporter.importData(this.fullPath(this.sourceFilePath), this.password, tableName);
     	tableData = this.__insertStudyIdAndJobId(tableData);
 
-    	await SqLiteImporter.appendData(this.targetFilePath, this.password, tableName, columnBlueprints, tableData);
+    	await SqLiteImporter.appendData(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);
 
     	
     }

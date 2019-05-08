@@ -83,7 +83,7 @@ export default class InputModification extends ComponentAtom {
 	
 	getModifiedPath(executable){	
 
-		let inputPath = executable.inputPath;
+		let inputPath = executable.fullPath(executable.inputPath);
 
 		//split path with point to determine file extension if one exists
 		const subStrings = inputPath.split(".");

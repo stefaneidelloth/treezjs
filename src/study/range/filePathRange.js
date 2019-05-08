@@ -26,6 +26,7 @@ export default class FilePathRange extends VariableRange {
 	    
 	    sectionContent.append('treez-file-path-list')
 	    	.label('Range')
+	    	.nodeAttr('pathMapProvider', this)
 	    	.bindValue(this, ()=>this.directoryList);	 
 	    
 	   				

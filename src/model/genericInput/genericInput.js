@@ -282,22 +282,8 @@ export default class GenericInput extends Model {
 		return enabledVariables;
 	}
 	
-	get pathMap(){	
-		
-		var pathVariables = [];
-		
-		var pathAtoms = this.parent.childrenByClass(Path);
-		
-		for(var pathAtom of pathAtoms){
-			pathVariables = pathVariables.concat(pathAtom.pathMap);
-		}
-		
-		for(var variable of this.enabledVariables){
-			if(variable instanceof AbstractPathVariable){
-				pathVariables.push(variable);
-			}
-		}
-		return pathVariables;
+	get providesPathMap() {
+		return true;
 	}
 	
 }

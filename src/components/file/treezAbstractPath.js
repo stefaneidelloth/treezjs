@@ -76,6 +76,21 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 				:path;		
 		
     }
+    
+    static replacePathVariables(pathIncludingVariables, pathMap){
+    	var fullPath = pathIncludingVariables;
+    	for(var entry of pathMap.reverse()){
+    		var placeHolder = '{$' + entry.name + '$}';
+    		var path = entry.value;
+    		fullPath = fullPath.replace(placeHolder, path);
+    	}
+    	
+    	if(fullPath.includes('{$')){
+    		console.warn('File path including unknown path variable: "' + fullPath + '"');
+    	}
+    	
+    	return fullPath;
+    }
 
         
     get directory(){

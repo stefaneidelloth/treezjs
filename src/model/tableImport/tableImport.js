@@ -127,6 +127,7 @@ export default class TableImport extends Model {
 
 		this.__sourceFilePathSelection = sectionContent.append('treez-file-path')
 			.label('Source file')
+			.nodeAttr('pathMapProvider', this)
 			.bindValue(this, ()=>this.sourceFilePath);
 
 		this.__numberOfHeaderLinesToSkipSelection = sectionContent.append('treez-text-field')
@@ -432,7 +433,7 @@ export default class TableImport extends Model {
 		if (this.isInheritingSourceFilePath) {
 			return this.__getSourcePathFromParent();
 		} else {
-			return this.sourceFilePath;
+			return this.fullPath(this.sourceFilePath);
 		}		
 	}
 

@@ -98,16 +98,13 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 
        if(this.__isFile){
 			window.treezTerminal.browseFilePath(this.directory).then((newValue)=>{
-				if(newValue){
-				   var oldValue = this.value;
-					this.value = this.injectPathMap(newValue.trim());					
-					this.dispatchEvent(new Event('change'));                	                	   
+				if(newValue){				  
+					this.value = this.injectPathMap(newValue.trim());
 				}                    	
 			}); 
        } else {
 			window.treezTerminal.browseDirectoryPath(this.directory).then((newValue)=>{
 				if(newValue){
-				   var oldValue = this.value;
 					this.value = this.injectPathMap(newValue.trim());	
 				}                    	
 			}); 

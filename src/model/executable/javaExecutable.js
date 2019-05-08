@@ -38,7 +38,8 @@ export default class JavaExecutable extends Executable {
 
 	        sectionContent.append('treez-file-path')
 	            .label('Path to java.exe')           
-	            .onChange(()=>this.refreshStatus())           
+	            .onChange(()=>this.refreshStatus()) 
+	            .nodeAttr('pathMapProvider', this)
 	            .bindValue(this,()=>this.executablePath);            
 		}  
 	 
@@ -61,6 +62,7 @@ export default class JavaExecutable extends Executable {
 		
 		sectionContent.append('treez-file-or-directory-path')
 			.label('Class path (e. g. path to jar file that provides main class)')
+			.nodeAttr('pathMapProvider', this)
 			.onChange(()=>this.refreshStatus())
 			.bindValue(this,()=>this.classPath);        
 			
@@ -91,7 +93,7 @@ export default class JavaExecutable extends Executable {
 	__buildCommand(){
 
 		//''cmd.exe /C start /b /wait /low "''
-		let command = '"' + this.executablePath + '"';
+		let command = '"' + this.fullPath(this.executablePath) + '"';
 		command = this.__addJavaArguments(command);
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);

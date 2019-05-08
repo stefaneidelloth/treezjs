@@ -299,7 +299,8 @@ export default class Executable extends Model {
 
         sectionContent.append('treez-file-path')
             .label('Executable')           
-            .onChange(()=>this.refreshStatus())           
+            .onChange(()=>this.refreshStatus())    
+            .nodeAttr('pathMapProvider', this)
             .bindValue(this,()=>this.executablePath);            
 	}  
     
@@ -320,7 +321,8 @@ export default class Executable extends Model {
             .bindValue(this,()=>this.inputArguments); 
 
 		sectionContent.append('treez-file-or-directory-path')
-            .label('Input file or directory')            
+            .label('Input file or directory')  
+            .nodeAttr('pathMapProvider', this)
             .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.inputPath);            
 	}   
@@ -337,7 +339,8 @@ export default class Executable extends Model {
             .bindValue(this,()=>this.outputArguments); 
 
        sectionContent.append('treez-file-or-directory-path')
-            .label('Output file or directory')            
+            .label('Output file or directory')   
+            .nodeAttr('pathMapProvider', this)
             .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.outputPath); 
 
@@ -469,7 +472,7 @@ export default class Executable extends Model {
 
 
 	__buildCommand(){
-		let command = '"' + this.executablePath + '"';
+		let command = '"' + this.fullPath(this.executablePath) + '"';
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);
 		command = this.__addLoggingArguments(command);
@@ -531,7 +534,7 @@ export default class Executable extends Model {
 		
 		return inputModification
 			?inputModification.getModifiedPath(this)
-			:this.inputPath;		
+			:this.fullPath(this.inputPath);		
 	}
 
 	__getModifiedOutputPath() {

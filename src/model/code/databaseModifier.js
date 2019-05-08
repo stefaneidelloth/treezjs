@@ -60,7 +60,7 @@ export default class DatabaseModifier extends CodeModel {
     	
     	switch(this.targetType){
     		case TableTargetType.sqLite:
-    			var connectionString = this.targetFilePath;
+    			var connectionString = this.fullPath(this.targetFilePath);
     			var query = this.__buildQuery();
     			await window.treezTerminal.sqLiteQuery(connectionString, query, false)
     				.catch((error)=>{
@@ -91,7 +91,8 @@ export default class DatabaseModifier extends CodeModel {
 
         this.__targetFilePathSelection = sectionContent.append('treez-file-path')
             .label('Database file')           
-            .onChange(()=>this.refreshStatus())           
+            .onChange(()=>this.refreshStatus())  
+            .nodeAttr('pathMapProvider', this)
             .bindValue(this,()=>this.targetFilePath);  
         
         this.__hostSelection = sectionContent.append('treez-text-field')

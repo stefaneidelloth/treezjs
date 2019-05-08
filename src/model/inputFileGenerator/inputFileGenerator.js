@@ -76,13 +76,13 @@ export default class InputFileGenerator extends Model  {
 		        
 		await window.treezTerminal.deleteFile(modifiedInputPath);	
 
-		var template = await window.treezTerminal.readTextFile(this.templatePath) //
+		var template = await window.treezTerminal.readTextFile(this.fullPath(this.templatePath)) //
 												 .catch((error)=>{
 													monitor.error(error);
 												 });
 
 		if(!template){
-			throw new Error('Could not read template at ' + this.templatePath);
+			throw new Error('Could not read template at ' + this.fullPath(this.templatePath));
 		}
 
 		monitor.worked(1);
@@ -126,7 +126,8 @@ export default class InputFileGenerator extends Model  {
 	    var sectionContent = section.append('div'); 
 
 	    sectionContent.append('treez-file-path')
-        	.label('Template for input file (contains variable place holders)')        	
+        	.label('Template for input file (contains variable place holders)')  
+        	.nodeAttr('pathMapProvider', this)
         	.bindValue(this,()=>this.templatePath);
         
 	    
@@ -147,6 +148,7 @@ export default class InputFileGenerator extends Model  {
 	    sectionContent.append('treez-file-path')
 	    	.label('Input file to generate')	    	
 	    	.onChange(()=>this.refreshStatus())	
+	    	.nodeAttr('pathMapProvider', this)
 	    	.bindValue(this,()=>this.inputPath);
 
 	    sectionContent.append('treez-check-box')
@@ -187,7 +189,7 @@ export default class InputFileGenerator extends Model  {
 		
 		return inputModification
 			?inputModification.getModifiedPath(this)
-			:this.inputPath;
+			:this.fullPath(this.inputPath);
 	}
 
 		

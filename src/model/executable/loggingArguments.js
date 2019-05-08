@@ -11,8 +11,6 @@ export default class LoggingArguments extends ComponentAtom {
 	    this.logFilePath = undefined;       
 	}
 
-	
-
     createComponentControl(tabFolder){  
 		const page = tabFolder.append('treez-tab')
             .title('Data');
@@ -46,13 +44,9 @@ export default class LoggingArguments extends ComponentAtom {
 
         sectionContent.append('treez-file-path')
              .title('Log file')            
-             .onChange(()=>this.refreshStatus())          
-             .bindValue(this,()=>this.logFilePath);
-       
-    }
-    
-    
-    
-    
+             .onChange(()=>this.refreshStatus())  
+             .nodeAttr('pathMapProvider', this)
+             .bindValue(this,()=>this.logFilePath);       
+    }   
 
 }

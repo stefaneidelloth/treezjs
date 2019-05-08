@@ -13,7 +13,7 @@ export default class Path extends Model {
 
 	constructor(name) {		
 		super(name);
-		this.image = 'path.png';
+		this.image = 'path.png';		
 		
 		this.__section = undefined;
 	}	
@@ -154,7 +154,7 @@ export default class Path extends Model {
 		return directoryPathVariable;
 	}	
 
-	get paths() {
+	get variables() {
         const variableFields = [];
 		for (const child of this.children) {
 		    if(child instanceof VariableField){
@@ -164,11 +164,15 @@ export default class Path extends Model {
 		return variableFields;
 	}
 	
+	get providesPathMap() {
+		return true;
+	}
+	
 	get pathMap(){		
-		return this.enabledPaths;
+		return this.enabledVariables;
 	}
 
-	get enabledPaths(){
+	get enabledVariables(){
 		var enabledVariables = [];
 		this.children.forEach((child)=>{
 			if(child instanceof Variable){

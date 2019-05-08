@@ -75,6 +75,7 @@ export default class TableSource extends ComponentAtom  {
 		
 		this.__filePathSelection = sectionContent.append('treez-file-path')
 										.label('File path')
+										.nodeAttr('pathMapProvider', this)
 										.bindValue(this,()=>this.filePath);
 		
 		this.__columnSeperatorSelection = sectionContent.append('treez-text-field')
@@ -211,7 +212,6 @@ export default class TableSource extends ComponentAtom  {
 		this.__useCustomQuerySelection.enable();
 		showAndHideQueryComponents();
 	}
-
 	
 
 }
