@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import DirectoryPathVariable from './../../model/variable/field/directoryPathVariable.js';
+import DirectoryPathVariable from './../field/directoryPathVariable.js';
 
 export default class DirectoryPathRange extends VariableRange {
 
@@ -29,6 +29,15 @@ export default class DirectoryPathRange extends VariableRange {
 	    	.nodeAttr('pathMapProvider', this)
 	    	.bindValue(this, ()=>this.directoryList);
 	    	   
-    }	
+    }
+	
+	createVariableControl(sectionContent, dTreez){
+		
+		sectionContent.append('treez-directory-path-list')
+			.label(this.name)
+			.nodeAttr('pathMapProvider', this)
+			.bindValue(this, ()=>this.directoryList);
+    	
+    }
 
 }

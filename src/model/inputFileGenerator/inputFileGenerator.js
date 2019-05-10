@@ -3,7 +3,7 @@ import Executable from './../executable/executable.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import InputModification from './../executable/inputModification.js';
 import GenericInput from './../genericInput/genericInput.js';
-import QuantityVariable from './../variable/field/quantityVariable.js';
+import QuantityVariable from './../../variable/field/quantityVariable.js';
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the

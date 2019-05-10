@@ -5,7 +5,6 @@ import ColumnType from './../../data/column/columnType.js';
 import VariableRangeCodeAdaption from './variableRangeCodeAdaption.js';
 
 export default class VariableRange extends ComponentAtom {
-
 	
 	constructor(name, values) {
 		super(name);
@@ -23,16 +22,12 @@ export default class VariableRange extends ComponentAtom {
 	}
 	
 	createComponentControl(tabFolder){    
-		
+		throw new Error('Must be overridden by inheriting variable class.')
 	}	
 	
-	get values(){
-		return eval(this.__rangeString);
-	}
-
-	set values(array){
-		this.__rangeString = '[' + array + ']';		
-	}
+	createVariableControl(parent, dTreez){
+    	throw new Error('Must be overridden by inheriting variable class.')
+    }	
 	
 	getSourceModelPath(){
 		var study = this.parent;
@@ -43,34 +38,35 @@ export default class VariableRange extends ComponentAtom {
 		return new VariableRangeCodeAdaption(this);
 	}
 	
-	/*
-	
+	get values(){
+		return eval(this.__rangeString);
+	}
 
-	
+	set values(array){
+		this.__rangeString = '[' + array + ']';		
+	}
+		
+	/*
 	
 	// Changes the model path selection for the source variable to use the source model as relative root
 	
-	protected void assignRealtiveRootToSourceVariablePath() {
-		Objects.requireNonNull(sourceModelModelPath, "Source model path must not be null when calling this function.");
-		data.setLabel("Data for " + sourceModelModelPath);
-		AbstractAtom<?> relativeRootAtom = this.childFromRoot(sourceModelModelPath);
-		AttributeWrapper<String> pathWrapper = (AttributeWrapper<String>) sourceVariableModelPath;
+	assignRealtiveRootToSourceVariablePath() {
+		
+		this.data.label = 'Data for "' + this.sourceModelModelPath + '"';
+		var relativeRootAtom = this.childFromRoot(sourceModelModelPath);
+		
 		ModelPath modelPath = (ModelPath) pathWrapper.getAttribute();
 		modelPath.setModelRelativeRoot(relativeRootAtom);
 	}
 
-	@Override
-	public void setParentAtom(AbstractAtom<?> parent) {
+	setParentAtom(parent) {
 		super.setParentAtom(parent);
-		checkParentAndUpdateSourceModel(parent);
+		this.__checkParentAndUpdateSourceModel(parent);
 	}
 
-	
 
-
-	 // Checks if the parent is a study, gets the source model from it and updates the source model for this
-	 // VariableRange
-
+	// Checks if the parent is a study, gets the source model from it and updates the source model for this
+	// VariableRange
 	public void checkParentAndUpdateSourceModel(AbstractAtom<?> parent) {
 
 		if (parent == null) {
@@ -130,15 +126,6 @@ export default class VariableRange extends ComponentAtom {
 		return image;
 	}
 
-	//#end region
-
-	//#region ACCESSORS
-
-	
-
-	//#end region
-
-	//#region SOURCE VARIABLE
 
 	public void setSourceVariableModelPath(String sourceVariableModelPath) {
 		this.sourceVariableModelPath.set(sourceVariableModelPath);
@@ -176,8 +163,9 @@ export default class VariableRange extends ComponentAtom {
 		return relativePath;
 	}
 
-	
 	*/
+
+
 	
 
 }

@@ -79,7 +79,8 @@ export default class Page extends GraphicsAtom {
 		if(!monitor){
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
-			monitor.showInMonitorView();			
+			monitor.showInMonitorView();
+			monitor.clear();
 		}			
 
 		monitor.totalWork = 1 + this.numberOfRunnableChildren;	

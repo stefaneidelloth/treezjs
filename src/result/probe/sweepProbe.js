@@ -1,10 +1,11 @@
 import Probe from './probe.js';
 import SweepOutput from './../../study/sweep/sweepOutput.js';
 import Table from './../../data/table/table.js';
-import VariableRange from './../../study/range/variableRange.js';
+import Quantity from './../../variable/quantity.js';
+import VariableRange from './../../variable/range/variableRange.js';
 import ColumnBlueprint from './../../data/column/columnBlueprint.js'; 
 import Row from './../../data/row/row.js';
-import Quantity from './../../data/variable/quantity.js';
+
 
 /**
  * Collects data from a sweep parameter variation and puts it in a single (probe-) table. That table can easier be used

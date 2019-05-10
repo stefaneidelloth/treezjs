@@ -1,4 +1,5 @@
 import Variable from './../variable.js';
+import IntegerRange from './../range/integerRange.js';
 
 export default class IntegerVariable extends Variable {
 	
@@ -13,6 +14,10 @@ export default class IntegerVariable extends Variable {
 			.label(this.name)
 			.bindValue(this, ()=>this.value);	
     	
+    }
+	
+	createRange(name){
+    	return new IntegerRange(name);
     }
 
 }

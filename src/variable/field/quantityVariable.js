@@ -1,5 +1,6 @@
 import Variable from './../variable.js';
-import Quantity from './../../../core/quantity/quantity.js';
+import Quantity from './../quantity.js';
+import QuantityRange from './../range/quantityRange.js';
 
 export default class QuantityVariable extends Variable {
 	
@@ -50,6 +51,10 @@ export default class QuantityVariable extends Variable {
 			.label('unit:')
 			.attr('width','20%')	
 			.bindValue(this, ()=>this.unit);    	
+    }
+	
+	createRange(name){
+    	return new QuantityRange(name);
     }
 
 }

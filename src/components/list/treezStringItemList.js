@@ -57,6 +57,13 @@ export default class TreezStringItemList extends TreezStringList {
     	cell.onblur = (event)=>this.__cellLostFocus(event);                	
     	 
     }
+
+     get __defaultValue(){
+     	if(!this.options){
+     		return '';
+     	}
+     	return this.options.split(',')[0];    	
+    } 
     
     getCellValue(cell){
     	return cell.children[0].value;

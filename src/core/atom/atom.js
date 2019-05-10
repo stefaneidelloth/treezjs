@@ -362,20 +362,18 @@ export default class Atom {
 
 	rootHasChild(childPathStartingWithRoot) {
 		try {
-			this.childFromRoot(childPathStartingWithRoot);
-			return true;
+			var child = this.childFromRoot(childPathStartingWithRoot);
+			return child
+				?true
+				:false;
 		} catch (error) {
 			return false;
 		}
 	}
 
-	/**
-	 * Gets the first child atom with the given name. Throws an Error if the child could not be
-	 * found.
-	 */
 	childByName(childName) {
 
-		var wantedChild = undefined;
+		var wantedChild = null;
 
 		this.children.every(function(child){
 			var isWantedChild = child.name === childName;
@@ -385,34 +383,20 @@ export default class Atom {
 			} else {
 				return true;
 			}
-		});
-
-		if(!wantedChild){
-			throw new Error('Could not find child "' + childName + '" in "' + name + '".');
-		}
+		});		
 		
 		return wantedChild;		
 	}
-
-	/**
-	 * Gets the first child atom with the given class. Throws an Error if the child could not be
-	 * found.
-	 */
+	
 	childByClass(clazz) {
-
 		for(var child of this.children){
 			if(child instanceof clazz){
 				return child;
 			}
-		}
-		
-        throw new Error('Could not find a child with class "' + clazz + '" in "' + this.name + '".');        		
+		}		
+        return null;      		
 	}
 
-	/**
-	 * Gets a list of all child atoms with the given class. Returns an empty list if no child with the given class could
-	 * be found.
-	 */
 	childrenByClass(clazz) {
 		var wantedChildren = [];
         this.children.forEach(child => {
@@ -460,24 +444,15 @@ export default class Atom {
 		//could not find any child that has the wanted type
 		return false;
 	}
-	
-	
-
-	/**
-	 * Removes all children of this atom
-	 */
+		
 	removeAllChildren() {
 		this.children.length = 0;
 	}
-
-	/**
-	 * Removes the child with the given name if it exists. The names of the children should be unique. Only the first
-	 * child with the given name is removed.
-	 */
+	
 	removeChildIfExists(childName) {
 
 		try{
-			var childToRemove = this.childByName();
+			var childToRemove = this.childByName(childName);
 			this.removeChild(childToRemove);
 		} catch(error){
 

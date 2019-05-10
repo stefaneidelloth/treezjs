@@ -1,4 +1,5 @@
 import Variable from './../variable.js';
+import DoubleRange from './../range/doubleRange.js';
 
 export default class DoubleVariable extends Variable {
 	
@@ -13,6 +14,10 @@ export default class DoubleVariable extends Variable {
 			.label(this.name)
 			.bindValue(this, ()=>this.value);		
     	
+    }
+	
+	createRange(name){
+    	return new DoubleRange(name);
     }
 
 }

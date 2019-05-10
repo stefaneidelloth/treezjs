@@ -1,33 +1,19 @@
-import VariableRange from './../range/variableRange.js';
+import VariableRange from './../../variable/range/variableRange.js';
 import ModelInput from './../../model/input/modelInput.js';
 
 export default class SweepModelInputGenerator {
 
 	constructor(sweep) {
-		this.sweep = sweep;
-	}
-
-	
-	createModelInputs() {
-		var enabledVariableRanges = this.__getEnabledRanges();
-		return this.__createModelInputs(enabledVariableRanges);
-	}
-
-	getNumberOfSimulations() {
-		var enabledVariableRanges = this.__getEnabledRanges();
-		return this.__getNumberOfSimulations(enabledVariableRanges);
-	}
+		this.__sweep = sweep;
+	}	
 
 	exportStudyInfoToTextFile(filePath) {
-
-		var numberOfSimulations = getNumberOfSimulations();
-
+		
 		var studyInfo = '---------- SweepInfo ----------\r\n\r\n' + //
-				'Total number of simulations:\r\n' + numberOfSimulations + '\r\n\r\n' + //
+				'Total number of simulations:\r\n' + this.numberOfSimulations + '\r\n\r\n' + //
 				'Variable model paths and values:\r\n\r\n';
-
-		var variableRanges = this.__getEnabledRanges();
-		variableRanges.forEach(range=>{
+		
+		this.__enabledRanges.forEach(range => {
 			var variablePath = range.sourceVariableModelPath;
 			studyInfo += variablePath + '\r\n';
 			
@@ -41,15 +27,13 @@ export default class SweepModelInputGenerator {
 		try {
 			window.treezTerminal.writeFile(filePath, studyInfo);
 		} catch (error) {
-			var message = 'Could not export study info to "' + filePath
-					+ '". Maybe the path is not valid.';
+			var message = 'Could not export study info to "' + filePath + '". Maybe the path is not valid.';
 			console.error(message);
 		}
 	}
 
-	fillStudyInfo(database, tableName, studyId) {
-		var variableRanges = this.__getEnabledRanges();
-		variableRanges.forEach(range=>{
+	fillStudyInfo(database, tableName, studyId) {	
+		this.__enabledRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
 				var query = 'INSERT INTO `' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
@@ -60,9 +44,8 @@ export default class SweepModelInputGenerator {
 		
 	}
 
-	fillStudyInfoForSchema(database, schemaName, tableName, studyId) {
-		var variableRanges = this.__getEnabledRanges();
-		variableRanges.forEach(range=>{
+	fillStudyInfoForSchema(database, schemaName, tableName, studyId) {		
+		this.__enabledRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
 				var query = 'INSERT INTO `' + schemaName + '.' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
@@ -72,38 +55,7 @@ export default class SweepModelInputGenerator {
 		});		
 	}
 	
-	getNumberOfEnabledRanges(){
-		return this.__getEnabledRanges().length;
-	}
 	
-	__getEnabledRanges() {
-		var variableRanges = [];
-
-		this.sweep.children.forEach(child=>{
-			var isVariableRange = child instanceof VariableRange;
-			if (isVariableRange) {				
-				if (child.isEnabled) {
-					
-					//check if corresponding variable is also enabled					
-					var variable;
-					try {
-						variable = this.sweep.childFromRoot(child.variablePath);
-					} catch (error) {
-						var message = 'Could not find variable atom "' + child.variablePath + '".';
-						throw new Error(message + error);
-					}
-					
-					if (variable.isEnabled) {
-						variableRanges.push(child);
-					} else {
-						console.warn('Corresponding variable is not enabled for variable range ' + child.name);
-					}					
-				}
-			}
-		});		
-		
-		return variableRanges;
-	}
 	
 	__createModelInputs(variableRanges) {
 		var self=this;
@@ -187,13 +139,14 @@ export default class SweepModelInputGenerator {
 
 	
 	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId, totalNumberOfJobs) {
-		var sweepModelPath = this.sweep.treePath;
+		var sweepModelPath = this.__sweep.treePath;
 		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
 		initialInput.add(variableModelPath, value);
 		return initialInput;
 	}
-
-	__getNumberOfSimulations(variableRanges) {
+	
+	
+	__numberOfSimulationsForRanges(variableRanges) {
 	
 		var numberOfSimulations = 1;		
 		var hasAtLeastOneSimulation = false;
@@ -211,8 +164,45 @@ export default class SweepModelInputGenerator {
 			:0;			
 	}
 	
+	get numberOfEnabledRanges(){
+		return this.__enabledRanges.length;
+	}
 	
+	get __enabledRanges() {
+		var variableRanges = [];
 
-	//#end region
+		this.__sweep.children.forEach(child=>{
+			var isVariableRange = child instanceof VariableRange;
+			if (isVariableRange) {				
+				if (child.isEnabled) {
+					
+					//check if corresponding variable is also enabled					
+					var variable;
+					try {
+						variable = this.__sweep.childFromRoot(child.variablePath);
+					} catch (error) {
+						var message = 'Could not find variable atom "' + child.variablePath + '".';
+						throw new Error(message + error);
+					}
+					
+					if (variable.isEnabled) {
+						variableRanges.push(child);
+					} else {
+						console.warn('Corresponding variable is not enabled for variable range ' + child.name);
+					}					
+				}
+			}
+		});		
+		
+		return variableRanges;
+	}
+	
+	get modelInputs() {		
+		return this.__createModelInputs(this.__enabledRanges);
+	}
+
+	get numberOfSimulations() {		
+		return this.__numberOfSimulationsForRanges(this.__enabledRanges);
+	}
 
 }

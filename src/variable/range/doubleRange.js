@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import DoubleVariable from './../../model/variable/field/doubleVariable.js';
+import DoubleVariable from './../field/doubleVariable.js';
 import ColumnType from './../../data/column/columnType.js';
 
 export default class DoubleRange extends VariableRange {
@@ -30,5 +30,11 @@ export default class DoubleRange extends VariableRange {
 	    	.bindValue(this, ()=>this.__rangeString);	  
 				
     }	
+	
+	createVariableControl(sectionContent, dTreez){		
+	    sectionContent.append('treez-text-field')
+	    	.label(this.name)
+	    	.bindValue(this, ()=>this.__rangeString);	
+    }
 
 }

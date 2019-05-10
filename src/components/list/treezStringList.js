@@ -51,6 +51,13 @@ export default class TreezStringList extends TreezElement {
     		this.__recreateTableRows();
     	} 		    
     } 
+
+    __recreateTableRows(){                	
+    	this.__deleteRows(); 
+    	this.values.forEach((value)=>{
+    		this.__createRow(value);
+    	});  
+    } 
     
     __cellChanged(event){
     	let cell = event.currentTarget;
@@ -82,7 +89,11 @@ export default class TreezStringList extends TreezElement {
 	}
 
 	convertToStringValue(stringArray){
-		return "['" + stringArray.join("','") + "']";
+		if(stringArray.length < 1){
+			return "[]";
+		} else {
+			return "['" + stringArray.join("','") + "']";
+		}		
 	}                
     
     __addRow(){
@@ -95,12 +106,16 @@ export default class TreezStringList extends TreezElement {
 
     __appendNewRow(){
     	var valueArray = this.values;
-    	valueArray.push('');
+    	valueArray.push(this.__defaultValue);
     	this.value = valueArray;    	
     	
     	this.__recreateTableRows();
     	this.__selectRow(this.values.length-1);
-    }    
+    } 
+
+    get __defaultValue(){
+    	return '';
+    }   
 
      __cellLostFocus(event){ 
     	this.__selectedRowIndex=undefined;
@@ -207,9 +222,7 @@ export default class TreezStringList extends TreezElement {
     	
     	this.__recreateTableRows();
     	this.__selectRow(index+1);
-    }
-
-   
+    }   
 	
 	__moveCurrentRowUp(){
     	let index = this.__lastSelectedRowIndex;
@@ -270,18 +283,9 @@ export default class TreezStringList extends TreezElement {
 		valueArray.splice(newIndex,0,valueToMove);  
 		this.value = valueArray;
 
-		this.__recreateTableRows(); 		                 
-       
+		this.__recreateTableRows(); 
         this.__selectRow(newIndex); 
-
-    }
-    
-    __recreateTableRows(){                	
-    	this.__deleteRows(); 
-    	this.values.forEach((value)=>{
-    		this.__createRow(value);
-    	});  
-    } 
+    }    
 
     __rowCanBeDeleted(){
     	return this.values.length > 0; 					

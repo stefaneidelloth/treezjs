@@ -1,5 +1,5 @@
-import AtomCodeAdaption from './../../core/code/atomCodeAdaption.js';
-import CodeContainer from './../../core/code/codeContainer.js';
+import AtomCodeAdaption from './../core/code/atomCodeAdaption.js';
+import CodeContainer from './../core/code/codeContainer.js';
 
 export default class VariableCodeAdaption extends AtomCodeAdaption {
 

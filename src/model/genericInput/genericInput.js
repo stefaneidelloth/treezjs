@@ -8,17 +8,17 @@ import Model from './../model.js';
 import TreeViewAction from './../../core/treeview/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import ActionSeparator from './../../core/actionSeparator.js';
-import Variable from './../variable/variable.js';
-import DoubleVariable from './../variable/field/doubleVariable.js';
-import IntegerVariable from './../variable/field/integerVariable.js';
-import QuantityVariable from './../variable/field/quantityVariable.js';
-import BooleanVariable from './../variable/field/booleanVariable.js';
-import FilePathVariable from './../variable/field/filePathVariable.js';
-import DirectoryPathVariable from './../variable/field/directoryPathVariable.js';
-import StringVariable from './../variable/field/stringVariable.js';
-import StringItemVariable from './../variable/field/stringItemVariable.js';
+import Variable from './../../variable/variable.js';
+import DoubleVariable from './../../variable/field/doubleVariable.js';
+import IntegerVariable from './../../variable/field/integerVariable.js';
+import QuantityVariable from './../../variable/field/quantityVariable.js';
+import BooleanVariable from './../../variable/field/booleanVariable.js';
+import FilePathVariable from './../../variable/field/filePathVariable.js';
+import DirectoryPathVariable from './../../variable/field/directoryPathVariable.js';
+import StringVariable from './../../variable/field/stringVariable.js';
+import StringItemVariable from './../../variable/field/stringItemVariable.js';
+import AbstractPathVariable from './../../variable/field/abstractPathVariable.js';
 import GenericInputCodeAdaption from './genericInputCodeAdaption.js';
-import AbstractPathVariable from './../variable/field/abstractPathVariable.js';
 import Path from './../path/path.js';
 
 

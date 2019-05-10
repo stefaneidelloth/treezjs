@@ -77,7 +77,7 @@ export default class TreezSection extends HTMLElement {
     collapse(){
     	
         let header = this.children[0];
-    	let content = this.__getSectionContentDiv()
+    	let content = this.__getSectionContentDiv();
     	let style = content.style;
     	
 		style.display='none';

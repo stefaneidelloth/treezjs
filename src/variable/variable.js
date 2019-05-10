@@ -1,4 +1,4 @@
-import ComponentAtom from './../../core/component/componentAtom.js';
+import ComponentAtom from './../core/component/componentAtom.js';
 import VariableCodeAdaption from './variableCodeAdaption.js';
 
 export default class Variable extends ComponentAtom {
@@ -31,6 +31,10 @@ export default class Variable extends ComponentAtom {
 
     createCodeAdaption(){
     	return new VariableCodeAdaption(this);
+    }
+    
+    createRange(){    	
+    	throw new Error('Must be overridden by inheriting variable class.');
     }
 
 }

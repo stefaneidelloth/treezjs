@@ -1,4 +1,5 @@
 import Variable from './../variable.js';
+import StringRange from './../range/stringRange.js';
 
 export default class StringVariable extends Variable {
 	
@@ -11,6 +12,10 @@ export default class StringVariable extends Variable {
 		var textField = parent.append('treez-text-field')
 			.label(this.name)
 			.bindValue(this, ()=>this.value);
+    }
+	
+	createRange(name){
+    	return new StringRange(name);
     }
 
 }

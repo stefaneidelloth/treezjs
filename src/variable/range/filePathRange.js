@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import FilePathVariable from './../../model/variable/field/filePathVariable.js';
+import FilePathVariable from './../field/filePathVariable.js';
 
 export default class FilePathRange extends VariableRange {
 
@@ -28,8 +28,13 @@ export default class FilePathRange extends VariableRange {
 	    	.label('Range')
 	    	.nodeAttr('pathMapProvider', this)
 	    	.bindValue(this, ()=>this.directoryList);	 
-	    
-	   				
     }	
+	
+	createVariableControl(sectionContent, dTreez){
+	    sectionContent.append('treez-file-path-list')
+	    	.label(this.name)
+	    	.nodeAttr('pathMapProvider', this)
+	    	.bindValue(this, ()=>this.directoryList);	    	
+    }
 
 }

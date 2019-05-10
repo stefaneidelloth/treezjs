@@ -4,7 +4,7 @@ import ModelInput from './../model/input/modelInput.js';
 import Monitor from './../core/monitor/Monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import PythonExport from './pythonExport/pythonExport.js';
-
+import Variable from './../variable/variable.js';
 
 export default class Study extends ComponentAtom {
 			
@@ -24,6 +24,7 @@ export default class Study extends ComponentAtom {
 		
 		this.__page = undefined;
 		this.__sectionContent = undefined;
+		this.__sourceModelPathSelection = undefined;
 
 		this.__numberOfRemainingModelJobs = undefined;
 		this.__isCanceled = false;
@@ -58,7 +59,7 @@ export default class Study extends ComponentAtom {
         	.nodeAttr('atomClasses', [Model])
         	.bindValue(this, ()=>this.controlledModelPath);
 		
-		this.__sectionContent.append('treez-model-path')
+		this.__sourceModelPathSelection = this.__sectionContent.append('treez-model-path')
 	    	.label('Variable source model (provides variables)')
 	    	.nodeAttr('atomClasses', [Model])	    	
 	    	.bindValue(this, ()=>this.sourceModelPath);
@@ -70,7 +71,7 @@ export default class Study extends ComponentAtom {
 	    
     }
 	
-extendContextMenuActions(actions, parentSelection, treeView) {
+	extendContextMenuActions(actions, parentSelection, treeView) {
 				
 		actions.push(new AddChildAtomTreeViewAction(
 				PythonExport,
@@ -88,6 +89,7 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
+			monitor.clear();
 		}
 		await this.__doExecute(treeView, monitor)
 			  .catch((exception)=> {
@@ -103,32 +105,28 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 		var className = this.constructor.name;
 
 		var startMessage = 'Executing ' + className + ' "' + this.name + '"';
-		monitor.info(startMessage);
-		
-		var numberOfRanges = this.__inputGenerator.getNumberOfEnabledRanges();
-		monitor.info('Number of (enabled) ranges: ' + numberOfRanges);
+		monitor.info(startMessage);		
 	
 		var studyTitle = "Running " + className;
 		monitor.title = studyTitle;
 
-		var numberOfSimulations = this.__inputGenerator.getNumberOfSimulations();
+		var numberOfSimulations = this.inputGenerator.numberOfSimulations;
 		monitor.totalWork = numberOfSimulations;
 				
-		monitor.info("Number of total simulations: " + numberOfSimulations);
+		monitor.info("Total number of simulations: " + numberOfSimulations);
 
 		//reset job index to 1
 		ModelInput.resetIdCounter();
 
 		//create model inputs
-		var modelInputs = this.__inputGenerator.createModelInputs();
+		var modelInputs = this.inputGenerator.modelInputs;
 
 		//prepare result structure
 		this.__prepareResultStructure(monitor);
 		treeView.refresh();
 
-		//get sweep output atom
-		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
-		var studyOutputAtom = this.childFromRoot(studyOutputAtomPath);
+		//get study output atom		
+		var studyOutputAtom = this.childFromRoot(this.studyOutputAtomPath);
 
 		//remove all old children if they exist
 		studyOutputAtom.removeAllChildren();
@@ -202,7 +200,7 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 			self.__continueToProcessQueue(jobQueue);
 		};
 		
-		var model = this.getControlledModel();
+		var model = this.controlledModel;
 		
 		modelInputs.forEach((modelInput)=>{
 			self.__createAndEnqueueModelJob(jobQueue, treeView, outputAtom, model, modelInput, monitor, jobFinishedDelegate);
@@ -317,7 +315,7 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 
 		var self=this;
 		
-		var model = this.__getControlledModel();
+		var model = this.controlledModel;
 		var startTime = new Date().valueOf();		
 		
 		var pythonExport = this.childByClass(PythonExport);
@@ -371,17 +369,14 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 		this.__createOutputAtomIfNotExists(monitor);		
 	}
 
-	__createOutputAtomIfNotExists(monitor) {
-		var dataAtomPath = this.__createDataOutputAtomPath();
-		var studyOutputAtomName = this.__createStudyOutputAtomName();
+	__createOutputAtomIfNotExists(monitor) {		
 		
-		var studyOutputAtomPath = this.__createStudyOutputAtomPath();
-		var studyOutputAtomExists = this.rootHasChild(studyOutputAtomPath);
+		var studyOutputAtomExists = this.rootHasChild(this.studyOutputAtomPath);
 		if (!studyOutputAtomExists) {
-			var studyOutput = this.createStudyOutputAtom(studyOutputAtomName);
-			var data = this.childFromRoot(dataAtomPath);
+			var studyOutput = this.createStudyOutputAtom(this.studyOutputAtomName);
+			var data = this.childFromRoot(this.dataOutputAtomPath);
 			data.addChild(studyOutput);			
-			monitor.info('Created ' + studyOutputAtomPath + ' for study output.');
+			monitor.info('Created ' + this.studyOutputAtomPath + ' for study output.');
 		}
 
 	}
@@ -403,7 +398,7 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 	__createDataAtomIfNotExists(monitor) {
 		var resultAtomPath = 'root.results';
 		var dataAtomName = 'data';
-		var dataAtomPath = this.__createDataOutputAtomPath();
+		var dataAtomPath = this.dataOutputAtomPath;
 		var dataAtomExists = this.rootHasChild(dataAtomPath);
 		if (!dataAtomExists) {			
 			var results = this.childFromRoot(resultAtomPath);
@@ -412,40 +407,17 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 		}
 	}
 	
-	__createStudyOutputAtomPath() {
-		return this.__createDataOutputAtomPath() + "." + this.__createStudyOutputAtomName();	
+	get studyOutputAtomPath() {
+		return this.dataOutputAtomPath + '.' + this.studyOutputAtomName;	
 	}
 
-	__createDataOutputAtomPath() {
+	get dataOutputAtomPath() {
 		return 'root.results.data';		
 	}
 
-
-	__createStudyOutputAtomName() {
+	get studyOutputAtomName() {
 		return this.name + 'Output';		
 	}	
-
-	__getControlledModel() {		
-		try {
-			return this.childFromRoot(this.controlledModelPath);
-			
-		} catch (error) {
-			var message = 'The model path "' + this.controlledModelPath + '" does not point to a valid model.';
-			throw new Error(message, error);
-		}
-	}
-
-	__getSourceModel() {
-		if(!this.sourceModelPath){
-			return null;
-		}
-		try{
-			return this.childFromRoot(this.sourceModelPath);			
-		} catch (error) {
-			var message = 'The model path "' + sourcePath + '" does not point to a valid model.';
-			throw new Error(message, error);
-		}
-	}
 
 	__logStartMessage(counter, startTime, numberOfSimulations, monitor) {
 
@@ -506,13 +478,64 @@ extendContextMenuActions(actions, parentSelection, treeView) {
 			return date.toLocaleString();
 		}
 	}
+
+	createPythonExport(name){
+		this.createChild(PythonExport, name);
+	}
+
+	get inputGenerator(){
+		return this.__inputGenerator;
+	}
 	
 	set inputGenerator(inputGenerator){
 		this.__inputGenerator = inputGenerator;
+	}	
+
+	get controlledModel() {		
+		try {
+			return this.childFromRoot(this.controlledModelPath);
+			
+		} catch (error) {
+			var message = 'The model path "' + this.controlledModelPath + '" does not point to a valid model.';
+			throw new Error(message, error);
+		}
 	}
-	
-	createPythonExport(name){
-		this.createChild(PythonExport, name);
+
+	get sourceModel() {
+		if(!this.sourceModelPath){
+			return null;
+		}
+		try{
+			return this.childFromRoot(this.sourceModelPath);			
+		} catch (error) {
+			var message = 'The model path "' + sourcePath + '" does not point to a valid model.';
+			throw new Error(message, error);
+		}
+	}
+
+	get availableVariables(){
+		if(!this.parent){
+			return [];
+		}
+		
+		var sourceModel = this.sourceModel;
+		if(!sourceModel){
+			return [];
+		}		
+		
+		var variables = [];				
+		for (var child of sourceModel.children) {				
+			if (child instanceof Variable) {
+				if(child.isEnabled){
+					variables.push(child);
+				}						
+			}
+		}
+		return variables;	
+	}
+
+	get availableVariableNames(){
+		return this.availableVariables.map(variable => variable.name);		
 	}
 
 

@@ -1,4 +1,5 @@
 import Variable from './../variable.js';
+import BooleanRange from './../range/booleanRange.js';
 
 export default class BooleanVariable extends Variable {
 	
@@ -13,6 +14,10 @@ export default class BooleanVariable extends Variable {
 			.label(this.name)
 			.bindValue(this, ()=>this.value);	
     	
+    }
+	
+	createRange(name){
+    	return new BooleanRange(name);
     }
 
 }

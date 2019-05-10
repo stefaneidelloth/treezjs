@@ -2,14 +2,14 @@ import Study from './../study.js';
 import SweepOutput from './sweepOutput.js';
 import SweepModelInputGenerator from './sweepModelInputGenerator.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
-import DoubleRange from './../range/doubleRange.js';
-import IntegerRange from './../range/integerRange.js';
-import BooleanRange from './../range/booleanRange.js';
-import QuantityRange from './../range/quantityRange.js';
-import StringRange from './../range/stringRange.js';
-import StringItemRange from './../range/stringItemRange.js';
-import FilePathRange from './../range/filePathRange.js';
-import DirectoryPathRange from './../range/directoryPathRange.js';
+import DoubleRange from './../../variable/range/doubleRange.js';
+import IntegerRange from './../../variable/range/integerRange.js';
+import BooleanRange from './../../variable/range/booleanRange.js';
+import QuantityRange from './../../variable/range/quantityRange.js';
+import StringRange from './../../variable/range/stringRange.js';
+import StringItemRange from './../../variable/range/stringItemRange.js';
+import FilePathRange from './../../variable/range/filePathRange.js';
+import DirectoryPathRange from './../../variable/range/directoryPathRange.js';
 
 export default class Sweep extends Study {	
 		
@@ -22,8 +22,6 @@ export default class Sweep extends Study {
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		actions = super.extendContextMenuActions(actions, parentSelection, treeView);
-	
-		
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(

@@ -1,11 +1,11 @@
-import ComponentAtom from "./../core/component/componentAtom.js";
+import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import Study from './study.js';
 import Sweep from './sweep/sweep.js';
 
-//import Picking from './picking/picking.js';
+import Picking from './picking/picking.js';
 //import Sensitivity from './sensitivity/sensitivity.js';
 //import Probability from './probability/probability.js';
 
@@ -14,7 +14,7 @@ export default class Studies extends ComponentAtom {
 	constructor(name) {		
 		super(name);
 		this.isRunnable=true;
-		this.image = "studies.png";
+		this.image = 'studies.png';
 	}
 
 
@@ -44,29 +44,35 @@ export default class Studies extends ComponentAtom {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		actions.push(new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				Sweep,
-				"sweep",
-				"sweep.png",
+				'sweep',
+				'sweep.png',
 				parentSelection,
 				this,
-				treeView));
+				treeView
+			)
+		);
+		
+		
+		actions.push(
+			new AddChildAtomTreeViewAction(
+        		Picking,
+				'picking',
+				'picking.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
 		
 		/*
 
-        const addPicking = new AddChildAtomTreeViewAction(
-        		Picking,
-				"picking",
-				"picking.png",
-				parentSelection,
-				this,
-				treeView);
-		actions.push(addPicking);
-
         const addSensitivity = new AddChildAtomTreeViewAction(
         		Sensitivity,
-				"sensitivity",
-				"sensitivity.png",
+				'sensitivity',
+				'sensitivity.png',
 				parentSelection,
 				this,
 				treeView);
@@ -74,8 +80,8 @@ export default class Studies extends ComponentAtom {
 		
 		const addProbability = new AddChildAtomTreeViewAction(
 				Probability,
-				"probability",
-				"probability.png",
+				'probability',
+				'probability.png',
 				parentSelection,
 				this,
 				treeView);
@@ -94,9 +100,7 @@ export default class Studies extends ComponentAtom {
 	createSweep(name) {
 		return this.createChild(Sweep, name);
 	}
-	
-	/*
-	
+		
 	createPicking(name) {
 		return this.createChild(Picking, name);
 	}
@@ -107,8 +111,6 @@ export default class Studies extends ComponentAtom {
 	
 	createPropability(name) {
 		return this.createChild(Probability, name);
-	}
-	
-	*/
+	}	
 
 }

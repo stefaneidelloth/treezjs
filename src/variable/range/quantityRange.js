@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import QuantityVariable from './../../model/variable/field/quantityVariable.js';
+import QuantityVariable from './../field/quantityVariable.js';
 import ColumnType from './../../data/column/columnType.js';
 
 export default class QuantityRange extends VariableRange {
@@ -46,5 +46,21 @@ export default class QuantityRange extends VariableRange {
 	    	.bindValue(this, ()=>this.unit);	    
 				
     }	
+	
+	createVariableControl(sectionContent, dTreez){
+		
+		sectionContent.append('treez-text-label')
+			.label(this.name);
+	
+	    sectionContent.append('treez-text-field')
+	    	.label('Number range')
+	    	.bindValue(this, ()=>this.__rangeString);	
+    
+	    sectionContent.append('treez-text-field')
+	    	.label('Unit')
+	    	.bindValue(this, ()=>this.unit);
+		
+    	
+    }
 
 }

@@ -206,6 +206,7 @@ export default class ComponentAtom extends Atom {
 			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
+			monitor.clear();
 			hasMainMonitor = true;
 		}
 

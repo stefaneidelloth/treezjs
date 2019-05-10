@@ -1,4 +1,5 @@
 import Variable from './../variable.js';
+import StringItemRange from './../range/stringItemRange.js';
 
 export default class StringItemVariable extends Variable {
 	
@@ -55,6 +56,10 @@ export default class StringItemVariable extends Variable {
         	}        	
         }
     	
+    }
+    
+	createRange(name){
+    	return new StringItemRange(name);
     }
 	
 	get options(){

@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import BooleanVariable from './../../model/variable/field/booleanVariable.js';
+import BooleanVariable from './../field/booleanVariable.js';
 
 export default class BooleanRange extends VariableRange {
 	
@@ -46,6 +46,15 @@ export default class BooleanRange extends VariableRange {
 			.nodeAttr('options', ['true & false', 'false & true'])
 			.bindValue(this, ()=>this.__rangeString); 
 				
+    }
+	
+	createVariableControl(sectionContent, dTreez){
+		
+		sectionContent.append('treez-combo-box')
+			.label(this.name)
+			.nodeAttr('options', ['true & false', 'false & true'])
+			.bindValue(this, ()=>this.__rangeString); 
+    	
     }
 
 }

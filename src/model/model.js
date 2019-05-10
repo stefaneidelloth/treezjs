@@ -1,7 +1,7 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
 import OutputAtom from './../core/output/outputAtom.js';
-import AbstractPathVariable from './variable/field/abstractPathVariable.js';
+import AbstractPathVariable from './../variable/field/abstractPathVariable.js';
 
 
 export default class Model extends ComponentAtom {	

@@ -1,5 +1,5 @@
 import VariableRange from './variableRange.js';
-import StringVariable from './../../model/variable/field/stringVariable.js';
+import StringVariable from './../field/stringVariable.js';
 
 /**
  * Represents a variable range for String values. The parent must by a Study (e.g. Sweep)
@@ -29,8 +29,13 @@ export default class StringRange extends VariableRange {
 	   
 	    sectionContent.append('treez-string-list')
 	    	.label('Range')
-	    	.bindValue(this, ()=>this.__stringList);   
-				
+	    	.bindValue(this, ()=>this.__stringList); 
+    }
+	
+	createVariableControl(parent, dTreez){
+	    sectionContent.append('treez-string-list')
+	    	.label(this.name)
+	    	.bindValue(this, ()=>this.__stringList);     	
     }
 	
 	get values(){
