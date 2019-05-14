@@ -122,7 +122,7 @@ export default class Study extends ComponentAtom {
 		var modelInputs = this.inputGenerator.modelInputs;
 
 		//prepare result structure
-		this.__prepareResultStructure(monitor);
+		this.prepareResultStructure(monitor);
 		treeView.refresh();
 
 		//get study output atom		
@@ -352,18 +352,13 @@ export default class Study extends ComponentAtom {
 				}
 			}			
 
-			jobFinishedHook();			
-
-			treeView.refresh();		
-			
-			jobCounter++;	
-			
+			jobFinishedHook();	
+			treeView.refresh();				
+			jobCounter++;			
 		};
-
 	}
-
 	
-	__prepareResultStructure(monitor) {
+	prepareResultStructure(monitor) {
 		this.__createResultsAtomIfNotExists(monitor);
 		this.__createDataAtomIfNotExists(monitor);
 		this.__createOutputAtomIfNotExists(monitor);		
@@ -379,11 +374,10 @@ export default class Study extends ComponentAtom {
 			monitor.info('Created ' + this.studyOutputAtomPath + ' for study output.');
 		}
 
-	}
+	}	
 	
-	//Needs to be implemented by inheriting class
 	createStudyOutputAtom(name){
-		throw new Exception('Not yet implemented');
+		throw new Exception('Must be implemented by inheriting class');
 	}
 
 	__createResultsAtomIfNotExists(monitor) {

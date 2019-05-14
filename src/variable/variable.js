@@ -1,5 +1,6 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import VariableCodeAdaption from './variableCodeAdaption.js';
+import ColumnType from './../data/column/columnType.js';
 
 export default class Variable extends ComponentAtom {
 		
@@ -7,6 +8,7 @@ export default class Variable extends ComponentAtom {
 		super(name);
 		this.value=value;		
 		this.isDisableable=true;
+		this.columnType = ColumnType.string;
 	}	
 	
     createComponentControl(tabFolder){    

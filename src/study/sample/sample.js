@@ -4,12 +4,12 @@ export default class Sample extends ComponentAtom {
 
 	constructor(name) {
 		super(name);
-		this.image = 'pickingSample.png';
+		this.image = 'sample.png';
 		this.isDisableable = true;
 		
 		this.__variableAtomMap = {};
 		this.__tempVariableAtomMap = {};
-		this.__pickingSection = undefined
+		this.__studySection = undefined
 	}
 	
 	createComponentControl(tabFolder){   
@@ -26,18 +26,21 @@ export default class Sample extends ComponentAtom {
 	}
 
 	__createVariableComponents(sectionContent) {
-		this.__createSampleVariableAtoms();							
-		this.__createTimeSeriesLabel(sectionContent);		
+		this.__createSampleVariableAtoms();
+		
+		if(this.parent.isTimeDependent){
+			this.__createTimeSeriesLabel(sectionContent);
+		}
 		this.__createVariableAtomControls(sectionContent);		
 	}
 
 	__createSampleVariableAtoms(){
-		var picking = this.parent;
-		var isTimeDependent = picking.isTimeDependent;					
+		var study = this.parent;
+		var isTimeDependent = study.isTimeDependent;					
 		this.__tempVariableAtomMap = {};		
-		for (var variable of picking.selectedVariables) {			
+		for (var variable of study.selectedVariables) {			
 			if (isTimeDependent) {			
-				this.__createVariableRange(variable, picking.nameOfTimeVariable);
+				this.__createVariableRange(variable, study.nameOfTimeVariable);
 			} else {
 				this.__createVariable(variable);
 			}			
@@ -46,16 +49,31 @@ export default class Sample extends ComponentAtom {
 	}
 
 	__createTimeSeriesLabel(sectionContent) {
-		var picking = this.parent;
-		var timeVariableName = picking.nameOfTimeVariable;
+		var study = this.parent;
+		var timeVariableName = study.nameOfTimeVariable;
 
 		sectionContent.append('treez-text-label')
 			.value(timeVariableName);
 
 		sectionContent.append('treez-text-label')
-			.value('' + picking.timeRange);	
+			.value('' + study.timeRange);	
 
 	}	
+	
+	
+
+	__createVariableRange(variable, timeVariableName) {
+		var variableRange = variable.createRange();		
+		var name = variable.name + '(' + timeVariableName + ')';
+		variableRange.name = name;
+		this.__tempVariableAtomMap[name] = variableRange;
+		this.__tryToRestoreVariable(name);	
+	}
+
+	__createVariable(variable) {
+		this.__tempVariableAtomMap[variable.name] = variable.copy();
+		this.__tryToRestoreVariable(variable.name);	
+	}
 	
 	__createVariableAtomControls(sectionContent){		
 		for (var variableName in this.__variableAtomMap) {
@@ -63,19 +81,6 @@ export default class Sample extends ComponentAtom {
 			variableAtom.createVariableControl(sectionContent, this.treeView.dTreez);
 		}
 	}	
-
-	__createVariableRange(variable, timeVariableName) {
-		var variableRange = variable.createRange();		
-		var name = variable.name + '(' + timeVariableName + ')';
-		variableRange.name = name;
-		this.__tempVariableAtomMap[name] = variableRange;
-		this.__tryToRestoreVariable(variable.name);	
-	}
-
-	__createVariable(variable) {
-		this.__tempVariableAtomMap[variable.name] = variable.copy();
-		this.__tryToRestoreVariable(variable.name);	
-	}
 
 	__tryToRestoreVariable(name){
 		if(name in this.__variableAtomMap){			

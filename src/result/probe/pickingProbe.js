@@ -1,554 +1,398 @@
-package org.treez.results.atom.probe;
+import Probe from './probe.js';
+import Picking from './../../study/picking/picking.js';
+import PickingOutput from './../../study/picking/pickingOutput.js';
+import DomainType from './domainType.js';
+import Column from './../../data/column/column.js';
+import ColumnType from './../../data/column/columnType.js';
+import ColumnBlueprint from './../../data/column/columnBlueprint.js';
+import Table from './../../data/table/table.js';
+import Row from './../../data/row/row.js';
 
-import java.util.ArrayList;
-import java.util.List;
+export default class PickingProbe extends Probe {
+	
+	constructor(name) {
+		super(name);		
+		this.image = 'picking.png';		
+		
+		this.domainLabel = 'sample_index'; 
+		this.domainType = DomainType.sampleIndex;
+		
+		//The model path to a column that is used to retrieve domain values
+		this.domainColumnPath = ''; 
+		
+		//The model path to Picking that is used to retrieve time values
+		this.pickingPath = '';			
+	
+		this.probeLabel = 'y';	
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.ComboBox;
-import org.treez.core.atom.attribute.modelPath.ModelPath;
-import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.atom.base.AbstractAtom;
-import org.treez.core.atom.variablefield.IntegerVariableField;
-import org.treez.core.atom.variablelist.NumberRangeProvider;
-import org.treez.core.atom.variablerange.VariableRange;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.core.data.column.ColumnBlueprint;
-import org.treez.core.data.column.ColumnType;
-import org.treez.core.data.row.Row;
-import org.treez.core.quantity.Quantity;
-import org.treez.data.column.Column;
-import org.treez.data.column.Columns;
-import org.treez.data.output.OutputAtom;
-import org.treez.data.table.nebula.Table;
-import org.treez.results.Activator;
+		this.pickingOutputPath = '';
+		this.firstProbeTablePath = '';
+		this.columnIndex = 0;
+		this.rowIndex = 0;
 
-/**
- * Collects data from a picking parameter variation and puts it in a single (probe-) table. That table can easier be
- * used to produce plots than the distributed picking results.
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class PickingProbe extends AbstractProbe {
-
-	private static final Logger LOG = Logger.getLogger(PickingProbe.class);
-
-	//#region ATTRIBUTES
-
-	//domain section
-
-	private static final String DOMAIN_TYPE_SAMPLES = "Samples";
-
-	private static final String DOMAIN_TYPE_TIME_SERIES_PICKING = "Time series from picking";
-
-	private static final String DOMAIN_TYPE_TIME_SERIES_COLUMN = "Time series from column";
-
-	public final Attribute<String> domainType = new Wrap<>();
-
-	public final Attribute<String> domainLabel = new Wrap<>();
-
-	/**
-	 * The model path to a column that is used to retrieve domain values
-	 */
-	public final Attribute<String> domainColumnPath = new Wrap<>();
-
-	/**
-	 * The model path to Picking that is used to retrieve time values
-	 */
-	public final Attribute<String> pickingPath = new Wrap<>();
-
-	//probe section
-
-	public final Attribute<String> probeLabel = new Wrap<>();
-
-	public final Attribute<String> pickingOutput = new Wrap<>();
-
-	public final Attribute<String> firstProbeTable = new Wrap<>();
-
-	public final Attribute<Integer> probeColumnIndex = new Wrap<>();
-
-	public final Attribute<Integer> probeRowIndex = new Wrap<>();
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public PickingProbe(String name) {
-		super(name);
-		createPickingProbeModel();
+		this.__domainLabelSelection = undefined;
+		this.__domainColumnPathSelection = undefined;
+		this.__pickingPathSelection = undefined;		
 	}
 
-	//#end region
+	createComponentControl(tabFolder){    
+	     
+		const page = tabFolder.append('treez-tab')
+            .label('Data');
+		
+		this.__createDomainSection(page);
+		this.__createProbeSection(page);
+	}
+	
+	__createDomainSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Domain');		
+	
+		section.append('treez-section-action')
+	        .image('run.png')
+	        .label('Run probe')
+	        .addAction(()=>this.execute(this.__treeView));		
+		
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-enum-combo-box')
+			.label('Type')
+			.nodeAttr('options', DomainType)
+			.onChange(() => this.__showOrHideComponents())
+			.bindValue(this, ()=>this.domainType);
+		
+		this.__domainLabelSelection = sectionContent.append('treez-text-field')
+			.label('Label')
+			.bindValue(this, ()=>this.domainLabel);		
+		
+		this.__pickingPathSelection = sectionContent.append('treez-model-path')
+			.label('Picking')
+			.nodeAttr('atomClasses', [Picking])	
+			.bindValue(this, ()=>this.pickingPath);
+		
+		this.__domainColumnPathSelection = sectionContent.append('treez-model-path')
+			.label('Column')
+			.nodeAttr('atomClasses', [Column])	
+			.bindValue(this, ()=>this.domainColumnPath);	
 
-	//#region METHODS
-
-	@SuppressWarnings({ "checkstyle:javancss", "checkstyle:executablestatementcount" })
-	private void createPickingProbeModel() {
-		AttributeRoot root = new AttributeRoot("root");
-
-		org.treez.core.atom.attribute.attributeContainer.Page page = root.createPage("page");
-
-		//domain section
-		Section domainSection = page.createSection("domainSection", "DomainSectionHelpId");
-		domainSection.setLabel("Domain");
-		domainSection.createSectionAction("action", "Run probe", () -> execute(treeView));
-
-		ComboBox domainTypeCombo = domainSection.createComboBox(domainType, this);
-		domainTypeCombo.setLabel("Domain type");
-		domainTypeCombo.setItems(
-				DOMAIN_TYPE_SAMPLES + "," + DOMAIN_TYPE_TIME_SERIES_PICKING + "," + DOMAIN_TYPE_TIME_SERIES_COLUMN);
-		domainTypeCombo.set("Samples");
-
-		TextField domainLabelField = domainSection.createTextField(domainLabel, this);
-		domainLabelField.setLabel("Domain label");
-		domainLabelField.setEnabled(false);
-
-		ModelPath pickingModelPath = domainSection.createModelPath(pickingPath, this, "", NumberRangeProvider.class,
-				this);
-		pickingModelPath.setLabel("Picking for domain range");
-		pickingModelPath.setSelectionType(ModelPathSelectionType.FLAT);
-		pickingModelPath.setEnabled(false);
-
-		ModelPath timeColumnModelPath = domainSection.createModelPath(domainColumnPath, this, "", Column.class, this);
-		timeColumnModelPath.setLabel("Column for domain range");
-		timeColumnModelPath.setSelectionType(ModelPathSelectionType.FLAT);
-		timeColumnModelPath.setEnabled(false);
-		//timeRangePath.set("root.studies.picking.time");
-
-		domainTypeCombo.addModificationConsumerAndRun("Update label field", () -> {
-
-			domainLabelField.set("Sample");
-			domainLabelField.setEnabled(false);
-			pickingModelPath.setEnabled(false);
-			timeColumnModelPath.setEnabled(false);
-
-			boolean isPickingTimeSeries = isPickingTimeSeries();
-			boolean isColumnTimeSeries = isColumnTimeSeries();
-			if (isPickingTimeSeries || isColumnTimeSeries) {
-				domainLabelField.set("Time");
-				domainLabelField.setEnabled(true);
-				if (isPickingTimeSeries) {
-					pickingModelPath.setEnabled(true);
-				}
-				if (isColumnTimeSeries) {
-					timeColumnModelPath.setEnabled(true);
-				}
+		this.__showOrHideComponents();
+	}
+	
+	__showOrHideComponents(){		
+		
+		this.__domainColumnPathSelection.hide();
+		this.__pickingPathSelection.hide();
+	
+		if (this.__isTimeSeries) {
+			if(this.domainLabel === 'sample_index'){
+				this.domainLabel = 'time';
 			}
-		});
+			
+			if (this.__isTimeSeriesFromPicking) {
+				this.__pickingPathSelection.show();
+			}
+			
+			if (this.__isTimeSeriesFromColumn) {
+				this.__domainColumnPathSelection.show();
+			}
+		} 	else {
+			if(this.domainLabel === 'time'){
+				this.domainLabel = 'sample_index';
+			}
+		}	
+	}
+	
+	__createProbeSection(page){
+		
+		var section = page.append('treez-section')
+			.label('Probe');
+	
+		var sectionContent = section.append('div');
+		
+		sectionContent.append('treez-text-field')
+			.label('Probe label')
+			.bindValue(this, ()=>this.probeLabel);
+	
+		sectionContent.append('treez-model-path')
+			.label('Picking output')
+			.nodeAttr('atomClasses', [PickingOutput])	
+			.bindValue(this, ()=>this.pickingOutputPath);
+		
+		this.__firstProbeTableSelection = sectionContent.append('treez-model-path')
+			.label('First probe table')
+			.nodeAttr('atomClasses', [Table])			
+			.bindValue(this, ()=>this.firstProbeTablePath);			
+	
+		sectionContent.append('treez-text-field')
+			.label('One based column index')
+			.bindValue(this, ()=>this.columnIndex);
+	
+		sectionContent.append('treez-text-field')
+			.label('One based row index')
+			.bindValue(this, ()=>this.rowIndex);
+	}	
 
-		//probe section
-		Section probeSection = page.createSection("probe", "Probe");
-
-		TextField probeNameField = probeSection.createTextField(probeLabel, this);
-		probeNameField.setLabel("Probe label");
-		ModelPath pickingOutputModelPath = probeSection.createModelPath(pickingOutput, this, "", OutputAtom.class,
-				this);
-		pickingOutputModelPath.setLabel("Picking output");
-		ModelPath firstProbeTablePath = probeSection.createModelPath(firstProbeTable, this, pickingOutputModelPath,
-				Table.class);
-		firstProbeTablePath.setLabel("First probe table");
-
-		final Color white = new Color(null, 255, 255, 255);
-		IntegerVariableField columnIndex = probeSection.createIntegerVariableField(probeColumnIndex, this, 0);
-		columnIndex.setLabel("Column index");
-		columnIndex.setBackgroundColor(white);
-		columnIndex.setMinValue(0);
-
-		IntegerVariableField rowIndex = probeSection.createIntegerVariableField(probeRowIndex, this, 0);
-		rowIndex.setLabel("Row index");
-		rowIndex.setBackgroundColor(white);
-		rowIndex.setMinValue(0);
-		setModel(root);
+	afterCreateControlAdaptionHook() {
+		this.__updateRelativePathRoots();
 	}
 
-	private boolean isColumnTimeSeries() {
-		boolean isColumnTimeSeries = domainType.get().equals(DOMAIN_TYPE_TIME_SERIES_COLUMN);
-		return isColumnTimeSeries;
+	__updateRelativePathRoots() {
+		//this.__firstProbeTableSelection.updateRelativeRootAtom();		
+	}
+	
+	createTableColumns(table, monitor) {
+		monitor.info('Creating table columns...');		
+		var columnBlueprints = this.__createColumnBlueprints();
+		table.createColumns(columnBlueprints);
+		monitor.info('Created table columns.');
 	}
 
-	private boolean isPickingTimeSeries() {
-		boolean isPickingTimeSeries = domainType.get().equals(DOMAIN_TYPE_TIME_SERIES_PICKING);
-		return isPickingTimeSeries;
-	}
-
-	private boolean isTimeSeries() {
-		boolean isPickingTimeSeries = isPickingTimeSeries();
-		boolean isColumnTimeSeries = isColumnTimeSeries();
-		boolean isTimeSeries = isPickingTimeSeries || isColumnTimeSeries;
-		return isTimeSeries;
-	}
-
-	@Override
-	protected void afterCreateControlAdaptionHook() {
-		updateRelativePathRoots();
-	}
-
-	@Override
-	protected void updateRelativePathRoots() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath firstProbeTableModelPath = (ModelPath) attribute;
-		firstProbeTableModelPath.updateRelativeRootAtom();
-	}
-
-	/**
-	 * Provides an image to represent this atom
-	 */
-	@Override
-	public Image provideBaseImage() {
-		Image baseImage = Activator.getImage("picking.png");
-		return baseImage;
-	}
-
-	//#region CREATE TABLE COLUMNS
-
-	/**
-	 * Creates the required columns for the given new table
-	 *
-	 * @param table
-	 */
-	@Override
-	@SuppressWarnings({ "checkstyle:executablestatementcount", "checkstyle:javancss" })
-	protected void createTableColumns(Table table) {
-
-		LOG.info("Creating table columns...");
-
-		//determine column names, types and legends
-		List<ColumnBlueprint> columnBlueprints = new ArrayList<>();
-
-		if (isTimeSeries()) {
-			columnBlueprints = createColumnBlueprintsWithTimeSeries();
-		} else {
-			//domain column
-			columnBlueprints.add(new ColumnBlueprint("Sample", ColumnType.STRING, ""));
-
-			//probe column
-			ColumnType probeColumnType = this.getPickingProbeColumnType();
-			columnBlueprints.add(new ColumnBlueprint(probeLabel.get(), probeColumnType, probeLabel.get()));
-		}
-
-		createColumns(table, columnBlueprints);
-
-		LOG.info("Created table columns.");
-
-	}
-
-	private List<ColumnBlueprint> createColumnBlueprintsWithTimeSeries() {
-
-		List<ColumnBlueprint> columnBlueprints = new ArrayList<>();
-
-		//domain column
-		ColumnType domainColumnType = getDomainColumnType();
-		columnBlueprints.add(new ColumnBlueprint(domainLabel.get(), domainColumnType, ""));
-
-		//sample columns
-		if (isPickingTimeSeries()) {
-			columnBlueprints = addSampleColumnBlueprintsForPickingTimeSeries(columnBlueprints);
-		} else if (isColumnTimeSeries()) {
-			columnBlueprints = addSampleColumnBlueprintsForColumnTimeSeries(columnBlueprints);
-		} else {
-			throw new IllegalStateException("Unknown domain series type");
-		}
-
+	__createColumnBlueprints() {
+		var columnBlueprints = [];			
+		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType, null));
+		this.__addVariableColumnBlueprints(columnBlueprints);		
+		this.__addProbeColumnBlueprint(columnBlueprints);
 		return columnBlueprints;
 	}
-
-	private List<ColumnBlueprint> addSampleColumnBlueprintsForPickingTimeSeries(
-			List<ColumnBlueprint> columnBlueprints) {
-		ColumnType probeColumnType = getPickingProbeColumnType();
-		List<AbstractAtom<?>> samples = getSamplesFromPicking();
-		for (AbstractAtom<?> sample : samples) {
-			String sampleName = sample.getName();
-			columnBlueprints.add(new ColumnBlueprint(sampleName, probeColumnType, sampleName));
-		}
-		return columnBlueprints;
-	}
-
-	private List<ColumnBlueprint> addSampleColumnBlueprintsForColumnTimeSeries(List<ColumnBlueprint> columnBlueprints) {
-		String domainColumnModelPath = domainColumnPath.get();
-		boolean timeIsSpecified = !"".equals(domainColumnModelPath);
-		if (timeIsSpecified) {
-			Column column = this.childFromRoot(domainColumnModelPath);
-			ColumnType columnType = column.getColumnType();
-
-			int numberOfDomainValues = column.getValues().size();
-			if (numberOfDomainValues > 0) {
-				int numberOfPickingOutputs = getNumberOfPickingOutputs();
-				int numberOfProbeColumns = numberOfPickingOutputs / numberOfDomainValues;
-				for (int columnIndex = 1; columnIndex <= numberOfProbeColumns; columnIndex++) {
-					String sampleColumnName = "Costum_sample_" + columnIndex;
-					columnBlueprints.add(new ColumnBlueprint(sampleColumnName, columnType, sampleColumnName));
-				}
-			}
-		}
-		return columnBlueprints;
-	}
-
-	private int getNumberOfPickingOutputs() {
-		String pickingOutputModelPath = pickingOutput.get();
-		boolean pickingOutputIsSpecified = !"".equals(pickingOutputModelPath);
-		if (pickingOutputIsSpecified) {
-			AbstractAtom<?> pickingOutputAtom = this.childFromRoot(pickingOutputModelPath);
-			int numberOfOutputs = pickingOutputAtom.getChildAtoms().size();
-			return numberOfOutputs;
-		}
-		return 0;
-	}
-
-	private List<AbstractAtom<?>> getSamplesFromPicking() {
-		String pickingModelPath = pickingPath.get();
-		boolean pickingIsSpecified = !"".equals(pickingModelPath);
-		if (pickingIsSpecified) {
-			AbstractAtom<?> picking = this.childFromRoot(pickingModelPath);
-			return picking.getChildAtoms();
-		}
-		return null;
-	}
-
-	private ColumnType getPickingProbeColumnType() {
-		String firstProbeTableModelPath = firstProbeTable.get();
-		boolean probeTableSpecified = !"".equals(firstProbeTableModelPath);
-		if (probeTableSpecified) {
-			Table table = this.childFromRoot(firstProbeTableModelPath);
-			Columns columns = table.getColumns();
-			int columnIndex = this.probeColumnIndex.get();
-			Column probeColumn = columns.getColumnByIndex(columnIndex);
-			ColumnType columnType = probeColumn.getColumnType();
-			return columnType;
-		} else {
-			String message = "Could not determine the probe column type. Please make sure that a probe table is specified.";
-			throw new IllegalStateException(message);
+	
+	__addVariableColumnBlueprints(columnBlueprints){
+		var variables = this.__picking.selectedVariables;
+		for(var variable of variables){
+			columnBlueprints.push(new ColumnBlueprint(variable.name, variable.name, variable.columnType));
 		}
 	}
-
-	private ColumnType getDomainColumnType() {
-		if (isColumnTimeSeries()) {
-			return getDomainColumnTypeFromColumn();
-		} else if (isPickingTimeSeries()) {
-			return getDomainColumnTypeFromPicking();
-		}
-		throw new IllegalStateException("Unknown time series type");
+	
+	__addProbeColumnBlueprint(columnBlueprints){
+		columnBlueprints.push(new ColumnBlueprint(this.probeLabel, this.probeLabel, this.__pickingProbeColumnType));
 	}
+	
+	collectProbeDataAndFillTable(table, monitor) {
 
-	private ColumnType getDomainColumnTypeFromColumn() {
-		String domainColumnModelPath = domainColumnPath.get();
-		boolean timeIsSpecified = !"".equals(domainColumnModelPath);
-		if (timeIsSpecified) {
-			Column column = this.childFromRoot(domainColumnModelPath);
-			ColumnType columnType = column.getColumnType();
-			return columnType;
-		} else {
-			return null;
-		}
-	}
+		monitor.info('Filling probe table...');
+		
+		//get probe table relative path		
+		var pathItems = this.__firstProbeTableRelativePath.split('.');
+		var firstPrefix = pathItems[0];
+		var firstIndex = firstPrefix.length + 1;
+		var relativeProbeTablePath = this.__firstProbeTableRelativePath.substring(firstIndex);
+		var prefix = this.probeTablePrefix(firstPrefix);
+		
 
-	private ColumnType getDomainColumnTypeFromPicking() {
-		String pickingModelPath = pickingPath.get();
-		boolean pickingIsSpecified = !"".equals(pickingModelPath);
-		Class<?> domainColumnType = null;
-		if (pickingIsSpecified) {
-			NumberRangeProvider picking = this.childFromRoot(pickingModelPath);
-			domainColumnType = picking.getRangeType();
-			if (domainColumnType == null) {
-				String message = "The picking '" + pickingModelPath + "' that is used for the picking probe '"
-						+ getName() + "'does not provide a time series.";
-				throw new IllegalArgumentException(message);
-			}
-		}
-		ColumnType columnType = ColumnType.getType(domainColumnType);
-		return columnType;
-	}
-
-	//#end region
-
-	//#region COLLECT PROBE DATA
-
-	@Override
-	protected void collectProbeDataAndFillTable(Table table) {
-
-		LOG.info("Filling probe table...");
-
-		boolean isTimeSeries = isTimeSeries();
-
-		if (isTimeSeries) {
+		if (this.__isTimeSeries) {
 
 			//get domain information
 
-			List<Number> domainValues = getDomainTimeSeriesRange();
+			var domainValues = this.__domainTimeSeriesRange;
 
-			String timeLabelString = domainLabel.get();
-			String timePath = domainColumnPath.get();
-			boolean timeIsSpecified = !"".equals(timePath);
-			VariableRange<?> timeRangeAtom = null;
-
-			List<?> timeRangeValues = null;
-			if (timeIsSpecified) {
+			var timeLabelString = this.domainLabel;
+			var timePath = this.domainColumnPath;
+			
+			var timeRangeAtom = null;
+			var timeRangeValues = [];
+			if (timePath) {
 				timeRangeAtom = this.childFromRoot(timePath);
-				timeRangeValues = timeRangeAtom.getRange();
+				timeRangeValues = timeRangeAtom.range;
 			}
-
-			/*
-			//get y information
-			String yLabelString = yLabel.get();
-
-			//get tuple information
-			String tupleyPath = tupleList.get();
-			List<?> tupleListValues = getTupleValues(tupleyPath);
-
-			//column names
-			List<String> columnNames = createColumnNames(timeLabelString, yLabelString, tupleListValues);
-
-			*/
-
-			//get sweep output path
-			String sweepOutputPath = pickingOutput.get();
-
-			//get probe table relative path
-			String firstProbeTableRelativePath = getFirstProbeRelativePath();
-			String[] pathItems = firstProbeTableRelativePath.split("\\.");
-			String firstPrefix = pathItems[0];
-			int firstIndex = firstPrefix.length() + 1;
-			String relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
-
-			//get probe table prefix
-			String prefix = getProbeTablePrefix(firstPrefix);
-
-			//fillProbeTable(table, timeRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix);
+		
+			var columnNames = this.__createColumnNames();
+			this.__fillProbeTable(table, columnNames, relativeProbeTablePath, prefix, timeRangeValues);
+			
 
 		} else {
-
+			
+			var columnNames = this.__createColumnNames();
+			this.__fillProbeTable(table, columnNames, relativeProbeTablePath, prefix);
 		}
+		
+		
 
-		LOG.info("Filled probe table.");
+		monitor.info("Filled probe table.");
 
 	}
-
-	private void fillProbeTable(
-			Table table,
-			List<?> xRangeValues,
-			List<String> columnNames,
-			String sweepOutputPath,
-			String relativeProbeTablePath,
-			String prefix) {
-		//get probe table row index
-		int probeRowId = probeRowIndex.get();
-
-		//get probe table column index
-		int probeColumnId = probeColumnIndex.get();
-
-		int sweepIndex = 1;
-		for (int rowIndex = 0; rowIndex < xRangeValues.size(); rowIndex++) {
-
-			//create new row
-			Row row = new Row(table);
-
-			//fill x column entry
-			Object xValue = xRangeValues.get(rowIndex);
-			boolean isQuantity = xValue instanceof Quantity;
-			if (isQuantity) {
-				//only take numeric value (="remove" unit)
-				Quantity quantity = (Quantity) xValue;
-				xValue = quantity.getValue();
-			}
-			row.setEntry(columnNames.get(0), xValue);
-
-			//fill y column entries
-			for (int columnIndex = 1; columnIndex < columnNames.size(); columnIndex++) {
-				String yColumnName = columnNames.get(columnIndex);
-				String tablePath = sweepOutputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
-				Object yValue = getProbeValue(tablePath, probeRowId, probeColumnId);
-				row.setEntry(yColumnName, yValue);
-
-				//increase sweep index
-				sweepIndex++;
-			}
-
-			//add row
+	
+	__fillProbeTable(
+			table,			
+			columnNames,			
+			relativeProbeTablePath,
+			prefix,
+			timeRangeValues
+	) {
+				
+		var rowIndex = 0;
+		for(var sample of this.__enabledSamples){
+			
+			var oneBasedSampleIndex = rowIndex+1;
+			
+			var row = new Row(table);
+			
+			var domainValue = timeRangeValues
+								?timeRangeValues[rowIndex]
+								:oneBasedSampleIndex;
+								
+			row.setEntry(columnNames[0], domainValue);
+			
+			var variableMap = sample.variableMap;
+			
+			for(var columnIndex = 1; columnIndex < columnNames.length-1; columnIndex++){				
+				var columnName = columnNames[columnIndex];
+				var variable = variableMap[columnName];
+				row.setEntry(columnName, variable.value);
+			}			
+			
+			var tablePath = this.pickingOutputPath + '.' + prefix + oneBasedSampleIndex + '.' + relativeProbeTablePath;
+			var probeValue = this.__probeValue(tablePath);
+			var rangeLabel = columnNames[columnNames.length-1];			
+			row.setEntry(rangeLabel, probeValue);
+			
 			table.addRow(row);
-
+			
+			rowIndex++;
 		}
+		
 	}
 
-	private List<Number> getDomainTimeSeriesRange() {
-		if (isColumnTimeSeries()) {
-			String domainColumnModelPath = domainColumnPath.get();
-			boolean timeIsSpecified = !"".equals(domainColumnModelPath);
-			if (timeIsSpecified) {
-				Column column = this.childFromRoot(domainColumnModelPath);
-				List<?> domainRange = column.getValues();
-				List<Number> domainNumberRange = new ArrayList<>();
-				for (Object domainValue : domainRange) {
-					Number domainNumberValue = (Number) domainValue;
-					domainNumberRange.add(domainNumberValue);
-				}
-			}
-			return null;
-		} else if (isPickingTimeSeries()) {
-			String pickingModelPath = pickingPath.get();
-			boolean pickingIsSpecified = !"".equals(pickingModelPath);
-			if (pickingIsSpecified) {
-				NumberRangeProvider picking = (NumberRangeProvider) this.childFromRoot(pickingModelPath);
-				List<Number> domainNumberRange = picking.getRange();
-				return domainNumberRange;
-			}
-			return null;
+	
+
+	
+	
+	__createColumnNames(domainColumnName) {
+		var columnNames = [];
+		
+		columnNames.push(this.domainLabel);
+		
+		var variables = this.__picking.selectedVariables;
+		for(var variable of variables){
+			columnNames.push(variable.name);
 		}
-
-		throw new IllegalStateException("Unknown time series type");
-	}
-
-	private static String getProbeTablePrefix(String firstPrefix) {
-		String idSeparator = "Id";
-		String[] prefixItems = firstPrefix.split(idSeparator);
-		String prefix = prefixItems[0] + idSeparator;
-		return prefix;
-	}
-
-	private String getFirstProbeRelativePath() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath probeTablePath = (ModelPath) attribute;
-		String firstRelativeProbeTablePath = probeTablePath.getRelativeValue();
-		return firstRelativeProbeTablePath;
-	}
-
-	private static
-			List<String>
-			createColumnNames(String xLabelString, String yLabelString, List<?> firstFamilyRangeValues) {
-		List<String> columnNames = new ArrayList<>();
-
-		//create first column info (=x column)
-		String xColumnName = xLabelString;
-		columnNames.add(xColumnName);
-
-		//create remaining column info (=y columns)
-		for (int firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.size(); firstFamilyIndex++) {
-			String columnName = yLabelString + "#" + firstFamilyIndex;
-
-			columnNames.add(columnName);
-
-		}
+		
+		columnNames.push(this.probeLabel);
+		
 		return columnNames;
 	}
+	
 
-	private Object getProbeValue(String probeTablePath, int rowIndex, int columnIndex) {
-
-		//get probe table
-		Table probeTable = this.childFromRoot(probeTablePath);
-
-		//get probe value
-		String columnHeader = probeTable.getHeaders().get(columnIndex);
-		Row row = probeTable.getRows().get(rowIndex);
-		Object value = row.getEntry(columnHeader);
-
-		//return probe value
-		return value;
+	__probeValue(probeTablePath) {	
+		var probeTable = this.childFromRoot(probeTablePath);	
+		var columnHeader = probeTable.headers[this.columnIndex];
+		var row = probeTable.rows[this.rowIndex];
+		return row.entry(columnHeader);
 	}
 
-	//#end region
+	get __firstProbeTableRelativePath(){
+		return this.firstProbeTablePath.substring(this.pickingOutputPath.length+1);
+	}	
+	
+	get __isTimeSeriesFromColumn() {
+		return this.domainType === DomainType.timeSeriesFromColumn;		
+	}
 
-	//#end region
+	get __isTimeSeriesFromPicking() {
+		return this.domainType === DomainType.timeSeriesFromPicking;
+	}
+
+	get __isTimeSeries() {
+		return this.__isTimeSeriesFromColumn || this.__isTimeSeriesFromPicking;		
+	}
+
+	get __numberOfPickingOutputs() {		
+		if (this.pickingOutputPath) {
+			var pickingOutputAtom = this.childFromRoot(this.pickingOutputPath);
+			return pickingOutputAtom.children.length;			
+		} else {
+			return 0;
+		}		
+	}
+
+	get __enabledSamples() {		
+		if (this.pickingPath) {
+			var picking = this.childFromRoot(this.pickingPath);
+			return picking.enabledSamples;
+		} else {
+			return [];
+		}		
+	}
+	
+	get __picking(){
+		if(!this.pickingPath){
+			return null;
+		}
+		return this.childFromRoot(this.pickingPath);
+	}
+
+	get __pickingProbeColumnType() {		
+		if (this.firstProbeTablePath) {
+			var table = this.childFromRoot(this.firstProbeTablePath);				
+			var probeColumn = table.columnFolder.columnByIndex(this.columnIndex);
+			return probeColumn.type;			
+		} else {
+			var message = 'Could not determine the probe column type. Please make sure that a probe table is specified.';
+			throw new Error(message);
+		}
+	}
+
+	get __domainColumnType() {
+		if (this.__isTimeSeriesFromColumn) {
+			return this.__domainColumnTypeFromColumn;
+		} else if (this.__isTimeSeriesFromPicking) {
+			return this.__domainColumnTypeFromPicking;
+		}
+		return ColumnType.integer;
+		
+	}
+
+	get __domainColumnTypeFromColumn() {	
+		if (this.domainColumnPath) {
+			var column = this.childFromRoot(this.domainColumnPath);
+			return column.type;			
+		} else {
+			return null;
+		}
+	}
+
+	get __getDomainColumnTypeFromPicking() {
+		
+		if(!this.pickingPath){
+			return null;
+		}		
+		
+		var picking = this.childFromRoot(this.pickingPath);
+		domainColumnType = picking.rangeType;
+		
+		if (!domainColumnType) {
+			var message = 'The picking "' + pickingModelPath + '" that is used for the picking probe "'
+					+ this.name + '" does not provide a time series.';
+			throw new Error(message);
+		}
+		
+		return ColumnType.getType(domainColumnType);
+		
+	}
+	
+	get __domainTimeSeriesRange() {
+		if (this.__isTimeSeriesfromColumn) {			
+			if (this.domainColumnPath) {
+				var column = this.childFromRoot(this.domainColumnPath);
+				return column.values;				
+			} else {
+				return [];
+			}
+		
+		} else if (this.__isTimeSeriesFromPicking) {			
+			if (this.pickingPath) {
+				var picking =  this.childFromRoot(this.pickingPath);
+				return picking.range;				
+			} else {
+				return [];
+			}
+			
+		}
+
+		throw new Error('Unknown time series type');
+	}
+
+	get __firstProbeRelativePath() {
+		return this.__firstProbeTableSelection.relativePath;		
+	}
 
 }

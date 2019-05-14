@@ -47,6 +47,10 @@ export default class Probability extends Study {
 
 		executeExecutableChildren(refreshable);
 	}
+	
+	createStudyOutputAtom(name){
+		return new ProbabilityOutput(name);
+	}
 
 	createNormalAssumption(name) {
 		return this.createChild(NormalAssumption, name);

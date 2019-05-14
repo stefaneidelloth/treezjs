@@ -71,7 +71,7 @@ export default class PickingModelInputGenerator {
 
 		var samples = this.enabledSamples;
 		
-		var sourceModelPath = picking.sourceModelPath;
+		var sourceModelPath = this.__picking.sourceModelPath;
 
 		var studyInfo = '---------- PickingInfo ----------\n\n' + //
 				'Total number of simulations:\n' + numberOfSimulations + '\n\n' + //

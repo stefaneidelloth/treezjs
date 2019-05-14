@@ -66,7 +66,8 @@ export default class Probe extends ComponentAtom {
 		}
 		
 		var probeTableName = this.name + 'Table';
-		var table = this.createTable(probeTableName);		
+		var table = this.createTable(probeTableName);	
+		table.createColumnFolder();	
 		this.createTableColumns(table, monitor);
 
 		return table;
@@ -74,12 +75,19 @@ export default class Probe extends ComponentAtom {
 
 	//should be overridden by inheriting class
 	createTableColumns(table, monitor){
-		 table.createColumnFolder();
+		
 	}
 
 	//should be overridden by inheriting class
 	async collectProbeDataAndFillTable(table, monitor){
 		throw new Error('Not yet implemented');
-	}	
+	}
+
+	probeTablePrefix(firstPrefix) {
+		var idSeparator = '_';
+		var prefixItems = firstPrefix.split(idSeparator);
+		var prefix = prefixItems[0] + idSeparator;
+		return prefix;
+	}		
 
 }

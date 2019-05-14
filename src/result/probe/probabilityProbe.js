@@ -1,84 +1,38 @@
-package org.treez.results.atom.probe;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.modelPath.ModelPath;
-import org.treez.core.atom.attribute.modelPath.ModelPathSelectionType;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.atom.variablerange.VariableRange;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.core.data.column.ColumnBlueprint;
-import org.treez.core.data.column.ColumnType;
-import org.treez.core.data.row.Row;
-import org.treez.core.quantity.Quantity;
-import org.treez.data.output.OutputAtom;
-import org.treez.data.table.nebula.Table;
-import org.treez.results.Activator;
+export default class ProbabilityProbe extends Probe {
 
-/**
- * Collects data from a picker parameter variation and puts it in a single (probe-) table. That table can easier be used
- * to produce plots than the distributed picker results.
- */
-@SuppressWarnings("checkstyle:visibilitymodifier")
-public class ProbabilityProbe extends AbstractProbe {
-
-	private static final Logger LOG = Logger.getLogger(ProbabilityProbe.class);
-
-	//#region ATTRIBUTES
-
-	//time section
-
-	public final Attribute<String> timeLabel = new Wrap<>();
-
-	public final Attribute<String> timeRange = new Wrap<>();
-
-	//y section
-
-	public final Attribute<String> yLabel = new Wrap<>();
-
-	//tuple section
-
-	public final Attribute<String> tupleListLabel = new Wrap<>();
-
-	public final Attribute<String> tupleList = new Wrap<>();
-
-	//probe section
-
-	public final Attribute<String> probeName = new Wrap<>();
-
-	public final Attribute<String> propabilityOutput = new Wrap<>();
-
-	public final Attribute<String> firstProbeTable = new Wrap<>();
-
-	public final Attribute<String> probeColumnIndex = new Wrap<>();
-
-	public final Attribute<String> probeRowIndex = new Wrap<>();
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public ProbabilityProbe(String name) {
+	constructor(name) {
 		super(name);
-		createPickerProbeModel();
+		this.image = 'probability.png';
+		this.domainLabel = 'Time';
+		this.domainRange = [];
+		
+		this.rangeLabel = 'y';
+		
+		this.tubleListLabel = 'tubleList';
+		this.tupleList = [];
+		
+		this.probeName = 'probe';
+		this.propabilityOutput = '';
+		this.firstProbeTable = '';
+		this.probeColumnIndex = 0;
+		this.probeRowIndex = 0;
+		
 	}
 
-	//#end region
-
-	//#region METHODS
-
-	private void createPickerProbeModel() {
-		AttributeRoot root = new AttributeRoot("root");
-
-		org.treez.core.atom.attribute.attributeContainer.Page page = root.createPage("page");
-
-		//time section
+	createComponentControl(tabFolder){    
+	     
+		const page = tabFolder.append('treez-tab')
+            .label('Data');
+					
+		this.__createDomainSection(page);
+		this.__createRangeSection(page);
+		this.__createTupleListSection(page);		
+		this.__crateProbeSection(page);
+	 }
+	
+	__createDomainSection(page){
 		Section timeSection = page.createSection("timeSection", "Time");
 		timeSection.createSectionAction("action", "Run probe", () -> execute(treeView));
 
@@ -88,22 +42,25 @@ public class ProbabilityProbe extends AbstractProbe {
 		timeRangePath.setLabel("Range for time axis");
 		timeRangePath.setSelectionType(ModelPathSelectionType.FLAT);
 		//timeRangePath.set("root.studies.picker.time");
-
-		//y section
+	}
+	
+	__createRangeSection(page){
 		Section ySection = page.createSection("ySection", "Y");
 
 		TextField yLabelField = ySection.createTextField(yLabel, this, "y");
 		yLabelField.setLabel("Label for y-Axis");
-
-		//tuple list section
+	}
+	
+	__createTupleListSection(page){
 		Section tupleListSection = page.createSection("tupleList", "Tuple list");
 		tupleListSection.setExpanded(false);
 
 		//tupleListSection.createTextField(tupleListLabel, "tupleListLabel", "Label for first family", "family1");
 		//tupleListSection.createModelPath(tupleList, this, "Range for first family", "",
 		//		VariableRange.class, this);
-
-		//probe section
+	}	
+	
+	__crateProbeSection(page){
 		Section probeSection = page.createSection("probe", "Probe");
 
 		TextField probeNameField = probeSection.createTextField(probeName, this, "MyProbe");
@@ -120,72 +77,48 @@ public class ProbabilityProbe extends AbstractProbe {
 		columnIndex.setLabel("Column index");
 		TextField rowIndex = probeSection.createTextField(probeRowIndex, this, "0");
 		rowIndex.setLabel("Row index");
-
-		setModel(root);
-
 	}
 
-	@Override
-	protected void afterCreateControlAdaptionHook() {
-		updateRelativePathRoots();
+	
+	afterCreateControlAdaptionHook() {
+		this.__updateRelativePathRoots();
 	}
 
-	@Override
-	protected void updateRelativePathRoots() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath firstProbeTableModelPath = (ModelPath) attribute;
-		firstProbeTableModelPath.updateRelativeRootAtom();
+	__updateRelativePathRoots() {		
+		this.__firstProbeTableSelection.updateRelativeRootAtom();
 	}
 
-	/**
-	 * Provides an image to represent this atom
-	 */
-	@Override
-	public Image provideBaseImage() {
-		Image baseImage = Activator.getImage("probability.png");
-		return baseImage;
-	}
+	createTableColumns(table, monitor) {
 
-	//#region CREATE TABLE COLUMNS
-
-	/**
-	 * Creates the required columns for the given new table
-	 *
-	 * @param table
-	 */
-	@Override
-	@SuppressWarnings({ "checkstyle:executablestatementcount", "checkstyle:javancss" })
-	protected void createTableColumns(Table table) {
-
-		LOG.info("Creating table columns...");
+		monitor.info('Creating table columns...');
 
 		//create column blueprints
-		List<ColumnBlueprint> columnBlueprints = new ArrayList<>();
+		var columnBlueprints = [];
 
-		//time column----------------------------------------
-		String timeLabelString = timeLabel.get();
-		String timeColumnName = timeLabelString;
-		Class<?> timeType = getTimeType();
-		ColumnType timeColumnType = ColumnType.getType(timeType);
-		String timeLegend = timeLabelString;
-		columnBlueprints.add(new ColumnBlueprint(timeColumnName, timeColumnType, timeLegend));
+		//domain column----------------------------------------
+		var domainLabelString = this.domainLabel;
+		var domainColumnName = domainLabelString;
+		var domainType = this.__domainType;
+		var timeColumnType = ColumnType.getType(domainType);
+		var domainLegend = domainLabelString;
+		columnBlueprints.add(new ColumnBlueprint(domainColumnName, domainColumnType, domainLegend));
 
-		//y columns---------------------------------------
+		//range columns---------------------------------------
 
-		//get y information
-		String yLabelString = yLabel.get();
-		ColumnType yColumnType = ColumnType.STRING;
+		//get range information
+		var yLabelString = this.__yLabel;
+		var yColumnType = ColumnType.string;
 
 		//get tuple information
-		String tupleListLabelString = tupleListLabel.get();
-		List<?> tupleList = getTupleList();
+		var tupleListLabelString = this.tupleListLabel;
+		var tupleList = this.__tupleList;
 
 		//create y column names, types and legends
-		int tupleIndex = 1;
-		for (Object tuple : tupleList) {
-			String columnName = yLabelString + "#" + tupleIndex;
-			String tupleResultValueString = tuple.toString();
-			String legendText = tupleListLabelString + ": " + tupleResultValueString;
+		var tupleIndex = 1;
+		for (var tuple of tupleList) {
+			var columnName = yLabelString + '#' + tupleIndex;
+			var tupleResultValueString = '' + tuple;
+			var legendText = tupleListLabelString + ': ' + tupleResultValueString;
 			columnBlueprints.add(new ColumnBlueprint(columnName, yColumnType, legendText));
 
 			tupleIndex++;
@@ -194,119 +127,115 @@ public class ProbabilityProbe extends AbstractProbe {
 		//create columns--------------------------------------------------------------------------
 		createColumns(table, columnBlueprints);
 
-		LOG.info("Created table columns.");
+		monitor.info('Created table columns.');
 
 	}
 
-	private List<?> getTupleList() {
-		String firstFamilyPath = tupleList.get();
-		boolean firstFamilyIsSpecified = !"".equals(firstFamilyPath);
-		List<?> firstFamilyRangeValues = null;
-		if (firstFamilyIsSpecified) {
-			VariableRange<?> firstFamilyRangeAtom = this.childFromRoot(firstFamilyPath);
+	get __tupleList() {
+		var firstFamilyPath = tupleList.get();
+	
+		var firstFamilyRangeValues = null;
+		if (firstFamilyPath) {
+			var firstFamilyRangeAtom = this.childFromRoot(firstFamilyPath);
 			firstFamilyRangeValues = firstFamilyRangeAtom.getRange();
 		} else {
-			String message = "At least the first family range needs to be specified.";
-			throw new IllegalStateException(message);
+			var message = 'At least the first family range needs to be specified.';
+			throw new Error(message);
 		}
 		return firstFamilyRangeValues;
 	}
 
-	private Class<?> getTimeType() {
-		String timePath = timeRange.get();
-		boolean timeIsSpecified = !"".equals(timePath);
-		Class<?> timeType = null;
-		if (timeIsSpecified) {
-			VariableRange<?> timeRangeAtom = this.childFromRoot(timePath);
-			timeType = timeRangeAtom.getType();
+	get __domainType() {
+		var domainPath = this.domainRange;
+		if(!domainPath){
+			return null;
 		}
-		return timeType;
+		
+		var domainRangeAtom = this.childFromRoot(domainPath);
+		return domainRangeAtom.type;
+
 	}
 
-	//#end region
+	collectProbeDataAndFillTable(table, monitor) {
 
-	//#region COLLECT PROBE DATA
-
-	@Override
-	protected void collectProbeDataAndFillTable(Table table) {
-
-		LOG.info("Filling probe table...");
+		monitor.info('Filling probe table...');
 
 		//get time information
-		String timeLabelString = timeLabel.get();
-		String timePath = timeRange.get();
-		boolean timeIsSpecified = !"".equals(timePath);
-		VariableRange<?> timeRangeAtom = null;
+		var timeLabelString = timeLabel.get();
+		var timePath = timeRange.get();
+		var timeIsSpecified = !"".equals(timePath);
+		var timeRangeAtom = null;
 
-		List<?> timeRangeValues = null;
+		var timeRangeValues = null;
 		if (timeIsSpecified) {
 			timeRangeAtom = this.childFromRoot(timePath);
 			timeRangeValues = timeRangeAtom.getRange();
 		}
 
 		//get y information
-		String yLabelString = yLabel.get();
+		var yLabelString = yLabel.get();
 
 		//get tuple information
-		String tupleyPath = tupleList.get();
-		List<?> tupleListValues = getTupleValues(tupleyPath);
+		var tupleyPath = tupleList.get();
+		var tupleListValues = getTupleValues(tupleyPath);
 
 		//column names
-		List<String> columnNames = createColumnNames(timeLabelString, yLabelString, tupleListValues);
+		var columnNames = createColumnNames(timeLabelString, yLabelString, tupleListValues);
 
 		//get sweep output path
-		String sweepOutputPath = propabilityOutput.get();
+		var sweepOutputPath = propabilityOutput.get();
 
 		//get probe table relative path
-		String firstProbeTableRelativePath = getFirstProbeRelativePath();
-		String[] pathItems = firstProbeTableRelativePath.split("\\.");
-		String firstPrefix = pathItems[0];
-		int firstIndex = firstPrefix.length() + 1;
-		String relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
+		var firstProbeTableRelativePath = getFirstProbeRelativePath();
+		var pathItems = firstProbeTableRelativePath.split("\\.");
+		var firstPrefix = pathItems[0];
+		var firstIndex = firstPrefix.length() + 1;
+		var relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
 
 		//get probe table prefix
-		String prefix = getProbeTablePrefix(firstPrefix);
+		var prefix = getProbeTablePrefix(firstPrefix);
 
 		fillProbeTable(table, timeRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix);
 
-		LOG.info("Filled probe table.");
+		monitor.info("Filled probe table.");
 
 	}
 
-	private void fillProbeTable(
-			Table table,
-			List<?> xRangeValues,
-			List<String> columnNames,
-			String sweepOutputPath,
-			String relativeProbeTablePath,
-			String prefix) {
+	__fillProbeTable(
+			table,
+			 xRangeValues,
+			 columnNames,
+			 sweepOutputPath,
+			 relativeProbeTablePath,
+			 prefix
+	) {
 		//get probe table row index
-		int probeRowId = Integer.parseInt(probeRowIndex.get());
+		var probeRowId = Integer.parseInt(probeRowIndex.get());
 
 		//get probe table column index
-		int probeColumnId = Integer.parseInt(probeColumnIndex.get());
+		var probeColumnId = Integer.parseInt(probeColumnIndex.get());
 
-		int sweepIndex = 1;
-		for (int rowIndex = 0; rowIndex < xRangeValues.size(); rowIndex++) {
+		var sweepIndex = 1;
+		for (var rowIndex = 0; rowIndex < xRangeValues.size(); rowIndex++) {
 
 			//create new row
-			Row row = new Row(table);
+			var row = new Row(table);
 
 			//fill x column entry
-			Object xValue = xRangeValues.get(rowIndex);
-			boolean isQuantity = xValue instanceof Quantity;
+			var xValue = xRangeValues.get(rowIndex);
+			var isQuantity = xValue instanceof Quantity;
 			if (isQuantity) {
 				//only take numeric value (="remove" unit)
-				Quantity quantity = (Quantity) xValue;
-				xValue = quantity.getValue();
+				
+				xValue = quantity.number;
 			}
 			row.setEntry(columnNames.get(0), xValue);
 
 			//fill y column entries
-			for (int columnIndex = 1; columnIndex < columnNames.size(); columnIndex++) {
-				String yColumnName = columnNames.get(columnIndex);
-				String tablePath = sweepOutputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
-				Object yValue = getProbeValue(tablePath, probeRowId, probeColumnId);
+			for (var columnIndex = 1; columnIndex < columnNames.size(); columnIndex++) {
+				var yColumnName = columnNames.get(columnIndex);
+				var tablePath = sweepOutputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
+				var yValue = getProbeValue(tablePath, probeRowId, probeColumnId);
 				row.setEntry(yColumnName, yValue);
 
 				//increase sweep index
@@ -319,68 +248,55 @@ public class ProbabilityProbe extends AbstractProbe {
 		}
 	}
 
-	private static String getProbeTablePrefix(String firstPrefix) {
-		String idSeparator = "Id";
-		String[] prefixItems = firstPrefix.split(idSeparator);
-		String prefix = prefixItems[0] + idSeparator;
-		return prefix;
+	probeTablePrefix(firstPrefix) {
+		var idSeparator = 'Id';
+		var prefixItems = firstPrefix.split(idSeparator);
+		return prefixItems[0] + idSeparator;
+		
 	}
 
-	private String getFirstProbeRelativePath() {
-		Attribute<String> attribute = getWrappedAttribute(firstProbeTable);
-		ModelPath probeTablePath = (ModelPath) attribute;
-		String firstRelativeProbeTablePath = probeTablePath.getRelativeValue();
-		return firstRelativeProbeTablePath;
+	get __firstProbeRelativePath() {
+		return this.__firstProbleTableSelection.relativePath;		
 	}
 
-	private static
-			List<String>
-			createColumnNames(String xLabelString, String yLabelString, List<?> firstFamilyRangeValues) {
-		List<String> columnNames = new ArrayList<>();
+	createColumnNames(xLabelString, yLabelString, firstFamilyRangeValues) {
+		
+		var columnNames = [];
 
 		//create first column info (=x column)
-		String xColumnName = xLabelString;
+		var xColumnName = this.xLabelString;
 		columnNames.add(xColumnName);
 
 		//create remaining column info (=y columns)
-		for (int firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.size(); firstFamilyIndex++) {
-			String columnName = yLabelString + "#" + firstFamilyIndex;
-
-			columnNames.add(columnName);
-
+		for (var firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.length; firstFamilyIndex++) {
+			var columnName = yLabelString + '#' + firstFamilyIndex;
+			columnNames.push(columnName);
 		}
 		return columnNames;
 	}
 
-	private List<?> getTupleValues(String firstFamilyPath) {
-		boolean firstFamilyIsSpecified = !"".equals(firstFamilyPath);
-		List<?> firstFamilyRangeValues = null;
-		if (firstFamilyIsSpecified) {
-			VariableRange<?> firstFamilyRangeAtom = this.childFromRoot(firstFamilyPath);
-			firstFamilyRangeValues = firstFamilyRangeAtom.getRange();
+	tupleValues(firstFamilyPath) {
+		
+		var firstFamilyRangeValues = null;
+		if (this.firstFamilyPath) {
+			var firstFamilyRangeAtom = this.childFromRoot(this.firstFamilyPath);
+			firstFamilyRangeValues = firstFamilyRangeAtom.range;
 		} else {
-			String message = "At least the first family range needs to be specified.";
-			throw new IllegalStateException(message);
+			var message = 'At least the first family range needs to be specified.';
+			throw new Error(message);
 		}
 		return firstFamilyRangeValues;
 	}
 
-	private Object getProbeValue(String probeTablePath, int rowIndex, int columnIndex) {
-
-		//get probe table
-		Table probeTable = this.childFromRoot(probeTablePath);
-
-		//get probe value
-		String columnHeader = probeTable.getHeaders().get(columnIndex);
-		Row row = probeTable.getRows().get(rowIndex);
-		Object value = row.getEntry(columnHeader);
-
-		//return probe value
-		return value;
+	probeValue(probeTablePath, rowIndex, columnIndex) {
+		
+		var probeTable = this.childFromRoot(probeTablePath);
+		
+		var columnHeader = probeTable.headers[columnIndex];
+		var row = probeTable.rows[rowIndex];
+		return  row.entry(columnHeader);
+	
 	}
 
-	//#end region
-
-	//#end region
 
 }

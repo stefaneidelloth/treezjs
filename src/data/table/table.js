@@ -578,7 +578,7 @@ export default class Table extends ComponentAtom {
 
 	columnType(columnHeader) {
 		if (this.isLinkedToSource) {			
-			return DatabasePageResultLoader.getColumnType(this.tableSource, columnHeader);
+			return DatabasePageResultLoader.columnType(this.tableSource, columnHeader);
 		} else {
 			return this.columnFolder.type(columnHeader);			
 		}
@@ -651,8 +651,8 @@ export default class Table extends ComponentAtom {
 		return true;
 	}
 
-	getColumnDataClass(columnHeader) {
-		var columnType = this.getColumnType(columnHeader);
+	columnDataClass(columnHeader) {
+		var columnType = this.columnType(columnHeader);
 		return columnType.getAssociatedClass();		
 	}
 

@@ -2,6 +2,8 @@ import ComponentAtom from './../../core/component/componentAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import Table from './../../data/table/table.js';
 import SweepProbe from './../probe/sweepProbe.js';
+import PickingProbe from './../probe/pickingProbe.js';
+//import SensitivityProbe from './../probe/sensitivityProbe.js';
 import SweepOutput from './../../study/sweep/sweepOutput.js';
 
 export default class Data extends ComponentAtom {
@@ -47,42 +49,41 @@ export default class Data extends ComponentAtom {
 		actions.push(new AddChildAtomTreeViewAction(
 				SweepProbe,
 				'sweepProbe',
-				'sweep.png',
-				this,
+				'sweepProbe.png',
 				parentSelection,
-				treeView,
-				'probe.png')
+				this,				
+				treeView)
 		);
 
-		/*
 		
-		actions.add( new AddChildAtomTreeViewAction(
+		
+		actions.push( new AddChildAtomTreeViewAction(
 				PickingProbe,
 				'pickingProbe',
-				'picking.png',
-				this,
-				treeView,
-				'probe.png')
+				'pickingProbe.png',
+				parentSelection,
+				this,				
+				treeView)
 		);
 		
+		/*
 		
-		
-		actions.add( new AddChildAtomTreeViewAction(
+		actions.push( new AddChildAtomTreeViewAction(
 				SensitivityProbe,
 				'sensitvityProbe',
 				'sensitivity.png',
-				this,
 				parentSelection,
+				this,
 				treeView,
 				'probe.png')
 		);
 		
-		actions.add( new AddChildAtomTreeViewAction(
+		actions.push( new AddChildAtomTreeViewAction(
 				ProbabilityProbe,
 				'probabilityProbe',
 				'probability.png',
-				this,
 				parentSelection,
+				this,				
 				treeView,
 				'probe.png')
 		);		

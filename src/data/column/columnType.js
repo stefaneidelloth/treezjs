@@ -10,6 +10,18 @@ export default class ColumnType extends Enum {
 	get isNumeric() {
 		return !(this === ColumnType.string);
 	}
+
+	isCompatible(value){
+		switch(typeof value){
+			case 'number':
+				return this.isNumeric;	
+			case 'string':
+				return (this === ColumnType.string);		
+			default:
+				return false;
+		}		
+	}
+	
 }
 
 if(window.ColumnType){

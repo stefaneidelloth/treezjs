@@ -13,7 +13,10 @@ export default class ColumnBlueprint {
 			isLinkedToSource=false
 		) {
 		this.name = name;		
-		this.legend = legend;		
+		this.legend = legend;	
+		if(!(type instanceof ColumnType)){
+			throw new Error('type must be ColumnType and not ' + typeof type);
+		}	
 		this.type = type;		
 		this.defaultValue = defaultValue;
 		this.isNullable = isNullable;

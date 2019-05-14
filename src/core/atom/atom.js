@@ -291,7 +291,11 @@ export default class Atom {
 			//go to the wanted child in a loop; each iteration
 			//overrides the previous parent atom in the loop
 			for (var index = 1; index < childNames.length; index++) {
-				child = child.childByName(childNames[index]);
+				try{
+					child = child.childByName(childNames[index]);
+				} catch (error){
+					throw new Error('Could not find child "' + childNames[index] + '" in tree path "' + childPath + '".', error);
+				}				
 			}
 			return child;
 		} else {			

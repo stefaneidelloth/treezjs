@@ -129,8 +129,8 @@ export default class Sweep extends Study {
 		
 
 		return actions;
-	}
-	
+	}	
+		
 	createStudyOutputAtom(name){
 		return new SweepOutput(name);
 	}	

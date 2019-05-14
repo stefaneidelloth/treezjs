@@ -58,36 +58,23 @@ export default class Row {
 	 */
 	setEntry(columnHeader, value) {
 
-		var columnExists = this.__table.headers.indexOf(columnHeader) > -1;
+		var table = this.__table;
+
+		var columnExists = table.headers.indexOf(columnHeader) > -1;
 		if (columnExists) {
-			if (value !== null && value instanceof Object) {
-				
-				
-				var valueClass = value.construtor;
-				var valueColumnType = ColumnType.forClass(valueClass);
-				var columnType = table.getColumnType(columnHeader);
-
-				var columnTypeFitsToValue = valueColumnType === columnType;
-				if (columnTypeFitsToValue) {
-					
-					this.__entryMap[columnHeader] = value;
-				} else {
-					var message = 'The class "' + valueClass.name + '" of the given value "' + value + '" is not compatible to the ' + 
-					' column type "' + columnType + '"';
-
-					throw new Error(message);
-				}
-			} else {
+			var columnType = table.columnType(columnHeader);			
+			if (columnType.isCompatible(value)) {
 				this.__entryMap[columnHeader] = value;
+			} else {
+				var message = 'The class "' + valueClass.name + '" of the given value "' + value + '" is not compatible to the ' + 
+				' column type "' + columnType + '"';
+				throw new Error(message);
 			}
-
 		} else {
 			var message = 'The columnHeader "' + columnHeader + '" does not exist and the value "' + value + '" could not be set.';
 			throw new Error(message);
 		}
-	}
-
-	
+	}	
 
 	getEntryAsString(header) {
 		var value = this.getEntry(header);
