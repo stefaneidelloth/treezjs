@@ -14,7 +14,7 @@ export default class PickingProbe extends Probe {
 		super(name);		
 		this.image = 'picking.png';		
 		
-		this.domainLabel = 'sample_index'; 
+		this.domainLabel = 'domain'; 
 		this.domainType = DomainType.sampleIndex;
 		
 		//The model path to a column that is used to retrieve domain values
@@ -25,8 +25,8 @@ export default class PickingProbe extends Probe {
 	
 		this.probeLabel = 'y';	
 
-		this.pickingOutputPath = '';
-		this.firstProbeTablePath = '';
+		this.pickingOutputPath = 'root.results.data.pickingOutput';
+		this.firstProbeTablePath = 'root.results.data.pikcingOutput.output_1.tableImportOutput';
 		this.columnIndex = 0;
 		this.rowIndex = 0;
 
@@ -84,10 +84,7 @@ export default class PickingProbe extends Probe {
 		this.__domainColumnPathSelection.hide();
 		this.__pickingPathSelection.hide();
 	
-		if (this.__isTimeSeries) {
-			if(this.domainLabel === 'sample_index'){
-				this.domainLabel = 'time';
-			}
+		if (this.__isTimeSeries) {			
 			
 			if (this.__isTimeSeriesFromPicking) {
 				this.__pickingPathSelection.show();
@@ -96,11 +93,7 @@ export default class PickingProbe extends Probe {
 			if (this.__isTimeSeriesFromColumn) {
 				this.__domainColumnPathSelection.show();
 			}
-		} 	else {
-			if(this.domainLabel === 'time'){
-				this.domainLabel = 'sample_index';
-			}
-		}	
+		} 	
 	}
 	
 	__createProbeSection(page){
@@ -122,7 +115,7 @@ export default class PickingProbe extends Probe {
 		this.__firstProbeTableSelection = sectionContent.append('treez-model-path')
 			.label('First probe table')
 			.nodeAttr('atomClasses', [Table])			
-			.bindValue(this, ()=>this.firstProbeTablePath);			
+			.bindValue(this, () => this.firstProbeTablePath);			
 	
 		sectionContent.append('treez-text-field')
 			.label('One based column index')
@@ -178,37 +171,18 @@ export default class PickingProbe extends Probe {
 		var relativeProbeTablePath = this.__firstProbeTableRelativePath.substring(firstIndex);
 		var prefix = this.probeTablePrefix(firstPrefix);
 		
-
-		if (this.__isTimeSeries) {
-
-			//get domain information
-
-			var domainValues = this.__domainTimeSeriesRange;
-
-			var timeLabelString = this.domainLabel;
-			var timePath = this.domainColumnPath;
-			
-			var timeRangeAtom = null;
-			var timeRangeValues = [];
-			if (timePath) {
-				timeRangeAtom = this.childFromRoot(timePath);
-				timeRangeValues = timeRangeAtom.range;
-			}
-		
+		if (this.__picking.isTimeDependent) {
+			if(!this.__isTimeSeries){
+				throw new Error('Type of picking probe does not fit time dependent picking.')
+			}	
 			var columnNames = this.__createColumnNames();
-			this.__fillProbeTable(table, columnNames, relativeProbeTablePath, prefix, timeRangeValues);
-			
-
-		} else {
-			
+			this.__fillProbeTableForTimeSeries(table, columnNames, relativeProbeTablePath, prefix, this.__domainTimeSeriesRange);
+		} else {			
 			var columnNames = this.__createColumnNames();
 			this.__fillProbeTable(table, columnNames, relativeProbeTablePath, prefix);
-		}
-		
-		
+		}		
 
 		monitor.info("Filled probe table.");
-
 	}
 	
 	__fillProbeTable(
@@ -224,20 +198,17 @@ export default class PickingProbe extends Probe {
 			
 			var oneBasedSampleIndex = rowIndex+1;
 			
-			var row = new Row(table);
-			
-			var domainValue = timeRangeValues
-								?timeRangeValues[rowIndex]
-								:oneBasedSampleIndex;
+			var row = new Row(table);			
 								
-			row.setEntry(columnNames[0], domainValue);
+			row.setEntry(columnNames[0], oneBasedSampleIndex);
 			
 			var variableMap = sample.variableMap;
 			
 			for(var columnIndex = 1; columnIndex < columnNames.length-1; columnIndex++){				
-				var columnName = columnNames[columnIndex];
-				var variable = variableMap[columnName];
-				row.setEntry(columnName, variable.value);
+				var variableName = columnNames[columnIndex];				
+				var variable = variableMap[variableName];
+
+				row.setEntry(variableName, variable.value);
 			}			
 			
 			var tablePath = this.pickingOutputPath + '.' + prefix + oneBasedSampleIndex + '.' + relativeProbeTablePath;
@@ -252,9 +223,42 @@ export default class PickingProbe extends Probe {
 		
 	}
 
-	
+	__fillProbeTableForTimeSeries(
+			table,			
+			columnNames,			
+			relativeProbeTablePath,
+			prefix,
+			timeRangeValues
+	) {
+				
+		var sample = this.__enabledSamples[0];
+		
 
-	
+		for(var rowIndex = 0; rowIndex < timeRangeValues.length; rowIndex++){
+									
+			var row = new Row(table);
+			
+			var domainValue = timeRangeValues[rowIndex];								
+								
+			row.setEntry(columnNames[0], domainValue);
+			
+			var variableMap = sample.variableMap;
+			
+			for(var columnIndex = 1; columnIndex < columnNames.length-1; columnIndex++){				
+				var variableName = columnNames[columnIndex];				
+				var rangeVariable = variableMap[variableName];
+				var value = rangeVariable.values[rowIndex];				
+				row.setEntry(variableName, value);
+			}			
+			
+			var tablePath = this.pickingOutputPath + '.' + prefix + (rowIndex+1) + '.' + relativeProbeTablePath;
+			var probeValue = this.__probeValue(tablePath);
+			var rangeLabel = columnNames[columnNames.length-1];			
+			row.setEntry(rangeLabel, probeValue);
+			
+			table.addRow(row);			
+		}		
+	}	
 	
 	__createColumnNames(domainColumnName) {
 		var columnNames = [];
@@ -350,14 +354,14 @@ export default class PickingProbe extends Probe {
 		}
 	}
 
-	get __getDomainColumnTypeFromPicking() {
+	get __domainColumnTypeFromPicking() {
 		
 		if(!this.pickingPath){
 			return null;
 		}		
 		
 		var picking = this.childFromRoot(this.pickingPath);
-		domainColumnType = picking.rangeType;
+		var domainColumnType = picking.rangeType;
 		
 		if (!domainColumnType) {
 			var message = 'The picking "' + pickingModelPath + '" that is used for the picking probe "'
@@ -365,15 +369,30 @@ export default class PickingProbe extends Probe {
 			throw new Error(message);
 		}
 		
-		return ColumnType.getType(domainColumnType);
+		return domainColumnType;
 		
 	}
 	
 	get __domainTimeSeriesRange() {
-		if (this.__isTimeSeriesfromColumn) {			
+		if (this.__isTimeSeriesFromColumn) {			
 			if (this.domainColumnPath) {
 				var column = this.childFromRoot(this.domainColumnPath);
-				return column.values;				
+				var range = column.values;
+
+				if(this.pickingPath){
+					var picking =  this.childFromRoot(this.pickingPath);
+					var pickingRange = picking.range;
+					if(range.length < pickingRange.length){
+						throw new Error('The selected column for the domain values does contain less values than the time range.');
+					}
+
+					if(range.length > pickingRange.length){
+						return range.slice(0,pickingRange.length);						
+					} else {
+						return range;
+					}
+				}
+								
 			} else {
 				return [];
 			}

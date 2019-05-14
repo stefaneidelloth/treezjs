@@ -66,7 +66,7 @@ export default class Row {
 			if (columnType.isCompatible(value)) {
 				this.__entryMap[columnHeader] = value;
 			} else {
-				var message = 'The class "' + valueClass.name + '" of the given value "' + value + '" is not compatible to the ' + 
+				var message = 'The type "' + (typeof value) + '" of the given value "' + value + '" is not compatible to the ' + 
 				' column type "' + columnType + '"';
 				throw new Error(message);
 			}

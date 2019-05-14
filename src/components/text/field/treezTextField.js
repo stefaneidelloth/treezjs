@@ -15,13 +15,13 @@ export default class TreezTextField extends LabeledTreezElement {
             var label = document.createElement('label');  
             this.__label = label;                     
             label.innerText = this.label;  
-            label.setAttribute('class','treez-text-field-label');
+            label.className = 'treez-text-field-label';
             this.appendChild(label);                                                            
 
             var textField = document.createElement('input'); 
             this.__textField = textField;
             this.appendChild(textField); 
-            textField.setAttribute('class','treez-text-field')                
+            textField.className = 'treez-text-field-field';                
             textField.onchange = () => this.__textFieldChanged();
         }
 

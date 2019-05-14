@@ -1,8 +1,13 @@
+treez-text-field {
+	clear: both;
+	display: block;
+}
+
 .treez-text-field-label {
 	margin-right:5px;	
 }
 
-.treez-text-field {
+.treez-text-field-field {
     font-family: Consolas;
     font-size: 12px;   
     resize:vertical;

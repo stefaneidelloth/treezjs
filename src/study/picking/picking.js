@@ -19,7 +19,7 @@ export default class Picking extends AbstractSampleStudy {
 		this.isTimeDependent = false;
 
 		//The model path of the variable that represents the time. The variable values may be of type Integer or Double.
-		this.timeVariableModelPath = undefined;
+		this.timeVariablePath = undefined;
 		
 		this.timeRangeString = '[]';				
 	
@@ -48,7 +48,7 @@ export default class Picking extends AbstractSampleStudy {
 		this.__timeVariablePathSelection = sectionContent.append('treez-model-path')
 			.label('Time variable')
 			.nodeAttr('atomClasses', [IntegerVariable, DoubleVariable])
-			.bindValue(this, ()=>this.timeVariableModelPath);
+			.bindValue(this, ()=>this.timeVariablePath);
 		
 		this.__timeRangeSelection = sectionContent.append('treez-text-field')
 			.label('Time range')
@@ -128,11 +128,11 @@ export default class Picking extends AbstractSampleStudy {
 		return new PickingOutput(name);
 	}	
 		
-	static nameOfTimeVariable() {		
-		if(!this.timeVariableModelPath){
+	get nameOfTimeVariable() {		
+		if(!this.timeVariablePath){
 			return null;
 		}
-		var pathItems = this.timeVariableModelPath.split('\.');
+		var pathItems = this.timeVariablePath.split('\.');
 		return pathItems[pathItems.length - 1];		
 	}	
 
@@ -155,7 +155,7 @@ export default class Picking extends AbstractSampleStudy {
 	get rangeType() {
 		if (this.isTimeDependent) {
 			
-			var timeVariable = this.childFromRoot(this.timeVariableModelPath);
+			var timeVariable = this.childFromRoot(this.timeVariablePath);
 			
 			if(timeVariable instanceof IntegerVariable){
 				return ColumnType.integer;

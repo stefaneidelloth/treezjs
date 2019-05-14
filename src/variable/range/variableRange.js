@@ -37,6 +37,7 @@ export default class VariableRange extends ComponentAtom {
 	createCodeAdaption(){
 		return new VariableRangeCodeAdaption(this);
 	}
+		
 	
 	get values(){
 		return eval(this.__rangeString);
@@ -45,6 +46,15 @@ export default class VariableRange extends ComponentAtom {
 	set values(array){
 		this.__rangeString = '[' + array + ']';		
 	}
+
+	get value(){
+		return this.values;
+	}
+
+	set value(array){
+		this.values = array;		
+	}
+	
 		
 	/*
 	

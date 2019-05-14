@@ -6,7 +6,7 @@ treez-section {
     margin-top:1px;
     margin-bottom:3px;
     border-style: none;
-    display:'block';
+    /* display: block; */
 }
 
 treez-section div {  

@@ -19,33 +19,46 @@ export default class PickingModelInputGenerator {
 			var studyId = picking.id;
 			var studyDescription = picking.description;
 			var sourceModelPath = picking.sourceModelPath;	
-			var totalNumberOfJobs = samples.length;		
+				
 
 			if (picking.isTimeDependent) {
-				var timeVariablePath = picking.timeVariableModelPath;
+				
+
+				if(samples.length < 1){
+					throw new Error('Please create a sample child for the picking study.')
+				}
+
+				if(samples.length > 1){
+					throw new Error('Time dependent picking study must only have one sample child.')
+				}
+
+				var sample = samples[0];
+				
+
+				var timeVariablePath = picking.timeVariablePath;
 				var timeRange = picking.timeRange;
+				var totalNumberOfJobs = timeRange.length;	
+
 				for (var timeIndex = 0; timeIndex < timeRange.length; timeIndex++) {
 					var timeValue = timeRange[timeIndex];
-					var jobId = 1;
+					var jobId = timeIndex+1;					
 
-					for (var sample of samples) {
-						var modelInput = this.__createModelInputFromSampleForTimeStep(								
-								sourceModelPath, 
-								studyId, 
-								studyDescription, 
-								sample, 
-								jobId, 
-								totalNumberOfJobs,
-								timeVariablePath,
-								timeIndex, 
-								timeValue
-						);
-						modelInputs.push(modelInput);
-						jobId++;
-					}
+					var modelInput = this.__createModelInputFromSampleForTimeStep(								
+							sourceModelPath, 
+							studyId, 
+							studyDescription, 
+							sample, 
+							jobId, 
+							totalNumberOfJobs,
+							timeVariablePath,
+							timeIndex, 
+							timeValue
+					);
+					modelInputs.push(modelInput);
 				}
 
 			} else {
+				var totalNumberOfJobs = samples.length;	
 				var jobId = 1;
 				for (var sample of samples) {
 					var modelInput = this.__createModelInputFromSample(
@@ -188,14 +201,18 @@ export default class PickingModelInputGenerator {
 	}
 
 	get numberOfSimulations() {
-		return this.enabledSamples.length;
+		if (this.__picking.isTimeDependent) {
+			return this.numberOfTimeSteps;
+		} else {
+			return this.enabledSamples.length;
+		}			
 	}
 	
 	get enabledSamples() {
 		return this.__picking.enabledSamples;		
 	}
 
-	get numberOfTimeSteps() {
+	get numberOfTimeSteps() {		
 		return this.__picking.numberOfTimeSteps;
 	}	
 
