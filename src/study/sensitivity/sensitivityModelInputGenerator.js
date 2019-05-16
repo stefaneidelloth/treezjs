@@ -23,6 +23,7 @@ export default class SensitivityModelInputGenerator extends SweepModelInputGener
 			var values = eval(info);
 			
 			var mockedVariableRange = {
+					name: variable.name,
 					variablePath: variable.treePath,
 					values: values,
 					parent: this.__study

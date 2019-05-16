@@ -212,8 +212,9 @@ export default class TreezElement extends HTMLElement {
 							 );
 		this.dispatchEvent(event);
 	}
+	*/
 	
-	__dispatchChangeEvent(){
+	dispatchChangeEvent(){
     	var event = new Event(
 							  'change', 
 							  {
@@ -223,7 +224,7 @@ export default class TreezElement extends HTMLElement {
 							 );
 		this.dispatchEvent(event);
     }
-    */
+    
 
 	disconnectedCallback(){
 		while (this.firstChild) {

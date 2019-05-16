@@ -23,9 +23,14 @@ export default class AbstractSampleStudy extends Study {
 		
 		this.__variableListSelection = sectionContent.append('treez-string-item-list')			
 			.nodeAttr('options', this.availableVariableNames)
+			.onChange(() => this.variableListChanged())
 			.bindValue(this, () => this.variableNames);
 		
 		this.__sourceModelPathSelection.onChange(() => this.__updateAvailableVariableNames());
+	}
+	
+	variableListChanged(){
+		//can be overridden by inheriting classes		
 	}
 			 
 	updateAvailableVariableNames() {		

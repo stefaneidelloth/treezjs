@@ -190,7 +190,7 @@ export default class TreezStringList extends TreezElement {
     }
     
     setCellValue(cell, value){
-    	cell.innerText = value;
+    	cell.innerText = value;	
     }
     
 	__deleteRow(){
@@ -210,14 +210,17 @@ export default class TreezStringList extends TreezElement {
 
 		this.__recreateTableRows(); 					 
 
-		this.__updateSelectedRowIndexAfterDeletion(indexOfRowToDelete);           	
+		this.__updateSelectedRowIndexAfterDeletion(indexOfRowToDelete);    
+		this.dispatchChangeEvent();        	
     }
 
      __deleteRows(){
-    	var body = this.__tableBody;  
+    	var body = this.__tableBody; 
+    	
 		while (body.hasChildNodes()) {
 			body.removeChild(body.lastChild);
 		}
+    	 		
     }
 
     __duplicateRow(index){
@@ -230,6 +233,7 @@ export default class TreezStringList extends TreezElement {
     	
     	this.__recreateTableRows();
     	this.__selectRow(index+1);
+    	this.dispatchChangeEvent(); 
     }   
 	
 	__moveCurrentRowUp(){
@@ -271,6 +275,7 @@ export default class TreezStringList extends TreezElement {
 		this.__recreateTableRows(); 		                 
       
         this.__selectRow(newIndex);
+        this.dispatchChangeEvent(); 
     }
 
     __moveRowDown(index){
@@ -291,7 +296,8 @@ export default class TreezStringList extends TreezElement {
 		this.value = valueArray;
 
 		this.__recreateTableRows(); 
-        this.__selectRow(newIndex); 
+        this.__selectRow(newIndex);
+        this.dispatchChangeEvent(); 
     }    
 
     __rowCanBeDeleted(){

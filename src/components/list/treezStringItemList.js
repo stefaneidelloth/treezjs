@@ -4,24 +4,28 @@ export default class TreezStringItemList extends TreezStringList {
 
     constructor(){
         super();
+        this.__itemInfoMap = {};
     } 
     
     static get observedAttributes() {
 		return TreezStringList.observedAttributes.concat(['options']);                    
-    }    
+    }  
     
-     
-    __comboBoxChanged(comboBox){
-    	let cell = comboBox.parentElement;
-    	let newValue = comboBox.value;
-    	let rowIndex = cell.parentElement.rowIndex;  
-
-    	var valueArray = this.values;                	
-    	valueArray[rowIndex] = newValue;
-    	this.value = valueArray;
-    	
-    	this.__focusCell(rowIndex);
+    info(item, info){
+    	if(info === undefined){
+    		return this.__itemInfoMap[item];
+    	} else {
+    		this.__itemInfoMap[item] = info;
+    		if(this.__tableBody){
+    			this.__recreateTableRows();
+    		}        	
+    	}    	
     }
+    
+    get hasItemInfo(){
+    	return Object.keys(this.__itemInfoMap).length > 0;
+    }     
+   
     
     __focusCell(rowIndex){
     	var row = this.__tableBody.children[rowIndex];
@@ -40,6 +44,16 @@ export default class TreezStringItemList extends TreezStringList {
     	cell.className = 'treez-list-td';
     	row.appendChild(cell);
     	
+    	if(this.hasItemInfo){ 
+    		var infoCell = document.createElement('td');
+    		infoCell.className = 'treez-list-td';
+    		var info = this.__itemInfoMap[value];
+    		if(info !== undefined){
+    			infoCell.innerText = info;
+    		}  
+    		row.appendChild(infoCell);  		
+    	} 
+    	
     	var comboBox = document.createElement('select'); 
     	comboBox.className = 'treez-list-select';
     	comboBox.onchange = () => this.__comboBoxChanged(comboBox);                                              
@@ -56,6 +70,18 @@ export default class TreezStringItemList extends TreezStringList {
     	row.tabIndex=row.rowIndex;    	
     	cell.onblur = (event)=>this.__cellLostFocus(event);                	
     	 
+    }
+    
+    __comboBoxChanged(comboBox){
+    	let cell = comboBox.parentElement;
+    	let newValue = comboBox.value;
+    	let rowIndex = cell.parentElement.rowIndex;  
+
+    	var valueArray = this.values;                	
+    	valueArray[rowIndex] = newValue;
+    	this.value = valueArray;
+    	
+    	this.__focusCell(rowIndex);
     }
 
      get __defaultValue(){
