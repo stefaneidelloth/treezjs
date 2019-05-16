@@ -5,81 +5,7 @@ export default class PickingModelInputGenerator {
 	constructor(picking) {
 		this.__picking = picking;
 	}
-
-	get modelInputs() {
-
-		var modelInputs = [];
-
-		var samples = this.enabledSamples;
-
-		if (samples.length > 0) {
-
-			var picking = this.__picking;
-
-			var studyId = picking.id;
-			var studyDescription = picking.description;
-			var sourceModelPath = picking.sourceModelPath;	
-				
-
-			if (picking.isTimeDependent) {
-				
-
-				if(samples.length < 1){
-					throw new Error('Please create a sample child for the picking study.')
-				}
-
-				if(samples.length > 1){
-					throw new Error('Time dependent picking study must only have one sample child.')
-				}
-
-				var sample = samples[0];
-				
-
-				var timeVariablePath = picking.timeVariablePath;
-				var timeRange = picking.timeRange;
-				var totalNumberOfJobs = timeRange.length;	
-
-				for (var timeIndex = 0; timeIndex < timeRange.length; timeIndex++) {
-					var timeValue = timeRange[timeIndex];
-					var jobId = timeIndex+1;					
-
-					var modelInput = this.__createModelInputFromSampleForTimeStep(								
-							sourceModelPath, 
-							studyId, 
-							studyDescription, 
-							sample, 
-							jobId, 
-							totalNumberOfJobs,
-							timeVariablePath,
-							timeIndex, 
-							timeValue
-					);
-					modelInputs.push(modelInput);
-				}
-
-			} else {
-				var totalNumberOfJobs = samples.length;	
-				var jobId = 1;
-				for (var sample of samples) {
-					var modelInput = this.__createModelInputFromSample(
-						sourceModelPath, 
-						studyId, 
-						studyDescription, 
-						sample,
-						jobId, 
-						totalNumberOfJobs
-					);
-					modelInputs.push(modelInput);
-					jobId++;
-				}
-			}
-		}
-
-		return modelInputs;
-	}
-
 	
-
 	exportStudyInfoToTextFile(filePath) {
 
 		var samples = this.enabledSamples;
@@ -134,6 +60,66 @@ export default class PickingModelInputGenerator {
 				database.execute(query);
 			}
 		}
+	}
+	
+	__createModelInputsForTimeDependentPicking(samples){
+		
+		if(samples.length < 1){
+			throw new Error('Please create a sample child for the picking study.')
+		}
+
+		if(samples.length > 1){
+			throw new Error('Time dependent picking study must only have one sample child.')
+		}
+
+		var sample = samples[0];
+		
+		var picking = this.__picking;			
+		var timeRange = picking.timeRange;
+		var totalNumberOfJobs = timeRange.length;
+		
+		var modelInputs = [];
+		for (var timeIndex = 0; timeIndex < totalNumberOfJobs; timeIndex++) {
+			var timeValue = timeRange[timeIndex];
+			var jobId = timeIndex+1;					
+
+			var modelInput = this.__createModelInputFromSampleForTimeStep(								
+					picking.sourceModelPath, 
+					picking.id, 
+					picking.description, 
+					sample, 
+					jobId, 
+					totalNumberOfJobs,
+					picking.timeVariablePath,
+					timeIndex, 
+					timeValue
+			);
+			modelInputs.push(modelInput);
+		}
+		
+		return modelInputs;
+	}
+	
+	__createModelInputsForPicking(samples){
+		var picking = this.__picking;
+		
+		var totalNumberOfJobs = samples.length;	
+		
+		var modelInputs = [];
+		var jobId = 1;
+		for (var sample of samples) {
+			var modelInput = this.__createModelInputFromSample(
+				picking.sourceModelPath, 
+				picking.id, 
+				picking.description, 
+				sample,
+				jobId, 
+				totalNumberOfJobs
+			);
+			modelInputs.push(modelInput);
+			jobId++;
+		}
+		return modelInputs;
 	}
 
 	__collectUniqueVariableValues(samples) {
@@ -198,6 +184,17 @@ export default class PickingModelInputGenerator {
 			}
 		}
 		return modelInput;
+	}	
+	
+	get modelInputs() {	
+		var samples = this.enabledSamples;
+		if (samples.length > 0) {
+			return picking.isTimeDependent
+				?this.__createModelInputsForTimeDependentPicking(samples)
+				:this.__createModelInputsForPicking(samples);							
+		} else {
+			return [];
+		}		
 	}
 
 	get numberOfSimulations() {

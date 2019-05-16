@@ -3,71 +3,71 @@ import RelationType from './relationType.js';
 
 export default class SensitivityValueFactory {
 
-	static updateVariableInfos(variableList, sensitivity) {		
+	static updateVariableInfos(variableMap, sensitivity) {		
 		switch (sensitivity.type) {
 		case SensitivityType.relativeDistance:
-			this.__updateByRelativeDistance(variableList, sensitivity);
+			this.__updateByRelativeDistance(variableMap, sensitivity);
 			break;
 		case SensitivityType.relativePosition:
-			this.__updateByRelativePosition(variableList, sensitivity);
+			this.__updateByRelativePosition(variableMap, sensitivity);
 			break;
 		case SensitivityType.absoluteDistance:
-			this.__updateByAbsoluteDistance(variableList, sensitivity);
+			this.__updateByAbsoluteDistance(variableMap, sensitivity);
 			break;
 		default:
 			throw new Error('Not yet implemented type ' + sensitivity.type);
 		}
 	}
 
-	static __updateByRelativeDistance(variableList, sensitivity) {		
+	static __updateByRelativeDistance(variableMap, sensitivity) {		
 		switch (sensitivity.relationType) {
 		case RelationType.percentage:
-			this.__updateByRelativeDistanceWithPercentage(variableList, sensitivity);
+			this.__updateByRelativeDistanceWithPercentage(variableMap, sensitivity);
 			break;
 		case RelationType.factor:
-			this.__updateByRelativeDistanceWithFactor(variableList, sensitivity);
+			this.__updateByRelativeDistanceWithFactor(variableMap, sensitivity);
 			break;
 		case RelationType.exponent:
-			this.__updateByRelativeDistanceWithExponent(variableList, sensitivity);
+			this.__updateByRelativeDistanceWithExponent(variableMap, sensitivity);
 			break;
 		default:
 			throw new IllegalStateException('Not yet implemented type ' + sensitivity.relationType);
 		}
 	}
 
-	static __updateByRelativeDistanceWithPercentage(variableList, sensitivity) {
+	static __updateByRelativeDistanceWithPercentage(variableMap, sensitivity) {
 
 	}
 
-	static __updateByRelativeDistanceWithFactor(variableList, sensitivity) {
+	static __updateByRelativeDistanceWithFactor(variableMap, sensitivity) {
 
 	}
 
-	static __updateByRelativeDistanceWithExponent(variableList, sensitivity) {
+	static __updateByRelativeDistanceWithExponent(variableMap, sensitivity) {
 
 	}
 
-	static __updateByRelativePosition(variableList, sensitivity) {		
+	static __updateByRelativePosition(variableMap, sensitivity) {		
 		switch (sensitivity.relationType) {
 		case RelationType.percentage:
-			this.__updateByRelativePositionWithPercentage(variableList, sensitivity);
+			this.__updateByRelativePositionWithPercentage(variableMap, sensitivity);
 			break;
 		case RelationType.factor:
-			this.__updateByRelativePositionWithFactor(variableList, sensitivity);
+			this.__updateByRelativePositionWithFactor(variableMap, sensitivity);
 			break;
 		case RelationType.exponent:
-			this.__updateByRelativePositionWithExponent(variableList, sensitivity);
+			this.__updateByRelativePositionWithExponent(variableMap, sensitivity);
 			break;
 		default:
 			throw new IllegalStateException('Not yet implemented type ' + sensitivity.relationType);
 		}
 	}
 
-	static __updateByRelativePositionWithPercentage(variableList, sensitivity) {
+	static __updateByRelativePositionWithPercentage(variableMap, sensitivity) {
 		var percentages = this.__sortedIndividualValues(sensitivity);
-		for (var variable of variableList.value) {				
+		for (var variable of variableMap.keys()) {				
 			var variableInfo = this.__variableInfoByRelativePositionWithPercentage(variable.value, percentages);
-			variableList.setVariableInfo(variable.name, variableInfo);
+			variableMap.set(variable, variableInfo);
 		}
 	}
 
@@ -81,13 +81,15 @@ export default class SensitivityValueFactory {
 		var variableInfo = '[';
 		var workingPointValueIncluded = false;
 		for (var percentage of percentages) {
-			if (percentage == 0) {
+			if (percentage === 0) {
 				variableInfo += '0, ';
-			} else if (percentage == 1) {
+			} else if (percentage === 100) {
 				variableInfo += workingPointValue + ', ';
-			} else if (percentage > 1) {
+				workingPointValueIncluded = true;
+			} else if (percentage > 100) {
 				if (!workingPointValueIncluded) {
 					variableInfo += workingPointValue + ', ';
+					workingPointValueIncluded = true;
 				}
 				variableInfo += (workingPointValue * (percentage * percent)) + ', ';
 
@@ -96,16 +98,20 @@ export default class SensitivityValueFactory {
 			}
 		}
 
-		variableInfo = variableInfo.substring(variableInfo.length() - 2) + ']';
+		if(!workingPointValueIncluded){
+			variableInfo += workingPointValue + ', ';
+		}
+
+		variableInfo = variableInfo.substring(0, variableInfo.length - 2) + ']';
 
 		return variableInfo;
 	}
 
-	static __updateByRelativePositionWithFactor(variableList, sensitivity) {
+	static __updateByRelativePositionWithFactor(variableMap, sensitivity) {
 		var factors = this.__sortedIndividualValues(sensitivity);
-		for (var variable of variableList.value) {				
+		for (var variable of variableMap.values()) {				
 			var variableInfo = this.__variableInfoByRelativePositionWithFactor(variable.value, factors);
-			variableList.setVariableInfo(variable.name, variableInfo);
+			variableMap.set(variable.name, variableInfo);
 		}
 	}
 
@@ -133,16 +139,16 @@ export default class SensitivityValueFactory {
 			}
 		}
 
-		variableInfo = variableInfo.substring(variableInfo.length() - 2) + ']';
+		variableInfo = variableInfo.substring(0, variableInfo.length - 2) + ']';
 
 		return variableInfo;
 	}
 
-	static __updateByRelativePositionWithExponent(variableList, sensitivity) {
+	static __updateByRelativePositionWithExponent(variableMap, sensitivity) {
 		var exponents = this.__sortedIndividualValues(sensitivity);
-		for (var variable of variableList.value) {						
+		for (var variable of variableMap.values()) {						
 			var variableInfo = this.__variableInfoByRelativePositionWithExponent(variable.value, exponents);
-			variableList.setVariableInfo(variable.name, variableInfo);
+			variableMap.set(variable.name, variableInfo);
 		}
 	}
 
@@ -170,16 +176,16 @@ export default class SensitivityValueFactory {
 			}
 		}
 
-		variableInfo = variableInfo.substring(variableInfo.length() - 2) + ']';
+		variableInfo = variableInfo.substring(0, variableInfo.length - 2) + ']';
 
 		return variableInfo;
 	}
 
-	static __updateByAbsoluteDistance(variableList, sensitivity) {
+	static __updateByAbsoluteDistance(variableMap, sensitivity) {
 		var distances = this.__sortedIndividualValues(sensitivity);
-		for (var variable of variableList.value) {			
+		for (var variable of variableMap.values()) {			
 			var variableInfo = this.__variableInfoByAbsoluteDistance(variable.value, distances);
-			variableList.setVariableInfo(variable.name, variableInfo);
+			variableMap.set(variable, variableInfo);
 		}
 	}
 
@@ -204,14 +210,14 @@ export default class SensitivityValueFactory {
 			}
 		}
 
-		variableInfo = variableInfo.substring(variableInfo.length() - 1) + ']';
+		variableInfo = variableInfo.substring(0, variableInfo.length - 1) + ']';
 
 		return variableInfo;
 	}
 
 	static __sortedIndividualValues(sensitivity) {
-		var individualValues = sensitivity.values;
-		individualValues.sort(null);
+		var individualValues = eval(sensitivity.valuesString);
+		individualValues.sort();
 		return individualValues;
 	}	
 

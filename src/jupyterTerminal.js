@@ -129,7 +129,10 @@ export default class JupyterTerminal {
 			                    }
 			                    
 			                 }
-			        }
+			            },
+			            input: (request) => {
+			            	throw new Error('Considering user input is not yet implemented.');
+			            }
 			};
 		 	
 		 	self.__kernel.execute(pythonCode, callbacks);
@@ -237,7 +240,10 @@ export default class JupyterTerminal {
 										throw new Error('Not yet implemented content type "' + content.name + '"');
 			                    }
 			                 }
-			        }
+			        },
+			        input: (request) => {
+			            	throw new Error('Considering user input is not yet implemented.');
+			            }
 			};                
 
 		 	self.__kernel.execute(pythonCode, callbacks);

@@ -10,19 +10,14 @@ export default class TreezTextField extends LabeledTreezElement {
 
     connectedCallback() {
     	
-        if(!this.__label){                       
-
-            var label = document.createElement('label');  
-            this.__label = label;                     
-            label.innerText = this.label;  
-            label.className = 'treez-text-field-label';
-            this.appendChild(label);                                                            
-
-            var textField = document.createElement('input'); 
-            this.__textField = textField;
-            this.appendChild(textField); 
-            textField.className = 'treez-text-field-field';                
-            textField.onchange = () => this.__textFieldChanged();
+        if(!this.__label){   
+        	if(this.label){
+        		this.__createTextFieldLabel();
+        	}           
+        }
+        
+        if(!this.__textField){
+        	 this.__createTextField();
         }
 
         if(!this.width){
@@ -32,6 +27,22 @@ export default class TreezTextField extends LabeledTreezElement {
         this.updateElements(this.value);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
+    }
+    
+    __createTextFieldLabel(){
+    	var label = document.createElement('label');  
+        this.__label = label;                     
+        label.innerText = this.label;  
+        label.className = 'treez-text-field-label';
+        this.appendChild(label); 
+    }
+    
+    __createTextField(){
+    	var textField = document.createElement('input'); 
+        this.__textField = textField;
+        this.appendChild(textField); 
+        textField.className = 'treez-text-field-field';                
+        textField.onchange = () => this.__textFieldChanged();
     }
     
     updateElements(newValue){

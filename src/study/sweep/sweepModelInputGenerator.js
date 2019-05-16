@@ -3,17 +3,17 @@ import ModelInput from './../../model/input/modelInput.js';
 
 export default class SweepModelInputGenerator {
 
-	constructor(sweep) {
-		this.__sweep = sweep;
+	constructor(study) {
+		this.__study = study;
 	}	
 
 	exportStudyInfoToTextFile(filePath) {
 		
-		var studyInfo = '---------- SweepInfo ----------\r\n\r\n' + //
+		var studyInfo = '---------- StudyInfo ----------\r\n\r\n' + //
 				'Total number of simulations:\r\n' + this.numberOfSimulations + '\r\n\r\n' + //
 				'Variable model paths and values:\r\n\r\n';
 		
-		this.__enabledRanges.forEach(range => {
+		this.enabledRanges.forEach(range => {
 			var variablePath = range.sourceVariableModelPath;
 			studyInfo += variablePath + '\r\n';
 			
@@ -33,7 +33,7 @@ export default class SweepModelInputGenerator {
 	}
 
 	fillStudyInfo(database, tableName, studyId) {	
-		this.__enabledRanges.forEach(range=>{
+		this.enabledRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
 				var query = 'INSERT INTO `' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
@@ -45,7 +45,7 @@ export default class SweepModelInputGenerator {
 	}
 
 	fillStudyInfoForSchema(database, schemaName, tableName, studyId) {		
-		this.__enabledRanges.forEach(range=>{
+		this.enabledRanges.forEach(range=>{
 			var variablePath = range.sourceVariableModelPath;
 			range.values.forEach(value=>{
 				var query = 'INSERT INTO `' + schemaName + '.' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
@@ -53,9 +53,7 @@ export default class SweepModelInputGenerator {
 			});
 			
 		});		
-	}
-	
-	
+	}	
 	
 	__createModelInputs(variableRanges) {
 		var self=this;
@@ -85,7 +83,6 @@ export default class SweepModelInputGenerator {
 			
 		}
 		return modelInputs;
-
 	}
 	
 	__numberOfJobs(variableRanges){
@@ -130,21 +127,17 @@ export default class SweepModelInputGenerator {
 				var modelInputsWithCurrentQuantities = self.__extendModelInputs(modelInput, remainingRanges);
 				modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);
 				counter++;				
-			});
-						
+			});						
 			return modelInputs;
 		}
-
 	}
-
 	
 	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId, totalNumberOfJobs) {
-		var sweepModelPath = this.__sweep.treePath;
-		var initialInput = new ModelInput(sweepModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
+		var studyModelPath = this.__study.treePath;
+		var initialInput = new ModelInput(studyModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
 		initialInput.add(variableModelPath, value);
 		return initialInput;
-	}
-	
+	}	
 	
 	__numberOfSimulationsForRanges(variableRanges) {
 	
@@ -164,14 +157,10 @@ export default class SweepModelInputGenerator {
 			:0;			
 	}
 	
-	get numberOfEnabledRanges(){
-		return this.__enabledRanges.length;
-	}
-	
-	get __enabledRanges() {
+	get enabledRanges() {
 		var variableRanges = [];
 
-		this.__sweep.children.forEach(child=>{
+		this.__study.children.forEach(child=>{
 			var isVariableRange = child instanceof VariableRange;
 			if (isVariableRange) {				
 				if (child.isEnabled) {
@@ -179,7 +168,7 @@ export default class SweepModelInputGenerator {
 					//check if corresponding variable is also enabled					
 					var variable;
 					try {
-						variable = this.__sweep.childFromRoot(child.variablePath);
+						variable = this.__study.childFromRoot(child.variablePath);
 					} catch (error) {
 						var message = 'Could not find variable atom "' + child.variablePath + '".';
 						throw new Error(message + error);
@@ -197,12 +186,16 @@ export default class SweepModelInputGenerator {
 		return variableRanges;
 	}
 	
+	get numberOfEnabledRanges(){
+		return this.enabledRanges.length;
+	}
+	
 	get modelInputs() {		
-		return this.__createModelInputs(this.__enabledRanges);
+		return this.__createModelInputs(this.enabledRanges);
 	}
 
 	get numberOfSimulations() {		
-		return this.__numberOfSimulationsForRanges(this.__enabledRanges);
+		return this.__numberOfSimulationsForRanges(this.enabledRanges);
 	}
 
 }

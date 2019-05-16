@@ -4,9 +4,8 @@ import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewA
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import Study from './study.js';
 import Sweep from './sweep/sweep.js';
-
 import Picking from './picking/picking.js';
-//import Sensitivity from './sensitivity/sensitivity.js';
+import Sensitivity from './sensitivity/sensitivity.js';
 //import Probability from './probability/probability.js';
 
 export default class Studies extends ComponentAtom {
@@ -66,26 +65,30 @@ export default class Studies extends ComponentAtom {
 				treeView
 			)
 		);
-		
-		/*
-
-        const addSensitivity = new AddChildAtomTreeViewAction(
+       
+		actions.push(
+			new AddChildAtomTreeViewAction(
         		Sensitivity,
 				'sensitivity',
 				'sensitivity.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addSensitivity);
+				treeView
+			)
+		);
+
+		/*		
 		
-		const addProbability = new AddChildAtomTreeViewAction(
+		actions.push(
+			new AddChildAtomTreeViewAction(
 				Probability,
 				'probability',
 				'probability.png',
 				parentSelection,
 				this,
-				treeView);
-		actions.push(addProbability);
+				treeView
+			)
+		);
 		
 		*/
 

@@ -312,9 +312,7 @@ export default class Study extends ComponentAtom {
 	}
 
 	async __executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
-
-		var self=this;
-		
+				
 		var model = this.controlledModel;
 		var startTime = new Date().valueOf();		
 		
@@ -325,6 +323,11 @@ export default class Study extends ComponentAtom {
 		}		
 		
 		var jobCounter = 1;
+
+		if(modelInputs.length < 1){
+			monitor.warn('The number of generated model inputs is 0.')
+			jobfinishedHook();
+		}
 		
 		for(const modelInput of modelInputs){
 			

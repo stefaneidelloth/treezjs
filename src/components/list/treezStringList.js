@@ -15,42 +15,50 @@ export default class TreezStringList extends TreezElement {
 		return TreezElement.observedAttributes.concat(['label']);                    
     }
 
-    connectedCallback() {
-    	var self = this;
-
-        if(!self.__table){   
-
-			var container = document.createElement('div');  
-			container.setAttribute("class","treez-string-list-container");
-			self.appendChild(container);      
-
-			var labelElement = document.createElement('label');
-			this.__labelElement = labelElement;
-			labelElement.className = 'treez-list-label'
-			labelElement.innerText = self.label;                                            
-			container.appendChild(labelElement); 
-			
-			this.__createButtons(container);					
-
-			var table = document.createElement('table'); 
-			table.className = 'treez-list-table';
-			self.__table = table;		
-			container.appendChild(table); 
-
-			var tableBody = document.createElement('tbody')
-			this.__tableBody = tableBody;
-			table.appendChild(tableBody);
-			
-			this.__recreateTableRows();						                                       
-                                                  		
+    connectedCallback() {  
+        if(!this.__table){  
+			var container = this.__createContainer();			
+			if(this.label){
+        		this.__createLabelElement(container);
+        	} 					
+			this.__createButtons(container);			
+			this.__createTable(container);      		
         }
-    }     	
+    }    
 
     updateElements(stringArray){ 
     	if(this.__table){
     		this.__recreateTableRows();
     	} 		    
     } 
+    
+    __createContainer(){
+    	var container = document.createElement('div');  
+		container.setAttribute("class","treez-string-list-container");
+		this.appendChild(container);
+		return container;
+    }
+    
+    __createLabelElement(container){
+    	var labelElement = document.createElement('label');
+		this.__labelElement = labelElement;
+		labelElement.className = 'treez-list-label'
+		labelElement.innerText = this.label;                                            
+		container.appendChild(labelElement); 
+    }
+    
+    __createTable(container){
+    	var table = document.createElement('table'); 
+		table.className = 'treez-list-table';
+		this.__table = table;		
+		container.appendChild(table); 
+
+		var tableBody = document.createElement('tbody')
+		this.__tableBody = tableBody;
+		table.appendChild(tableBody);
+		
+		this.__recreateTableRows();
+    }
 
     __recreateTableRows(){                	
     	this.__deleteRows(); 
@@ -262,8 +270,7 @@ export default class TreezStringList extends TreezElement {
 
 		this.__recreateTableRows(); 		                 
       
-        this.__selectRow(newIndex);                	
-    	
+        this.__selectRow(newIndex);
     }
 
     __moveRowDown(index){

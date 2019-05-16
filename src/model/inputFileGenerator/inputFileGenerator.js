@@ -74,12 +74,15 @@ export default class InputFileGenerator extends Model  {
 
 		var modifiedInputPath = this.__getModifiedInputPath();				
 		        
-		await window.treezTerminal.deleteFile(modifiedInputPath);	
+		await window.treezTerminal.deleteFile(modifiedInputPath)
+			 .catch((error)=>{
+				monitor.error(error);
+			 });;	
 
 		var template = await window.treezTerminal.readTextFile(this.fullPath(this.templatePath)) //
-												 .catch((error)=>{
-													monitor.error(error);
-												 });
+							 .catch((error)=>{
+								monitor.error(error);
+							 });
 
 		if(!template){
 			throw new Error('Could not read template at ' + this.fullPath(this.templatePath));

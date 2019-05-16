@@ -34,6 +34,10 @@ export default class Picking extends AbstractSampleStudy {
 		this.createVariableSection(this.__page);		
 	}
 	
+	createStudyOutputAtom(name){
+		return new PickingOutput(name);
+	}
+	
 	__createTimeDependentSection(page){
 		var section = page.append('treez-section')
 			.label('Time dependent picking');
@@ -68,65 +72,7 @@ export default class Picking extends AbstractSampleStudy {
 			this.__timeVariablePathSelection.hide();
 			this.__timeRangeSelection.hide();
 		}		
-	}	
-
-	runStudy(treeView, monitor) {
-		
-		this.treeView = treeView;
-
-		var startMessage = 'Executing picking "' + this.name + '"';
-		monitor.info(startMessage);		
-
-		var samples = inputGenerator.enabledSamples;
-		
-		var numberOfSamples = samples.size();
-		monitor.info('Number of samples: ' + numberOfSamples);
-		
-		if (this.isTimeDependentPicking) {			
-			monitor.info('Number of time steps: ' + inputGenerator.numberOfTimeSteps);
-		}
-
-		if (numberOfSamples > 0) {
-			var firstSample = samples[0];
-			
-			var allAreActive = this.checkIfAllReferencedVariablesAreActive(firstSample);
-			if (allAreActive) {
-				this.__doRunStudy(treeView, monitor, inputGenerator, samples);
-			}
-		}
 	}
-	
-	__doRunStudy(treeView, monitor, inputGenerator, samples) {
-		
-		var numberOfSimulations = samples.length;
-		monitor.info('Number of total simulations: ' + numberOfSimulations);
-		
-		monitor.totalWork = numberOfSimulations;
-		
-		HashMapModelInput.resetIdCounter();
-
-		var modelInputs = inputGenerator.modelInputs;
-		
-		this.prepareResultStructure();
-		treeView.refresh();
-		
-		var studyOutputAtom = this.childFromRoot(this.studyOutputAtomPath);		
-		studyOutputAtom.removeAllChildren();
-		
-		this.executeTargetModel(treeView, monitor, numberOfSimulations, modelInputs, studyOutputAtom);
-
-		this.__executeRunnableChildren(treeView);
-		
-		monitor.description = '=>Finished!';
-	
-		this.__logAndShowSweepEndMessage();
-		monitor.info('The picking output is located at ' + studyOutputAtomPath);
-		monitor.done();
-	}
-	
-	createStudyOutputAtom(name){
-		return new PickingOutput(name);
-	}	
 		
 	get nameOfTimeVariable() {		
 		if(!this.timeVariablePath){
