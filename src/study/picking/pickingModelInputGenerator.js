@@ -147,7 +147,7 @@ export default class PickingModelInputGenerator {
 		for (var variableName in variableMap) {
 			var variable = variableMap[variableName];
 			var variablePath = sourceModelPath + '.' + variableName;			
-			modelInput.add(variablePath, variable.value);
+			modelInput.set(variablePath, variable.value);
 		}
 		return modelInput;
 	}
@@ -165,7 +165,7 @@ export default class PickingModelInputGenerator {
 	) {		
 		var modelInput = new ModelInput(this.__picking.treePath, studyId, studyDescription, jobId, totalNumberOfJobs);
 		
-		modelInput.add(timeVariablePath, timeValue);
+		modelInput.set(timeVariablePath, timeValue);
 	
 		var variableMap = sample.variableMap;
 		for (var variableName in variableMap) {
@@ -175,7 +175,7 @@ export default class PickingModelInputGenerator {
 			var list = range.values;
 			try {
 				var value = list[timeIndex];
-				modelInput.add(variablePath, value);
+				modelInput.set(variablePath, value);
 			} catch (error) {
 				var message = 'Could not retieve sample value for sample ' + sample.name + '\n' + //
 						' and variable "' + variableName + '" at time index ' + timeIndex + //

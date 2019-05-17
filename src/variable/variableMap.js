@@ -4,12 +4,14 @@ export default class VariableMap extends Map {
 	
 	constructor(keys){
 		super();
+		
 		for(var key of keys){
 			if(key === undefined){
 				throw new Error('Keys must not be undefined');
 			}
 			this.set(key, '[]');
-		}
+		}		
+		
 	}
 	
 	set(key, value){		

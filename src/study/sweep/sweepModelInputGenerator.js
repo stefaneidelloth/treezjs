@@ -58,7 +58,7 @@ export default class SweepModelInputGenerator {
 	__createModelInputs(variableRanges) {
 		var self=this;
 		
-		var totalNumberOfJobs = this.__numberOfJobs(variableRanges);
+		var totalNumberOfJobs = this.numberOfSimulations(variableRanges);
 		
 		var modelInputs = [];
 		if (variableRanges.length > 0) {
@@ -84,21 +84,6 @@ export default class SweepModelInputGenerator {
 		}
 		return modelInputs;
 	}
-	
-	__numberOfJobs(variableRanges){
-		
-		if(variableRanges.length < 1){
-			return 0;
-		}
-		
-		var numberOfJobs = 1;
-		
-		for(var range of variableRanges){
-			numberOfJobs = numberOfJobs * range.values.length;
-		}		
-		return numberOfJobs;		
-	}	
-	
 
 	__extendModelInputs(initialInput, variableRanges) {
 		
@@ -122,7 +107,7 @@ export default class SweepModelInputGenerator {
 				var modelInput = initialInput.copy();
 
 				//add current quantity
-				modelInput.add(variableModelPath, value);
+				modelInput.set(variableModelPath, value);
 				//copy and extend with remaining variable ranges
 				var modelInputsWithCurrentQuantities = self.__extendModelInputs(modelInput, remainingRanges);
 				modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);
@@ -135,27 +120,23 @@ export default class SweepModelInputGenerator {
 	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId, totalNumberOfJobs) {
 		var studyModelPath = this.__study.treePath;
 		var initialInput = new ModelInput(studyModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
-		initialInput.add(variableModelPath, value);
+		initialInput.set(variableModelPath, value);
 		return initialInput;
-	}	
-	
-	__numberOfSimulationsForRanges(variableRanges) {
-	
-		var numberOfSimulations = 1;		
-		var hasAtLeastOneSimulation = false;
-		
-		variableRanges.forEach(variableRange=>{			
-			var numberOfValues = variableRange.values.length;
-			if (numberOfValues > 0) {
-				hasAtLeastOneSimulation = true;
-				numberOfSimulations *= numberOfValues;
-			}
-		});
-
-		return hasAtLeastOneSimulation
-			?numberOfSimulations
-			:0;			
 	}
+	
+	__numberOfSimulations(variableRanges){
+		
+		if(variableRanges.length < 1){
+			return 0;
+		}
+		
+		var numberOfSimulations = 1;
+		
+		for(var range of variableRanges){
+			numberOfSimulations = numberOfSimulations * range.values.length;
+		}		
+		return numberOfSimulations;		
+	}		
 	
 	get enabledRanges() {
 		var variableRanges = [];
@@ -195,7 +176,7 @@ export default class SweepModelInputGenerator {
 	}
 
 	get numberOfSimulations() {		
-		return this.__numberOfSimulationsForRanges(this.enabledRanges);
+		return this.__numberOfSimulations(this.enabledRanges);
 	}
 
 }

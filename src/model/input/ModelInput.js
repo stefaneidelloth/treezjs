@@ -43,7 +43,7 @@ export default class ModelInput {
 		return modelInput;
 	}
 
-	add(variableModelPath, value) {
+	set(variableModelPath, value) {
 		this.__variableModelPathToValueMap[variableModelPath] = value;
 	}
 
