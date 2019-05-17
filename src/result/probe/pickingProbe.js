@@ -4,7 +4,6 @@ import PickingOutput from './../../study/picking/pickingOutput.js';
 import DomainType from './domainType.js';
 import Column from './../../data/column/column.js';
 import ColumnType from './../../data/column/columnType.js';
-import ColumnBlueprint from './../../data/column/columnBlueprint.js';
 import Table from './../../data/table/table.js';
 import Row from './../../data/row/row.js';
 
@@ -12,7 +11,7 @@ export default class PickingProbe extends Probe {
 	
 	constructor(name) {
 		super(name);		
-		this.image = 'picking.png';		
+		this.image = 'pickingProbe.png';		
 		
 		this.domainLabel = 'domain'; 
 		this.domainType = DomainType.sampleIndex;
@@ -20,19 +19,17 @@ export default class PickingProbe extends Probe {
 		//The model path to a column that is used to retrieve domain values
 		this.domainColumnPath = ''; 
 		
-		//The model path to Picking that is used to retrieve time values
-		this.pickingPath = '';			
+		
+		this.studyPath = 'root.studies.picking';			
 	
-		this.probeLabel = 'y';	
+		this.probeLabel = 'probe';	
 
-		this.pickingOutputPath = 'root.results.data.pickingOutput';
+		this.outputPath = 'root.results.data.pickingOutput';
 		this.firstProbeTablePath = 'root.results.data.pikcingOutput.output_1.tableImportOutput';
-		this.columnIndex = 0;
-		this.rowIndex = 0;
-
+		
 		this.__domainLabelSelection = undefined;
 		this.__domainColumnPathSelection = undefined;
-		this.__pickingPathSelection = undefined;		
+		this.__studyPathSelection = undefined;		
 	}
 
 	createComponentControl(tabFolder){    
@@ -66,10 +63,10 @@ export default class PickingProbe extends Probe {
 			.label('Label')
 			.bindValue(this, ()=>this.domainLabel);		
 		
-		this.__pickingPathSelection = sectionContent.append('treez-model-path')
+		this.__studyPathSelection = sectionContent.append('treez-model-path')
 			.label('Picking')
 			.nodeAttr('atomClasses', [Picking])	
-			.bindValue(this, ()=>this.pickingPath);
+			.bindValue(this, ()=>this.studyPath);
 		
 		this.__domainColumnPathSelection = sectionContent.append('treez-model-path')
 			.label('Column')
@@ -82,12 +79,12 @@ export default class PickingProbe extends Probe {
 	__showOrHideComponents(){		
 		
 		this.__domainColumnPathSelection.hide();
-		this.__pickingPathSelection.hide();
+		this.__studyPathSelection.hide();
 	
 		if (this.__isTimeSeries) {			
 			
 			if (this.__isTimeSeriesFromPicking) {
-				this.__pickingPathSelection.show();
+				this.__studyPathSelection.show();
 			}
 			
 			if (this.__isTimeSeriesFromColumn) {
@@ -110,7 +107,7 @@ export default class PickingProbe extends Probe {
 		sectionContent.append('treez-model-path')
 			.label('Picking output')
 			.nodeAttr('atomClasses', [PickingOutput])	
-			.bindValue(this, ()=>this.pickingOutputPath);
+			.bindValue(this, ()=>this.outputPath);
 		
 		this.__firstProbeTableSelection = sectionContent.append('treez-model-path')
 			.label('First probe table')
@@ -124,62 +121,23 @@ export default class PickingProbe extends Probe {
 		sectionContent.append('treez-text-field')
 			.label('One based row index')
 			.bindValue(this, ()=>this.rowIndex);
-	}	
-
-	afterCreateControlAdaptionHook() {
-		this.__updateRelativePathRoots();
-	}
-
-	__updateRelativePathRoots() {
-		//this.__firstProbeTableSelection.updateRelativeRootAtom();		
-	}
+	}		
 	
-	createTableColumns(table, monitor) {
-		monitor.info('Creating table columns...');		
-		var columnBlueprints = this.__createColumnBlueprints();
-		table.createColumns(columnBlueprints);
-		monitor.info('Created table columns.');
-	}
-
-	__createColumnBlueprints() {
-		var columnBlueprints = [];			
-		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType, null));
-		this.__addVariableColumnBlueprints(columnBlueprints);		
-		this.__addProbeColumnBlueprint(columnBlueprints);
-		return columnBlueprints;
-	}
 	
-	__addVariableColumnBlueprints(columnBlueprints){
-		var variables = this.__picking.selectedVariables;
-		for(var variable of variables){
-			columnBlueprints.push(new ColumnBlueprint(variable.name, variable.name, variable.columnType));
-		}
-	}
-	
-	__addProbeColumnBlueprint(columnBlueprints){
-		columnBlueprints.push(new ColumnBlueprint(this.probeLabel, this.probeLabel, this.__pickingProbeColumnType));
-	}
 	
 	collectProbeDataAndFillTable(table, monitor) {
 
-		monitor.info('Filling probe table...');
+		monitor.info('Filling probe table...');		
 		
-		//get probe table relative path		
-		var pathItems = this.__firstProbeTableRelativePath.split('.');
-		var firstPrefix = pathItems[0];
-		var firstIndex = firstPrefix.length + 1;
-		var relativeProbeTablePath = this.__firstProbeTableRelativePath.substring(firstIndex);
-		var prefix = this.probeTablePrefix(firstPrefix);
-		
-		if (this.__picking.isTimeDependent) {
+		if (this.study.isTimeDependent) {
 			if(!this.__isTimeSeries){
 				throw new Error('Type of picking probe does not fit time dependent picking.')
 			}	
 			var columnNames = this.__createColumnNames();
-			this.__fillProbeTableForTimeSeries(table, columnNames, relativeProbeTablePath, prefix, this.__domainTimeSeriesRange);
+			this.__fillProbeTableForTimeSeries(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix, this.__domainTimeSeriesRange);
 		} else {			
 			var columnNames = this.__createColumnNames();
-			this.__fillProbeTable(table, columnNames, relativeProbeTablePath, prefix);
+			this.__fillProbeTable(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix);
 		}		
 
 		monitor.info("Filled probe table.");
@@ -211,8 +169,8 @@ export default class PickingProbe extends Probe {
 				row.setEntry(variableName, variable.value);
 			}			
 			
-			var tablePath = this.pickingOutputPath + '.' + prefix + oneBasedSampleIndex + '.' + relativeProbeTablePath;
-			var probeValue = this.__probeValue(tablePath);
+			var tablePath = this.outputPath + '.' + prefix + oneBasedSampleIndex + '.' + relativeProbeTablePath;
+			var probeValue = this.probeValue(tablePath);
 			var rangeLabel = columnNames[columnNames.length-1];			
 			row.setEntry(rangeLabel, probeValue);
 			
@@ -251,8 +209,8 @@ export default class PickingProbe extends Probe {
 				row.setEntry(variableName, value);
 			}			
 			
-			var tablePath = this.pickingOutputPath + '.' + prefix + (rowIndex+1) + '.' + relativeProbeTablePath;
-			var probeValue = this.__probeValue(tablePath);
+			var tablePath = this.outputPath + '.' + prefix + (rowIndex+1) + '.' + relativeProbeTablePath;
+			var probeValue = this.probeValue(tablePath);
 			var rangeLabel = columnNames[columnNames.length-1];			
 			row.setEntry(rangeLabel, probeValue);
 			
@@ -260,12 +218,20 @@ export default class PickingProbe extends Probe {
 		}		
 	}	
 	
-	__createColumnNames(domainColumnName) {
+	createColumnBlueprints() {
+		var columnBlueprints = [];			
+		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType, null));
+		this.__addVariableColumnBlueprints(columnBlueprints);		
+		this.__addProbeColumnBlueprint(columnBlueprints);
+		return columnBlueprints;
+	}
+	
+	__createColumnNames() {
 		var columnNames = [];
 		
 		columnNames.push(this.domainLabel);
 		
-		var variables = this.__picking.selectedVariables;
+		var variables = this.study.selectedVariables;
 		for(var variable of variables){
 			columnNames.push(variable.name);
 		}
@@ -273,19 +239,18 @@ export default class PickingProbe extends Probe {
 		columnNames.push(this.probeLabel);
 		
 		return columnNames;
-	}
-	
-
-	__probeValue(probeTablePath) {	
-		var probeTable = this.childFromRoot(probeTablePath);	
-		var columnHeader = probeTable.headers[this.columnIndex];
-		var row = probeTable.rows[this.rowIndex];
-		return row.entry(columnHeader);
-	}
-
-	get __firstProbeTableRelativePath(){
-		return this.firstProbeTablePath.substring(this.pickingOutputPath.length+1);
 	}	
+	
+	get __enabledSamples() {		
+		if (this.studyPath) {
+			var picking = this.childFromRoot(this.studyPath);
+			return picking.enabledSamples;
+		} else {
+			return [];
+		}		
+	}
+
+
 	
 	get __isTimeSeriesFromColumn() {
 		return this.domainType === DomainType.timeSeriesFromColumn;		
@@ -297,43 +262,7 @@ export default class PickingProbe extends Probe {
 
 	get __isTimeSeries() {
 		return this.__isTimeSeriesFromColumn || this.__isTimeSeriesFromPicking;		
-	}
-
-	get __numberOfPickingOutputs() {		
-		if (this.pickingOutputPath) {
-			var pickingOutputAtom = this.childFromRoot(this.pickingOutputPath);
-			return pickingOutputAtom.children.length;			
-		} else {
-			return 0;
-		}		
-	}
-
-	get __enabledSamples() {		
-		if (this.pickingPath) {
-			var picking = this.childFromRoot(this.pickingPath);
-			return picking.enabledSamples;
-		} else {
-			return [];
-		}		
-	}
-	
-	get __picking(){
-		if(!this.pickingPath){
-			return null;
-		}
-		return this.childFromRoot(this.pickingPath);
-	}
-
-	get __pickingProbeColumnType() {		
-		if (this.firstProbeTablePath) {
-			var table = this.childFromRoot(this.firstProbeTablePath);				
-			var probeColumn = table.columnFolder.columnByIndex(this.columnIndex);
-			return probeColumn.type;			
-		} else {
-			var message = 'Could not determine the probe column type. Please make sure that a probe table is specified.';
-			throw new Error(message);
-		}
-	}
+	}	
 
 	get __domainColumnType() {
 		if (this.__isTimeSeriesFromColumn) {
@@ -341,8 +270,7 @@ export default class PickingProbe extends Probe {
 		} else if (this.__isTimeSeriesFromPicking) {
 			return this.__domainColumnTypeFromPicking;
 		}
-		return ColumnType.integer;
-		
+		return ColumnType.integer;		
 	}
 
 	get __domainColumnTypeFromColumn() {	
@@ -356,11 +284,11 @@ export default class PickingProbe extends Probe {
 
 	get __domainColumnTypeFromPicking() {
 		
-		if(!this.pickingPath){
+		if(!this.studyPath){
 			return null;
 		}		
 		
-		var picking = this.childFromRoot(this.pickingPath);
+		var picking = this.childFromRoot(this.studyPath);
 		var domainColumnType = picking.rangeType;
 		
 		if (!domainColumnType) {
@@ -379,8 +307,8 @@ export default class PickingProbe extends Probe {
 				var column = this.childFromRoot(this.domainColumnPath);
 				var range = column.values;
 
-				if(this.pickingPath){
-					var picking =  this.childFromRoot(this.pickingPath);
+				if(this.studyPath){
+					var picking =  this.childFromRoot(this.studyPath);
 					var pickingRange = picking.range;
 					if(range.length < pickingRange.length){
 						throw new Error('The selected column for the domain values does contain less values than the time range.');
@@ -398,8 +326,8 @@ export default class PickingProbe extends Probe {
 			}
 		
 		} else if (this.__isTimeSeriesFromPicking) {			
-			if (this.pickingPath) {
-				var picking =  this.childFromRoot(this.pickingPath);
+			if (this.studyPath) {
+				var picking =  this.childFromRoot(this.studyPath);
 				return picking.range;				
 			} else {
 				return [];
@@ -410,8 +338,6 @@ export default class PickingProbe extends Probe {
 		throw new Error('Unknown time series type');
 	}
 
-	get __firstProbeRelativePath() {
-		return this.__firstProbeTableSelection.relativePath;		
-	}
+	
 
 }

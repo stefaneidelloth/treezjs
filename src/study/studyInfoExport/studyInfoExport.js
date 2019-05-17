@@ -290,7 +290,7 @@ public class StudyInfoExport extends AbstractModel {
 
 		for (ModelInput modelInput : inputGenerator.createModelInputs()) {
 			String jobId = modelInput.getJobId();
-			List<String> variablePaths = modelInput.getAllVariableModelPaths();
+			List<String> variablePaths = modelInput.all;
 			for (String variablePath : variablePaths) {
 				Object value = modelInput.getVariableValue(variablePath);
 				String query = "INSERT INTO '" + jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
@@ -307,7 +307,7 @@ public class StudyInfoExport extends AbstractModel {
 		String studyId = getStudyIdFromParent();
 		for (ModelInput modelInput : inputGenerator.createModelInputs()) {
 			String jobId = modelInput.getJobId();
-			List<String> variablePaths = modelInput.getAllVariableModelPaths();
+			List<String> variablePaths = modelInput.all;
 			for (String variablePath : variablePaths) {
 				Object value = modelInput.getVariableValue(variablePath);
 				String query = "INSERT INTO `" + schema + "`.`" + jobInfoTableName + "` VALUES(null, '" + studyId

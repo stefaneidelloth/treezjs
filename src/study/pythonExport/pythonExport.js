@@ -57,7 +57,7 @@ export default class PythonExport extends ComponentAtom {
     async __exportTableToPythonContext(modelInput, table){
     	if(window.treezTerminal.executePythonCode){
     		
-    		var studyVariables = modelInput.getAll();			
+    		var studyVariables = modelInput.all;			
     		
     		var name = table.name;			
     					            

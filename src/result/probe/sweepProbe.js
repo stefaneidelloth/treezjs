@@ -155,23 +155,18 @@ export default class SweepProbe extends Probe {
 		}
 		this.__firstProbeTableSelection.nodeAttr('relativeRootAtom', relativeRoot);
 	}
-
-	createTableColumns(table, monitor) {
-
-		monitor.info('Creating table columns...');
-
-		//create column blueprints
+	
+	createColumnBlueprints() {
 		var columnBlueprints = [];		
 
 		//domain column----------------------------------------			
 		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType));
 
 		//probe columns---------------------------------------				
-		var probeColumnType = this.__probeColumnType;
+		var probeColumnType = this.probeColumnType;
 		var firstFamilyRangeValues = this.__firstFamilyRangeValues;
         var secondFamilyRangeValues = this.__secondFamilyRangeValues;
-
-		//create y column names, types and legends
+		
 		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
 		if (firstFamilyIsSpecified) {
 			var secondFamilyIsSpecified = secondFamilyRangeValues !== null;
@@ -196,19 +191,12 @@ export default class SweepProbe extends Probe {
 		} else {			
 			columnBlueprints.push(new ColumnBlueprint(this.probeLabel, '', probeColumnType));
 		}
-
-		//create columns
-		table.createColumns(columnBlueprints);
-
-		monitor.info('Created table columns.');
-
-	}
+		return columnBlueprints;
+	}	
 	
 	collectProbeDataAndFillTable(table, monitor) {
 
 		monitor.info('Filling probe table...');
-
-		
 
 		var domainRangeValues = null;
 		if (this.domainRangePath) {
@@ -217,40 +205,19 @@ export default class SweepProbe extends Probe {
 		}
 				
 		var columnNames = SweepProbe.__createColumnNames(this.domainLabel, this.probeLabel, this.firstFamilyRangeValues, this.secondFamilyRangeValues);
-
-		
-		//get probe table relative path		
-		var pathItems = this.__firstProbeTableRelativePath.split('.');
-		var firstPrefix = pathItems[0];
-		var firstIndex = firstPrefix.length + 1;
-		var relativeProbeTablePath = this.__firstProbeTableRelativePath.substring(firstIndex);
-
-		//get probe table prefix
-		var prefix = this.probeTablePrefix(firstPrefix);
-
-		this.__fillProbeTable(table, domainRangeValues, columnNames, this.sweepOutputPath, relativeProbeTablePath, prefix);
+		this.__fillProbeTable(table, domainRangeValues, columnNames, this.sweepOutputPath, this.relativeProbeTablePath, this.probeTablePrefix);
 
 		monitor.info('Filled probe table.');
-
 	}
-
-	get __firstProbeTableRelativePath(){
-		return this.firstProbeTablePath.substring(this.sweepOutputPath.length+1);
-	}
-
+	
 	__fillProbeTable(table, domainRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix) {
 		
-		var probeRowIndex = parseInt(this.rowIndex);		
-		var probeColumnIndex = parseInt(this.columnIndex);
-
-
 		var firstFamilyRangeValues = this.__firstFamilyRangeValues;
 		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
 
         var secondFamilyRangeValues = this.__secondFamilyRangeValues;
         var secondFamilyIsSpecified = secondFamilyRangeValues !== null;	
 			
-
 		var sweepIndex = 1;
 		for (var rowIndex = 0; rowIndex < domainRangeValues.length; rowIndex++) {
 
@@ -285,7 +252,7 @@ export default class SweepProbe extends Probe {
 
 			//probe value			
 			var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
-			var probeValue = this.__probeValue(tablePath, probeRowIndex, probeColumnIndex);
+			var probeValue = this.probeValue(tablePath);
 
 			var columnName = columnNames[columnIndex];
 			row.setEntry(columnName, probeValue);				
@@ -294,9 +261,7 @@ export default class SweepProbe extends Probe {
 			table.addRow(row);
 
 		}
-	}
-	
-	
+	}	
 
 	static __createColumnNames(xColumnName, yColumnName, firstFamilyRangeValues, secondFamilyRangeValues) {
 		
@@ -318,19 +283,6 @@ export default class SweepProbe extends Probe {
 			columnNames.push(yColumnName);
 		}
 		return columnNames;
-	}
-
-	__probeValue(probeTablePath, rowIndex, columnIndex) {		
-		var table = this.childFromRoot(probeTablePath);		
-		var columnHeader = table.headers[columnIndex];
-		var row = table.row(rowIndex);
-		if(!row){
-			var maxIndex = table.rows.length-1;
-			var message = 'Could not get probe row with zero based index '+ rowIndex +' from table "' 
-							+ probeTablePath + '" (max index: ' + maxIndex + ' rows).'; 
-			throw new Error(message)
-		}
-		return row.entry(columnHeader);		
 	}	
 	
 	get __domainColumnType() {		
@@ -340,14 +292,7 @@ export default class SweepProbe extends Probe {
 		} else {
 			return null;
 		}		
-	}
-
-	get __probeColumnType() {
-		var probeTable = this.childFromRoot(this.firstProbeTablePath);
-		var columnIndex = parseInt(this.columnIndex);
-		var probeColumn = probeTable.columns[columnIndex];
-		return probeColumn.type;
-	}
+	}	
 
 	get __firstFamilyRangeValues() {				
 		if (this.firstFamilyRangePath) {
@@ -366,11 +311,6 @@ export default class SweepProbe extends Probe {
 			return null;
 		}
 	}
-
-	
-
-	
-
 	
 
 }

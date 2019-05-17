@@ -43,7 +43,7 @@ export default class Model extends ComponentAtom {
 			this.jobId = modelInput.jobId;
 
 			//set variable values
-			const variableModelPaths = modelInput.getAll();
+			const variableModelPaths = modelInput.all;
             variableModelPaths.forEach((variableModelPath)=>{
                 const quantityToAssign = modelInput.get(variableModelPath);
                 const variableAtom = this.getVariableAtom(variableModelPath);               

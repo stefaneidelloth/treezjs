@@ -27,6 +27,8 @@ export default class SensitivityModelInputGenerator extends SweepModelInputGener
 		
 		if (variableRanges.length > 0) {
 			
+			var jobId = 2;
+			
 			for(var variableRange of variableRanges){
 				var variablePath = variableRange.variablePath;
 				var variable = this.__study.childFromRoot(variablePath);
@@ -38,8 +40,9 @@ export default class SensitivityModelInputGenerator extends SweepModelInputGener
 						continue;
 					}
 					
-					var modelInput = this.__createdAdaptedModelInput(workingPointInput, variable.treePath, value);
-					modelInputs.push(modelInput);					
+					var modelInput = this.__createdAdaptedModelInput(jobId, workingPointInput, variable.treePath, value);
+					modelInputs.push(modelInput);
+					jobId++;
 				}			
 			}			
 		}
@@ -68,8 +71,9 @@ export default class SensitivityModelInputGenerator extends SweepModelInputGener
 		return modelInput;
 	}	
 	
-	__createdAdaptedModelInput(workingPointInput, variableModelPath, value){
+	__createdAdaptedModelInput(jobId, workingPointInput, variableModelPath, value){
 		var modelInput = workingPointInput.copy();
+		modelInput.jobId = jobId;
 		modelInput.set(variableModelPath, value);
 		return modelInput;
 	}	

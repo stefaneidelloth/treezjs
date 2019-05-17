@@ -56,7 +56,7 @@ export default class ModelInput {
 		return this.__variableModelPathToValueMap[variableModelPath];
 	}
 
-	getAll() {
+	get all() {
 		return Object.keys(this.__variableModelPathToValueMap);
 	}	
 

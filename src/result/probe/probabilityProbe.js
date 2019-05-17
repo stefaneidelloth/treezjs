@@ -189,13 +189,12 @@ export default class ProbabilityProbe extends Probe {
 		var firstProbeTableRelativePath = getFirstProbeRelativePath();
 		var pathItems = firstProbeTableRelativePath.split("\\.");
 		var firstPrefix = pathItems[0];
-		var firstIndex = firstPrefix.length() + 1;
-		var relativeProbeTablePath = firstProbeTableRelativePath.substring(firstIndex);
+		
 
 		//get probe table prefix
 		var prefix = getProbeTablePrefix(firstPrefix);
 
-		fillProbeTable(table, timeRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix);
+		fillProbeTable(table, timeRangeValues, columnNames, sweepOutputPath, this.relativeProbeTablePath, prefix);
 
 		monitor.info("Filled probe table.");
 

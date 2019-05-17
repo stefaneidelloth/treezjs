@@ -1,7 +1,7 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import Monitor from './../../core/monitor/Monitor.js';
 import Table from './../../data/table/table.js';
-
+import ColumnBlueprint from './../../data/column/columnBlueprint.js';
 
 export default class Probe extends ComponentAtom {
 
@@ -9,6 +9,13 @@ export default class Probe extends ComponentAtom {
 		super(name);
 		this.overlayImage = 'probe.png';
 		this.isRunnable=true;
+		
+		this.probeLabel = 'probe';	
+		this.studyPath = '';
+		this.outputPath = '';
+		this.firstProbeTablePath = '';
+		this.columnIndex = 0;
+		this.rowIndex = 0;
 	}
 
 	async execute(treeView, monitor) {
@@ -58,6 +65,28 @@ export default class Probe extends ComponentAtom {
 	createTable(name){
 		return this.createChild(Table, name);
 	}
+	
+	createTableColumns(table, monitor) {
+		monitor.info('Creating table columns...');		
+		var columnBlueprints = this.createColumnBlueprints();
+		table.createColumns(columnBlueprints);
+		monitor.info('Created table columns.');
+	}
+
+	createColumnBlueprints(){
+		throw new Error('Must be implemented by inheriting class');
+	}
+	
+	addVariableColumnBlueprints(columnBlueprints){
+		var variables = this.study.selectedVariables;
+		for(var variable of variables){
+			columnBlueprints.push(new ColumnBlueprint(variable.name, variable.name, variable.columnType));
+		}
+	}
+	
+	addProbeColumnBlueprint(columnBlueprints){
+		columnBlueprints.push(new ColumnBlueprint(this.probeLabel, this.probeLabel, this.probeColumnType));
+	}
 
 	reCreateTable(monitor) {
 		
@@ -71,23 +100,92 @@ export default class Probe extends ComponentAtom {
 		this.createTableColumns(table, monitor);
 
 		return table;
-	}
-
-	//should be overridden by inheriting class
-	createTableColumns(table, monitor){
-		
-	}
+	}	
 
 	//should be overridden by inheriting class
 	async collectProbeDataAndFillTable(table, monitor){
 		throw new Error('Not yet implemented');
 	}
+	
+	afterCreateControlAdaptionHook() {
+		this.updateRelativePathRoots();
+	}
 
-	probeTablePrefix(firstPrefix) {
+	updateRelativePathRoots() {
+		//this.__firstProbeTableSelection.updateRelativeRootAtom();		
+	}
+	
+	probeValue(probeTablePath) {		
+		var probeTable = this.childFromRoot(probeTablePath);	
+		var columnHeader = probeTable.headers[this.zeroBasedColumnIndex];
+		var row = probeTable.rows[this.zeroBasedRowIndex];
+		if(!row){
+			var message = 'Could not get probe row with one based index '+ this.rowIndex +' from table "' 
+							+ probeTablePath + '" (max index: ' + probeTable.rows.length + ' rows).'; 
+			throw new Error(message)
+		}
+		return row.entry(columnHeader);
+	}	
+
+	get probeTablePrefix() {		
+		var pathItems = this.firstProbeTableRelativePath.split('.');
+		var firstPrefix = pathItems[0];		
+		
 		var idSeparator = '_';
 		var prefixItems = firstPrefix.split(idSeparator);
 		var prefix = prefixItems[0] + idSeparator;
 		return prefix;
-	}		
+	}
+	
+	get firstProbeTableRelativePath(){
+		return this.firstProbeTablePath.substring(this.outputPath.length+1);
+	}	
+	
+	get firstProbeRelativePath() {
+		return this.__firstProbeTableSelection.relativePath;		
+	}
+	
+	get relativeProbeTablePath(){
+		var pathItems = this.firstProbeTableRelativePath.split('.');
+		var firstPrefix = pathItems[0];
+		var firstIndex = firstPrefix.length + 1;
+		return this.firstProbeTableRelativePath.substring(firstIndex);
+	}	
+	
+	get numberOfOutputs() {		
+		if (this.outputPath) {
+			var outputAtom = this.childFromRoot(this.outputPath);
+			return outputAtom.children.length;			
+		} else {
+			return 0;
+		}		
+	}	
+	
+	get probeColumnType() {		
+		if (this.firstProbeTablePath) {
+			var table = this.childFromRoot(this.firstProbeTablePath);				
+			var probeColumn = table.columnFolder.columnByIndex(this.zeroBasedColumnIndex);
+			return probeColumn.type;			
+		} else {
+			var message = 'Could not determine the probe column type. Please make sure that a probe table is specified.';
+			throw new Error(message);
+		}
+	}
+	
+	get zeroBasedColumnIndex(){
+		return parseInt(this.columnIndex) -1;
+	}	
+	
+	get zeroBasedRowIndex(){
+		return parseInt(this.rowIndex) -1;
+	}
+	
+	
+	get study(){
+		if(!this.studyPath){
+			return null;
+		}
+		return this.childFromRoot(this.studyPath);
+	}
 
 }
