@@ -1,6 +1,10 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import Data from './data.js';
+import Fill from './fill.js';
+import Line from './line.js';
+import Graph from './../graph/graph.js';
 
-export default class Xy extends PagedGraphicsAtom {
+export default class Bar extends PagedGraphicsAtom {
 
 	constructor(name){
 		super(name);
@@ -12,10 +16,10 @@ export default class Xy extends PagedGraphicsAtom {
 
 		var factories = [];
 		
-		this.data = Data.create();
+		this.data = Data.create(this);
 		factories.push(this.data);
 
-		this.fill = Fill.create();
+		this.fill = Fill.create(this);
 		factories.push(this.fill);
 
 		this.line = Line.create();
@@ -34,26 +38,32 @@ export default class Xy extends PagedGraphicsAtom {
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //
-				.select('#' + name) //
+				.select('#' + this.name) //
 				.remove();
 
 		//create new axis group
-		barSelection = graphOrBarSeriesSelection //
+		this.__barSelection = graphOrBarSeriesSelection //
 				.insert('g', '.axis') //
 				.className('bar') //
 				.onClick(()=>this.handleMouseClick());
 		
 		
-		this.bindString(()=>this.name, xySelection, 'id');
+		this.bindString(()=>this.name, this.__barSelection, 'id');
 
 		this.__updatePlot(dTreez);
 
-		return barSelection;
+		return this.__barSelection;
 	}
 
-	updatePlot(dTreez) {
+	__updatePlot(dTreez) {
 		this.__contributeDataForAutoScale(dTreez);
-		this.plotWithPages(dTreez);
+		this.__plotWithPages(dTreez);
+	}
+
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__barSelection, null, this);
+		}
 	}
 
 	__contributeDataForAutoScale(dTreez) {
@@ -61,7 +71,7 @@ export default class Xy extends PagedGraphicsAtom {
 		var horizontalScaleChanged = false;
 		var verticalScaleChanged = false;
 
-		var isVerticalBar = data.barDirection.isVertical;
+		var isVerticalBar = this.data.barDirection.isVertical;
 		if (isVerticalBar) {
 			horizontalScaleChanged = this.__contributePositionValuesToHorizontalAxis();
 			verticalScaleChanged = this.__contributeLengthValuesToVerticalAxis();
@@ -77,21 +87,23 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	__contributePositionValuesToHorizontalAxis() {
-		
-		if (this.horizontalAxis.isQuantitative) {			
 
-			var oldHorizontalLimits = horizontalAxis.quantitativeLimits;
-			horizontalAxis.includeDataForAutoScale(this.quantitativePositions);			
-			var horizontalLimits = horizontalAxis.quantitativeLimits;
+		var axis = this.horizontalAxis;
+		
+		if (axis.isQuantitative) {			
+
+			var oldHorizontalLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativePositions);			
+			var horizontalLimits = axis.quantitativeLimits;
 
 			var horizontalScaleChanged = ('' + oldHorizontalLimits) !== ('' + horizontalLimits);
 			return horizontalScaleChanged;
 
 		} else {		
 
-			var oldNumberOfValues = horizontalAxis.numberOfValues;
-			horizontalAxis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
-			var numberOfValues = horizontalAxis.numberOfValues;
+			var oldNumberOfValues = axis.numberOfValues;
+			axis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
+			var numberOfValues = axis.numberOfValues;
 
 			var horizontalScaleChanged = numberOfValues != oldNumberOfValues;
 			return horizontalScaleChanged;
@@ -102,19 +114,19 @@ export default class Xy extends PagedGraphicsAtom {
 
 	__contributeLengthValuesToVerticalAxis() {
 
-		var verticalAxis = this.verticalAxis;		
-		if (verticalAxis.isQuantitative) {
-			var oldVerticalLimits = verticalAxis.quantitativeLimits;
-			verticalAxis.includeDataForAutoScale(this.quantitativeLengths);
-			var verticalLimits = verticalAxis.quantitativeLimits;
+		var axis = this.verticalAxis;		
+		if (axis.isQuantitative) {
+			var oldVerticalLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativeLengths);
+			var verticalLimits = axis.quantitativeLimits;
 
 			var verticalScaleChanged = ('' + verticalLimits) !== ('' + oldVerticalLimits);
 			return verticalScaleChanged;
 
 		} else {
-			var oldNumberOfValues = verticalAxis.numberOfValues;
-			verticalAxis.includeOrdinalValuesForAutoScale(this.ordinalLengths);
-			var numberOfValues = verticalAxis.numberOfValues;
+			var oldNumberOfValues = axis.numberOfValues;
+			axis.includeOrdinalValuesForAutoScale(this.ordinalLengths);
+			var numberOfValues = axis.numberOfValues;
 
 			var verticalScaleChanged = numberOfValues !== oldNumberOfValues;
 			return verticalScaleChanged;
@@ -123,18 +135,18 @@ export default class Xy extends PagedGraphicsAtom {
 
 	__contributePositionValuesToVerticalAxis() {
 
-		var verticalAxis = this.verticalAxis;		
-		if (verticalAxis.isQuantitative) {
-			var oldVerticalLimits = verticalAxis.getQuantitativeLimits();
-			verticalAxis.includeDataForAutoScale(this.quantitativePositions);
-			var verticalLimits = verticalAxis.getQuantitativeLimits();
+		var axis = this.verticalAxis;		
+		if (axis.isQuantitative) {
+			var oldVerticalLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativePositions);
+			var verticalLimits = axis.quantitativeLimits;
 
 			var verticalScaleChanged = ('' + verticalLimits) !== ('' + oldVerticalLimits);
 			return verticalScaleChanged;
 		} else {
-			var oldNumberOfValues = verticalAxis.numberOfValues;
-			verticalAxis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
-			var numberOfValues = verticalAxis.numberOfValues;
+			var oldNumberOfValues = axis.numberOfValues;
+			axis.includeOrdinalValuesForAutoScale(this.ordinalPositions);
+			var numberOfValues = axis.numberOfValues;
 
 			var verticalScaleChanged = numberOfValues != oldNumberOfValues;
 			return verticalScaleChanged;
@@ -144,40 +156,28 @@ export default class Xy extends PagedGraphicsAtom {
 
 	__contributeLengthValuesToHorizontalAxis() {
 
-		var horizontalAxis = this.horizontalAxis;		
-		if (horizontalAxis.isQuantitative) {
-			var oldHorizontalLimits = horizontalAxis.getQuantitativeLimits();
-			horizontalAxis.includeDataForAutoScale(this.quantitativeLengths);
-			var horizontalLimits = horizontalAxis.getQuantitativeLimits();
+		var axis = this.horizontalAxis;		
+		if (axis.isQuantitative) {
+			var oldHorizontalLimits = axis.quantitativeLimits;
+			axis.includeDataForAutoScale(this.quantitativeLengths);
+			var horizontalLimits = axis.quantitativeLimits;
 
 			var horizontalScaleChanged = ('' + horizontalLimits) !== ('' + oldHorizontalLimits);
 			return horizontalScaleChanged;
 
 		} else {			
-			var oldNumberOfValues = horizontalAxis.numberOfValues;
-			horizontalAxis.includeOrdinalValuesForAutoScale(this.ordinalLength);
-			var numberOfValues = horizontalAxis.numberOfValues;
+			var oldNumberOfValues = axis.numberOfValues;
+			axis.includeOrdinalValuesForAutoScale(this.ordinalLength);
+			var numberOfValues = axis.numberOfValues;
 
 			var horizontalScaleChanged = numberOfValues != oldNumberOfValues;
 			return horizontalScaleChanged;
 		}
 	}
 
-	get graph() {
-		
-		var parentIsGraph = this.parent instanceof Graph;
-		if (parentIsGraph) {
-			return this.parent;
-		} else {
-			return this.parent.parent;			
-		}
-	}
+	
 
-	__plotWithPages(dTreez) {
-		for (var pageFactory of this.pageFactories) {
-			pageFactory.plot(dTreez, this.__barSelection, null, this);
-		}
-	}
+	
 
 	addLegendContributors(legendContributors) {
 		if (this.providesLegendEntry) {
@@ -185,13 +185,7 @@ export default class Xy extends PagedGraphicsAtom {
 		}
 	}
 
-	get  providesLegendEntry() {
-		return !this.lengendText.length > 0;
-	}
 
-	get legendText() {
-		return this.data.legendText;
-	}
 
 	createLegendSymbolGroup(dTreez, parentSelection, symbolLengthInPx, treeView) {
 		var symbolSelection = parentSelection //
@@ -204,47 +198,47 @@ export default class Xy extends PagedGraphicsAtom {
 		return symbolSelection;
 	}
 
-	getBarDataString(positionAxisIsOrdinal, lengthAxisIsOrdinal) {
+	barDataString(positionAxisIsOrdinal, lengthAxisIsOrdinal) {
 		
-		var lengthDataValues = this.lengthDataValues;
-        var positionDataValues = this.positionDataValues;
+		var lengthData = this.lengthData;
+        var positionData = this.positionData;
         
-		var lengthSize = lengthDataValues.length;
-		var positionSize = positionDataValues.length;
+		var lengthSize = lengthData.length;
+		var positionSize = positionData.length;
 		this.__assertEqualSizes(lengthSize, positionSize);
 
 		if (lengthSize == 0) {
 			return '[]';
 		}
 
-		var firstPosition = positionDataValues[0];
+		var firstPosition = positionData[0];
 		var positionsAreOrdinal = firstPosition instanceof String;
 
-		var firstLength = lengthDataValues[0];
+		var firstLength = lengthData[0];
 		var lengthsAreOrdinal = firstLength instanceof String;
 
 		var rowList = [];
 		for (var rowIndex = 0; rowIndex < lengthSize; rowIndex++) {
 
-			var positionDatum = positionDataValues[rowIndex];
+			var positionDatum = positionData[rowIndex];
 			
 			var position = '' + positionDatum;
 			if (positionsAreOrdinal) {
 				if (positionAxisIsOrdinal) {
 					position = '"' + position + '"';
 				} else {
-					position = '' + (positionDataValues.indexOf(positionDatum) + 1);
+					position = '' + (positionData.indexOf(positionDatum) + 1);
 				}
 
 			}
 
-			var lengthDatum = lengthDataValues[rowIndex];
+			var lengthDatum = lengthData[rowIndex];
 			var length = '' + lengthDatum;
 			if (lengthsAreOrdinal) {
 				if (lengthAxisIsOrdinal) {
 					length = '"' + length + '"';
 				} else {
-					length = '' + (lengthDataValues.indexOf(lengthDatum) + 1);
+					length = '' + (lengthData.indexOf(lengthDatum) + 1);
 				}
 
 			}
@@ -264,6 +258,24 @@ export default class Xy extends PagedGraphicsAtom {
 					+ lengthSize + ' and size of position data is ' + positionSize;
 			throw new Error(message);
 		}
+	}
+
+	get graph() {
+		
+		var parentIsGraph = this.parent instanceof Graph;
+		if (parentIsGraph) {
+			return this.parent;
+		} else {
+			return this.parent.parent;			
+		}
+	}
+
+	get  providesLegendEntry() {
+		return !this.lengendText.length > 0;
+	}
+
+	get legendText() {
+		return this.data.legendText;
 	}
 
 	get numberOfPositionValues() {
@@ -332,10 +344,10 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get lengthData() {		
-		if (!this.data.barLength) {
+		if (!this.data.barLengths) {
 			return [];
 		}
-		var lengthDataColumn = this.childFromRoot(this.data.barLength);
+		var lengthDataColumn = this.childFromRoot(this.data.barLengths);
 		return lengthDataColumn.values;		
 	}
 
@@ -349,12 +361,12 @@ export default class Xy extends PagedGraphicsAtom {
 
 	get quantitativePositions() {		
 		if (!this.data.barPositions) {
-			return[];
+			return [];
 		}
 		
 		var positionColumn = this.childFromRoot(this.data.barPositions);		
 		if (positionColumn.isNumeric) {
-			return positionDataColumn.doubleValues;			
+			return positionColumn.numericValues;			
 		} else {
 			var ordinalPositionValues = positionColumn.stringValues;
 			
@@ -381,7 +393,7 @@ export default class Xy extends PagedGraphicsAtom {
 
 		var lengthColumn = this.childFromRoot(this.data.barLengths);		
 		if (lengthColumn.isNumeric) {
-			return lengthColumn.doubleValues;			
+			return lengthColumn.numericValues;			
 		} else {
 			var ordinalLengthValues = lengthDataColumn.stringValues;
 			

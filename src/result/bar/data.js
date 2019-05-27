@@ -1,9 +1,12 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Column from './../../data/column/column.js';
+import Axis from './../axis/axis.js';
+import Direction from './../axis/direction.js';
 
 export default class Data extends GraphicsAtom {
 	
 	constructor(){
-
+		super();
 		
 		this.barPositions = 'root.data.table.columns.x';	
 		this.barLengths = 'root.data.table.columns.y';	
@@ -40,7 +43,7 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-enum-combo-box')
 			.label('Bar direction')
 			.nodeAttr('options',Direction)
-			.bindValue(this, ()=>this.barLengths);
+			.bindValue(this, ()=>this.barDirection);
 
 		sectionContent.append('treez-text-field')
 			.label('Bar fill rato')			
@@ -50,7 +53,7 @@ export default class Data extends GraphicsAtom {
 			.label('Legend text')			
 			.bindValue(this, ()=>this.legendText);
 	
-		var horizontalAxisFilterDelegat = (axis) => {
+		var horizontalAxisFilterDelegate = (axis) => {
 			return axis.data.direction.isHorizontal;
 		}; //TODO
 		
@@ -59,7 +62,7 @@ export default class Data extends GraphicsAtom {
 			.nodeAttr('atomClasses',[Axis])
 			.bindValue(this, ()=>this.horizontalAxis);
 		
-		var verticalAxisFilterDelegat = (axis) => {
+		var verticalAxisFilterDelegate = (axis) => {
 			return axis.data.direction.isVertical;
 		}; //TODO
 		
@@ -72,9 +75,9 @@ export default class Data extends GraphicsAtom {
 
 	plot(dTreez, xySelection, rectSelection, bar) {
 
-		var dataChangedConsumer = () => bar.updatePlot(dTreez);
+		var dataChangedConsumer = () => bar.__updatePlot(dTreez);
 		
-		this.addListener(()=>this.barLength, dataChangedConsumer);
+		this.addListener(()=>this.barLengths, dataChangedConsumer);
 		this.addListener(()=>this.barPositions, dataChangedConsumer);
 		this.addListener(()=>this.barDirection, dataChangedConsumer);
 		this.addListener(()=>this.barFillRatio, dataChangedConsumer);

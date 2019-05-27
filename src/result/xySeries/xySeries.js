@@ -150,7 +150,7 @@ export default class XySeries extends GraphicsAtom {
 		var numberOfColumns = columnFolder.numberOfColumns;
 		if (numberOfColumns > 0) {
 			var domainColumn = sourceTable.columnfolder.getColumnByIndex(0);
-			var domainValues = domainColumn.doubleValues;
+			var domainValues = domainColumn.numericValues;
 			return this.__getLimits(domainValues, Double.MAX_VALUE, Double.MIN_VALUE); //TODO
 		} else {
 			return [0, 1];			
@@ -204,7 +204,7 @@ export default class XySeries extends GraphicsAtom {
 			var limits = [ Double.MAX_VALUE, Double.MIN_VALUE ]; //TODO
 			for (var columnIndex = 1; columnIndex < numberOfColumns; columnIndex++) {
 				var rangeColumn = sourceTable.getColumnByIndex(columnIndex);
-				var rangeValues = rangeColumn.doubleValues;
+				var rangeValues = rangeColumn.numericValues;
 				limits = this.__getLimits(rangeValues, limits[0], limits[1]);
 			}
 			return limits;

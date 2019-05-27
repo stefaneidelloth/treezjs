@@ -310,7 +310,7 @@ export default class Contour extends PagedGraphicsAtom {
 			return [];
 		}
 		var xDataColumn = this.childFromRoot(this.data.xData);
-		return xDataColumn.doubleValues;	
+		return xDataColumn.numericValues;	
 	}
 
 	get yData() {
@@ -318,7 +318,7 @@ export default class Contour extends PagedGraphicsAtom {
 			return [];
 		}
 		var yDataColumn = this.childFromRoot(this.data.yData);
-		return yDataColumn.doubleValues;
+		return yDataColumn.numericValues;
 	}
 
 	get zData() {
@@ -326,7 +326,7 @@ export default class Contour extends PagedGraphicsAtom {
 			return [];
 		}
 		var zDataColumn = this.childFromRoot(this.data.zData);
-		return zDataColumn.doubleValues;
+		return zDataColumn.numericValues;
 	}
 
 	get xScale() {

@@ -18,7 +18,7 @@ if(window.BorderMode){
 	BorderMode.ten =        new BorderMode('ten', '10%', 0.1);
 	BorderMode.fiveteen =   new BorderMode('fiveteen', '15%', 0.15);
 	BorderMode.twenty =     new BorderMode('twenty', '20%', 0.2);
-	BorderMode.twentyfive = new BorderMode('twentyFive', '25%', 0.25);
+	BorderMode.twentyFive = new BorderMode('twentyFive', '25%', 0.25);
 	
 	window.BorderMode = BorderMode;
 }

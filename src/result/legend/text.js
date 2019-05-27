@@ -50,7 +50,7 @@ export default class Text extends GraphicsAtom {
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.isHideen);
+			.bindValue(this, ()=>this.isHidden);
 
 	}
 

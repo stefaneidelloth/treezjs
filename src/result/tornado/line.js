@@ -51,7 +51,7 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.leftIsHideen);
+			.bindValue(this, ()=>this.leftIsHidden);
 	}
 	
 	__createRightSection(page){
@@ -78,7 +78,7 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.rightIsHideen);
+			.bindValue(this, ()=>this.rightIsHidden);
 	}
 	
 	

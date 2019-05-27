@@ -43,7 +43,7 @@ export default class Fill extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.leftIsHideen);
+			.bindValue(this, ()=>this.leftIsHidden);
 	}
 	
 	__createRightSection(page){
@@ -62,7 +62,7 @@ export default class Fill extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.rightIsHideen);
+			.bindValue(this, ()=>this.rightIsHidden);
 	}
 
 
@@ -256,7 +256,7 @@ export default class Fill extends GraphicsAtom {
 			if (axisIsOrdinal) {
 				defaultBarWidth = graphWidth / dataSize;
 			} else {
-				defaultBarWidth = xScale.apply(1).asDouble();
+				defaultBarWidth = xScale(1);
 			}
 		} else {
 			defaultBarWidth = graphWidth / this.__graphicsToBarRatioForSingleBar;
@@ -272,7 +272,7 @@ export default class Fill extends GraphicsAtom {
 			if (axisIsOrdinal) {
 				defaultBarHeight = graphHeight / dataSize;
 			} else {
-				defaultBarHeight = graphHeight - yScale.apply(1).asDouble();
+				defaultBarHeight = graphHeight - yScale(1);
 			}
 		} else {
 			defaultBarHeight = graphHeight / this.__graphicsToBarRatioForSingleBar;

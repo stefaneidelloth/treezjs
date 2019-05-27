@@ -1,8 +1,11 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Length from './../graphics/length.js';
+import Color from './../../components/color/color.js';
 
 export default class Fill extends GraphicsAtom {
 	
 	constructor(){
+		super();
 
 		this.__graphicsToBarRationForSingleBar = 3;
 		this.color = Color.black;
@@ -11,6 +14,7 @@ export default class Fill extends GraphicsAtom {
 	
 		this.transparency = '0';
 		this.isHidden = false;
+		this.__rectsGroupSelection = undefined;
 		this.__rectsSelection = undefined;
 	}
 
@@ -26,7 +30,7 @@ export default class Fill extends GraphicsAtom {
 
 		sectionContent.append('treez-color')
 			.label('Color mode')	
-			.bindValue(this, ()=>this.color);	
+			.bindValue(this, () => this.color);	
 
 		//fill.createFillStyle(fillStyle, 'style', 'Style');
 
@@ -36,14 +40,13 @@ export default class Fill extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.isHideen);
-
+			.bindValue(this, ()=>this.isHidden);
 		
 	}
 
 	plot(dTreez, barSelection, rectSelection, bar) {		
 
-		var clipPathId = 'bar-rects-' + this.parent.name + '-clip-path';
+		var clipPathId = 'bar_rects_' + this.parent.name + '_clipping_path';
 
 		//remove old group if it already exists
 		barSelection //
@@ -51,31 +54,40 @@ export default class Fill extends GraphicsAtom {
 				.remove();
 
 		//create new group
-		rectsSelection = barSelection //
+		this.__rectsGroupSelection = barSelection //
 				.append('g') //
 				.attr('id', 'bar-rects') //
-				.attr('class', 'bar-rects') //
-				.attr('clip-path', 'url(#' + clipPathId);
+				.attr('class', 'bar-rects'); //
+				//.attr('clip-path', 'url(#' + clipPathId +')');
 
 		//create clipping path that ensures that the bars are only
 		//shown within the bounds of the graph
 		var graph = bar.graph;
-
+		
+		/*
+		var clipPath = this.__rectsGroupSelection.append('clipPath') //
+			.attr('id', clipPathId); 
+		
 		var width = Length.toPx(graph.data.width);
 		var height = Length.toPx(graph.data.height);
-		rectsSelection.append('clipPath') //
-				.attr('id', clipPathId) //
-				.append('rect') //
+		
+		
+		clipPath.append('rect')			
+				.attr('id','clipping-rect')
 				.attr('x', 0) //
 				.attr('y', 0) //
 				.attr('width', width) //
 				.attr('height', height);
+		*/
+				
 
 		
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, rectsSelection);		
+		this.bindBooleanToNegatingDisplay(() => this.isHidden, this.__rectsGroupSelection);		
 
-		var replotRects = () =>  this.replotRects(bar);		
-		replotRects();
+		var replotRects = () => this.replotRects(bar);		
+		replotRects(bar);
+
+		
 
 		return barSelection;
 	}
@@ -87,8 +99,11 @@ export default class Fill extends GraphicsAtom {
 	}
 
 	__removeOldRects() {
-		this.__rectsSelection.selectAll('rect') //
+		if(this.____rectsSelection){
+			this.__rectsSelection.selectAll('rect') //
 				.remove();
+		}
+		
 	}
 
 	__plotNewRects(bar) {
@@ -98,13 +113,13 @@ export default class Fill extends GraphicsAtom {
 		var graphHeight = Length.toPx(graph.data.height);
 		var graphWidth = Length.toPx(graph.data.width);
 
-		var horizontalAxis = bar.getHorizontalAxis();
-		var horizontalAxisIsOrdinal = horizontalAxis.isOrdinal();
-		var horizontalScale = bar.getHorizontalScale();
+		var horizontalAxis = bar.horizontalAxis;
+		var horizontalAxisIsOrdinal = horizontalAxis.isOrdinal;
+		var horizontalScale = bar.horizontalScale;
 
-		var verticalAxis = bar.getVerticalAxis();
-		var verticalAxisIsOrdinal = verticalAxis.isOrdinal();
-		var verticalScale = bar.getVerticalScale();
+		var verticalAxis = bar.verticalAxis;
+		var verticalAxisIsOrdinal = verticalAxis.isOrdinal;
+		var verticalScale = bar.verticalScale;
 
 		var direction = bar.data.barDirection;
 		var isVertical = direction.isVertical;
@@ -121,37 +136,39 @@ export default class Fill extends GraphicsAtom {
 			var barWidth = this.__determineBarWidth(bar, graphWidth, horizontalAxis, numberOfPositionValues, barFillRatio);
 
 			var dataString = bar.barDataString(horizontalAxisIsOrdinal, verticalAxisIsOrdinal);
+			var data = eval(dataString);
 
-			rectsSelection.selectAll('rect') //
-					.data(dataString) //
+			this.__rectsSelection = this.__rectsGroupSelection.selectAll('rect') //
+					.data(data) //
 					.enter() //
 					.append('rect')
-					.attr('x', new AxisScaleFirstDataFunction(engine, horizontalScale))
-					.attr('y', new AxisScaleSecondDataFunction(engine, verticalScale))
+					.attr('x', row => horizontalScale(row[0]))
+					.attr('y', row => verticalScale(row[1]))
 					.attr('width', barWidth)
-					.attr('transform', 'translate(-' + barWidth / 2 + ',0)')
-					.attr('height', new AxisScaleInversedSecondDataFunction(engine, verticalScale, graphHeight));
+					.attr('transform', 'translate(-' + barWidth / 2 + ', 0)')
+					.attr('height', row => graphHeight - verticalScale(row[1]));
 		} else {
 			var barHeight = this.__determineBarHeight(bar, graphHeight, verticalAxis, numberOfPositionValues, barFillRatio);
 
 			var dataString = bar.barDataString(verticalAxisIsOrdinal, horizontalAxisIsOrdinal);
+			var data = eval(dataString);
 
-			rectsSelection.selectAll('rect') //
-					.data(dataString) //
+			this.__rectsSelection = this.__rectsGroupSelection.selectAll('rect') //
+					.data(data) //
 					.enter() //
 					.append('rect')
 					.attr('x', 0)
-					.attr('y', new AxisScaleFirstDataFunction(engine, verticalScale))
+					.attr('y', row => verticalScale(row[0]))
 					.attr('height', barHeight)
 					.attr('transform', 'translate(0,-' + barHeight / 2 + ')')
-					.attr('width', new AxisScaleSecondDataFunction(engine, horizontalScale));
+					.attr('width', row => horizontalScale(row[1]));
 		}
 
 		//bind attributes
-		this.bindString(()=>this.color, rectsSelection, 'fill');
+		this.bindString(() => this.color, this.__rectsGroupSelection, 'fill');
 		
-		this.bindTransparency(()=>this.transparency, rectsSelection);
-		this.bindBooleanToTransparency(()=>this.hide, ()=>this.transparency, rectsSelection);
+		this.bindTransparency(()=>this.transparency, this.__rectsSelection);
+		this.bindBooleanToTransparency(()=>this.isHidden, ()=>this.transparency, this.__rectsSelection);
 
 	}
 
@@ -167,8 +184,8 @@ export default class Fill extends GraphicsAtom {
 				var horizontalScale = horizontalAxis.scale;
 				var limits = horizontalAxis.quantitativeLimits;
 				var minValue = limits[0];
-				var offset = horizontalScale.apply(minValue).asDouble();
-				var scaledWidth = horizontalScale.apply(minValue + smallestPositionDistance).asDouble();
+				var offset = horizontalScale(minValue);
+				var scaledWidth = horizontalScale(minValue + smallestPositionDistance);
 				defaultBarWidth = scaledWidth - offset;
 			}
 
@@ -190,8 +207,8 @@ export default class Fill extends GraphicsAtom {
 				var smallestPositionDistance = bar.smallestPositionDistance;
 				var verticalScale = verticalAxis.scale;
 				var minValue = verticalAxis.quantitativeLimits[0];
-				var offset = graphHeight - verticalScale.apply(minValue).asDouble();
-				var scaledHeight = graphHeight - verticalScale.apply(minValue + smallestPositionDistance).asDouble();
+				var offset = graphHeight - verticalScale(minValue);
+				var scaledHeight = graphHeight - verticalScale(minValue + smallestPositionDistance);
 				defaultBarHeight = scaledHeight - offset;
 			}
 

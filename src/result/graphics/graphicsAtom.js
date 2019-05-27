@@ -3,11 +3,18 @@ import Length from './length.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
 
 
+
 export default class GraphicsAtom extends ComponentAtom {
    
 	constructor(name) {		
 		super(name);			
 	}
+
+	static create(parent){
+		var atom = ComponentAtom.__createAtom(this);
+		atom.parent=parent;
+		return atom;
+	}	
 	
 	bindNameToId(selection) {
 		selection.attr("id", name);

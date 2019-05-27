@@ -1,13 +1,18 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 
+import Color from './../../components/color/color.js';
+import LineStyle from './../../components/lineStyle/lineStyle.js';
+
 export default class Line extends GraphicsAtom {
 	
 	constructor(){
+		super();
+		
 		this.color = Color.black;
 		this.width = '3';
 		this.style = LineStyle.solid;
 		this.transparency = '0';
-		this.isHiden = false;	
+		this.isHidden = false;	
 	}
 
 	createPage(root) {
@@ -38,7 +43,7 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
-			.bindValue(this, ()=>this.isHideen);
+			.bindValue(this, ()=>this.isHidden);
 	}
 
 	plot(dTreez, barSelection, rectSelection, bar) {
