@@ -1,6 +1,6 @@
 If you want to use treezjs with Jupyter Notebook please follow following steps:
 
-#A. Install Jupyter Notebook 
+#A. Install Jupyter Notebook and Chrome browser (other browsers are currently not supported)
 
 #B. Create a (windows) shortcut for starting Jupyter Notebook with your wanted workspace (notebok-dir):
  
@@ -32,7 +32,7 @@ jupyter-contrib-nbextension.exe install
 
 import './treezjs/src/treezJupyterNotebook.js';
 
-#H. Start Jupyter notebook, switch to the nbextensions tab and enable the workspace_module extension
+#H. Start Jupyter notebook in Chrome, switch to the nbextensions tab and enable the workspace_module extension
 
 #J. Open some notebook file. Now the views of treez.js should be shown inside the Jupyter notebook. 
 (If not you might want to open the developer tools of the browser and look for error messages in the
