@@ -7,6 +7,7 @@ import Axis from './../axis/axis.js';
 import Bar from './../bar/bar.js';
 import Xy from './../xy/xy.js';
 import XySeries from './../xySeries/xySeries.js';
+import Tornado from './../tornado/tornado.js';
 
 
 export default class Graph extends PagedGraphicsAtom {
@@ -70,7 +71,6 @@ export default class Graph extends PagedGraphicsAtom {
 				treeView
 			)
 		);
-
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -81,9 +81,7 @@ export default class Graph extends PagedGraphicsAtom {
 				this,
 				treeView
 			)
-		);
-		
-		/*
+		);		
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -95,6 +93,8 @@ export default class Graph extends PagedGraphicsAtom {
 				treeView
 			)
 		);
+		
+		/*
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -178,15 +178,11 @@ export default class Graph extends PagedGraphicsAtom {
 		
 		//this.__plotChildren(Contour, dTreez);
 		this.__plotChildren(XySeries, dTreez);
-		this.__plotChildren(Xy, dTreez);
-		
-	
-		this.__plotChildren(Bar, dTreez);
-	
-		/*
+		this.__plotChildren(Xy, dTreez);	
+		this.__plotChildren(Bar, dTreez);			
 		this.__plotChildren(Tornado, dTreez);
-		this.__plotChildren(Legend, dTreez);
-		*/
+		//this.__plotChildren(Legend, dTreez);
+		
 	}	
 	
 	__plotChildren(clazz, dTreez){

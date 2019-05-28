@@ -332,7 +332,7 @@ export default class SensitivityValueFactory {
 	static __sortedIndividualValues(sensitivity) {
 		var values = eval(sensitivity.valuesString);
 		var uniqueValues = Array.from(new Set(values));		
-		uniqueValues.sort();
+		uniqueValues.sort((a,b) => a-b);
 		return uniqueValues;
 	}	
 

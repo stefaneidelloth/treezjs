@@ -25,14 +25,14 @@ export default class QuantitativeScaleBuilder {
 	
 	includeDomainValuesForAutoScale(dataForAutoScale) {
 		var minAndMax = this.__getMinAndMax(dataForAutoScale);
-		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort();
+		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort((a,b) => a-b);
 		this.__updateAutoLimits();
 	}
 
 	includeForAutoScale(valueToInclude) {
 		var added = this.__dataForAutoScale.push(valueToInclude);  //todo check if this works
 		if (added) {
-			this.__dataForAutoScale = this.__dataForAutoScale.sort();
+			this.__dataForAutoScale = this.__dataForAutoScale.sort((a,b) => a-b);
 			this.__updateAutoLimits();
 		}
 	}
@@ -126,7 +126,7 @@ export default class QuantitativeScaleBuilder {
 	}
 
 	__getMinAndMax(dataForAutoScale) {
-		var sortedList = dataForAutoScale.sort();		
+		var sortedList = dataForAutoScale.sort((a,b) => a-b);		
 		return [sortedList[0], sortedList[sortedList.length-1]];
 	}	
 
@@ -139,7 +139,7 @@ export default class QuantitativeScaleBuilder {
 	set dataForAutoScale(dataForAutoScale) {
 		var minAndMax = this.__getMinAndMax(dataForAutoScale);
 		this.__dataForAutoScale.length = 0;
-		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort();
+		this.__dataForAutoScale = this.__dataForAutoScale.concat(minAndMax).sort((a,b) => a-b);
 		this.__updateAutoLimits();
 	}
 

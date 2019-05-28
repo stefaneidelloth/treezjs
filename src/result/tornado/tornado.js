@@ -1,4 +1,9 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import Data from './data.js';
+import Fill from './fill.js';
+import Line from './line.js';
+import Labels from './labels.js';
+import Graph from './../graph/graph.js';
 
 export default class Tornado extends PagedGraphicsAtom {
 	
@@ -18,10 +23,10 @@ export default class Tornado extends PagedGraphicsAtom {
 		this.fill = Fill.create(this);
 		factories.push(this.fill);
 
-		line = Line.create(this);
+		this.line = Line.create(this);
 		factories.push(this.line);
 
-		labels = Labels.create(this);
+		this.labels = Labels.create(this);
 		factories.push(this.labels);
 		
 		return factories;
@@ -34,7 +39,7 @@ export default class Tornado extends PagedGraphicsAtom {
 
 		//remove old bar group if it already exists
 		graphOrBarSeriesSelection //
-				.select('#' + name) //
+				.select('#' + this.name) //
 				.remove();
 
 		//create new axis group
@@ -43,14 +48,14 @@ export default class Tornado extends PagedGraphicsAtom {
 				.className('tornado') //
 				.onClick(this);
 		
-		this.bindString(()=>this.name, this.__tornadoSelection, 'id');
+		this.bindString(() => this.name, this.__tornadoSelection, 'id');
 		
-		this.__updatePlot(dTreez);
+		this.updatePlot(dTreez);
 
-		return tornadoSelection;
+		return this.__tornadoSelection;
 	}
 
-	__updatePlot(dTreez) {
+	updatePlot(dTreez) {
 		this.__plotWithPages(dTreez);
 	}
 	

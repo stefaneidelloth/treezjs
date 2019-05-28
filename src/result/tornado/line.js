@@ -13,7 +13,7 @@ export default class Line extends GraphicsAtom {
 	
 		this.rightColor = Color.black;
 		this.rightWidth = '3';
-		this. rightStyle = LineStyle.solid;
+		this.rightStyle = LineStyle.solid;
 		this.rightTransparency = '0';
 		this.rightIsHidden = false;
 	}
@@ -94,7 +94,7 @@ export default class Line extends GraphicsAtom {
 		this.bindLineTransparency(()=>this.leftTransparency, rectsLeftSelection);
 		this.bindBooleanToLineTransparency(()=>this.leftIsHidden, ()=>this.leftTransparency, rectsLeftSelection);
 		
-		var rectsRightSelection = barSelection //
+		var rectsRightSelection = tornadoSelection //
 				.select('.bar-rects-right') //
 				.selectAll('rect');
 
@@ -104,7 +104,7 @@ export default class Line extends GraphicsAtom {
 		this.bindLineTransparency(()=>this.rightTransparency, rectsRightSelection);
 		this.bindBooleanToLineTransparency(()=>this.rightIsHidden, ()=>this.leftTransparency, rectsRightSelection);
 
-		return barSelection;
+		return tornadoSelection;
 	}
 
 	formatLegendSymbolLine(symbolSelection, legend) {

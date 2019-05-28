@@ -1,31 +1,36 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import DataMode from './dataMode.js';
+import SortingMode from './sortingMode.js';
+import Axis from './../axis/axis.js';
+import Table from './../../data/table/table.js';
+import Column from './../../data/column/column.js';
 
 export default class Data extends GraphicsAtom {
 	
-	constructor(tornado){
-		super();
-		
-		this.__tornado = tornado;
+	constructor(){
+		super();		
 
 		this.dataMode = DataMode.table;
-		this.tablePath = 'root.data.table';
+		this.tablePath = 'root.data.table';		
+
 		this.leftLegendText = 'left legend text';
 		this.rightLegendText = 'right legend text';		
-		this.sortingMode = SortingMode.largestDifferenc;
+		this.sortingMode = SortingMode.largestDifference;
 		this.barFillRatio = '0.75';
 		
+		this.labelAxis = 'root.results.page.graph.y';
+				
+		this.inputBase = 'root.results.data.table.columns.inputBase';
+		this.inputLabel = '';
+		this.inputLeft = 'root.results.data.table.columns.inputLeft';
+		this.inputRight = 'root.results.data.table.columns.inputRight';
+		this.inputUnit = 'root.results.data.table.columns.unit';		
 	
-		this.inputLabel = 'root.data.table.columns.inputLabel';
-		
-		this.inputBase = 'root.data.table.columns.inputBase';
-		this.inputLeft = 'root.data.table.columns.inputLeft';
-		this.inputRight = 'root.data.table.columns.inputRight';
-		this.inputUnit = 'root.data.table.columns.unit';		
-	
-		this.outputBase = 'root.data.table.columns.outputBase';
-		this.outputLeft = 'root.data.table.columns.outputLeft';
-		this.outputRight = 'root.data.table.columns.outputRight';
-		this.outputUnit = 'root.data.table.columns.outputUnit';			
+		this.outputAxis = 'root.results.page.graph.x';		
+		this.outputBase = 'root.results.data.table.columns.outputBase';
+		this.outputLeft = 'root.results.data.table.columns.outputLeft';
+		this.outputRight = 'root.results.data.table.columns.outputRight';
+		this.outputUnit = '';			
 
 	}
 
@@ -56,17 +61,17 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-model-path')
 			.label('Table')
 			.nodeAttr('atomClasses',[Table])
-			.bindValue(this,()=>this.tablePath);
-		
-		sectionContent.append('treez-model-path')
-			.label('Input axis')
-			.nodeAttr('atomClasses',[Axis])
-			.bindValue(this,()=>this.inputAxis);
+			.bindValue(this,()=>this.tablePath);		
 		
 		sectionContent.append('treez-model-path')
 			.label('Output axis')
 			.nodeAttr('atomClasses',[Axis])
 			.bindValue(this,()=>this.outputAxis);
+
+		sectionContent.append('treez-model-path')
+			.label('Label axis')
+			.nodeAttr('atomClasses',[Axis])
+			.bindValue(this,()=>this.labelAxis);
 
 		sectionContent.append('treez-text-field')
 			.label('Unit')
@@ -129,7 +134,7 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-model-path')
 			.label('Unit')
 			.nodeAttr('atomClasses',[Column])
-			.bindValue(this,()=>this.inputRight);	
+			.bindValue(this,()=>this.inputUnit);	
 
 	}
 
@@ -165,7 +170,7 @@ export default class Data extends GraphicsAtom {
 		this.addListener(()=>this.inputBase, replotListener);
 		this.addListener(()=>this.inputLeft, replotListener);
 		this.addListener(()=>this.inputUnit, replotListener);
-		this.addListener(()=>this.inputAxis, replotListener);
+		this.addListener(()=>this.labelAxis, replotListener);
 		
 		this.addListener(()=>this.outputBase, replotListener);
 		this.addListener(()=>this.outputLeft, replotListener);
@@ -181,6 +186,17 @@ export default class Data extends GraphicsAtom {
 		return parentSelection;
 	}
 
+	__getValuesWithColumnPath(dataPath) {
+		if (!dataPath) {
+			return [];
+		}
+		var dataColumn = this.childFromRoot(dataPath);
+		if(!dataColumn){
+			throw new Error('Could not find column "' + dataPath + '"');
+		}
+		return dataColumn.values;		
+	}
+
 	get leftBarDataString() {
 		var inputLabelData = this.inputLabelData;
 		var inputLeftData = this.inputLeftData;
@@ -189,7 +205,7 @@ export default class Data extends GraphicsAtom {
 		
 		var dataSize = outputBaseData.length;
 
-		var inputAxisIsOrdinal = this.inputAxis.isOrdinal;
+		var labelAxisIsOrdinal = this.labelAxis.isOrdinal;
 
 		var rowList = [];
 		for (var rowIndex = 0; rowIndex < dataSize; rowIndex++) {
@@ -209,7 +225,7 @@ export default class Data extends GraphicsAtom {
 			}
 
 			var inputValue;
-			if (inputAxisIsOrdinal) {
+			if (labelAxisIsOrdinal) {
 				inputValue = '"' + inputLabelData[rowIndex] + '"';
 			} else {
 				inputValue = '' + (rowIndex + 1);
@@ -228,13 +244,13 @@ export default class Data extends GraphicsAtom {
 
 	get rightBarDataString() {
 		var inputLabelData = this.inputLabelData;
-		var inputRightData = this.inputLeftData;
+		var inputRightData = this.inputRightData;
 		var outputBaseData = this.outputBaseData;
 		var outputRightData = this.outputRightData;
 		
 		var dataSize = outputBaseData.length;
 
-		var inputAxisIsOrdinal = this.inputAxis.isOrdinal;
+		var labelAxisIsOrdinal = this.labelAxis.isOrdinal;
 
 		var rowList = [];
 		for (var rowIndex = 0; rowIndex < dataSize; rowIndex++) {
@@ -254,7 +270,7 @@ export default class Data extends GraphicsAtom {
 			}
 
 			var key;
-			if (inputAxisIsOrdinal) {
+			if (labelAxisIsOrdinal) {
 				key = '"' + inputLabelData[rowIndex] + '"';
 			} else {
 				key = '' + (rowIndex + 1);
@@ -330,23 +346,21 @@ export default class Data extends GraphicsAtom {
 		return this.__getValuesWithColumnPath(this.outputRight);
 	}
 
-	__getValuesWithColumnPath(dataPath) {
-		if (!dataPath) {
-			return [];
-		}
-		var dataColumn = this.childFromRoot(dataPath);
-		return dataColumn.values;		
+	
+
+	get __tornado(){
+		return this.parent;
 	}	
 
 	get inputScale() {
-		return this.inputAxisAtom
-			?this.inputAxis.scale
+		return this.labelAxisAtom
+			?this.labelAxisAtom.scale
 			:null;		
 	}
 
 	get outputScale() {
 		return this.outputAxisAtom
-		?this.outputAxis.scale
+		?this.outputAxisAtom.scale
 		:null;
 	}
 
@@ -354,11 +368,11 @@ export default class Data extends GraphicsAtom {
 		return this.inputBaseData.length;		
 	}
 
-	get inputAxisAtom() {		
-		if (!this.inputAxis) {
+	get labelAxisAtom() {		
+		if (!this.labelAxis) {
 			return null;
 		}
-		return this.__tornado.childFromRoot(this.inputAxis);		
+		return this.__tornado.childFromRoot(this.labelAxis);		
 	}
 
 	get outputAxisAtom() {		

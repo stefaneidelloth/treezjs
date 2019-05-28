@@ -1,4 +1,7 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import LabelMode from './labelMode.js';
+import Color from './../../components/color/color.js';
+import Length from './../graphics/length.js';
 
 export default class Labels extends GraphicsAtom {
 	
@@ -53,7 +56,7 @@ export default class Labels extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('Underline')		
-			.bindValue(this, ()=>this.isUnderline);
+			.bindValue(this, ()=>this.hasUnderline);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')		
@@ -74,55 +77,55 @@ export default class Labels extends GraphicsAtom {
 		var graphHeight = Length.toPx(graph.data.height);
 		var graphWidth = Length.toPx(graph.data.width);
 
-		var inputAxis = tornado.data.inputAxis;		
+		var labelAxis = tornado.data.labelAxis;		
 		var inputScale = tornado.data.inputScale;
 
 		var outputAxis = tornado.data.outputAxis;		
 		var outputScale = tornado.data.outputScale;
 
-		var leftDataString = tornado.data.leftBarDataString;
-		var rightDataString = tornado.data.rightBarDataString;
+		var leftData = eval(tornado.data.leftBarDataString);
+		var rightData = eval(tornado.data.rightBarDataString);
 		
 
 		if (outputAxis.isHorizontal) {
 
 			leftSelection.selectAll('text') //
-					.data(leftDataString) //
+					.data(leftData) //
 					.enter() //
 					.append('text')
-					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
-					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('x', entry => outputScale(entry.value))
+					.attr('y', entry => inputScale(entry.key))
 					.style('fill', 'black')
-					.text(new AttributeStringDataFunction(engine, 'input'));
+					.text(entry => entry.input);
 
 			rightSelection.selectAll('text') //
-					.data(rightDataString) //
+					.data(rightData) //
 					.enter() //
 					.append('text')
-					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
-					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('x', entry => outputScale(entry.value))
+					.attr('y', entry => inputScale(entry.key))
 					.style('fill', 'black')
-					.text(new AttributeStringDataFunction(engine, 'input'));
+					.text(entry => entry.input);
 
 		} else {
 
 			leftSelection.selectAll('text') //
-					.data(leftDataString) //
+					.data(leftData) //
 					.enter() //
 					.append('text')
-					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('x', entry => inputScale(entry.key))
+					.attr('y', entry => graphHeight - outputScale(entry.value))
 					.style('fill', 'black')
-					.text(new AttributeStringDataFunction(engine, 'input'));
+					.text(entry => entry.input);
 
 			rightSelection.selectAll('text') //
-					.data(rightDataString) //
+					.data(rightData) //
 					.enter() //
 					.append('text')
-					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('x', entry => inputScale(entry.key))
+					.attr('y', entry => graphHeight - outputScale(entry.value))
 					.style('fill', 'black')
-					.text(new AttributeStringDataFunction(engine, 'input'));
+					.text(entry => entry.input);
 		}
 
 		var textSelection = tornadoSelection.selectAll('g') //

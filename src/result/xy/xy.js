@@ -52,12 +52,12 @@ export default class Xy extends PagedGraphicsAtom {
 		
 		this.bindString(()=>this.name, this.__xySelection, 'id');
 		
-		this.__updatePlot(dTreez);
+		this.updatePlot(dTreez);
 
 		return this.__xySelection;
 	}
 
-	__updatePlot(dTreez) {
+	updatePlot(dTreez) {
 		this.__contributeDataForAutoScale(dTreez);
 		this.__plotWithPages(dTreez);
 	}

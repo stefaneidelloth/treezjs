@@ -1,5 +1,8 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 
+import Length from './../graphics/length.js';
+
+
 export default class Fill extends GraphicsAtom {
 	
 	constructor(){
@@ -9,11 +12,11 @@ export default class Fill extends GraphicsAtom {
 		
 		this.leftColor = Color.grey;	
 		this.leftTransparency = '0';	
-		this.isLeftHidden = false;
+		this.leftIsHidden = false;
 	
 		this.rightColor = Color.green;	
 		this.rightTransparency = '0';	
-		this.isRightHidden = false;
+		this.rightIsHidden = false;
 	
 		this.__rectsLeftSelection = undefined;	
 		this.__rectsRightSelection = undefined;	
@@ -111,20 +114,17 @@ export default class Fill extends GraphicsAtom {
 				.attr('height', height);
 
 		//bind attributes
-		this.bindBooleanToNegatingDisplay(()=>this.isLeftHidden, this.__rectsLeftSelection);
-		this.bindBooleanToNegatingDisplay(()=>this.isRightHidden, this.__rectsRightSelection);
+		this.bindBooleanToNegatingDisplay(()=>this.leftIsHidden, this.__rectsLeftSelection);
+		this.bindBooleanToNegatingDisplay(()=>this.rightIsHidden, this.__rectsRightSelection);
 				
 		this.__replotRects(tornado, dTreez);
 
 		return tornadoSelection;
-	}
+	}	
 
-	
-
-	__rePlotRects(tornado, dTreez) {
+	__replotRects(tornado, dTreez) {
 		this.__removeOldRects();
 		this.__plotNewRects(tornado, dTreez);
-
 	}
 
 	__removeOldRects() {
@@ -141,32 +141,32 @@ export default class Fill extends GraphicsAtom {
 		var graphHeight = Length.toPx(graph.data.height);
 		var graphWidth = Length.toPx(graph.data.width);
 
-		var inputAxis = tornado.data.inputAxis;		
+		var labelAxis = tornado.data.labelAxisAtom;		
 		var inputScale = tornado.data.inputScale;
 
-		var outputAxis = tornado.data.outputAxis;		
+		var outputAxis = tornado.data.outputAxisAtom;		
 		var outputScale = tornado.data.outputScale;
 
 		var barFillRatio = tornado.data.barFillRatio;
 
-		var leftDataString = tornado.data.leftBarDataString;
-		var rightDataString = tornado.data.rghtBarDataString;
+		var leftData = eval(tornado.data.leftBarDataString);
+		var rightData = eval(tornado.data.rightBarDataString);
 		var numberOfBars = tornado.data.dataSize;
 
 		var inputScaleChanged = false;
-		if (inputAxisIsOrdinal) {
+		if (labelAxis.isOrdinal) {
 			var labelData = tornado.data.inputLabelData;
 
 			var labels = labelData.map((labelObj) => '' + labelObj); //
 					
-			var oldNumberOfValues = inputAxis.numberOfValues;
-			inputAxis.includeOrdinalValuesForAutoScale(labels);
-			var numberOfValues = inputAxis.numberOfValues;
+			var oldNumberOfValues = labelAxis.numberOfValues;
+			labelAxis.includeOrdinalValuesForAutoScale(labels);
+			var numberOfValues = labelAxis.numberOfValues;
 			inputScaleChanged = numberOfValues !== oldNumberOfValues;
 
 		} else {
-			//TODO
-			//inputAxis.includeDataForAutoScale(inputData);
+			var numberOfEntries = leftData.length;
+			labelAxis.includeDataForAutoScale([0, numberOfEntries+1]);
 		}
 
 		var allOutputData = tornado.data.allBarData;
@@ -182,59 +182,70 @@ export default class Fill extends GraphicsAtom {
 
 		if (outputAxis.isHorizontal) {
 
-			var barHeight = this.__determineBarHeight(graphHeight, inputScale, numberOfBars, barFillRatio, inputAxis.isOrdinal);
+			var barHeight = this.__determineBarHeight(graphHeight, inputScale, numberOfBars, barFillRatio, labelAxis.isOrdinal);
 
 			this.__rectsLeftSelection.selectAll('rect') //
-					.data(leftDataString) //
+					.data(leftData) //
 					.enter() //
 					.append('rect')
-					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
-					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('x', entry => outputScale(entry.value))
+					.attr('y', entry => inputScale(entry.key))
 					.attr('height', barHeight)
 					.attr('transform', 'translate(0,-' + barHeight / 2 + ')')
-					.attr('width', new AxisScaleSizeDataFunction(engine, outputScale));
+					.attr('width', entry => this.__scaleSize(entry, outputScale));
 
 			this.__rectsLeftSelection.selectAll('text') //
-					.data(leftDataString) //
+					.data(leftData) //
 					.enter() //
 					.append('text')
-					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
-					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('x', entry => outputScale(entry.value)+10)
+					.attr('y', entry => inputScale(entry.key))
 					.style('fill', 'black')
-					.text(new AttributeStringDataFunction(engine, 'input'));
+					.text(entry => entry.input);
 
 			this.__rectsRightSelection.selectAll('rect') //
-					.data(rightDataString) //
+					.data(rightData) //
 					.enter() //
 					.append('rect')
-					.attr('x', new AxisScaleValueDataFunction(engine, outputScale))
-					.attr('y', new AxisScaleKeyDataFunction(engine, inputScale))
+					.attr('x', entry => outputScale(entry.value))
+					.attr('y', entry => inputScale(entry.key))
 					.attr('height', barHeight)
 					.attr('transform', 'translate(0,-' + barHeight / 2 + ')')
-					.attr('width', new AxisScaleSizeDataFunction(engine, outputScale));
+					.attr('width', entry => this.__scaleSize(entry, outputScale));
+
+
+			this.__rectsRightSelection.selectAll('text') //
+					.data(rightData) //
+					.enter() //
+					.append('text')
+					.attr('x', entry => outputScale(entry.value+entry.size)+10)
+					.attr('y', entry => inputScale(entry.key))
+					.style('fill', 'black')
+					.text(entry => entry.input);
+					
 		} else {
 
-			var barWidth = this.__determineBarWidth(graphWidth, inputScale, numberOfBars, barFillRatio, inputAxis.isOrdinal);
+			var barWidth = this.__determineBarWidth(graphWidth, inputScale, numberOfBars, barFillRatio, labelAxis.isOrdinal);
 
 			this.__rectsLeftSelection.selectAll('rect') //
-					.data(leftDataString) //
+					.data(leftData) //
 					.enter() //
 					.append('rect')
-					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('x', entry => inputScale(entry.key))
+					.attr('y', entry => graphHeight - outputScale(entry.value))
 					.attr('width', barWidth)
 					.attr('transform', 'translate(-' + barWidth / 2 + ',0)')
-					.attr('height', new AxisScaleInversedSizeDataFunction(engine, outputScale));
+					.attr('height', entry => this.__scaleSize(entry, outputScale));
 
 			this.__rectsRightSelection.selectAll('rect') //
-					.data(rightDataString) //
+					.data(rightData) //
 					.enter() //
 					.append('rect')
-					.attr('x', new AxisScaleKeyDataFunction(engine, inputScale))
-					.attr('y', new AxisScaleInversedValueDataFunction(engine, outputScale, graphHeight))
+					.attr('x', entry => inputScale(entry.key))
+					.attr('y', entry => graphHeight - outputScale(entry.value))
 					.attr('width', barWidth)
 					.attr('transform', 'translate(-' + barWidth / 2 + ',0)')
-					.attr('height', new AxisScaleInversedSizeDataFunction(engine, outputScale));
+					.attr('height', entry => this.__scaleSize(entry, outputScale));
 
 		}
 
@@ -247,6 +258,26 @@ export default class Fill extends GraphicsAtom {
 		this.bindTransparency(()=>this.rightTransparency, this.__rectsRightSelection);
 		this.bindBooleanToTransparency(()=>this.rightIsHidden, ()=>this.rightTransparency, this.__rectsRightSelection);
 
+	}
+
+	
+
+	__scaleSize(entry, scale){
+		var value = entry.value;
+		var size = entry.size;
+
+		var scaledRightValue = scale(value+size);
+		var scaledLeftValue = scale(value);
+		return scaledRightValue - scaledLeftValue;
+	}
+
+	__inverselyScaleSize(entry, scale){
+		var value = entry.value;
+		var size = entry.size;
+
+		var scaledRightValue = scale(value+size);
+		var scaledLeftValue = scale(value);
+		return -(scaledRightValue - scaledLeftValue);
 	}
 
 	__determineBarWidth(graphWidth, xScale, dataSize, barFillRatio, axisIsOrdinal) {
