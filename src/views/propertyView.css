@@ -44,15 +44,22 @@
 	border-width: 0px 1px 1px 0px;
 }
 
-.treez-table TR:first-child TH {	
+.treez-table TR:first-child TH {
+	padding-left: 3px;
+	padding-right: 3px;
 	border: 1px solid #9EB6CE;
 	border-width: 0px 1px 1px 0px;
+}
+
+.treez-table TR:first-child TH.highlighted {
+	background-color: #ccd9e8;
 }
 
 
 .treez-table TR:first-child TH:first-child {
 		
 }
+
 
 
 .treez-table TD {
@@ -63,12 +70,19 @@
 	border-width: 0px 1px 1px 0px;
 }
 
+.treez-table TD.highlighted {
+	/* background-color: lightgreen; */
+}
+
+.treez-table TD.highlighted.selected {
+	background-color: lightblue;
+}
+
 .treez-table TD B {
-	border: 0px;
+	border: 10px;
 	background-color: white;
 	font-weight: bold;
 }
-
 
 
 .treez-table TR TD:first-child {
@@ -78,6 +92,9 @@
 	border-width: 0px 1px 1px 0px;
 }
 
+.treez-table TR.highlighted TD:first-child {
+		background-color: #ccd9e8;
+}
 
 .treez-table-toolbar {	
 	

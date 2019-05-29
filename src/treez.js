@@ -57,6 +57,14 @@ export default class Treez {
 		document.head.appendChild(link);
 	}	
 
+	static importStaticCssStyleSheet(href){
+		var link = document.createElement('link');
+		link.setAttribute('type','text/css');
+		link.setAttribute('rel','stylesheet');
+		link.setAttribute('href', href);
+		document.head.appendChild(link);
+	}	
+
 	static importScript(src){
 		var script = document.createElement('script');
 		script.setAttribute('src', window.treezConfig.home + src);		

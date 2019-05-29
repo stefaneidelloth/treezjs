@@ -6,6 +6,9 @@ import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeVi
 import TableSource from './tableSource.js';
 import TableCodeAdaption from './tableCodeAdaption.js';
 import Row from './../row/row.js';
+import Treez from './../../treez.js';
+import SelectionManager from './selectionManager.js';
+
 
 export default class Table extends ComponentAtom {
 	
@@ -28,13 +31,19 @@ export default class Table extends ComponentAtom {
 		this.__isCaching = false;
 		this.__COLUMN_SEPARATOR = ';';
 		this.__ROW_SEPARATOR = '\n';
-	}
-	
+		
+		this.__selectionManager = new SelectionManager(this);
+
+		
+		this.__tableSelection = undefined;
+		
+
+		
+	}	
 	
 	createControlAdaption(parent, treeView) {
-
-		const self = this;
-		self.__treeView = treeView;		
+		
+		this.__treeView = treeView;		
 		
 		parent.selectAll('div').remove();
 		parent.selectAll('treez-tab-folder').remove();	
@@ -57,7 +66,8 @@ export default class Table extends ComponentAtom {
 			this.__createTableControl(tableContainer, treeView);			
 		} else {
 			tableContainer.text('This table does not contain any column yet.');			
-		} 		
+		} 	
+		
 	}		
 
 	createContextMenuActions(selection, parentSelection, treeView) {
@@ -232,6 +242,8 @@ export default class Table extends ComponentAtom {
 		var tableSelection = parent.append('table')
 									.className('treez-table');
 		
+		this.__tableSelection = tableSelection;
+		
 		var displayColumns = [{header:'&nbsp;'}].concat(this.columns);
 				
 		tableSelection.append('thead')			
@@ -248,7 +260,8 @@ export default class Table extends ComponentAtom {
 	    tableSelection.append('tbody')
 	        .selectAll('tr')
 	        .data(this.pagedRows).enter()
-	        .append('tr')	       
+	        .append('tr')	
+	        .onClick((data, index, parent) => this.__selectionManager.rowClicked(data, index, parent))
 	        .selectAll('td')
 	        .data(function(row, index) {
 	        	var displayRow = [index+1].concat(row.values);
@@ -258,9 +271,14 @@ export default class Table extends ComponentAtom {
 	        .append('td')	       
 	        .html((cellValue)=>{	        	
 	        	return cellValue;
-	        })	       
+	        })
+	        .onClick((data, index, parent) => this.__selectionManager.cellClicked(data, index, parent))
+	        .onMouseUp((data, index, parent) => this.__selectionManager.cellMouseUp(data, index, parent))
+	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));	       
 		
 	}
+	
+	
 	
 	__createPagination(parent, treeView){
 		var pagination = parent.append('div')
@@ -706,6 +724,14 @@ export default class Table extends ComponentAtom {
 		} catch (error) {
 			return 0;
 		}
+	}
+	
+	get tableSelection(){
+		return this.__tableSelection;
+	}
+
+	get dTreez(){
+		return this.__treeView.dTreez;
 	}
 	
 }

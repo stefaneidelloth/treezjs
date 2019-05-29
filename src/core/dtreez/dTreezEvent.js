@@ -4,6 +4,10 @@ export default class DTreezEvent {
 		this.__d3 = d3;			
 	}
 
+	get ctrlKey(){
+		return this.__d3.event.ctrlKey;
+	}
+
 	get source(){
 		return this.__d3.event.source;
 	}

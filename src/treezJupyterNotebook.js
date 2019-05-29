@@ -20,6 +20,10 @@ require([
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
 
+	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
+	//Treez.importStaticCssStyleSheet('https://handsontable.com/static/css/main.css')
+	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
+
 		
 	var layoutContainer = __createLayoutContainer(GoldenLayout);	
 	var focusManager = __createJupyterLayoutAndRegisterLayoutCompoments(GoldenLayout, layoutContainer);
