@@ -6,15 +6,12 @@ Originally Treez has been developed as Eclipse Plugin (see https://github.com/st
 
 # Content
 
-* [Installation](installation.md)
-* [Views](views.md)
-* [Atoms](atoms.md)
+* [Installation](doc/installation.md)
+* [User interaction](doc/userInteraction.md)
+* [Views](doc/views.md)
+* [Atoms](doc/atoms.md)
 
-# Installation
 
-## Stand allone
-
-## Jupyter notebook extension
 
 # User interaction
 
