@@ -1,3 +1,5 @@
+(main readme)[../README.md]
+
 # Installation
 
 ## Stand allone
