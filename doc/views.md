@@ -9,7 +9,7 @@ The Treez View is the heart of Treez. It displays a tree model of the applica-ti
 ### Tool bar actions 
 * ![addRoot](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/icons/root.png?raw=true): Create a Root atom and set it as the content of the Treez View (overrides the previous content of the Treez View). 
 * ![import](icons/toTree.png?raw=true): Import a tree from the currently opened text file (overrides the previ-ous content of the Treez View). 
-* ![export](favicon.ico): Exports the tree to the currently opened text file (overrides the pre-vious content of the text file).
+* ![export](favicon.ico?raw=true): Exports the tree to the currently opened text file (overrides the pre-vious content of the text file).
  
 ###	Tree node mouse actions
 
