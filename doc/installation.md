@@ -1,4 +1,4 @@
-(main readme)[../README.md]
+[Content](../README.md)
 
 # Installation
 
