@@ -58,7 +58,7 @@ export default class SweepModelInputGenerator {
 	__createModelInputs(variableRanges) {
 		var self=this;
 		
-		var totalNumberOfJobs = this.numberOfSimulations(variableRanges);
+		var totalNumberOfJobs = this.__numberOfSimulations(variableRanges);
 		
 		var modelInputs = [];
 		if (variableRanges.length > 0) {
