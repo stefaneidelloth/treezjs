@@ -16,6 +16,7 @@
 .treez-details {
 	font-family: Consolas;
     font-size: 12px;
+   
 }
 
 .treez-indent {
@@ -27,7 +28,8 @@
 }
 
 .treez-summary {
-	outline: none;
+	outline: none;	
+	display: inline;
 }
 
 .treez-node-icon-folder {
