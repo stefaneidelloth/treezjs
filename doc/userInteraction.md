@@ -7,6 +7,7 @@
 In order to be able to **edit tree models**, treezjs focuses on two sorts user interactions:
 
 a) **context menus of tree nodes/atoms** in the so-called **Treez View** and 
+
 b) operations in the **Treez Properties View**. 
 
 Treez does not have an obfuscating main menu on the top of the application window. The clearly arranged **context menu** in the Treez View exactly provides **those actions being relevant** to the selected Treez Atom. This strategy is not a new idea. Nevertheless, the **decision to have a minimum main menu** and to concentrate on the tree nodes actually has a **deep impact on the workflows** and on the way one thinks about an application in Treez.
