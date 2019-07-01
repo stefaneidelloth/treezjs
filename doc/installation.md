@@ -33,10 +33,10 @@ https://stackoverflow.com/questions/21705091/bower-behind-a-proxy
 The file "startTreez.bat" in the "main folder" of treezjs needs to be adapted to contain
 the currect paths to the main folder itself, Java JDK and chrome, e.g. 
 
-d:
-cd D:\treezjs
-start cmd /c D:\jdk\bin\java.exe -jar treezServer.jar
-start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" http://localhost:8080/
+>d:<br>
+>cd D:\treezjs<br>
+>start cmd /c D:\jdk\bin\java.exe -jar treezServer.jar<br>
+>start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" http://localhost:8080/
 
 7. Execute "startTreez.bat" 
 Double click on "startTreez.bat" to start the standallone server of treezjs and to open a browser
