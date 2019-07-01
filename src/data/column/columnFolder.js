@@ -98,7 +98,7 @@ export default class ColumnFolder extends ComponentAtom {
 			return this.children[columnIndex];
 			
 		} else {
-			var message = 'The table only has ' + children.length + ' columns and the index ' + columnIndex
+			var message = 'The table only has ' + this.children.length + ' columns and the index ' + columnIndex
 					+ ' is invalid.';
 			throw new Error(message);
 		}
