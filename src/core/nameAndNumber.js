@@ -17,7 +17,11 @@ export default class NameAndNumber {
 	}
 
 	getFullName() {
-		return this.name + this.number;
+		if(this.number > 0){
+			return this.name + this.number;
+		} else {
+			return this.name;
+		}
 	}	
 	
 	equals(other) {
