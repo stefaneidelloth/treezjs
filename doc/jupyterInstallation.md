@@ -49,9 +49,11 @@ D:\EclipsePython\App\WinPython\notebooks\treezjs
 ## Copy custom nbextension "workspace_module"
 
 Treez comes with an extension "workspace_module" for the Jupyter Notebook. That extension
-executes the file "workspace.js" if it exists in the workspace of the Jupyter Notebook.
+executes the file "workspace.js" if it exists in the workspace of the Jupyter Notebook, e.g
 
-Copy the folder 
+>import './treezjs/src/treezJupyterNotebook.js';
+
+In order for this to work, please copy the folder 
 
 >...\treezjs\jupyter_notebook_extension\workspace_module
 
@@ -81,11 +83,17 @@ https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
 ## Enable nbextensions
 
 If you now start the Jupyter Notebook, you should see an extra tab "Nbextensions".
-Please enable the extension "Workspace module" and all other extensions you would like to use:
+Please enable the required extension "Workspace module" (and all other extensions you would like to use):
 
 ![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_nbextensions_tab.png)
 
-If you open a notebook file, workspace.js will be executed and that modifies the user interface of the Jupyter Notebook to include treez:
+If you now open a notebook file, workspace.js will be automatically executed. The content of workspace.js is responsible for starting treezjs. The user interface of the Jupyter Notebook is modified to to include the views of treezjs:
 
 ![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_treez_views.png)
+
+If you did not download treezjs to the working directory of the Jupyter Notebook you should adapt workspace.js to
+point to the right path. 
+
+The views of treezjs might only be visible if you use Google Chrome as web browser because treezjs is based on 
+modern javascript features (e.g. ES6 modules) that are not yet supported by all browsers.
 
