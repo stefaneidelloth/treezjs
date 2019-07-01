@@ -2,7 +2,10 @@
 
 # Installation
 
-## Stand allone
+## A. Stand allone
+
+Treezjs comes with a minimal Java based server, that can be used to run treezjs in standalone mode. 
+Some features, e.g. interaction with python, might not work in this mode. 
 
 ### Download source code
 
@@ -52,4 +55,17 @@ Double click on "startTreez.bat" to start the standallone server of treezjs and 
 window that connects to the server. If you cannot see the views of treezjs, please open the
 Developer Tools of the browser (F12) and check the console for errors. 
 
-## Jupyter notebook extension
+## B. Jupyter notebook extension
+
+Treezjs can also be installed as an extension of the Jupyter notebook. The Jupyter notebook already
+comes with a server that allows access to the file system and treezjs connects to this server.
+
+### Install Jupyter notebook
+
+### Install nbextensions
+
+### Download treez source code
+
+### Copy custeom nbextension "workspace_module"
+
+### Initialize nbextensions
