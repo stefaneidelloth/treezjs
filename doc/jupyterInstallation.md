@@ -78,8 +78,14 @@ Also see
 
 https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
 
+## Enable nbextensions
+
 If you now start the Jupyter Notebook, you should see an extra tab "Nbextensions".
-Please enable the extension "workspace_module":
+Please enable the extension "Workspace module" and all other extensions you would like to use:
 
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_nbextensions_tab.png)
 
+If you open a notebook file, workspace.js will be executed and that modifies the user interface of the Jupyter Notebook to include treez:
+
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_treez_views.png)
 
