@@ -493,7 +493,7 @@ export default class TableImport extends Model {
 	}
 
 	static __checkAndPrepareColumnsIfRequired(tableData, table) {
-		var headers = tableData.headers;		
+		var headers = tableData.headerData;		
 		if (table.hasColumns) {			
 			var columnNamesAreOk = table.checkHeaders(headers);
 			if (!columnNamesAreOk) {
@@ -509,8 +509,10 @@ export default class TableImport extends Model {
 				columnFolder = table.createColumnFolder();
 			}
 
-			for (var header of headers) {
-				columnFolder.createColumn(header, ColumnType.double);
+			if(headers){				
+				for (var header of headers) {
+					columnFolder.createColumn(header, ColumnType.double);
+				}
 			}
 		}
 	}	
