@@ -1,3 +1,5 @@
+[Installation](./installation.md)
+
 # Installation as Jupyter Notebook extension
 
 Treezjs can also be installed as an extension of the Jupyter notebook. The Jupyter notebook already
