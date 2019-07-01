@@ -18,13 +18,13 @@ for the Jupyter Notebook. Pleas install it with following console command (pip.e
 
 >pip install jupyter_contrib_nbextensions
 
-That creates a sub folder "jupyter_contrib_nbextensions" in the site-packages of your python installation, e.g. at
+That creates a sub folder "jupyter_contrib_nbextensions" in the site-packages of your python installation, for example at
 
-D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\
+>D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\
 
-The individual extensions are located in the folder nbextensions, e.g.
+The individual extensions are located in the folder nbextensions, for example:
 
-D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\nbextensions
+>D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\nbextensions
 
 We will put a custom extension in that folder, see next steps. 
 
@@ -42,12 +42,44 @@ to the working directory of the Jupyter notebook, e.g.
 
 D:\EclipsePython\App\WinPython\notebooks\treezjs
 
-(The working directory can be customized, e.g. by creating as windows shortcut like
-
+(The working directory (="notebook-dir") of Jupyter Notebook can be customized, e.g. by creating a windows shortcut like
+%COMSPEC% /C ".\App\WinPython\Jupyter Notebook.exe"  --notebook-dir=%cd%\workspace
 )
-
-
 
 ## Copy custom nbextension "workspace_module"
 
+Treez comes with an extension "workspace_module" for the Jupyter Notebook. That extension
+executes the file "workspace.js" if it exists in the workspace of the Jupyter Notebook.
+
+Copy the folder 
+
+>...\treezjs\jupyter_notebook_extension\workspace_module
+
+from the treez source code to the nbextensions folder of the Jupyter Notebook, e.g.
+
+>D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\nbextensions
+
+and copy the file "workspace.js" from 
+
+>...\treezjs\jupyter_notebook_extension\workspace.js
+
+to the Jupyter Notebook workspace directory, e.g. 
+
+D:\EclipsePython\App\WinPython\notebooks
+
+
 ## Initialize nbextensions
+
+Run following console command to initilaize the nbextensions:
+
+>jupyter-contrib-nbextension.exe install 
+
+Also see
+
+https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
+
+If you now start the Jupyter Notebook, you should see an extra tab "Nbextensions".
+Please enable the extension "workspace_module":
+
+
+
