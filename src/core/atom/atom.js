@@ -127,9 +127,8 @@ export default class Atom {
 						()=>this.rename())
 					);
 
-		//move up
-		var canBeMovedUp = this.canBeMovedUp;
-		if (canBeMovedUp) {
+		//move up		
+		if (this.canBeMovedUp) {
 			actions.push(new TreeViewAction(
 							'Move up',
 							'up.png',
@@ -139,9 +138,8 @@ export default class Atom {
 						);
 		}
 
-		//move down
-		var canBeMovedDown = this.canBeMovedDown;
-		if (canBeMovedDown) {
+		//move down		
+		if (this.canBeMovedDown) {
 			actions.push(new TreeViewAction(
 							'Move down',
 							'down.png',
@@ -168,7 +166,7 @@ export default class Atom {
 	 */
 	moveUp() {
 		
-		if (canBeMovedUp()) {			
+		if (this.canBeMovedUp) {			
 			var currentChildren = this.parent.children;
 			var currentIndex = currentChildren.indexOf(this);
 			
@@ -185,7 +183,7 @@ export default class Atom {
 	 * Moves the atom in the children of the parent atom to a specific index (Position)
 	 */
 	moveAtom(position) {		
-		if (canBeMovedUp()) {			
+		if (this.canBeMovedUp) {			
 			var currentChildren = this.parent.children;
 			var currentIndex = currentChildren.indexOf(this);
 			throw new Error('not yet implemented');
@@ -197,7 +195,7 @@ export default class Atom {
 	}	
 
 	moveDown() {		
-		if (this.canBeMovedDown()) {			
+		if (this.canBeMovedDown) {			
 			var currentChildren = this.parent.children;
 			var currentIndex = currentChildren.indexOf(this);
 			
@@ -756,7 +754,7 @@ export default class Atom {
 	 * Returns true if this atom can be moved down in the children of its parent
 	 */
 	get canBeMovedDown() {		
-		if (this.parent != null) {
+		if (this.parent) {
 			var currentChildren = this.parent.children;
 			var childrenExist = currentChildren != null && currentChildren.length > 1;
 			if (childrenExist) {
@@ -787,8 +785,8 @@ export default class Atom {
 	 * Returns true if this atom can be moved up in the children of its parent
 	 */
 	get canBeMovedUp() {		
-		if (this.parent != null) {
-			var currentChildren = parent.children;
+		if (this.parent) {
+			var currentChildren = this.parent.children;
 			var childrenExist = currentChildren != null && currentChildren.length > 1;
 			if (childrenExist) {
 				var currentIndex = currentChildren.indexOf(this);
