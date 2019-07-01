@@ -2,7 +2,10 @@
 
 # Installation
 
-## A. Stand allone
+* [Stand-alone](./standaloneInstallation.md)
+* [Jupyter notebook extension](./jupyterInstallation.md)
+
+## A. Stand alone
 
 Treezjs comes with a minimal Java based server, that can be used to run treezjs in standalone mode. 
 Some features, e.g. interaction with python, might not work in this mode. 
