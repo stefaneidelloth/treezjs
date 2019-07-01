@@ -10,3 +10,5 @@ Originally Treez has been developed as Eclipse Plugin (see https://github.com/st
 * [User interaction](doc/userInteraction.md)
 * [Views](doc/views.md)
 * [Atoms](doc/atoms.md)
+
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
