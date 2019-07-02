@@ -272,12 +272,12 @@ export default class MySqlImporter extends Importer {
 		List<List<Object>> data = new ArrayList<>();
 		ResultSetProcessor processor = (ResultSet resultSet) -> {
 			while (resultSet.next()) {
-				List<Object> rowData = new ArrayList<>();
+				List<Object> rows = new ArrayList<>();
 				for (ColumnBlueprint columnBlueprint : columnBlueprints) {
 					Object entry = resultSet.getObject(columnBlueprint.getName());
-					rowData.add(entry);
+					rows.add(entry);
 				}
-				data.add(rowData);
+				data.add(rows);
 			}
 		};
 		database.executeAndProcess(dataQuery, processor);
@@ -325,12 +325,12 @@ export default class MySqlImporter extends Importer {
 		List<List<Object>> data = new ArrayList<>();
 		ResultSetProcessor processor = (ResultSet resultSet) -> {
 			while (resultSet.next()) {
-				List<Object> rowData = new ArrayList<>();
+				List<Object> rows = new ArrayList<>();
 				for (ColumnBlueprint columnBlueprint : columnBlueprints) {
 					Object entry = resultSet.getObject(columnBlueprint.getName());
-					rowData.add(entry);
+					rows.add(entry);
 				}
-				data.add(rowData);
+				data.add(rows);
 			}
 		};
 		database.executeAndProcess(dataQuery, processor);

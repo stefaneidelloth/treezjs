@@ -35,9 +35,7 @@ export default class SweepProbe extends Probe {
 		 * result columns, this will be used as name prefix. The family range indices will also be added to the result
 		 * column names.
 		 */
-		this.probeLabel = 'y';	
-
-		this.sweepOutputPath = '';
+		this.probeLabel = 'y';			
 		this.firstProbeTablePath = '';
 		this.columnIndex = 0;
 		this.rowIndex = 0;
@@ -127,15 +125,15 @@ export default class SweepProbe extends Probe {
 		sectionContent.append('treez-model-path')
 			.label('Sweep output')
 			.nodeAttr('atomClasses', [SweepOutput])	
-			.bindValue(this, ()=>this.sweepOutputPath)
-			.onChange(()=>this.__sweepOutputPathChanged());
+			.bindValue(this, ()=>this.outputPath)
+			.onChange(()=>this.__outputPathChanged());
 		
 		this.__firstProbeTableSelection = sectionContent.append('treez-model-path')
 			.label('First probe table')
 			.nodeAttr('atomClasses', [Table])			
 			.bindValue(this, ()=>this.firstProbeTablePath);
 
-		this.__sweepOutputPathChanged();
+		this.__outputPathChanged();
 
 		sectionContent.append('treez-text-field')
 			.label('One based column index')
@@ -146,10 +144,10 @@ export default class SweepProbe extends Probe {
 			.bindValue(this, ()=>this.rowIndex);		
 	}
 
-	__sweepOutputPathChanged(){
+	__outputPathChanged(){
 		var relativeRoot = null;
 		try{
-			relativeRoot = this.childFromRoot(this.sweepOutputPath);
+			relativeRoot = this.childFromRoot(this.outputPath);
 		} catch(error){
 
 		}
@@ -205,12 +203,12 @@ export default class SweepProbe extends Probe {
 		}
 				
 		var columnNames = SweepProbe.__createColumnNames(this.domainLabel, this.probeLabel, this.firstFamilyRangeValues, this.secondFamilyRangeValues);
-		this.__fillProbeTable(table, domainRangeValues, columnNames, this.sweepOutputPath, this.relativeProbeTablePath, this.probeTablePrefix);
+		this.__fillProbeTable(table, domainRangeValues, columnNames, this.outputPath, this.relativeProbeTablePath, this.probeTablePrefix);
 
 		monitor.info('Filled probe table.');
 	}
 	
-	__fillProbeTable(table, domainRangeValues, columnNames, sweepOutputPath, relativeProbeTablePath, prefix) {
+	__fillProbeTable(table, domainRangeValues, columnNames, outputPath, relativeProbeTablePath, prefix) {
 		
 		var firstFamilyRangeValues = this.__firstFamilyRangeValues;
 		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
@@ -251,7 +249,7 @@ export default class SweepProbe extends Probe {
 			}
 
 			//probe value			
-			var tablePath = sweepOutputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
+			var tablePath = outputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
 			var probeValue = this.probeValue(tablePath);
 
 			var columnName = columnNames[columnIndex];

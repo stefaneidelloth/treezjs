@@ -351,12 +351,12 @@ export default class SqLiteImporter extends Importer {
 	}
 
 	static async appendData(filePath, password, tableName, columnBlueprints, tableData){
-		if(tableData.rowData.length < 1){
+		if(tableData.rows.length < 1){
 			return;
 		}
 
 		var rowValues = [];
-		for(var row of tableData.rowData){
+		for(var row of tableData.rows){
 
 			var cellValues = [];
 

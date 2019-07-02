@@ -127,7 +127,7 @@ export default class SqLiteAppender extends Model {
     					
     	var jobId = this.jobId;
 
-    	for(var row of tableData.rowData){
+    	for(var row of tableData.rows){
 			row.splice(0,0,jobId);
 			row.splice(0,0,studyId);
     	}

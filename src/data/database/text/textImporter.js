@@ -19,45 +19,45 @@ export default class TextImporter extends Importer {
 		
 		var lineData = await TextImporter.__readLines(filePath, numberOfHeaderLinesToSkip, columnSeparator, maxNumberOfRowsToRead);
 		
-		var headerData = isUsingCustomColumnHeaders
+		var headers = isUsingCustomColumnHeaders
 							?customColumnHeaders
-							:this.trimHeaderData(lineData[0]);
+							:this.trimHeaders(lineData[0]);
 							
-		var rowData = isUsingCustomColumnHeaders
+		var rows = isUsingCustomColumnHeaders
 						?lineData
 						:lineData.slice(1);
 				
 
 		//check data size (number of lines > 1, number of columns equal)
 		var firstRowIndex = numberOfHeaderLinesToSkip + numberOfRowsForHeaders;
-		TextImporter.__checkDataSizes(headerData, rowData, firstRowIndex);
+		TextImporter.__checkDataSizes(headers, rows, firstRowIndex);
 		
 		//TODO: implement filtering of rows for jobId
 						
 		var tableData = {
-				headerData: headerData,
-				rowData: rowData,
+				heades: headers,
+				rows: rows,
 				columnType: ColumnType.string
 		}			
 
 		return tableData;
 	}
 
-	static trimHeaderData(headerData){
-		return headerData.map((entry)=>entry.trim());
+	static trimHeaders(headers){
+		return headers.map((entry)=>entry.trim());
 	}
 
 
-	static __checkDataSizes(headerData, rowData, firstRowIndex) {
+	static __checkDataSizes(headers, rows, firstRowIndex) {
 		
-		if (rowData.length < 1) {
+		if (rows.length < 1) {
 			throw new Error('The imported text file must contain at least one data row');
 		}
 		
-		var numberOfColumns = headerData.length;
+		var numberOfColumns = headers.length;
 
 		var relativeRowIndex = 0;
-		for(var row of rowData){
+		for(var row of rows){
 			if(row.length !== numberOfColumns){				
 				var lineNumber = firstRowIndex + relativeRowIndex;
 				var message = 'The number of columns in line ' + lineNumber + ' has to be ' + numberOfColumns + ' but is ' + row.length + '. Line: "' + row + '"';

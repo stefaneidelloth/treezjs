@@ -474,7 +474,7 @@ export default class TableImport extends Model {
 			table.deleteAllRows();
 		}
 		
-		for (var rowEntries of tableData.rowData) {
+		for (var rowEntries of tableData.rows) {
 			var doubleEntries = rowEntries.map((valueString)=>parseFloat(valueString));
 			table.createRow(doubleEntries);
 		}
@@ -493,7 +493,7 @@ export default class TableImport extends Model {
 	}
 
 	static __checkAndPrepareColumnsIfRequired(tableData, table) {
-		var headers = tableData.headerData;		
+		var headers = tableData.headers;		
 		if (table.hasColumns) {			
 			var columnNamesAreOk = table.checkHeaders(headers);
 			if (!columnNamesAreOk) {
@@ -502,10 +502,8 @@ export default class TableImport extends Model {
 			}
 		} else {
 			
-			var columnFolder;
-			try {
-				columnFolder = table.getColumnFolder();
-			} catch (error) {
+			var columnFolder = table.columnFolder;
+			if(!columnFolder) {
 				columnFolder = table.createColumnFolder();
 			}
 

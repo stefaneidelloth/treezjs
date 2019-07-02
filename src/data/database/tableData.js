@@ -2,9 +2,9 @@
 
 export default class TableData {
 
-	constructor(columnBlueprints, rowData) {
+	constructor(columnBlueprints, rows) {
 		this.__columnBlueprints = columnBlueprints;
-		this.__rowData = rowData;
+		this.__rows = rows;
 		this.__headers = [];
 
 		this.__extractHeadersFromColumnBlueprints();
@@ -36,8 +36,8 @@ export default class TableData {
 		return this.__headers;
 	}
 
-	get rowData() {
-		return this.__rowData;
+	get rows() {
+		return this.__rows;
 	}
 
 	columnType(header) {

@@ -183,7 +183,7 @@ export default class ProbabilityProbe extends Probe {
 		var columnNames = createColumnNames(timeLabelString, yLabelString, tupleListValues);
 
 		//get sweep output path
-		var sweepOutputPath = propabilityOutput.get();
+		var outputPath = outputPath.get();
 
 		//get probe table relative path
 		var firstProbeTableRelativePath = getFirstProbeRelativePath();
@@ -194,7 +194,7 @@ export default class ProbabilityProbe extends Probe {
 		//get probe table prefix
 		var prefix = getProbeTablePrefix(firstPrefix);
 
-		fillProbeTable(table, timeRangeValues, columnNames, sweepOutputPath, this.relativeProbeTablePath, prefix);
+		fillProbeTable(table, timeRangeValues, columnNames, outputPath, this.relativeProbeTablePath, prefix);
 
 		monitor.info("Filled probe table.");
 
@@ -204,7 +204,7 @@ export default class ProbabilityProbe extends Probe {
 			table,
 			 xRangeValues,
 			 columnNames,
-			 sweepOutputPath,
+			 outputPath,
 			 relativeProbeTablePath,
 			 prefix
 	) {
@@ -233,7 +233,7 @@ export default class ProbabilityProbe extends Probe {
 			//fill y column entries
 			for (var columnIndex = 1; columnIndex < columnNames.size(); columnIndex++) {
 				var yColumnName = columnNames.get(columnIndex);
-				var tablePath = sweepOutputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
+				var tablePath = outputPath + "." + prefix + sweepIndex + "." + relativeProbeTablePath;
 				var yValue = getProbeValue(tablePath, probeRowId, probeColumnId);
 				row.setEntry(yColumnName, yValue);
 
