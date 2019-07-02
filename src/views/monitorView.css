@@ -102,8 +102,8 @@
   padding:5px; 
   border-radius: 6px; 
   position:absolute;
-  top:10%;
-  left:10%;
+  top:99%;
+  left:5%;
   z-index: 1; 
   opacity: 1;  
 }
