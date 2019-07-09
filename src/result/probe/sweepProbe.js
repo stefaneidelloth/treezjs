@@ -288,7 +288,7 @@ export default class SweepProbe extends Probe {
 			var rangeAtom = this.childFromRoot(this.domainRangePath);
 			return rangeAtom.columnType;
 		} else {
-			return null;
+			throw new Error('Unknown domain range path.');
 		}		
 	}	
 

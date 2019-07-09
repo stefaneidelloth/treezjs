@@ -15,7 +15,7 @@ export default class ColumnBlueprint {
 		this.name = name;		
 		this.legend = legend;	
 		if(!(type instanceof ColumnType)){
-			throw new Error('type must be ColumnType and not ' + typeof type);
+			throw new Error('Type must be ColumnType and not ' + typeof type);
 		}	
 		this.type = type;		
 		this.defaultValue = defaultValue;

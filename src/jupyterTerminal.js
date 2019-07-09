@@ -86,7 +86,14 @@ export default class JupyterTerminal {
 	
 	execute(command, messageHandler, errorHandler, finishedHandler){		
 
-		var pythonCode = '!' + command;			
+		//var pythonCode = '!' + command;		
+		
+		var pythonCode = 'from subprocess import Popen, PIPE, CalledProcessError\n' +
+						 'with Popen(\'' + command + '\', stdout=PIPE, bufsize=1, universal_newlines=True) as process:\n' +
+						 '    for line in process.stdout:\n' +
+						 '        print(line, end="")\n' +
+						 'if process.returncode != 0:\n' +
+						 '    raise CalledProcessError(process.returncode, process.args)'
 		
 		var self=this;
 
@@ -154,9 +161,7 @@ export default class JupyterTerminal {
 	}
 
 
-	async sqLiteQuery(connectionString, query, isExpectingOutput) {
-
-			
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {			
 
 		if(isExpectingOutput){
 
