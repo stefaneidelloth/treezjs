@@ -12,7 +12,7 @@ export default class IntegerVariable extends Variable {
 		
 	createVariableControl(parent, dTreez){
 
-		var textField = parent.append('treez-text-field')
+		var textField = parent.append('treez-integer')
 			.label(this.name)
 			.bindValue(this, ()=>this.value);	
     	
