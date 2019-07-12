@@ -1,4 +1,5 @@
 [Content](../README.md)
+----
 
 # Views
 
@@ -9,3 +10,6 @@ The user interfaceof trees is organized in several "views" (=windows):
 * [Editor View](./views/editorView.md)
 * [Graphics View](./views/graphicsView.md)
 * [Monitor View](./views/monitorView.md)
+
+----
+* [Atoms](./atoms.md)
