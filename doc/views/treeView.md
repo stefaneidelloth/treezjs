@@ -15,9 +15,10 @@ The Tree View is the heart of Treez. It displays a tree model of the application
  
 ###	Tree node mouse actions
 
-*	Double-click: Fully expands or collapses the tree node.
-*	Left-click: Show the properties of the corresponding Treez atom in the [Properties View](./propertiesView.md).
-*	Right-click: Shows a context menu that provides specific actions for the tree node/atom, e.g
+* Left-click on triangle: expand or collapse the tree node.
+*	Left-click on node label: Show the properties of the node/atom in the [Properties View](./propertiesView.md).
+*	Double-click on node label: Fully expand or collapse the tree node and its children.
+*	Right-click on node label: Show a context menu that provides specific actions for the tree node/atom, e.g.
 ![Tree View](../images/context_menu.png)
 
 
