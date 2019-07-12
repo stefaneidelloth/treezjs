@@ -5,7 +5,7 @@
 
 The Tree View is the heart of Treez. It displays a tree model of the application and provides actions to edit that model. Each node of the tree represents a corresponding Treez Atom.
 
-![Tree View](/../images/tree_view.png)
+![Tree View](../images/tree_view.png)
 
 ### Tool bar actions 
 * ![addRoot](../../master/icons/root.png) Create a Root atom and set it as the content of the Treez View (overrides the previous content of the Treez View). 
