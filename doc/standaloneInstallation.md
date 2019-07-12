@@ -7,7 +7,7 @@ minimalistic Java based server is to allow access to the local file system and t
 JavaScript files for the client (=web application in the browser). 
 
 Some special features, e.g. the interaction with python, are not supported by this installation option.
-Also see [Jupyter notebook extension](./jupyterInstallation.md).
+If you want treez to interact with python please see [Jupyter notebook extension](./jupyterInstallation.md).
 
 The following instructions assume that you use windows as operation system. (Treez should also work
 on other operation systems like Ubuntu but has only be tested with windows.) 
