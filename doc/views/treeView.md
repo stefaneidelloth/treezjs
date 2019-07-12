@@ -11,18 +11,19 @@ The Tree View is the heart of Treez. It displays a tree model of the application
 
 The toolbar of the Tree View provides several action buttons:
 
-* ![addRoot](../../icons/root.png) Create a Root atom and set it as the content of the Treez View (overrides the previous content of the Tree View). 
-* ![import](../../icons/toTree.png) Import a tree model from the currently opened text file (overrides the previous content of the Tree View). 
-* ![export](../../icons/fromTree.png) Export the tree model to the currently opened text file (overrides the previous content of the text file).
+* ![addRoot](../../icons/root.png) **Create a Root atom** and set it as the content of the Treez View (overrides the previous content of the Tree View). 
+* ![import](../../icons/toTree.png) **Import a tree model** from the currently opened text file (overrides the previous content of the Tree View). 
+* ![export](../../icons/fromTree.png) **Export the tree model** to the currently opened text file (overrides the previous content of the text file).
+* ![help](../../icons/help.png) **Show help** in a new tab of the browser.
  
 ##	Tree node mouse actions
 
 Users can modify the tree model using mouse actions:
 
-* Left-click on triangle symbol: expand or collapse a tree node.
-*	Left-click on node label: Show the properties of a node/atom in the [Properties View](./propertiesView.md).
-*	Double-click on node label: Fully expand or collapse a tree node and its children.
-*	Right-click on node label: Show the context menu of a tree node, for example:<br>
+* **Left-click on triangle** symbol: **expand or collapse** a tree node.
+*	**Left-click** on node label: **Show the properties** of a node/atom in the [Properties View](./propertiesView.md).
+*	**Double-click** on node label: **Fully expand or collapse** a tree node and its children.
+*	**Right-click** on node label: Show the **context menu** of a tree node, for example:<br>
 ![Tree View](../images/context_menu.png)
 
 
