@@ -1,8 +1,11 @@
 [Views](../views.md)
+----
 
 # Tree View
 
-The Treez View is the heart of Treez. It displays a tree model of the applica-tion and provides actions to edit the tree model. Each node of the tree repre-sents a corresponding Treez Atom. 
+The Tree View is the heart of Treez. It displays a tree model of the application and provides actions to edit that model. Each node of the tree represents a corresponding Treez Atom.
+
+![Tree View](../../images/treeView.png)
 
 ### Tool bar actions 
 * ![addRoot](../../master/icons/root.png) Create a Root atom and set it as the content of the Treez View (overrides the previous content of the Treez View). 
@@ -14,3 +17,6 @@ The Treez View is the heart of Treez. It displays a tree model of the applica-ti
 *	Left-click: Show the properties of the corresponding Treez atom in the Properties View.
 *	Right-click: Shows a context menu that provides specific actions for that tree node/atom.
 *	Double-click: Fully expands or collapses the tree node.
+
+----
+[Properties View](./propertiesView.md)
