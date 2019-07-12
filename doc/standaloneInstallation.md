@@ -49,9 +49,11 @@ install Java JDK, for example from https://jdk.java.net/12/
 
 ## Install Google Chrome 
 
+Download and install the Google Chrome browser from https://www.google.com/chrome/. 
+
 Treez uses modern JavaScript features like ES6 modules and custom web components. Those
-JavaScript features are already supported by Google Chrome but might not yet be supported
-by other browsers. Treez might work with other browsers but only has been tested with
+JavaScript features are supported by Google Chrome but might not yet be supported
+by other browsers. Treez might work with other browsers as well but only has been tested with
 Google Chrome.
 
 ## Adapt the startup script file "startTreez.bat"
