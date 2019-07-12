@@ -1,4 +1,5 @@
 [Installation](./installation.md)
+----
 
 # Jupyter Notebook extension
 
@@ -145,4 +146,7 @@ modern javascript features (e.g. ES6 modules) that are not yet supported by all 
 
 If you cannot see the [views](doc/views.md) of treez inside your Jupyter Notebook, please open the 
 Developer Tools (F12) of your browser and check the JavaScript console for errors. 
+
+----
+[User interaction](./userInteraction.md)
 
