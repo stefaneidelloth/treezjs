@@ -2,6 +2,7 @@
 ----
 
 <img align="right" width="300" src="../images/tree_view.png">
+
 # Tree View
 
 The Tree View is the heart of Treez. It displays a tree model of the application and provides actions to edit that model. Each node of the tree represents a corresponding Treez Atom. The first node of the tree is called "root". 
