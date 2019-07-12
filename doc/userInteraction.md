@@ -1,5 +1,5 @@
 [Content](../README.md)
-
+----
 # User interaction
 
 The heart of treez is a tree view. The concept of **trees** is often used to **manage complexity** and therefore, it is not suprising that trees are a common element in complex applications. For example, the file system on your computer has a tree structure. You probably use a tree based file explorer to manage thousands of files for some complex research project. 
@@ -15,3 +15,6 @@ Treez does not have an obfuscating main menu on the top of the application windo
 Treez does not only allow to **edit an application model** with a graphical work-flow but also to edit the application model **in form of a text file** in a **Source Code Editor**. 
 
 The graphical workflow with mouse clicks in the Tree View is easier to learn for **new users** and the source code workflow provides an efficient option for **advanced users**.
+
+----
+[Views](../views.md)
