@@ -15,4 +15,4 @@ The tree path of the current atom is typically shown on top of the properties vi
 
 ----
 
-[Editor View](./editor_view.md)
+[Editor View](./editorView.md)
