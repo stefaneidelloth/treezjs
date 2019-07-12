@@ -5,7 +5,7 @@ Treez originally has been developed as Eclipse Plugin (see https://github.com/st
 
 The [**atoms**](./doc/atoms.md) that come with treez can be used to model a **common simulation work flow**: define an exectuable model that should be run several times, define and execute a (batch) study and finally evaluate the results and plot some figures.
 
-If the already existing atoms are not sufficient for you, please feel free to reuse the **input elements** that come with treez (for example file chooser, color picker, ...) to [**build additional atoms**]((./doc/atoms/howToImplementAtoms.md)) for **your own tree based GUI**. 
+If the already existing atoms are not sufficient for you, please feel free to reuse the **input elements** that come with treez (for example file chooser, color picker, ...) to [**implement additional atoms**]((./doc/atoms/howToImplementAtoms.md)) for **your own tree based GUI**. 
 
 <img align="right" width="650" src="./doc/images/treezjs.png">
 
