@@ -8,6 +8,11 @@ Treez originally has been developed as Eclipse Plugin (see https://github.com/st
 * [Installation](doc/installation.md)
 * [User interaction](doc/userInteraction.md)
 * [Views](doc/views.md)
+** [Tree View](./views/treeView.md)
+** [Properties View](./views/propertiesView.md)
+** [Editor View](./views/editorView.md)
+** [Graphics View](./views/graphicsView.md)
+** [Monitor View](./views/monitorView.md)
 * [Atoms](doc/atoms.md)
 
 ![Screenshot](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
