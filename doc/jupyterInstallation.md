@@ -2,7 +2,11 @@
 
 # Jupyter Notebook extension
 
-Treez can be installed as an extension of the [Jupyter notebook](https://www.dataquest.io/blog/jupyter-notebook-tutorial/). The Jupyter notebook already comes with a server that allows access to the file system. Treez connects to this server to
+Treez can be installed as an extension of the [Jupyter notebook](https://www.dataquest.io/blog/jupyter-notebook-tutorial/): 
+
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_treez_views.png)
+
+The Jupyter notebook already comes with a server that allows access to the file system. Treez connects to this server to
 access the local file system and to execute python code.
 
 ## Install Jupyter Notebook
