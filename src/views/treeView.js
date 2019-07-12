@@ -130,7 +130,9 @@ export default class TreeView {
     }   
 
     showHelp(){
-    	console.log('show help');
+		var url = 'https://github.com/stefaneidelloth/treezjs/blob/master/README.md'
+		var newWindow = window.open(url, '_blank');
+		newWindow.focus();    	
     }
 
     showProperties(atom){    	
