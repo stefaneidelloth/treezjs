@@ -2,6 +2,16 @@
 
 # Views
 
+* [Tree View](./views/treeView.md)
+
+* [Properties View](./views/propertiesView.md)
+
+* [Editor View](./views/editorView.md)
+
+* [Graphics View](./views/graphicsView.md)
+
+* [Monitor View](./views/monitorView.md)
+
 ## Treez View
 
 The Treez View is the heart of Treez. It displays a tree model of the applica-tion and provides actions to edit the tree model. Each node of the tree repre-sents a corresponding Treez Atom. 
