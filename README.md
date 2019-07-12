@@ -1,7 +1,11 @@
 # treezjs
-**Treez** is an open source project that helps you to create **tree based Graphical User Interfaces (GUIs)** for (scientific) web applications. The core idea of treez is to provide reusable building blocks (so-called **atoms**) and to organize them in a **tree model**. The tree model can be edited with a **tree view**. It can also be exported to and imported from a JavaScript **code editor**. The code can be stored as text file. 
+**Treez** is an open source project that helps you to create **tree based Graphical User Interfaces (GUIs)** for (scientific) web applications. The core idea of treez is to provide reusable building blocks (so-called **atoms**) and to organize them in a **tree model**. The tree model can be edited with a **tree view**. It can also be exported to and imported from a JavaScript **code editor**. The code representation of the tree model can be stored as text file. 
 
 Treez originally has been developed as Eclipse Plugin (see https://github.com/stefaneidelloth/treez). This github project provides  a **JavaScript implementation of Treez (= treezjs)**. All further development is done here. 
+
+The **atoms** that come with treez can be used to model a **common simulation work flow**: define an exectuable model that should be run several times, define and execute a (batch) study and finally evaluate the results and plot some graphics.
+
+The **input elements** that come with treez (for example file chooser, color picker, ...) can be reused to create additional atoms for your own tree based GUI. 
 
 <img align="right" width="650" src="./doc/images/treezjs.png">
 
