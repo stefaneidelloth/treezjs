@@ -3,6 +3,8 @@ Treez is an open source project that helps you to create tree based Graphical Us
 
 Treez originally has been developed as Eclipse Plugin (see https://github.com/stefaneidelloth/treez). This github project provides  a JavaScript implementation of Treez (= treezjs). All further development will be done here. 
 
+<img align="right" width="300" src="./doc/images/treezjs.png">
+
 # Content
 
 * [Installation](doc/installation.md)
@@ -15,4 +17,3 @@ Treez originally has been developed as Eclipse Plugin (see https://github.com/st
   * [Monitor View](doc/views/monitorView.md)
 * [Atoms](doc/atoms.md)
 
-![Screenshot](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
