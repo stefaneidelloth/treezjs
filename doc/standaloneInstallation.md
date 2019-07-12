@@ -1,16 +1,16 @@
 [Installation](./installation.md)
 
-# Stand-alone installation
+# Stand-alone 
 
-Treez consists of two parts, a JavaScript based client and a Java based server. The purpose of the
-minimalistic Java based server is to allow access to the local file system and to serve the
-JavaScript files for the client (=web application in the browser). 
+Treez consists of two parts, a JavaScript based client (=web application in the browser) and a Java based server. The purpose of the minimalistic Java based server is to allow access to the local file system and to serve the JavaScript files for the client. 
 
 Some special features, e.g. the interaction with python, are not supported by this installation option.
-If you want treez to interact with python please see [Jupyter notebook extension](./jupyterInstallation.md).
+If you want treez to be able to interact with python please see [Jupyter notebook extension](./jupyterInstallation.md).
 
-The following instructions assume that you use windows as operation system. (Treez should also work
-on other operation systems like Ubuntu but has only be tested with windows.) 
+The following instructions assume that you use Windows as operation system and Google Chrome as browser. 
+(Treez should also work on other operation systems like Ubuntu but has only be tested on Windows with Google Chrome.) 
+
+![Screenshot](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
 
 ## Download source code
 
