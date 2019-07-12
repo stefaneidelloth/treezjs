@@ -7,6 +7,8 @@ The [atoms](./doc/atoms.md) that come with treez can be used to model a **common
 
 If the already existing atoms are not sufficient for you, please feel free to reuse the **input elements** that come with treez (for example file chooser, color picker, ...) to [implement additional atoms]((./doc/atoms/howToImplementAtoms.md)) for **your own tree based GUI**. 
 
+**Please contribute!** If every user of treez creates a single new atom and feeds it back to this open source project, a large **atom library** will arise with time. If you would like to contribute, please create a new issue ticket and describe your atom suggestions. **Bug reports and ideas on how to improve** the already existing atoms are also very welcome.
+
 <img align="right" width="650" src="./doc/images/treezjs.png">
 
 # Content
