@@ -10,4 +10,4 @@ Treez originally has been developed as Eclipse Plugin (see https://github.com/st
 * [Views](doc/views.md)
 * [Atoms](doc/atoms.md)
 
-![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
+![Screenshot](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/treezjs.png)
