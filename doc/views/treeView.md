@@ -1,8 +1,6 @@
-[Content](../README.md)
+[Views](../views.md)
 
-# Views
-
-## Treez View
+# Tree View
 
 The Treez View is the heart of Treez. It displays a tree model of the applica-tion and provides actions to edit the tree model. Each node of the tree repre-sents a corresponding Treez Atom. 
 
@@ -16,19 +14,3 @@ The Treez View is the heart of Treez. It displays a tree model of the applica-ti
 *	Left-click: Show the properties of the corresponding Treez atom in the Properties View.
 *	Right-click: Shows a context menu that provides specific actions for that tree node/atom.
 *	Double-click: Fully expands or collapses the tree node.
-
-## Properties View
-
-The purpose of the Properties View is to inspect and edit the properties of a Treez Atom. It has a hierarchical structure: 
-
-##	Editor View
-
-The purpose of the Editor View is to edit the tree model of the application in form of a text file. The text file can be saved and restored and contains all modi-fied properties of the Treez Atoms.   
-
-##	Graphics View
-
-Some of the Treez Atoms have graphical representations, for example a plot window. The purpose of the Graphics View is to show those graphical repre-sentations.    
-
-##	Monitoring View
-
-The Monitoring View shows the progress of executed actions (e.g. batch simu-lations) in form of progress bars and log messages. 
