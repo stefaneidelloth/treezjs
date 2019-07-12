@@ -11,7 +11,7 @@ The purpose of the Properties View is to **inspect and edit the properties of a 
 * A section might contain several **input elements**
 
 If you click on a node/atom in the [Tree View](./tree_view.md), the corresponding properties are shown in the Properties View.
-The tree path of the current atom is typically shown on top of the properties view. 
+The tree path of the current atom is typically shown on top of the properties view (e.g. root.results.page.graph.xy). 
 
 ----
 
