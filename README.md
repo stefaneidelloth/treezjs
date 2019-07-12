@@ -3,7 +3,7 @@
 
 Treez originally has been developed as Eclipse Plugin (see https://github.com/stefaneidelloth/treez). This github project provides  a **JavaScript implementation of Treez (= treezjs)**. All further development is done here. 
 
-The **atoms** that come with treez can be used to model a **common simulation work flow**: define an exectuable model that should be run several times, define and execute a (batch) study and finally evaluate the results and plot some graphics.
+The **atoms** that come with treez can be used to model a **common simulation work flow**: define an exectuable model that should be run several times, define and execute a (batch) study and finally evaluate the results and plot some figures.
 
 The **input elements** that come with treez (for example file chooser, color picker, ...) can be reused to create additional atoms for your own tree based GUI. 
 
