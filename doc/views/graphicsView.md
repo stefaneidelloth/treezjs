@@ -1,10 +1,14 @@
 [Views](../views.md)
 
-<img align="right" width="650" src="./doc/images/graphics_view.png">
+<img align="right" width="650" src="../images/graphics_view.png">
 
 #	Graphics View
 
-Some of the Treez Atoms have a graphical representation, for example a plot window. The purpose of the Graphics View is to show those graphical representations.  
+Some of the Treez Atoms have a graphical representation, for example a plot. The purpose of the Graphics View is to show those graphical representations. 
+
+The graphics of Treez can be interactive. Click for example on the axis label of a plot to show the properties of the label in the Properties View. 
+
+Double click on a plot to save it as *.svg file. 
 
 ----
 [Monitor View](./monitorView.md)
