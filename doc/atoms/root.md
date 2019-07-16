@@ -3,43 +3,28 @@
 
 # Root
 
-The <img src="../../icons/root.png"> Root atom is represented by the **first node of the tree** in the [Tree View](../views/treeView.md). 
+The <img src="../../icons/root.png"> Root atom is represented by the **first node of the tree** in the [Tree View](../views/treeView.md). It's context menu in the Tree View allows to create further atoms, also see below. 
 
-
-<H3>Source code</H3>
+## Source code
 
 [/src/root/root.js](../../src/root/root.js)
 
-<H3>Construction</H3>
+## Construction
 
-There are two ways to <b>create a new <a class="root"></a> atom</b>: 
-<ul>
-	<li>click on the <b>Create root</b>-button in the <b>tool bar</b> of the <a class = "treezView"></a>. This 
-	    will delete the current content of the <a class = "treezView"></a> and create a new <a class="root"></a> atom. 
-	    (If you export the <a class="root"></a> to the <a class = "textEditor"></a>, you will get some Java code 
-	    that looks like the code below.)
-	</li>
-	<li>by calling the constructor of the <a class="root"></a> atom in a <b>Java file</b>. If you save the following 
-	    code as a Java file "HelloWorld.java", open it with a <a class = "textEditor"></a> and <b>import</b> it into the 
-	    <a class = "treezView"></a>, you will have created a <a class="root"></a> atom with the label "helloWorldRoot".	
-	<pre class="prettyprint">package org.treez.example;
+There are two ways to <b>create a new Root atom: 
 
-import org.treez.core.scripting.ModelProvider;
-import org.treez.views.treeView.rootAtom.Root;
+* Click on the **Create root**-button in the toolbar of the Tree View. This deletes the current content of the Tree View and creates a new Root atom.
 
-public class HelloWorld extends ModelProvider {
+* Copy the below JavaScript source code to the [Editor View](../views/editorView.md) and <img src="../../icons/toTree.png"> import it to the TreeView: 
 
-	@Override
-	public Root createModel() {
+>import Root from './src/root/root.js';
+>
+>window.createModel = function () {
+>    var root = new Root();
+>    return root;	
+>}
 
-		Root root = new Root("helloWorldRoot");
 
-		return root;
-
-	}
-}</pre>	     
-	</li>
-</ul>
 
 <H3>Adding child atoms to the Root atom</H3>
 
