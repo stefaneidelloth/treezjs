@@ -16,9 +16,9 @@ The toolbar of the Editor View provides several action buttons:
 * ![Open from](../../icons/openFromLocalStorage.png) **Open from local storage** Open a previously stored source code from the local browser storage in the Editor View and also import it to the TreeView (="quick open"). 
 * ![Open from](../../icons/saveToLocalStorage.png) **Save to local storage** Save the content of the Editor View to the local browser storage (="quick save") 
 
-## Installation options
+## Appearance
 
-The appearance of the Editor View might be slightly different, depending on how you use treez:
+The appearance of the Editor View might be slightly different, depending on how you [installed](../installation.md) treez:
 
 * [**Stand-alone**](../standaloneInstallation.md): [Orion](http://wiki.eclipse.org/Orion) is used as source code editor and line numbers are shown by default. There is no extra border.
 
