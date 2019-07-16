@@ -17,8 +17,19 @@ There are two ways to <b>create a new Root atom:
 
 * Copy the below JavaScript source code to the [Editor View](../views/editorView.md), correct the import path if required, and <img src="../../icons/toTree.png"> import it to the TreeView: 
 
+Example code for stand-alone installation:
 ```javascript
 import Root from './src/root/root.js';
+
+window.createModel = function () {
+    var root = new Root();
+    return root;
+}
+```
+
+Example code for Jupyter Notebook extension:
+```javascript
+import Root from './treezjs/src/root/root.js';
 
 window.createModel = function () {
     var root = new Root();
@@ -30,9 +41,9 @@ window.createModel = function () {
 
 If you right-click on the Root atom in the Tree View, you will see some **context menu actions** that allow you to **add child atoms**: 
 
-* [Models](./model/models.md): Branch for all models
-* [Studies](./study/studies.md): Branch for all studies
-* [Results](./result/results.md): Branch for all results 
+* ![Models](../../icons/models.png) [Models](./model/models.md): Branch for all models
+* ![Studies](../../icons/studies.png) [Studies](./study/studies.md): Branch for all studies
+* ![Results](../../icons/results.png) [Results](./result/results.md): Branch for all results 
 
 As an alternative to the tree node operations, you can also add child atoms to the Root atom by editing the JavaScript source code. Follow the above links to the child atoms if you want to learn more about it.
 
