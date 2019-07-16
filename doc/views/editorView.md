@@ -1,6 +1,9 @@
 [Views](../views.md)
 ----
 
+
+<img align="right" width="400" src="../images/editor_view_stand-alone.png">
+
 <img align="right" width="400" src="../images/editor_view.png">
 
 #	Editor View
