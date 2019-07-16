@@ -1,12 +1,10 @@
+![](../../../icons/models.png) [Models](../models.md)
 
+----
 
-<h2>GenericInputModel</h2>
-	
-	<p>
-		<h3>Purpose</h3>
-		
-		<p>
-		The purpose of the <a class = "genericInputModel"></a> is to provide a list of <b>VariablesFields</b> 
+# GenericInput
+
+The purpose of the <a class = "genericInputModel"></a> is to provide a list of <b>VariablesFields</b> 
 		that can be used by other models (e.g. by the <a class ="executable"></a> model). The <b>VariablesFields</b>
 		of a <a class = "genericInputModel"></a> can also be referenced by a study atom 
 		(e.g. <a class="sweep"></a>). The individual <b>VariablesFields</b> are shown in the <a class="treezPropertiesView"></a>
@@ -44,3 +42,8 @@
 		<li><a class="directoryPathVariableField"></a></li>
 		</ul>
 </p>
+
+----
+
+![](../../../icons/exectuable.png) [Executable](../executable/executable.md)
+
