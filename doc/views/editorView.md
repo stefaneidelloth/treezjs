@@ -3,15 +3,17 @@
 
 #	Editor View
 
-The purpose of the Editor View is to **edit the tree model** of the application in form of **JavaScript** source code. The source code can be saved and restored as text file. Generated code contains all modified properties (= different to default value) of the treez atoms.
+The purpose of the Editor View is to **edit the tree model** of the application in form of **JavaScript** source code. The source code can be saved and restored as text file. 
+
+Code that this generated from the tree model contains all modified properties (= different to default value) of the treez atoms.
 
 ## Toolbar
 
 The toolbar of the Editor View provides several action buttons:
 
-* ![Open from](../../icons/openFromLocalStorage.png) **Open from...**
+* ![Open from](../../icons/browse.png) **Open from...**
 * **Save as...**
-* ![Open from](../../icons/openFromLocalStorage.png) **Open from local storage**
+* ![Open from](../../icons/save.png) **Open from local storage**
 * ![Open from](../../icons/saveToLocalStorage.png) **Save to local storage**
 
 ## Installation options
