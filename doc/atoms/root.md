@@ -47,7 +47,7 @@ If you right-click on the Root atom in the Tree View, you will see some **contex
 
 As an alternative to the tree node operations, you can also add child atoms to the Root atom by editing the JavaScript source code. Follow the above links to the child atoms for some examples.
 
-## Meaning of the available child atoms
+## Purpose of the child atoms
 
 As already stated in the introduction, the **atoms** that come with Treez are thought to model an exemplary **simulation work flow**. 
 
