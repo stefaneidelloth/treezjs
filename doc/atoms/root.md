@@ -3,7 +3,7 @@
 
 # Root
 
-The <img src="../../icons/root.png"> Root atom is represented by the **first node of the tree**> in the [Tree View](./treeView.md). 
+The <img src="../../icons/root.png"> Root atom is represented by the **first node of the tree** in the [Tree View](./treeView.md). 
 
 
 <H3>Source code</H3>
