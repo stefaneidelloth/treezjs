@@ -29,8 +29,8 @@ var models = root.createModels();
 
 The context menu of the ![](../../../icons/models.png) Models atom allows to add child models: 
 
-* ![](../../../icons/genericInputModel.png) [GenericInputModel](./genericInputModel.md)
-* ![](../../../icons/executable.png) [Executable](./executable.md)
+* ![](../../../icons/genericInput.png) [GenericInputModel](./genericInputModel.md)
+* ![](../../../icons/run.png) [Executable](./executable.md)
 
 
 ----
