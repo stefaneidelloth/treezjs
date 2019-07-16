@@ -10,7 +10,7 @@ The progress bar(s) might consist of a hierarchical structure (you could call it
 
 You can use the progress bars to **filter the log messages**. Click on a progress bar to see its **corresponding log messages**.
 
-If you use your mouse to **hover over a log message** you can see additional information in a pop-up window. That additional information is escpecially useful for **error messages**. If you would like to be get to the source code that caused the error, you can (hopefully) click on a link of the stack trace that is shown in the pop-up window of the error log message.  
+If you use your mouse to **hover over a log message** you can see additional information in a **pop-up window**. That additional information is escpecially useful for **error messages**. If you would like to be get to the source code that caused the error, you can (hopefully) click on a link of the **stack trace** that is shown in the pop-up window of the error log message.  
 
 
 ----
