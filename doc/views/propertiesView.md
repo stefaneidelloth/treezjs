@@ -1,4 +1,5 @@
 [Views](../views.md)
+
 ----
 <img align="right" width="400" src="../images/properties_view.png">
 
@@ -17,5 +18,4 @@ Each **section** has a blueish **header, sometimes including a toolbar**. If a s
 The **tree path** of the atom (that is currently inspected in the Properties View) is shown on top of the Properties View (e.g. root.results.page.graph.xy). 
 
 ----
-
 [Editor View](./editorView.md)
