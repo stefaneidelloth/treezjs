@@ -3,19 +3,15 @@
 
 # Models
 
-<H2>Models</H2>
-
-<H3>Purpose</H3>
-
 The <a class="models"></a> atom is the parent atom for all underlying model atoms. Creating the <a class="models"></a> is 
 typically the first step in a simulation work flow. Each individual model atom (the children of the <a class="models"></a> atom)
 implements the interface <b>org.treez.model.interfaces.Model</b>.
 
-<H3>Class name</H3>
+# Source code
 
 org.treez.model.atom.Models
 
-<H3>Construction</H3>
+# Construction
 
 A new <a class="models"></a> atom is created either 
 <ul>
