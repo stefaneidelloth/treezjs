@@ -4,4 +4,4 @@
 # Root
 
 ----
-[Models](./models.md)
+[Models](./model/models.md)
