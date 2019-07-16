@@ -1,4 +1,4 @@
-[Atoms](../../atoms.md)
+[Root](../root.md)
 
 ----
 
