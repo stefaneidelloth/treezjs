@@ -1,4 +1,4 @@
-[Root](../root.md)
+![](../../../icons/root.png) [Root](../root.md)
 
 ----
 
