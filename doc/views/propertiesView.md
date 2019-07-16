@@ -14,7 +14,7 @@ The Properties View has a hierarchical structure (you could call it "another tre
 
 Each **section** has a blueish **header, sometimes including a toolbar**. If a section toolbar provides a help button and you click on that button, you will get **context specific help** for that section. Sections can be **collapsed/expanded**.
 
-The **tree path** of the atom (that is currently inspected in the Properties View) is typically shown on top of the Properties View (e.g. root.results.page.graph.xy). 
+The **tree path** of the atom (that is currently inspected in the Properties View) is shown on top of the Properties View (e.g. root.results.page.graph.xy). 
 
 ----
 
