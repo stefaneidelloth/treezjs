@@ -8,7 +8,7 @@ Some of the Treez Atoms have a graphical representation, for example a plot. The
 
 The graphics of Treez can be interactive. Click for example on the axis label of a plot to show the properties of the label in the Properties View. 
 
-Double click on a plot to save it as *.svg file. 
+Double click on a plot in the Graphics View to save it as *.svg file. 
 
 ----
 [Monitor View](./monitorView.md)
