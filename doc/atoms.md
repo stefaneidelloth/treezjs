@@ -11,6 +11,12 @@ existing atoms are not sufficient for your needs, you might want to [implement c
 * ![](../icons/root.png) [Root](./atoms/root.md)
   * ![](../icons/models.png) [Models](./atoms/model/models.md)
   * ![](../icons/studies.png) [Studies](./atoms/study/studies.md)
+    * ![](../icons/sweep.png) [Sweep](./atoms/study/sweep/sweep.md)
+    * ![](../icons/sensitivity.png) [Sensitivity](./atoms/study/sensitivity/sensitivity.md)
+    * ![](../icons/picking.png) [Picking](./atoms/study/picking/picking.md)
+    * ![](../icons/probability.png) [Probability](./atoms/study/probability/probability.md)
+    * ![](../icons/pythonExport.png) [PythonExport](./atoms/study/pythonExport/pythonExport.md)
+    * ![](../icons/studyInfoExport.png) [StudyInfoExport](./atoms/study/studyInfoExport/studyInfoExport.md)
   * ![](../icons/results.png) [Results](./atoms/result/results.md)
 
 * [How to implement atoms](./atoms/howToImplementAtoms.md)
