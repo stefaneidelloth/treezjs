@@ -6,7 +6,7 @@
 
 The ![](../../../icons/models.png) Models atom is the parent atom for all underlying model atoms. Creating the models is 
 typically the first step in a simulation work flow. Each individual model atom (the children of the Models atom)
-inherits from <b>./src/model/model.js</b>.
+inherits from [./src/model/model.js](../../../src/model/model.js)
 
 # Source code
 
