@@ -22,9 +22,9 @@ If the already existing atoms are not sufficient for you, please feel free to re
   * [Graphics View](./doc/views/graphicsView.md)
   * [Monitor View](./doc/views/monitorView.md)
 * [Atoms](./doc/atoms.md)
-  * [Root](./doc/atoms/root.md)
-  * [Models](./doc/atoms/model/models.md)
-  * [Studies](./doc/atoms/study/studies.md)
-  * [Results](./doc/atoms/result/results.md)
+  * ![](./icons/root.png) [Root](./doc/atoms/root.md)
+    * ![](./icons/models.png) [Models](./doc/atoms/model/models.md)
+    * ![](./icons/studies.png) [Studies](./doc/atoms/study/studies.md)
+    * ![](./icons/results.png) [Results](./doc/atoms/result/results.md)
   * [How to implement atoms](./doc/atoms/howToImplementAtoms.md)
 
