@@ -1,4 +1,5 @@
 [Installation](./installation.md)
+
 ----
 
 # Jupyter Notebook extension
