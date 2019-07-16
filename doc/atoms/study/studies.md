@@ -4,39 +4,37 @@
 
 # Studies
 
-<H2>Studies</H2>
+The ![](../../../icons/studies.png) Studies atom represents a branch for all underlying study atoms. Creating studies is 
+typically the second step in a simulation work flow. Lets assume that the ![](../../../icons/models.png) Models branch of the tree already has been finished and that we want to analyze the models in detail. This typically requires to execute the models many times and the purpose of the studies is to automate that tedious process. Each individual study atom (the children of the Studies atom) inherits from [./src/study/study.js](../../../src/study/study.js). A study might produce results in the ![Results](../../../icons/results.png) [Results](../result/results.md) branch of the tree. 
 
-<H3>Purpose</H3>
+# Source code
 
-The <a class="studies"></a> atom is the parent atom for all underlying study atoms. Creating the <a class="studies"></a> is 
-typically the second step in a simulation work flow. The <a class="models"></a> section of the tree is already finished and 
-we want to analyze the <a class="models"></a> in detail. This typically requires to execute the models many times and the
-purpose of the <a class="studies"></a> is to automate this tedious process. Each individual study (the children of the 
-<a class="studies"></a> atom ) implements the interface <b>org.treez.study.atom.Study</b>. A study might produce results in
-the <a class="results"></a> section of the tree. 
+[./src/study/studies.js](../../../src/study/studies.js)
 
-<H3>Class name</H3>
+# Construction
 
-org.treez.study.atom.Studies
+A new ![](../../../icons/studies.png) Studies atom is created either 
 
-<H3>Construction</H3>
 
-A new <a class="studies"></a> atom is created either 
-<ul>
-	<li>from the context menu of an existing <a class="root"></a> atom or 
-	</li>
-	<li>by calling the corresponding factory method of the <a class="root"></a> atom:	
-	<pre class="prettyprint">Studies studies = root.createStudies("studies");</pre>	     
-	</li>
-</ul>
+* from the context menu of an existing ![](../../../icons/root.png) [Root](../root.md) atom in the [Tree View](../../views/treeView.md) or 
 
-<H3>Context menu</H3>
+* by calling the corresponding factory method of the ![](../../../icons/root.png) [Root](../root.md) atom in the source code of the [Editor View](../../views/editorView.md):	
 
-The context menu of the <a class="studies"></a> atom allows to add new child studies: 
-<ul>
-<li><a class = "sweep"></a></li>
-<li><a class = "sensitivity"> </a></li>
-</ul>
+```javascript
+    ...
+    var studies = root.createStudies();	     
+```
+
+# Child atoms
+
+The context menu of the ![](../../../icons/studies.png) Studies atom allows to add child models: 
+
+* ![](../../../icons/sweep.png) [Sweep](./sweep/sweep.md)
+* ![](../../../icons/sensitivity.png) [Sensitivity](./sensitivity/sensitivity.md)
+* ![](../../../icons/picking.png) [Picking](./picking/picking.md)
+* ![](../../../icons/probablity.png) [Probability](./probability/probability.md)
+* ![](../../../icons/pythonExport.png) [PythonExport](./pythonExport/pythonExport.md)
+* ![](../../../icons/studyInfoExport.png) [StudyInfoExport](./studyInfoExport/studyInfoExport.md)
 
 
 ----
