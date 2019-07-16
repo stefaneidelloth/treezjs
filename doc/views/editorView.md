@@ -28,3 +28,6 @@ The appearance of the Editor View might be slightly different, depending on how 
 
 <img width="400" src="../images/editor_view.png">
 
+----
+[Graphics View](./graphicsView.md)
+
