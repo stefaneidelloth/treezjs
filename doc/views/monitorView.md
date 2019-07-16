@@ -2,7 +2,7 @@
 
 #	Monitor View
 
-Some of the atoms can be executed and the Monitor View shows the corresponding progress by **progress bars** and **log messages**. 
+Some of the atoms can be executed and the Monitor View shows the corresponding progress by **progress bars** in the tab "Progress" and **log messages** in the tab "Log". 
 
 <img src="../images/monitor_view.png">
 
