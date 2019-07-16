@@ -51,12 +51,12 @@ As an alternative to the tree node operations, you can also add child atoms to t
 
 As already stated in the introduction, the **atoms** that come with Treez are thought to model an exemplary **simulation work flow**. 
 
-The atom **Models** typically includes, as the name suggest, some models. The **first step of the simulation work flow** is to fill that part of the tree with meaningful content. A model can be **started manually** with a specific **set of properties**.
+The atom ![Models](../../icons/models.png) [Models](./model/models.md) typically includes, as the name suggest, some models. The **first step of the simulation work flow** is to fill that part of the tree with meaningful content. A model can be **started manually** with a specific **set of properties**.
 
 If you want to **run a model many times**, for example to perform a **sensitivity study**, it often makes sense to 
-automate this time consuming task. The purpose of the atoms that can be found under the **Studies** atom is the automated model execution. 
+automate this time consuming task. The purpose of the atoms that can be found under the ![Studies](../../icons/studies.png) [Studies](./study/studies.md) atom is the automated model execution. 
 
-Finally, the results of the model runs are **inspected** and **evaluated** with the last part of the tree: the **Results** atom and its children.    
+Finally, the results of the model runs are **inspected** and **evaluated** with the last part of the tree: the ![Results](../../icons/results.png) [Results](./result/results.md) atom and its children.    
 
 ----
 [Models](./model/models.md)
