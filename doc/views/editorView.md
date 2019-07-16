@@ -20,11 +20,11 @@ The toolbar of the Editor View provides several action buttons:
 
 The appearance of the Editor View might be slightly different, depending on how you use treez:
 
-* **Stand-alone**: [Orion](http://wiki.eclipse.org/Orion) is used as source code editor and line numbers are shown by default. There is no extra border.
+* [**Stand-alone**](../standaloneInstallation.md): [Orion](http://wiki.eclipse.org/Orion) is used as source code editor and line numbers are shown by default. There is no extra border.
 
 <img width="400" src="../images/editor_view_stand-alone.png">
 
-* **Jupyter Notebook extension**: The first cell of the Jupyter Notebook is used to edit the JavaScript sourcecode for the tree model. The cells of the Jupyter Notebook are based on [CodeMirror](https://codemirror.net/). You can [enable line numbers](https://stackoverflow.com/questions/10979667/showing-line-numbers-in-ipython-jupyter-notebooks) if you want. Further cells (containing python code or any other supported content) can be added to the Jupyter Notebook below. The cells have a border that indicates their current state/[edit mode](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Modal-editor). In addition to the buttons of the Editor View, the [buttons of the Jupyter Notebook](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Mouse-navigation) can be used, e.g. to open or save *.ipynb notebook files. 
+* [**Jupyter Notebook extension**](../jupyterInstallation.md): The first cell of the Jupyter Notebook is used to edit the JavaScript sourcecode for the tree model. The cells of the Jupyter Notebook are based on [CodeMirror](https://codemirror.net/). You can [enable line numbers](https://stackoverflow.com/questions/10979667/showing-line-numbers-in-ipython-jupyter-notebooks) if you want. Further cells (containing python code or any other supported content) can be added to the Jupyter Notebook below. The cells have a border that indicates their current state/[edit mode](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Modal-editor). In addition to the buttons of the Editor View, the [buttons of the Jupyter Notebook](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Mouse-navigation) can be used, e.g. to open or save *.ipynb notebook files. 
 
 <img width="400" src="../images/editor_view.png">
 
