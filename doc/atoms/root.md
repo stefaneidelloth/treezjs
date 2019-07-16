@@ -3,19 +3,12 @@
 
 # Root
 
-<H3>Description</H3>
+The <img src="../icons/root.png"> Root atom is represented by the **first node of the tree**> in the [Tree View](./treeView.md). 
 
-The  <a class="root"></a> atom represents the <b>first node of the tree</b> in the <a class = "treezView"></a>. 
-When a Java file is imported from the <a class = "textEditor"></a> to the <a class = "treezView"></a>, the 
-source code is compiled and a method <b>createModel</b> is called. This method call  yields a <a class="root"></a> 
-atom which is put as the <b>content of the</b> <a class = "treezView"></a>. In order to ensure that this process
-works correctly, the source code has to implement the interface <b>org.treez.core.scripting.ModelProvider</b>.
-The <b>return argument</b> of the method <b>createModel</b> in that interface is a <a class="root"></a> atom. 
-  
 
-<H3>Class name</H3>
+<H3>Source code</H3>
 
-org.treez.views.treeView.rootAtom.Root
+[/src/root/root.js](../../src/root/root.js)
 
 <H3>Construction</H3>
 
