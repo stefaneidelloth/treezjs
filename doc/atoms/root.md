@@ -15,14 +15,16 @@ There are two ways to <b>create a new Root atom:
 
 * Click on the <img src="../../icons/root.png"> **Create root** - button in the toolbar of the Tree View. This deletes the current content of the Tree View and creates a new Root atom.
 
-* Copy the below JavaScript source code to the [Editor View](../views/editorView.md) and <img src="../../icons/toTree.png"> import it to the TreeView: 
+* Copy the below JavaScript source code to the [Editor View](../views/editorView.md), correct the import path if required, and <img src="../../icons/toTree.png"> import it to the TreeView: 
 
->import Root from './src/root/root.js';<br>
-><br>
->window.createModel = function () {<br>
->    var root = new Root();<br>
->    return root;<br>	
->}
+import Root from './src/root/root.js';<br>
+<br>
+window.createModel = function () {<br>
+    var root = new Root();<br>
+    return root;<br>	
+}
+
+
 
 
 
