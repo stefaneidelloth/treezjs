@@ -1,6 +1,6 @@
 [Content](../README.md)
 
-----
+--
 # Installation
 
 There are two ways to install and run treez:
