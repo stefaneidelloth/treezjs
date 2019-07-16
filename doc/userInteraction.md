@@ -19,4 +19,4 @@ Treez does not only allow to **edit an application model** with a graphical work
 The graphical workflow with mouse clicks in the Tree View is easier to learn for **new users** and the source code workflow provides an efficient option for **advanced users**.
 
 ----
-[Views](../views.md)
+[Views](./views.md)
