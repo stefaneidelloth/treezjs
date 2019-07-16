@@ -59,4 +59,4 @@ automate this time consuming task. The purpose of the atoms that can be found un
 Finally, the results of the model runs are **inspected** and **evaluated** with the last part of the tree: the ![Results](../../icons/results.png) [Results](./result/results.md) atom and its children.    
 
 ----
-[Models](./model/models.md)
+![Models](../../icons/models.png) [Models](./model/models.md)
