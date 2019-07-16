@@ -11,10 +11,10 @@ Code that this generated from the tree model contains all modified properties (=
 
 The toolbar of the Editor View provides several action buttons:
 
-* ![Open from](../../icons/browse.png) **Open from...**
-* **Save as...**
-* ![Open from](../../icons/save.png) **Open from local storage**
-* ![Open from](../../icons/saveToLocalStorage.png) **Save to local storage**
+* ![Open from](../../icons/browse.png) **Open from...** Open a text file and show it in the Editor View. 
+* ![Open from](../../icons/save.png) **Save as...** Download the content of the Editor View as JavScript file *.js. 
+* ![Open from](../../icons/openFromLocalStorage.png) **Open from local storage** Open a previously stored source code from the local browser storage in the Editor View and also import it to the TreeView (="quick open"). 
+* ![Open from](../../icons/saveToLocalStorage.png) **Save to local storage** Save the content of the Editor View to the local browser storage (="quick save") 
 
 ## Installation options
 
