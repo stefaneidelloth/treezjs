@@ -1,4 +1,4 @@
-![](../../../icons/models.png) [Models](../models.md)
+![](../../../../icons/models.png) [Models](../models.md)
 
 ----
 
@@ -45,5 +45,5 @@ The purpose of the <a class = "genericInputModel"></a> is to provide a list of <
 
 ----
 
-![](../../../icons/exectuable.png) [Executable](../executable/executable.md)
+![](../../../../icons/exectuable.png) [Executable](../executable/executable.md)
 
