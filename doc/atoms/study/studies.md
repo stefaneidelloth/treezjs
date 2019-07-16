@@ -39,4 +39,4 @@ The context menu of the <a class="studies"></a> atom allows to add new child stu
 
 
 ----
-[Results](../result/results.md)
+![Results](../../../icons/results.png) [Results](../result/results.md)
