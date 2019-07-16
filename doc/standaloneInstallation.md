@@ -1,5 +1,7 @@
 [Installation](./installation.md)
+
 ----
+
 # Stand-alone 
 
 Treez consists of two parts, a JavaScript based client (=web application in the browser) and a Java based server. The purpose of the minimalistic Java based server is to allow access to the local file system and to serve the JavaScript files for the client. 
