@@ -45,7 +45,7 @@ If you right-click on the Root atom in the Tree View, you will see some **contex
 * ![Studies](../../icons/studies.png) [Studies](./study/studies.md): Branch for all studies
 * ![Results](../../icons/results.png) [Results](./result/results.md): Branch for all results 
 
-As an alternative to the tree node operations, you can also add child atoms to the Root atom by editing the JavaScript source code. Follow the above links to the child atoms if you want to learn more about it.
+As an alternative to the tree node operations, you can also add child atoms to the Root atom by editing the JavaScript source code. Follow the above links to the child atoms for some examples.
 
 ## Meaning of the available child atoms
 
