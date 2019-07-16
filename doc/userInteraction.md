@@ -1,5 +1,7 @@
 [Content](../README.md)
+
 ----
+
 # User interaction
 
 The heart of treez is a tree view. The concept of **trees** is often used to **manage complexity** and therefore, it is not suprising that trees are a common element in complex applications. For example, the file system on your computer has a tree structure. You probably use a tree based file explorer to manage thousands of files for some complex research project. 
