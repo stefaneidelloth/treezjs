@@ -1,5 +1,7 @@
 [Views](../views.md)
 
+----
+
 #	Graphics View
 
 Some of the Treez Atoms have a graphical representation, for example a plot. The purpose of the Graphics View is to show those graphical representations. 
