@@ -45,5 +45,5 @@ The purpose of the <a class = "genericInputModel"></a> is to provide a list of <
 
 ----
 
-![](../../../../icons/exectuable.png) [Executable](../executable/executable.md)
+![](../../../../icons/run.png) [Executable](../executable/executable.md)
 
