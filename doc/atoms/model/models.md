@@ -19,7 +19,7 @@ A new ![](../../../icons/models.png) Models atom is created either
 
 * from the context menu of an existing ![](../../../icons/root.png) [Root](../root.md) atom in the [Tree View](../../views/treeView.md) or 
 
-* by calling the corresponding factory method of the ![](../../../icons/root.png) [Root](../root.md) atom in the source code:	
+* by calling the corresponding factory method of the ![](../../../icons/root.png) [Root](../root.md) atom in the source code of the [Editor View](../../views/editorView.md):	
 
 ```javascript
     ...
