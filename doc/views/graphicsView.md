@@ -8,7 +8,7 @@ The graphics of Treez are based on [d3.js](https://d3js.org/) and can be **inter
 
 Also try to double click on a plot in the Graphics View to **export it** as scalable vector graphics *.svg file. 
 
-<img align="right" width="650" src="../images/graphics_view.png">
+<img width="650" src="../images/graphics_view.png">
 
 ----
 [Monitor View](./monitorView.md)
