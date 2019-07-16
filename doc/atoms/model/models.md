@@ -31,4 +31,4 @@ The context menu of the <a class="models"></a> atom allows to add new child mode
 </ul>
 
 ----
-[Studies](../study/studies.md)
+![Studies](../../../icons/studies.png) [Studies](../study/studies.md)
