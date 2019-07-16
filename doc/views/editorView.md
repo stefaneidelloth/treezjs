@@ -24,7 +24,7 @@ The appearance of the Editor View might be slightly different, depending on how 
 
 <img width="400" src="../images/editor_view_stand-alone.png">
 
-* **Jupyter Notebook extension**: The first cell of the Jupyter Notebook is used to edit the JavaScript code of treez. The cells of the Jupyter Notebook are based on [CodeMirror](https://codemirror.net/) and here you can also [enable line numbers](https://stackoverflow.com/questions/10979667/showing-line-numbers-in-ipython-jupyter-notebooks) if you want. Further cells (containing python code or any other supported content) can be added to the Jupyter Notebook below. 
+* **Jupyter Notebook extension**: The first cell of the Jupyter Notebook is used to edit the JavaScript sourcecode for the tree model. The cells of the Jupyter Notebook are based on [CodeMirror](https://codemirror.net/). You can [enable line numbers](https://stackoverflow.com/questions/10979667/showing-line-numbers-in-ipython-jupyter-notebooks) if you want. Further cells (containing python code or any other supported content) can be added to the Jupyter Notebook below. In addition to the buttons of the toolbar of the Editor View, the buttons of the Jupyter Notebook can be used, e.g. to open or save *.ipynb notebook files. 
 
 <img width="400" src="../images/editor_view.png">
 
