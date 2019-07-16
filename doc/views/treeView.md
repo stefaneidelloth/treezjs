@@ -11,7 +11,7 @@ The Tree View is the heart of Treez. It displays a tree model of the application
 
 The toolbar of the Tree View provides several action buttons:
 
-* ![addRoot](../../icons/root.png) **Create a Root atom** and set it as the content of the Treez View (overrides the previous content of the Tree View). 
+* ![addRoot](../../icons/root.png) **Create a [Root](../atoms/root.md) atom** and set it as the content of the Treez View (overrides the previous content of the Tree View). 
 * ![import](../../icons/toTree.png) **Import a tree model** from the currently opened text file (overrides the previous content of the Tree View). 
 * ![export](../../icons/fromTree.png) **Export the tree model** to the currently opened text file (overrides the previous content of the text file).
 * ![help](../../icons/help.png) **Show help** page in a new tab of the browser: [README.md](https://github.com/stefaneidelloth/treezjs/blob/master/README.md)
