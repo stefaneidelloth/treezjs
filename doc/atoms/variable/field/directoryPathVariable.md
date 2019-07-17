@@ -13,7 +13,7 @@ You can **edit** the directory by
 * entering the directory directly in the **text field**
 * clicking on the ![](../../../../icons/browseDirectory.png) selection button. That opens an extra **directory selection dialog**.
 
-You can **open** the directory by clicking on the ![](../../../../icons/run_triangle.png) run button.
+You can **open** the selected directory by clicking on the ![](../../../../icons/run_triangle.png) run button.
 
 You can use previously defined ![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariables](./directoryPathVariable.md) to specify relative paths. In order to do so, you use the name of the existing variable, wrapped within placeholder symbols, e.g. {$workingDirectory$}.
 
