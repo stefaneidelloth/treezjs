@@ -8,7 +8,7 @@ The ![](../../../../icons/path.png) Path atom helps to organize **file**- and **
 
 ![](../../../images/path.png)
 
-(Instead of using the ![](../../../../icons/path.png) Path atom it would also be possible to define paths as pure JavaScript string variables in the source code. Those variables could also be concatenated to mimic relative paths. However, this approach has a disadvantage: If the source code is imported to the Tree View and then re-exported to the Editor View, the dependencies between the paths are lost. You would end up with absolute paths instead of the originally related (relative) paths.)
+(Instead of using the ![](../../../../icons/path.png) Path atom it would also be possible to define paths as pure JavaScript string variables in the source code. Those variables could also be concatenated to mimic relative paths. However, that approach would have a disadvantage: If the source code is imported to the Tree View and then re-exported to the Editor View, the dependencies between the paths are lost. You would end up with absolute paths instead of the originally related (relative) paths. Therefore, we recomment to use the Path atom to organize your file- and directory paths.)
 
 ## Source code
 
