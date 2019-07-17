@@ -16,7 +16,7 @@ The context menu of the ![](../../../../icons/genericInput.png) GenericInput ato
 
 ## Source code
 
-[/src/model/genericInput/genericInput.js](../../../../src/model/genericInput/genericInput.js)
+[./src/model/genericInput/genericInput.js](../../../../src/model/genericInput/genericInput.js)
 		
 ## Construction
 		
