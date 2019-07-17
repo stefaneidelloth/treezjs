@@ -42,7 +42,7 @@ export default class TreezFilePath extends TreezAbstractPath {
 		    this.__browseButton = browseButton;	
 		    browseButton.className='treez-file-path-browse-button';					   
 		    browseButton.type='button';
-		    browseButton.title=' ';
+		    browseButton.title='Select file path';
 		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFilePath();				   
@@ -52,7 +52,7 @@ export default class TreezFilePath extends TreezAbstractPath {
             this.__executeButton = executeButton;
             executeButton.className='treez-file-path-play-button';	
             executeButton.type = 'button';
-            executeButton.title = 'execute';
+            executeButton.title = 'Open file with system editor/executor';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
