@@ -4,27 +4,26 @@
 
 # GenericInput
 
-The purpose of the <a class = "genericInputModel"></a> is to provide a list of <b>VariablesFields</b> 
-		that can be used by other models (e.g. by the <a class ="executable"></a> model). The <b>VariablesFields</b>
-		of a <a class = "genericInputModel"></a> can also be referenced by a study atom 
-		(e.g. <a class="sweep"></a>). The individual <b>VariablesFields</b> are shown in the <a class="treezPropertiesView"></a>
-		 if the <a class = "genericInputModel"></a> is selected in the <a class="triesView"></a>. 
-		For adding or removing a <b>VariablesField</b>, corresponding actions are available in the context menu
-		of the <a class = "genericInputModel"></a>.
-		</p> 
-		<img src="images/genericInputModelScreenShot.png">
+The purpose of the ![](../../../../icons/genericInput.png) GenericInput atom is to provide a list of **variables** that can be used by other atoms (e.g. by a ![](../../../../icons/inputFileGenerator.png) InputFileGenerator or the ranges for a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study). 
+
+If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), the values for the variables can be edited inthe [Properties View](../../../views/propertiesView.md).
+
+The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md) provides actions for adding variables.
+
+![](../../../images/generic_input.png)
+
+## Source code
+
+[/src/model/genericInput/genericInput.js](../../../../src/model/genericInput/genericInput.js)
 		
-		<h3>Class name</h3>
+## Construction
 		
-		org.treez.model.atom.genericInput.GenericInputModel
-		
-		<h3>Construction</h3>
-		
-		A new <a class = "genericInputModel"></a> is created by: 
-		<ul>
-			<li>using the context menu of a <a class="models"></a> atom or
-			</li>
-			<li>by calling the corresponding factory method of the <a class="models"></a> atom:	
+A new ![](../../../../icons/genericInput.png) GenericInput atom is created either by: 
+
+* using the context menu of a ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the ![](../../../../icons/models.png) [Models](../models.md) atom in the source code of the [Editor view](../../../views/editorView.md):
+
+
 			<pre class="prettyprint">GenericInputModel genericModel = models.createGenericInputModel("genericModel");</pre>	     
 			</li>
 		</ul>
