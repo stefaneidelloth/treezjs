@@ -5,7 +5,7 @@
 # Studies
 
 The ![](../../../icons/studies.png) Studies atom represents a branch for all underlying study atoms. Creating studies is 
-typically the second step in a simulation work flow. Lets assume that the ![](../../../icons/models.png) Models branch of the tree already has been finished and that we want to analyze the models in detail. This typically requires to execute the models many times and the purpose of the studies is to automate that tedious process. Each individual study atom (the children of the Studies atom) inherits from [./src/study/study.js](../../../src/study/study.js). A study might produce results in the ![Results](../../../icons/results.png) [Results](../result/results.md) branch of the tree. 
+typically the second step in a simulation work flow. Lets assume that the ![](../../../icons/models.png) Models branch of the tree already has been finished and that we want to analyze the models in detail. This typically requires to execute the models many times. The purpose of the studies is to automate that tedious task. Each individual study atom inherits from [./src/study/study.js](../../../src/study/study.js). A study might produce results in the ![Results](../../../icons/results.png) [Results](../result/results.md) branch of the tree. 
 
 # Source code
 
