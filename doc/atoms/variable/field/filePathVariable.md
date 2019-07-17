@@ -5,7 +5,7 @@
 
 # FilePathVariable
 
-The ![](../../../../icons/filePath.png) FilePathVariable atom is used to specify file paths (for example as part of a ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom.
+The ![](../../../../icons/filePathVariable.png) FilePathVariable atom is used to specify file paths (for example as part of a ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom.
 
 ![](../../../images/file_path_variable.png)
 
@@ -21,7 +21,7 @@ You can **open/execute** the file by clicking on the ![](../../../../icons/run_t
 
 ## Construction
 
-A new ![](../../../../icons/filePath.png) FilePathVariable atom is created either 
+A new ![](../../../../icons/filePathVariable.png) FilePathVariable atom is created either 
 
 * from the context menu of an existing ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom in the [Tree View](../../../views/treeView.md) or 
 
@@ -34,4 +34,4 @@ A new ![](../../../../icons/filePath.png) FilePathVariable atom is created eithe
 ```
 
 ----
-![DirectoryPathVariable](../../../icons/directoryPath.png) [DirectoryPathVariable](./directoryPathVariable.md)
+![DirectoryPathVariable](../../../icons/directoryPathVariable.png) [DirectoryPathVariable](./directoryPathVariable.md)
