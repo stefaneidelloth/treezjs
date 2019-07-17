@@ -4,9 +4,7 @@
 
 # DoubleVariable
 
-The ![](../../../../icons/doubleVariable.png) DoubleVariable atom is used to specify a double value (=floating point number)
-
-(for example for a ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom):
+The ![](../../../../icons/doubleVariable.png) DoubleVariable atom is used to specify a double input value (=floating point number) for a model, e.g. for a ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model):
 
 ![](../../../images/double_variable.png)
 
