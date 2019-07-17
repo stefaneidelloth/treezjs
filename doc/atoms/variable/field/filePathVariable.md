@@ -34,4 +34,4 @@ A new ![](../../../../icons/filePathVariable.png) FilePathVariable atom is creat
 ```
 
 ----
-![DirectoryPathVariable](../../../icons/directoryPathVariable.png) [DirectoryPathVariable](./directoryPathVariable.md)
+![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariable](./directoryPathVariable.md)
