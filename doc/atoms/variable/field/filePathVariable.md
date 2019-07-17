@@ -1,4 +1,4 @@
-![](../../../../icons/path.png) [Path](../../model/path/path.md)
+![](../../../../icons/path.png) [Path](../../model/path/path.md)<br>
 ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md)
 
 ----
@@ -34,4 +34,4 @@ A new ![](../../../../icons/filePath.png) FilePathVariable atom is created eithe
 ```
 
 ----
-![DirectoryPathVariable](../../../icons/directoryPathVariable.png) [DirectoryPathVariable](./directoryPathVariable.md)
+![DirectoryPathVariable](../../../icons/directoryPath.png) [DirectoryPathVariable](./directoryPathVariable.md)
