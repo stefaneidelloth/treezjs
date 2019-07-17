@@ -52,7 +52,7 @@ export default class TreezFilePath extends TreezAbstractPath {
             this.__executeButton = executeButton;
             executeButton.className='treez-file-path-play-button';	
             executeButton.type = 'button';
-            executeButton.title = 'Open file with system editor/executor';
+            executeButton.title = 'Open (or execute) file';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   

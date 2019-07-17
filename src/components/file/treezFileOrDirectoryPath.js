@@ -72,7 +72,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 		    this.__browseButton = browseButton;						   
 		    browseButton.type='button';
 		    browseButton.className='treez-file-or-directory-path-browse-button';	
-		    browseButton.title='browse file path';
+		    browseButton.title='Select file- or directory path';
 		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFileOrDirectoryPath();				   
@@ -82,7 +82,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             this.__executeButton = executeButton;
             executeButton.type = 'button';
             executeButton.className='treez-file-or-directory-path-play-button';	
-            executeButton.title = 'execute';
+            executeButton.title = 'Open (or execute) file or directory';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
