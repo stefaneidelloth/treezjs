@@ -34,6 +34,12 @@ A new ![](../../../../icons/genericInput.png) GenericInput atom is created eithe
 		
 The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom allows to add child atoms: 
 
+* ![](../../../../icons/doubleVariable.png) [DoubleVariable](../../variable/field/doubleVariable.md)
+* ![](../../../../icons/integerVariable.png) [IntegerVariable](../../variable/field/integerVariable.md)
+* ![](../../../../icons/quantityVariable.png) [QuantityVariable](../../variable/field/quantityVariable.md)
+* ![](../../../../icons/booleanVariable.png) [BooleanVariable](../../variable/field/booleanVariable.md)
+* ![](../../../../icons/stringVariable.png) [StringVariable](../../variable/field/stringVariable.md)
+* ![](../../../../icons/stringItemVariable.png) [StringItemVariable](../../variable/field/stringItemVariable.md)
 * ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md)
 * ![](../../../../icons/directoryPathVariable.png) [DirectoryPathVariable](../../variable/field/directoryPathVariable.md)
 
