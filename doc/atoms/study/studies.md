@@ -27,7 +27,7 @@ A new ![](../../../icons/studies.png) Studies atom is created either
 
 ## Child atoms
 
-The context menu of the ![](../../../icons/studies.png) Studies atom allows to add child models: 
+The context menu of the ![](../../../icons/studies.png) Studies atom allows to add child atoms: 
 
 * ![](../../../icons/sweep.png) [Sweep](./sweep/sweep.md)
 * ![](../../../icons/picking.png) [Picking](./picking/picking.md)
