@@ -13,9 +13,9 @@ You can **edit** the file path by
 * entering the path directly in the **text field**
 * clicking on the ![](../../../../icons/browse.png) selection button. That opens an extra **file selection dialog**.
 
-It is possible to use previously defined ![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariables](./directoryPathVariable.md) in the file path (= specify relative paths). In order to do so, you use the name of the variable within placholder symbols, e.g. {$workingDirectory$}/inputFile.txt
-
 You can **open/execute** the file by clicking on the ![](../../../../icons/run_triangle.png) run button.
+
+You can use previously defined ![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariables](./directoryPathVariable.md) to specify relative paths. In order to do so, you use the name of the existing variable, wrapped within placeholder symbols, e.g. {$workingDirectory$}.
 
 ## Source code
 
