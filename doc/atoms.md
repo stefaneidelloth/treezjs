@@ -60,6 +60,8 @@ existing atoms are not sufficient for your needs, you might want to [implement c
   * ![](../icons/results.png) [Results](./atoms/result/results.md)
     * ![](../icons/data.png) [Data](./atoms/result/data/data.md)
       * ![](../icons/table.png) [Table](./atoms/data/table/table.md)
+        * ![](../icons/columnFolder.png) [ColumnFolder](./atoms/data/column/columnFolder.md)
+          * ![](../icons/column.png) [Column](./atoms/data/column/column.md)
       * ![](../icons/sweepProbe.png) [SweepProbe](./atoms/result/probe/sweepProbe.md)
       * ![](../icons/pickingProbe.png) [PickingProbe](./atoms/result/probe/pickingProbe.md)
       * ![](../icons/sensitivityProbe.png) [SensitivityProbe](./atoms/result/probe/sensitivityProbe.md)     
