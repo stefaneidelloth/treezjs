@@ -11,7 +11,7 @@ ony have to change it once, instead of going through all places where the path i
 
 ## Source code
 
-[./src/model/path/path.js](../../../src/model/path/path.js)
+[./src/model/path/path.js](../../../../src/model/path/path.js)
 
 ## Construction
 
