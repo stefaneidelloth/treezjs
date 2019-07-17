@@ -22,7 +22,7 @@ A new ![](../../../../icons/booleanVariable.png) BooleanVariable atom is created
 
 ```javascript
     ...
-    var length = genericInput.createBooleanVariable('isUsingExtraBoost', true);
+    genericInput.createBooleanVariable('isUsingExtraBoost', true);
 ```
 
 ----
