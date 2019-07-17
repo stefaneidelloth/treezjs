@@ -10,7 +10,7 @@ The ![](../../../../icons/integerVariable.png) IntegerVariable atom is used to s
 
 You can enter a value directly or use the arrow buttons on the right side of the input field to increase/decrease the number by 1. 
 
-Treez is based on JavaScript and [numbers in JavaScript have some limitations](http://www.javascripter.net/faq/accuracy.htm). 
+Please note that Treez is based on JavaScript and [numbers in JavaScript have some limitations](http://www.javascripter.net/faq/accuracy.htm). 
 
 ## Source code
 
