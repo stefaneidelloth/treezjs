@@ -9,7 +9,7 @@ export default class ColumnFolder extends ComponentAtom {
 			name='columns';
 		}
 		super(name);	
-		this.image = 'columns.png';			
+		this.image = 'columnFolder.png';			
 	}
 
 	
