@@ -37,5 +37,5 @@ A new ![](../../../../icons/directoryPathVariable.png) DirectoryPathVariable ato
 ```
 
 ----
-![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md)
-![](../../../../icons/run.png) [Exectuable](../../model/exectuable/executable.md)
+![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md)<br>
+![](../../../../icons/run.png) [Exectuable](../../model/executable/executable.md)
