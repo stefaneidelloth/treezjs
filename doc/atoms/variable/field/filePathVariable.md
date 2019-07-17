@@ -9,11 +9,11 @@ The ![](../../../../icons/filePath.png) FilePathVariable atom is used to specify
 
 ![](../../../images/file_path_variable.png)
 
-You can edit the file path
-* by entering the path directly in the text field
-* by clicking on the ![](../../../../icons/browse.png) file path selection button
+You can **edit** the file path by
+* entering the path directly in the text field
+* clicking on the ![](../../../../icons/browse.png) selection button. That opens an extra file selection dialog.
 
-You can open/execute the file by clicking on the ![](../../../../icons/run_triangle.png) run button.
+You can **open/execute** the file by clicking on the ![](../../../../icons/run_triangle.png) run button.
 
 ## Source code
 
