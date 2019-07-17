@@ -32,8 +32,8 @@ A new ![](../../../../icons/path.png) Path atom is created either
 
 The context menu of the ![](../../../../icons/path.png) Path atom allows to add child atoms: 
 
-* ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../../variable/field/filePathVariable.md)
-* ![](../../../../icons/directoryPathVariable.png) [DirectoryPathVariable](../../../variable/field/directoryPathVariable.md)
+* ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md)
+* ![](../../../../icons/directoryPathVariable.png) [DirectoryPathVariable](../../variable/field/directoryPathVariable.md)
 
 ----
 ![GenericInput](../../../icons/genericInput.png) [GenericInput](../genericInput/genericInput.md)
