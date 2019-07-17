@@ -30,9 +30,12 @@ A new ![](../../../icons/models.png) Models atom is created either
 
 The context menu of the ![](../../../icons/models.png) Models atom allows to add child models: 
 
+* ![](../../../icons/path.png) [Path](./path/path.md)
 * ![](../../../icons/genericInput.png) [GenericInput](./genericInput/genericInput.md)
-* ![](../../../icons/run.png) [Executable](./executable/executable.md)
-
+* ![](../../../icons/run.png) [Executable](./executable/executable.md) 
+* ![](../../../icons/java.png) [JavaExecutable](./executable/javaExecutable.md)  	
+* ![](../../../icons/javaScript.png) [JavaScriptModel](./code/javaScriptModel.md)
+* ![](../../../icons/python.png) [PythonModel](./code/pythonModel.md)
 
 ----
 ![Studies](../../../icons/studies.png) [Studies](../study/studies.md)
