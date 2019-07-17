@@ -17,9 +17,9 @@ ony have to change it once, instead of going through all places where the path i
 
 A new ![](../../../../icons/path.png) Path atom is created either 
 
-* from the context menu of an existing ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../views/treeView.md) or 
+* from the context menu of an existing ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) or 
 
-* by calling the corresponding factory method of the ![](../../../../icons/models.png) [Models](../models.md) atom in the source code of the [Editor View](../../views/editorView.md):	
+* by calling the corresponding factory method of the ![](../../../../icons/models.png) [Models](../models.md) atom in the source code of the [Editor View](../../../views/editorView.md):	
 
 ```javascript
     ...
