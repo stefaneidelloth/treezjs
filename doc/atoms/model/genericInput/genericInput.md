@@ -6,9 +6,9 @@
 
 The purpose of the ![](../../../../icons/genericInput.png) GenericInput atom is to provide a **list of variables** that can be **referenced and used by other atoms** (e.g. by a ![](../../../../icons/inputFile.png) [InputFileGenerator](../../model/inputFileGenerator/inputFileGenerator.md) or the ranges for a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study). 
 
-The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md) provides actions for adding variables as children of the GenericInput atom.
+The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md) provides actions for **adding variables as children** of the ![](../../../../icons/genericInput.png) GenericInput atom.
 
-If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), the values for the variables can be edited in the [Properties View](../../../views/propertiesView.md). The content for the [Properties View](../../../views/propertiesView.md) is automatically generated from the children of the ![](../../../../icons/genericInput.png) GenericInput atom:
+If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), you can **edit the values of the variables** in the [Properties View](../../../views/propertiesView.md). The content for the [Properties View](../../../views/propertiesView.md) is automatically generated from the children of the ![](../../../../icons/genericInput.png) GenericInput atom:
 
 ![](../../../images/generic_input.png)
 
