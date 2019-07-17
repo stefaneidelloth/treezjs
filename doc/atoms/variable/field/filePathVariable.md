@@ -5,7 +5,7 @@
 
 # FilePathVariable
 
-The ![](../../../../icons/filePathVariable.png) FilePathVariable atom is used to specify file paths (for example as part of a ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom).
+The ![](../../../../icons/filePathVariable.png) FilePathVariable atom is used to specify file paths (for example as part of a ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom):
 
 ![](../../../images/file_path_variable.png)
 
