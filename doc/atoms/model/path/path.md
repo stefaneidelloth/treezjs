@@ -4,18 +4,11 @@
 
 # Path
 
-The ![](../../../../icons/path.png) Path atom helps to organize **file**- and **directory** paths. Once a path has 
-been specified, it can be used as a variable within other paths. This way it is possible to **reuse already
-existing paths** and to specify **relative paths**. If you would like to adapt a path in future, you  
-only have to change it once, instead of going through all places where the path is applied. 
+The ![](../../../../icons/path.png) Path atom helps to organize **file**- and **directory** paths. Once a path has been specified, it can be used as a variable within other paths. This way it is possible to **reuse already existing paths** and to specify **relative paths**. If you would like to adapt a path in future, you only have to change it once, instead of going through all places where the path is applied. 
 
 ![](../../../images/path.png)
 
-(Instead of using the ![](../../../../icons/path.png) Path atom it would also be possible to define paths as
-pure JavaScript string variables in the source code. Those variables could also be concatenated to mimic relative
-paths. However, this approach has a disadvantage: If the source code is imported to the Tree View and 
-then re-exported to the Editor View, the dependencies between the paths are lost. You would end up with absolute paths
-instead of the originally related (relative) paths.)
+(Instead of using the ![](../../../../icons/path.png) Path atom it would also be possible to define paths as pure JavaScript string variables in the source code. Those variables could also be concatenated to mimic relative paths. However, this approach has a disadvantage: If the source code is imported to the Tree View and then re-exported to the Editor View, the dependencies between the paths are lost. You would end up with absolute paths instead of the originally related (relative) paths.)
 
 ## Source code
 
