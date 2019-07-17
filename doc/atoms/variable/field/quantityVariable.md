@@ -4,7 +4,7 @@
 
 # QuanityVariable
 
-The ![](../../../../icons/quantityVariable.png) QuanityVariable atom is used to specify a physical quantity, consisting of a (double) **value and a unit**. QuantityVariables are thought to be uses by some model, e.g. the ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model):
+The ![](../../../../icons/quantityVariable.png) QuanityVariable atom is used to specify a physical quantity. The value of a quantity consisting of a **number and a unit**. QuantityVariables are thought to be used by some model, e.g. the ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model):
 
 ![](../../../images/quantity_variable.png)
 
@@ -24,7 +24,9 @@ A new ![](../../../../icons/quantityVariable.png) QuanityVariable atom is create
 
 ```javascript
     ...
-    genericInput.createQuanityVariable('length', Quantity(5, 'm'));
+    var length = genericInput.createQuantityVariable('length');
+    length.number = 2.5;
+    length.unit = 'm';
 ```
 
 ----
