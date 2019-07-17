@@ -4,39 +4,32 @@
 
 # Results
 
-<H2>Results</H2>
+The ![](../../../icons/results.png) Results atom represents the branch for all underlying result atoms. Creating the results is 
+typically the last step in a simulation work flow. The purpose of the Results branch of the tree is to contain data that results from the execution of models and studies. The results branch is also the right place for plots and reports.  
 
-<H3>Purpose</H3>
+## Source code
 
-The <a class="results"></a> atom is the parent atom for all underlying result atoms. Creating the <a class="results"></a> is 
-typically the last step in a simulation work flow. The purpose of the <a class="results"></a> section of the tree is to contain
-data that results from the execution of <a class="models"></a> and <a class="studies"></a>. The <a class="results"></a> section 
-is also the right place for diagram pages and reports.  
+[./src/result/results.js](../../../src/result/results.js)
 
-<H3>Class name</H3>
+## Construction
 
-org.treez.study.atom.Results
+A new ![](../../../icons/results.png) Results atom is created either 
 
-<H3>Construction</H3>
+* from the context menu of an existing ![](../../../icons/root.png) Root atom in the [Tree View](../../views/treeView.md) or 
+* by calling the corresponding factory method of the ![](../../../icons/root.png) Root atom in the source code of the [Editor View](../../views/editorView.md):
 
-A new <a class="results"></a> atom is created either 
-<ul>
-	<li>from the context menu of an existing <a class="root"></a> atom or 
-	</li>
-	<li>by calling the corresponding factory method of the <a class="root"></a> atom:	
-	<pre class="prettyprint">Results results = root.createResults("results");</pre>	     
-	</li>
-</ul>
+```javascript
+    ...
+    var results = root.createResults();	     
+```
 
-<H3>Context menu</H3>
+## Child atoms
 
-The context menu of the <a class="results"></a> atom allows to add new child atoms: 
-<ul>
-<li><a class = "data"></a></li>
-<li><a class = "page"> </a></li>
-</ul>
+The context menu of the ![](../../../icons/results.png) Results atom allows to add child models: 
 
-</body>
+* ![](../../../icons/data.png) [Data](./data/data.md)
+* ![](../../../icons/page.png) [Page](./page/page.md)
+
 
 ----
 [Content](../../../README.md)
