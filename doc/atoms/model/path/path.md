@@ -1,4 +1,4 @@
-![](../../../icons/models.png) [Models](../models.md)
+![](../../../../icons/models.png) [Models](../models.md)
 
 ----
 
