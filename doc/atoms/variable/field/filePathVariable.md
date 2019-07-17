@@ -25,7 +25,7 @@ A new ![](../../../../icons/filePath.png) FilePathVariable atom is created eithe
 
 * from the context menu of an existing ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom in the [Tree View](../../../views/treeView.md) or 
 
-* by calling the corresponding factory method in the source code of the [Editor View](../../../views/editorView.md):	
+* by calling the corresponding factory method of a parent atom in the source code of the [Editor View](../../../views/editorView.md):	
 
 ```javascript
     ...
