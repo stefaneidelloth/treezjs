@@ -10,9 +10,7 @@ If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in t
 
 ![](../../../images/generic_input.png)
 
-The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md) provides actions for adding variables.
-
-
+The context menu of the ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md) provides actions for adding variables as children of the GenericInput atom.
 
 ## Source code
 
