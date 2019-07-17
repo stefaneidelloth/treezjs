@@ -4,7 +4,7 @@
 
 # BooleanVariable
 
-The ![](../../../../icons/booleanVariable.png) BooleanVariable atom is used to specify a boolean value, e.g. True or False: 
+The ![](../../../../icons/booleanVariable.png) BooleanVariable atom is used to specify a boolean value (true or false): 
 
 ![](../../../images/boolean_variable.png)
 
@@ -22,7 +22,7 @@ A new ![](../../../../icons/booleanVariable.png) BooleanVariable atom is created
 
 ```javascript
     ...
-    var length = genericInput.createBooleanVariable('isUsingExtraBoost', True);
+    var length = genericInput.createBooleanVariable('isUsingExtraBoost', true);
 ```
 
 ----
