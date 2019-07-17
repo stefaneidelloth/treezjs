@@ -8,7 +8,7 @@ The ![](../../../../icons/quantityVariable.png) QuanityVariable atom is used to 
 
 ![](../../../images/quantity_variable.png)
 
-QuantityVariables are thought to be used by some model, e.g. the ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model)
+QuantityVariables are thought to be used by some model, e.g. the ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model. 
 
 Please note that Treez is based on JavaScript and that [numbers in JavaScript have some limitations](http://www.javascripter.net/faq/accuracy.htm). 
 
