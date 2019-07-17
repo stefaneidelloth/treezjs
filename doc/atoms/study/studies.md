@@ -30,8 +30,8 @@ A new ![](../../../icons/studies.png) Studies atom is created either
 The context menu of the ![](../../../icons/studies.png) Studies atom allows to add child models: 
 
 * ![](../../../icons/sweep.png) [Sweep](./sweep/sweep.md)
-* ![](../../../icons/sensitivity.png) [Sensitivity](./sensitivity/sensitivity.md)
 * ![](../../../icons/picking.png) [Picking](./picking/picking.md)
+* ![](../../../icons/sensitivity.png) [Sensitivity](./sensitivity/sensitivity.md)
 * ![](../../../icons/probability.png) [Probability](./probability/probability.md)
 * ![](../../../icons/pythonExport.png) [PythonExport](./pythonExport/pythonExport.md)
 * ![](../../../icons/studyInfoExport.png) [StudyInfoExport](./studyInfoExport/studyInfoExport.md)
