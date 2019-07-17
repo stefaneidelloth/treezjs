@@ -12,6 +12,8 @@ The **number format** might depend on the language settings of your Google Chrom
 
 The arrow buttons on the right side of the input field increase/decrease the number by 1.0. 
 
+Treez is based on JavaScript and [numbers in JavaScript have some limitations](http://www.javascripter.net/faq/accuracy.htm). JavaScript numbers are always stored as double precision floating point numbers, following the international IEEE 754 standard. 
+
 ## Source code
 
 [./src/variable/field/doubleVariable.js](../../../../src/variable/field/doubleVariable.js)
