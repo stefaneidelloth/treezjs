@@ -10,8 +10,10 @@ The ![](../../../../icons/filePathVariable.png) FilePathVariable atom is used to
 ![](../../../images/file_path_variable.png)
 
 You can **edit** the file path by
-* entering the path directly in the text field
-* clicking on the ![](../../../../icons/browse.png) selection button. That opens an extra file selection dialog.
+* entering the path directly in the **text field**
+* clicking on the ![](../../../../icons/browse.png) selection button. That opens an extra **file selection dialog**.
+
+It is possible to use previously defined ![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariables](./directoryPathVariable.md) in the file path (= specify relative paths).
 
 You can **open/execute** the file by clicking on the ![](../../../../icons/run_triangle.png) run button.
 
