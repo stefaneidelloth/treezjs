@@ -25,7 +25,7 @@ A new ![](../../../icons/results.png) Results atom is created either
 
 ## Child atoms
 
-The context menu of the ![](../../../icons/results.png) Results atom allows to add child models: 
+The context menu of the ![](../../../icons/results.png) Results atom allows to add child atoms: 
 
 * ![](../../../icons/data.png) [Data](./data/data.md)
 * ![](../../../icons/page.png) [Page](./page/page.md)
