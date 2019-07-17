@@ -8,11 +8,11 @@ The ![](../../../icons/models.png) Models atom represents a branch for all under
 typically the first step in a simulation work flow. Each individual model atom (the children of the Models atom)
 inherits from [./src/model/model.js](../../../src/model/model.js)
 
-# Source code
+## Source code
 
 [./src/model/models.js](../../../src/model/models.js)
 
-# Construction
+## Construction
 
 A new ![](../../../icons/models.png) Models atom is created either 
 
@@ -26,7 +26,7 @@ A new ![](../../../icons/models.png) Models atom is created either
     var models = root.createModels();	     
 ```
 
-# Child atoms
+## Child atoms
 
 The context menu of the ![](../../../icons/models.png) Models atom allows to add child models: 
 
