@@ -13,7 +13,7 @@ export default class TreezTextLabel extends TreezElement {
     }                  
 
     updateElements(newValue){                	               	
-		this.innerText = newValue;                 						    
+		this.innerHTML = newValue;                 						    
     }  
     
     disableElements(newValue){

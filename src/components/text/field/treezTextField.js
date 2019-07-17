@@ -32,7 +32,7 @@ export default class TreezTextField extends LabeledTreezElement {
     __createTextFieldLabel(){
     	var label = document.createElement('label');  
         this.__label = label;                     
-        label.innerText = this.label;  
+        label.innerHTML = this.label;  
         label.className = 'treez-text-field-label';
         this.appendChild(label); 
     }

@@ -43,12 +43,12 @@ export default class QuantityVariable extends Variable {
 		var container = parent.append('div');
 		
 		var numberField = container.append('treez-double')
-			.label('value:')
+			.label('number:')
 			.attr('width','20%')						
 			.bindValue(this, ()=>this.number);
 		
 		var unitField = container.append('treez-text-field')
-			.label('unit:')
+			.label('&nbsp;&nbsp;unit:')
 			.attr('width','20%')	
 			.bindValue(this, ()=>this.unit);    	
     }
