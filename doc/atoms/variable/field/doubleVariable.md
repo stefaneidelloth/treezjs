@@ -10,28 +10,24 @@ The ![](../../../../icons/doubleVariable.png) DoubleVariable atom is used to spe
 
 ![](../../../images/double_variable.png)
 
-In order to be **consistent** with the **decimal separator** that is used for numbers in the the source code of the [Editor View](../../views/editorView), we recomment to set the language settings
-of Google Chrome to "English (United States)": Settings => Advanced => Languages => "English (United States)". 
-
-You can use previously defined ![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariables](./directoryPathVariable.md) to specify relative paths. In order to do so, you use the name of the existing variable, wrapped within placeholder symbols, e.g. {$workingDirectory$}.
+In order to be **consistent** with the point-**decimal separator** that is used for numbers in the the source code of the [Editor View](../../views/editorView), we recomment to set the language settings of the browser UI (e.g. Google Chrome) to "English (United States)": Settings => Advanced => Languages => "English (United States)". 
 
 ## Source code
 
-[./src/variable/field/filePathVariable.js](../../../../src/variable/field/filePathVariable.js)
+[./src/variable/field/doubleVariable.js](../../../../src/variable/field/doubleVariable.js)
 
 ## Construction
 
-A new ![](../../../../icons/filePathVariable.png) FilePathVariable atom is created either 
+A new ![](../../../../icons/doubleVariable.png) DoubleVariable atom is created either 
 
-* from the context menu of an existing ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom in the [Tree View](../../../views/treeView.md) or 
+* from the context menu of an existing ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom in the [Tree View](../../../views/treeView.md) or 
 
 * by calling the corresponding factory method of a parent atom in the source code of the [Editor View](../../../views/editorView.md):	
 
 ```javascript
     ...
-    var path = models.createPath();	   
-    path.createFilePathVariable('inputFile', '{$workingDirectory$}\input.txt');
+    genericInput.createDoubleVariable('siteLimit', 0.05);
 ```
 
 ----
-![DirectoryPathVariable](../../../../icons/directoryPathVariable.png) [DirectoryPathVariable](./directoryPathVariable.md)
+![IntegerVariable](../../../../icons/integerVariable.png) [IntegerVariable](./integerVariable.md)
