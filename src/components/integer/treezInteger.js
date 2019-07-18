@@ -52,10 +52,10 @@ export default class TreezInteger extends LabeledTreezElement {
     }
     
     convertFromStringValue(stringValue){
-		if(stringValue === ''){
-			return undefined;
-		}
-		
+        if(stringValue === undefined || stringValue === ''){
+        	return undefined;
+        }
+
     	var number = Math.floor(Number(stringValue));
     	if(number > Number.MAX_SAFE_INTEGER){    	
     		console.warn('Number '+number+' exceeds MAX_SAFE_INTEGER ' + Number.MAX_SAFE_INTEGER);
@@ -64,9 +64,9 @@ export default class TreezInteger extends LabeledTreezElement {
     }
 
     convertToStringValue(value){
-    	if(value === undefined || value == null || value === Number.NaN){
+    	if(value === undefined || value === null || value === Number.NaN){
     		return '';
-    	}		
+    	}
     	var directNotation = '' + value;
     	var scientificNotation = value.toExponential().replace('+','');
     	return (scientificNotation.length < directNotation.length)
