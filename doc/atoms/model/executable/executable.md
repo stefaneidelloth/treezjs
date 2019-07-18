@@ -76,7 +76,7 @@ The system command is created and executed. The creation of the system command i
 
 * ![](../../../../icons/inputModification.png) [InputModification](../../models/executable/inputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
 * ![](../../../../icons/outputModification.png) [OutputModification](../../models/executable/outputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
-* ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md) Specify additional logging arguments
+* ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md) Include additional logging arguments
 
 If the system command writes text to the console, that text will also be shown in the [[Monitor View](../../../views/monitorView.md).
 
