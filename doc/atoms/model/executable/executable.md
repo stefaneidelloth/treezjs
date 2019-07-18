@@ -47,7 +47,11 @@ The context menu of the ![](../../../../icons/run.png) Executable atom allows to
 * ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md)
 * ![](../../../../icons/tableImport.png) [TableImport](../../models/executable/tableImport.md)
 * ![](../../../../icons/databaseAppender.png) [SqLiteAppender](../../models/sqLiteAppender/sqLiteAppender.md)
-		
+	
+## JobId
+
+
+	
 ## Work flow	
 
 You can **run** the ![](../../../../icons/run.png) Executable atom either 
@@ -83,18 +87,9 @@ If the system command writes text to the console, that text will also be shown i
 ### 3. Postprocessing phase
 
 If the  ![](../../../../icons/run.png) Executable atom has children of the type ![](../../../../icons/tableImport.png) [TableImport](./tableImport.md) or ![](../../../../icons/databaseAppender.png) [SqLiteAppender](./sqLiteAppender.md), those children are executed. 
-				
-## Construction
-		
-		A new <a class = "executable"></a> is created by: 
-		<ul>
-			<li>using the context menu of a <a class="models"></a> atom or
-			</li>
-			<li>by calling the corresponding factory method of the <a class="models"></a> atom:	
-			<pre class="prettyprint">Executable executable = models.createExecutable("executable");</pre>	     
-			</li>
-		</ul>
-		
+
+The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 1. 
+			
 ## Arguments
 		
 		<h4>Executable</h4>
