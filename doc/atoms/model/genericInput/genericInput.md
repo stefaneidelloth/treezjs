@@ -12,7 +12,7 @@ The content of the [Properties View](../../../views/propertiesView.md) for the !
 
 If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), you can **edit the values of all variables** in the [Properties View](../../../views/propertiesView.md). 
 
-If you click on a variable atom in the [Tree View](../../../views/treeView.md), you can **edit the name** of the variable in the [Properties View](../../../views/propertiesView.md) and additional attributes if they exist (e.g. the available options for a ![](../../../../icons/stringItemVariable.png) [StringItemVariable](../../variable/field/stringItemVariable.md)). The name of variable atom can also be changed using the ![](../../../../icons/rename.png) Rename action of the context menu in the [Tree View](../../../views/treeView.md).
+If you click on a variable atom in the [Tree View](../../../views/treeView.md), you can **edit the name** of the variable in the [Properties View](../../../views/propertiesView.md) and additional attributes if they exist (e.g. the available options for a ![](../../../../icons/stringItemVariable.png) [StringItemVariable](../../variable/field/stringItemVariable.md)). The name of a variable atom can also be changed using the ![](../../../../icons/rename.png) Rename action of the context menu in the [Tree View](../../../views/treeView.md).
 
 ![](../../../images/generic_input.png)
 
