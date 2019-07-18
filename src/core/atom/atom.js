@@ -216,7 +216,7 @@ export default class Atom {
 
 	rename() {
 		var newName = prompt('Please enter the new name:', this.name); 
-		this.setName(newName);
+		this.name = newName;
 	}
 
 	addNameChangedConsumer(nameChangedConsumer) {		
