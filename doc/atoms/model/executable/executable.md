@@ -13,7 +13,9 @@ C:\Windows\System32\notepad.exe /A C:/setup.log
 A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
 
 The system command might continue with **command line flags and further arguments**. You can 
+
 a) enter the whole system command as a single long line in the executable input field or 
+
 b) use the extra sections "Input" and "Output" to make your specifications easier to read. 
 
 The total system command is shown in the section "Status" as "Resulting command". If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePath.png) [FilePathVariable](../../variable/field/filePathVariable.md) inputFile ), the "Resulting command" contains the actual variable values (e.g. C:/setup.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}). 
