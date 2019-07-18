@@ -4,7 +4,7 @@
 
 # StringItemVariable
 
-The ![](../../../../icons/stringItemVariable.png) StringItemVariable atom provides a combo box to select a text item from a list of predefined text items: 
+The ![](../../../../icons/stringItemVariable.png) StringItemVariable atom provides a combo box to select a single text item from a list of predefined options: 
 
 ![](../../../images/string_item_variable.png)
 
@@ -25,8 +25,8 @@ A new ![](../../../../icons/stringItemVariable.png) StringItemVariable atom is c
     genericInput.createStringItemVariable('programmingLanguage');
 ```
 
-The **available text items** can be specified by clicking on the ![](../../../../icons/stringItemVariable.png) StringItemVariable atom in the [Tree View](../../../views/treeView.md) and editing the **comma separated list** of available text items in the [Properties View](../../../views/propertiesView.md).
-The **available text items** can also be specified in the source code of the [Editor View](../../../views/editorView.md):
+The **available options** can be specified by clicking on the ![](../../../../icons/stringItemVariable.png) StringItemVariable atom in the [Tree View](../../../views/treeView.md) and editing the **comma separated list** of available text items in the [Properties View](../../../views/propertiesView.md).
+The **available options** can also be specified in the source code of the [Editor View](../../../views/editorView.md):
 
 ```javascript
     ...
