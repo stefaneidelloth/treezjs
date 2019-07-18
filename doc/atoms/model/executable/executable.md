@@ -18,7 +18,7 @@ b) use the extra sections "Input" and "Output" to clearly arrange the individual
 	
 ![](../../../images/executable.png)
 
-The total system command is shown in the section "Status" as **Resulting command**. If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePath.png) [FilePathVariable](../../variable/field/filePathVariable.md) inputFile ), the "Resulting command" contains the actual variable values (e.g. C:/system.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}). 
+The total system command is shown in the section "Status" as **Resulting command**. If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*), the "Resulting command" contains the actual variable values (e.g. C:/system.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}). 
 		
 ## Source code
 
