@@ -56,7 +56,7 @@ b) with the ![](../../../../icons/run.png) run button in the context menu of the
 c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models) or<br>
 d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
-The ![](../../../../icons/run.png) Executable atom runs in three phases: 
+The ![](../../../../icons/run.png) Executable atom runs in **three phases**: 
 		
 ### 1. Preparation phase
 
