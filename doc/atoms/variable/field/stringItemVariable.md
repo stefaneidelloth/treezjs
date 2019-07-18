@@ -22,10 +22,18 @@ A new ![](../../../../icons/stringItemVariable.png) StringItemVariable atom is c
 
 ```javascript
     ...
-    genericInput.createStringItemVariable('tag', 'python');
+    genericInput.createStringItemVariable('programmingLanguage');
 ```
 
-The available text items can be specified by clicking on the ![](../../../../icons/stringItemVariable.png) StringItemVariable atom in the [Tree View](../../../views/treeView.md) and editing the commo separated list of available text items in the [Properties View](../../../views/propertiesView.md) 
+The **available text items** can be specified by clicking on the ![](../../../../icons/stringItemVariable.png) StringItemVariable atom in the [Tree View](../../../views/treeView.md) and editing the **comma separated list** of available text items in the [Properties View](../../../views/propertiesView.md).
+The **available text items** can also be specified in the source code of the [Editor View](../../../views/editorView.md):
+
+```javascript
+    ...
+    var programmingLanguage = genericInput.createStringItemVariable('programmingLanguage');
+    programmingLanguage.optionsExpression = '["Python", "JavaScript", "Kotlin", "Julia", "Octave", "R"]';
+    programmingLanguage.value = 'Python';
+```
 
 ----
 ![FilePathVariable](../../../../icons/filePathVariable.png) [FilePathVariable](./filePathVariable.md)
