@@ -10,11 +10,11 @@ The context menu of the ![](../../../../icons/genericInput.png) GenericInput ato
 
 The content of the [Properties View](../../../views/propertiesView.md) for the ![](../../../../icons/genericInput.png) GenericInput atom is automatically generated from its children. 
 
-If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), you can **edit the values of all variables** in the [Properties View](../../../views/propertiesView.md). 
-
-If you click on a variable atom in the [Tree View](../../../views/treeView.md), you can **edit the name** of the variable in the [Properties View](../../../views/propertiesView.md) and additional attributes if they exist (e.g. the available options for a ![](../../../../icons/stringItemVariable.png) [StringItemVariable](../../variable/field/stringItemVariable.md)). The name of a variable atom can also be changed using the ![](../../../../icons/rename.png) Rename action of the context menu in the [Tree View](../../../views/treeView.md).
+If you click on a ![](../../../../icons/genericInput.png) GenericInput atom in the [Tree View](../../../views/treeView.md), you can **edit the values of all variables** in the [Properties View](../../../views/propertiesView.md): 
 
 ![](../../../images/generic_input.png)
+
+If you click on a variable atom in the [Tree View](../../../views/treeView.md), you can **edit its name** in the [Properties View](../../../views/propertiesView.md). You can also edit additional attributes if they exist (e.g. the available options for a ![](../../../../icons/stringItemVariable.png) [StringItemVariable](../../variable/field/stringItemVariable.md)). The name of a variable atom can also be changed using the ![](../../../../icons/rename.png) Rename action of the context menu in the [Tree View](../../../views/treeView.md).
 
 ## Source code
 
