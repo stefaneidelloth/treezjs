@@ -1,24 +1,24 @@
+![](../../../../icons/models.png) [Models](../models.md)
 
+----
 
+#Executable
+		
+The purpose of the ![](../../../../icons/run.png) Executable atom is to execute a system command, for example
 
+```
+C:\Windows\System32\notepad.exe /A C:/setup.log 
+```
 
-<body>
-	
-		<h2>Executable</h2>
+A system command typically consists of the path to an executable \*.exe or \*.bat file and optional arguments to specify details about input and output. 
 		
-		<h3>Purpose</h3>
+## Source code
+
+[./src/model/executable/executable.js](../../../../src/model/executable/executable.js)
 		
-		The purpose of the <a class = "executable"></a> atom is to execute a system command, e.g. 
-		<pre>"C:\windows\system32\mshta.exe" javascript:alert(42);close();</pre> 
-		The system command typically consists of the path to an executable file and optional arguments (for input, output and logging). 
-		
-		<h3>Class name</h3>	
-		
-		org.treez.model.atom.executable.Executable; 
-		
-		<h3>Work flow</h3>
-		
-		You can start the <a class = "executable"></a> atom with 
+## Work flow	
+
+You can start the <a class = "executable"></a> atom with 
 		<ul>
 			<li>the play button in the upper right corner of the property page,</li>
 			<li>with the play button in the context menu or</li>
