@@ -14,7 +14,7 @@ A system command typically starts with the **path to an executable** \*.exe or \
 
 The system command might continue with **command line arguments and additional paths**. You can<br>
 a) enter the **whole system command** as a single (long) line in the section "Executable" or<br> 
-b) use the extra sections "Input" and "Output" to clearly arrange the **individual parts** of the command. With this option, an already existing old output file is deleted before the system command is executed (which not supported for the single line option a)):
+b) use the extra sections "Input" and "Output" to clearly arrange the **individual parts** of the system command. With this option, an already existing old output file is deleted before the system command is executed (which not supported for the single line option a)):
 	
 ![](../../../images/executable.png)
 
