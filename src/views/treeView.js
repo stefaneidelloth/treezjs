@@ -24,32 +24,32 @@ export default class TreeView {
 		this.createButton(
 			toolbar, 
 			'root.png',
-			'Create an empty root atom.\n'+
-			'The current content of the tree viewer will be overwridden.', 
+			'Create a new Root atom without children.\n'+
+			'The current content of the Tree View will be overwritten.', 
 			()=>this.createRoot()
 		);
 
 		this.createButton(
 			toolbar, 
 			'toTree.png',
-			'Build a tree from the code document that is currently opened in the text editor.\n' +
-			'The current content of the tree viewer will be overwritten.', 
+			'Build tree model from the JavaScript source code that is currently opened in the Editor View.\n' +
+			'The current content of the Tree View will be overwritten.', 
 			()=>this.toTree()
 		);
 
 		this.createButton(
 			toolbar, 
 			'fromTree.png',
-			'Build code from the tree.\n' +
-			'The code will be written to currently opend document in the text editor.\n' +
-			'The currently opened document will be overwritten.', 
+			'Generate JavaScript source code from the tree model.\n' +
+			'The generated source code will be written to the Editor View.\n' +
+			'The currently opened source code will be overwritten.', 
 			()=>this.fromTree()
 		);
 
 		this.createButton(
 			toolbar, 
 			'help.png',
-			'Show the Treez help.', 
+			'Open online help for Treez in a new browser tab.', 
 			()=>this.showHelp()
 		);	
     }
