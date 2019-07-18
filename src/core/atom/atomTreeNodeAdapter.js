@@ -148,7 +148,7 @@ export default class AtomTreeNodeAdapter {
     	 var button = menu.append('div')    	 
     	     .append('button')
     	     .className('treez-menu-button') 
-          	 .onMouseDown(item.action);
+          	 .onMouseDown(() => item.action());
     	 
     	 var iconFolder = button.append('span')
 			.className('treez-node-icon-folder');

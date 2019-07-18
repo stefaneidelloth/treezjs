@@ -30,7 +30,7 @@ export default class AddChildAtomTreeViewAction extends TreeViewAction {
 		   grandParentElement.insertBefore(detailsElement, parentElement);
            parentElement.remove();  
 
-           details.attr('open', true);   
+           details.attr('open', '');   
                      
 		}
     }
