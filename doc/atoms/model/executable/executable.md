@@ -29,7 +29,7 @@ The total system command is shown in the section "Status" as **Resulting command
 You can execute the ![](../../../../icons/run.png) Executable atom  
 * with the ![](../../../../icons/run.png) play button in the upper right corner of the [Properties View](../../../views/propertiesView.md)
 * with the ![](../../../../icons/run.png) play button in the context menu of the atom in the [Tree View](../../../views/treeView.md)
-* remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep]() study. 
+* remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
 
 The ![](../../../../icons/run.png) Executable atom is executed in three phases: 
