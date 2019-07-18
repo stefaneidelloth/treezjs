@@ -50,11 +50,11 @@ The context menu of the ![](../../../../icons/run.png) Executable atom allows to
 		
 ## Work flow	
 
-You can **run** the ![](../../../../icons/run.png) Executable atom  
-* with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md)
-* with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)
-* with the ![](../../../../icons/run.png) run button in the context menu of the ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models)
-* remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
+You can **run** the ![](../../../../icons/run.png) Executable atom either 
+a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md) or<br>
+b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md) or<br>
+c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models) or<br>
+d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
 The ![](../../../../icons/run.png) Executable atom runs in three phases: 
 		
