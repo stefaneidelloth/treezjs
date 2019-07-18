@@ -7,7 +7,7 @@
 The purpose of the ![](../../../../icons/run.png) Executable atom is to execute a system command, for example
 
 ```
-C:\Windows\System32\notepad.exe /A C:/setup.log 
+notepad.exe /A C:/setup.log 
 ```
 
 A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
