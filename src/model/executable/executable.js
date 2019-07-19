@@ -27,8 +27,7 @@ export default class Executable extends Model {
         this.outputPath = undefined;
         this.isCopyingInputFileToOutputFolder = false; 
         
-        this.__commandInfo = undefined;
-        this.__executionStatusInfo = 'Not yet executed.';
+        this.__commandInfo = undefined;     
         this.__jobIdInfo = '1';
         
         this.treeView=undefined;
@@ -131,12 +130,21 @@ export default class Executable extends Model {
 
 		monitor.description = 'Running InputFileGenerator children if exist.';
 
-		//execute input file generator child(ren) if exist		
 		
+        //execute DatabaseModifier child(ren) if exist	
+		try {
+			await this.__runDatabaseModifiers(treeView, monitor);
+		} catch (exception) {
+			monitor.error('Could not execute DatabaseModifiers for executable ' + this.name, exception);
+			monitor.cancel();
+			return this.__createEmptyModelOutput();			
+		}	
+		
+		//execute InputFileGenerator child(ren) if exist	
 		try {
 			await this.__runInputFileGenerators(treeView, monitor);
 		} catch (exception) {
-			monitor.error('Could not execute input file generator for executable ' + this.name, exception);
+			monitor.error('Could not execute IinputFileGenerators for executable ' + this.name, exception);
 			monitor.cancel();
 			return this.__createEmptyModelOutput();			
 		}
@@ -363,12 +371,7 @@ export default class Executable extends Model {
        sectionContent.append('treez-text-area')
             .label('Resulting command') 
             .disable() 
-            .bindValue(this,()=>this.__commandInfo);  
-     
-       sectionContent.append('treez-text-area')
-            .label('Execution status') 
-            .disable()
-            .bindValue(this,()=>this.__executionStatusInfo);       
+            .bindValue(this,()=>this.__commandInfo); 
      
        sectionContent.append('treez-text-area')
             .label('Next job index') 
@@ -379,8 +382,7 @@ export default class Executable extends Model {
    
 
    refreshStatus() {
-		this.__commandInfo = this.__buildCommand();
-		this.__executionStatusInfo = 'Not yet executed';
+		this.__commandInfo = this.__buildCommand();		
 		this.__jobIdInfo = ''+ this.jobId;
 	}	
 
@@ -442,13 +444,13 @@ export default class Executable extends Model {
 
 	}
 
+	async __runDatabaseModifiers(refreshable, monitor){
+		await this.executeChildren(DatabaseModifier, refreshable, monitor);
+	}
 	
 	async __runInputFileGenerators(refreshable, monitor){
 		await this.executeChildren(InputFileGenerator, refreshable, monitor);
 	}
-	
-	
-
 	
 	__runDataImports(refreshable, monitor){
 		const hasDataImportChild = this.hasChildModel(TableImport);
@@ -462,7 +464,8 @@ export default class Executable extends Model {
 	}
 
 	async __deleteOldOutputAndLogFilesIfExist(){
-	    // TODO
+	   
+
 	    /*
 		 * File outputFile = new File(outputPath.get()); if
 		 * (outputFile.exists()) { outputFile.delete(); } File logFile = new
