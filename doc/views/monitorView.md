@@ -1,4 +1,4 @@
-[Views](../views.md)
+[Views](./views.md)
 
 ----
 
@@ -18,4 +18,4 @@ If you **hover over a log message** with your mouse, you can see additional info
 
 
 ----
-[Atoms](../atoms.md)
+[Atoms](../atoms/atoms.md)
