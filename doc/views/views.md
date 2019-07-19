@@ -1,4 +1,4 @@
-[Content](../README.md)
+[Content](../../README.md)
 
 ----
 
@@ -6,11 +6,11 @@
 
 The user interface of Treez is organized in several "views" (= windows):
 
-* [Tree View](./views/treeView.md)
-* [Properties View](./views/propertiesView.md)
-* [Editor View](./views/editorView.md)
-* [Graphics View](./views/graphicsView.md)
-* [Monitor View](./views/monitorView.md)
+* [Tree View](./treeView.md)
+* [Properties View](./propertiesView.md)
+* [Editor View](./editorView.md)
+* [Graphics View](./graphicsView.md)
+* [Monitor View](./monitorView.md)
 
 ----
-* [Atoms](./atoms.md)
+* [Atoms](../atoms/atoms.md)
