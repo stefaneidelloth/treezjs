@@ -5,7 +5,11 @@
 # Models
 
 The ![](../../../icons/models.png) Models atom represents a branch for all underlying model atoms. Creating the models is 
-typically the first step in a simulation work flow. Model atoms inherit from [./src/model/model.js](../../../src/model/model.js)
+typically the first step in a simulation work flow. 
+
+![](../../../images/models.png)
+
+Model atoms inherit from [./src/model/model.js](../../../src/model/model.js)
 
 ## Source code
 
@@ -38,6 +42,11 @@ The context menu of the ![](../../../icons/models.png) Models atom allows to add
 * ![](../../../icons/databaseAppender.png) [SqLiteAppender](./sqLiteAppender/sqLiteAppender.md) 
 * ![](../../../icons/javaScript.png) [JavaScriptModel](./code/javaScriptModel.md)
 * ![](../../../icons/python.png) [PythonModel](./code/pythonModel.md)
+
+## Work flow and job index
+
+The models atom can be executed either 
+
 
 ----
 ![Studies](../../../icons/studies.png) [Studies](../study/studies.md)
