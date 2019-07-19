@@ -32,13 +32,9 @@ A new ![](../../../../icons/run.png) Executable atom is created either by:
 		
 The context menu of the ![](../../../../icons/run.png) Executable atom allows to add child atoms: 
 
-* ![](../../../../icons/databaseModifier.png) [DatabaseModifier](../../models/code/databaseModifier.md)
-* ![](../../../../icons/inputFile.png) [InputFileGenerator](../../models/inputFileGenerator/inputFileGenerator.md)
 * ![](../../../../icons/inputModification.png) [InputModification](../../models/executable/inputModification.md)
 * ![](../../../../icons/outputModification.png) [OutputModification](../../models/executable/outputModification.md)
 * ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md)
-* ![](../../../../icons/tableImport.png) [TableImport](../../models/executable/tableImport.md)
-* ![](../../../../icons/databaseAppender.png) [SqLiteAppender](../../models/sqLiteAppender/sqLiteAppender.md)
 	
 ## StudyId and JobId
 
@@ -52,11 +48,7 @@ b) with the ![](../../../../icons/run.png) run button in the context menu of the
 c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models) or<br>
 d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
-The creation of the system command is influenced by following child atoms if they exist:
-
-* ![](../../../../icons/inputModification.png) [InputModification](../../models/executable/inputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
-* ![](../../../../icons/outputModification.png) [OutputModification](../../models/executable/outputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
-* ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md) Include additional logging arguments
+The creation of the system command can be influenced by adding child atoms.
 
 If the system command writes text to the console, that text will be shown in the [[Monitor View](../../../views/monitorView.md).
 
