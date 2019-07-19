@@ -1,4 +1,4 @@
-[Views](../views.md)
+[Views](./views.md)
 
 ----
 
