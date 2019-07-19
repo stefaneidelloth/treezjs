@@ -1,4 +1,4 @@
-[Atoms](../atoms.md)
+[Atoms](./atoms.md)
 
 ----
 
