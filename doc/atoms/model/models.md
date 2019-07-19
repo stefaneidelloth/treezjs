@@ -35,14 +35,14 @@ The context menu of the ![](../../../icons/models.png) Models atom allows to add
 
 * ![](../../../icons/path.png) [Path](./path/path.md)
 * ![](../../../icons/genericInput.png) [GenericInput](./genericInput/genericInput.md)
+* ![](../../../icons/databaseAppender.png) [SqLiteAppender](./sqLiteAppender/sqLiteAppender.md) 
 * ![](../../../icons/databaseModifier.png) [DatabaseModifier](./code/databaseModifier.md)
 * ![](../../../icons/fileCleanup.png) [FileCleanup](./fileCleanup/fileCleanup.md)
+* ![](../../../icons/fileCopy.png) [FileCopy](./fileCopy/fileCopy.md)
 * ![](../../../icons/inputFile.png) [InputFileGenerator](./inputFileGenerator/inputFileGenerator.md)
 * ![](../../../icons/run.png) [Executable](./executable/executable.md) 
 * ![](../../../icons/java.png) [JavaExecutable](./executable/javaExecutable.md)  
-* ![](../../../icons/fileCopy.png) [FileCopy](./fileCopy/fileCopy.md)
 * ![](../../../icons/tableImport.png) [TableImport](./tableImport/tableImport.md)
-* ![](../../../icons/databaseAppender.png) [SqLiteAppender](./sqLiteAppender/sqLiteAppender.md) 
 * ![](../../../icons/javaScript.png) [JavaScriptModel](./code/javaScriptModel.md)
 * ![](../../../icons/python.png) [PythonModel](./code/pythonModel.md)
 
