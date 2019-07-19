@@ -31,6 +31,7 @@ The context menu of the ![](../../../icons/models.png) Models atom allows to add
 
 * ![](../../../icons/path.png) [Path](./path/path.md)
 * ![](../../../icons/genericInput.png) [GenericInput](./genericInput/genericInput.md)
+* ![](../../../icons/databaseModifier.png) [DatabaseModifier](./code/databaseModifier.md)
 * ![](../../../icons/run.png) [Executable](./executable/executable.md) 
 * ![](../../../icons/java.png) [JavaExecutable](./executable/javaExecutable.md)  	
 * ![](../../../icons/tableImport.png) [TableImport](./tableImport/tableImport.md)
