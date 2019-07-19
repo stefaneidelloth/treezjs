@@ -1,4 +1,4 @@
-[Content](../README.md)
+[Content](../../README.md)
 
 ---
 
@@ -10,4 +10,4 @@ There are two ways to install and run treez:
 * [Jupyter notebook extension](./jupyterInstallation.md) Treez can also be installed as an extension to the Jupyter Notebook. This option connects to a python kernel to access the local file system and supports extra python features in treez. 
 
 ----
-[User interaction](./userInteraction.md)
+[User interaction](../userInteraction.md)
