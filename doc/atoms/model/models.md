@@ -57,11 +57,11 @@ The property *studyId* is only used if a model is remotely executed as part of a
 
 The property *jobId* is 1 by default. If a model is manually executed by a user, the *jobId* is **automatically increased by one after the current job (=model run) has been finished**. 
 
-You can **reset the jobId** with the ![](../../../icons/resetJobId.png) "Reset jobId to 1" button of the ![](../../../../icons/models.png) Models atom. 
+You can **reset the jobId** with the ![](../../../icons/resetJobId.png) "Reset jobId to 1" button of the ![](../../../../icons/models.png) Models atom in the [Properties View](../../views/propertiesView.md).
 
-You can see the *jobId* for the next run in the [Properties View](../../views/propertiesView.md) for the ![](../../../icons/models.png) Models atom.
+You can also see the *jobId* for the next run in the [Properties View](../../views/propertiesView.md).
 
-If a model is remotely executed as part of a study or as part of a parent model, a parent *jobId* is determined and the local/manual *jobId* is overwritten. 
+If a model is remotely executed as part of a study (or as part of a parent model), a parent *jobId* is determined and the local/manual *jobId* is overwritten. 
 
 ## Work flow 
 
