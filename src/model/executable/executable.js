@@ -21,13 +21,13 @@ export default class Executable extends Model {
 		this.executablePath = 'notepad.exe';
         
         this.inputArguments = '';
-        this.inputPath = undefined;
+        this.inputPath = '';
                
-        this.outputArguments = undefined;
-        this.outputPath = undefined;
+        this.outputArguments = '';
+        this.outputPath = '';
         this.isCopyingInputFileToOutputFolder = false; 
         
-        this.__commandInfo = undefined;     
+        this.__commandInfo = '';     
         this.__jobIdInfo = '1';
         
         this.treeView=undefined;
@@ -106,7 +106,7 @@ export default class Executable extends Model {
 
 		await this.__deleteOldOutputAndLogFilesIfExist();
 
-		monitor.description = 'Running InputFileGenerator children if exist.';       
+		       
 		
 		//execute InputFileGenerator child(ren) if exist	
 		try {
@@ -126,8 +126,7 @@ export default class Executable extends Model {
 
 		monitor.worked(1);			
 		
-		//post processing
-		await this.__postProcessExecution(treeView, monitor);
+		this.__increaseJobId();
 		
 		monitor.done();
 		
@@ -173,15 +172,7 @@ export default class Executable extends Model {
     	});	
     }
     
-    async __postProcessExecution(treeView, monitor){
-    	    					
-			monitor.description = '=> Post processing';		
-
-			await this.__copyInputFileToOutputFolderIfEnabled();
-			this.__increaseJobId();
-		
-			monitor.description = 'finished\n';				
-	}    
+    
 
 	createInputFileGenerator(name) {
 		return this.createChild(InputFileGenerator, name);		
@@ -379,6 +370,8 @@ export default class Executable extends Model {
 	}
 	
 	async __runInputFileGenerators(refreshable, monitor){
+
+		monitor.description = 'Running InputFileGenerator children if exist.';
 		await this.executeChildren(InputFileGenerator, refreshable, monitor);
 	}
 	
