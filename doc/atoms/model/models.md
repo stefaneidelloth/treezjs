@@ -7,7 +7,7 @@
 The ![](../../../icons/models.png) Models atom represents a branch for all underlying model atoms. Creating the models is 
 typically the first step in a simulation work flow. 
 
-![](../../../images/models.png)
+![](../../images/models.png)
 
 Model atoms inherit from [./src/model/model.js](../../../src/model/model.js) and the ![](../../../icons/models.png) Models atom istself is also an executable model. Executing a ![](../../../../icons/models.png) Models atom simply means that all of its runnable child atoms are executed.
 
