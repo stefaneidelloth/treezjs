@@ -13,15 +13,15 @@ If the already existing atoms are not sufficient for you, please feel free to re
 
 # Content
 
-* [Installation](./doc/installation.md)
+* [Installation](./doc/installation/installation.md)
 * [User interaction](./doc/userInteraction.md)
-* [Views](./doc/views.md)
+* [Views](./doc/views/views.md)
   * [Tree](./doc/views/treeView.md)
   * [Properties](./doc/views/propertiesView.md)
   * [Editor](./doc/views/editorView.md)
   * [Graphics](./doc/views/graphicsView.md)
   * [Monitor](./doc/views/monitorView.md)
-* [Atoms](./doc/atoms.md)
+* [Atoms](./doc/atoms/atoms.md)
   * ![](./icons/root.png) [Root](./doc/atoms/root.md)
     * ![](./icons/models.png) [Models](./doc/atoms/model/models.md)
     * ![](./icons/studies.png) [Studies](./doc/atoms/study/studies.md)
