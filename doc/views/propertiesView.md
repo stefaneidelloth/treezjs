@@ -1,4 +1,4 @@
-[Views](../views.md)
+[Views](./views.md)
 
 ----
 <img align="right" width="400" src="../images/properties_view.png">
