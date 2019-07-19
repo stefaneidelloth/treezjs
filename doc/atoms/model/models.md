@@ -46,7 +46,7 @@ The context menu of the ![](../../../icons/models.png) Models atom allows to add
 
 ## StudyId and JobId
 
-The ![](../../../../icons/models.png) Models atom has two properties that are used to differentiate
+The ![](../../../icons/models.png) Models atom has two properties that are used to differentiate
 subsequent runs:
 
 ### StudyId
@@ -71,7 +71,7 @@ b) with the ![](../../../../icons/run.png) run button in the context menu of the
 c) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
 Executing a ![](../../../../icons/models.png) Models atom simply means that all of its runnable child atoms are executed. 
-The progress is shown in the [Monitoring View](../../../views/monitoringView.md). After the execution has been finished, the *jobId* is automatically increased by one.  
+The progress is shown in the [Monitoring View](../../../views/monitoringView.md). After the execution has been finished, the *jobId* is increased by one.  
 
 
 ----
