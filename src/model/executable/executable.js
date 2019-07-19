@@ -1,12 +1,12 @@
 import Model from './../model.js';
 import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
 import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
-import TableImport from './../tableImport/tableImport.js';
+
 import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
-import DatabaseModifier from './../code/databaseModifier.js';
-import SqLiteAppender from './../sqLiteAppender/sqLiteAppender.js';
+
+
 
 
 export default class Executable extends Model {   
@@ -52,15 +52,7 @@ export default class Executable extends Model {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		this.treeView=treeView;
-				
-		actions.push(new AddChildAtomTreeViewAction(
-				DatabaseModifier,
-				'databaseModifier',
-				'databaseModifier.png',
-				parentSelection,
-				this,
-				treeView));	
+		this.treeView=treeView;	
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				InputFileGenerator,
@@ -93,22 +85,8 @@ export default class Executable extends Model {
 				parentSelection,	
 				this,
 				treeView));
+
 		
-		actions.push(new AddChildAtomTreeViewAction(
-				TableImport,
-				'tableImport',
-				'tableImport.png',
-				parentSelection,
-				this,
-				treeView));
-		
-		actions.push(new AddChildAtomTreeViewAction(
-				SqLiteAppender,
-				'sqLiteAppender',
-				'databaseAppender.png',
-				parentSelection,
-				this,
-				treeView));	
 
 		return actions;
 	}
@@ -128,17 +106,7 @@ export default class Executable extends Model {
 
 		await this.__deleteOldOutputAndLogFilesIfExist();
 
-		monitor.description = 'Running InputFileGenerator children if exist.';
-
-		
-        //execute DatabaseModifier child(ren) if exist	
-		try {
-			await this.__runDatabaseModifiers(treeView, monitor);
-		} catch (exception) {
-			monitor.error('Could not execute DatabaseModifiers for executable ' + this.name, exception);
-			monitor.cancel();
-			return this.__createEmptyModelOutput();			
-		}	
+		monitor.description = 'Running InputFileGenerator children if exist.';       
 		
 		//execute InputFileGenerator child(ren) if exist	
 		try {
@@ -149,23 +117,20 @@ export default class Executable extends Model {
 			return this.__createEmptyModelOutput();			
 		}
 		
-
-		//create command
+		//create & execute command
 		monitor.description = 'Executing system command.';
 		const command = this.__buildCommand();
+		
 		monitor.info('Executing ' + command);
-
-		//execute command
 		await this.__executeCommand(command, monitor);
 
 		monitor.worked(1);			
 		
-		//post process execution results
-		var modelOutput = await this.__postProcessExecution(treeView, monitor);
+		//post processing
+		await this.__postProcessExecution(treeView, monitor);
 		
-		monitor.done();				
-
-		return modelOutput;
+		monitor.done();
+		
     }  
     
     async __executeCommand(command, monitor){
@@ -173,9 +138,8 @@ export default class Executable extends Model {
     	var self = this;
 
     	return await new Promise(function(resolve, reject){
-	    	try {
-				var exitingCommand = command + " & exit";
-				window.treezTerminal.execute(exitingCommand, messageHandler, errorHandler, finishedHandler);
+	    	try {				
+				window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
 
 				function messageHandler(message){
 					monitor.info(message);
@@ -210,55 +174,14 @@ export default class Executable extends Model {
     }
     
     async __postProcessExecution(treeView, monitor){
-    	    		
-			// update progress monitor		
-			monitor.description = '=>Post processing model output.';
+    	    					
+			monitor.description = '=> Post processing';		
 
-			const modelOutput = this.__createEmptyModelOutput();
-
-			// execute data import child(ren) if exist
-			try {
-				const dataImportOutput = await this.__runDataImports(treeView, monitor);
-				modelOutput.addChild(dataImportOutput);
-			} catch (exception) {
-				monitor.error('Could not import results of "' + this.name + '": ', exception);
-				monitor.cancelAll();				
-				return modelOutput;
-			}
-			
-			// execute SqLiteAppender child(ren) if exist
-			try {
-				await await this.executeChildren(SqLiteAppender, treeView, monitor);			
-			} catch (exception) {
-				monitor.error('Could not append SqLite database for "' + this.name + '": ', exception);
-				monitor.cancelAll();				
-				return modelOutput;
-			}
-			
-
-			// copy input file to output folder (modifies input file name)
-			try {
-				if (this.isCopyingInputFileToOutputFolder) {
-					await this.__copyInputFileToOutputFolder();
-				}
-			} catch (exception) {
-				monitor.error('Could not copy input file to output folder for ' + this.name, exception);
-				monitor.cancel();
-				return modelOutput;
-			}
-
-			// increase job index
+			await this.__copyInputFileToOutputFolderIfEnabled();
 			this.__increaseJobId();
-
-			// inform progress monitor to be done
-			monitor.description = 'finished\n';			
-
-			return modelOutput;	
-	}
-
-    createDatabaseModifier(name){
-    	return this.createChild(DatabaseModifier, name);
-    }
+		
+			monitor.description = 'finished\n';				
+	}    
 
 	createInputFileGenerator(name) {
 		return this.createChild(InputFileGenerator, name);		
@@ -275,14 +198,8 @@ export default class Executable extends Model {
 	createLoggingArguments(name) {
 		return this.createChild(LoggingArguments, name);
 	}
-	
-	createSqLiteAppender(name){
-    	return this.createChild(SqLiteAppender, name);
-    }
 
-	createTableImport(name) {
-		return this.createChild(TableImport, name);
-	}
+
 
     __createExecutableSection(tab) {
 
@@ -296,7 +213,7 @@ export default class Executable extends Model {
 
         section.append('treez-section-action')
             .image('run.png')
-            .label('Run external executable')
+            .label('Run executable')
             .addAction(()=>this.execute(this.__treeView)
             				   .catch(error => {
             					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
@@ -374,7 +291,7 @@ export default class Executable extends Model {
             .bindValue(this,()=>this.__commandInfo); 
      
        sectionContent.append('treez-text-area')
-            .label('Next job index') 
+            .label('Next jobId') 
             .disable() 
             .bindValue(this,()=>this.__jobIdInfo); 
    }   
@@ -385,6 +302,19 @@ export default class Executable extends Model {
 		this.__commandInfo = this.__buildCommand();		
 		this.__jobIdInfo = ''+ this.jobId;
 	}	
+
+
+	async __copyInputFileToOutputFolderIfEnabled(){
+
+		try {
+			if (this.isCopyingInputFileToOutputFolder) {
+				await this.__copyInputFileToOutputFolder();
+			}
+		} catch (exception) {
+			monitor.error('Could not copy input file to output folder for ' + this.name, exception);
+			monitor.cancel();				
+		}
+	}
 
 	/**
 	 * Copies input file to output folder and modifies the file name

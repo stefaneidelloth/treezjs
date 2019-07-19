@@ -16,6 +16,7 @@ export default class Monitor {
 		this.__children = [];        
 		
 		this.__totalWork = totalWork;
+		this.__isRunning = false;
 		
 		if(coveredWorkOfParentMonitor===undefined){
 			this.__coveredWorkOfParentMonitor = totalWork;
@@ -145,7 +146,8 @@ export default class Monitor {
 		this.__assertTotalWorkHasBeenSet();
 
 		var workIncrement = this.__totalWork - this.__finishedWork;
-		this.__finishedWork = this.__totalWork;		
+		this.__finishedWork = this.__totalWork;	
+		this.__isRunning = false;	
 		
 		this.__triggerPropertyChangedListeners();
 		this.__incrementParentWork(workIncrement);
@@ -250,9 +252,14 @@ export default class Monitor {
 		return this.__description;
 	}
 
+	get totalWork(){
+		return this.__totalWork;
+	}
+
 	set totalWork(totalWork) {
 		if (this.__totalWork === undefined) {
 			this.__totalWork = totalWork;
+			this.__isRunning = true;
 			this.__triggerPropertyChangedListeners();
 		} else {
 			throw new Error("Total work must only be set once");
@@ -261,9 +268,16 @@ export default class Monitor {
 
 	get progressInPercent() {
 
-		if (this.__totalWork === undefined || this.__totalWork === 0) {
+		if (this.__totalWork === undefined) {
 			return 0;
 		}
+
+		if (this.__totalWork === 0){
+			return this.__isRunning
+				?0
+				:100;			
+		}
+
 		var progressInPercent = 1.0 * this.__finishedWork / this.__totalWork * 100;
 		return Math.floor(progressInPercent);
 	}

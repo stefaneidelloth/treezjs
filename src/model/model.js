@@ -102,7 +102,8 @@ export default class Model extends ComponentAtom {
 
 		monitor.info('Running ' + this.constructor.name + ' "' + this.name + '"');			
 		
-		monitor.totalWork = this.numberOfRunnableChildren;	
+		monitor.totalWork = this.numberOfRunnableChildren;
+					
 		const modelOutput = this.__createEmptyModelOutput();
 		for (const child of this.children){
 
@@ -118,7 +119,11 @@ export default class Model extends ComponentAtom {
 				}
 				
 			}
-		}
+		}		
+
+		monitor.done();
+		var newJobId = this.jobId +1;
+		this.jobId = newJobId;		
 		
 		if(modelOutput.children.length>0){
 			return modelOutput; 		

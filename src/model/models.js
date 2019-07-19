@@ -3,8 +3,14 @@ import Model from "./model.js";
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import Path from './path/path.js';
 import GenericInput from './genericInput/genericInput.js';
+
+import DatabaseModifier from './code/databaseModifier.js';
+
 import Executable from './executable/executable.js';
 import JavaExecutable from './executable/javaExecutable.js';
+import TableImport from './tableImport/tableImport.js';
+import SqLiteAppender from './sqLiteAppender/sqLiteAppender.js';
+
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import JavaScriptModel from './code/javaScriptModel.js';
 import PythonModel from './code/pythonModel.js';
@@ -14,9 +20,7 @@ export default class Models extends Model {
 	constructor(name) {		
 		super(name);
 		this.isRunnable=true;
-		this.image = "models.png";
-		
-		 this.__jobIdInfo = '1';
+		this.image = "models.png";		
 	}	
 
 	createComponentControl(tabFolder){    
@@ -47,9 +51,9 @@ export default class Models extends Model {
 			.text('This atom represents models.');
 	    
 	    sectionContent.append('treez-text-area')
-	        .label('Next job index:') 
+	        .label('Next jobId:') 
 	        .disable() 
-	        .bindValue(this,()=>this.__jobIdInfo); 
+	        .bindValue(this,()=>this.__jobId); 
     }	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
@@ -75,6 +79,22 @@ export default class Models extends Model {
 				treeView
 			)
 		);
+
+		actions.push(new AddChildAtomTreeViewAction(
+				DatabaseModifier,
+				'databaseModifier',
+				'databaseModifier.png',
+				parentSelection,
+				this,
+				treeView));	
+						
+		actions.push(new AddChildAtomTreeViewAction(
+				SqLiteAppender,
+				'sqLiteAppender',
+				'databaseAppender.png',
+				parentSelection,
+				this,
+				treeView));	
        
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -85,7 +105,7 @@ export default class Models extends Model {
 				this,
 				treeView
 			)
-		);
+		);		
        
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -97,6 +117,14 @@ export default class Models extends Model {
 				treeView
 			)
 		);
+
+		actions.push(new AddChildAtomTreeViewAction(
+				TableImport,
+				'tableImport',
+				'tableImport.png',
+				parentSelection,
+				this,
+				treeView));
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -135,6 +163,10 @@ export default class Models extends Model {
 		return this.createChild(GenericInput, name);		
 	}
 
+	createDatabaseModifier(name){
+    	return this.createChild(DatabaseModifier, name);
+    }	
+
 	createExecutable(name) {
 		return this.createChild(Executable, name);
 	}
@@ -142,6 +174,14 @@ export default class Models extends Model {
 	createJavaExecutable(name) {
 		return this.createChild(JavaExecutable, name);
 	}
+
+	createTableImport(name) {
+		return this.createChild(TableImport, name);
+	}
+
+	createSqLiteAppender(name){
+    	return this.createChild(SqLiteAppender, name);
+    }
 	
 	createJavaScriptModel(name) {
 		return this.createChild(JavaScriptModel, name);
