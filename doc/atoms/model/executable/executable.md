@@ -9,16 +9,8 @@ The purpose of the ![](../../../../icons/run.png) Executable atom is to execute 
 ```
 notepad.exe /A C:/system.log 
 ```
-
-A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
-
-The system command might continue with **command line arguments and additional paths**. You can<br>
-a) enter the **whole system command** as a single (long) line in the section "Executable" or<br> 
-b) use the extra sections "Input" and "Output" to clearly arrange the **individual parts** of the system command. With this option, an already existing old output file is deleted before the system command is executed (which not supported for the single line option a)):
 	
 ![](../../../images/executable.png)
-
-The total system command is shown in the section "Status" as **Resulting command**. If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*), the status section contains the current variable values (e.g. C:/system.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}). 
 		
 ## Source code
 
@@ -48,51 +40,31 @@ The context menu of the ![](../../../../icons/run.png) Executable atom allows to
 * ![](../../../../icons/tableImport.png) [TableImport](../../models/executable/tableImport.md)
 * ![](../../../../icons/databaseAppender.png) [SqLiteAppender](../../models/sqLiteAppender/sqLiteAppender.md)
 	
-## JobId
+## StudyId and JobId
 
 
 	
 ## Work flow	
 
-You can **run** the ![](../../../../icons/run.png) Executable atom either 
+You can **run** the ![](../../../../icons/run.png) Executable atom either<br> 
 a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md) or<br>
 b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md) or<br>
 c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models) or<br>
 d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
-The ![](../../../../icons/run.png) Executable atom runs in **three phases**: 
-		
-### 1. Preparation phase
-
-If output and/or log files are specified in their distinct sections and those files already exist, the old files are deleted. 
-
-If the  ![](../../../../icons/run.png) Executable atom has children of the type ![](../../../../icons/datbaseModifier.png) [DatabaseModifier](../databaseModifier/databaseModifier.md) or ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerator.md), those children are executed. 
-
-An input file that has been dynamically generated in the preparation phase can be referenced by the system command in the execution phase.
-
-A [DatabaseModifier](../databaseModifier/databaseModifier.md) can be used to modify an input database. The modified input database can be applied by the system command in the executable phase.
-
-
-			
-### 2. Execution phase
-
-The system command is created and executed. The creation of the system command is influenced by following child atoms if they exist:
+The creation of the system command is influenced by following child atoms if they exist:
 
 * ![](../../../../icons/inputModification.png) [InputModification](../../models/executable/inputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
 * ![](../../../../icons/outputModification.png) [OutputModification](../../models/executable/outputModification.md) Modify input path by including additional information (e.g. current date or consecutive jobId)
 * ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md) Include additional logging arguments
 
-If the system command writes text to the console, that text will also be shown in the [[Monitor View](../../../views/monitorView.md).
+If the system command writes text to the console, that text will be shown in the [[Monitor View](../../../views/monitorView.md).
 
-### 3. Postprocessing phase
-
-If the  ![](../../../../icons/run.png) Executable atom has children of the type ![](../../../../icons/tableImport.png) [TableImport](./tableImport.md) or ![](../../../../icons/databaseAppender.png) [SqLiteAppender](./sqLiteAppender.md), those children are executed. 
-
-The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 1. 
+The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 1 after the execution has been finished.
 			
 ## Arguments
-		
-		<h4>Executable</h4>
+
+<h4>Executable</h4>
 		
 		<ul>
 			<li><b>Executable</b>: The path to the <b>executable file</b>. This path will be automatically put in 
@@ -179,5 +151,15 @@ The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 
 			does not require a log file.   	     
 			</li>
 		</ul>
+
+A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
+
+The system command might continue with **command line arguments and additional paths**. You can<br>
+a) enter the **whole system command** as a single (long) line in the section "Executable" or<br> 
+b) use the extra sections "Input" and "Output" to clearly arrange the **individual parts** of the system command. With this option, an already existing old output file is deleted before the system command is executed (which not supported for the single line option a)):
+
+The total system command is shown in the section "Status" as **Resulting command**. If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*), the status section contains the current variable values (e.g. C:/system.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}).
+		
+		
 				
 		
