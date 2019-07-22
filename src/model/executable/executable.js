@@ -6,9 +6,6 @@ import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
 
-
-
-
 export default class Executable extends Model {   
 
 	//static variable __finishedString is defined below class definition
@@ -46,7 +43,7 @@ export default class Executable extends Model {
         this.__createStatusSection(page);
 	}
 
-	provideFilePath() {
+	providePath() {
 		return this.__getModifiedOutputPath();		
 	}
 
@@ -342,7 +339,7 @@ export default class Executable extends Model {
 	 */
 	__getOutputPathToCopyInputFile() {
 
-		const outputPathString = this.provideFilePath();
+		const outputPathString = this.providePath();
 
 		// split path with point to determine file extension if one exists
 

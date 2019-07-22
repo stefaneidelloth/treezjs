@@ -30,8 +30,11 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     disableElements(booleanValue){
     	if(this.__textField){   
     		this.__textField.disabled = booleanValue;
-    		this.__browseButton.disabled = booleanValue;
-    		this.__executeButton.disabled = booleanValue;
+    		if(booleanValue){
+				this.__browseButton.style.display = 'none';
+    		} else {
+    			this.__browseButton.style.display = null;
+    		} 
     	}
     }	
    
@@ -79,6 +82,9 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     
     static replacePathVariables(pathIncludingVariables, pathMap){
     	var fullPath = pathIncludingVariables;
+    	if(!fullPath){
+    		return undefined;
+    	}
     	for(var entry of pathMap.reverse()){
     		var placeHolder = '{$' + entry.name + '$}';
     		var path = entry.value;

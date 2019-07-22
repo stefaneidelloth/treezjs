@@ -5,6 +5,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
     constructor(){
         super();           
         this.__isFile = true;
+        this.__isFileButton = undefined;
     }            	
 
     connectedCallback() {
@@ -64,6 +65,8 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 			isFileButton.className='treez-file-or-directory-path-is-file-button';	
 			isFileButton.style.background = 'url("' + urlPrefix + '/icons/fileToggle.png")';
 			isFileButton.style.backgroundRepeat = 'no-repeat';
+
+			this.__isFileButton = isFileButton;
 			
 			rightSpan.appendChild(isFileButton);                
 
@@ -92,7 +95,19 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
         this.updateElements(this.value);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
-    }  
+    } 
+
+    disableElements(booleanValue){
+    	super.disableElements(booleanValue);
+
+    	if(this.__isFileButton){  
+    		if(booleanValue){
+    			this.__isFileButton.style.display = 'none';				
+    		} else {
+    			this.__isFileButton.style.display = null;
+    		}    		
+    	}
+    }	 
 
     __browseFileOrDirectoryPath(){  
 

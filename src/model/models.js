@@ -1,10 +1,12 @@
-import Model from "./model.js";
+import Model from './model.js';
 
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import Path from './path/path.js';
 import GenericInput from './genericInput/genericInput.js';
 
 import DatabaseModifier from './code/databaseModifier.js';
+import FileCleanup from './fileCleanup/fileCleanup.js';
+import FileCopy from './fileCopy/fileCopy.js';
 
 import Executable from './executable/executable.js';
 import JavaExecutable from './executable/javaExecutable.js';
@@ -20,7 +22,7 @@ export default class Models extends Model {
 	constructor(name) {		
 		super(name);
 		this.isRunnable=true;
-		this.image = "models.png";		
+		this.image = 'models.png';		
 	}	
 
 	createComponentControl(tabFolder){    
@@ -61,8 +63,8 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				Path,
-				"path",
-				"path.png",
+				'path',
+				'path.png',
 				parentSelection,
 				this,
 				treeView
@@ -72,8 +74,30 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				GenericInput,
-				"genericInput",
-				"genericInput.png",
+				'genericInput',
+				'genericInput.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
+
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				FileCleanup,
+				'fileCleanup',
+				'fileCleanup.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
+
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				FileCopy,
+				'fileCopy',
+				'fileCopy.png',
 				parentSelection,
 				this,
 				treeView
@@ -99,8 +123,8 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				Executable,
-				"executable",
-				"run.png",
+				'executable',
+				'run.png',
 				parentSelection,
 				this,
 				treeView
@@ -110,8 +134,8 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				JavaExecutable,
-				"javaExecutable",
-				"java.png",
+				'javaExecutable',
+				'java.png',
 				parentSelection,
 				this,
 				treeView
@@ -129,8 +153,8 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				JavaScriptModel,
-				"javaSriptModel",
-				"javaScript.png",
+				'javaSriptModel',
+				'javaScript.png',
 				parentSelection,
 				this,
 				treeView
@@ -140,8 +164,8 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				PythonModel,
-				"pythonModel",
-				"python.png",
+				'pythonModel',
+				'python.png',
 				parentSelection,
 				this,
 				treeView
@@ -166,6 +190,14 @@ export default class Models extends Model {
 	createDatabaseModifier(name){
     	return this.createChild(DatabaseModifier, name);
     }	
+
+    createFileCleanup(name){
+    	return this.createChild(FileCleanup, name);
+    }	
+
+    createFileCopy(name){
+    	return this.createChild(FileCopy, name);
+    }
 
 	createExecutable(name) {
 		return this.createChild(Executable, name);

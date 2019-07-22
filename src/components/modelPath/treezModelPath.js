@@ -6,7 +6,8 @@ export default class TreezModelPath extends LabeledTreezElement {
         super();   
         this.__label = undefined;  
         this.__comboBox = undefined;
-        this.__atomClasses = [];   
+        this.__atomClasses = undefined;   //used to identify allowed atoms by their class
+        this.__atomFunctionNames = undefined; //used to identify allowed atoms by their functions/interface
         this.__relativeRootAtom = undefined; 
         this.__relativeRootLabel = undefined;                 
     }            	
@@ -122,7 +123,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     		return;
     	} 
     	                	             	
-        var modelPaths = [null].concat(this.__getAvailableModelPaths(this.root, this.__atomClasses, this.hasToBeEnabled, this.filterDelegate));
+        var modelPaths = [null].concat(this.__getAvailableModelPaths(this.root, this.hasToBeEnabled, this.filterDelegate));
         
 		
 		var newComboBoxValue = this.__tryToGetUpdatedModelPath(modelPaths);
@@ -191,9 +192,13 @@ export default class TreezModelPath extends LabeledTreezElement {
         } 
     }
     
-    __getAvailableModelPaths(atom, classes, hasToBeEnabled, filterDelegate){ 
+    __getAvailableModelPaths(atom, hasToBeEnabled, filterDelegate){ 
+
+    	
+    	var classes = this.__atomClasses;
+    	var functionNames = this.__atomFunctionNames;
     	    	
-    	var rootPath = this.root.treePath;
+    	
     	            		            		
 		var availablePaths = [];
 		
@@ -204,33 +209,82 @@ export default class TreezModelPath extends LabeledTreezElement {
 					continue;
 				}
     		}
-				
-			for(var clazz of classes){           						
-				if (!(child instanceof clazz)) {
-					continue;
-				}
 
-				if (filterDelegate) {
-					var passedFilter = filterDelegate(child);
-					if (!passedFilter) {
-						continue;
-					}
-				}          				
+    		if(classes){
 
-				var path = child.treePath;
+    			if(functionNames){
+    				throw new Error('Please specify only atomClasses or atomFunctionNames and not both.');
+    			}
 
-				if(this.isUsingRelativeRoot){                					
-					var relativePath = path.substring(rootPath.length);
-					availablePaths.push(relativePath);
-				} else {
-					availablePaths.push(path);
-				}
-			}
+    			availablePaths = this.__addAvailablePathByClass(availablePaths, child, classes, filterDelegate);
+    			
 
-			availablePaths = availablePaths.concat(this.__getAvailableModelPaths(child, this.__atomClasses, hasToBeEnabled, filterDelegate));
+    		} else {
+
+    			if(!functionNames){
+    				throw new Error('Either atomClasses or atomFunctionNames need to be specified to identify allowed atoms.')
+    			}
+
+				availablePaths = this.__addAvailablePathByInterface(availablePaths, child, functionNames);
+    		}			
+
+			availablePaths = availablePaths.concat(this.__getAvailableModelPaths(child, hasToBeEnabled, filterDelegate));
 		}
 		return availablePaths;
     }
+
+    __addAvailablePathByClass(availablePaths, child, classes, filterDelegate){
+
+		var rootPath = this.root.treePath;
+    	var paths = availablePaths;
+		for(var clazz of classes){           						
+			if (!(child instanceof clazz)) {
+				continue;
+			}
+
+			if (filterDelegate) {
+				var passedFilter = filterDelegate(child);
+				if (!passedFilter) {
+					continue;
+				}
+			}   
+
+			paths = this.__addPathForChild(paths, child);
+			
+		}
+		return paths;
+	}
+
+	__addAvailablePathByInterface(availablePaths, child, functionNames){		
+		var paths = availablePaths;
+		return this.__containsAllFunctions(child, functionNames)
+			? this.__addPathForChild(availablePaths, child)
+			:paths;		
+	}
+
+	__addPathForChild(availablePaths, child){
+
+		var rootPath = this.root.treePath;
+		var paths = availablePaths;
+		var path = child.treePath;
+
+		if(this.isUsingRelativeRoot){                					
+				var relativePath = path.substring(rootPath.length);
+				paths.push(relativePath);
+		} else {
+				paths.push(path);
+		}
+		return paths;
+	}
+
+	__containsAllFunctions(child, functionNames){		
+		for(var functionName of functionNames){           						
+			if (!(child[functionName])) {
+				return false;
+			}		
+		}
+		return true;
+	}
     
     get atomClasses() {   				
   	  return this.__atomClasses
@@ -238,6 +292,15 @@ export default class TreezModelPath extends LabeledTreezElement {
 
   	set atomClasses(value) {
   	  this.__atomClasses = value;	
+  	  this.__updateOptionsAndRelativeRoot();  
+  	} 
+
+  	get atomFunctionNames() {   				
+  	  return this.__atomFunctionNames
+  	}
+
+  	set atomFunctionNames(value) {
+  	  this.__atomFunctionNames = value;	
   	  this.__updateOptionsAndRelativeRoot();  
   	} 
 

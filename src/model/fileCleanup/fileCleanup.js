@@ -1,5 +1,7 @@
 import Model from './../model.js';
 import Executable from './../executable/executable.js';
+import Utils from './../../core/utils/utils.js';
+import DirectoryCleanupMode from './directoryCleanupMode.js';
 
 export default class FileCleanup extends Model {   
 	
@@ -12,9 +14,14 @@ export default class FileCleanup extends Model {
 		this.isUsingOutputPathProvider = true;
         
 		this.pathOfOutputPathProvider = 'root.models.executable';
-		this.fileOrDirectoryPath = 'c:\myOldOutputFile.txt';
+		this.fileOrDirectoryPath = 'c:/myOldOutputFile.txt';
         
-        this.isOnlyClearingDirectoryInsteadOfDeletingDirectory = true;		       
+        this.mode = DirectoryCleanupMode.deleteFiles;	
+
+
+        this.__pathOfOutputPathProviderComponent = undefined;
+        this.__fileOrDirectoryPathComponent = undefined;
+        this.__modeComponent = undefined;	       
 	}
 	
 
@@ -23,7 +30,7 @@ export default class FileCleanup extends Model {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
-		const section = tab.append('treez-section')
+		const section = page.append('treez-section')
             .label('File cleanup');		
 
         section.append('treez-section-action')
@@ -37,17 +44,59 @@ export default class FileCleanup extends Model {
 
         const sectionContent = section.append('div'); 
 
-        sectionContent.append('treez-file-path')
-            .label('Executable')           
-            .onChange(()=>this.refreshStatus())    
-            .nodeAttr('pathMapProvider', this)
-            .bindValue(this,()=>this.executablePath); 
+        sectionContent.append('treez-check-box')
+        	.label('Is using output path provider')
+        	.onChange(()=>this.__updateComponents())
+        	.bindValue(this, ()=>this.isUsingOutputPathProvider);
+
+        this.__pathOfOutputPathProviderComponent = sectionContent.append('treez-model-path')
+            .label('Output path provider')           
+            .onChange(()=>this.__updateComponents())    
+            .nodeAttr('atomFunctionNames', ['providePath'])
+            .bindValue(this,()=>this.pathOfOutputPathProvider);
+
+        this.__fileOrDirectoryPathComponent = sectionContent.append('treez-file-or-directory-path')
+            .label('File or directory path')   
+            .onChange(()=>this.__updateComponents())            
+            .bindValue(this,()=>this.fileOrDirectoryPath); 
+
+        this.__modeComponent = sectionContent.append('treez-enum-combo-box')
+        	.label('Mode')  
+        	.nodeAttr('options', DirectoryCleanupMode)      	
+        	.bindValue(this, ()=>this.mode);
+
+        this.__updateComponents();
 		
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {		
 		this.treeView=treeView;	
 		return actions;
+	}	
+
+	__updateComponents(){
+		if(this.isUsingOutputPathProvider){
+			this.__pathOfOutputPathProviderComponent.show();
+			this.__fileOrDirectoryPathComponent.disable();
+			this.fileOrDirectoryPath = this.__getOutputPathFromProvider();
+		} else {
+			this.__pathOfOutputPathProviderComponent.hide();
+			this.__fileOrDirectoryPathComponent.enable();
+		}
+
+		if(this.isFile){
+			this.__modeComponent.hide();
+		} else {
+			this.__modeComponent.show();
+		}
+	};
+
+	__getOutputPathFromProvider(){
+		var outputPathProvider = this.childFromRoot(this.pathOfOutputPathProvider);
+		
+		return outputPathProvider
+			?outputPathProvider.providePath()
+			:null;		
 	}
 
 	
@@ -64,9 +113,35 @@ export default class FileCleanup extends Model {
 		
 		monitor.done();
 		
-    }  
-	
-	
+    } 
+
+    __buildCommand(){ 
+    	var prefix = 'chcp 65001 & '; //enables utf8 encoding to correctly handle umlauts, as ö in "Datei wurde gelöscht - D:\outputDir\foo.txt"
+        if(this.isFile){
+			var filePath = this.path;
+			return prefix + this.__buildFileCleanupCommand(this.path);
+        } else {
+        	return prefix +this.__buildDirectoryCleanupCommand(this.path);        	
+        }		
+	} 
+
+	__buildFileCleanupCommand(filePath){
+		return 'del "' + filePath + '"';
+	}
+
+	__buildDirectoryCleanupCommand(directoryPath){
+		switch(this.mode){
+			case DirectoryCleanupMode.deleteFiles:
+				return 'del /S /Q "' + directoryPath + '\\*.*"';
+			case DirectoryCleanupMode.deleteDirectory:
+				return 'IF EXIST "' + directoryPath + '" rmdir /S /Q "' + directoryPath + '"';
+			case DirectoryCleanupMode.deleteFilesAndSubDirectories:
+				return 'del /S /Q "' + directoryPath + '\\*.*" & ' +
+				       'for /d %i in ("' + directoryPath + '\\*.*") do @rmdir /S /Q "%i"';
+			default:
+				throw Error('Not yet implemented');
+		}
+	}	
     
     async __executeCommand(command, monitor){
 
@@ -106,17 +181,22 @@ export default class FileCleanup extends Model {
 				reject(errorTitle + exception.toString());
 			}	
     	});	
-    }
+    }	
 
-
-
-	__buildCommand(){
-		let command = '"' + this.fullPath(this.executablePath) + '"';
-		command = this.__addInputArguments(command);
-		command = this.__addOutputArguments(command);
-		command = this.__addLoggingArguments(command);
-		return command;
+	get path(){
+		if(this.isUsingOutputPathProvider){
+			return this.__getOutputPathFromProvider().replace(/\//g, '\\\\');
+		} else {
+			return this.fileOrDirectoryPath.replace(/\//g, '\\\\');
+		}		
 	}	
+
+	get isFile(){
+		if(!this.path){
+			return true;
+		}
+		return Utils.isFilePath(this.path);
+	}
 
 }
 

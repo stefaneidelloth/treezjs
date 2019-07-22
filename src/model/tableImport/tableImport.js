@@ -443,10 +443,10 @@ export default class TableImport extends Model {
 			return '';
 		}
 		
-		if(this.parent.provideFilePath){
-			return this.parent.provideFilePath();
+		if(this.parent.providePath){
+			return this.parent.providePath();
 		} else {
-			var message = 'The parent atom "' + parent.name + '" does not have a method provideFilePath.'
+			var message = 'The parent atom "' + parent.name + '" does not have a method providePath.'
 			+ 'Therefore the soruce file path could not be inherited. Please deactivate the inheritance or implement the missing method.';
 			throw new Error(message);
 		}		
