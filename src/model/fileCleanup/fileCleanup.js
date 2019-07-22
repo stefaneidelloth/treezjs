@@ -1,5 +1,4 @@
 import Model from './../model.js';
-import Executable from './../executable/executable.js';
 import Utils from './../../core/utils/utils.js';
 import DirectoryCleanupMode from './directoryCleanupMode.js';
 
@@ -11,15 +10,15 @@ export default class FileCleanup extends Model {
 		this.image = 'fileCleanup.png';
 		this.isRunnable = true;
 
-		this.isUsingOutputPathProvider = true;
+		this.isUsingPathProvider = true;
         
-		this.pathOfOutputPathProvider = 'root.models.executable';
+		this.pathOfPathProvider = 'root.models.executable';
 		this.fileOrDirectoryPath = 'c:/myOldOutputFile.txt';
         
         this.mode = DirectoryCleanupMode.deleteFiles;	
 
 
-        this.__pathOfOutputPathProviderComponent = undefined;
+        this.__pathOfPathProviderComponent = undefined;
         this.__fileOrDirectoryPathComponent = undefined;
         this.__modeComponent = undefined;	       
 	}
@@ -45,15 +44,15 @@ export default class FileCleanup extends Model {
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-check-box')
-        	.label('Is using output path provider')
+        	.label('Is using path provider')
         	.onChange(()=>this.__updateComponents())
-        	.bindValue(this, ()=>this.isUsingOutputPathProvider);
+        	.bindValue(this, ()=>this.isUsingPathProvider);
 
-        this.__pathOfOutputPathProviderComponent = sectionContent.append('treez-model-path')
-            .label('Output path provider')           
+        this.__pathOfPathProviderComponent = sectionContent.append('treez-model-path')
+            .label('Path provider')           
             .onChange(()=>this.__updateComponents())    
             .nodeAttr('atomFunctionNames', ['providePath'])
-            .bindValue(this,()=>this.pathOfOutputPathProvider);
+            .bindValue(this,()=>this.pathOfPathProvider);
 
         this.__fileOrDirectoryPathComponent = sectionContent.append('treez-file-or-directory-path')
             .label('File or directory path')   
@@ -75,12 +74,12 @@ export default class FileCleanup extends Model {
 	}	
 
 	__updateComponents(){
-		if(this.isUsingOutputPathProvider){
-			this.__pathOfOutputPathProviderComponent.show();
+		if(this.isUsingPathProvider){
+			this.__pathOfPathProviderComponent.show();
 			this.__fileOrDirectoryPathComponent.disable();
 			this.fileOrDirectoryPath = this.__getOutputPathFromProvider();
 		} else {
-			this.__pathOfOutputPathProviderComponent.hide();
+			this.__pathOfPathProviderComponent.hide();
 			this.__fileOrDirectoryPathComponent.enable();
 		}
 
@@ -92,10 +91,10 @@ export default class FileCleanup extends Model {
 	};
 
 	__getOutputPathFromProvider(){
-		var outputPathProvider = this.childFromRoot(this.pathOfOutputPathProvider);
+		var PathProvider = this.childFromRoot(this.pathOfPathProvider);
 		
-		return outputPathProvider
-			?outputPathProvider.providePath()
+		return PathProvider
+			?PathProvider.providePath()
 			:null;		
 	}
 
@@ -184,7 +183,7 @@ export default class FileCleanup extends Model {
     }	
 
 	get path(){
-		if(this.isUsingOutputPathProvider){
+		if(this.isUsingPathProvider){
 			return this.__getOutputPathFromProvider().replace(/\//g, '\\\\');
 		} else {
 			return this.fileOrDirectoryPath.replace(/\//g, '\\\\');

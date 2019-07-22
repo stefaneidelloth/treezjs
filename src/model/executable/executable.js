@@ -47,6 +47,10 @@ export default class Executable extends Model {
 		return this.__getModifiedOutputPath();		
 	}
 
+	provideInputPath() {
+		return this.__getModifiedInputPath();		
+	}
+
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
 		this.treeView=treeView;	

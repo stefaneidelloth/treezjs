@@ -1,20 +1,28 @@
 import Model from './../model.js';
-import Executable from './../executable/executable.js';
+import Utils from './../../core/utils/utils.js';
 
 export default class FileCopy extends Model {   
 	
 
 	constructor(name) {		
 		super(name);
-		this.image = 'fileCleanup.png';
+		this.image = 'fileCopy.png';
 		this.isRunnable = true;
 
-		this.isUsingOutputPathProvider = true;
+		this.isUsingInputPathProvider = true;	
+		this.isUsingOutputPathProvider = true;	
         
-		this.pathOfOutputPathProvider = 'root.models.executable';
-		this.fileOrDirectoryPath = 'c:\myOldOutputFile.txt';
-        
-        this.isOnlyClearingDirectoryInsteadOfDeletingDirectory = true;		       
+		this.pathOfInputPathProvider = 'root.models.executable';	
+		this.pathOfOutputPathProvider = 'root.models.executable';			
+
+		this.inputFilePath = 'c:/myInputFile.txt';
+		this.outputDirectoryPath = 'c:/outputDirectory';
+
+        this.__pathOfInputPathProviderComponent = undefined;
+        this.__pathOfOutputPathProviderComponent = undefined;
+        this.__inputFilePathComponent = undefined;
+        this.__outputDirectoryPathComponent = undefined;
+        this.__modeComponent = undefined;	   	       
 	}
 	
 
@@ -23,12 +31,12 @@ export default class FileCopy extends Model {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
-		const section = tab.append('treez-section')
-            .label('File cleanup');		
+		const section = page.append('treez-section')
+            .label('File copy');		
 
         section.append('treez-section-action')
             .image('run.png')
-            .label('Cleanup')
+            .label('Copy')
             .addAction(()=>this.execute(this.__treeView)
             				   .catch(error => {
             					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
@@ -37,17 +45,82 @@ export default class FileCopy extends Model {
 
         const sectionContent = section.append('div'); 
 
-        sectionContent.append('treez-file-path')
-            .label('Executable')           
-            .onChange(()=>this.refreshStatus())    
-            .nodeAttr('pathMapProvider', this)
-            .bindValue(this,()=>this.executablePath); 
+        sectionContent.append('treez-check-box')
+        	.label('Is using input path provider')
+        	.onChange(()=>this.__updateComponents())
+        	.bindValue(this, ()=>this.isUsingInputPathProvider);
+
+        this.__pathOfInputPathProviderComponent = sectionContent.append('treez-model-path')
+            .label('Input path provider')           
+            .onChange(()=>this.__updateComponents())    
+            .nodeAttr('atomFunctionNames', ['provideInputPath'])
+            .bindValue(this,()=>this.pathOfInputPathProvider);
+
+        this.__inputFilePathComponent = sectionContent.append('treez-file-path')
+            .label('Input file path')   
+            .onChange(()=>this.__updateComponents())            
+            .bindValue(this,()=>this.inputFilePath); 
+
+       sectionContent.append('treez-check-box')
+        	.label('Is using ouput path provider')
+        	.onChange(()=>this.__updateComponents())
+        	.bindValue(this, ()=>this.isUsingOutputPathProvider);
+
+        this.__pathOfOutputPathProviderComponent = sectionContent.append('treez-model-path')
+            .label('Output path provider')           
+            .onChange(()=>this.__updateComponents())    
+            .nodeAttr('atomFunctionNames', ['providePath'])
+            .bindValue(this,()=>this.pathOfOutputPathProvider);
+
+        this.__outputDirectoryPathComponent = sectionContent.append('treez-directory-path')
+            .label('Output directory path')   
+            .onChange(()=>this.__updateComponents())            
+            .bindValue(this,()=>this.outputDirectoryPath); 
+
+        this.__updateComponents();
 		
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {		
 		this.treeView=treeView;	
 		return actions;
+	}	
+
+	__updateComponents(){
+		if(this.isUsingInputPathProvider){
+			this.__pathOfInputPathProviderComponent.show();
+			this.__inputFilePathComponent.disable();
+			this.inputFilePath = this.__pathFromInputPathProvider();
+		} else {
+			this.__pathOfInputPathProviderComponent.hide();
+			this.__inputFilePathComponent.enable();
+		}
+
+		if(this.isUsingOutputPathProvider){
+			this.__pathOfOutputPathProviderComponent.show();
+			this.__outputDirectoryPathComponent.disable();
+			this.ouputDirectoryPath = this.__pathFromOutputPathProvider();
+		} else {
+			this.__pathOfOutputPathProviderComponent.hide();
+			this.__outputDirectoryPathComponent.enable();
+		}
+		
+	};
+
+	__pathFromInputPathProvider(){
+		var inputPathProvider = this.childFromRoot(this.pathOfInputPathProvider);
+		
+		return inputPathProvider
+			?inputPathProvider.provideInputPath()
+			:null;		
+	}
+
+	__pathFromOutputPathProvider(){
+		var outputPathProvider = this.childFromRoot(this.pathOfOutputPathProvider);
+		
+		return outputPathProvider
+			?outputPathProvider.providePath()
+			:null;		
 	}
 
 	
@@ -64,9 +137,13 @@ export default class FileCopy extends Model {
 		
 		monitor.done();
 		
-    }  
-	
-	
+    } 
+
+    __buildCommand(){ 
+        var fileName = Utils.extractFileName(this.inputPath);
+    	return 'if not exist "' + this.outputPath + '" mkdir "' + this.outputPath + '" &' 
+    	+ ' copy /Y "' + this.inputPath + '" "' + this.outputPath + '\\' + fileName + '"';    		
+	} 	
     
     async __executeCommand(command, monitor){
 
@@ -106,17 +183,25 @@ export default class FileCopy extends Model {
 				reject(errorTitle + exception.toString());
 			}	
     	});	
-    }
+    }	
 
-
-
-	__buildCommand(){
-		let command = '"' + this.fullPath(this.executablePath) + '"';
-		command = this.__addInputArguments(command);
-		command = this.__addOutputArguments(command);
-		command = this.__addLoggingArguments(command);
-		return command;
+	get inputPath(){
+		if(this.isUsingInputPathProvider){
+			return this.__pathFromInputPathProvider().replace(/\//g, '\\\\');
+		} else {
+			return this.inputFilePath.replace(/\//g, '\\\\');
+		}		
 	}	
+
+	get outputPath(){
+		if(this.isUsingOutputPathProvider){
+			return this.__pathFromOutputPathProvider().replace(/\//g, '\\\\');
+		} else {
+			return this.outputDirectoryPath.replace(/\//g, '\\\\');
+		}		
+	}
+
+	
 
 }
 
