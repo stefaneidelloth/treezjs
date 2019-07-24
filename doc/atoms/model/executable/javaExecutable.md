@@ -56,27 +56,39 @@ The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 
 			
 ## Arguments
 
-The total system command is created by concatenation from the individual input fields. A preview for the command is shown as **Resulting command** in the section "Status". 
+The total system command is created by concatenation the individual input fields with spaces. A preview for the command is shown as **Resulting command** in the section "Status". 
 
 It is possible to use variables (e.g. a ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*) that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
 
 If you use **special characters**, please check if you need to include escape characters for your (nested) command line arguments, e.g. double slashes or quotation marks instead of single ones.
 
-### Executable
+### Java executable
 		
-The path to the **executable** (e.g. \*.exe or \*.bat) file. This path is automatically put in **quotation marks** to ensure that paths that include spaces work correctly. 
+The path to the **Java executable**. This path is automatically put in **quotation marks** to ensure that paths that include spaces work correctly. 
 
-Please do not include additional arguments here but use the other input fields. (Otherwise the whole line would be put within quotation marks and the system command might not work.) 
+Please do not include additional arguments here but use the other input fields. (Otherwise the whole line would be put within quotation marks and the system command would not work.) 
 
 The content of the other input fields is appended to the executable path (separated by spaces). Please have a look at the **status section** to see a preview of the **Resulting command**.
+
+### Class path
+
+The class path for the java program. Might for example consist of a single /*.jar file or of several folders containing /*.class files. 
+
+### Main class
+
+The full name of the main class (= contains a method *static void main(String[] args)* ) to start. 
+
+### JVM arguments
+
+Arguments for the Java Virtual Machine (JVM), also see https://stackoverflow.com/questions/14763079/what-are-the-xms-and-xmx-parameters-when-starting-jvm
 
 ### Input
 
 #### Input arguments
 
-This is typically a **key word**, telling the executable that an input file path follows, e.g. "-i" or "/OPEN". 
+This is typically a **key word**, telling the java program that an input file path follows, e.g. "-i" or "/OPEN". 
 
-Leave this input field empty if your executable does not require such an input key word. 
+Leave this input field empty if your java program does not require such an input key word. 
 
 #### Input file or directory
 
@@ -86,9 +98,9 @@ You can manually enter the path or [browse the file or directory](../../../compo
 
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you **might need to manually wrap it in quotation marks**. 
 
-Leave this input field empty if your executable does not require an input file or folder.   	
+Leave this input field empty if your program does not require an input file or folder.   	
 
-It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
+It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/java.png) JavaExecutable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
 
 **Input files can be dynamically created** with ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atoms. 
 
@@ -98,9 +110,9 @@ It is possible to **dynamically modify the input path** using an ![](../../../..
 
 #### Output arguments
 
-This is typically a **key word**, telling the executable that an output file follows, e.g. "-output" or "/O". 
+This is typically a **key word**, telling the java program that an output file follows, e.g. "-output" or "/O". 
 
-Leave this input filed empty if your executable does not require such an output key word.  
+Leave this input field empty if your program does not require such an output key word.  
 			
 #### Output file or directory
 
@@ -108,9 +120,9 @@ This is typically the path to an output file or folder, e.g. "C:/output.txt".
 
 The output path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the output path. Therefore, if you use an output path that contains spaces, you might need to manually wrap it in quotation marks.
 
-Leave this output field empty if your executable does not require an input file or folder.   	
+Leave this output field empty if your program does not require an output file or folder.   	
 
-It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
+It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/java.png) JavaExecutable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
 
 **Old output files and directories can be deleted** with ![](../../../../icons/fileCleanup.png) [FileCleanup](../fileCleanup/fileCleanup.md) atoms. 
 
