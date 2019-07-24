@@ -1,4 +1,18 @@
+![](../../../../icons/run.png) [Executable](./executable.md)<br>
+![](../../../../icons/java.png) [Executable](./javaExecutable.md)
 
+----
+
+# OutputModification
+
+The purpose of the ![](../../../../icons/outputModification.png) OutputModification atom is to modify the output file or directory path of its parent atom.
+
+![](../../../images/output_modification.png)
+
+
+----
+
+![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md)
 
 
 <h4 id="outputModification" >Output modification</h4>
