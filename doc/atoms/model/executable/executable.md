@@ -84,11 +84,11 @@ This is typically the path to an input file or folder, e.g. "C:/input.txt".
 
 You can manually enter the path or **browse** the file or directory on your local disk. 
 
-The **selection mode** can be toggled:
+The **selection mode** might need to be toggled:
 * ![](../../../../icons/fileToggle.png): select file
 * ![](../../../../icons/directoryToggle.png): select directory
 
-(Unfortunately, Google Chrome does not provide a dialogs that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
+(Unfortunately, Google Chrome does not provide a dialog that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
 
 You can **open** the selected input file or directory using the ![](../../../../icons/run_triangle.png) run button.
 
