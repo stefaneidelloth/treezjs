@@ -9,6 +9,16 @@ The purpose of the ![](../../../../icons/inputModification.png) InputModificatio
 
 ![](../../../images/input_modification.png)
 
+This makes sense if you run the parent atom many times, for example as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have different input paths for each execution.
+
+The check boxes allow you to include the **execution date** and/or a jobId (= increasing number for subsequent runs). 
+
+In order to preview the effect of the individual modification options, you might want to have a look at the **status section** of the parent atom. The actual date probably will be different to the date that is shown in the preview and the jobId might be overridden when remotely running the parent atom as part of a study.  
+
+If you use the ![](../../../../icons/inputModification.png) InputModification atom, please make sure that 
+* the modified input file or directory paths already exist or 
+* that they are dynamically generated before the parent atom is executed, also see ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md). 
+
 ## Source code
 
 [./src/model/executable/inputModification.js](../../../../src/model/executable/inputModification.js)
