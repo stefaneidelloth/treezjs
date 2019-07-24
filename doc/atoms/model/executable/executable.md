@@ -68,13 +68,15 @@ The content of the other input fields is appended to the executable path (separa
 
 It is possible to use variables that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
 
-### Input arguments
+### Input
+
+#### Input arguments
 
 This is typically a **key word**, telling the executable that an input file path follows, e.g. "-i" or "/OPEN". 
 
 Leave this input field empty if your executable does not require such an input key word. 
 
-### Input file or folder
+#### Input file or folder
 
 This is typically the path to an input file or folder, e.g. "C:/input.txt". 
 
@@ -83,14 +85,16 @@ The input file can be dynamically created with an ![](../../../../icons/inputFil
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you might need to manually wrap it in quotation marks. 
 
 Leave this input field empty if your executable does not require an input file or folder.   	     
-	
-### Output arguments
+
+### Output
+
+#### Output arguments
 
 This is typically a **key word**, telling the executable that an output file follows, e.g. "-output" or "/O". 
 
 Leave this input filed empty if your executable does not require such an output key word.  
 			
-### Output file or folder
+#### Output file or folder
 
 This is typically the path to an output file or folder, e.g. "C:/output.txt". 
 
@@ -98,28 +102,18 @@ The output path is not automatically wrapped in quotation marks because some pro
 
 Leave this output field empty if your executable does not require an input file or folder.   	
 
-It is possible to dynamically modify the output path using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output location for each run**.
+It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output location for each run**.
 
-			</li>
-		</ul>
+### Logging
+
+You can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
+
+
 		
 		
 		
 		
-		<h4 id="logging">Logging</h4>
 		
-		<ul>
-			<li><b>Log arguments</b>: First part for specifying logging arguments. This is typically a key word
-			that tells the executable that the specification of a logging file will follow, e.g. "-log" or "-l". 
-			Leave this empty if your executable does not require such a logging key word.  
-			</li>
-			<li><b>Log file</b>: Second part for specifying logging arguments. This is typically the path
-			to a logging file, e.g. "C:/log.txt". This path will not automatically be put in quotation marks 
-			because some programs do not support quotation marks around the logging file path. If you use a logging
-			path that contains spaces you might need to wrap it in quotation marks.Leave this empty if your executable
-			does not require a log file.   	     
-			</li>
-		</ul>
 
 A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
 
