@@ -224,6 +224,10 @@ export default class Model extends ComponentAtom {
 	resetJobId(){
 		this.jobId = 1;		
 	}
+
+	increaseJobId() {		
+		this.jobId = this.jobId + 1;		
+	}
 	
 	refreshStatus(){
 		//might be overridden by inheriting class

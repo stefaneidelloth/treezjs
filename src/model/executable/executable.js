@@ -6,9 +6,7 @@ import InputModification from './inputModification.js';
 import OutputModification from './outputModification.js';
 import LoggingArguments from './loggingArguments.js';
 
-export default class Executable extends Model {   
-
-	//static variable __finishedString is defined below class definition
+export default class Executable extends Model { 	
 
 	constructor(name) {		
 		super(name);
@@ -24,8 +22,7 @@ export default class Executable extends Model {
         this.outputPath = '';
         this.isCopyingInputFileToOutputFolder = false; 
         
-        this.__commandInfo = '';     
-        this.__jobIdInfo = '1';
+        this.__commandInfo = ''; 
         
         this.treeView=undefined;
 	}
@@ -53,15 +50,7 @@ export default class Executable extends Model {
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 		
-		this.treeView=treeView;	
-		
-		actions.push(new AddChildAtomTreeViewAction(
-				InputFileGenerator,
-				'inputFileGenerator',
-				'inputFile.png',
-				parentSelection,
-				this,
-				treeView));		
+		this.treeView=treeView;		
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				InputModification,
@@ -85,9 +74,7 @@ export default class Executable extends Model {
 				'loggingArguments.png',
 				parentSelection,	
 				this,
-				treeView));
-
-		
+				treeView));		
 
 		return actions;
 	}
@@ -127,7 +114,7 @@ export default class Executable extends Model {
 
 		monitor.worked(1);			
 		
-		this.__increaseJobId();
+		this.increaseJobId();
 		
 		monitor.done();
 		
@@ -173,12 +160,6 @@ export default class Executable extends Model {
     	});	
     }
     
-    
-
-	createInputFileGenerator(name) {
-		return this.createChild(InputFileGenerator, name);		
-	}
-
 	createInputModification(name) {
 		return this.createChild(InputModification, name);
 	}
@@ -190,8 +171,6 @@ export default class Executable extends Model {
 	createLoggingArguments(name) {
 		return this.createChild(LoggingArguments, name);
 	}
-
-
 
     __createExecutableSection(tab) {
 
@@ -285,16 +264,12 @@ export default class Executable extends Model {
        sectionContent.append('treez-text-area')
             .label('Next jobId') 
             .disable() 
-            .bindValue(this,()=>this.__jobIdInfo); 
-   }   
-
-   
+            .bindValue(this,()=>this.__jobId); 
+   }
 
    refreshStatus() {
-		this.__commandInfo = this.__buildCommand();		
-		this.__jobIdInfo = ''+ this.jobId;
+		this.__commandInfo = this.__buildCommand();
 	}	
-
 
 	async __copyInputFileToOutputFolderIfEnabled(){
 
@@ -306,97 +281,7 @@ export default class Executable extends Model {
 			monitor.error('Could not copy input file to output folder for ' + this.name, exception);
 			monitor.cancel();				
 		}
-	}
-
-	/**
-	 * Copies input file to output folder and modifies the file name
-	 */
-	__copyInputFileToOutputFolder() {
-		const inputFilePath = this.getModifiedInputPath();
-		// TODO
-		/*
-		 * const inputFile = new File(inputFilePath); if (inputFile.exists()) {
-		 * String destinationPath = null; try { destinationPath =
-		 * getOutputPathToCopyInputFile(); } catch (Exception exception) {
-		 * LOG.warn('Input file is not copied to output folder since output
-		 * folder is not known.'); } if (destinationPath != null) {
-		 * copyInputFileToOutputFolder(inputFile, destinationPath); } }
-		 */
-
-	}
-
-	/**
-	 * Copies the given inputFile to the given destination path
-	 */
-	__copyInputFileToOutputFolder(inputFile, destinationPath) {
-	    /*
-		 * File destinationFile = new File(destinationPath);
-		 * 
-		 * try { FileUtils.copyFile(inputFile, destinationFile); } catch
-		 * (IOException exception) { String message = 'Could not copy input file
-		 * to output folder'; LOG.error(message, exception); }
-		 */
-	}
-
-	/**
-	 * Returns the destination folder for the input file
-	 */
-	__getOutputPathToCopyInputFile() {
-
-		const outputPathString = this.providePath();
-
-		// split path with point to determine file extension if one exists
-
-		const isFilePath = Utils.isFilePath(outputPathString);
-		let folderPath = outputPathString;
-		if (isFilePath) {
-			folderPath = Utils.extractParentFolder(outputPathString);
-		}
-
-		const inputPathString = this.getModifiedInputPath();
-		const inputPathIsFilePath = Utils.isFilePath(inputPathString);
-		if (inputPathIsFilePath) {
-			const inputFileName = Utils.extractFileName(inputPathString);
-			const newInputFileName = Utils.includeNumberInFileName(inputFileName, '#' + this.jobId);
-			const destinationPath = folderPath + '/' + newInputFileName;
-			return destinationPath;
-		} else {
-			return null;
-		}
-
-	}
-
-	async __runDatabaseModifiers(refreshable, monitor){
-		await this.executeChildren(DatabaseModifier, refreshable, monitor);
-	}
-	
-	async __runInputFileGenerators(refreshable, monitor){
-
-		monitor.description = 'Running InputFileGenerator children if exist.';
-		await this.executeChildren(InputFileGenerator, refreshable, monitor);
-	}
-	
-	__runDataImports(refreshable, monitor){
-		const hasDataImportChild = this.hasChildModel(TableImport);
-		if (hasDataImportChild) {
-			const modelOutput =  this.runChildModel(TableImport, refreshable, monitor);
-			return modelOutput;
-		} else {
-			monitor.info('No data has been imported since there is no DataImport child.');
-			return this.__createEmptyModelOutput();
-		}
-	}
-
-	async __deleteOldOutputAndLogFilesIfExist(){
-	   
-
-	    /*
-		 * File outputFile = new File(outputPath.get()); if
-		 * (outputFile.exists()) { outputFile.delete(); } File logFile = new
-		 * File(logFilePath.get()); if (logFile.exists()) { logFile.delete(); }
-		 */
-	}
-
+	}	
 
 	__buildCommand(){
 		let command = '"' + this.fullPath(this.executablePath) + '"';
@@ -500,12 +385,7 @@ export default class Executable extends Model {
 		return loggingArguments
 			?loggingArguments.addLoggingArguments(commandToExtend)
 			:commandToExtend;
-	}
-
-	__increaseJobId() {		
-		this.jobId = this.jobId+1;		
-	}	
+	}		
 
 }
 
-Executable.__finishedString = '_treezExecutionFinished_';

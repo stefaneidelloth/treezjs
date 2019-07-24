@@ -2,7 +2,6 @@ import Utils from './../../core/utils/utils.js';
 import ComponentAtom from './../../core/component/componentAtom.js';
 
 export default class OutputModification extends ComponentAtom {
-
     
 	constructor(name) {		
 	    super(name);
@@ -16,15 +15,10 @@ export default class OutputModification extends ComponentAtom {
         this.isIncludingjobIdInOutputSubFolder = undefined;      
 	}
 
-	
-
     createComponentControl(tabFolder){    
-     
 		const page = tabFolder.append('treez-tab')
             .title('Data');
-		
-        this.createOutputModificationSection(page);       
-	     
+        this.createOutputModificationSection(page);   
 	}	  
 
    createOutputModificationSection(page) {       
@@ -75,8 +69,7 @@ export default class OutputModification extends ComponentAtom {
 		   .label('File name')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingjobIdInOutputFile);           
-    
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputFile);
    }  
    
    getModifiedPath(executable) {

@@ -10,12 +10,9 @@ export default class JavaExecutable extends Executable {
         this.classPath = undefined;
         this.fullClassName = undefined;
         this.jvmArguments = undefined;
-	}
-
-
-	
+	}	
 	 
-	 __createExecutableSection(tab) {
+	__createExecutableSection(tab) {
 
 			const section = tab.append('treez-section')
 	            .label('Java executable');
@@ -47,16 +44,12 @@ export default class JavaExecutable extends Executable {
 	 __createInterimSections(page){
 		 this.__createClassPathSection(page);
 		 this.__createJvmArgumentsSection(page);	    	
-	 }
-
-	
+	 }	
 
 	__createClassPathSection(page) {
 
 		const section = page.append('treez-section')
-				.label("Class path (e. g. jar file)");
-		
-		//section.moveAtom(1);
+				.label("Class path (e. g. jar file)");		
 
 		var sectionContent = section.append('div');
 		
@@ -78,8 +71,6 @@ export default class JavaExecutable extends Executable {
 		const section = page.append('treez-section')
 			.label('JVM arguments');
 
-		//section.moveAtom(2);
-
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-text-area')
@@ -88,7 +79,6 @@ export default class JavaExecutable extends Executable {
 			.bindValue(this,()=>this.jvmArguments);	
 
 	}
-
 
 	__buildCommand(){
 

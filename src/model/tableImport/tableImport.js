@@ -19,8 +19,7 @@ export default class TableImport extends Model {
 
 		this.image = 'tableImport.png';
         this.isAppendingData= false;        
-        this.isFilteringforJobId = false;
-        this.isInheritingSourceFilePath = false;
+        this.isFilteringforJobId = false;       
         this.isLinkingSource = false;
 		this.isRunnable=true;
         this.isUsingCustomQuery= false;
@@ -42,8 +41,7 @@ export default class TableImport extends Model {
 
         this.__sourceTypeSelection = undefined;	
 		this.__isLinkingSourceSelection = undefined;
-		this.__rowLimitSelection = undefined;
-        this.__isInheritingSourceFilePathSelection = undefined;
+		this.__rowLimitSelection = undefined;       
 		this.__sourceFilePathSelection = undefined;		
 		this.__columnSeparatorSelection = undefined;		
 		this.__hostSelection = undefined;		
@@ -117,13 +115,7 @@ export default class TableImport extends Model {
 		var section = page.append('treez-section')
 			.label('Source data');
 		
-		var sectionContent = section.append('div');
-		
-		//inherit source file path : take (modified) parent output path
-		this.__isInheritingSourceFilePathSelection = sectionContent.append('treez-check-box')
-			.label('Inherit source file path')			
-			.bindValue(this, ()=>this.isInheritingSourceFilePath)
-			.onChange(()=>this.__showAndHideDependentComponents());
+		var sectionContent = section.append('div');		
 
 		this.__sourceFilePathSelection = sectionContent.append('treez-file-path')
 			.label('Source file')
@@ -195,8 +187,6 @@ export default class TableImport extends Model {
 
 	}
 	
-	
-	
 	__showAndHideLinkComponents() {		
 		if (this.isLinkingSource) {
 			this.__rowLimitSelection.hide();
@@ -205,20 +195,12 @@ export default class TableImport extends Model {
 			this.__rowLimitSelection.show();
 			this.__appendDataSelection.show();
 		}
-	}
-
-	
+	}	
 
 	afterCreateControlAdaptionHook() {
-		this.__showAndHideDependentComponents();
-		this.__updatedInheritedSourcePath();
+		this.__showAndHideDependentComponents();		
 	}
 
-	__updatedInheritedSourcePath() {		
-		if (this.isInheritingSourceFilePath) {
-			this.sourceFilePath = this.sourcePath;
-		}
-	}
 
 	__showAndHideDependentComponents() {		
 		switch (this.sourceType) {
@@ -242,17 +224,10 @@ export default class TableImport extends Model {
 		this.__isLinkingSourceSelection.hide(); //TODO: check if csv can be read paginated. If so, it might make sense to show this
 		
 		this.__isFilteringforJobIdSelection.show();		
-		this.__showAndHideJobComponents()
-
-		this.__isInheritingSourceFilePathSelection.show();
-	
-		if(this.isInheritingSourceFilePath){
-			this.__sourceFilePathSelection.hide();
-			this.__columnSeparatorSelection.hide();
-		} else {
-			this.__sourceFilePathSelection.show();
-			this.__columnSeparatorSelection.show();
-		}
+		this.__showAndHideJobComponents()	
+		
+		this.__sourceFilePathSelection.show();
+		this.__columnSeparatorSelection.show();	
 
 		this.__numberOfHeaderLinesToSkipSelection.show();
 		
@@ -272,14 +247,8 @@ export default class TableImport extends Model {
 		
 		this.__isLinkingSourceSelection.show(); 
 		this.__isFilteringforJobIdSelection.show();		
-
-		this.__isInheritingSourceFilePathSelection.show();
 		
-		if(this.isInheritingSourceFilePath){
-			this.__sourceFilePathSelection.hide();			
-		} else {
-			this.__sourceFilePathSelection.show();			
-		}
+		this.__sourceFilePathSelection.show();
 
 		this.__numberOfHeaderLinesToSkipSelection.hide();
 		
@@ -302,8 +271,7 @@ export default class TableImport extends Model {
 
 		this.__isLinkingSourceSelection.show(); 
 		this.__isFilteringforJobIdSelection.show();	
-
-		this.__isInheritingSourceFilePathSelection.hide();
+	
 		this.__sourceFilePathSelection.hide();
 		this.__numberOfHeaderLinesToSkipSelection.hide();	
 		this.__columnSeparatorSelection.hide();
@@ -430,27 +398,11 @@ export default class TableImport extends Model {
 	}
 
 	get sourcePath() {		
-		if (this.isInheritingSourceFilePath) {
-			return this.__getSourcePathFromParent();
-		} else {
-			return this.fullPath(this.sourceFilePath);
-		}		
+		return this.fullPath(this.sourceFilePath);				
 	}
 
 
-	__getSourcePathFromParent() {		
-		if (!this.parent) {
-			return '';
-		}
-		
-		if(this.parent.providePath){
-			return this.parent.providePath();
-		} else {
-			var message = 'The parent atom "' + parent.name + '" does not have a method providePath.'
-			+ 'Therefore the soruce file path could not be inherited. Please deactivate the inheritance or implement the missing method.';
-			throw new Error(message);
-		}		
-	}
+	
 
 	__linkTargetTableToSource(tableSource) {
 		this.__createTableIfNotExists();		

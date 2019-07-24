@@ -5,17 +5,15 @@ import SqLiteImporter from './../../data/database/sqlite/sqLiteImporter.js';
 import ColumnBlueprint from './../../data/column/columnBlueprint.js';
 import TableTargetType from './../../data/table/tableTargetType.js';
 
-export default class SqLiteAppender extends Model {   
-
-	//static variable __finishedString is defined below class definition
+export default class SqLiteAppender extends Model { 
 
 	constructor(name) {		
 		super(name);
 		this.image = 'databaseAppender.png';
 		this.isRunnable=true;	
 
-		this.sourceFilePath = 'C:/data.sqlite';
-		this.targetFilePath = 'C:/data.sqlite';
+		this.sourceFilePath = 'C:/output.sqlite';
+		this.targetFilePath = 'C:/cumulatedOutput.sqlite';
         this.password = '';        
         
 	}	
@@ -83,9 +81,7 @@ export default class SqLiteAppender extends Model {
     	var tableData = await SqLiteImporter.importData(this.fullPath(this.sourceFilePath), this.password, tableName);
     	tableData = this.__insertStudyIdAndJobId(tableData);
 
-    	await SqLiteImporter.appendData(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);
-
-    	
+    	await SqLiteImporter.appendData(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);    	
     }
 
     __insertStudyIdAndJobIdColumns(columnBlueprints){
@@ -133,7 +129,6 @@ export default class SqLiteAppender extends Model {
     	}
 
     	return tableData;
-    }   
-   
+    }      
 
 }
