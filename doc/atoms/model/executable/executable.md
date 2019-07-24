@@ -80,15 +80,23 @@ Leave this input field empty if your executable does not require such an input k
 
 #### Input file or folder
 
-This is typically the path to an input file or folder, e.g. "C:/input.txt". 
+This is typically the path to an input file or folder, e.g. "C:/input.txt".
 
-The input file can be dynamically created with an ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atom. 
+You can manually enter the path or browse the file or directory on your local disk. The selection mode can be toggled:
+* ![](../../../../icons/fileToggle.png): select file
+* ![](../../../../icons/directoryToggle.png): select directory
+
+(Unfortunately, Google Chrome does not provide a dialogs that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
+
+You can open the selected input file or directory using the ![](../../../../icons/runTriangle.png) run button.
 
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you might need to manually wrap it in quotation marks. 
 
 Leave this input field empty if your executable does not require an input file or folder.   	
 
 It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
+
+Input files can be dynamically created with ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atoms. 
 
 ### Output
 
