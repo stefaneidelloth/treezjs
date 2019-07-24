@@ -38,7 +38,7 @@ The context menu of the ![](../../../../icons/run.png) Executable atom allows to
 	
 ## StudyId and JobId
 
-
+Work similar to the studyId and jobId of the ![](../../../../icons/models.png) [Models](../models.md), see [StudyId and JobId](../models.md#studyid-and-jobid).
 	
 ## Work flow	
 
