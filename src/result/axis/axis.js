@@ -111,7 +111,7 @@ export default class Axis extends PagedGraphicsAtom {
 		this.__axisSelection = graphSelection //
 				.append('g') //
 				.className('axis') //
-				.onClick(this);		
+				.onClick(() => this.handleMouseClick());		
 		
 		this.bindString(()=>this.name, this.__axisSelection, 'id');
 		

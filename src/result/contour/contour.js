@@ -298,7 +298,7 @@ export default class Contour extends PagedGraphicsAtom {
 		var contourSelection = graphSelection //
 				.insert('g', '.axis') //
 				.attr('class', 'contour-group') //
-				.onClick(this);
+				.onClick(() => this.handleMouseClick());
 		
 		this.bindString(()=>this.name, contourSelection, 'id');		
 		

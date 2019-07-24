@@ -141,7 +141,7 @@ export default class Graph extends PagedGraphicsAtom {
 	
 		this.__rectSelection = this.__graphGroupSelection //
 				.append('rect') //
-				.onClick(this);
+				.onClick(() => this.handleMouseClick());
 
 		this.updatePlot(dTreez);
 			

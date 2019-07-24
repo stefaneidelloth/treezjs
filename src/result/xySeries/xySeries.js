@@ -252,7 +252,7 @@ export default class XySeries extends GraphicsAtom {
 		//create new series group
 		seriesGroupSelection = graphSelection //
 				.append('g') //
-				.onClick(this);
+				.onClick(() => this.handleMouseClick());
 		
 		this.bindString(()=>this.name, seriesGroupSelection,'id');
 		

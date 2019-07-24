@@ -46,7 +46,7 @@ export default class Tornado extends PagedGraphicsAtom {
 		this.__tornadoSelection = graphOrBarSeriesSelection //
 				.insert('g', '.axis') //
 				.className('tornado') //
-				.onClick(this);
+				.onClick(() => this.handleMouseClick());
 		
 		this.bindString(() => this.name, this.__tornadoSelection, 'id');
 		
