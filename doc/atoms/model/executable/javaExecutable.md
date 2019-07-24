@@ -38,7 +38,7 @@ The context menu of the ![](../../../../icons/run.png) JavaExecutable atom allow
 	
 ## StudyId and JobId
 
-
+See the [studyId and jobId](../models.md#studyid-and-jobid) of the ![](../../../../icons/models.png) [Models](../models.md) atom. They work similarly.
 	
 ## Work flow	
 
