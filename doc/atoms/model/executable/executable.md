@@ -100,7 +100,7 @@ It is possible to **dynamically modify the input path** using an ![](../../../..
 
 **Input files can be dynamically created** with ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atoms. 
 
-**Input files can be copied** with ![](../../../../icons/fileCopy.png) [FileCopy](../fileCopy/fileCopy.md) atoms. 
+**Input files can be copied** with ![](../../../../icons/fileCopy.png) [FileCopy](../fileCopy/fileCopy.md) atoms, e.g. to store them with the output. 
 
 ### Output
 
