@@ -74,4 +74,4 @@ existing atoms are not sufficient for your needs, you might want to [implement c
 * [How to implement atoms](./howToImplementAtoms.md)
 
 ----
-
+[Components](../components/components.md)
