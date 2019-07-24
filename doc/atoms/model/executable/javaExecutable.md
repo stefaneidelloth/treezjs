@@ -98,7 +98,7 @@ You can manually enter the path or [browse the file or directory](../../../compo
 
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you **might need to manually wrap it in quotation marks**. 
 
-Leave this input field empty if your program does not require an input file or folder.   	
+Leave this input field empty if your program does not require an input file or diretory.   	
 
 It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/java.png) JavaExecutable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
 
@@ -120,7 +120,7 @@ This is typically the path to an output file or directory, e.g. "C:/output.txt".
 
 The output path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the output path. Therefore, if you use an output path that contains spaces, you might need to manually wrap it in quotation marks.
 
-Leave this output field empty if your program does not require an output file or folder.   	
+Leave this output field empty if your program does not require an output file or directory.   	
 
 It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/java.png) JavaExecutable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
 
