@@ -92,7 +92,7 @@ Leave this input field empty if your java program does not require such input ke
 
 #### Input file or directory
 
-This is typically the path to an input file or folder, e.g. "C:/input.txt".
+This is typically the path to an input file or directory, e.g. "C:/input.txt".
 
 You can manually enter the path or [browse the file or directory](../../../components/file/fileOrDirectoryPath.md) on your local disk. 
 
@@ -116,7 +116,7 @@ Leave this input field empty if your program does not require such an output key
 			
 #### Output file or directory
 
-This is typically the path to an output file or folder, e.g. "C:/output.txt". 
+This is typically the path to an output file or directory, e.g. "C:/output.txt". 
 
 The output path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the output path. Therefore, if you use an output path that contains spaces, you might need to manually wrap it in quotation marks.
 
