@@ -68,12 +68,12 @@ If a model is remotely executed as part of a study (or as part of a parent model
 
 ## Work flow 
 
-You can **execute** the ![](../../../../icons/models.png) Models atom either<br> 
-a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md) or<br>
-b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md) or<br>
-c) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
+You can **execute** the ![](../../../icons/models.png) Models atom either<br> 
+a) with the ![](../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md) or<br>
+b) with the ![](../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md) or<br>
+c) remotely with another atom (e.g. as part of a ![](../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
-Executing a ![](../../../../icons/models.png) Models atom simply means that all of its runnable child atoms are executed. 
+Executing a ![](../../../icons/models.png) Models atom simply means that all of its runnable child atoms are executed. 
 The progress is shown in the [Monitoring View](../../../views/monitoringView.md). After the execution has been finished, the *jobId* is increased by one.  
 
 
