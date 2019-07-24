@@ -43,7 +43,7 @@ The option **File** is only relevant if the output path is a file path.
 The option **Extra directory** means that an extra sub directory is included in the path, for example:
 
 ```
-C:/otuput/output.txt  => C:/output/2019-07-24_13:28:19#1/output.txt
+C:/output/output.txt  => C:/output/2019-07-24_13:28:19#1/output.txt
 ```
 
 
