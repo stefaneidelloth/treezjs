@@ -27,4 +27,5 @@ If the already existing atoms are not sufficient for you, please feel free to re
     * ![](./icons/studies.png) [Studies](./doc/atoms/study/studies.md)
     * ![](./icons/results.png) [Results](./doc/atoms/result/results.md)
   * [How to implement atoms](./doc/atoms/howToImplementAtoms.md)
+* [Components](./doc/components/components.md)
 
