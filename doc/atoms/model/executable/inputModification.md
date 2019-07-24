@@ -17,7 +17,7 @@ In order to preview the effect of the individual modification options, you might
 
 If you use the ![](../../../../icons/inputModification.png) InputModification atom, please make sure that 
 * the modified input file or directory paths already exist or 
-* that they are dynamically generated before the parent atom is executed, also see ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md). 
+* that they are dynamically generated just before the parent atom is executed, also see ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md). 
 
 ## Source code
 
