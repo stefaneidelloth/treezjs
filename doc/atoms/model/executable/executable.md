@@ -56,7 +56,11 @@ The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 
 			
 ## Arguments
 
-If you use **special characters**, please check if you need to include escape characters for your command line arguments, e.g. double slashes or quotation marks instead of single ones.
+The total system command is created by concatenation from the individual input fields. A prview for the command is shown as **Resulting command** in the section "Status". 
+
+It is possible to use variables (e.g. a ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*) that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
+
+If you use **special characters**, please check if you need to include escape characters for your (nested) command line arguments, e.g. double slashes or quotation marks instead of single ones.
 
 ### Executable
 		
@@ -64,9 +68,7 @@ The path to the **executable** (e.g. \*.exe or \*.bat) file. This path is automa
 
 Please do not include additional arguments here but use the other input fields. (Otherwise the whole line would be put within quotation marks and the system command might not work.) 
 
-The content of the other input fields is appended to the executable path (separated by spaces). Please have a look at the **status section** to see a preview of the **complete system command** that results from the content of all input fields.
-
-It is possible to use variables that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
+The content of the other input fields is appended to the executable path (separated by spaces). Please have a look at the **status section** to see a preview of the **Resulting command**.
 
 ### Input
 
@@ -84,7 +86,9 @@ The input file can be dynamically created with an ![](../../../../icons/inputFil
 
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you might need to manually wrap it in quotation marks. 
 
-Leave this input field empty if your executable does not require an input file or folder.   	     
+Leave this input field empty if your executable does not require an input file or folder.   	
+
+It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
 
 ### Output
 
@@ -102,27 +106,12 @@ The output path is not automatically wrapped in quotation marks because some pro
 
 Leave this output field empty if your executable does not require an input file or folder.   	
 
-It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output location for each run**.
+It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
 
 ### Logging
 
 You can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
 
+----
 
-		
-		
-		
-		
-		
-
-A system command typically starts with the **path to an executable** \*.exe or \*.bat file. Please enter that path in the section "Executable" of the [Properties View](../../../views/propertiesView.md). 
-
-The system command might continue with **command line arguments and additional paths**. You can<br>
-a) enter the **whole system command** as a single (long) line in the section "Executable" or<br> 
-b) use the extra sections "Input" and "Output" to clearly arrange the **individual parts** of the system command. With this option, an already existing old output file is deleted before the system command is executed (which not supported for the single line option a)):
-
-The total system command is shown in the section "Status" as **Resulting command**. If you use variables in the input fields (e.g. a previously defined ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*), the status section contains the current variable values (e.g. C:/system.log ) instead of the variable placeholder expressions (e.g. {$inputFile$}).
-		
-		
-				
-		
+![](../../../../icons/java.png) [JavaExecutable](./javaExecutable.md)	
