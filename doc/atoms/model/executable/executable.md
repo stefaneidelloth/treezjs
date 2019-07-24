@@ -90,7 +90,7 @@ The **selection mode** can be toggled:
 
 (Unfortunately, Google Chrome does not provide a dialogs that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
 
-You can **open** the selected input file or directory using the ![](../../../../icons/runTriangle.png) run button.
+You can **open** the selected input file or directory using the ![](../../../../icons/run_triangle.png) run button.
 
 The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you **might need to manually wrap it in quotation marks**. 
 
