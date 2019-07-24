@@ -1,5 +1,5 @@
 ![](../../../../icons/run.png) [Executable](./executable.md)<br>
-![](../../../../icons/java.png) [Executable](./javaExecutable.md)
+![](../../../../icons/java.png) [JavaExecutable](./javaExecutable.md)
 
 ----
 
