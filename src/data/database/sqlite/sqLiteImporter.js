@@ -76,6 +76,9 @@ export default class SqLiteImporter extends Importer {
 		
 		var data = await window.treezTerminal.sqLiteQuery(filePath, structureQuery, true);
 
+        var headers = data[0];
+        var nameIndex = headers.indexOf('name')
+        
 		var tableStructure = [];		
 
         var isVirtual = false;
@@ -84,14 +87,14 @@ export default class SqLiteImporter extends Importer {
 		data.shift();
 		
 		for(var line of data){
-			var name = line[1]; //available columns: cid, name, type, notnull, dflt_value, pk
-			var type = SqLiteColumnTypeConverter.convert(line[2]);
-			var isNullable = line[3] !== '0';			
-			var defaultValueString = line[4];
+			var name = line[nameIndex]; //available columns: cid, name, type, notnull, dflt_value, pk
+			var type = SqLiteColumnTypeConverter.convert(line[nameIndex+1]);
+			var isNullable = line[nameIndex+2] !== '0';			
+			var defaultValueString = line[nameIndex+3];
 			if(defaultValueString === 'NULL'){
 				defaultValueString = null;
 			}
-			var isPrimaryKey = line[5] !== '0';
+			var isPrimaryKey = line[nameIndex+4] !== '0';
 			var legend = name;
 
 			tableStructure.push(new ColumnBlueprint(

@@ -27,11 +27,7 @@ export default class DatabaseModifier extends CodeModel {
 		this.__hostSelection = undefined;		
 		this.__portSelection = undefined;		
 		this.__userSelection = undefined;		
-		this.__passwordSelection = undefined;        
-      
-        this.__executionStatusInfo = 'Not yet executed.';
-        this.__jobIdInfo = '1';   
-        
+		this.__passwordSelection = undefined;         
 	}	
 
 	get mode(){
@@ -61,7 +57,7 @@ export default class DatabaseModifier extends CodeModel {
     	switch(this.targetType){
     		case TableTargetType.sqLite:
     			var connectionString = this.fullPath(this.targetFilePath);
-    			var query = this.__buildQuery();
+    			var query = this.buildCode();
     			await window.treezTerminal.sqLiteQuery(connectionString, query, false)
     				.catch((error)=>{
     					monitor.error(error);

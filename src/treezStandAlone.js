@@ -6,7 +6,8 @@ requirejs.config({
 		paths : {
 			'd3' : 'bower_components/d3/d3.min',				
 			'jquery' : 'bower_components/jquery/dist/jquery.min',
-			'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min'				
+			'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min',
+			'codemirror' : 'bower_components/codemirror'						
 		},
 		bundles : {
 			'lib/orion/code_edit/built-codeEdit-amd' : ['orion/codeEdit', 'orion/Deferred']
@@ -69,7 +70,7 @@ function createEditor(handleCreatedEditor, OrionCodeEdit){
 				},
 				processText: function(textHandler){						
 			    	var editorContext = editorView.editor.getEditorContext();
-			    	editorContext.getText().then((text)=>textHandler(text));
+			    	editorContext.getText().then((text) => textHandler(text));
 				}
 		};
 		
@@ -92,12 +93,14 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 	var myLayout = createGoldenLayout(GoldenLayout, containerElement); //Also see http://golden-layout.com/docs/Config.html
 
 	var focusManager = {
-		__graphicsContainer: undefined,
-		focusGraphicsView: ()=>{
-			var graphics = this.__graphicsContainer.parent;
-        	graphics.parent.setActiveContentItem(graphics);
-		}
+		graphicsContainer: undefined
 	}
+
+	focusManager['focusGraphicsView'] = () => {
+			var graphics = focusManager.graphicsContainer.parent;
+        	graphics.parent.setActiveContentItem(graphics);
+	};
+	
 
 	myLayout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
@@ -128,7 +131,7 @@ function createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, contain
 	});
 
 	myLayout.registerComponent('Graphics', function(container) {
-		focusManager.__graphicsContainer = container;
+		focusManager.graphicsContainer = container;
 		var element = container.getElement();
 		element.attr('id','treez-graphics');
 

@@ -7,9 +7,11 @@ import GenericInput from './genericInput/genericInput.js';
 import DatabaseModifier from './code/databaseModifier.js';
 import FileCleanup from './fileCleanup/fileCleanup.js';
 import FileCopy from './fileCopy/fileCopy.js';
+import InputFileGenerator from './inputFileGenerator/inputFileGenerator.js';
 
 import Executable from './executable/executable.js';
 import JavaExecutable from './executable/javaExecutable.js';
+
 import TableImport from './tableImport/tableImport.js';
 import SqLiteAppender from './sqLiteAppender/sqLiteAppender.js';
 
@@ -113,9 +115,9 @@ export default class Models extends Model {
 				treeView));	
 						
 		actions.push(new AddChildAtomTreeViewAction(
-				SqLiteAppender,
-				'sqLiteAppender',
-				'databaseAppender.png',
+				InputFileGenerator,
+				'inputFileGenerator',
+				'inputFile.png',
 				parentSelection,
 				this,
 				treeView));	
@@ -149,6 +151,14 @@ export default class Models extends Model {
 				parentSelection,
 				this,
 				treeView));
+
+		actions.push(new AddChildAtomTreeViewAction(
+				SqLiteAppender,
+				'sqLiteAppender',
+				'databaseAppender.png',
+				parentSelection,
+				this,
+				treeView));	
 		
 		actions.push(
 			new AddChildAtomTreeViewAction(
@@ -198,6 +208,10 @@ export default class Models extends Model {
     createFileCopy(name){
     	return this.createChild(FileCopy, name);
     }
+
+    createInputFileGenerator(name) {
+		return this.createChild(InputFileGenerator, name);		
+	}
 
 	createExecutable(name) {
 		return this.createChild(Executable, name);

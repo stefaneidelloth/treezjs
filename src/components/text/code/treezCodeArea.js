@@ -10,56 +10,61 @@ export default class TreezCodeArea extends LabeledTreezElement {
         this.__container = undefined;
         this.__textArea = undefined;  
         this.__codeMirror = undefined; 
-
-		if(!CodeMirror){
-			 Treez.importScript('/bower_components/codemirror/lib/codemirror.js');
-			 Treez.importScript('/bower_components/codemirror/mode/javascript/javascript.js');
-			 Treez.importScript('/bower_components/codemirror/mode/python/python.js');
-			 Treez.importScript('/bower_components/codemirror/mode/sql/sql.js');
-		}      		
-                                      
+        				
+		Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');                                      
     }   
 
     static get observedAttributes() {
 		return LabeledTreezElement.observedAttributes.concat(['mode']);                    
     } 	   	
 
-    connectedCallback() {    	
+    connectedCallback() {  
 
-        if(!this.__container){
-        	
-        	var container = document.createElement('div');
-        	container.className = 'treez-code-area-container';
-        	this.__container = container;
-        	
-        	this.appendChild(container);           
+        var self = this;  	
 
-            var self=this; 
+		require([
+			'codemirror/lib/codemirror',						
+			'codemirror/mode/sql/sql',
+			'codemirror/mode/javascript/javascript',
+			'codemirror/mode/python/python'		
+		], function(
+			 CodeMirror
+		) {		
+		
 
-            if(!self.mode){
-            	self.mode = 'javascript';
-            }
-            
-            //Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
-            this.__codeMirror = CodeMirror(container,  
-              {
-            	value: self.value,
-            	mode: self.mode,
-                lineNumbers: false, //showing line numbers somehow misaligns the cursor position
-                matchBrackets: true,
-                continueComments: "Enter",
-                extraKeys: {"Ctrl-Q": "toggleComment"}
-              }
-            );            
-            
-            this.__codeMirror.on('change', function(codeMirror, change){ 
-               var newValue = codeMirror.getValue();               
-               self.value = newValue; 
-            });
-        }        
-      
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+			if(!self.__container){
+
+				var container = document.createElement('div');
+				container.className = 'treez-code-area-container';
+				self.__container = container;
+
+				self.appendChild(container);   
+				
+				if(!self.mode){
+					self.mode = 'javascript';
+				}
+
+				//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
+				self.__codeMirror = CodeMirror(container,  
+				  {
+					value: self.value,
+					mode: self.mode,
+					lineNumbers: false, //showing line numbers somehow misaligns the cursor position
+					matchBrackets: true,
+					continueComments: "Enter",
+					extraKeys: {"Ctrl-Q": "toggleComment"}
+				  }
+				);            
+
+				self.__codeMirror.on('change', function(codeMirror, change){ 
+				   var newValue = codeMirror.getValue();               
+				   self.value = newValue; 
+				});
+			}        
+
+			self.disableElements(self.disabled)
+			self.hideElements(self.hidden); 
+		});        
     }    
     
     updateElements(newValue){

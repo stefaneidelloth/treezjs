@@ -195,10 +195,22 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 							var jsonObject = jsonReader.readObject();
 							var command = jsonObject.getString("command");
 							
-							try {
-								handleClientMessage(command);
-							} catch (Exception exception) {
-								throw new IllegalStateException("Could not handle client message" + message);
+							if(!command.isEmpty()) {
+							
+								try {
+									handleClientMessage(command);
+								} catch (Exception exception) {
+									throw new IllegalStateException("Could not handle client message " + message, exception);
+								}
+							} else {
+								var connectionString = jsonObject.getString("connectionString");
+								var query = jsonObject.getString("query");
+								try {
+									handleClientQuery(connectionString, query);
+								} catch (Exception exception) {
+									var exceptionMessage = "Could not handle client query\nconnectionString: " + connectionString + "\nquery: " + query;
+									throw new IllegalStateException(exceptionMessage, exception);
+								}
 							}
 							
 						}
@@ -226,6 +238,11 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 
 	protected void handleClientMessage(String message) {
 		System.out.println(message);
+	}
+	
+	protected void handleClientQuery(String connectionString, String query) {
+		System.out.println(connectionString);
+		System.out.println(query);
 	}
 
 	protected static byte[] encode(String message) throws IOException {

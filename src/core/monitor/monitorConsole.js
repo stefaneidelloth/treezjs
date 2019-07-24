@@ -22,9 +22,18 @@ export default class MonitorConsole {
 	
 	error(message, error){
 
-		let logMessage = error
-			?new LogMessage(message + error.message, 'error', error.stack)
-			:new LogMessage(message, 'error', this.__stack);
+		var logMessage;
+		if(error){
+			logMessage = new LogMessage(message + error.message, 'error', error.stack);
+		} else {
+			if(message.stack){
+				logMessage = new LogMessage(message.message , 'error', message.stack);
+			} else {
+				logMessage = new LogMessage(message, 'error', this.__stack);
+			}
+		}
+
+
 		this.__logMessages.push(logMessage);
 		this.__appendMessageToParentSelection(logMessage);
 	}
@@ -64,19 +73,22 @@ export default class MonitorConsole {
 	}	
 		
 	__appendMessageToParentSelection(logMessage){
-		var multiLineText = this.__replaceLineBreaksWithHtmlBrElements(logMessage.text);
-		var entry = this.__parentSelection.append('div') //
-			.style('color',logMessage.color)
-			.className('treez-monitor-titled')			
-			.html(multiLineText);
+		if(logMessage.text){
+			var multiLineText = this.__replaceLineBreaksWithHtmlBrElements(logMessage.text);
+			var entry = this.__parentSelection.append('div') //
+				.style('color',logMessage.color)
+				.className('treez-monitor-titled')			
+				.html(multiLineText);
 		
-		var title = entry.append('div')
-			.className('treez-monitor-title');
+			var title = entry.append('div')
+				.className('treez-monitor-title');
 
-		entry.onMouseOver(()=>{ //this lazily creates the stackTrace ... to not slow down logging.
-				title.html(logMessage.stackTrace); 
-				entry.onMouseOver(null);
-		});
+			entry.onMouseOver(()=>{ //this lazily creates the stackTrace ... to not slow down logging.
+					title.html(logMessage.stackTrace); 
+					entry.onMouseOver(null);
+			});
+		}
+		
 			
 	}		
 

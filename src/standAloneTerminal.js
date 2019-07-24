@@ -1,3 +1,4 @@
+import TableData from './data/database/tableData.js';
 export default class StandAloneTerminal {
 
 	constructor(){
@@ -44,13 +45,77 @@ export default class StandAloneTerminal {
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
 		return jQuery.get('deleteFile', uri);			
 	}	
+
+
+	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){
+		this.__onMessage = messageHandler;
+		this.__onError = errorHandler;
+		this.__onFinished = finishedHandler;
+		this.__send(command + " & exit");
+	}
 	
 	execute(command, messageHandler, errorHandler, finishedHandler){
 		this.__onMessage = messageHandler;
 		this.__onError = errorHandler;
 		this.__onFinished = finishedHandler;
-		this.__send(command + " & exit");		
+		this.__send(command + " & exit");	
 	}		
+
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {			
+
+		if(isExpectingOutput){
+			
+			var self = this;
+
+			return new Promise(function(resolve, reject) { 			    
+				self.__onMessage = (message) => {
+					
+					var tableArray =  TableData.parseTableTextTo2DArray(message, ',');
+					resolve(tableArray);
+				};
+				self.__onError = (message) => reject(message);
+				self.__onFinished = () => resolve('SqLite query finished.');
+				
+				self.__sendQuery('sqlite:' + connectionString, query);	
+			}); 
+
+			throw new Error('Not yet implemented');
+
+            /*
+			var pythonCode = '%%python\n'
+			+ 'import sqlite3\n'
+			+ 'import pandas\n'	
+			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
+            + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
+            + 'print(dataFrame.to_csv())\n';		
+
+			var text = await this.executePythonCode(pythonCode, true);
+			return TableData.parseTableTextTo2DArray(text, ',');
+			*/
+
+		} else {
+
+			var self = this;
+
+			return new Promise(function(resolve, reject) { 			    
+				self.__onMessage = (message) => resolve(message);
+				self.__onError = (message) => reject(message);
+				self.__onFinished = resolve();
+				
+				self.__sendQuery("sqlite:" + connectionString, query);	
+			}); 			
+				
+		}
+	}
+
+	__sendQuery(connectionString, query){
+		var jsonObject = {
+			command: '',
+			connectionString: connectionString,
+			query: query
+		};
+		this.__webSocket.send(JSON.stringify(jsonObject));	
+	}
 	
 	__send(command){
 		var jsonObject = {

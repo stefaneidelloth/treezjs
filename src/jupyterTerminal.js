@@ -84,17 +84,28 @@ export default class JupyterTerminal {
 		return this.executePythonCode(pythonCode, false);		
 	}	
 	
-	execute(command, messageHandler, errorHandler, finishedHandler){		
-
-		//var pythonCode = '!' + command;		
-		
+	execute(command, messageHandler, errorHandler, finishedHandler){	
+			
 		var pythonCode = 'from subprocess import Popen, PIPE, CalledProcessError\n' +
 						 'with Popen(\'' + command + '\', stdout=PIPE, bufsize=1, shell=True, encoding="utf8") as process:\n' +
 						 '    for line in process.stdout:\n' +
 						 '        print(line, end="")\n' +
 						 'if process.returncode != 0:\n' +
-						 '    raise CalledProcessError(process.returncode, process.args)'
-		
+						 '    raise CalledProcessError(process.returncode, process.args)';
+
+		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
+	}	
+
+
+	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
+			
+		var pythonCode = 'from subprocess import Popen\n' +		                
+                         'Popen(\'' + command + '\')';	
+
+		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
+	}	
+
+	__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler){
 		var self=this;
 
     	new Promise(function(resolve, reject) {  
@@ -146,8 +157,7 @@ export default class JupyterTerminal {
 		})
 		.catch(errorHandler)
 		.then(finishedHandler);		
-		
-	}	
+	}
 
 	do(){
 

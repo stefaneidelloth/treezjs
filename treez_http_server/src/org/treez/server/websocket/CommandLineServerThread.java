@@ -6,10 +6,16 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.DriverManager;
+import java.util.ArrayList;
 
 public class CommandLineServerThread extends AbstractServerThreadHandlingOneClient {
 
 	static private boolean isCheckingConsoleOutput = false;	
+	
+	static private String columnDelimiter = ",";
+	
+	static private String rowDelimiter = "\n";
 
 	private Process process;
 
@@ -64,6 +70,59 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 		
 		initializeConsoleProcess();
 		
+	}
+	
+	@Override
+	protected void handleClientQuery(String connectionString, String query) {
+		System.out.println("#Processing web socket query");
+		System.out.println(connectionString);
+		System.out.println(query);		
+		
+		try(
+			var connection = DriverManager.getConnection("jdbc:" + connectionString);
+			var statement = connection.createStatement();
+		){
+			var hasResults = statement.execute(query);
+			if(hasResults) {
+				var resultSet = statement.getResultSet();
+				
+				 var metaData = resultSet.getMetaData();
+				 var numberOfColumns = metaData.getColumnCount();
+				 
+				 var headers = new ArrayList<String>();
+				 for (int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++) {					 
+					 headers.add(metaData.getColumnLabel(columnIndex));					 
+				 }
+				 
+				 var tableText = String.join(columnDelimiter, headers) + rowDelimiter;
+				 				 				 
+				 while (resultSet.next()) {
+					 
+					   var rowEntries = new ArrayList<String>();
+				       for (int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++) {				          
+				           var entry = resultSet.getObject(columnIndex);
+				           if(entry!=null) {
+				        	   rowEntries.add(entry.toString());
+				           } else {
+				        	   rowEntries.add("null");
+				           }
+				           
+				       }
+				       tableText += String.join(columnDelimiter, rowEntries) +  rowDelimiter;
+				   }					
+				
+				//System.out.println("Query result:\n" + tableText);
+				
+				sendMessageToClient(tableText);	
+			}
+			
+			
+		} catch(Exception exception) {
+			var message = "Could not execute database query '" + query 
+					+ "' with connection string '" + connectionString + "'!";
+			throw new IllegalStateException(message, exception);
+		}          
+	         
 	}
 
 	private void readAndHandleProcessOutput(String message) {
