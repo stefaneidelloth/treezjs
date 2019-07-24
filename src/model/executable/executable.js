@@ -19,14 +19,12 @@ export default class Executable extends Model {
         this.inputPath = '';
                
         this.outputArguments = '';
-        this.outputPath = '';
-        this.isCopyingInputFileToOutputFolder = false; 
+        this.outputPath = '';       
         
         this.__commandInfo = ''; 
         
         this.treeView=undefined;
-	}
-	
+	}	
 
     createComponentControl(tabFolder){    
      
@@ -87,34 +85,19 @@ export default class Executable extends Model {
     	    	    	
 		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
 		monitor.info(startMessage);
-
-		//initialize progress monitor
-		const totalWork = 4;
-		monitor.totalWork = totalWork;
-
-		await this.__deleteOldOutputAndLogFilesIfExist();
-
-		       
+	
+		const totalWork = 2;
+		monitor.totalWork = totalWork;	
 		
-		//execute InputFileGenerator child(ren) if exist	
-		try {
-			await this.__runInputFileGenerators(treeView, monitor);
-		} catch (exception) {
-			monitor.error('Could not execute IinputFileGenerators for executable ' + this.name, exception);
-			monitor.cancel();
-			return this.__createEmptyModelOutput();			
-		}
-		
-		//create & execute command
 		monitor.description = 'Executing system command.';
 		const command = this.__buildCommand();
+
+		monitor.worked(1);		
 		
 		monitor.info('Executing ' + command);
 		await this.__executeCommand(command, monitor);
 
-		monitor.worked(1);			
-		
-		this.increaseJobId();
+		this.increaseJobId();		
 		
 		monitor.done();
 		
@@ -238,16 +221,8 @@ export default class Executable extends Model {
             .label('Output file or directory')   
             .nodeAttr('pathMapProvider', this)
             .onChange(()=>this.refreshStatus())           
-            .bindValue(this,()=>this.outputPath); 
-
-       sectionContent.append('treez-check-box')
-		   .label('Copy input file to output folder')
-		   .value(false)
-		   .onChange(()=>this.refreshStatus())		  
-		   .bindValue(this,()=>this.isCopyingInputFileToOutputFolder);       
-   }  
-
-	
+            .bindValue(this,()=>this.outputPath);
+	}  	
 
 	__createStatusSection(page) {
        const section = page.append('treez-section')
@@ -269,18 +244,6 @@ export default class Executable extends Model {
 
    refreshStatus() {
 		this.__commandInfo = this.__buildCommand();
-	}	
-
-	async __copyInputFileToOutputFolderIfEnabled(){
-
-		try {
-			if (this.isCopyingInputFileToOutputFolder) {
-				await this.__copyInputFileToOutputFolder();
-			}
-		} catch (exception) {
-			monitor.error('Could not copy input file to output folder for ' + this.name, exception);
-			monitor.cancel();				
-		}
 	}	
 
 	__buildCommand(){
