@@ -32,9 +32,9 @@ A new ![](../../../../icons/java.png) JavaExecutable atom is created either by:
 		
 The context menu of the ![](../../../../icons/run.png) JavaExecutable atom allows to add child atoms: 
 
-* ![](../../../../icons/inputModification.png) [InputModification](../../models/executable/inputModification.md)
-* ![](../../../../icons/outputModification.png) [OutputModification](../../models/executable/outputModification.md)
-* ![](../../../../icons/loggingArguments.png) [LoggingArguments](../../models/executable/loggingArguments.md)
+* ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md)
+* ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md)
+* ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md)
 	
 ## StudyId and JobId
 
