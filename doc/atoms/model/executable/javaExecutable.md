@@ -64,7 +64,7 @@ If you use **special characters**, please check if you need to include escape ch
 
 ### Java executable
 		
-The path to the **Java executable**. This path is automatically put in **quotation marks** to ensure that paths that include spaces work correctly. 
+The path to the **java.exe**. This path is automatically put in **quotation marks** to ensure that paths that include spaces work correctly. 
 
 Please do not include additional arguments here but use the other input fields. (Otherwise the whole line would be put within quotation marks and the system command would not work.) 
 
@@ -88,7 +88,7 @@ Arguments for the Java Virtual Machine (JVM), also see https://stackoverflow.com
 
 This is typically a **key word**, telling the java program that an input file path follows, e.g. "-i" or "/OPEN". 
 
-Leave this input field empty if your java program does not require such an input key word. 
+Leave this input field empty if your java program does not require such input key words. 
 
 #### Input file or directory
 
