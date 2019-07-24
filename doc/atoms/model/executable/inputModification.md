@@ -37,6 +37,8 @@ The option **Extra directory** means that an extra sub directory is included in 
 C:/input/input.txt  => C:/input/2019-07-24_13:28:19#1/input.txt
 ```
 
+In order to preview the effect of the individual modification options, you might want to have a look at the status section of the parent atom. 
+
 ----
 
 ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md)
