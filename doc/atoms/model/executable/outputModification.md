@@ -7,6 +7,9 @@
 
 The purpose of the ![](../../../../icons/outputModification.png) OutputModification atom is to modify the output file or directory path of its parent atom.
 
+
+![](../../../images/output_modification.png)
+
 This makes sense if you run the parent atom many times, for example as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have different output paths for each execution.
 
 The check boxes allow you to include the **execution date** and/or a jobId (= increasing number for subsequent runs). 
@@ -15,7 +18,6 @@ In order to preview the effect of the individual modification options, you might
 
 If you use the ![](../../../../icons/outputModification.png) OutputModification atom please make sure that your (Java-) executable is able to automatically create the files/folders if they do not yet exist.
 
-![](../../../images/output_modification.png)
 
 ## Source code
 
