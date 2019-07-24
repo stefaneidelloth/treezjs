@@ -43,9 +43,9 @@ The context menu of the ![](../../../../icons/run.png) Executable atom allows to
 ## Work flow	
 
 You can **run** the ![](../../../../icons/run.png) Executable atom either<br> 
-a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md) or<br>
-b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md) or<br>
-c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models) or<br>
+a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md)<br>
+b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)<br>
+c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/models.png) [Models](../models.md) atom in the [Tree View](../../../views/treeView.md) (runs all executable models)<br>
 d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study. 
 
 The creation of the system command can be influenced by adding child atoms.
@@ -56,77 +56,54 @@ The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 
 			
 ## Arguments
 
-<h4>Executable</h4>
+If you use **special characters**, please check if you need to include escape characters for your command line arguments, e.g. double slashes or quotation marks instead of single ones.
+
+### Executable
 		
-		<ul>
-			<li><b>Executable</b>: The path to the <b>executable file</b>. This path will be automatically put in 
-			<b>quotation marks</b> to ensure that paths that include spaces work correctly. Do not include additional
-			arguments here but use the other input fields. The content of the other input fields will be appended 
-			to the executable path (separated by spaces). You can have a look at the <b>status section</b> to see a
-			preview of the <b>complete system command</b> that results from the content of all input fields.  
-			</li>			
-		</ul>
+The path to the **executable** (e.g. \*.exe or \*.bat) file. This path is automatically put in **quotation marks** to ensure that paths that include spaces work correctly. 
+
+Please do not include additional arguments here but use the other input fields. (Otherwise the whole line would be put within quotation marks and the system command might not work.) 
+
+The content of the other input fields is appended to the executable path (separated by spaces). Please have a look at the **status section** to see a preview of the **complete system command** that results from the content of all input fields.
+
+It is possible to use variables that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
+
+### Input arguments
+
+This is typically a **key word**, telling the executable that an input file path follows, e.g. "-i" or "/OPEN". 
+
+Leave this input field empty if your executable does not require such an input key word. 
+
+### Input file or folder
+
+This is typically the path to an input file or folder, e.g. "C:/input.txt". 
+
+The input file can be dynamically created with an ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atom. 
+
+The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you might need to manually wrap it in quotation marks. 
+
+Leave this input field empty if your executable does not require an input file or folder.   	     
+	
+### Output arguments
+
+This is typically a **key word**, telling the executable that an output file follows, e.g. "-output" or "/O". 
+
+Leave this input filed empty if your executable does not require such an output key word.  
 			
-		
-		<h4 id="input">Input</h4>
-		
-		<ul>
-			<li><b>Input arguments</b>: First part for specifying input arguments. This is typically a <b>key word</b>
-			that tells the executable that the specification of an input file will follow, e.g. "-i" or "-open". Leave 
-			this empty if your executable does not require such an input key word. If you use <b>special characters</b>
-			please check if you need to include escape characters, e.g. double slashes or quotation marks instead of
-			single ones. Please consider this also for the other arguments.
-			</li>
-			<li><b>Input file or folder</b>: Second part for specifying input arguments. This is typically the path
-			to an input file  or folder, e.g. "C:/input.txt". If the input file does not yet exist, you can manually 
-			create it or use a <a class="inputFileGenerator"></a> atom to automatically generate the input file from a 
-			<a class="genericInputModel"></a> before the system command is executed. This path will not automatically
-			be put in quotation marks because some programs do not support quotation marks around the input file path. If
-			you use an input path that contains spaces you might need to wrap it in quotation marks. Leave this empty if your
-			executable does not require an input file.   	     
+### Output file or folder
+
+This is typically the path to an output file or folder, e.g. "C:/output.txt". 
+
+The output path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the output path. Therefore, if you use an output path that contains spaces, you might need to manually wrap it in quotation marks.
+
+Leave this output field empty if your executable does not require an input file or folder.   	
+
+It is possible to dynamically modify the output path using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output location for each run**.
+
 			</li>
 		</ul>
 		
-		<h4 id="output">Output</h4>
 		
-		<ul>
-			<li><b>Output arguments</b>: First part for specifying output arguments. This is typically a <b>key word</b>
-			that tells the executable that the specification of an output file will follow, e.g. "-output" or "-o". 
-			Leave this empty if your executable does not require such an output key word.  
-			</li>
-			<li><b>Output file or folder</b>: Second part for specifying output arguments. This is typically the path
-			to an output file or folder, e.g. "C:/output.txt". This path will not automatically be put in quotation marks 
-			because some programs do not support quotation marks around the output file path. If you use an output path
-			that contains spaces you might need to wrap it in quotation marks. Leave this empty if your executable 
-			does not require an output file/folder.   	     
-			</li>
-		</ul>
-		
-		<h4 id="outputModification" >Output modification</h4>
-		
-		<p>
-		The <b>check boxes</b> in the output modification section allow to automatically modify the output file/folder that is
-		specified above. This makes sense if you execute the <a class="executable"></a> atom many times, for example
-		in a <a class="sweep"></a> study, and you want to have a <b>different output location for each execution</b>.
-		</p>
-		<p>
-		The check boxes allow you to include the <b>execution date</b> and or a <b>study index</b> (=increasing number). 
-		You can append them to the name of the (parent) <b>folder</b>, the name of an extra <b>sub folder</b> or to the 
-		<b>file name</b> by enabling the corresponding check boxes. If you use the output modification <b>please make
-		sure</b> that your executable is able to automatically create the files/folders if they do not exist. 
-		</p>
-		<p>
-		You can manually <b>reset the study index</b> with the orange button in the upper right corner of the property page. 
-		If you remotely run the <a class="executable"></a> atom as part of a study, the <b>study index</b> will be reset
-		at the start and then automatically increased while executing the study.       
-		<p>
-		<p>
-		If you are not sure how the check boxes affect the system command, have a look the status section where a preview
-		for the resulting system command is shown. The status section also shows the <b>study index</b> that will be used 
-		for the next manual execution. (The actual <b>execution date</b> will be different to the date that is shown in the 
-		preview and the study index might be overridden when remotely running the the <a class="executable"></a> atom as 
-		part of a study.)  
-		</p>
 		
 		
 		<h4 id="logging">Logging</h4>
