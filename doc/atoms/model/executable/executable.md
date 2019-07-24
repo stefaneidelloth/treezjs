@@ -78,25 +78,29 @@ This is typically a **key word**, telling the executable that an input file path
 
 Leave this input field empty if your executable does not require such an input key word. 
 
-#### Input file or folder
+#### Input file or directory
 
 This is typically the path to an input file or folder, e.g. "C:/input.txt".
 
-You can manually enter the path or browse the file or directory on your local disk. The selection mode can be toggled:
+You can manually enter the path or **browse** the file or directory on your local disk. 
+
+The **selection mode** can be toggled:
 * ![](../../../../icons/fileToggle.png): select file
 * ![](../../../../icons/directoryToggle.png): select directory
 
 (Unfortunately, Google Chrome does not provide a dialogs that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
 
-You can open the selected input file or directory using the ![](../../../../icons/runTriangle.png) run button.
+You can **open** the selected input file or directory using the ![](../../../../icons/runTriangle.png) run button.
 
-The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you might need to manually wrap it in quotation marks. 
+The input path is not automatically wrapped in quotation marks because some programs do not support quotation marks around the input path. Therefore, if you use an input path that contains spaces, you **might need to manually wrap it in quotation marks**. 
 
 Leave this input field empty if your executable does not require an input file or folder.   	
 
 It is possible to **dynamically modify the input path** using an ![](../../../../icons/inputModification.png) [InputModification](./inputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different input path for each run**.
 
-Input files can be dynamically created with ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atoms. 
+**Input files can be dynamically created** with ![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerators.md) atoms. 
+
+**Input files can be copied** with ![](../../../../icons/fileCopy.png) [FileCopy](../fileCopy/fileCopy.md) atoms. 
 
 ### Output
 
@@ -106,7 +110,7 @@ This is typically a **key word**, telling the executable that an output file fol
 
 Leave this input filed empty if your executable does not require such an output key word.  
 			
-#### Output file or folder
+#### Output file or directory
 
 This is typically the path to an output file or folder, e.g. "C:/output.txt". 
 
@@ -115,6 +119,8 @@ The output path is not automatically wrapped in quotation marks because some pro
 Leave this output field empty if your executable does not require an input file or folder.   	
 
 It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
+
+**Old output files and directories can be deleted** with ![](../../../../icons/fileCleanup.png) [FileCleanup](../fileCleanup/fileCleanup.md) atoms. 
 
 ### Logging
 
