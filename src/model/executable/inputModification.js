@@ -6,21 +6,19 @@ export default class InputModification extends ComponentAtom {
 	constructor(name) {		
 	    super(name);
 		this.image = 'inputModification.png';
-		
-        this.isIncludingDateInInputFile = undefined;
-        this.isIncludingDateInInputFolder = undefined;
-        this.isIncludingDateInInputSubFolder = undefined;
-        this.isIncludingjobIdInInputFile = undefined;
-        this.isIncludingjobIdInInputFolder = undefined;
-        this.isIncludingjobIdInInputSubFolder = undefined;
-       
-	}
-
-	
+		        
+        this.isIncludingDateInInputDirectory = false;
+        this.isIncludingDateInInputSubDirectory = false;
+        this.isIncludingDateInInputFile = false;
+               
+        this.isIncludingjobIdInInputDirectory = false;
+        this.isIncludingjobIdInInputSubDirectory = false;  
+        this.isIncludingjobIdInInputFile = false;     
+	}	
 
     createComponentControl(tabFolder){  
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
 		
         this.createInputModificationSection(page); 
 	}	
@@ -28,49 +26,49 @@ export default class InputModification extends ComponentAtom {
    createInputModificationSection(page) {
 
        const section = page.append('treez-section')
-           .title('Input modification')
+           .label('Input modification')
            .attr('expanded','false');
 
        const sectionContent = section.append('div'); 
 
        sectionContent.append('treez-text-label')
-       	   .value('Include date in:')
+       	   .value('Include date in name of:')
 
        sectionContent.append('treez-check-box')
-		   .label('Folder name')
+		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInInputFolder);
+		   .bindValue(this,()=>this.isIncludingDateInInputDirectory);
 
 	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
+		   .label('Extra directory')
 		   .value(false)		   
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInInputSubFolder);
+		   .bindValue(this,()=>this.isIncludingDateInInputSubDirectory);
 
 	   	sectionContent.append('treez-check-box')
-		   .label('File name')
+		   .label('File')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingDateInInputFile);
 
       	sectionContent.append('treez-text-label')
-       	   .value('Include job index in:') 
+       	   .value('Include jobId in name of:') 
        	   
 		sectionContent.append('treez-check-box')
-		   .label('Folder name')
+		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingjobIdInInputFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInInputDirectory);
 
 	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
+		   .label('Extra directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingjobIdInInputSubFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInInputSubDirectory);
 
 	   sectionContent.append('treez-check-box')
-		   .label('File name')
+		   .label('File')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingjobIdInInputFile);  
@@ -100,9 +98,9 @@ export default class InputModification extends ComponentAtom {
 
 		let inputPathExpression = pathBase;
 
-		inputPathExpression = this.__includeFolder(inputPathExpression, executable);
+		inputPathExpression = this.__includeDirectory(inputPathExpression, executable);
 		
-		inputPathExpression = this.__includeSubFolder(inputPathExpression, executable);
+		inputPathExpression = this.__includeSubDirectory(inputPathExpression, executable);
 
 		if (hasFileExtension) {
 			inputPathExpression = this.__includeFileNameAndExtension(fileNameWithoutExtension, pathPostFix,
@@ -112,52 +110,52 @@ export default class InputModification extends ComponentAtom {
 		return inputPathExpression;
 	}
 
-	__includeFolder(inputPathExpression, executable){
-		var newExpression = this.__includeDateInFolder(inputPathExpression, executable);
-		newExpression = this.__includejobIdInFolder(newExpression, executable);
+	__includeDirectory(inputPathExpression, executable){
+		var newExpression = this.__includeDateInDirectory(inputPathExpression, executable);
+		newExpression = this.__includejobIdInDirectory(newExpression, executable);
 		return newExpression;
 	}
 
-	__includeDateInFolder(inputPathExpression, executable) {
+	__includeDateInDirectory(inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
-		const doIncludeDateInFolder = this.isIncludingDateInInputFolder;
-		if (doIncludeDateInFolder) {
+		const doIncludeDateInDirectory = this.isIncludingDateInInputDirectory;
+		if (doIncludeDateInDirectory) {
 			newInputPath += "_" + Utils.getDateString();
 		}
 		return newInputPath;
 	}
 
-	 __includejobIdInFolder(inputPathExpression, executable) {
+	 __includejobIdInDirectory(inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
-		const doIncludejobIdInFolder = this.isIncludingjobIdInInputFolder;
-		if (doIncludejobIdInFolder) {
-			newInputPath += "#" + executable.getJobId();
+		const doIncludejobIdInDirectory = this.isIncludingjobIdInInputDirectory;
+		if (doIncludejobIdInDirectory) {
+			newInputPath += "#" + executable.jobId;
 		}
 		return newInputPath;
 	}
 
-	__includeSubFolder(inputPathExpression, executable) {
+	__includeSubDirectory(inputPathExpression, executable) {
 
 		let newInputPath = inputPathExpression;
 
-		const isIncludingDateInSubFolder = this.isIncludingDateInInputSubFolder;
-        const isIncludingjobIdInSubFolder = this.isIncludingjobIdInInputSubFolder;
-        const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingjobIdInSubFolder;
+		const isIncludingDateInSubDirectory = this.isIncludingDateInInputSubDirectory;
+        const isIncludingjobIdInSubDirectory = this.isIncludingjobIdInInputSubDirectory;
+        const doIncludeSubDirectory = isIncludingDateInSubDirectory || isIncludingjobIdInSubDirectory;
 
-		if (doIncludeSubFolder) {
+		if (doIncludeSubDirectory) {
 			newInputPath += "/";
 		}
 
-		if (isIncludingDateInSubFolder) {
+		if (isIncludingDateInSubDirectory) {
 			newInputPath += Utils.getDateString();
 		}
 
-		if (isIncludingjobIdInSubFolder) {
-			newInputPath += "#" + executable.getJobId();
+		if (isIncludingjobIdInSubDirectory) {
+			newInputPath += "#" + executable.jobId;
 		}
 		return newInputPath;
 	}
@@ -175,7 +173,7 @@ export default class InputModification extends ComponentAtom {
 		}
 
 		if (this.isIncludingjobIdInInputFile) {
-			newInputPath += "#" + executable.getJobId();
+			newInputPath += "#" + executable.jobId;
 		}
 		newInputPath += pathPostFix; //is empty for directories
 		return newInputPath;

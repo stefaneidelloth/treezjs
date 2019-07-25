@@ -7,9 +7,9 @@ export default class JavaExecutable extends Executable {
 		this.image = 'java.png';
 		this.executablePath = 'D:/EclipseJava/App/jdk/bin/java.exe';
        
-        this.classPath = undefined;
-        this.fullClassName = undefined;
-        this.jvmArguments = undefined;
+        this.classPath = '';
+        this.fullClassName = '';
+        this.jvmArguments = '';
 	}	
 	 
 	__createExecutableSection(tab) {
@@ -43,13 +43,14 @@ export default class JavaExecutable extends Executable {
 
 	 __createInterimSections(page){
 		 this.__createClassPathSection(page);
+		 this.__createMainSection(page);
 		 this.__createJvmArgumentsSection(page);	    	
 	 }	
 
 	__createClassPathSection(page) {
 
 		const section = page.append('treez-section')
-				.label("Class path (e. g. jar file)");		
+				.label("Class path (e.g. jar file)");		
 
 		var sectionContent = section.append('div');
 		
@@ -57,8 +58,16 @@ export default class JavaExecutable extends Executable {
 			.label('Class path (e. g. path to jar file that provides main class)')
 			.nodeAttr('pathMapProvider', this)
 			.onChange(()=>this.refreshStatus())
-			.bindValue(this,()=>this.classPath);        
-			
+			.bindValue(this,()=>this.classPath);  		
+	}
+
+	__createMainSection(page) {
+
+		const section = page.append('treez-section')
+				.label("Main class");		
+
+		var sectionContent = section.append('div');
+				
 		sectionContent.append('treez-text-field')
 			.label('Full name of main class')
 			.onChange(()=>this.refreshStatus())

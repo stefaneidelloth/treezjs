@@ -12,7 +12,7 @@ export default class TableImport extends Model {
               
         this.columnSeparator = ',';
         this.customColumnHeaders = '';
-        this.customJobId = 'myCustomJobId';
+        this.customJobId = '1';
         this.customQuery = '';
 
         this.host = 'host';
@@ -21,6 +21,7 @@ export default class TableImport extends Model {
         this.isAppendingData= false;        
         this.isFilteringforJobId = false;       
         this.isLinkingSource = false;
+        this.isReplacingColumnHeaders = false;
 		this.isRunnable=true;
         this.isUsingCustomQuery= false;
 
@@ -32,17 +33,18 @@ export default class TableImport extends Model {
         this.rowLimit = 1000;
 
         this.schema = 'my_schema';
-        this.sourceFilePath = 'C:/data.csv';
-        this.sourceType = TableSourceType.csv;
+        this.filePath = 'C:/data.csv';
+        this.type = TableSourceType.csv;
 
         this.tableName = 'table_name';
 
         this.user = 'user';
 
-        this.__sourceTypeSelection = undefined;	
+        this.__typeSelection = undefined;	
 		this.__isLinkingSourceSelection = undefined;
+		this.__isReplacingColumnHeadersSelection = undefined;
 		this.__rowLimitSelection = undefined;       
-		this.__sourceFilePathSelection = undefined;		
+		this.__filePathSelection = undefined;		
 		this.__columnSeparatorSelection = undefined;		
 		this.__hostSelection = undefined;		
 		this.__portSelection = undefined;		
@@ -61,75 +63,41 @@ export default class TableImport extends Model {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 				
-		this.__createSourceTypeSection(page); 
-		this.__createSourceDataSection(page);                
+		this.__createSourceSection(page); 
+		this.__createImportSection(page); 
+
+		this.__showAndHideDependentComponents();
 	}
 
 	
 
-	__createSourceTypeSection(page) {
+	__createSourceSection(page) {
 		
 		var section = page.append('treez-section')
-			.label('Source type');
+			.label('Source');
 			
-		 section.append('treez-section-action')
-	         .image('run.png')
-	         .label('Import data')
-	         .addAction(()=>this.execute(this.__treeView)
+		section.append('treez-section-action')
+	    	.image('run.png')
+	        .label('Import table')
+	        .addAction(()=>this.execute(this.__treeView)
 	        		 			.catch(error => {
 									  console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);									 
 								  })
-	         );
+	        );
 		 
-		 var sectionContent = section.append('div');
+		var sectionContent = section.append('div');
 		 
-		this.__sourceTypeSelection = sectionContent.append('treez-enum-combo-box')
-			.label('Source type')
-			.nodeAttr('options', TableSourceType)			
-			.bindValue(this,()=>this.sourceType)
-			.onChange(()=>this.__showAndHideDependentComponents());
+		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
+			.label('Type')
+			.nodeAttr('options', TableSourceType)		
+			.onChange(()=>this.__showAndHideDependentComponents())	
+			.bindValue(this,()=>this.type);			
 		
-		
-		//if true, the target table is linked to the original source
-		//pro: for huge tables only the first few rows need to be initialized and the
-		//remaining data can be loaded lazily.
-		//con: if the source is replaced/changed/deleted, e.g. in a sweep, the
-		//link might not give meaningful data.
-		this.__isLinkingSourceSelection = sectionContent.append('treez-check-box')
-			.label('Link source')
-			.bindValue(this, ()=>this.isLinkingSource)
-			.onChange(()=>this.__showAndHideDependentComponents());
-
-		
-
-		this.__rowLimitSelection = sectionContent.append('treez-text-field')
-			.label('Row limit')			
-			.bindValue(this,()=>this.rowLimit);		
-
-	}
-
-	
-
-	__createSourceDataSection(page) {
-		
-		var section = page.append('treez-section')
-			.label('Source data');
-		
-		var sectionContent = section.append('div');		
-
-		this.__sourceFilePathSelection = sectionContent.append('treez-file-path')
-			.label('Source file')
+		this.__filePathSelection = sectionContent.append('treez-file-path')
+			.label('File')
 			.nodeAttr('pathMapProvider', this)
-			.bindValue(this, ()=>this.sourceFilePath);
-
-		this.__numberOfHeaderLinesToSkipSelection = sectionContent.append('treez-text-field')
-			.label('Number of header lines to skip')
-			.bindValue(this, ()=>this.numberOfHeaderLinesToSkip);
-
-		this.__customColumnHeadersSelection = sectionContent.append('treez-text-field')
-			.label('Custom column headers (as comma separated list)' )
-			.bindValue(this, ()=>this.customColumnHeaders);
-		
+			.bindValue(this, ()=>this.filePath);
+			
 		this.__columnSeparatorSelection = sectionContent.append('treez-text-field')
 			.label('Column separator')
 			.bindValue(this, ()=>this.columnSeparator);
@@ -157,14 +125,53 @@ export default class TableImport extends Model {
 		this.__tableNameSelection = sectionContent.append('treez-text-field')
 			.label('Table name')
 			.bindValue(this, ()=>this.tableName);
+	}
+
+	
+
+	__createImportSection(page) {
+		
+		var section = page.append('treez-section')
+			.label('Import');
+		
+		var sectionContent = section.append('div');				
+	
+
+		this.__numberOfHeaderLinesToSkipSelection = sectionContent.append('treez-text-field')
+			.label('Number of header lines to skip')
+			.bindValue(this, ()=>this.numberOfHeaderLinesToSkip);
+
+		this.__rowLimitSelection = sectionContent.append('treez-text-field')
+			.label('Row limit (too many imported rows might crash user interface)')			
+			.bindValue(this,()=>this.rowLimit);	
+
+		this.__isReplacingColumnHeadersSelection = sectionContent.append('treez-check-box')
+			.label('Replace column headers')
+			.bindValue(this, ()=>this.isReplacingColumnHeaders)
+			.onChange(()=>this.__showAndHideCustomColumnHeaders());
+
+		this.__customColumnHeadersSelection = sectionContent.append('treez-text-field')
+			.label('Custom column headers (as comma separated list)' )
+			.bindValue(this, ()=>this.customColumnHeaders);
+
+		//if true, the target table is linked to the original source
+		//pro: for huge tables only the first few rows need to be loaded and the
+		//remaining data can be loaded lazily.
+		//con: if the source is replaced/changed/deleted, e.g. in a sweep, the
+		//link does not work.
+		this.__isLinkingSourceSelection = sectionContent.append('treez-check-box')
+			.label('Link table to source')
+			.bindValue(this, ()=>this.isLinkingSource)
+			.onChange(()=>this.__showAndHideDependentComponents());
+		
 		
 		this.__isFilteringforJobIdSelection = sectionContent.append('treez-check-box')
-			.label('Filter rows with JobId')			
+			.label('Filter rows by jobId (requires column "job_id")')			
 			.bindValue(this, ()=>this.isFilteringforJobId)
 			.onChange(()=>this.__showAndHideJobComponents());		
 
 		this.__customJobIdSelection = sectionContent.append('treez-text-field')
-			.label('JobId')			
+			.label('Custom jobId')			
 			.bindValue(this, ()=>this.customJobId)
 			.onChange(()=>{
 				if (this.jobId !== this.customJobId) {
@@ -179,10 +186,10 @@ export default class TableImport extends Model {
 
 		this.__customQuerySelection = sectionContent.append('treez-text-field')
 			.label('Custom query')
-			.bindValue(this, ()=>this.customQuery);
+			.bindValue(this, ()=>this.customQuery);			
 		
 		sectionContent.append('treez-check-box')
-			.label('Append data')			
+			.label('Append data of subsequent runs')			
 			.bindValue(this, ()=>this.isAppendingData);
 
 	}
@@ -203,7 +210,7 @@ export default class TableImport extends Model {
 
 
 	__showAndHideDependentComponents() {		
-		switch (this.sourceType) {
+		switch (this.type) {
 		case TableSourceType.csv:
 			this.__showAndHideCompontentsForCsv();
 			break;
@@ -214,8 +221,18 @@ export default class TableImport extends Model {
 			this.__showAndHideCompontentsForMySql();
 			break;
 		default:
-			var message = 'The TableSourceType "' + this.sourceType + '" is not yet implemented.';
+			var message = 'The TableSourceType "' + this.type + '" is not yet implemented.';
 			throw new Error(message);
+		}
+
+		this.__showAndHideCustomColumnHeaders();
+	}
+
+	__showAndHideCustomColumnHeaders(){
+		if(this.isReplacingColumnHeaders){
+			this.__customColumnHeadersSelection.show()
+		} else {
+			this.__customColumnHeadersSelection.hide()
 		}
 	}
 
@@ -226,7 +243,7 @@ export default class TableImport extends Model {
 		this.__isFilteringforJobIdSelection.show();		
 		this.__showAndHideJobComponents()	
 		
-		this.__sourceFilePathSelection.show();
+		this.__filePathSelection.show();
 		this.__columnSeparatorSelection.show();	
 
 		this.__numberOfHeaderLinesToSkipSelection.show();
@@ -248,7 +265,7 @@ export default class TableImport extends Model {
 		this.__isLinkingSourceSelection.show(); 
 		this.__isFilteringforJobIdSelection.show();		
 		
-		this.__sourceFilePathSelection.show();
+		this.__filePathSelection.show();
 
 		this.__numberOfHeaderLinesToSkipSelection.hide();
 		
@@ -272,7 +289,7 @@ export default class TableImport extends Model {
 		this.__isLinkingSourceSelection.show(); 
 		this.__isFilteringforJobIdSelection.show();	
 	
-		this.__sourceFilePathSelection.hide();
+		this.__filePathSelection.hide();
 		this.__numberOfHeaderLinesToSkipSelection.hide();	
 		this.__columnSeparatorSelection.hide();
 		
@@ -343,7 +360,7 @@ export default class TableImport extends Model {
 	}
 
 	async __importTableData() {			
-		switch (this.sourceType) {
+		switch (this.type) {
 		case TableSourceType.csv:	
 			return await TextImporter.importData(
 				this.sourcePath, 
@@ -379,7 +396,7 @@ export default class TableImport extends Model {
 				 rowOffset);
 			
 		default:
-			throw new Error('The TableSourceType "' + this.sourceType + '" is not yet implemented.');
+			throw new Error('The TableSourceType "' + this.type + '" is not yet implemented.');
 		}
 	}
 	
@@ -398,7 +415,7 @@ export default class TableImport extends Model {
 	}
 
 	get sourcePath() {		
-		return this.fullPath(this.sourceFilePath);				
+		return this.fullPath(this.filePath);				
 	}
 
 

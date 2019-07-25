@@ -7,66 +7,66 @@ export default class OutputModification extends ComponentAtom {
 	    super(name);
 		this.image = 'outputModification.png';
 		
-        this.isIncludingDateInOutputFile = undefined;
-        this.isIncludingDateInOutputFolder = undefined;
-        this.isIncludingDateInOutputSubFolder = undefined;
-        this.isIncludingjobIdInOutputFile = undefined;
-        this.isIncludingjobIdInOutputFolder = undefined;
-        this.isIncludingjobIdInOutputSubFolder = undefined;      
+        this.isIncludingDateInOutputFile = false;
+        this.isIncludingDateInOutputDirectory = false;
+        this.isIncludingDateInOutputSubDirectory = false;
+        this.isIncludingjobIdInOutputFile = false;
+        this.isIncludingjobIdInOutputDirectory = false;
+        this.isIncludingjobIdInOutputSubDirectory = false;      
 	}
 
     createComponentControl(tabFolder){    
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
         this.createOutputModificationSection(page);   
 	}	  
 
    createOutputModificationSection(page) {       
 
        const section = page.append('treez-section')
-           .title('Output modification')
+           .label('Output modification')
            .attr('expanded','false');
 
        const sectionContent = section.append('div'); 
 
        sectionContent.append('treez-text-label')
-       	   .value('Include date in:')
+       	   .value('Include date in name of:')
 
        sectionContent.append('treez-check-box')
-		   .label('Folder name')
+		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		 
-		   .bindValue(this,()=>this.isIncludingDateInOutputFolder);
+		   .bindValue(this,()=>this.isIncludingDateInOutputDirectory);
 
 	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
+		   .label('Extra directory')
 		   .value(false)		   
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingDateInOutputSubFolder);
+		   .bindValue(this,()=>this.isIncludingDateInOutputSubDirectory);
 
 	   	sectionContent.append('treez-check-box')
-		   .label('File name')
+		   .label('File')
 		   .value(false)
 		   .onChange(this.refreshStatus)		 
 		   .bindValue(this,()=>this.isIncludingDateInOutputFile);
 
       	sectionContent.append('treez-text-label')
-       	   .value('Include job index in:') 
+       	   .value('Include jobId in name of:') 
        	   
 		sectionContent.append('treez-check-box')
-		   .label('Folder name')
+		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingjobIdInOutputFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputDirectory);
 
 	    sectionContent.append('treez-check-box')
-		   .label('Extra folder')
+		   .label('Extra directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
-		   .bindValue(this,()=>this.isIncludingjobIdInOutputSubFolder);
+		   .bindValue(this,()=>this.isIncludingjobIdInOutputSubDirectory);
 
 	   sectionContent.append('treez-check-box')
-		   .label('File name')
+		   .label('File')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  
 		   .bindValue(this,()=>this.isIncludingjobIdInOutputFile);
@@ -90,9 +90,9 @@ export default class OutputModification extends ComponentAtom {
 
 		let outputPathExpression = pathBase;
 
-		outputPathExpression = this.__includeFolder(outputPathExpression, executable);		
+		outputPathExpression = this.__includeDirectory(outputPathExpression, executable);		
 
-		outputPathExpression = this.__includeSubFolder(outputPathExpression, executable);
+		outputPathExpression = this.__includeSubDirectory(outputPathExpression, executable);
 
 		if (hasFileExtension) {
 			//append file name and extension
@@ -103,46 +103,46 @@ export default class OutputModification extends ComponentAtom {
 		return outputPathExpression;
 	}
 
-	__includeFolder(inputPathExpression, executable){
-		var newExpression = this.__includeDateInFolder(inputPathExpression, executable);
-		newExpression = this.__includejobIdInFolder(newExpression, executable);
+	__includeDirectory(inputPathExpression, executable){
+		var newExpression = this.__includeDateInDirectory(inputPathExpression, executable);
+		newExpression = this.__includejobIdInDirectory(newExpression, executable);
 		return newExpression;
 	}
 
-   __includeDateInFolder(outputPathExpression, executable) {
+   __includeDateInDirectory(outputPathExpression, executable) {
 		let newOutputPath = outputPathExpression;
-		if (this.isIncludingDateInOutputFolder) {
+		if (this.isIncludingDateInOutputDirectory) {
 			newOutputPath += "_" + Utils.getDateString();
 		}
 		return newOutputPath;
 	}
 
-   __includejobIdInFolder(outputPathExpression, executable) {
+   __includejobIdInDirectory(outputPathExpression, executable) {
 		let newOutputPath = outputPathExpression;
-		if (this.isIncludingjobIdInOutputFolder) {
-			newOutputPath += "#" + executable.getJobId();
+		if (this.isIncludingjobIdInOutputDirectory) {
+			newOutputPath += "#" + executable.jobId;
 		}
 		return newOutputPath;
 	}
 
-   __includeSubFolder(outputPathExpression, executable) {
+   __includeSubDirectory(outputPathExpression, executable) {
 
 		let newOutputPath = outputPathExpression;
 
-		const isIncludingDateInSubFolder = this.isIncludingDateInOutputSubFolder;
-       const isIncludingjobIdInSubFolder = this.isIncludingjobIdInOutputSubFolder;
-       const doIncludeSubFolder = isIncludingDateInSubFolder || isIncludingjobIdInSubFolder;
+		const isIncludingDateInSubDirectory = this.isIncludingDateInOutputSubDirectory;
+       const isIncludingjobIdInSubDirectory = this.isIncludingjobIdInOutputSubDirectory;
+       const doIncludeSubDirectory = isIncludingDateInSubDirectory || isIncludingjobIdInSubDirectory;
 
-		if (doIncludeSubFolder) {
+		if (doIncludeSubDirectory) {
 			newOutputPath += "/";
 		}
 
-		if (isIncludingDateInSubFolder) {
+		if (isIncludingDateInSubDirectory) {
 			newOutputPath += Utils.getDateString();
 		}
 
-		if (isIncludingjobIdInSubFolder) {
-			newOutputPath += "#" + executable.getJobId();
+		if (isIncludingjobIdInSubDirectory) {
+			newOutputPath += "#" + executable.jobId;
 		}
 		return newOutputPath;
 	}
@@ -160,7 +160,7 @@ export default class OutputModification extends ComponentAtom {
 		}
 
 		if (this.isIncludingjobIdInOutputFile) {
-			newOutputPath += "#" + executable.getJobId();
+			newOutputPath += "#" + executable.jobId;
 		}
 		newOutputPath += pathPostFix; //is empty for directories
 		return newOutputPath;

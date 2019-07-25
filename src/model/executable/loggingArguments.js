@@ -7,13 +7,13 @@ export default class LoggingArguments extends ComponentAtom {
 	    super(name);
 		this.image = 'loggingArguments.png';
 		
-		this.logArguments = undefined;
-	    this.logFilePath = undefined;       
+		this.logArguments = '';
+	    this.logFileOrDirectoryPath = '';       
 	}
 
     createComponentControl(tabFolder){  
 		const page = tabFolder.append('treez-tab')
-            .title('Data');
+            .label('Data');
 		
 		this.__createLoggingSection(page);
 	}	
@@ -21,32 +21,30 @@ export default class LoggingArguments extends ComponentAtom {
     addLoggingArguments(commandToExtend){
 		let command = commandToExtend;
 		if (this.logArguments) {
-			command += " " + logArguments;
+			command += " " + this.logArguments;
 		}
 
-		if (this.logFilePath) {
-			command += " " + logFilePath;
+		if (this.logFileOrDirectoryPath) {
+			command += " " + this.logFileOrDirectoryPath;
 		}
 		return command;
 	}
 
     __createLoggingSection(page) {
         const section = page.append('treez-section')
-            .title('Logging')
+            .label('Logging')
             .attr('expanded','false');
 
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-text-area')
-             .title('Log arguments')           
-             .onChange(()=>this.refreshStatus())          
+             .label('Log arguments') 
              .bindValue(this,()=>this.logArguments); 
 
-        sectionContent.append('treez-file-path')
-             .title('Log file')            
-             .onChange(()=>this.refreshStatus())  
+        sectionContent.append('treez-file-or-directory-path')
+             .label('Log file or directory') 
              .nodeAttr('pathMapProvider', this)
-             .bindValue(this,()=>this.logFilePath);       
+             .bindValue(this,() => this.logFileOrDirectoryPath);       
     }   
 
 }
