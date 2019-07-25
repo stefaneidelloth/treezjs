@@ -12,10 +12,7 @@ The target database might initially be empty. The required tables are created if
 In order to distinguish the data from subsequent sources, the source tables are extented with two columns "study_id", "job_id".
 The extended tables are then attached to the target database. 
 
-The ![](../../../../icons/databaseAppender.png) SqLiteAppender is only thought for small amounts of data and might be slow. The current implementation 
-is done in the client and all the data needs to be send back and forth through http requests. 
-
-```
+The ![](../../../../icons/databaseAppender.png) SqLiteAppender is only thought for small amounts of data and might be very slow for large databases. The current implementation is done in the client and all the data is send back and forth through string based http requests. 
 	
 ![](../../../images/sqlite_appender.png)
 		
