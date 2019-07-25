@@ -35,6 +35,18 @@ d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png
 			
 ## Arguments
 
+### Source model
+
+The tree path of a model that provides variables (e.g. "root.models.genericInput"). 
+
+Leave this input field empty if you 
+* do not want to inject variable values in the JavaScript code or you 
+* only want to use the ("global") variables jobId and studyId.  
+
+### Code
+
+The code to be executed.
+
 ----
 
 ![](../../../../icons/python.png) [PythonModel](./pythonModel.md)
