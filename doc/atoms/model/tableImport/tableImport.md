@@ -40,7 +40,7 @@ d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png
 
 #### Type
 
-Choose if you want to import the data from csv, sqLite or mySql.
+Choose if you want to import the data from csv, sqLite or mySql (not yet implemented).
 
 The visibility of the following arguments might depend on the source type.
 
