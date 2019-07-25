@@ -57,4 +57,4 @@ The code to be executed.
 
 ----
 
-![](../../../../icons/python.png) [PythonModel](./pythonModel.md)
+![](../../../../icons/studies.png) [Studies](../../study/studies.md)
