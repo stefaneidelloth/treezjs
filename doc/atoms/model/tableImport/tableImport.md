@@ -135,3 +135,7 @@ SELECT * FROM my_table WHERE age > 3
 #### Append data of subsequent runs
 
 If the TableImport is run several times, the default behaviour is that already imported data is deleted before importing new data. If you instead want to append the data of subsequent runs/jobs, please enable this option. 
+
+----
+
+![](../../../../icons/databaseAppender.png) [SqLiteAppender](../sqLiteAppender/sqLiteAppender.md)   
