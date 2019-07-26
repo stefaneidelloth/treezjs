@@ -1,37 +1,44 @@
-<h2>DoubleVariableRange</h2>
+![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md)
+
+----
+
+# DoubleRange
 	
-	<p>
-		<h3>Purpose</h3>
+The purpose of the ![](../../../../icons/doubleRange.png) atom is to edit a range of double values. 
 		
-		<p>
-		The purpose of the <a class = "doubleVariableRange"></a> is to edit a range of double values. 
-		It can for example be used by a <a class = "sweep"></a>. 
-						
-		<h3>Class name</h3>
+![](../../../images/double_range.png)
+
+The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a red decorator icon in the [Tree View](../../../views/treeView.md).
 		
-		org.treez.study.atom.range.DoubleVariableRange
+## Source code
+
+[./src/variable/range/doubleRange.js](../../../../src/variable/range/doubleRange.js)
+
+## Construction
 		
-		<h3>Construction</h3>
+A new ![](../../../../icons/doubleRange.png) atom atom is created either by: 
+
+* using the context menu of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the source code of the [Editor view](../../../views/editorView.md):
+
+```javascript
+    ...
+    var weightRange = models.createDoubleRange('root.models.genericInput.weight',[70.0, 70.5, 71.0, 71.5, 72.0]);	     
+```						
 		
-		A new <a class = "doubleVariableRange"></a> is created by: 
-		<ul>
-			<li>using the context menu of a <a class="sweep"></a> atom or
-			</li>
-			<li>by calling the corresponding factory method of the <a class="sweep"></a> atom:	
-			<pre class="prettyprint">DoubleVariableRange doubleRange = sweep.createDoubleVariableRange("doubleRange");</pre>	     
-			</li>
-		</ul>
-						
-		<img src="../images/doubleVariableRangeScreenShot.png">
-								
-		<h3>Attributes</h3>
-		
-		<ul>
-			<li><b>Double variable</b>: the corresponding variable that should be controlled by the range.</li>
-			<li><b>Range</b>: a comma separated list of range values in curly brackets, e.g. {0.5, 1, 1.5, 2} or a range command
-			range(min, max, step), e.g. range(0.5, 2, 0.5) </li>	
-			<li><b>Enabled</b>: if the range is disabled it will not be used by studies. Enabling/disabling a range is also
-			possible through the context menu of the atom.</li>			
-		</ul>
-				
-</p>
+## Sections
+
+### Data
+
+#### Variable path
+
+The tree path to the variable that should be controlled by the range.
+
+#### Range
+
+A comma separated list of range values in square brackets, e.g. [0.5, 1, 1.5, 2] or a range command range(min, max, step), e.g. range(0.5, 2, 0.5)
+
+----
+
+![](../../../../icons/integerRange.png) [IntegerRange](./integerRange.md) 
+
