@@ -1,37 +1,44 @@
-<h2>QuantityVariableRange</h2>
+![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md)
+
+----
+
+# QuantityRange
 	
-	<p>
-		<h3>Purpose</h3>
+The purpose of the ![](../../../../icons/quantityRange.png) IntegerRange atom is to edit a range of integer values. 
 		
-		<p>
-		The purpose of the <a class = "quantityVariableRange"></a> is to edit a range of Quantities (value & unit). 
-		It can for example be used by a <a class = "sweep"></a>. 
-						
-		<h3>Class name</h3>
+![](../../../images/quantity_range.png)
+
+The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		
-		org.treez.study.atom.range.QuantityVariableRange
+## Source code
+
+[./src/variable/range/quantityRange.js](../../../../src/variable/range/quantityRange.js)
+
+## Construction
 		
-		<h3>Construction</h3>
+A new ![](../../../../icons/quantityRange.png) QuantityRange atom atom is created either by: 
+
+* using the context menu of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the source code of the [Editor view](../../../views/editorView.md):
+
+```javascript
+    ...
+    var lengthRange = models.createQuantityRange('root.models.genericInput.length', [20.0, 21.0, 22.0], 'm');	     
+```						
 		
-		A new <a class = "quantityVariableRange"></a> is created by: 
-		<ul>
-			<li>using the context menu of a <a class="sweep"></a> atom or
-			</li>
-			<li>by calling the corresponding factory method of the <a class="sweep"></a> atom:	
-			<pre class="prettyprint">QuantityVariableRange doubleRange = seep.createQuantityVariableRange("sweep");</pre>	     
-			</li>
-		</ul>
-						
-		<img src="../images/quantityVariableRangeScreenShot.png">
-								
-		<h3>Attributes</h3>
-		
-		<ul>
-			<li><b>Quantity variable</b>: the corresponding variable that should be controlled by the range.</li>
-			<li><b>Range</b>: a comma separated list of range values in curly brackets, e.g. {0.5, 1, 1.5, 2} or a range command
-			range(min, max, step), e.g. range(0.5, 2, 0.5). The unit for all range values is specified in the extra field.</li>	
-			<li><b>Enabled</b>: if the range is disabled it will not be used by studies. Enabling/disabling a range is also
-			possible through the context menu of the atom.</li>			
-		</ul>
-				
-</p>
+## Sections
+
+### Data
+
+#### Variable path
+
+The tree path to the variable that should be controlled by the range.
+
+#### Range
+
+A comma separated list of range values in square brackets, e.g. [13,14,15] or a range command range(min, max, step), e.g. range(13,15,1)
+
+----
+
+![](../../../../icons/booleanRange.png) [BooleanRange](./booleanRange.md) 
+
