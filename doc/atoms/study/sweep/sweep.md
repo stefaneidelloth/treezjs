@@ -1,36 +1,53 @@
+![](../../../../icons/studies.png) [Studies](../studies.md)
+
+----
+
+# Sweep
+		
+The purpose of the ![](../../../../icons/sweep.png) Sweep atom is to execute a model several times while the input parameters are varied according to a list of parameter ranges. 
+
+The input of a Sweep can be imagined as a rectangular grid or matrix (see below) in the domain. Every node of that rectangular grid is used. In comparison, a ![](../../../../picking.png) [Picking](../picking/picking.md) study might not use every node on a grid and the grid does not need to be rectangular.    
+
+The execution of a model is also called a "model run" or a "job". The model that is controlled by a ![](../../../../icons/sweep.png) Sweep might consist of several sub models.
+
+## Source code
+
+[./src/study/sweep/sweep.js](../../../../src/study/sweep/sweep.js)
+
+## Construction
+		
+A new ![](../../../../icons/sweep.png) Sweep atom is created either by: 
+
+* using the context menu of a ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the source code of the [Editor view](../../../views/editorView.md):
+
+```javascript
+    ...
+    var sweep = studies.createSweep();	     
+```
+
+## Work flow	
+
+You can **run** the ![](../../../../icons/sweep.png) Sweep atom either<br> 
+a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md)<br>
+b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)<br>
+c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the [Tree View](../../../views/treeView.md) (runs all studies)<br>
+
+## Child atoms
+		
+The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to add child atoms: 
+
+* ![](../../../../icons/doubleRange.png) [DoubleRange](../variable/range/doubleRange.md)
+* ![](../../../../icons/integerRange.png) [IntegerRange](./variable/range/integerRange.md)
+* ![](../../../../icons/quantityRange.png) [QuantityRange](./variable/range/quantityRange.md)
+* ![](../../../../icons/booleanRange.png) [BooleanRange](./variable/range/booleanRange.md)
+* ![](../../../../icons/stringRange.png) [StringRange](./variable/range/stringRange.md)
+* ![](../../../../icons/stringItemRange.png) [StringItemRange](./variable/range/stringItemRange.md)
+* ![](../../../../icons/filePathRange.png) [FilePathRange](./variable/range/filePathRange.md)
+* ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](./variable/range/directoryPathRange.md)
 
 
-
-<h2>Sweep</h2>
-
-
-<h3>Purpose</h3>
-<p>
-The purpose of the <a class = "sweep"></a> atom is to execute a model several times while
-the input parameters are varied according to a list of parameter ranges. Characteristic 
-for a sweep is that it its input can be imagined as a rectangular grid or matrix (see below) and 
-that every node of that grid is used. In comparison to that, a <a class = "scenarios"></a> 
-study might not use every node on a grid and the grid does not need to be rectangular.    
-The execution of a model is also called "simulation" and the model that is controlled 
-by a <a class = "sweep"></a> might consist of several sub models.   
-</p>
-
-<h3>Class name</h3>
-
-org.treez.model.atom.Models
-
-<H3>Construction</H3>
-
-You can create a new <a class = "sweep"></a> atom: 
-<ul>
-	<li>from the context menu of an existing <a class = "studies"></a> atom or
-	</li>
-	<li>by calling the corresponding factory method of an <a class = "studies"></a> atom:	
-	<pre class="prettyprint">Sweep sweep = studies.createSweep("sweep");</pre>	     
-	</li>
-</ul>
-
-<h2> Simulation order </h2>
+## Simulation order
 
 <p>
 If there are for example two parameter ranges [10,20,30,40], [100,200], you can imagine 
@@ -51,7 +68,7 @@ individual simulation.
 
 <img src = "images/sweeptree.png"/>
 
-<h3>Attributes</h3>
+## Attributes
 
 <ul>
 <li><b>Model to run</b>: the model that is executed by the sweep.</li>
