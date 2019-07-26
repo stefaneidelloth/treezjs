@@ -46,6 +46,9 @@ The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to ad
 * ![](../../../../icons/filePathRange.png) [FilePathRange](../../variable/range/filePathRange.md)
 * ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](../../variable/range/directoryPathRange.md)
 
+The **ranges** for a ![](../../../../icons/sweep.png) Sweep are defined through those child atoms. 
+
+The ranges can be **enabled/disabled** through their context menu. If a range is disabled it is not included in the ![](../../../../icons/sweep.png) Sweep. 
 
 ## Simulation order
 
@@ -53,42 +56,33 @@ If there are for example two parameter ranges [10,20,30,40], [100,200], you can 
 
 ![](../../../images/sweep_table.png)
 
-The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be understood as a tree structure, where the elements of the first range build the main tree nodes, the elements of the second range build sub level tree nodes and so on. Each existing path in the tree (e.g. 10 => 100 or 30 => 200) corresponds to an individual job.
+The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be understood as a tree structure, where the elements of the first range build the main tree nodes, the elements of the second range build sub level tree nodes and so on. Each existing path in the tree (e.g. 10 => 100 or 30 => 200) corresponds to an individual job of the ![](../../../../icons/sweep.png) Sweep study.
 
 ![](../../../images/sweep_tree.png)
 
 
-## Attributes
+## Sections
 
-<ul>
-<li><b>Model to run</b>: the model that is executed by the sweep.</li>
-<li><b>Variable source model</b>: the model that provides the variables that can be varied. Only the variables that are provided by
-              this model and its sub models can be referenced by the variable ranges of the sweep. The variable source model might 
-              be the same as the model to run.</li>
-<li><b>Export sweep information</b>: if this is true, information about the sweep (total number of simulations, range values) will 
-              be exported to a text file. </li>
-<li><b>Target file path for sweep information</b>: the path to a text file, e.g. C:\sweepdata.txt, where the sweep information
-              is exported. If the option <b>Export sweep information</b> is false, this argument is disabled and not used.</li>
-</ul>
+### Sweep
 
-<h3>Ranges</h3>
+#### Id
 
-The ranges for a <a class = "sweep"></a> atom are defined through child atoms. 
-The context menu of the <a class = "sweep"></a> atom allows you to add new children and you
-can also add range atoms by adapting the source code. There exist several kinds of ranges
-which differ in the type of the individual values they include:
+Please enter a unique studyId that can be used to differentiate results of different studies in a result database.  
 
-<ul>
-<li><a class="quantityVariableRange"></a></li>
-<li><a class="doubleVariableRange"></a></li>
-<li><a class="booleanVariableRange"></a></li>
-<li><a class="stringVariableRange"></a></li>
-<li><a class="filePathVariableRange"></a></li>
-<li><a class="directoryPathVariableRange"></a></li>
-</ul>
+#### Description
 
-The ranges can be enabled/disabled through their context menu. If a range is disabled it is
-not included in the sweep. 
+A desription of the study. You might want to explain the purpose of the study, its assumptions ect. 
 
+#### Model to run
 
-</body>
+The model that is executed by the Sweep.
+
+### Variable source model
+
+The model that provides the variables that can be varied. Only the variables that are provided by this model and its sub models can be referenced by the variable ranges of the sweep. 
+
+The variable source model might be the same as the model to run.
+
+----
+
+![](../../../../icons/picking.png) [Picking](../picking/picking.md)
