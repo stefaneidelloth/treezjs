@@ -4,7 +4,7 @@
 
 # DoubleRange
 	
-The purpose of the ![](../../../../icons/doubleRange.png) atom is to edit a range of double values. 
+The purpose of the ![](../../../../icons/doubleRange.png) DoubleRange atom is to edit a range of double values. 
 		
 ![](../../../images/double_range.png)
 
@@ -16,7 +16,7 @@ The range can be disabled/enabled through the context menu of the atom. The disa
 
 ## Construction
 		
-A new ![](../../../../icons/doubleRange.png) atom atom is created either by: 
+A new ![](../../../../icons/doubleRange.png) DoubleRange atom atom is created either by: 
 
 * using the context menu of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the [Tree View](../../../views/treeView.md) or
 * calling the corresponding factory method of the ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) atom in the source code of the [Editor view](../../../views/editorView.md):
