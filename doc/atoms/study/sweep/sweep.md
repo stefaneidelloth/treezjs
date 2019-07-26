@@ -37,7 +37,7 @@ c) with the ![](../../../../icons/run.png) run button in the context menu of the
 		
 The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to add child atoms: 
 
-* ![](../../../../icons/doubleRange.png) [DoubleRange](../variable/range/doubleRange.md)
+* ![](../../../../icons/doubleRange.png) [DoubleRange](../../variable/range/doubleRange.md)
 * ![](../../../../icons/integerRange.png) [IntegerRange](./variable/range/integerRange.md)
 * ![](../../../../icons/quantityRange.png) [QuantityRange](./variable/range/quantityRange.md)
 * ![](../../../../icons/booleanRange.png) [BooleanRange](./variable/range/booleanRange.md)
