@@ -6,7 +6,7 @@
 		
 The purpose of the ![](../../../../icons/sweep.png) Sweep atom is to execute a model several times while the input parameters are varied according to a list of parameter ranges. 
 
-The input of a Sweep can be imagined as a rectangular grid or matrix (see below) in the domain. Every node of that rectangular grid is used. In comparison, a ![](../../../../picking.png) [Picking](../picking/picking.md) study might not use every node on a grid and the grid does not need to be rectangular.    
+The input of a Sweep can be imagined as a rectangular grid or matrix (see below) in the domain. Every node of that rectangular grid is used. In comparison, a ![](../../../../icons/picking.png) [Picking](../picking/picking.md) study might not use every node on a grid and the grid does not need to be rectangular.    
 
 The execution of a model is also called a "model run" or a "job". The model that is controlled by a ![](../../../../icons/sweep.png) Sweep might consist of several sub models.
 
@@ -38,35 +38,25 @@ c) with the ![](../../../../icons/run.png) run button in the context menu of the
 The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to add child atoms: 
 
 * ![](../../../../icons/doubleRange.png) [DoubleRange](../../variable/range/doubleRange.md)
-* ![](../../../../icons/integerRange.png) [IntegerRange](./variable/range/integerRange.md)
-* ![](../../../../icons/quantityRange.png) [QuantityRange](./variable/range/quantityRange.md)
-* ![](../../../../icons/booleanRange.png) [BooleanRange](./variable/range/booleanRange.md)
-* ![](../../../../icons/stringRange.png) [StringRange](./variable/range/stringRange.md)
-* ![](../../../../icons/stringItemRange.png) [StringItemRange](./variable/range/stringItemRange.md)
-* ![](../../../../icons/filePathRange.png) [FilePathRange](./variable/range/filePathRange.md)
-* ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](./variable/range/directoryPathRange.md)
+* ![](../../../../icons/integerRange.png) [IntegerRange](../../variable/range/integerRange.md)
+* ![](../../../../icons/quantityRange.png) [QuantityRange](../../variable/range/quantityRange.md)
+* ![](../../../../icons/booleanRange.png) [BooleanRange](../../variable/range/booleanRange.md)
+* ![](../../../../icons/stringRange.png) [StringRange](../../variable/range/stringRange.md)
+* ![](../../../../icons/stringItemRange.png) [StringItemRange](../../variable/range/stringItemRange.md)
+* ![](../../../../icons/filePathRange.png) [FilePathRange](../../variable/range/filePathRange.md)
+* ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](../../variable/range/directoryPathRange.md)
 
 
 ## Simulation order
 
-<p>
-If there are for example two parameter ranges [10,20,30,40], [100,200], you can imagine 
-a 4 x 2 table or a grid with 8 nodes, where each node represents the input for a simulation
-(e.g. {10,100} or {30,200}). The first value of the first range (e.g. 10) is included in 
-the first simulation. That value is kept constant while the remaining range is varied.
-</p>
+If there are for example two parameter ranges [10,20,30,40], [100,200], you can imagine a 4 x 2 table or a grid with 8 nodes, where each node represents the input for a job (e.g. {10,100} or {30,200}). The first value of the first range (e.g. 10) is included in the first job. That value is kept constant while the remaining range is varied.
 
-<img src = "images/sweeptable.png"/>
+![](../../../images/sweep_table.png)
 
-<p> 
-The numbers 1...8 represent the simulation order (="study index"). A sweep can also be 
-understood as a tree structure, where the elements of the first range build
-the main tree nodes, the elements of the second range build sub level tree nodes
-and so on. Each existing path in the tree (e.g. 10=>100 or 30=>200) corresponds to an
-individual simulation.
-</p>
+The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be understood as a tree structure, where the elements of the first range build the main tree nodes, the elements of the second range build sub level tree nodes and so on. Each existing path in the tree (e.g. 10 => 100 or 30 => 200) corresponds to an individual job.
 
-<img src = "images/sweeptree.png"/>
+![](../../../images/sweep_tree.png)
+
 
 ## Attributes
 
