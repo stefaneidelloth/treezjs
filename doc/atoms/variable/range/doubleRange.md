@@ -8,7 +8,7 @@ The purpose of the ![](../../../../icons/doubleRange.png) atom is to edit a rang
 		
 ![](../../../images/double_range.png)
 
-The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a red decorator icon in the [Tree View](../../../views/treeView.md).
+The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		
 ## Source code
 
