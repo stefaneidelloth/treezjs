@@ -4,7 +4,7 @@
 
 # Sweep
 		
-The purpose of the ![](../../../../icons/sweep.png) Sweep atom is to execute a model several times while the input parameters are varied according to a list of parameter ranges. 
+The purpose of the ![](../../../../icons/sweep.png) Sweep study is to execute a model several times while the input parameters are varied according to a list of parameter ranges. 
 
 The input of a Sweep can be imagined as a rectangular grid or matrix (see below) in the domain. Every node of that rectangular grid is used. In comparison, a ![](../../../../icons/picking.png) [Picking](../picking/picking.md) study might not use every node on a grid and the grid does not need to be rectangular.    
 
