@@ -22,7 +22,7 @@ existing atoms are not sufficient for your needs, you might want to [implement c
       * ![](../../icons/stringItemVariable.png) [StringItemVariable](./variable/field/stringItemVariable.md)
       * ![](../../icons/filePathVariable.png) [FilePathVariable](./variable/field/filePathVariable.md)
       * ![](../../icons/directoryPathVariable.png) [DirectoryPathVariable](./variable/field/directoryPathVariable.md)
-    * ![](../../icons/databaseModifier.png) [DatabaseModifier](./models/code/databaseModifier.md)
+    * ![](../../icons/databaseModifier.png) [DatabaseModifier](./model/code/databaseModifier.md)
     * ![](../../icons/run.png) [Executable](./model/executable/executable.md)      
       * ![](../../icons/inputFile.png) [InputFileGenerator](./model/inputFileGenerator/inputFileGenerator.md)
       * ![](../../icons/inputModification.png) [InputModification](./model/executable/inputModification.md)
