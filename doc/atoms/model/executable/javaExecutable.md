@@ -54,7 +54,7 @@ If the system command writes text to the console, that text will be shown in the
 
 The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 1 after the execution has been finished.
 			
-## Arguments
+## Sections
 
 The total system command is created by concatenation the individual input fields with spaces. A preview for the command is shown as **Resulting command** in the section "Status". 
 
@@ -126,9 +126,13 @@ It is possible to **dynamically modify the output path** using an ![](../../../.
 
 **Old output files and directories can be deleted** with ![](../../../../icons/fileCleanup.png) [FileCleanup](../fileCleanup/fileCleanup.md) atoms. 
 
+### Status
+
+The status section shows a preview for the **Resulting command** and the next jobId. 
+
 ### Logging
 
-You can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
+There is no section for logging arguments but you can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
 
 ----
 
