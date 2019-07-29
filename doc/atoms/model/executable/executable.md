@@ -120,7 +120,7 @@ The status section shows a preview for the **Resulting command** and the next jo
 
 ### Logging
 
-You can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
+There is no section for logging arguments but you can use a  ![](../../../../icons/loggingArguments.png) [LoggingArguments](./loggingArguments.md) child atom to specify extra logging arguments. 
 
 ----
 
