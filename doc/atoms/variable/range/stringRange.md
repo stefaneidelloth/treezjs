@@ -36,7 +36,7 @@ The tree path to the variable that should be controlled by the range.
 
 #### Range
 
-A list of string values. Use the buttons and input fields to edit the entries of the list:
+A list of string values. Use the buttons and text fields to edit the entries of the list:
 * ![](../../../../icons/add.png) Add entry
 * ![](../../../../icons/delete.png) Delete entry
 * ![](../../../../icons/up.png) Move entry up
