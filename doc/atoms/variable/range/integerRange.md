@@ -23,7 +23,7 @@ A new ![](../../../../icons/integerRange.png) IntegerRange atom atom is created 
 
 ```javascript
     ...
-    var ageRange = models.createDoubleRange('root.models.genericInput.age', [13, 14, 15]);	     
+    var ageRange = models.createIntegerRange('root.models.genericInput.age', [13, 14, 15]);	     
 ```						
 		
 ## Sections
