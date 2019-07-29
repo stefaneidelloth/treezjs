@@ -1,40 +1,13 @@
-package org.treez.study.atom.exportStudyInfo;
+import Enum from './../../components/enum.js';
 
-public enum StudyInfoExportType {
+export default class StudyInfoExportType extends Enum {}    
 
-	//#region VALUES
-
-	DISABLED("Disabled"),
-
-	TEXT_FILE("Text file *.txt"),
-
-	SQLITE("SqLite database *.sqlite"),
-
-	MYSQL("MySQL database");
-
-	//#end region
-
-	//#region ATTRIBUTES
-
-	private String label;
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	StudyInfoExportType(String label) {
-		this.label = label;
-	}
-
-	//#end region
-
-	//#region METHODS
-
-	@Override
-	public String toString() {
-		return label;
-	}
-
-	//#end region
-
+if(window.StudyInfoExportType){
+	StudyInfoExportType = window.StudyInfoExportType;
+} else {
+	StudyInfoExportType.textFile = new StudyInfoExportType('Text file *.txt');                    
+	StudyInfoExportType.sqLite = new StudyInfoExportType('SqLite database *.sqlite');                    
+	StudyInfoExportType.mySql = new StudyInfoExportType('MySQL database');  
+	
+	window.StudyInfoExportType = StudyInfoExportType;
 }

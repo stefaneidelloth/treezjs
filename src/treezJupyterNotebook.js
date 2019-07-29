@@ -14,7 +14,8 @@ require([
 ) {	
 	
 	Treez.config({
-		home: '../notebooks/treezjs'
+		home: '../notebooks/treezjs',
+		isSupportingPython: true
 	});
 
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	

@@ -70,6 +70,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
         window.treezTerminal.browseDirectoryPath(this.directory).then((result)=>{
             if(result){
                 this.value = this.injectPathMap(result.trim());
+                //dispatchChangeEvent();
             }                    	
         }); 
     }   

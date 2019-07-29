@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezStringList.css" />
+	</head>
+
+	<body>	
+	
+		<treez-file-path-list id="pathList" label="File paths" value="c:\foo.txt,c:\baa.txt"></treez-file-path-list>	
+
+		<script type="module">
+			import TreezFilePathList from './treezFilePathList.js';
+
+            var pathList = document.getElementById('pathList'); 
+            pathList.value = 'c:\foo.txt,c:\baa.txt,c:\qux.txt'; 
+		</script>
+		
+	</body>
+</html>

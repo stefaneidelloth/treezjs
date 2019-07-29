@@ -23,6 +23,8 @@
 
 .treez-list-tr {
 	border: 1px solid lightgrey;
+	margin: 0px;
+	padding: 0px;
 }
 
 .treez-list-select {

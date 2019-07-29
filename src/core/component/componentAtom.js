@@ -18,6 +18,7 @@ import TreezComboBox from './../../components/comboBox/treezComboBox.js';
 import TreezEnumComboBox from './../../components/comboBox/treezEnumComboBox.js';
 
 import TreezDirectoryPath from './../../components/file/treezDirectoryPath.js';
+import TreezDirectoryPathList from './../../components/list/treezDirectoryPathList.js';
 import TreezDouble from './../../components/double/treezDouble.js';
 
 import TreezErrorBarStyle from './../../components/errorBarStyle/treezErrorBarStyle.js';
@@ -25,6 +26,7 @@ import ErrorBarStyle from './../../components/errorBarStyle/errorBarStyle.js';
 
 import TreezFileOrDirectoryPath from './../../components/file/treezFileOrDirectoryPath.js';
 import TreezFilePath from './../../components/file/treezFilePath.js';
+import TreezFilePathList from './../../components/list/treezFilePathList.js';
 
 import TreezFillStyle from './../../components/fillStyle/treezFillStyle.js';
 import FillStyle from './../../components/fillStyle/fillStyle.js';
@@ -185,6 +187,8 @@ export default class ComponentAtom extends Atom {
 		actions.push(new ActionSeparator());
 		
 		actions = this.extendContextMenuActions(actions, parentSelection, treeView);
+
+		actions = this.appendContextMenuActions(actions, parentSelection, treeView);
 		
 		actions.push(new ActionSeparator());
 
@@ -194,7 +198,13 @@ export default class ComponentAtom extends Atom {
 		return actions;
 	}
 
+	//can be overridden by inheriting classes
 	extendContextMenuActions(actions, parentSelection, treeView) {
+		return actions;
+	}
+
+	//can be overridden by inheriting classes
+	appendContextMenuActions(actions, parentSelection, treeView) {
 		return actions;
 	}
 

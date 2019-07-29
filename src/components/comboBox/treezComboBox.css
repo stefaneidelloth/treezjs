@@ -1,14 +1,12 @@
 .treez-combo-box-container {   
     with: auto; 
-    vertical-align: top;  
-    margin-bottom:10px;    
+    vertical-align: top; 
 }
 
 .treez-combo-box-select {   
     with: auto; 
     vertical-align: middle;
     margin-left:5px;
-	
 }
 
 .treez-combo-box-label {  

@@ -5,7 +5,6 @@
 .treez-double {
     font-family: Consolas;
     font-size: 12px;   
-    resize:vertical;
-    margin-bottom:10px;
+    resize:vertical;   
     margin-right:5px;
 }

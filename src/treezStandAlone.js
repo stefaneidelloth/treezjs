@@ -26,7 +26,10 @@ require([
 	 OrionDeferred
 ) {		
 	
-	Treez.config({home: '.'});	
+	Treez.config({
+		home: '.',
+		isSupportingPython: false
+	});	
 	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	

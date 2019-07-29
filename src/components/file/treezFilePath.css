@@ -6,8 +6,7 @@ treez-file-path {
 
 .treez-file-path-container {
     display:'inline-block';
-    white-space: nowrap;
-    margin-bottom:10px;
+    white-space: nowrap;   
 }
 
 .treez-file-path-browse-button {

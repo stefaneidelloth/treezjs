@@ -10,8 +10,10 @@ treez-section {
 }
 
 treez-section div {  
-  padding-left: 2px;  
+  padding-left: 1px;  
+  padding-right: 1px;  
   border-style:none;
+  padding-bottom: 5px;
 }
 
 treez-section-header {

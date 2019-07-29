@@ -1,14 +1,12 @@
 
 treez-directory-path {   
     font-family: Consolas;
-    font-size: 12px;  
-    margin-bottom:10px;   
+    font-size: 12px;
 }
 
 .treez-directory-path-container {
     display:'inline-block';
-    white-space: nowrap;
-    margin-bottom:10px;
+    white-space: nowrap;   
 }
 
 .treez-directory-path-browse-button {		

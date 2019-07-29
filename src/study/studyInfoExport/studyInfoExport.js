@@ -1,334 +1,277 @@
-package org.treez.study.atom.exportStudyInfo;
+import Model from './../../model/model.js';
+import StudyInfoExportType from './studyInfoExportType.js';
 
-import java.util.List;
+export default class StudyInfoExport extends Model {
 
-import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
-import org.treez.core.adaptable.FocusChangingRefreshable;
-import org.treez.core.atom.attribute.attributeContainer.AttributeRoot;
-import org.treez.core.atom.attribute.attributeContainer.Page;
-import org.treez.core.atom.attribute.attributeContainer.section.Section;
-import org.treez.core.atom.attribute.comboBox.enumeration.EnumComboBox;
-import org.treez.core.atom.attribute.fileSystem.FilePath;
-import org.treez.core.atom.attribute.text.TextField;
-import org.treez.core.attribute.Attribute;
-import org.treez.core.attribute.Wrap;
-import org.treez.core.treeview.treeView;
-import org.treez.data.database.mysql.MySqlDatabase;
-import org.treez.data.database.sqlite.SqLiteDatabase;
-import org.treez.model.atom.AbstractModel;
-import org.treez.model.input.ModelInput;
-import org.treez.study.Activator;
-import org.treez.study.atom.ModelInputGenerator;
-import org.treez.study.atom.Study;
-
-public class StudyInfoExport extends AbstractModel {
-
-	private static final Logger LOG = Logger.getLogger(StudyInfoExport.class);
-
-	//#region ATTRIBUTES
-
-	/**
-	 * If this is true, a text file with information about the study will be exported to the specified export path
-	 */
-	public final Attribute<StudyInfoExportType> studyInfoExportType = new Wrap<>();
-
-	/**
-	 * The path where study info will be exported if the export option is enabled
-	 */
-	public final Attribute<String> studyInfoExportPath = new Wrap<>();
-
-	public final Attribute<String> host = new Wrap<>();
-
-	public final Attribute<String> port = new Wrap<>();
-
-	public final Attribute<String> user = new Wrap<>();
-
-	public final Attribute<String> password = new Wrap<>();
-
-	public final Attribute<String> schema = new Wrap<>();
-
-	//#end region
-
-	//#region CONSTRUCTORS
-
-	public StudyInfoExport(String name) {
+	constructor(name){
 		super(name);
-		createModel();
+		this.image = 'studyInfoExport.png';
+		this.isRunnable = true;
+
+		this.type = StudyInfoExportType.textFile;
+		this.filePath = '';
+		this.host = '';
+		this.port = '';
+		this.user = '';
+		this.password = '';
+		this.schema = '';
+
+		this.__filePathSelection = undefined;	
+		this.__hostSelection = undefined;		
+		this.__portSelection = undefined;		
+		this.__userSelection = undefined;		
+		this.__passwordSelection = undefined;		
+		this.__schemaSelection = undefined;	
 	}
 
-	//#end region
+	createComponentControl(tabFolder){    
+     
+		const page = tabFolder.append('treez-tab')
+            .label('Data');
 
-	//#region METHODS
-
-	private void createModel() {
-
-		AttributeRoot root = new AttributeRoot("root");
-		Page dataPage = root.createPage("data", "   Data   ");
-
-		String relativeHelpContextId = "studyInfoExport";
-		String absoluteHelpContextId = Activator.getInstance().getAbsoluteHelpContextId(relativeHelpContextId);
-
-		createStudyInfoSection(dataPage, absoluteHelpContextId);
-
-		setModel(root);
+		this.__createStudyInfoSection(page); 
+		
 	}
 
-	@Override
-	public void execute(FocusChangingRefreshable refreshable) {
+	async doRunModel(treeView, monitor) {
+    	    	    	
+		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
+		monitor.info(startMessage);	
+		
+		monitor.totalWork = 1;	
+		
+		var study = this.parent;
+	    var inputGenerator = study.modelInputGenerator;
+		await this.__exportStudyInfo(inputGenerator, monitor);
+	
+		monitor.done();
+		
+    }  
 
-		if (studyInfoExportType.get() == StudyInfoExportType.DISABLED) {
-			return;
-		}
 
-		String sweepTitle = "StudyInfoExport '" + getName() + "'";
-		runNonUiTask(sweepTitle, (mainMonitor) -> {
-			Study study = (Study) this.getParentAtom();
-			ModelInputGenerator inputGenerator = study.getModelInputGenerator();
-			exportStudyInfo(inputGenerator);
-			mainMonitor.done();
-		});
+	
+	__createStudyInfoSection(tab) {
+
+
+		const section = tab.append('treez-section')
+            .label('Study info export'); 
+
+        this.createHelpAction(section, 'study/studyInfoExport/studyInfoExport.md');
+		
+        section.append('treez-section-action')
+            .image('run.png')
+            .label('Export study info')
+            .addAction(()=>this.execute(this.__treeView)
+            				   .catch(error => {
+            					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
+            				   })
+            );  
+
+        const sectionContent = section.append('div'); 
+
+        sectionContent.append('treez-enum-combo-box')
+            .label('Type')           
+            .onChange(() => this.__showAndHideDependentComponents())	
+            .nodeAttr('options', StudyInfoExportType)
+            .bindValue(this,()=>this.type);
+
+        this.__filePathSelection = sectionContent.append('treez-file-path')
+            .label('File path')  
+            .nodeAttr('pathMapProvider', this)
+            .bindValue(this,()=>this.filePath);  
+
+        this.__hostSelection = sectionContent.append('treez-text-field')
+			.label('Host')
+			.bindValue(this, ()=>this.host);
+		
+		this.__portSelection = sectionContent.append('treez-text-field')
+			.label('Port')
+			.bindValue(this, ()=>this.port);
+
+		this.__schemaSelection = sectionContent.append('treez-text-field')
+			.label('Schema name')
+			.bindValue(this, ()=>this.schema); 
+		
+		this.__userSelection = sectionContent.append('treez-text-field')
+			.label('User')
+			.bindValue(this, ()=>this.user);
+		
+		this.__passwordSelection = sectionContent.append('treez-text-field')
+			.label('Password')
+			.bindValue(this, ()=>this.password);
+		
+		 
+
+		this.__showAndHideDependentComponents();			
 	}
 
-	private String getStudyIdFromParent() {
-		Study study = (Study) this.getParentAtom();
-		return study.getId();
-	}
 
-	@Override
-	public Image provideImage() {
-		return Activator.getImage("studyInfoExport.png");
-	}
+	__showAndHideDependentComponents(){
 
-	@Override
-	protected List<Object> extendContextMenuActions(List<Object> actions, treeView treeViewer) {
-		return actions;
-	}
-
-	@Override
-	public AbstractModel copy() {
-		return null;
-	}
-
-	protected void createStudyInfoSection(Page dataPage, String absoluteHelpContextId) {
-		//study info
-		Section studyInfoSection = dataPage.createSection("studyInfo", absoluteHelpContextId);
-		studyInfoSection.setLabel("Export study info");
-		studyInfoSection.createSectionAction("action", "Export study info", () -> execute(treeView));
-
-		//export study info combo box
-		EnumComboBox<StudyInfoExportType> exportStudyInfoTypeCombo = studyInfoSection
-				.createEnumComboBox(studyInfoExportType, this, StudyInfoExportType.DISABLED);
-		exportStudyInfoTypeCombo.setLabel("Export study information");
-
-		//export sweep info path
-		FilePath filePath = studyInfoSection.createFilePath(studyInfoExportPath, this,
-				"Target file path for study information", "");
-		filePath.setValidatePath(false);
-
-		//host
-		TextField hostField = studyInfoSection.createTextField(host, this, "localhost");
-		hostField.setLabel("Host name/IP address");
-
-		//port
-		TextField portField = studyInfoSection.createTextField(port, this, "3306");
-
-		//user
-		TextField userField = studyInfoSection.createTextField(user, this, "root");
-
-		//password
-		TextField passwordField = studyInfoSection.createTextField(password, this, "");
-
-		//schema
-		TextField schemaField = studyInfoSection.createTextField(schema, this, "my_schema");
-		schemaField.setLabel("Schema name");
-
-		//enable & disable fields
-		exportStudyInfoTypeCombo.addModificationConsumer("updateEnabledState", () -> {
-
-			StudyInfoExportType exportType = studyInfoExportType.get();
-			switch (exportType) {
-			case DISABLED:
-				filePath.setEnabled(false);
-				hostField.setEnabled(false);
-				portField.setEnabled(false);
-				userField.setEnabled(false);
-				passwordField.setEnabled(false);
-				schemaField.setEnabled(false);
+		switch (this.type) {
+			case StudyInfoExportType.textFile:
+				this.__filePathSelection.show();
+				this.__hostSelection.hide();
+				this.__portSelection.hide();
+				this.__userSelection.hide();
+				this.__passwordSelection.hide();
+				this.__schemaSelection.hide();				
 				break;
-			case TEXT_FILE:
-				filePath.setEnabled(true);
-				hostField.setEnabled(false);
-				portField.setEnabled(false);
-				userField.setEnabled(false);
-				passwordField.setEnabled(false);
-				schemaField.setEnabled(false);
+			case StudyInfoExportType.sqLite:
+				this.__filePathSelection.show();
+				this.__hostSelection.hide();
+				this.__portSelection.hide();
+				this.__userSelection.hide();
+				this.__passwordSelection.show();
+				this.__schemaSelection.hide();
 				break;
-			case SQLITE:
-				filePath.setEnabled(true);
-				hostField.setEnabled(false);
-				portField.setEnabled(false);
-				userField.setEnabled(false);
-				passwordField.setEnabled(false);
-				schemaField.setEnabled(false);
-				break;
-			case MYSQL:
-				filePath.setEnabled(false);
-				hostField.setEnabled(true);
-				portField.setEnabled(true);
-				userField.setEnabled(true);
-				passwordField.setEnabled(true);
-				schemaField.setEnabled(true);
+			case StudyInfoExportType.mySql:
+				this.__filePathSelection.hide();
+				this.__hostSelection.show();
+				this.__portSelection.show();
+				this.__userSelection.show();
+				this.__passwordSelection.show();
+				this.__schemaSelection.show();
 				break;
 			default:
-				throw new IllegalStateException("The export type '" + exportType + "' has not yet been implemented.");
+				throw new Error('The export type "' + this.type + '" has not yet been implemented.');
 			}
 
-		});
+		
 	}
 
-	protected void exportStudyInfo(ModelInputGenerator modelInputGenerator) {
+	__exportStudyInfo(modelInputGenerator, monitor) {		
 
-		StudyInfoExportType exportType = studyInfoExportType.get();
-		String filePath = studyInfoExportPath.get();
-
-		switch (exportType) {
-		case DISABLED:
-			//Nothing to do
-			break;
-		case TEXT_FILE:
-			if (filePath.isEmpty()) {
-				String message = "Export of study info to text file is enabled but no file "
-						+ "(e.g. c:/studyInfo.txt) has been specified. Export is cancled.";
-				LOG.warn(message);
+		switch (this.type) {
+		
+			case StudyInfoExportType.textFile:
+				if (!this.filePath) {
+					var message = 'Export of study info to text file is enabled but no file path '
+							+ '(e.g. C:/studyInfo.txt) has been specified. The xxport is cancled.';
+					monitor.warn(message);
+					return;
+				}
+				modelInputGenerator.exportStudyInfoToTextFile(filePath);
+				monitor.info('Exported study info totextfile: ' + this.filePath);
 				return;
-			}
-			modelInputGenerator.exportStudyInfoToTextFile(filePath);
-			LOG.info("Exported study info totextfile: " + filePath);
-			return;
-		case SQLITE:
-			if (filePath.isEmpty()) {
-				String message = "Export of study info to text file is enabled but no file "
-						+ "(e.g. c:/studyInfo.txt) has been specified. Export is cancled.";
-				LOG.warn(message);
+			case StudyInfoExportType.sqLite:
+				if (!this.filePath) {
+					var message = 'Export of study info to sqLite is enabled but no database file '
+							+ '(e.g. c:/studyInfo.sqlite) has been specified. The export is cancled.';
+					monitor.warn(message);
+					return;
+				}
+				this.__exportStudyInfoToSqLiteDatabase(modelInputGenerator, this.filePath);
+				monitor.info('Exported study info to SqLite database: ' + filePath);
 				return;
-			}
-			exportStudyInfoToSqLiteDatabase(modelInputGenerator, filePath);
-			LOG.info("Exported study info to SqLite database: " + filePath);
-			return;
-		case MYSQL:
-			exportStudyInfoToMySqlDatabase(modelInputGenerator);
-			LOG.info("Exported study info to MySqlDatabase: " + host.get() + ":" + port.get() + "/" + schema.get());
-			break;
-		default:
-			String message = "The export type '" + exportType + "' has not yet been implemented.";
-			throw new IllegalStateException(message);
+			case StudyInfoExportType.mySql:
+				this.__exportStudyInfoToMySqlDatabase(modelInputGenerator);
+				var message = 'Exported study info to MySql database: ' + this.host + ':' + this.port + '/' + this.schema;
+				monitor.info(message);
+				break;
+			default:
+				var message = 'The export type "' + exportType + '" has not yet been implemented.';
+				throw new Error(message);
 		}
 
 	}
 
-	private void exportStudyInfoToSqLiteDatabase(ModelInputGenerator modelInputGenerator, String filePath) {
-		SqLiteDatabase database = new SqLiteDatabase(filePath);
-		writeStudyInfo(modelInputGenerator, database);
-		writeJobInfo(modelInputGenerator, database);
+	__exportStudyInfoToSqLiteDatabase(modelInputGenerator, filePath) {
+		var database = new SqLiteDatabase(filePath);
+		this.__writeStudyInfo(modelInputGenerator, database);
+		this.__writeJobInfo(modelInputGenerator, database);
 
 	}
 
-	private void exportStudyInfoToMySqlDatabase(ModelInputGenerator inputGenerator) {
-		String url = host.get() + ":" + port.get();
-		String userValue = user.get();
-		String passwordValue = password.get();
-		String schemaName = schema.get();
-
-		MySqlDatabase database = new MySqlDatabase(url, userValue, passwordValue);
-		writeStudyInfo(inputGenerator, database, schemaName);
-		writeJobInfo(inputGenerator, database, schemaName);
+	__exportStudyInfoToMySqlDatabase(inputGenerator) {
+		var url = this.host + ':' + this.port;
+		var database = new MySqlDatabase(url, this.user, this.password);
+		this.__writeStudyInfo(inputGenerator, database, this.schema);
+		this.__writeJobInfo(inputGenerator, database, this.schema);
 	}
 
-	private void writeStudyInfo(ModelInputGenerator inputGenerator, SqLiteDatabase database) {
-		String studyInfoTableName = "study_info";
+	__writeStudyInfo(inputGenerator, database) {
+		var studyInfoTableName = "study_info";
 		createStudyInfoTableIfNotExists(database, studyInfoTableName);
 		deleteOldEntriesForStudyIfExist(database, studyInfoTableName);
 		inputGenerator.fillStudyInfo(database, studyInfoTableName, getStudyIdFromParent());
 	}
 
-	private void writeStudyInfo(ModelInputGenerator inputGenerator, MySqlDatabase database, String schema) {
-		String studyInfoTableName = "study_info";
+	__writeStudyInfo(inputGenerator, database, schema) {
+		var studyInfoTableName = "study_info";
 		createStudyInfoTableIfNotExists(database, schema, studyInfoTableName);
 		deleteOldEntriesForStudyIfExist(database, schema, studyInfoTableName);
 		inputGenerator.fillStudyInfo(database, schema, studyInfoTableName, getStudyIdFromParent());
 	}
 
-	private static void createStudyInfoTableIfNotExists(SqLiteDatabase database, String tableName) {
-		String query = "CREATE TABLE IF NOT EXISTS '" + tableName
-				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, variable TEXT, value TEXT);";
+	__createStudyInfoTableIfNotExists(database, tableName) {
+		var query = 'CREATE TABLE IF NOT EXISTS ´' + tableName
+				+ '´ (id INTEGER PRIMARY KEY NOT NULL, study TEXT, variable TEXT, value TEXT);';
 		database.execute(query);
 	}
 
-	private static void createStudyInfoTableIfNotExists(MySqlDatabase database, String schema, String tableName) {
-		String query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
+	__createStudyInfoTableIfNotExists(database, schema, tableName) {
+		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
 		database.execute(query);
 	}
 
-	private void deleteOldEntriesForStudyIfExist(SqLiteDatabase database, String tableName) {
-		String query = "DELETE FROM '" + tableName + "' WHERE study = '" + getStudyIdFromParent() + "';";
+	__deleteOldEntriesForStudyIfExist(database, tableName) {
+		var query = "DELETE FROM '" + tableName + "' WHERE study = '" + getStudyIdFromParent() + "';";
 		database.execute(query);
 	}
 
-	private void deleteOldEntriesForStudyIfExist(MySqlDatabase database, String schema, String tableName) {
-		String query = "DELETE FROM `" + schema + "`.`" + tableName + "` WHERE study = '" + getStudyIdFromParent()
+	__deleteOldEntriesForStudyIfExist(database, schema, tableName) {
+		var query = "DELETE FROM `" + schema + "`.`" + tableName + "` WHERE study = '" + getStudyIdFromParent()
 				+ "';";
 		database.execute(query);
 	}
 
-	private void writeJobInfo(ModelInputGenerator inputGenerator, SqLiteDatabase database) {
-		String jobInfoTableName = "job_info";
+	__writeJobInfo(inputGenerator, database) {
+		var jobInfoTableName = "job_info";
 		createJobInfoTableIfNotExists(database, jobInfoTableName);
 		deleteOldEntriesForStudyIfExist(database, jobInfoTableName);
-		String studyId = getStudyIdFromParent();
+		var studyId = getStudyIdFromParent();
 
-		for (ModelInput modelInput : inputGenerator.createModelInputs()) {
-			String jobId = modelInput.getJobId();
-			List<String> variablePaths = modelInput.all;
-			for (String variablePath : variablePaths) {
-				Object value = modelInput.getVariableValue(variablePath);
-				String query = "INSERT INTO '" + jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
+		for (var modelInput of inputGenerator.createModelInputs()) {
+			var jobId = modelInput.getJobId();
+			varvariablePaths = modelInput.all;
+			for (var variablePath of variablePaths) {
+				var value = modelInput.getVariableValue(variablePath);
+				var query = "INSERT INTO '" + jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
 						+ "', '" + variablePath + "','" + value + "')";
 				database.execute(query);
 			}
 		}
 	}
 
-	private void writeJobInfo(ModelInputGenerator inputGenerator, MySqlDatabase database, String schema) {
-		String jobInfoTableName = "job_info";
+	__writeJobInfo(inputGenerator, database, schema) {
+		var jobInfoTableName = "job_info";
 		createJobInfoTableIfNotExists(database, schema, jobInfoTableName);
 		deleteOldEntriesForStudyIfExist(database, schema, jobInfoTableName);
-		String studyId = getStudyIdFromParent();
-		for (ModelInput modelInput : inputGenerator.createModelInputs()) {
-			String jobId = modelInput.getJobId();
-			List<String> variablePaths = modelInput.all;
-			for (String variablePath : variablePaths) {
-				Object value = modelInput.getVariableValue(variablePath);
-				String query = "INSERT INTO `" + schema + "`.`" + jobInfoTableName + "` VALUES(null, '" + studyId
+		var studyId = getStudyIdFromParent();
+		for (var modelInput of inputGenerator.createModelInputs()) {
+			var jobId = modelInput.getJobId();
+			var variablePaths = modelInput.all;
+			for (var variablePath of variablePaths) {
+				var value = modelInput.getVariableValue(variablePath);
+				var query = "INSERT INTO `" + schema + "`.`" + jobInfoTableName + "` VALUES(null, '" + studyId
 						+ "', '" + jobId + "', '" + variablePath + "','" + value + "')";
 				database.execute(query);
 			}
 		}
 	}
 
-	private static void createJobInfoTableIfNotExists(SqLiteDatabase database, String tableName) {
-		String query = "CREATE TABLE IF NOT EXISTS '" + tableName
+	__createJobInfoTableIfNotExists(database, tableName) {
+		var query = "CREATE TABLE IF NOT EXISTS '" + tableName
 				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, job TEXT, variable TEXT, value TEXT);";
 		database.execute(query);
 	}
 
-	private static void createJobInfoTableIfNotExists(MySqlDatabase database, String schema, String tableName) {
-		String query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
+	__createJobInfoTableIfNotExists(database, schema, tableName) {
+		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, job TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
 		database.execute(query);
-	}
-
-	//#end region
+	}	
 
 }

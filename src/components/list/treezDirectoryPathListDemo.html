@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="./treezStringList.css" />
+	</head>
+
+	<body>	
+	
+		<treez-file-path-list id="pathList" label="Directory paths" value="c:\foo,c:\baa"></treez-file-path-list>	
+
+		<script type="module">
+			import TreezDirectoryPathList from './treezDirectoryPathList.js';
+
+            var pathList = document.getElementById('pathList'); 
+            pathList.value = 'c:\foo,c:\baa,c:\qux'; 
+		</script>
+		
+	</body>
+</html>

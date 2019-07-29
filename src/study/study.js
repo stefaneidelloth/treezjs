@@ -5,6 +5,8 @@ import Monitor from './../core/monitor/Monitor.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
 import PythonExport from './pythonExport/pythonExport.js';
 import Variable from './../variable/variable.js';
+import StudyInfoExport from './studyInfoExport/studyInfoExport.js';
+import Treez from './../treez.js';
 
 export default class Study extends ComponentAtom {
 			
@@ -71,12 +73,23 @@ export default class Study extends ComponentAtom {
 	    
     }
 	
-	extendContextMenuActions(actions, parentSelection, treeView) {
+	appendContextMenuActions(actions, parentSelection, treeView) {
+
+		if(window.treezConfig.isSupportingPython){
 				
+			actions.push(new AddChildAtomTreeViewAction(
+					PythonExport,
+					"pythonExport",
+					"pythonExport.png",
+					parentSelection,
+					this,
+					treeView));
+		}
+
 		actions.push(new AddChildAtomTreeViewAction(
-				PythonExport,
-				"pythonExport",
-				"pythonExport.png",
+				StudyInfoExport,
+				"studyInfoExport",
+				"studyInfoExport.png",
 				parentSelection,
 				this,
 				treeView));
