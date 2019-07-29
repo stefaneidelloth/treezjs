@@ -23,7 +23,7 @@ A new ![](../../../../icons/filePathRange.png) FilePathRange atom atom is create
 
 ```javascript
     ...
-    var ageRange = models.createFilePathRange('root.models.genericInput.inputFilePath', ['C:\foo.txt', 'C:\baa.txt']);	     
+    var inputFilePathRange = models.createFilePathRange('root.models.genericInput.inputFilePath', ['C:\foo.txt', 'C:\baa.txt']);	     
 ```						
 		
 ## Sections
