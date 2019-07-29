@@ -23,7 +23,7 @@ A new ![](../../../../icons/directoryPathRange.png) DirectoryPathRange atom atom
 
 ```javascript
     ...
-    var ageRange = models.createDirectoryPathRange('root.models.genericInput.outputDirectoryPath', ['C:/foo', 'C:/baa']);	     
+    var outputDirectoryPathRange = models.createDirectoryPathRange('root.models.genericInput.outputDirectoryPath', ['C:/foo', 'C:/baa']);	     
 ```						
 		
 ## Sections
