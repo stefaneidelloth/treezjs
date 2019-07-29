@@ -38,7 +38,7 @@ d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png
 			
 The code is executed like the code of a cell in the Jupyter Notebook. The (html) output of the code (e.g. a plot) is shown in the section "Output".       
       
-## Arguments
+## Sections
 
 ### Source model
 
