@@ -36,7 +36,7 @@ The tree path to the variable that should be controlled by the range.
 
 #### Range
 
-A comma separated list of range values in square brackets, e.g. [13,14,15] or a range command range(min, max, step), e.g. range(13,15,1)
+A comma separated list of range values in square brackets, e.g. [13,14,15]
 
 ----
 
