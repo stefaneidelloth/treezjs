@@ -5,6 +5,7 @@ import AtomGraphicsAdaption from './atomGraphicsAdaption.js';
 import TreeViewAction from './../treeview/treeViewAction.js';
 import TreeView from './../../views/treeView.js';
 import VariableNameRegistry from './../code/variableNameRegistry.js';
+import Utils from './../utils/utils.js';
 
 
 export default class Atom {		
@@ -519,6 +520,27 @@ export default class Atom {
 		var fullName = currentNameAndNumber.getFullName();
 		return fullName;
 	}
+
+
+
+	createHelpAction(section, relativeUrl){
+	
+		section.append('treez-section-action')
+	        .image('help.png')
+	        .label('Show online help')
+	        .addAction(()=>this.showHelp(relativeUrl)); 
+	}
+
+	showHelp(relativeUrl){ 
+    	var url = this.absoluteHelpUrl(relativeUrl);
+    	var newWindow = window.open(url, '_blank');
+		newWindow.focus();  
+    }	
+
+    absoluteHelpUrl(relativeUrl){    	
+    	return 'https://github.com/stefaneidelloth/treezjs/blob/master/doc/atoms/' + relativeUrl;
+    }
+    
 	
 	__initializeProperties(){
 		var propertyNames = Object.getOwnPropertyNames(this);		
@@ -797,6 +819,14 @@ export default class Atom {
 		}
 		return false;
 	}
+
+	get atomType(){
+		var className = this.constructor.name;
+		return Utils.firstToLowerCase(className);
+	}
+
+
+	
 	
 	//#end region
 	

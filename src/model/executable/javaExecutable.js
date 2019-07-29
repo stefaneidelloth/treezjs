@@ -17,6 +17,8 @@ export default class JavaExecutable extends Executable {
 			const section = tab.append('treez-section')
 	            .label('Java executable');
 
+	        this.createHelpAction(section, 'model/executable/javaExecutable.md#java-executable');
+
 	        section.append('treez-section-action')
 	            .image('resetjobId.png')
 	            .label('Reset jobId to 1')
@@ -50,7 +52,9 @@ export default class JavaExecutable extends Executable {
 	__createClassPathSection(page) {
 
 		const section = page.append('treez-section')
-				.label("Class path (e.g. jar file)");		
+				.label("Class path");	
+
+		this.createHelpAction(section, 'model/executable/javaExecutable.md#class-path');	
 
 		var sectionContent = section.append('div');
 		
@@ -64,7 +68,9 @@ export default class JavaExecutable extends Executable {
 	__createMainSection(page) {
 
 		const section = page.append('treez-section')
-				.label("Main class");		
+				.label("Main class");
+
+		this.createHelpAction(section, 'model/executable/javaExecutable.md#main-class');		
 
 		var sectionContent = section.append('div');
 				
@@ -79,6 +85,8 @@ export default class JavaExecutable extends Executable {
 		
 		const section = page.append('treez-section')
 			.label('JVM arguments');
+
+		this.createHelpAction(section, 'model/executable/javaExecutable.md#jvm-arguments');
 
 		var sectionContent = section.append('div');
 		

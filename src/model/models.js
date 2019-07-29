@@ -33,7 +33,9 @@ export default class Models extends Model {
             .label('Data');		
 
 		const section = page.append('treez-section')
-        	.label('Models'); 
+        	.label('Models');
+
+        this.createHelpAction(section, 'model/models.md');        
 		
 		section.append('treez-section-action')
 	        .image('resetjobId.png')
@@ -58,7 +60,11 @@ export default class Models extends Model {
 	        .label('Next jobId:') 
 	        .disable() 
 	        .bindValue(this,()=>this.__jobId); 
-    }	
+    }
+
+    
+
+    
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
 

@@ -160,6 +160,8 @@ export default class Executable extends Model {
 		const section = tab.append('treez-section')
             .label('Executable'); 
 
+        this.createHelpAction(section, 'model/executable/executable.md#executable-1');
+
 		section.append('treez-section-action')
 	        .image('resetjobId.png')
 	        .label('Reset jobId to 1')
@@ -192,6 +194,8 @@ export default class Executable extends Model {
         const section = page.append('treez-section')
             .label('Input'); 
 
+        this.createHelpAction(section, 'model/executable/' + this.atomType + '.md#input');
+
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-text-area')
@@ -209,6 +213,8 @@ export default class Executable extends Model {
 	__createOutputSection(page) {
        const section = page.append('treez-section')
            .label('Output');
+
+       this.createHelpAction(section, 'model/executable/' + this.atomType + '.md#output');
 
        const sectionContent = section.append('div'); 
 
@@ -228,6 +234,8 @@ export default class Executable extends Model {
        const section = page.append('treez-section')
            .label('Status')
            .attr('expanded','false');
+
+       this.createHelpAction(section, 'model/executable/' + this.atomType + '.md#status');
 
        const sectionContent = section.append('div'); 
      

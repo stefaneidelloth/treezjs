@@ -77,6 +77,8 @@ export default class DatabaseModifier extends CodeModel {
 		const section = page.append('treez-section')
             .label('Target database'); 
 
+        this.createHelpAction(section, 'model/code/databaseModifier.md#target-database');  
+
         const sectionContent = section.append('div'); 
         
         sectionContent.append('treez-enum-combo-box')

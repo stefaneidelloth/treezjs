@@ -74,6 +74,8 @@ export default class CodeModel extends Model {
     	const section = page.append('treez-section')
             .label('Source model'); 
 
+        this.createHelpAction(section, 'model/code/' + this.atomType + '.md#source-model');
+
         const sectionContent = section.append('div'); 
 
         this.__codeSelection = sectionContent.append('treez-model-path')
@@ -86,6 +88,8 @@ export default class CodeModel extends Model {
        
         const section = page.append('treez-section')
             .label('Code'); 
+
+         this.createHelpAction(section, 'model/code/' + this.atomType + '.md#code');
         
         section.append('treez-section-action')
 	        .image('resetjobId.png')

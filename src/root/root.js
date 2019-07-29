@@ -18,7 +18,9 @@ export default class Root extends ComponentAtom {
         	.label('Data');		
 
 		const section = page.append('treez-section')
-			.label('Root');   
+			.label('Root'); 
+
+		this.createHelpAction(section, 'root.md');    
 
 		const sectionContent = section.append('div'); 	     
 

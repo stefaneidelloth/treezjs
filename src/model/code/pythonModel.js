@@ -63,6 +63,8 @@ export default class PythonModel extends CodeModel {
     	const section = page.append('treez-section')
             .label('Output'); 
 
+        this.createHelpAction(section, 'model/code/pythonModel.md#output');
+
         this.__outputSelection = section.append('div'); 
 
         
