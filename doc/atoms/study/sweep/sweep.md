@@ -45,6 +45,8 @@ The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to ad
 * ![](../../../../icons/stringItemRange.png) [StringItemRange](../../variable/range/stringItemRange.md)
 * ![](../../../../icons/filePathRange.png) [FilePathRange](../../variable/range/filePathRange.md)
 * ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](../../variable/range/directoryPathRange.md)
+* ![](../../../../icons/pythonExport.png) [PythonExport](../pythonExport/pythonExport.md)
+* ![](../../../../icons/studyInfoExport.png) [StudyInfoExport](../studyInfoExport/studyInfoExport.md)
 
 The **ranges** for a ![](../../../../icons/sweep.png) Sweep are defined through those child atoms. 
 
