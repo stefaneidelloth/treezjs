@@ -6,7 +6,7 @@
 	
 The purpose of the ![](../../../../icons/stringItemRange.png) StringItemRange atom is to edit a range of predefined string items. 
 		
-![](../../../images/integer_item_range.png)
+![](../../../images/string_item_range.png)
 
 The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		
