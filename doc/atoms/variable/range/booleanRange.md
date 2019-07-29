@@ -4,9 +4,7 @@
 
 # BooleanRange
 	
-The purpose of the ![](../../../../icons/booleanRange.png) BooleanRange atom is to select a range of boolean values: 
-* true & false or 
-* false & true. 
+The purpose of the ![](../../../../icons/booleanRange.png) BooleanRange atom is to select a range of boolean values.
 		
 ![](../../../images/boolean_range.png)
 
@@ -25,7 +23,7 @@ A new ![](../../../../icons/booleanRange.png) BooleanRange atom atom is created 
 
 ```javascript
     ...
-    var isUsingExtraBoostRange = models.createQuantityRange('root.models.genericInput.isUsingExtraBoost', [true, false]);	     
+    var isUsingExtraBoostRange = models.createBooleanRange('root.models.genericInput.isUsingExtraBoost', [true, false]);	     
 ```						
 		
 ## Sections
@@ -38,7 +36,9 @@ The tree path to the variable that should be controlled by the range.
 
 #### Range
 
-Please select the boolean range you would like to use. 
+Please select the boolean range you would like to use:
+* true & false or 
+* false & true
 
 ----
 
