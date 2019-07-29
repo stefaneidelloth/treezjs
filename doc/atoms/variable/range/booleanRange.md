@@ -4,7 +4,9 @@
 
 # BooleanRange
 	
-The purpose of the ![](../../../../icons/booleanRange.png) BooleanRange atom is to select a range of boolean values: true, false or false, true. 
+The purpose of the ![](../../../../icons/booleanRange.png) BooleanRange atom is to select a range of boolean values: 
+* true & false or 
+* false & true. 
 		
 ![](../../../images/boolean_range.png)
 
