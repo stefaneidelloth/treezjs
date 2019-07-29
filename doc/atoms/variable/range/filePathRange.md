@@ -36,7 +36,11 @@ The tree path to the variable that should be controlled by the range.
 
 #### Range
 
-A comma separated list of file paths in square brackets, e.g. ['C:\foo.txt', 'C:\baa.txt']
+A list of file paths. Use the buttons and text fields to edit the entries of the list:
+* ![](../../../../icons/add.png) Add entry
+* ![](../../../../icons/delete.png) Delete entry
+* ![](../../../../icons/up.png) Move entry up
+* ![](../../../../icons/down.png) Move entry down 
 
 ----
 
