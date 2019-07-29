@@ -56,7 +56,7 @@ The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 
 			
 ## Sections
 
-The total system command is created by concatenation from the individual input fields. A prview for the command is shown as **Resulting command** in the section "Status". 
+The total system command is created by concatenation from the individual input fields. A preview for the command is shown as **Resulting command** in the section "Status". 
 
 It is possible to use variables (e.g. a ![](../../../../icons/filePathVariable.png) [FilePathVariable](../../variable/field/filePathVariable.md) *inputFile*) that have been defined before. The preview of the status section contains the actual variable values (e.g. C:/system.log) instead of the variable placeholder expressions (e.g {$inputFile$}).
 
@@ -113,6 +113,10 @@ Leave this input field empty if your executable does not require an output file 
 It is possible to **dynamically modify the output path** using an ![](../../../../icons/outputModification.png) [OutputModification](./outputModification.md) atom. This makes sense if you run the ![](../../../../icons/run.png) Executable atom  many times, for example in a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have a **different output path for each run**.
 
 **Old output files and directories can be deleted** with ![](../../../../icons/fileCleanup.png) [FileCleanup](../fileCleanup/fileCleanup.md) atoms. 
+
+### Status
+
+The status section shows a preview for the **Resulting command** and the next jobId. 
 
 ### Logging
 
