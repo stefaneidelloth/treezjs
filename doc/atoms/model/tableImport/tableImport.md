@@ -70,7 +70,7 @@ A password only needs to be specified if a source database is password protected
 
 #### Schema name
 
-A single MySQL database can inlcude several "sub databases", called "schema".
+A single MySQL database can include several "sub databases", called "schema".
 Please specifiy the name of the schema that contains the table you would like
 to import. 
 
