@@ -43,13 +43,45 @@ Leave this input field empty if you
 * do not want to inject variable values into the query code or you 
 * only want to use the ("global") variables jobId and studyId.  
 
+### Target database
+
+#### Type
+
+Choose the type of database that you want to modify. The visibility of the following arguments might depend on the type.
+
+#### File path
+
+The path to some \*.sqlite file (not relevant for the type mySql).
+
+#### Host
+
+The host name or IP address of a MySQL server, for example "fooserver" or "153.96.123.456".
+
+#### Port
+
+The port number of a MySQL server, for example 3306.
+
+#### Schema name
+
+A single MySQL database can include several "sub databases", called "schema".
+Please specifiy the name of the schema that contains the table you would like
+to modify. 
+
+#### User
+
+The user name, for example "root". 
+
+#### Password
+
+A password only needs to be specified if the database is password protected.
+
 ### Code
 
 The query to be executed. The query might contain variable placeholders (e.g. {$jobId$}) that are replaced with the actual variable values before the query is executed. 
 
 ### Status
 
-A prview of the resulting query (including injected variable values).
+A preview of the resulting query (including injected variable values).
 
 ----
 
