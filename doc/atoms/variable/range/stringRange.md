@@ -36,8 +36,11 @@ The tree path to the variable that should be controlled by the range.
 
 #### Range
 
-A comma separated list of string values in square brackets, e.g. ['first description', 'second description']
-
+A list of string values. Use the buttons and input fields to edit the entries of the list:
+* ![](../../../../icons/add.png) Add entry
+* ![](../../../../icons/delete.png) Delete entry
+* ![](../../../../icons/up.png) Move entry up
+* ![](../../../../icons/down.png) Move entry down 
 ----
 
 ![](../../../../icons/stringItemRange.png) [StringItemRange](./stringItemRange.md) 
