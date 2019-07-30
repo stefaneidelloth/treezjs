@@ -102,9 +102,12 @@ If you prefer to identify placeholders differently (e.g. because your template a
 
 This style defines how a found variable placeholder of the template is replaced. The style supports following predefined tags:
 * \<name\>: the name of the variable
-* \<value\>: the (numeric) value of the variable
-* \<unit\>: the unit of the (quantiy-) variable
-	
+* \<value\>: the value of the variable 
+  * for QuantityVariables the numeric value is used
+  * for string based variables no extra quotation marks are injected (if required, those need to exist in the template or style)
+  * for BooleanVariables *true* or *false* is injected ( if instead *True* or *False* or *1* or *0* is required, please use some other variable type, e.g. StringItemVariable or IntegerVariable.) 
+* \<unit\>: the unit of a QuanityVariable (e.g. kg) or 1 for variables without unit.
+
 Some examples:
 
 a) Only inject the numeric value:
