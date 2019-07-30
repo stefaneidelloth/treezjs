@@ -10,7 +10,7 @@ The purpose of the ![](../../../../icons/fileCopy.png) FileCopy atom is to copy 
 		
 ## Source code
 
-[./src/model/fileCleanup/fileCopy.js](../../../../src/model/fileCopy/fileCopy.js)
+[./src/model/fileCopy/fileCopy.js](../../../../src/model/fileCopy/fileCopy.js)
 
 ## Construction
 		
