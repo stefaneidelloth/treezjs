@@ -54,7 +54,7 @@ The path to a file or directory to be cleaned. Also see [FileOrDirectoryPath](..
 
 #### Mode
 
-If a directory is selected above, you can choose a directory cleanup mode:
+If a directory is selected above, the Mode combo box is visible and you can choose a **directory cleanup mode**:
 * deleteFiles: Delete all files in the specified directory. Sub directories are not deleted. 
 * deleteFilesAndSubDirectories: Delete all files and sub directories in the specified directory.
 * deleteDirectory: Delete the specified directory.
