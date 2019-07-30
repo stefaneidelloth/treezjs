@@ -28,6 +28,9 @@ export default class StandAloneTerminal {
     }
 
     async readTextFile(filePath){
+    	if(!filePath){
+    		return null;
+    	}
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
 		return jQuery.get('readTextFile', uri); 

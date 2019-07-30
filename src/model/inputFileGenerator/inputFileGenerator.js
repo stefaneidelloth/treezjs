@@ -7,7 +7,7 @@ import QuantityVariable from './../../variable/field/quantityVariable.js';
 
 /**
  * The purpose of this atom is to generate an input text file that can be used as input for other atoms, e.g. the
- * Executable. It reads a template text file and replaces "tags"/"place holders" with Quantities. The filled template is
+ * Executable. It reads a template text file and replaces "tags"/"placeholders" with Quantities. The filled template is
  * then saved as new input file at the wanted input file path.
  */
 export default class InputFileGenerator extends Model  {
@@ -25,36 +25,21 @@ export default class InputFileGenerator extends Model  {
         
 		this.sourceModelPath = 'root.models.genericInput';
         this.nameExpression = '{$' + this.__nameTag + '$}';
-        this.valueExpression = this.valueTag + ' [' + this.__unitTag + ']'; 
+        this.valueExpression = this.__valueTag + ' [' + this.__unitTag + ']'; 
         
-        this.inputPath = 'C:/generated_input_file.txt';
+        this.isUsingInputPathProvider = true;
+		this.pathOfInputPathProvider = 'root.models.executable';
+        this.inputFilePath = 'C:/generated_input_file.txt';
+
+		this.isWrappingStrings = false;
+		this.stringWrapper = '"';
+		 
+        this.isDeletingUnassignedRows = false; 
+        this.isForcingInjection = false;  
+
         this.__inputPathInfo = undefined;
-
-        this.isDeletingUnassignedRows = false;  
-	}
-
-	
-	 
-	extendContextMenuActions(actions, parentSelection, treeView) {
-			
-		this.treeView=treeView;			
-		
-		const addInputModification = new AddChildAtomTreeViewAction(
-				InputModification,
-				"inputModification",
-				"inputModification.png",
-				parentSelection,
-				this,
-				treeView);
-		actions.push(addInputModification);
-		
-		return actions;
-	}
-	
-	createInputModification(name) {
-		const child = new InputModification(name);
-		this.addChild(child);
-		return child;
+        this.__pathOfInputPathProvierSelection = undefined;    
+        this.__stringWrapperComponent = undefined;   
 	}
 	
 	createComponentControl(tabFolder){    
@@ -62,8 +47,12 @@ export default class InputFileGenerator extends Model  {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
-		this.__createInputSection(page); 	       
+		this.__createTemplateSection(page);
+		this.__createSourceSection(page);  
+		this.__createTargetSection(page); 	       
         this.__createStatusSection(page);
+
+        this.__updateComponents();
 	}
 
 	async doRunModel(treeView, monitor){
@@ -71,45 +60,105 @@ export default class InputFileGenerator extends Model  {
 		monitor.totalWork = 2;
 				
 		monitor.info('Executing InputFileGenerator "' + this.name + '"');
-
-		var modifiedInputPath = this.__getModifiedInputPath();				
 		        
-		await window.treezTerminal.deleteFile(modifiedInputPath)
+		await window.treezTerminal.deleteFile(this.inputPath)
 			 .catch((error)=>{
 				monitor.error(error);
 			 });;	
 
-		var template = await window.treezTerminal.readTextFile(this.fullPath(this.templatePath)) //
+		var template = '';
+		if(this.templatePath){
+			template = await window.treezTerminal.readTextFile(this.fullPath(this.templatePath)) //
 							 .catch((error)=>{
 								monitor.error(error);
 							 });
-
-		if(!template){
-			throw new Error('Could not read template at ' + this.fullPath(this.templatePath));
-		}
+			if(!template){
+				throw new Error('Could not read template at ' + this.fullPath(this.templatePath));
+			}
+		} else {
+			if(!this.isForcingInjection){
+				var message = 'You must specify a template file or enable the option "Force injection".'
+				throw new Error(message);
+			}
+		}		
 
 		monitor.worked(1);
 
 		var sourceModelAtom = this.childFromRoot(this.sourceModelPath);	
 		
-		var inputFileString = this.__applyTemplateToSourceModel(template, sourceModelAtom);
+		var inputFileString = this.__applySourceModelToTemplate(template, sourceModelAtom);
 
 		if (inputFileString.length === 0) {
-			var message = 'The input file "' + modifiedInputPath
-					+ '" is empty. Please check the place holder and the source variables.';
+			var message = 'The input file "' + this.inputPath + 
+						  '" is empty. Please check the template, the styles and the source variables.';
 			monitor.warn(message);
 		}
 
-		await window.treezTerminal.writeTextFile(modifiedInputPath, inputFileString);	
+		await window.treezTerminal.writeTextFile(this.inputPath, inputFileString)
+			.catch((error)=>{
+				monitor.error(error);
+			});
 
 		monitor.done();		
 				
 	}	
 
-	__createInputSection(page) {
+	__createTemplateSection(page) {
+
+		const section = page.append('treez-section')
+        	.label('Template');	   
+	    
+	    var sectionContent = section.append('div'); 
+
+	    sectionContent.append('treez-file-path')
+        	.label('Template for input file (contains variable placeholders)')  
+        	.nodeAttr('pathMapProvider', this)
+        	.bindValue(this,()=>this.templatePath);
+
+        sectionContent.append('treez-text-field')
+			.label('Style for variable placeholder')			
+			.bindValue(this,()=>this.nameExpression);
+		
+	    sectionContent.append('treez-text-field')
+			.label('Style for variable injection')			
+			.bindValue(this,()=>this.valueExpression);
+
+		sectionContent.append('treez-check-box')
+			.label('Wrap string values')
+			.onChange(()=>this.__updateComponents())
+			.bindValue(this,()=>this.isWrappingStrings);
+
+		this.__stringWrapperComponent = sectionContent.append('treez-text-field')
+			.label('String wrapper (= "quotation mark for string values")')			
+			.bindValue(this,()=>this.stringWrapper);
+
+		sectionContent.append('treez-check-box')
+			.label('Delete unused rows (= template rows with unassigned variable placeholders).')
+			.bindValue(this,()=>this.isDeletingUnassignedRows);	
+
+		sectionContent.append('treez-check-box')
+			.label('Force injection (of all enabled variables at end of template).')
+			.bindValue(this,()=>this.isForcingInjection);	
+
+	}
+
+	__createSourceSection(page) {
 		
 		const section = page.append('treez-section')
-        .label('Input');
+        	.label('Source');	    
+	    
+	    var sectionContent = section.append('div');         
+	    
+	    sectionContent.append('treez-model-path')
+			.label('Variable source model (provides variables)')	
+			.nodeAttr('atomClasses', [Model])			
+			.bindValue(this,()=>this.sourceModelPath);	    
+	}
+
+	__createTargetSection(page){
+
+		const section = page.append('treez-section')
+        	.label('Target');
 
 	    section.append('treez-section-action')
 	        .image('resetjobId.png')
@@ -128,38 +177,52 @@ export default class InputFileGenerator extends Model  {
 	    
 	    var sectionContent = section.append('div'); 
 
-	    sectionContent.append('treez-file-path')
-        	.label('Template for input file (contains variable place holders)')  
-        	.nodeAttr('pathMapProvider', this)
-        	.bindValue(this,()=>this.templatePath);
-        
-	    
-	    sectionContent.append('treez-model-path')
-			.label('Variable source model (provides variables)')	
-			.nodeAttr('atomClasses', [Model])			
-			.bindValue(this,()=>this.sourceModelPath);
-	
+	    sectionContent.append('treez-check-box')
+        	.label('Use input path provider')
+        	.onChange(()=>this.__updateComponents())
+        	.bindValue(this, ()=>this.isUsingInputPathProvider);
 
-	    sectionContent.append('treez-text-field')
-			.label('Style for variable place holder')			
-			.bindValue(this,()=>this.nameExpression);
-		
-	    sectionContent.append('treez-text-field')
-			.label('Style for value and unit injection')			
-			.bindValue(this,()=>this.valueExpression);
+		this.__pathOfInputPathProviderComponent = sectionContent.append('treez-model-path')
+            .label('Input path provider')           
+            .onChange(()=>this.__updateComponents())    
+            .nodeAttr('atomFunctionNames', ['provideInputPath'])
+            .bindValue(this,()=>this.pathOfInputPathProvider);
 
-	    sectionContent.append('treez-file-path')
-	    	.label('Input file to generate')	    	
+        this.__inputFilePathComponent = sectionContent.append('treez-file-path')
+	    	.label('Input file to generate (=target)')	    	
 	    	.onChange(()=>this.refreshStatus())	
 	    	.nodeAttr('pathMapProvider', this)
-	    	.bindValue(this,()=>this.inputPath);
+	    	.bindValue(this,()=>this.inputFilePath);    
 
-	    sectionContent.append('treez-check-box')
-			.label('Delete template rows with unassigned variable place holders.')
-			.bindValue(this,()=>this.isDeletingUnassignedRows);	    
-	    
 	}
 
+	__updateComponents(){
+
+		if(this.isWrappingStrings){
+			this.__stringWrapperComponent.show();
+		} else {
+			this.__stringWrapperComponent.hide();
+		}
+
+
+		if(this.isUsingInputPathProvider){
+			this.__pathOfInputPathProviderComponent.show();
+			this.__inputFilePathComponent.hide();
+			this.inputFilePath = this.__pathFromInputPathProvider();
+		} else {
+			this.__pathOfInputPathProviderComponent.hide();
+			this.__inputFilePathComponent.show();
+		}		
+		this.refreshStatus();	
+	};
+
+	__pathFromInputPathProvider(){
+		var inputPathProvider = this.childFromRoot(this.pathOfInputPathProvider);
+		
+		return inputPathProvider
+			?inputPathProvider.provideInputPath()
+			:null;		
+	}
 	
 
 	__createStatusSection(page) {
@@ -180,53 +243,50 @@ export default class InputFileGenerator extends Model  {
 	}
 
 	refreshStatus() {			
-		this.__inputPathInfo = this.__getModifiedInputPath();	
+		this.__inputPathInfo = this.inputPath;	
 	}
 	
-	__getModifiedInputPath(){
-		var inputModification = null;
-		try{
-			inputModification = this.childByClass(InputModification);
-		} catch(error){			
-		}		
-		
-		return inputModification
-			?inputModification.getModifiedPath(this)
-			:this.fullPath(this.inputPath);
-	}
 
-		
-	
-
-	__applyTemplateToSourceModel(templateString, sourceModel) {
-
-		var self=this;
+	__applySourceModelToTemplate(templateString, sourceModel) {	
 
 		var resultString = templateString;
 
 		var variables = sourceModel.enabledVariables;
-		variables.forEach((variable)=>{
-			var variableName = variable.name;
-			var valueString = variable.value;			
 
-			var unit = '';
-			var isQuantityVariable = variable instanceof QuantityVariable;
-			if (isQuantityVariable) {				
-				unit = variable.unit;
+		var defaultUnit = '1';
+
+		if(templateString){
+			for(var variable of variables){			
+
+				var unit = variable instanceof QuantityVariable
+							?variable.unit
+							:defaultUnit;			
+
+				var placeholderExpression = self.__createPlaceHolderExpression(variable.name);
+
+				var injectedExpression = self.__createExpressionToInject(variable.name, variable.value, unit);
+
+				//inject expression into template
+				//console.info('Template placeholder to replace: "' + placeholderExpression + '"');
+				//console.info('Expression to inject: "' + injectedExpression + '"');
+				resultString = this.__replaceAll(resultString, placeholderExpression, injectedExpression);
+			}	
+
+			if (this.isDeletingUnassignedRows) {
+				resultString = this.__deleteRowsWithUnassignedPlaceHolders(resultString);
 			}
+		}
 
-			var placeholderExpression = self.__createPlaceHolderExpression(variableName);
-			
-			var injectedExpression = self.__createExpressionToInject(variableName, valueString, unit);
+		if (this.isForcingInjection){
+			for(var variable of variables){	
 
-			//inject expression into template
-			//console.info('Template placeholder to replace: "' + placeholderExpression + '"');
-			//console.info('Expression to inject: "' + injectedExpression + '"');
-			resultString = this.__replaceAll(resultString, placeholderExpression, injectedExpression);
-		});
+				var unit = variable instanceof QuantityVariable
+								?variable.unit
+								:defaultUnit;	
 
-		if (self.isDeletingUnassignedRows) {
-			resultString = this.__deleteRowsWithUnassignedPlaceHolders(resultString);
+				var injectedExpression = this.__createExpressionToInject(variable.name, variable.value, unit);
+				resultString = resultString + injectedExpression;
+			}
 		}
 
 		return resultString;
@@ -242,24 +302,37 @@ export default class InputFileGenerator extends Model  {
         return text.replace(regularExpression, expressionToInject);
 	}
 
-	__createExpressionToInject(variableName, valueString, unitString) {
-
-		var correctedValueString = valueString;
-		if (valueString === null) {
-			var message = 'Value for variable "' + variableName + '" is null.';
-			console.warn(message);
-			correctedValueString = 'null';
-		}
+	__createExpressionToInject(variableName, value, unitString, monitor) {
 
 		var injectedExpression;
-		injectedExpression = this.valueExpression.replace(this.__valueTag, correctedValueString);
+		injectedExpression = this.valueExpression.replace(this.__nameTag, variableName);
+
+        var valueString = this.__valueString(variableName, value, monitor);
+		injectedExpression = injectedExpression.replace(this.__valueTag, valueString);
+		
 		if (unitString != null) {
 			injectedExpression = injectedExpression.replace(this.__unitTag, unitString);
 		} else {
 			//remove unit tag
 			injectedExpression = injectedExpression.replace(this.__unitTag, '');
 		}
+
+		injectedExpression = injectedExpression.replace(/\\n/g,'\n');
 		return injectedExpression;
+	}
+
+	__valueString(variableName, value, monitor){
+		var valueString = '' + value;
+		if (value === null) {
+			var message = 'Value for variable "' + variableName + '" is null.';
+			monitor.warn(message);
+			return 'null';
+		} else {
+			if (typeof value === 'string' || value instanceof String){
+				valueString = this.stringWrapper + valueString  + this.stringWrapper;
+			}
+		}
+		return valueString;
 	}
 
 	 __createPlaceHolderExpression(variableName) {
@@ -282,10 +355,10 @@ export default class InputFileGenerator extends Model  {
 		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('<label>', '.*');
 
 		if (generalPlaceHolderExpression === '.*') {
-			var message = 'The deletion of rows with unassigned place holders is not yet implemented for place holders'
+			var message = 'The deletion of rows with unassigned placeholders is not yet implemented for placeholders'
 					+ 'of the type "' + nameExpression
 					+ '". Please adapt the name expression or disable the deletion of template rows'
-					+ 'with unassigned variable place holders.';
+					+ 'with unassigned variable placeholders.';
 			console.warn(message);
 			return resultString;
 		}
@@ -308,7 +381,7 @@ export default class InputFileGenerator extends Model  {
 
 		var newResultString = newLines.join('\n');
 		if (removedLines.length>0) {
-			var message = 'Some rows with unassigned variable place holders have been removed from the input file:\n'
+			var message = 'Some rows with unassigned variable placeholders have been removed from the input file:\n'
 					+ removedLines.join('\n');
 			console.info(message);
 		}
@@ -326,5 +399,18 @@ export default class InputFileGenerator extends Model  {
 			return '{unknownJobId}';
 		}
 	}
+
+	get inputPath(){
+		if(this.isUsingInputPathProvider){
+			var path = this.__pathFromInputPathProvider();
+			return path
+				?path.replace(/\//g, '\\\\')
+				:'';			
+		} else {
+			return this.inputFilePath
+				?this.inputFilePath.replace(/\//g, '\\\\')
+				:'';
+		}		
+	}	
 
 }

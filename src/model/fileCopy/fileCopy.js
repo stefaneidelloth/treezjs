@@ -46,7 +46,7 @@ export default class FileCopy extends Model {
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-check-box')
-        	.label('Is using input path provider')
+        	.label('Use input path provider')
         	.onChange(()=>this.__updateComponents())
         	.bindValue(this, ()=>this.isUsingInputPathProvider);
 
@@ -62,7 +62,7 @@ export default class FileCopy extends Model {
             .bindValue(this,()=>this.inputFilePath); 
 
        sectionContent.append('treez-check-box')
-        	.label('Is using ouput path provider')
+        	.label('Use output path provider')
         	.onChange(()=>this.__updateComponents())
         	.bindValue(this, ()=>this.isUsingOutputPathProvider);
 
@@ -187,7 +187,11 @@ export default class FileCopy extends Model {
 
 	get inputPath(){
 		if(this.isUsingInputPathProvider){
-			return this.__pathFromInputPathProvider().replace(/\//g, '\\\\');
+			var path = this.__pathFromInputPathProvider();
+			return path
+				?path.replace(/\//g, '\\\\')
+				:'';	
+			
 		} else {
 			return this.inputFilePath.replace(/\//g, '\\\\');
 		}		
@@ -195,7 +199,10 @@ export default class FileCopy extends Model {
 
 	get outputPath(){
 		if(this.isUsingOutputPathProvider){
-			return this.__pathFromOutputPathProvider().replace(/\//g, '\\\\');
+			var path = this.__pathFromOutputPathProvider();
+			return path
+				?path.replace(/\//g, '\\\\')
+				:'';			
 		} else {
 			return this.outputDirectoryPath.replace(/\//g, '\\\\');
 		}		

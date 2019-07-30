@@ -49,6 +49,9 @@ export default class JupyterTerminal {
   
 
     async readTextFile(filePath){
+    	if(!filePath){
+    		return null;
+    	}
 		var pythonCode = '%%python\n'
 			+ 'file = open("' + filePath + '", "r", encoding="utf-8")\n' 
             + 'print(file.read())\n';	
