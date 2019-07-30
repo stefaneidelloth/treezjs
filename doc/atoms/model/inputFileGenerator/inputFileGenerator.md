@@ -6,7 +6,7 @@
 		
 The purpose of the ![](../../../../icons/inputFile.png) InputFileGenerator atom is generate an input text file for ![](../../../../icons/run.png) [Executable](../executable/executable.md) atom. 
 
-The generated input file contains some specific variable values, that are provided for example by a ![](../../../../icons/genericInput.png) [GenericInput](../genericInput/genericInput.md) atom.
+The generated input file (= target) contains variable values. Those values are typlically provided by a ![](../../../../icons/genericInput.png) [GenericInput](../genericInput/genericInput.md) atom (= source).
 	
 ![](../../../images/input_file_generator.png)
 		
@@ -52,31 +52,41 @@ The template file and the variable source model are inputs for the ![](../../../
 			
 ## Sections
 
-### File copy
+### Template
+
+#### Template for input file
+
+#### Style for variable placeholder
+
+#### Style for variable injection
+
+#### Delete unused rows
+
+#### Force injection
+
+### Source
+
+#### Variable source model
+
+### Target
 
 #### Use input path provider
 
-If this option is enabled, a path provider can be selected instead of explicitly specifying the path of the file to copy. Use this for example if you would like to copy the (dynamically created) input file of an ![](../../../../icons/run.png) [Executable](../executable/executable.md) atom.
+If this option is enabled, a path provider can be selected instead of explicitly specifying the path of the input file to generate. 
 
 #### Input path provider
 
-The tree path of an atom that provides the input file path. 
+The tree path of an atom that provides the path of the input file to generate. 
 
-#### Input file path
+#### Input file to generate
 
-The path of some file to be copied.
+The path of the input text file to generate (e.g. C:/inputFile.txt or C:/inputParameters.xml) 
 
-#### Use output path provider
+### Status
 
-If this option is enabled, a path provider can be selected instead of explicitly specifying a output directory path. 
+#### Resulting input file path
 
-#### Output path provider
-
-The tree path of an atom that provides the output directory path. 
-
-#### Output file path
-
-The output directory path to where the (input) file should be copied.
+A preview of the used path for the input file to generate. This is useful, if path is not explicitly specified but variables are used or the path is provided by another atom. 
 
 ----
 
