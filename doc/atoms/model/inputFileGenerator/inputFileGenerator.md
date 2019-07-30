@@ -124,7 +124,7 @@ b) Inject the (numeric) value, a space, and the unit wrapped in square brackets:
 c) Inject variable assignments. 
 
 ```
-var <name> = <value>;  	
+var <name> = <value>;\n  	
 ```
 
 The last style might be useful if you use the option [Force injection](./inputFileGenerator.md#force-injection).
