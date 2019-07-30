@@ -37,25 +37,30 @@ d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png
 
 ### File copy
 
-#### Use path provider
+#### Use input path provider
 
-If this option is enabled a path provider can be selected instead of explicitly specifying a file path. Use this for example if you would like to clean up the (dynamically modified) output path of an ![](../../../../icons/run.png) [Executable](../executable/executable.md) atom.
+If this option is enabled, a path provider can be selected instead of explicitly specifying the path of the file to copy. Use this for example if you would like to copy the (dynamically created) input file of an ![](../../../../icons/run.png) [Executable](../executable/executable.md) atom.
 
-#### Path provider
+#### Input path provider
 
-The tree path of an atom that provides some (output) path to be cleaned.
+The tree path of an atom that provides the input file path. 
 
-#### File or directory path
+#### Input file path
 
-The path to a file or directory to be cleaned. Also see [FileOrDirectoryPath](../../../components/file/fileOrDirectoryPath.md).
+The path of some file to be copied.
 
-#### Mode
+#### Use output path provider
 
-If a directory is selected above, the Mode combo box is visible and you can choose a **directory cleanup mode**:
-* deleteFiles: Delete all files in the specified directory. Sub directories are not deleted. 
-* deleteFilesAndSubDirectories: Delete all files and sub directories in the specified directory.
-* deleteDirectory: Delete the specified directory.
+If this option is enabled, a path provider can be selected instead of explicitly specifying a output directory path. 
+
+#### Output path provider
+
+The tree path of an atom that provides the output directory path. 
+
+#### Output file path
+
+The output directory path to where the (input) file should be copied.
 
 ----
 
-![](../../../../icons/infputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerator.md)
+![](../../../../icons/inputFile.png) [InputFileGenerator](../inputFileGenerator/inputFileGenerator.md)
