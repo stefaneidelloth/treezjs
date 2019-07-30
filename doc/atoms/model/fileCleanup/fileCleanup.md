@@ -38,9 +38,26 @@ d) remotely with another atom (e.g. as part of a ![](../../../../icons/sweep.png
 			
 ## Sections
 
+### File cleanup
 
+#### Use path provider
 
-### Executable
+If this option is enabled a path provider can be selected instead of explicitly specifying a file path. Use this for example if you would like to clean up the (dynamically modified) output path of an ![](../../../../icons/run.png) [Executable](../executable/executable.md) atom.
+
+#### Path provider
+
+The tree path of an atom that provides some (output) path to be cleaned.
+
+#### File or directory path
+
+The path to a file or directory to be cleaned. Also see [FileOrDirectoryPath](../../comonents/file/fileOrDirectoryPath.md).
+
+#### Mode
+
+If a directory is selected above, you can choose a directory cleanup mode:
+* deleteFiles: Delete all files in the specified directory. Sub directories are not deleted. 
+* deleteFilesAndSubDirectories: Delete all files and sub directories in the specified directory.
+* deleteDirectory: Delete the specified directory.
 
 ----
 
