@@ -84,7 +84,7 @@ Example template, including placeholders for variables x, y, z, lever:
 
 #### Style for variable placeholder
 
-In order to be able to identify variable placeholders in the template file, those placeholder have to follow the style that is given here. By default, the name of the variable (denoted by the <name> tag) is wrapped within {$ and $}:
+In order to be able to identify variable placeholders in the template file, those placeholder have to follow the style that is given here. By default, the name of the variable (denoted by the \<name\> tag) is wrapped within {$ and $}:
 
 ```
 {$<name>$}	
@@ -101,9 +101,9 @@ If you prefer to identify placeholders differently (e.g. because your template a
 #### Style for variable injection
 
 This style defines how a found variable placeholder of the template is replaced. The style supports following predefined tags:
-* <name>: the name of the variable
-* <value>: the (numeric) value of the variable
-* <unit>: the unit of the (quantiy-) variable
+* \<name\>: the name of the variable
+* \<value\>: the (numeric) value of the variable
+* \<unit\>: the unit of the (quantiy-) variable
 	
 Some examples:
 
