@@ -50,7 +50,7 @@ The tree path of an atom that provides some (output) path to be cleaned.
 
 #### File or directory path
 
-The path to a file or directory to be cleaned. Also see [FileOrDirectoryPath](../../components/file/fileOrDirectoryPath.md).
+The path to a file or directory to be cleaned. Also see [FileOrDirectoryPath](../../../components/file/fileOrDirectoryPath.md).
 
 #### Mode
 
