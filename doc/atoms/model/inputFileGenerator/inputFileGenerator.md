@@ -104,13 +104,13 @@ This style defines how a found variable placeholder of the template is replaced.
 * \<name\>: the name of the variable
 * \<value\>: the value of the variable 
   * for QuantityVariables the numeric value is used
-  * for string based variables no extra quotation marks are injected (if required, those need to exist in the template or style)
+  * for string based variables the value might be wrapped, depending on the setting "Wrap string values"
   * for BooleanVariables *true* or *false* is injected ( if instead *True* or *False* or *1* or *0* is required, please use some other variable type, e.g. StringItemVariable or IntegerVariable.) 
-* \<unit\>: the unit of a QuanityVariable (e.g. kg) or 1 for variables without unit.
+* \<unit\>: the unit of a QuanityVariable (e.g. "kg") or the default unit "1" for variables without unit.
 
 Some examples:
 
-a) Only inject the numeric value:
+a) Only inject the (numeric) value:
 
 ```
 <value> 	
