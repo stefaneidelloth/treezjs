@@ -88,7 +88,7 @@ export default class DatabaseModifier extends CodeModel {
         	.bindValue(this, ()=>this.targetType);
 
         this.__targetFilePathSelection = sectionContent.append('treez-file-path')
-            .label('Database file')           
+            .label('File path')           
             .onChange(()=>this.refreshStatus())  
             .nodeAttr('pathMapProvider', this)
             .bindValue(this,()=>this.targetFilePath);  

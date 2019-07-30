@@ -6,7 +6,6 @@ import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewA
 import PythonExport from './pythonExport/pythonExport.js';
 import Variable from './../variable/variable.js';
 import StudyInfoExport from './studyInfoExport/studyInfoExport.js';
-import Treez from './../treez.js';
 
 export default class Study extends ComponentAtom {
 			

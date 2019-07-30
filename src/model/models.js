@@ -176,17 +176,19 @@ export default class Models extends Model {
 				treeView
 			)
 		);
-		
-		actions.push(
-			new AddChildAtomTreeViewAction(
-				PythonModel,
-				'pythonModel',
-				'python.png',
-				parentSelection,
-				this,
-				treeView
-			)
-		);
+
+		if(window.treezConfig.isSupportingPython){		
+			actions.push(
+				new AddChildAtomTreeViewAction(
+					PythonModel,
+					'pythonModel',
+					'python.png',
+					parentSelection,
+					this,
+					treeView
+				)
+			);
+		}
 
 		return actions;
 	}

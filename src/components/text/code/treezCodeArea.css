@@ -4,5 +4,7 @@
     font-size: 12px;    
     border: 1px solid lightgrey;
     margin-top: 5px;
-    margin-bottom: 5px;   
+    margin-bottom: 5px;  
+    resize: vertical;
+    overflow: auto !important; 
 }

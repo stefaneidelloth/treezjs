@@ -10,7 +10,7 @@ export default class FileCleanup extends Model {
 		this.image = 'fileCleanup.png';
 		this.isRunnable = true;
 
-		this.isUsingPathProvider = true;
+		this.isUsingPathProvider = false;
         
 		this.pathOfPathProvider = 'root.models.executable';
 		this.fileOrDirectoryPath = 'c:/myOldOutputFile.txt';
@@ -41,10 +41,10 @@ export default class FileCleanup extends Model {
             				   })
             );  
 
-        const sectionContent = section.append('div'); 
+        const sectionContent = section.append('div');      
 
         sectionContent.append('treez-check-box')
-        	.label('Is using path provider')
+        	.label('Use path provider')
         	.onChange(()=>this.__updateComponents())
         	.bindValue(this, ()=>this.isUsingPathProvider);
 
@@ -59,10 +59,12 @@ export default class FileCleanup extends Model {
             .onChange(()=>this.__updateComponents())            
             .bindValue(this,()=>this.fileOrDirectoryPath); 
 
-        this.__modeComponent = sectionContent.append('treez-enum-combo-box')
+       	this.__modeComponent = sectionContent.append('treez-enum-combo-box')
         	.label('Mode')  
-        	.nodeAttr('options', DirectoryCleanupMode)      	
+        	.nodeAttr('options', DirectoryCleanupMode)          	    	
         	.bindValue(this, ()=>this.mode);
+
+       
 
         this.__updateComponents();
 		
@@ -77,7 +79,7 @@ export default class FileCleanup extends Model {
 		if(this.isUsingPathProvider){
 			this.__pathOfPathProviderComponent.show();
 			this.__fileOrDirectoryPathComponent.disable();
-			this.fileOrDirectoryPath = this.__getOutputPathFromProvider();
+			this.fileOrDirectoryPath = this.__outputPathFromProvider();
 		} else {
 			this.__pathOfPathProviderComponent.hide();
 			this.__fileOrDirectoryPathComponent.enable();
@@ -90,7 +92,7 @@ export default class FileCleanup extends Model {
 		}
 	};
 
-	__getOutputPathFromProvider(){
+	__outputPathFromProvider(){
 		var PathProvider = this.childFromRoot(this.pathOfPathProvider);
 		
 		return PathProvider
@@ -184,7 +186,10 @@ export default class FileCleanup extends Model {
 
 	get path(){
 		if(this.isUsingPathProvider){
-			return this.__getOutputPathFromProvider().replace(/\//g, '\\\\');
+			var path = this.__outputPathFromProvider();
+			return path
+				?path.replace(/\//g, '\\\\')
+				:'';			
 		} else {
 			return this.fileOrDirectoryPath.replace(/\//g, '\\\\');
 		}		
