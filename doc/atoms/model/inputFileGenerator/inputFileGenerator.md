@@ -129,6 +129,13 @@ var <name> = <value>;\n
 
 The last style might be useful if you use the option [Force injection](./inputFileGenerator.md#force-injection).
 
+#### Wrap string value
+
+If this option is enabled, string values are wrapped within the given string wrapper symbol (e.g. quotation marks).
+
+#### String wrapper
+
+Some expression that is used to wrap string values in the input file, e.g. *"*, *'* or *`*.
 
 #### Delete unused rows
 
