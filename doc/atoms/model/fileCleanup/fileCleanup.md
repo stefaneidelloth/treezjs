@@ -61,4 +61,4 @@ If a directory is selected above, the Mode combo box is visible and you can choo
 
 ----
 
-![](../../../../icons/fileCopy.png) [FileCopy](./fileCopy.md)
+![](../../../../icons/fileCopy.png) [FileCopy](../fileCopy/fileCopy.md)
