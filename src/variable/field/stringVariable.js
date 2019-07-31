@@ -18,4 +18,8 @@ export default class StringVariable extends Variable {
     	return new StringRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/stringVariable.md';
+    }
+
 }

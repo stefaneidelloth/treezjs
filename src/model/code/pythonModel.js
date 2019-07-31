@@ -48,14 +48,11 @@ export default class PythonModel extends CodeModel {
     		for(var htmlOutput of htmlArray){
     			this.__outputSelection.append('div')
     				.html(htmlOutput);
-    			
     		}
-    		
     		
     	} else {
     		console.warn('Executing python code is not supported.');
     	}
-    	
     } 
     
     __createOutputSection(page){    	
@@ -65,10 +62,7 @@ export default class PythonModel extends CodeModel {
 
         this.createHelpAction(section, 'model/code/pythonModel.md#output');
 
-        this.__outputSelection = section.append('div'); 
-
-        
-        
+        this.__outputSelection = section.append('div');   
     }
    
 }

@@ -23,4 +23,8 @@ export default class DirectoryPathVariable extends AbstractPathVariable {
     	return new DirectoryPathRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/directoryPathVariable.md';
+    }
+
 }

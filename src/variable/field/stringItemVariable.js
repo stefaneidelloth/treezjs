@@ -71,4 +71,8 @@ export default class StringItemVariable extends Variable {
 		}
 	}
 
+	get helpPath(){
+    	return 'variable/field/stringItemVariable.md';
+    }
+
 }

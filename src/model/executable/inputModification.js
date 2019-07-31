@@ -25,16 +25,17 @@ export default class InputModification extends ComponentAtom {
 
    createInputModificationSection(page) {
 
-       const section = page.append('treez-section')
-           .label('Input modification')
-           .attr('expanded','false');
+		const section = page.append('treez-section')
+           .label('Input modification');
 
-       const sectionContent = section.append('div'); 
+		this.createHelpAction(section, 'model/executable/inputModification.md'); 
 
-       sectionContent.append('treez-text-label')
+        const sectionContent = section.append('div'); 
+
+        sectionContent.append('treez-text-label')
        	   .value('Include date in name of:')
 
-       sectionContent.append('treez-check-box')
+        sectionContent.append('treez-check-box')
 		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		  

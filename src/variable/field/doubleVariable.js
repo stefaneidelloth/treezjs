@@ -20,4 +20,8 @@ export default class DoubleVariable extends Variable {
     	return new DoubleRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/doubleVariable.md';
+    }
+
 }

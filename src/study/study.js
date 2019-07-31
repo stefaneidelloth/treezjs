@@ -38,6 +38,8 @@ export default class Study extends ComponentAtom {
 
 		const section = this.__page.append('treez-section')
         	.label(this.constructor.name); 
+
+       	this.createHelpAction(section, 'study/' + this.atomType + '/' + this.atomType + '.md');
 		
 		section.append('treez-section-action')
 		 	.label('Run')

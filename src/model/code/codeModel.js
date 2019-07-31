@@ -89,7 +89,7 @@ export default class CodeModel extends Model {
         const section = page.append('treez-section')
             .label('Code'); 
 
-         this.createHelpAction(section, 'model/code/' + this.atomType + '.md#code');
+        this.createHelpAction(section, 'model/code/' + this.atomType + '.md#code');
         
         section.append('treez-section-action')
 	        .image('resetjobId.png')
@@ -115,18 +115,18 @@ export default class CodeModel extends Model {
 	}   	
 
 	createStatusSection(page) {
-       const section = page.append('treez-section')
+		const section = page.append('treez-section')
            .label('Status')
            .attr('expanded','false');
 
-       const sectionContent = section.append('div'); 
+		this.createHelpAction(section, 'model/code/' + this.atomType + '.md#status');
+
+		const sectionContent = section.append('div'); 
      
-       sectionContent.append('treez-text-area')
+		sectionContent.append('treez-text-area')
             .label('Resulting code with injected values') 
             .disable() 
-            .bindValue(this,()=>this.__codeInfo);      
-      
-      
+            .bindValue(this,()=>this.__codeInfo);       
    }      
 
    refreshStatus() {
@@ -173,6 +173,10 @@ export default class CodeModel extends Model {
 		if(this.sourceModelPath){
 		
 			var sourceModel = this.childFromRoot(this.sourceModelPath);
+
+			if(!sourceModel){
+				return code;
+			}
 			
 			var variables = sourceModel.enabledVariables;
 			variables.forEach((variable)=>{

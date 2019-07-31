@@ -25,6 +25,8 @@ export default class Studies extends ComponentAtom {
 		const section = page.append('treez-section')
         	.label('Studies'); 
 
+		this.createHelpAction(section, 'study/studies.md');
+
         section.append('treez-section-action')
             .image('run.png')
             .label('Run studies')

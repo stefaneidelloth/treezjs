@@ -35,6 +35,8 @@ export default class LoggingArguments extends ComponentAtom {
             .label('Logging')
             .attr('expanded','false');
 
+		this.createHelpAction(section, 'model/executable/loggingArguments.md');
+
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-text-area')

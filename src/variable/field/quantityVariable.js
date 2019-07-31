@@ -57,4 +57,8 @@ export default class QuantityVariable extends Variable {
     	return new QuantityRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/quantityVariable.md';
+    }
+
 }

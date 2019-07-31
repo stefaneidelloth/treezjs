@@ -17,7 +17,9 @@ export default class DirectoryPathRange extends VariableRange {
 		const section = page.append('treez-section')
         	.label('Data');   
 
-	    const sectionContent = section.append('div'); 
+        this.createHelpAction(section, 'variable/range/' + this.atomType + '.md'); 
+
+	    const sectionContent = section.append('div'); 	  
 	    
 	    sectionContent.append('treez-model-path')
 	    	.label('Variable path')

@@ -19,8 +19,10 @@ export default class PythonExport extends ComponentAtom {
             .label('Data');
 		
 		const section = page.append('treez-section')
-        	.label('Python export');  
-
+        	.label('Python export');
+        	  
+        this.createHelpAction(section, 'study/pythonExport/pythonExport.md');
+        
 		const sectionContent = section.append('div');     
 
 		sectionContent.append('treez-text-field')

@@ -16,7 +16,9 @@ export default class IntegerRange extends VariableRange {
             .label('Data');		
 
 		const section = page.append('treez-section')
-        	.label('Data');   
+        	.label('Data'); 
+
+        this.createHelpAction(section, 'variable/range/' + this.atomType + '.md');   
 
 	    const sectionContent = section.append('div'); 
 

@@ -21,18 +21,20 @@ export default class OutputModification extends ComponentAtom {
         this.createOutputModificationSection(page);   
 	}	  
 
-   createOutputModificationSection(page) {       
+	createOutputModificationSection(page) {       
 
-       const section = page.append('treez-section')
+		const section = page.append('treez-section')
            .label('Output modification')
            .attr('expanded','false');
 
-       const sectionContent = section.append('div'); 
+		this.createHelpAction(section, 'model/executable/outputModification.md');
 
-       sectionContent.append('treez-text-label')
+        const sectionContent = section.append('div'); 
+
+        sectionContent.append('treez-text-label')
        	   .value('Include date in name of:')
 
-       sectionContent.append('treez-check-box')
+        sectionContent.append('treez-check-box')
 		   .label('Directory')
 		   .value(false)
 		   .onChange(this.refreshStatus)		 

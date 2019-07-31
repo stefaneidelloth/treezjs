@@ -106,7 +106,9 @@ export default class InputFileGenerator extends Model  {
 	__createTemplateSection(page) {
 
 		const section = page.append('treez-section')
-        	.label('Template');	   
+        	.label('Template');	 
+
+        this.createHelpAction(section, 'model/inputFileGenerator/inputFileGenerator.md#template');  
 	    
 	    var sectionContent = section.append('div'); 
 
@@ -145,7 +147,9 @@ export default class InputFileGenerator extends Model  {
 	__createSourceSection(page) {
 		
 		const section = page.append('treez-section')
-        	.label('Source');	    
+        	.label('Source');	 
+
+        this.createHelpAction(section, 'model/inputFileGenerator/inputFileGenerator.md#source');   
 	    
 	    var sectionContent = section.append('div');         
 	    
@@ -159,6 +163,8 @@ export default class InputFileGenerator extends Model  {
 
 		const section = page.append('treez-section')
         	.label('Target');
+
+        this.createHelpAction(section, 'model/inputFileGenerator/inputFileGenerator.md#target');
 
 	    section.append('treez-section-action')
 	        .image('resetjobId.png')
@@ -230,6 +236,8 @@ export default class InputFileGenerator extends Model  {
 		const section = page.append('treez-section')
         	.label('Status')
         	.attr('open',false);
+
+        this.createHelpAction(section, 'model/inputFileGenerator/inputFileGenerator.md#status');
 
 		var sectionContent = section.append('div'); 
 		

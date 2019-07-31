@@ -25,6 +25,8 @@ export default class SqLiteAppender extends Model {
 		
 		const section = page.append('treez-section')
         	.label('SqLite appender'); 
+
+		this.createHelpAction(section, 'model/sqLiteAppender/sqLiteAppender.md');
 		
 		 section.append('treez-section-action')
 	        .image('run.png')

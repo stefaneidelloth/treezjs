@@ -30,7 +30,9 @@ export default class FileCleanup extends Model {
             .label('Data');
 
 		const section = page.append('treez-section')
-            .label('File cleanup');		
+            .label('File cleanup');	
+
+        this.createHelpAction(section, 'model/fileCleanup/fileCleanup.md');	
 
         section.append('treez-section-action')
             .image('run.png')

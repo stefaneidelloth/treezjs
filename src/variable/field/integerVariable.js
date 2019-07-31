@@ -22,4 +22,8 @@ export default class IntegerVariable extends Variable {
     	return new IntegerRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/integerVariable.md';
+    }
+
 }

@@ -75,6 +75,8 @@ export default class TableImport extends Model {
 		
 		var section = page.append('treez-section')
 			.label('Source');
+
+		this.createHelpAction(section, 'model/tableImport/tableImport.md#source');
 			
 		section.append('treez-section-action')
 	    	.image('run.png')
@@ -134,7 +136,10 @@ export default class TableImport extends Model {
 		var section = page.append('treez-section')
 			.label('Import');
 		
-		var sectionContent = section.append('div');				
+		var sectionContent = section.append('div');	
+
+
+		this.createHelpAction(section, 'model/tableImport/tableImport.md#import');			
 	
 
 		this.__numberOfHeaderLinesToSkipSelection = sectionContent.append('treez-text-field')

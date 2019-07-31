@@ -32,7 +32,9 @@ export default class FileCopy extends Model {
             .label('Data');
 
 		const section = page.append('treez-section')
-            .label('File copy');		
+            .label('File copy');
+
+        this.createHelpAction(section, 'model/fileCopy/fileCopy.md');		
 
         section.append('treez-section-action')
             .image('run.png')

@@ -17,7 +17,9 @@ export default class Variable extends ComponentAtom {
             .label('Data');
 
 		const section = page.append('treez-section')
-        	.label('Properties');   
+        	.label('Properties'); 
+
+		this.createHelpAction(section, this.helpPath);       	  
 
 	    const sectionContent = section.append('div'); 
 	
@@ -37,6 +39,11 @@ export default class Variable extends ComponentAtom {
     
     createRange(){    	
     	throw new Error('Must be overridden by inheriting variable class.');
+    }
+
+	//should be overridden by inheriting classes
+    get helpPath(){
+    	return undefined;
     }
 
 }

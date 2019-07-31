@@ -37,10 +37,11 @@ export default class GenericInput extends Model {
             .label('Data');
 
 		this.__section = page.append('treez-section')
-        .label('Variables');  		
-		
-		this.__recreateVariableControls();   
-	     
+        	.label('Variables');  
+
+        this.createHelpAction(this.__section, 'model/genericInput/genericInput.md');
+        		
+		this.__recreateVariableControls();
 	}
 	
 	__recreateVariableControls(){

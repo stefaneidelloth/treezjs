@@ -20,4 +20,8 @@ export default class BooleanVariable extends Variable {
     	return new BooleanRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/booleanVariable.md';
+    }
+
 }

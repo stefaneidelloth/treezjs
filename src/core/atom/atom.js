@@ -524,11 +524,12 @@ export default class Atom {
 
 
 	createHelpAction(section, relativeUrl){
-	
-		section.append('treez-section-action')
+		if(relativeUrl){
+			section.append('treez-section-action')
 	        .image('help.png')
 	        .label('Show online help')
 	        .addAction(()=>this.showHelp(relativeUrl)); 
+		}		
 	}
 
 	showHelp(relativeUrl){ 

@@ -22,4 +22,8 @@ export default class FilePathVariable extends AbstractPathVariable {
     	return new FilePathRange(name);
     }
 
+    get helpPath(){
+    	return 'variable/field/filePathVariable.md';
+    }
+
 }

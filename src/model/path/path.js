@@ -24,7 +24,9 @@ export default class Path extends Model {
             .label('Data');
 
 		this.__section = page.append('treez-section')
-        .label('Paths');  		
+        	.label('Paths'); 
+
+        this.createHelpAction(this.__section, 'model/path/path.md');    
 		
 		this.__recreatePathControls();   
 	     

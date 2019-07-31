@@ -20,6 +20,8 @@ export default class StringItemRange extends VariableRange {
 
 		const section = page.append('treez-section')
         	.label('Data');   
+        
+        this.createHelpAction(section, 'variable/range/' + this.atomType + '.md'); 
 
 	    const sectionContent = section.append('div'); 
 	    
