@@ -9,10 +9,10 @@ First you define a model, then you define and run some studies and finally you p
 existing atoms are not sufficient for your needs, you might want to [implement custom atoms](./atoms/howToImplementAtoms.md). 
 
 <details open>
-  <summary><img src="../../icons/root.png"> <a href="./root.md">Root</a> </summary>
-  <details>
-    <summary>![](../../icons/models.png) [Models](./model/models.md)</summary>
-    whatever
+  <summary> <img src="../../icons/root.png"> <a href="./root.md">Root</a> </summary>
+  <details open>
+    <summary> <img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
+    
   </details>
 </details>
 
