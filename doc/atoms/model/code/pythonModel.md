@@ -59,6 +59,11 @@ The code to be executed.
 
 A preview of the code, including injected variable values.
 
+### Output
+
+Shows the (html) output of the python code, for example plots.
+This works similar to the output section of python code cells in a Jupyter Notebook. 
+
 ----
 
 ![](../../../../icons/studies.png) [Studies](../../study/studies.md)
