@@ -55,6 +55,10 @@ Leave this input field empty if you
 
 The code to be executed.
 
+### Status
+
+A preview of the code, including injected variable values.
+
 ----
 
 ![](../../../../icons/studies.png) [Studies](../../study/studies.md)
