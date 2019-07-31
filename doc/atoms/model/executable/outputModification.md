@@ -34,7 +34,9 @@ A new ![](../../../../icons/outputModification.png) OutputModification atom is c
     var outputModification = executable.createOutputModification();	     
 ```
 
-## Arguments
+## Sections
+
+### Output modification
 
 Activate the corresponding check boxes for includeing the date and/or the jobId in the path. 
 
