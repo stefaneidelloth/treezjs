@@ -7,7 +7,7 @@
   
 The purpose of the ![](../../../../icons/studyInfoExport.png) StudyInfoExport atom is to export meta information about a study to a text file or a database. This might be helpful if you would like to know which variable values belong to which jobId. 
 
-If you select a database as target for the export, two tables "study_info" and "job_info" will be created (if they do not yet exist).
+If you select a database type for the export, two tables "study_info" and "job_info" will be created (if they do not yet exist) in the database.
 
 ![](../../../images/study_info_export.png)
 		
