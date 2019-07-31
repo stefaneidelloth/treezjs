@@ -8,27 +8,8 @@ The atoms that come with Treez by default represent a typical **modelling workfl
 First you define a model, then you define and run some studies and finally you process and evaluate the results. If the
 existing atoms are not sufficient for your needs, you might want to [implement custom atoms](./atoms/howToImplementAtoms.md). 
 
-<details open>
-  <summary> <img src="../../icons/root.png"> <a href="./root.md">Root</a> </summary>
-  <span>   
-    <details open>
-       <summary>&nbsp;<img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
-       <div>
-         <details open>
-            <summary> <img src="../../icons/path.png"> <a href="./model/path/path.md">Path</a> </summary>
-            <div>
-              <img src="../../icons/filePathVariable.png"> <a href="./variable/field/filePathVariable.md">FilePathVariable</a>
-              <img src="../../icons/directoryPathVariable.png"> <a href="./variable/field/directoryPathVariable.md">DirectoryPathVariable</a>
-            </div>
-        </details>
-       </div>
-    </details>
-  </span>
- 
-</details>
-
-* 
-  * 
+* ![](../../icons/root.png) [Root](./root.md)
+  * ![](../../icons/models.png) [Models](./model/models.md)
     * ![](../../icons/path.png) [Path](./model/path/path.md)
       * ![](../../icons/filePathVariable.png) [FilePathVariable](./variable/field/filePathVariable.md)
       * ![](../../icons/directoryPathVariable.png) [DirectoryPathVariable](./variable/field/directoryPathVariable.md)
