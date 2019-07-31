@@ -13,7 +13,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 
 	static private boolean isCheckingConsoleOutput = false;	
 	
-	static private String columnDelimiter = ",";
+	static private String columnDelimiter = "|";
 	
 	static private String rowDelimiter = "\n";
 

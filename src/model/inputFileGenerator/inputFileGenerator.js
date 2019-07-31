@@ -270,9 +270,9 @@ export default class InputFileGenerator extends Model  {
 							?variable.unit
 							:defaultUnit;			
 
-				var placeholderExpression = self.__createPlaceHolderExpression(variable.name);
+				var placeholderExpression = this.__createPlaceHolderExpression(variable.name);
 
-				var injectedExpression = self.__createExpressionToInject(variable.name, variable.value, unit);
+				var injectedExpression = this.__createExpressionToInject(variable.name, variable.value, unit);
 
 				//inject expression into template
 				//console.info('Template placeholder to replace: "' + placeholderExpression + '"');

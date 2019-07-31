@@ -183,10 +183,10 @@ export default class JupyterTerminal {
 			+ 'import pandas\n'	
 			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
             + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
-            + 'print(dataFrame.to_csv())\n';		
+            + 'print(dataFrame.to_csv(sep="|"))\n';		
 
 			var text = await this.executePythonCode(pythonCode, true);
-			return TableData.parseTableTextTo2DArray(text, ',');
+			return TableData.parseTableTextTo2DArray(text, '|');
 		} else {
 
 			var pythonCode = '%%python\n'

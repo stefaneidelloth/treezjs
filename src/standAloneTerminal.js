@@ -73,7 +73,7 @@ export default class StandAloneTerminal {
 			return new Promise(function(resolve, reject) { 			    
 				self.__onMessage = (message) => {
 					
-					var tableArray =  TableData.parseTableTextTo2DArray(message, ',');
+					var tableArray =  TableData.parseTableTextTo2DArray(message, '|');
 					resolve(tableArray);
 				};
 				self.__onError = (message) => reject(message);
@@ -82,19 +82,7 @@ export default class StandAloneTerminal {
 				self.__sendQuery('sqlite:' + connectionString, query);	
 			}); 
 
-			throw new Error('Not yet implemented');
-
-            /*
-			var pythonCode = '%%python\n'
-			+ 'import sqlite3\n'
-			+ 'import pandas\n'	
-			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
-            + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
-            + 'print(dataFrame.to_csv())\n';		
-
-			var text = await this.executePythonCode(pythonCode, true);
-			return TableData.parseTableTextTo2DArray(text, ',');
-			*/
+			throw new Error('Not yet implemented');           
 
 		} else {
 
