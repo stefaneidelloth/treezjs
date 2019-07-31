@@ -4,7 +4,9 @@
 
 # PythonExport
   
-The purpose of the ![](../../../../icons/pythonExport.png) PythonExport atom is to export results of a study to the python kernel of the Jupyter Notebook. 
+The purpose of the ![](../../../../icons/pythonExport.png) PythonExport atom is to export results of a study to the python kernel of the [Jupyter Notebook](../../../installation/jupyterInstallation.md). 
+
+This atom requires python support and is not supported in the Stand-alone installation.
 
 Lets assume that each job of a sweep generates a table. The ![](../../../../icons/pythonExport.png) PythonExport atom exports that table to the python kernel and puts it in a data structure. That data structure is called "results" by default (its name can be modified if wanted).
 
@@ -38,7 +40,9 @@ A new ![](../../../../icons/pythonExport.png) PythonExport atom is created eithe
 
 ## Work flow	
 
-A ![](../../../../icons/pythonExport.png) PythonExport atom is automatically executed if it exists as child of a study and the study is executed. 
+A ![](../../../../icons/pythonExport.png) PythonExport atom is automatically executed if it exists as child of a study and the study is executed. It is not possible to manually run a ![](../../../../icons/pythonExport.png) PythonExport atom.
+
+Once the study has been finished, you can add extra cells to the Python Notebook 
       
 ## Sections
 
