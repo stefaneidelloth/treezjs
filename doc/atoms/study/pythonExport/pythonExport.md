@@ -1,122 +1,53 @@
-import ComponentAtom from './../../core/component/componentAtom.js';
-import Table from './../../data/table/table.js';
+![](../../../../icons/sweep.png) [Sweep](../sweep/sweep.md)
 
-export default class PythonExport extends ComponentAtom { 	
+----
 
-	constructor(name) {		
-		super(name);
-		this.image = 'pythonExport.png';
-		this.isRunnable=true;	
+# PythonExport
+  
+The purpose of the ![](../../../../icons/pythonExport.png) PythonExport atom is to export results of a study to the python kernel of the Jupyter Notebook. 
 
-		this.structureName = 'results';	
-		this.__outcomeNames = {};
-        
-	}	
+Lets assume that each job of a sweep generates a table. The ![](../../../../icons/pythonExport.png) PythonExport atom exports that table to the python kernel and puts it in a data structure. That data structure is called "results" by default (its name can be modified if wanted).
 
-    createComponentControl(tabFolder){    
-     
-		const page = tabFolder.append('treez-tab')
-            .label('Data');
+The results data structure is compatible to the [EMA workbench](https://emaworkbench.readthedocs.io/en/latest/indepth_tutorial/general-introduction.html?highlight=results#Processing-the-results-of-the-experiments):
+
+```
+By default, the return of perform_experiments is a tuple of length 2. The first item in the tuple is the experiments. The second item is the outcomes. Experiments and outcomes are aligned by index. 
+
+experiments, outcomes = results;
+```
+
+Therefore, the evaluation methods of the EMA workbench can be applied to the results structure that is exported by the ![](../../../../icons/pythonExport.png) PythonExport atom.
+
+![](../../../images/python_export.png)
 		
-		const section = page.append('treez-section')
-        	.label('Python export');  
+## Source code
 
-		const sectionContent = section.append('div');     
+[./src/study/pythonExport/pythonExport.js](../../../../src/study/pythonExport/pythonExport.js)
 
-		sectionContent.append('treez-text-field')
-	        .label('Name of python structure') 
-	        .bindValue(this,()=>this.structureName); 		
-			
-	}	
-    
-    extendContextMenuActions(actions, parentSelection, treeView) {
-		return actions;
-	}
-    
-    async deleteStructureFromPythonContextIfExists(){
-    	if(window.treezTerminal.executePythonCode){
-	    	var pythonCode = 'if "' + this.structureName + '" in locals():\n'
-	    	               + '    del ' + this.structureName + '\n';
-	    	await window.treezTerminal.executePythonCode(pythonCode, false);
-    	} else {
-    		console.warn('Deletion of python structure "' + this.structureName + '" has been skipped because python is not supported.');
-    	}    	
-    }
-    
-    async exportTablesToPythonContext(modelInput, outputAtom) {
-		if(outputAtom instanceof Table){
-			await this.__exportTableToPythonContext(modelInput, outputAtom);
-		}
+## Construction
 		
-		for(var child of outputAtom.children){
-			await this.exportTablesToPythonContext(modelInput, child);
-		}
-			
-	}    
-    
-    async __exportTableToPythonContext(modelInput, table){
-    	if(window.treezTerminal.executePythonCode){
-    		
-    		var studyVariables = modelInput.all;			
-    		
-    		var name = table.name;			
-    					            
-    	    var experimentEntries = [];
-    		for(var variable of studyVariables){
-    			experimentEntries.push("'" + variable + "': [" + modelInput.get(variable) + "]");
-    		}		
-    		experimentEntries.push("'scenario': [" + modelInput.jobId + "]");
-    		experimentEntries.push("'policy': [None]");
-    		experimentEntries.push("'model': ['treez']");
-    		
-    		var pythonCode = "import pandas\n"
-    			           + "import numpy\n"
-    			           + "NaN = numpy.NaN\n"
-                		   + "newRow = pandas.DataFrame({" + experimentEntries.join(",") + "})\n"
-                		   + "if '" + this.structureName +"' in locals():\n"
-    			           + "    experiments, outcomes = " + this.structureName + "\n"
-    			           + "    experiments = experiments.append(newRow)\n"
-    			           + "    " + this.structureName + " = (experiments, outcomes)\n"
-    			           + "else:\n"
-    			           + "    experiments = newRow\n"
-    		               + "    outcomes = dict()\n"
-    		               + "    " + this.structureName + " = (experiments, outcomes)\n";
-    		
-    		var key = 'job' + modelInput.jobId;
-    		if(!this.__outcomeNames[key]){
-    			this.__outcomeNames[key] = [];
-    		}
-    		
-    		for(var outcomeName of table.headers){
-    			
-    			if(outcomeName in this.__outcomeNames[key]){
-    				console.warn('The outcome column "' + outcomeName + '" already has been written. The data is overridden and the old data is lost.');
-    			} else {
-    				this.__outcomeNames[key].push(outcomeName);
-    			}
-    			
-    			var columnValues = table.getColumnValues(outcomeName);
-    						
-    			var outcomeReference = "outcomes['" + outcomeName + "']"
-    			pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
-    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), numpy.nan)\n"
-    			              );
-    			
-    			var isStringColumn = table.columnType(outcomeName) === ColumnType.string;
-    			if(isStringColumn){
-    				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = ['" + columnValues.join("', '") +"']\n"
-    			} else {
-    				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = [" + columnValues.join(", ") +"]\n"
-    			}
-    			              
-    		}
-    		
-    		await window.treezTerminal.executePythonCode(pythonCode, false);
-    		
-    		
-    	} else {
-    		console.warn('Export of table "' + table.name + '" to python context has been skipped because python is not supported.');
-    	}
-    }
+A new ![](../../../../icons/pythonExport.png) PythonExport atom is created either by: 
 
-}
+* using the context menu of a study (for example ![](../../../../icons/sweep.png) [Sweep](../sweep/sweep.md)) in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the study atom in the source code of the [Editor view](../../../views/editorView.md):
+
+```javascript
+    ...
+    var pythonExport = sweep.createPythonExport();	     
+```
+
+## Work flow	
+
+A ![](../../../../icons/pythonExport.png) PythonExport atom is automatically executed if it exists as child of a study and the study is executed. 
+      
+## Sections
+
+### Python export
+
+#### Name of python structure
+
+Enter the name of the python data structure to generate. The default name is "results".
+
+----
+
+![](../../../../icons/studyInfoExport.png) [StudyInfoExport](../studyInfoExport/studyInfoExport.md)
