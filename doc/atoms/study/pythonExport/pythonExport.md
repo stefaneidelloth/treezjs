@@ -15,8 +15,6 @@ The results data structure is compatible to the [EMA workbench](https://emaworkb
 >By default, the return of perform_experiments is a tuple of length 2. The first item in the tuple is the experiments. The second item is the outcomes. Experiments and outcomes are aligned by index. 
 
 ```
-
-
 experiments, outcomes = results;
 ```
 
@@ -44,7 +42,7 @@ A new ![](../../../../icons/pythonExport.png) PythonExport atom is created eithe
 
 A ![](../../../../icons/pythonExport.png) PythonExport atom is automatically executed if it exists as child of a study and the study is executed. It is not possible to manually run a ![](../../../../icons/pythonExport.png) PythonExport atom.
 
-Once the study has been finished, you can add extra cells to the Python Notebook 
+Once the study has been finished, you can add extra cells to the Python Notebook and access the results structure. 
       
 ## Sections
 
