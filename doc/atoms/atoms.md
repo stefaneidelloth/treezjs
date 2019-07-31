@@ -14,7 +14,13 @@ existing atoms are not sufficient for your needs, you might want to [implement c
      <details open>
        <summary> <img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
        <div>
-         
+         <details open>
+            <summary> <img src="../../icons/path.png"> <a href="./model/path/path.md">Path</a> </summary>
+            <div>
+              <img src="../../icons/filePathVariable.png"> <a href="./variable/field/filePathVariable.md">FilePathVariable</a>
+              <img src="../../icons/directoryPathVariable.png"> <a href="./variable/field/directoryPathVariable.md">DirectoryPathVariable</a>
+            </div>
+        </details>
        </div>
     </details>
   </div>
