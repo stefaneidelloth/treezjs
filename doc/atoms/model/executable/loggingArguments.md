@@ -26,15 +26,17 @@ A new ![](../../../../icons/loggingArguments.png) LoggingArguments atom is creat
     var loggingArguments = executable.createLoggingArguments();	     
 ```
 
-## Arguments
+## Sections
 
-### Logging arguments
+### Logging
+
+#### Log arguments
 
 This is typically a **key word**, telling the (Java-) executable that a log file path follows, e.g. "-l" or "/LOG". 
 
 Leave this input field empty if your executable does not require such input key words. 
 
-### Log file or directory
+#### Log file or directory
 
 This is typically the path to a log file or directory, e.g. "C:/simulation.log".
 
