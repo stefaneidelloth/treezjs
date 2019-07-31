@@ -449,8 +449,8 @@ export default class TableImport extends Model {
 		}
 		
 		for (var rowEntries of tableData.rows) {
-			var doubleEntries = rowEntries.map((valueString)=>parseFloat(valueString));
-			table.createRow(doubleEntries);
+			var values = rowEntries.map((valueString)=>valueString);
+			table.createRow(values);
 		}
 
 		return table;

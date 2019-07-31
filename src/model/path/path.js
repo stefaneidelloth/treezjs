@@ -65,6 +65,7 @@ export default class Path extends Model {
 				new TreeViewAction(
 					'Disable all paths',
 					'disable.png',
+					this,
 					treeView,
 					() => self.__disableAllVariables()
 				)
@@ -74,6 +75,7 @@ export default class Path extends Model {
 				new TreeViewAction(
 					'Enable all paths',
 					'enable.png',
+					this,
 					treeView,
 					() => self.__enableAllVariables()
 				)

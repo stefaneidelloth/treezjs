@@ -103,7 +103,7 @@ export default class JupyterTerminal {
 	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
 			
 		var pythonCode = 'from subprocess import Popen\n' +		                
-                         'Popen(\'' + command + '\')';	
+                         'Popen(\'cmd /k ' + command + '\')';	
 
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	

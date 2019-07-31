@@ -76,6 +76,7 @@ export default class GenericInput extends Model {
 				new TreeViewAction(
 					'Disable all variables',
 					'disable.png',
+					this,
 					treeView,
 					() => self.__disableAllVariables()
 				)
@@ -86,6 +87,7 @@ export default class GenericInput extends Model {
 				new TreeViewAction(
 					'Enable all variables',
 					'enable.png',
+					this,
 					treeView,
 					() => self.__enableAllVariables()
 				)

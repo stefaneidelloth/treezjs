@@ -86,6 +86,7 @@ export default class Table extends ComponentAtom {
         actions.push(new TreeViewAction(				
 							'Delete',
 							'delete.png',
+							this,
 							treeView,
 							() => this.delete(treeView)
 					 ));      

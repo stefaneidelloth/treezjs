@@ -47,7 +47,12 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 
     execute(){
     	var command = this.fullPath;
-    	window.treezTerminal.executeWithoutWait(command, undefined, console.error);                     
+    	window.treezTerminal.executeWithoutWait(command, undefined, (message) => {
+    			console.error(message);
+    			alert(message);
+    		}
+    	);
+    		                     
     } 
     
     injectPathMap(path){    	

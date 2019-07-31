@@ -11,12 +11,12 @@ export default class Row {
 	
 	
 	get values(){
-		return Object.values(this.__entryMap);
+		var headers = this.__table.headers
+        return headers.map(header=>this.__entryMap[header]);
 	}	
 
-	toString() {
-        var values = Object.values(this.__entryMap);
-		return '[' + values.join(', ') + ']';		
+	toString() {		
+		return '[' + this.values.join(', ') + ']';		
 	}
 
 	get isEmpty() {
