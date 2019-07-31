@@ -8,12 +8,15 @@ The atoms that come with Treez by default represent a typical **modelling workfl
 First you define a model, then you define and run some studies and finally you process and evaluate the results. If the
 existing atoms are not sufficient for your needs, you might want to [implement custom atoms](./atoms/howToImplementAtoms.md). 
 
-<details open style="padding:10px">
+<details open>
   <summary> <img src="../../icons/root.png"> <a href="./root.md">Root</a> </summary>
-  <details open>
-    <summary> <img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
-    
-  </details>
+  <div>
+     <details open>
+      <summary> <img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
+
+    </details>
+  </div>
+ 
 </details>
 
 * 
