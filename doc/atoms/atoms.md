@@ -10,7 +10,7 @@ existing atoms are not sufficient for your needs, you might want to [implement c
 
 <details open>
   <summary> <img src="../../icons/root.png"> <a href="./root.md">Root</a> </summary>
-  <div>
+  <div style="margin-left:10px;">
      <details open>
        <summary> <img src="../../icons/models.png"> <a href="./model/models.md">Models</a> </summary>
        <div>
