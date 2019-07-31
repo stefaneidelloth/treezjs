@@ -12,8 +12,10 @@ Lets assume that each job of a sweep generates a table. The ![](../../../../icon
 
 The results data structure is compatible to the [EMA workbench](https://emaworkbench.readthedocs.io/en/latest/indepth_tutorial/general-introduction.html?highlight=results#Processing-the-results-of-the-experiments):
 
+>By default, the return of perform_experiments is a tuple of length 2. The first item in the tuple is the experiments. The second item is the outcomes. Experiments and outcomes are aligned by index. 
+
 ```
-By default, the return of perform_experiments is a tuple of length 2. The first item in the tuple is the experiments. The second item is the outcomes. Experiments and outcomes are aligned by index. 
+
 
 experiments, outcomes = results;
 ```
