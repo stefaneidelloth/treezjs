@@ -35,7 +35,9 @@ A new ![](../../../../icons/inputModification.png) InputModification atom is cre
     var inputModification = executable.createInputModification();	     
 ```
 
-## Arguments
+## Sections
+
+### Input modification
 
 Activate the corresponding check boxes for includeing the date and/or the jobId in the path. (Including the date in the input path is not very common and might only make sense if the input file is dynamically generated immediately before execution.) 
 
