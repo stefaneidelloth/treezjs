@@ -1,11 +1,16 @@
 import Treez from './treez.js'; 
 import JupyterTerminal from './jupyterTerminal.js';
 
+Treez.config({
+	home: '../notebooks/treezjs',
+	isSupportingPython: true,
+	moduleFolder: 'node_modules'
+});
 
 require([
 	'base/js/namespace',
-	'../notebooks/treezjs/bower_components/golden-layout/dist/goldenlayout.min',
-	'../notebooks/treezjs/bower_components/d3/d3.min',
+	'../notebooks/treezjs/' + window.treezConfig.moduleFolder + '/golden-layout/dist/goldenlayout.min',
+	'../notebooks/treezjs/' + window.treezConfig.moduleFolder + '/d3/dist/d3.min',
 	'codemirror/mode/sql/sql' //enables sql mode for CodeMirror cells	
 ], function(
 	 Jupyter,
@@ -13,13 +18,10 @@ require([
 	 d3	
 ) {	
 	
-	Treez.config({
-		home: '../notebooks/treezjs',
-		isSupportingPython: true
-	});
 
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
+
+	Treez.importCssStyleSheet('/' + window.treezConfig.moduleFolder + '/golden-layout/src/css/goldenlayout-base.css');	
+	Treez.importCssStyleSheet('/' + window.treezConfig.moduleFolder + '/golden-layout/src/css/goldenlayout-light-theme.css');
 
 	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
 	//Treez.importStaticCssStyleSheet('https://handsontable.com/static/css/main.css')

@@ -1,13 +1,19 @@
 import Treez from './treez.js';
 import StandAloneTerminal from './standAloneTerminal.js'; 
 
+Treez.config({
+	home: '.',
+	isSupportingPython: false,
+	moduleFolder: 'node_modules'
+});	
+
 requirejs.config({
 		baseUrl : '..',
 		paths : {
-			'd3' : 'bower_components/d3/d3.min',				
-			'jquery' : 'bower_components/jquery/dist/jquery.min',
-			'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min',
-			'codemirror' : 'bower_components/codemirror'						
+			'd3' : window.treezConfig.moduleFolder + '/d3/dist/d3.min',				
+			'jquery' : window.treezConfig.moduleFolder + '/jquery/dist/jquery.min',
+			'golden-layout' : window.treezConfig.moduleFolder + '/golden-layout/dist/goldenlayout.min',
+			'codemirror' : window.treezConfig.moduleFolder + '/codemirror'						
 		},
 		bundles : {
 			'lib/orion/code_edit/built-codeEdit-amd' : ['orion/codeEdit', 'orion/Deferred']
@@ -24,15 +30,10 @@ require([
 	 d3,
 	 OrionCodeEdit, 
 	 OrionDeferred
-) {		
+) {			
 	
-	Treez.config({
-		home: '.',
-		isSupportingPython: false
-	});	
-	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');	
+	Treez.importCssStyleSheet('/' + window.treezConfig.moduleFolder + '/golden-layout/src/css/goldenlayout-base.css');	
+	Treez.importCssStyleSheet('/' + window.treezConfig.moduleFolder + '/golden-layout/src/css/goldenlayout-light-theme.css');	
 	Treez.importCssStyleSheet('/lib/orion/code_edit/built-codeEdit.css');
 	
 	var focusManager = createStandAloneLayoutAndRegisterLayoutCompoments(GoldenLayout, document.body);		
