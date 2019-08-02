@@ -28,7 +28,12 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+	// needed to transform es6 tests to es5, since karma does not
+	// support es6. 
+	// Also see
+	// https://stackoverflow.com/questions/47923536/using-es2015-with-mocha-karma-and-headless-chrome-for-testing
     preprocessors: {
+		'test/**/*.spec.js': [ 'webpack'] //preprocess with webpack
     },
 
 
@@ -37,6 +42,8 @@ module.exports = function(config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'kjhtml'],
 
+	// setting up webpack configuration
+    webpack: require('./webpack.test.config'),
 
     // web server port
     port: 9876,
@@ -57,7 +64,7 @@ module.exports = function(config) {
 	customLaunchers: {
 		ChromeDebugging: {
 		  base: 'Chrome',
-		  flags: ['--auto-open-devtools-for-tabs', 'http://localhost:9876/debug.html' ]
+		  flags: [ 'http://localhost:9876/debug.html' ] //'--auto-open-devtools-for-tabs',
 		}
     },
 
@@ -68,7 +75,8 @@ module.exports = function(config) {
 	plugins: [			   
             'karma-jasmine',                      
             'karma-chrome-launcher',  				
-			'karma-jasmine-html-reporter'
+			'karma-jasmine-html-reporter',
+			'karma-webpack'
         ],
 
 
