@@ -99,15 +99,17 @@ export default class Study extends ComponentAtom {
 	}
 	
 	async execute(treeView, monitor) {
+		
+		var studyName = this.name;
 		if(!monitor){
-			var monitorTitle = this.constructor.name + ' "' + this.name + '"';
+			var monitorTitle = this.constructor.name + ' "' + studyName + '"';
 			monitor = new Monitor(monitorTitle, treeView);
 			monitor.showInMonitorView();
 			monitor.clear();
 		}
 		await this.__doExecute(treeView, monitor)
 			  .catch((exception)=> {
-					monitor.error('Could not execute study "' + this.name + '"!', exception);
+					monitor.error('Could not execute study "' + studyName + '"!', exception);
 					monitor.cancel();
 			  });
 	}	
