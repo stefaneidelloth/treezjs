@@ -1,11 +1,6 @@
-
-
-
-
-
 export default class ModelInput {
 	
-	static nextId; //initial value is defined below class definition
+	//nextId is defined below class definition
 
 	constructor(studyModelPath, studyId, studyDescription, jobId, totalNumberOfJobs) {
 		this.studyModelPath = studyModelPath;

@@ -1,4 +1,4 @@
-import TreeViewAction from './TreeViewAction.js';
+import TreeViewAction from './treeViewAction.js';
 import Utils from '../utils/utils.js';
 
 export default class AddChildAtomTreeViewAction extends TreeViewAction {

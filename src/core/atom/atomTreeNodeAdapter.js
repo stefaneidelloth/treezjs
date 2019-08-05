@@ -1,4 +1,4 @@
-import DTreez from './../dTreez/dTreez.js';
+import DTreez from './../dtreez/dTreez.js';
 import ActionSeparator from './../actionSeparator.js';
 import Treez from './../../treez.js';
 

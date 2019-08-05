@@ -1,5 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
-import Monitor from './../../core/monitor/Monitor.js';
+import Monitor from './../../core/monitor/monitor.js';
 import Table from './../../data/table/table.js';
 import ColumnBlueprint from './../../data/column/columnBlueprint.js';
 

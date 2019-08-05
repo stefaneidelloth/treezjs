@@ -4,14 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/stefaneidelloth/treezjs.git",
   "author": "Stefan Eidelloth <matameko@posteo.de>",
-  "license": "BSD",
-  "dependencies": {
-    "codemirror": "5.48.2",
-    "d3": "5.9.7",
-    "golden-layout": "1.5.9",
-    "jquery": "3.4.1",
-    "requirejs": "2.3.6"
-  },
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "6.26.3",
     "babel-loader": "8.0.6",
@@ -23,8 +17,10 @@
     "karma-cli": "2.0.0",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-html-reporter": "1.4.2",
-    "karma-requirejs": "1.1.0",
+    "karma-requirejs": "^.1.0",
     "karma-webpack": "4.0.2",
+    "requirejs": "2.3.6",
+    "squirejs": "0.2.1",
     "webpack": "4.39.0"
   },
   "scripts": {

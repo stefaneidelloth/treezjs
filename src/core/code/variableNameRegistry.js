@@ -2,7 +2,7 @@ import Utils from './../utils/utils.js';
 
 export default class VariableNameRegistry {
 
-	static __instance;
+	//__instance is defined below class definition
 
 	static  get instance() {
 		if (!VariableNameRegistry.__instance) {
@@ -79,3 +79,5 @@ export default class VariableNameRegistry {
 	}
 
 }
+
+VariableNameRegistry.__instance = undefined;

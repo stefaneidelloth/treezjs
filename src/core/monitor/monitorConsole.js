@@ -24,7 +24,12 @@ export default class MonitorConsole {
 
 		var logMessage;
 		if(error){
-			logMessage = new LogMessage(message + error.message, 'error', error.stack);
+			if(error.stack){
+				logMessage = new LogMessage(message + error.message, 'error', error.stack);
+			} else {
+				logMessage = new LogMessage(message + error.message, 'error', this.__stack);
+			}
+			
 		} else {
 			if(message.stack){
 				logMessage = new LogMessage(message.message , 'error', message.stack);
