@@ -57,13 +57,15 @@ export default class SqLiteAppender extends Model {
 
     async doRunModel(treeView, monitor) {
     	    	    	
-		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
+		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + 
+		                     '" (studyId: ' + this.studyId + ', jobId: ' + this.jobId + ').';
 		monitor.info(startMessage);
 
 		var tableNames = await SqLiteImporter.tableNames(this.fullPath(this.sourceFilePath), this.password);		
 		monitor.totalWork = tableNames.length;			
 		
 		for(var tableName of tableNames){
+			monitor.info('Appending table "' + tableName +'".');
 			await this.__appendTable(tableName);
 			monitor.worked(1);	
 		}	
@@ -76,6 +78,7 @@ export default class SqLiteAppender extends Model {
     async __appendTable(tableName){
 
     	var columnBlueprints = await SqLiteImporter.readTableStructure(this.fullPath(this.sourceFilePath), this.password, tableName);
+    	this.__disablePrimaryKeys(columnBlueprints);
 		columnBlueprints = this.__insertStudyIdAndJobIdColumns(columnBlueprints);
     	
     	await SqLiteImporter.createTableIfNotExists(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints);
@@ -84,6 +87,12 @@ export default class SqLiteAppender extends Model {
     	tableData = this.__insertStudyIdAndJobId(tableData);
 
     	await SqLiteImporter.appendData(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);    	
+    }
+
+    __disablePrimaryKeys(columnBlueprints){
+    	for(var columnBlueprint of columnBlueprints){
+    		columnBlueprint.isPrimaryKey=false;
+    	}
     }
 
     __insertStudyIdAndJobIdColumns(columnBlueprints){

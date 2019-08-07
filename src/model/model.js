@@ -71,7 +71,11 @@ export default class Model extends ComponentAtom {
 			hasMainMonitor = true;
 		}
 
-		await this.doRunModel(treeView, monitor); //total work must be set inside this method		
+		await this.doRunModel(treeView, monitor)
+			.catch(error => {
+	        	monitor.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);    
+	        	throw error;        					   
+	        }); //total work must be set inside this method		
 
 		if(hasMainMonitor){
 			monitor.done();	

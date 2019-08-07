@@ -49,8 +49,12 @@ export default class StandAloneTerminal {
 		return jQuery.get('deleteFile', uri);			
 	}	
 
+	openDirectory(directoryPath, errorHandler, finishedHandler){
+		this.executeWithoutWait(directoryPath, undefined, errorHandler, finishedHandler);			
+	}
 
-	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){
+
+	executeWithoutWait(command, undefined, errorHandler, finishedHandler){
 		this.__onMessage = messageHandler;
 		this.__onError = errorHandler;
 		this.__onFinished = finishedHandler;

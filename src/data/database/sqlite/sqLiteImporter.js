@@ -378,6 +378,10 @@ export default class SqLiteImporter extends Importer {
 		var query = "INSERT INTO '" + tableName + "' ('" + tableData.headers.join("', '") + "') VALUES " + rowValues.join(", ");
 
 		await window.treezTerminal.sqLiteQuery(filePath, query, false)
+			.catch(error=>{
+				console.error(error);
+				throw error;
+			});
 	}
 
 }

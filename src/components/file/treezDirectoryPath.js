@@ -64,6 +64,15 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
     }
+
+    execute(){    	
+    	window.treezTerminal.openDirectory(this.fullPath, (message) => {
+    			console.error(message);
+    			alert(message);
+    		}
+    	);
+    		                     
+    } 
     
    
     __browseDirectoryPath(){                  

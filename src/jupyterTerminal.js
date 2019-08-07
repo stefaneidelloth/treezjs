@@ -9,12 +9,13 @@ export default class JupyterTerminal {
 	
 	async browseFilePath(initialDirectory){  
 
-		var pythonCode = '%%python\n'
-		                + 'import os\n'
-						+ 'import tkinter\n'
-						+ 'from tkinter import filedialog\n'
-						+ 'root = tkinter.Tk()\n'
-						+ 'root.withdraw() #use to hide tkinter window\n';
+		var pythonCode = '%%python\n' +
+						 '# -*- coding: utf-8 -*-\n' +
+		                 'import os\n' +
+						 'import tkinter\n' +
+						 'from tkinter import filedialog\n' +
+						 'root = tkinter.Tk()\n' +
+						 'root.withdraw() #use to hide tkinter window\n';
 
 		if(initialDirectory){
 			pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, initialdir="' + initialDirectory + '", title="Browse file path")\n';
@@ -29,12 +30,13 @@ export default class JupyterTerminal {
 
    
     async browseDirectoryPath(initialDirectory){   	
-		var pythonCode = '%%python\n'
-			+ 'import os\n'
-			+ 'import tkinter\n'
-			+ 'from tkinter import filedialog\n'
-			+ 'root = tkinter.Tk()\n'
-			+ 'root.withdraw() #use to hide tkinter window\n';
+		var pythonCode = '%%python\n' +
+			'# -*- coding: utf-8 -*-\n' +
+			'import os\n' +
+			'import tkinter\n' +
+			'from tkinter import filedialog\n' +
+			'root = tkinter.Tk()\n' +
+			'root.withdraw() #use to hide tkinter window\n';
 
 		if(initialDirectory){
 			pythonCode +=  'tempdir = filedialog.askdirectory(parent=root, initialdir="' + initialDirectory + '", title="Browse directory path")\n';
@@ -52,9 +54,10 @@ export default class JupyterTerminal {
     	if(!filePath){
     		return null;
     	}
-		var pythonCode = '%%python\n'
-			+ 'file = open("' + filePath + '", "r", encoding="utf-8")\n' 
-            + 'print(file.read())\n';	
+		var pythonCode = '%%python\n' +
+		    '# -*- coding: utf-8 -*-\n' +
+			'file = open("' + filePath + '", "r", encoding="utf-8")\n' +
+            'print(file.read())\n';	
 		
 		return await this.executePythonCode(pythonCode, true);	 
 	}
@@ -63,10 +66,11 @@ export default class JupyterTerminal {
 
 		var textString = this.__escapeSpecialCharacters(text);		
 
-		var pythonCode = '%%python\n'
-			+ 'file = open("' + filePath + '", "w", encoding="utf-8")\n' 
-            + 'file.write("' + textString + '")\n'
-            + 'file.close()\n';	
+		var pythonCode = '%%python\n' +
+			'# -*- coding: utf-8 -*-\n' +
+			'file = open("' + filePath + '", "w", encoding="utf-8")\n' +
+            'file.write("' + textString + '")\n' +
+            'file.close()\n';	
 		
 		return this.executePythonCode(pythonCode, false);
 	}
@@ -79,17 +83,20 @@ export default class JupyterTerminal {
 	}
 
     async deleteFile(filePath){	
-		var pythonCode = '%%python\n'
-			+ 'import os\n'
-			+ 'if os.path.exists("' + filePath +'"):\n'
-			+ '    os.remove("' + filePath + '")\n';           
+		var pythonCode = '%%python\n' +
+		    '# -*- coding: utf-8 -*-\n' +
+			'import os\n' +
+			'if os.path.exists("' + filePath +'"):\n' +
+			'    os.remove("' + filePath + '")\n';           
 		
 		return this.executePythonCode(pythonCode, false);		
 	}	
 	
 	execute(command, messageHandler, errorHandler, finishedHandler){	
 			
-		var pythonCode = 'from subprocess import Popen, PIPE, CalledProcessError\n' +
+		var pythonCode = '%%python\n' +
+						 '# -*- coding: utf-8 -*-\n' +
+		                 'from subprocess import Popen, PIPE, CalledProcessError\n' +
 						 'with Popen(\'' + command + '\', stdout=PIPE, bufsize=1, shell=True, encoding="utf8") as process:\n' +
 						 '    for line in process.stdout:\n' +
 						 '        print(line, end="")\n' +
@@ -99,10 +106,22 @@ export default class JupyterTerminal {
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	
 
+	openDirectory(directoryPath, errorHandler, finishedHandler){	
+			
+		var pythonCode = '%%python\n' +
+						 '# -*- coding: utf-8 -*-\n' +
+					     'from subprocess import Popen\n' +		                
+                         'Popen(\'cmd /k start ' + directoryPath + '\')';	
+
+		this.__executePythonCode(pythonCode, undefined, errorHandler, finishedHandler);		
+	}
+
 
 	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
 			
-		var pythonCode = 'from subprocess import Popen\n' +		                
+		var pythonCode = '%%python\n' +
+						 '# -*- coding: utf-8 -*-\n' +	
+		                 'from subprocess import Popen\n' +		                
                          'Popen(\'cmd /k ' + command + '\')';	
 
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
@@ -178,31 +197,42 @@ export default class JupyterTerminal {
 
 		if(isExpectingOutput){
 
-			var pythonCode = '%%python\n'
-			+ 'import sqlite3\n'
-			+ 'import pandas\n'	
-			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
-            + '    dataFrame = pandas.read_sql_query("' + query + '", connection)\n'
-            + 'print(dataFrame.to_csv(sep="|"))\n';		
+			var pythonCode = '%%python\n' +
+				'# -*- coding: utf-8 -*-\n' +
+				'import sqlite3\n' +
+				'import pandas\n'	+
+				'with sqlite3.connect("' + connectionString + '") as connection:\n' +
+            	'    dataFrame = pandas.read_sql_query("' + query + '", connection)\n' +
+            	'print(dataFrame.to_csv(sep="|", encoding = "utf-8"))\n';		
 
-			var text = await this.executePythonCode(pythonCode, true);
+			var text = await this.executePythonCode(pythonCode, true)
+					.catch(error=>{
+						console.error("Could not execute python code.", error);
+						throw error;
+					});
 			return TableData.parseTableTextTo2DArray(text, '|');
 		} else {
 
-			var pythonCode = '%%python\n'
-			+ 'import sqlite3\n'
-			+ 'import pandas\n'	
-			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
-			+ '    cursor = connection.cursor()\n'
-			+ '    cursor.execute("' + query + '")\n';
-
-			return this.executePythonCode(pythonCode, false);
+			var pythonCode = '%%python\n' +
+				'# -*- coding: utf-8 -*-\n' +
+				'import sqlite3\n' +
+				'import pandas\n'	+
+				'with sqlite3.connect("' + connectionString + '") as connection:\n' +
+				'    cursor = connection.cursor()\n' +
+				'    cursor.execute("' + query + '")\n';
+			
+			return this.executePythonCode(pythonCode, false)
+				.catch(error=>{
+						console.error("Could not execute python code.", error);
+						throw error;
+					});;
 		}
 	}
 
 	async sqLiteQueryTypes(connectionString, query) {
 
 		var pythonCode = '%%python\n'
+			+ '# -*- coding: utf-8 -*-\n'
 			+ 'import sqlite3\n'
 			+ 'import pandas\n'	
 			+ 'with sqlite3.connect("' + connectionString + '") as connection:\n'
