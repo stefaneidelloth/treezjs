@@ -1,8 +1,7 @@
 export default class MonitorView {
 
-	constructor(mainViewModel, dTreez){
-		this.__mainViewModel = mainViewModel;
-		this.__dTreez = dTreez;
+	constructor(treez){
+		this.__treez = treez;	
 		this.__content = undefined;
 		this.__progressPanel = undefined;
 		this.__loggingPanel =undefined;
@@ -12,10 +11,10 @@ export default class MonitorView {
 
 	buildView(){    
 
-		this.__progressPanel = this.__dTreez.select('#treez-progress')
+		this.__progressPanel = this.__treez.dTreez.select('#treez-progress')
 									.className('treez-monitor-progress-panel');	
 
-		this.__loggingPanel = this.__dTreez.select('#treez-log')
+		this.__loggingPanel = this.__treez.dTreez.select('#treez-log')
 									.className('treez-monitor-logging-panel');
 	}	
 	

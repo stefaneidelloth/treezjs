@@ -75,7 +75,7 @@ require([
     	handleCreatedTerminal(new JupyterTerminal(Jupyter)); 
     };  	
 	
-	Treez.initialize(d3, editorFactory, terminalFactory, focusManager); 	
+	Treez.initialize(d3, focusManager, editorFactory, terminalFactory); 	
 		
 });
 

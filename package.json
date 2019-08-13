@@ -7,23 +7,16 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "8.0.6",
-    "babel-preset-env": "1.7.0",
-    "jasmine": "3.4.0",
-    "jasmine-core": "3.4.0",
-    "karma": "4.2.0",
-    "karma-chrome-launcher": "3.0.0",
-    "karma-cli": "2.0.0",
-    "karma-jasmine": "2.0.1",
-    "karma-jasmine-html-reporter": "1.4.2",
-    "karma-requirejs": "^.1.0",
-    "karma-webpack": "4.0.2",
-    "requirejs": "2.3.6",
-    "squirejs": "0.2.1",
-    "webpack": "4.39.0"
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0",
+    "requirejs": "2.3.6"
   },
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start karma.conf.js"
+    "test": "jest --watch",
+    "test-coverage": "jest --coverage --collectCoverageFrom src/**/*.js --watch",
+    "debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --watch --runInBand"
   }
 }

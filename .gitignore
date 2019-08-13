@@ -5,3 +5,4 @@ node_modules
 /.metadata/
 /.recommenders/
 /debug.log
+coverage

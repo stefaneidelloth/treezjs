@@ -45,7 +45,7 @@ require([
 		 handleCreatedTerminal(new StandAloneTerminal());
 	 };
 	
-	Treez.initialize(d3, editorFactory, terminalFactory, focusManager); 		
+	Treez.initialize(d3, focusManager, editorFactory, terminalFactory); 		
 });
 
 

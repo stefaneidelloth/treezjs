@@ -38,6 +38,9 @@ export default class Enum {
 		var stack = new Error().stack;
 		var lastLine = stack.split('\n').pop();
 		var startIndex = lastLine.indexOf('/src/');
+		if(startIndex=-1){
+			return 'Could not find location of Enum definition. (Only works inside /src/ folder).';
+		}
 		var endIndex = lastLine.indexOf('.js:') + 3;
 		return lastLine.substring(startIndex, endIndex);
 	}

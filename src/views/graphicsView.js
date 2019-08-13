@@ -1,25 +1,22 @@
 export default class GraphicsView {
 
-	constructor(mainViewModel, dTreez){
-		this.__mainViewModel = mainViewModel;	
-		this.__dTreez = dTreez;			
-		this.__svgSelection = undefined;
-		
+	constructor(treez){
+		this.__treez = treez;		
+		this.__svgSelection = undefined;		
 	}
 
 	buildView(){
 		
-		var graphicsPanel = this.__dTreez.select('#treez-graphics')
+		var graphicsPanel = this.__treez.dTreez.select('#treez-graphics')
 								.onDoubleClick(() => this.saveSvg());
 		
 		this.__svgSelection = graphicsPanel.append('svg')
 						.className('treez-svg')
-						.attr('id','treez-svg');    
-			
+						.attr('id','treez-svg'); 
 	}
 
 	setFocus(){
-		this.__mainViewModel.focusGraphicsView();		
+		this.__treez.focusGraphicsView();		
 	}
 	
 	async saveSvg(){
@@ -30,5 +27,4 @@ export default class GraphicsView {
 		var filePath = await window.treezTerminal.browseFilePath('./treez.svg');
 		await window.treezTerminal.writeTextFile(filePath, svgXml);
 	}
-
 }

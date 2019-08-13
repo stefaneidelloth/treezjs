@@ -5,15 +5,14 @@ import Treez from './../treez.js'
 
 export default class TreeView {
 
-	constructor(mainViewModel, dTreez){
-		this.__mainViewModel = mainViewModel;
-		this.dTreez = dTreez;
+	constructor(treez){
+		this.__treez = treez;	
 		this.content = undefined;	
 		this.__lastAtomShownInPropertiesView = undefined;
 	}
 
 	buildView(){		
-		var parentSelection = this.dTreez.select('#treez-tree');
+		var parentSelection = this.__treez.dTreez.select('#treez-tree');
 		this.buildToolBar(parentSelection);
 		this.buildContent(parentSelection);
 	}	
@@ -101,16 +100,16 @@ export default class TreeView {
     }
 
     clearPropertiesView(){
-    	var propertiesView = this.dTreez.select('#treez-properties');
+    	var propertiesView = this.__treez.dTreez.select('#treez-properties');
     	propertiesView.selectAll('treez-tab-folder').remove();	
 		propertiesView.selectAll('div').remove();
     };  
 
     clearMonitoringView(){
-    	var progressView = this.dTreez.select('#treez-progress');    	
+    	var progressView = this.__treez.dTreez.select('#treez-progress');    	
 		progressView.selectAll('div').remove();
 
-		var logView = this.dTreez.select('#treez-log');    	
+		var logView = this.__treez.dTreez.select('#treez-log');    	
 		logView.selectAll('div').remove();
     };
     
@@ -136,30 +135,26 @@ export default class TreeView {
     }
 
     showProperties(atom){    	
-    	var propertiesView = this.dTreez.select('#treez-properties');    	
+    	var propertiesView = this.__treez.dTreez.select('#treez-properties');    	
     	atom.createControlAdaption(propertiesView, this);
     	this.__lastAtomShownInPropertiesView=atom;
     }  
     
     setFocus(atom){
-    	var propertiesView = this.dTreez.select('#treez-properties');
+    	var propertiesView = this.__treez.dTreez.select('#treez-properties');
     	atom.createControlAdaption(propertiesView, this);
-    }
-
-    get editorView(){
-		return this.__mainViewModel.editorView;
-	}
+    }  
 
 	get editor(){
-		return this.__mainViewModel.editor;
+		return this.__treez.editor;
 	}
 
 	get monitorView(){
-		return this.__mainViewModel.monitorView;
+		return this.__treez.monitorView;
 	}
 
 	get graphicsView(){
-		return this.__mainViewModel.graphicsView;
+		return this.__treez.graphicsView;
 	}
 
 }

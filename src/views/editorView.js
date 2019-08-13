@@ -2,20 +2,16 @@ import Treez from './../treez.js';
 
 export default class EditorView {
 
-	constructor(mainViewModel, dTreez){	
-		this.__mainViewModel = mainViewModel;	
-		this.__dTreez = dTreez;
-			
+	constructor(treez){	
+		this.__treez = treez;
 		this.content = undefined;		
 		this.model = undefined;	
 		this.fileInput = undefined;			
 	}
 
-	buildView(editorFactory){
+	buildView(editorFactory){     
 
-        var self = this;
-
-		var parentSelection = this.__dTreez.select('#treez-editor');
+		var parentSelection = this.__treez.dTreez.select('#treez-editor');
 
 		var toolbar = parentSelection.append('div')
 			.attr('id','treez-editor-toolbar')
@@ -26,11 +22,10 @@ export default class EditorView {
 			.attr('class','treez-editor-content');	
 
 		editorFactory((editor)=>{
-			this.__mainViewModel.editor = editor;	
+			this.__treez.editor = editor;	
 			this.fileInput = this.createHiddenFileInputElement(editor);
 			this.fillEditorToolbar(toolbar, editor);
-		});	   
-
+		});	
 	}
 
     fillEditorToolbar(toolbar, editor){
@@ -86,7 +81,7 @@ export default class EditorView {
 
     setEditorContentAndUpdateTree(code, editor){
     	editor.setText(code, ()=>{
-    		this.__mainViewModel.treeView.toTree();
+    		this.__treez.treeView.toTree();
     	});
     }
 
