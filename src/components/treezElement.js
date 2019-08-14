@@ -4,13 +4,54 @@ export default class TreezElement extends HTMLElement {
 		super();	
 		this.__parentAtom=undefined;
 		this.__listeners = [];   
-	} 	
+	} 
+	
+	static hide(element, booleanValue){
+    	element.style.display = booleanValue
+				         			?'none'
+				         			:null;
+    }  
 
 	static get observedAttributes() {
         return ['value', 'disabled', 'hidden', 'width'];
     }
 
+	//Can be overrriden by inheriting classes to implement different property types
+	convertFromStringValue(value){
+		return value;
+	}
 	
+	//Can be overrriden by inheriting classes to implement different property types
+	//Return null if you want an html attribute to be removed (="set to false")
+	convertToStringValue(value){
+		return value;
+	}
+	
+	//Should be overridden by inheriting classes.
+	//This method is called after the string-html-attribute of the html element has been changed.
+	//The passed argument "newValue" is the result of the method "convertFromString".
+	//This method has to update the plain html element(s) of your custom html element.
+	//This method must not set the javascript property 'value'.
+	//(The javascript proeprty 'value' has to be considered when listening to element changes, not
+	//when updating the elements.) 
+    updateElements(newValue){
+		console.warn('updateElements is not yet implemented for ' + this.constructor.name);
+	}
+	
+	//can be overriden by inheriting classes
+    updateWidth(width){
+		this.style.width = width + ' !important';
+    }	
+
+    //should be overridden by inheriting classes
+    disableElements(booleanValue){
+    	throw new Error('Not yet implemented for ' + this.constructor.name);
+    }	
+
+    //should be overridden by inheriting classes
+    hideElements(booleanValue){
+    	throw new Error('Not yet implemented for ' + this.constructor.name);
+    }	
 		
 	/*
 	 * In order to understand the whole binding workflow, one has to consider four places
@@ -54,54 +95,62 @@ export default class TreezElement extends HTMLElement {
 		this.__modifyExternalPropertyToUpdateValueOnPropertyChanges(parentAtom, propertyName);	
 	}
 
-	//Can be overrriden by inheriting classes to implement different property types
-	convertFromStringValue(value){
-		return value;
-	}
+	attributeChangedCallback(attr, oldStringValue, newStringValue) {
+		if(attr==='value'){                      	                		
+		   if(newStringValue!==oldStringValue){
+			   var newValue = this.convertFromStringValue(newStringValue);
+			   this.updateElements(newValue);
+			   this.__updateExternalProperties(newValue);
+		   }
+		}    
+
+		if(attr==='disabled'){                      	                		
+		   if(newStringValue!==oldStringValue){	
+			   var newValue = !(newStringValue === null);
+			   this.disableElements(newValue);
+		   }
+		}  
+
+		if(attr==='hidden'){                      	                		
+		   if(newStringValue!==oldStringValue){	
+			   var newValue = !(newStringValue === null);
+			   this.hideElements(newValue);							
+		   }
+		}   
+
+		 if(attr==='width'){                      	                		
+		   if(newStringValue!==oldStringValue){				
+			   this.updateWidth(newStringValue);							
+		   }
+		}                 
+   }		
+
+   
+   dispatchChangeEvent(){
+	   var event = new Event(
+							 'change', 
+							 {
+							   'bubbles': true,
+							   'cancelable': true
+							 }
+							);
+	   this.dispatchEvent(event);
+   }
+   
+
+   disconnectedCallback(){
+	   while (this.firstChild) {
+		   this.removeChild(this.firstChild);
+	   }
+   }
+
 	
-	//Can be overrriden by inheriting classes to implement different property types
-	//Return null if you want an html attribute to be removed (="set to false")
-	convertToStringValue(value){
-		return value;
-	}
-	
-	//Should be overridden by inheriting classes.
-	//This method is called after the string-html-attribute of the html element has been changed.
-	//The passed argument "newValue" is the result of the method "convertFromString".
-	//This method has to update the plain html element(s) of your custom html element.
-	//This method must not set the javascript property 'value'.
-	//(The javascript proeprty 'value' has to be considered when listening to element changes, not
-	//when updating the elements.) 
-    updateElements(newValue){
-		throw new Error('Not yet implemented for ' + this.constructor.name);
-    }
     
     __updateExternalProperties(newValue){
  	   for(var listener of this.__listeners){
  			listener.atom[listener.propertyName] = newValue;
  	   } 
- 	}
-
-    //can be overriden by inheriting classes
-    updateWidth(width){
-		this.style.width = width + ' !important';
-    }	
-
-    //should be overridden by inheriting classes
-    disableElements(booleanValue){
-    	throw new Error('Not yet implemented for ' + this.constructor.name);
-    }	
-
-    //should be overridden by inheriting classes
-    hideElements(booleanValue){
-    	throw new Error('Not yet implemented for ' + this.constructor.name);
-    }	
-    
-    hide(element, booleanValue){
-    	element.style.display = booleanValue
-				         			?'none'
-				         			:null;
-    }   
+ 	}     
 
     //we want to avoid hard coded strings to pass/identify properties
     //therefore a lambda expression is passed to identify the property
@@ -171,66 +220,7 @@ export default class TreezElement extends HTMLElement {
 				
 	}
 
-	attributeChangedCallback(attr, oldStringValue, newStringValue) {
-         if(attr==='value'){                      	                		
-			if(newStringValue!==oldStringValue){
-				var newValue = this.convertFromStringValue(newStringValue);
-				this.updateElements(newValue);
-				this.__updateExternalProperties(newValue);
-			}
-         }    
-
-         if(attr==='disabled'){                      	                		
-			if(newStringValue!==oldStringValue){	
-				var newValue = !(newStringValue === null);
-				this.disableElements(newValue);
-			}
-         }  
-
-         if(attr==='hidden'){                      	                		
-			if(newStringValue!==oldStringValue){	
-				var newValue = !(newStringValue === null);
-				this.hideElements(newValue);							
-			}
-         }   
-
-          if(attr==='width'){                      	                		
-			if(newStringValue!==oldStringValue){				
-				this.updateWidth(newStringValue);							
-			}
-         }                 
-    }		
-
-	/*
-	__dispatchInputEvent(){
-		var event = new Event(
-							  'input', 
-							  {
-								'bubbles': true,
-								'cancelable': true
-							  }
-							 );
-		this.dispatchEvent(event);
-	}
-	*/
 	
-	dispatchChangeEvent(){
-    	var event = new Event(
-							  'change', 
-							  {
-								'bubbles': true,
-								'cancelable': true
-							  }
-							 );
-		this.dispatchEvent(event);
-    }
-    
-
-	disconnectedCallback(){
-		while (this.firstChild) {
-			this.removeChild(this.firstChild);
-		}
-	}
 	
 	//The purpose of the following properties is to 
 	//translate html string attribute values to and from

@@ -10,8 +10,11 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-jest": "^24.8.0",
+    "express": "^4.17.1",   
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
+    "jest-puppeteer": "^4.3.0",
+    "puppeteer": "^1.19.0",
     "requirejs": "2.3.6"
   },
   "scripts": {

@@ -22,7 +22,6 @@
     "golden-layout": "1.5.9",
     "codemirror": "5.46.0"
   },
-  "devDependencies": {
-    "Squire.js": "squire#^0.2.0"
+  "devDependencies": {   
   }
 }
