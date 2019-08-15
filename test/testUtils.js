@@ -38,14 +38,14 @@ export default class TestUtils {
         browser.close();
     }
 
-    static async createCustomElement(page, tagName, className, importPath){
+    static async createCustomElement(page, tagName, className, importPath, id=tagName){  
 
         var moduleScript = "import " + className + " from '" + importPath + "';\n" +
         "if(!window.customElements.get('" + tagName + "')){\n" +
         "    window.customElements.define('" + tagName + "', " + className + ");\n" +
         "}\n" +
         "var element = document.createElement('" + tagName + "');\n" +   
-        "element.id='" + tagName + "';\n" +         
+        "element.id='" + id + "';\n" +         
         "document.body.appendChild(element);";
 
         await page.evaluate(({moduleScript}) => {            

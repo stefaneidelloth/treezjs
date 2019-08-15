@@ -38,19 +38,25 @@ export default class TreezElement extends HTMLElement {
 		console.warn('updateElements is not yet implemented for ' + this.constructor.name);
 	}
 	
-	//can be overriden by inheriting classes
-    updateWidth(width){
+	//Can be overriden by inheriting classes
+	//(This method is automatically called after the corresponding attribute has been changed
+	//and should not be manually called. Also see method attributeChangedCallback) 
+    updateWidth(width){		
 		this.style.width = width + ' !important';
     }	
 
-    //should be overridden by inheriting classes
+	//Should be overridden by inheriting classes
+	//(This method is automatically called after the corresponding attribute has been changed
+	//and should not be manually called. Also see method attributeChangedCallback) 
     disableElements(booleanValue){
-    	throw new Error('Not yet implemented for ' + this.constructor.name);
+    	console.warn('disableElements is not yet implemented for ' + this.constructor.name);
     }	
 
-    //should be overridden by inheriting classes
+	//Should be overridden by inheriting classes
+	//(This method is automatically called after the corresponding attribute has been changed
+	//and should not be manually called. Also see method attributeChangedCallback) 
     hideElements(booleanValue){
-    	throw new Error('Not yet implemented for ' + this.constructor.name);
+    	console.warn('hideElements is not yet implemented for ' + this.constructor.name);
     }	
 		
 	/*
@@ -86,7 +92,7 @@ export default class TreezElement extends HTMLElement {
 	bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
 		this.__parentAtom = parentAtom;
 		
-		var propertyName = this.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
+		var propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
 
 		this.value = parentAtom[propertyName];					
 
@@ -155,11 +161,9 @@ export default class TreezElement extends HTMLElement {
     //we want to avoid hard coded strings to pass/identify properties
     //therefore a lambda expression is passed to identify the property
     //this method extracts the property name using introspection
-	__extractPropertyNameFromLambdaExpression(parentAtom, expression){
-		var propertyName;
-		try{
-			propertyName = expression.toString().split(".")[1];
-		}catch(error){
+	static __extractPropertyNameFromLambdaExpression(parentAtom, expression){
+		var propertyName = expression.toString().split(".").pop();
+		if(propertyName.indexOf("=>")>-1){		
 			throw new Error("Could not determine property name to create binding from lambda expression '" + expression + "'")
 		}
 		
@@ -182,7 +186,16 @@ export default class TreezElement extends HTMLElement {
 
 		let self = this;
 
-		let propertyDescriptor = Object.getOwnPropertyDescriptor(parentAtom, propertyName);		
+		let propertyDescriptor = Object.getOwnPropertyDescriptor(parentAtom, propertyName);
+		if(!propertyDescriptor){
+			propertyDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(parentAtom), propertyName);
+		}	
+		
+		if(propertyDescriptor){
+			if(propertyDescriptor.set && (!propertyDescriptor.get)){
+				throw Error('In order to bind a property it must not have a setter only. Please add a getter or remove the setter.');
+			}
+		}
 
 		let privateValue = parentAtom[propertyName];
 
@@ -190,33 +203,83 @@ export default class TreezElement extends HTMLElement {
 		   parentAtom, 
 		   propertyName, 
 		   {
-			get: __getPropertyValueProxy,
-			set: __setPropertyValueProxy,
+			get: __createPropertyValueGetProxy(),
+			set: __createPropertyValueSetProxy(),
 			configurable: true					
 		   }
 		);
 	
-		function __getPropertyValueProxy(){
+		function __createPropertyValueGetProxy(){
 			let propertyAlreadyHasAGetter = propertyDescriptor && (propertyDescriptor.get !== undefined);
 			if(propertyAlreadyHasAGetter){
-				return propertyDescriptor.get();
+				return propertyDescriptor.get;
 			} else {
-				return privateValue;
+				return () => privateValue;
 			}
 		}
 
-		function __setPropertyValueProxy(newValue){
-			   
-			let oldValue = privateValue;
-			if(newValue != oldValue){
-				let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
-				 if(propertyAlreadyHasASetter){
-					propertyDescriptor.set(newValue);
-				 } 
-				 privateValue = newValue;
-				 self.value = newValue;																		         
-			}     
-		}	
+		function __createPropertyValueSetProxy(){			   
+			
+			let propertyAlreadyHasASetter = propertyDescriptor && (propertyDescriptor.set !== undefined);
+			if(propertyAlreadyHasASetter){
+				return __createPropertyValueSetProxyForExistingSetter(propertyDescriptor.set);					 
+			} else {
+				return __createNewPropertyValueSetProxy();				
+			}				
+
+			function __createPropertyValueSetProxyForExistingSetter(setter){
+				if(setter.subscribers){
+					return __createPropertyValueSetProxyForExistingTreezSetter(setter);						
+				} else {
+					return __createPropertyValueSetProxyForExistingExternalSetter(setter);
+				}			   
+			}
+
+			function __createPropertyValueSetProxyForExistingTreezSetter(setter){
+				if(setter.subscribers.indexOf(self) > -1){
+					//this element already has been binded to the atom; reuse existing setter
+					return setter;
+				} else {
+					//another element already has been binded to the atom; create extended setter
+					var setProxy = (newValue) => {
+						let oldValue = privateValue;
+						if(newValue != oldValue){							
+							setter.call(parentAtom, newValue); //call is used because setter(newValue) would not work due to missing this context
+							privateValue = newValue;
+							self.value = newValue;
+						} 
+					 };
+					 setProxy.subscribers = setter.subscribers.concat([self]);
+					 return setProxy;
+				}				
+			}
+
+			function __createPropertyValueSetProxyForExistingExternalSetter(setter){
+				var setProxy = (newValue) => {
+					let oldValue = privateValue;
+					if(newValue != oldValue){
+						setter.call(parentAtom, newValue);
+						privateValue = newValue;
+						self.value = newValue;
+					}
+				 };
+				 setProxy.subscribers = [self];
+				 return setProxy;
+			}
+			
+			function __createNewPropertyValueSetProxy(){
+				var setProxy = (newValue) => {
+					let oldValue = privateValue;
+					if(newValue != oldValue){						
+						privateValue = newValue;
+						self.value = newValue;
+					}
+				 };
+				 setProxy.subscribers = [self];
+				 return setProxy;
+			}
+
+		}		
 				
 	}
 
