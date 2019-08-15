@@ -20,8 +20,8 @@
     "requirejs": "2.3.6"
   },
   "scripts": {
-    "test": "jest --watch",
-    "test-coverage": "jest --coverage --collectCoverageFrom src/**/*.js --watch",
+    "test": "jest --runInBand",
+    "test-coverage": "jest --coverage --collectCoverageFrom src/**/*.js",
     "debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --watch --runInBand"
   }
 }
