@@ -22,6 +22,6 @@
   "scripts": {
     "test": "jest --runInBand",
     "test-coverage": "jest --coverage --collectCoverageFrom src/**/*.js",
-    "debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --watch --runInBand"
+    "debug": "chrome && node --inspect-brk ./node_modules/jest/bin/jest.js --watch --runInBand"
   }
 }

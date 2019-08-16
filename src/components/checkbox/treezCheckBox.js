@@ -66,7 +66,7 @@ export default class TreezCheckBox extends LabeledTreezElement {
    
     hideElements(booleanValue){
     	if(this.__container){   
-    		this.hide(this.__container, booleanValue);                		
+    		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}
     }                
               

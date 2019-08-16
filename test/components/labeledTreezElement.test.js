@@ -67,7 +67,7 @@ describe('LabeledTreezElement', ()=>{
                         innerText: ''
                     };
 
-                    element.__labelElement = labelElementMock                   
+                    element.__label = labelElementMock                   
 
                     element.attributeChangedCallback('label','oldStringValueMock','newStringValueMock');
 

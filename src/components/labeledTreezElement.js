@@ -4,7 +4,8 @@ export default class LabeledTreezElement extends TreezElement {
 	
 	constructor(){
 		super();
-		this.__labelElement=undefined; //should be created by inheriting class
+		this.__label=undefined; //this label-element should be created by inheriting classes
+		                        //it should have a property "innerText" that defines the label text
 	} 
 
 	static get observedAttributes() {
@@ -15,8 +16,8 @@ export default class LabeledTreezElement extends TreezElement {
     	super.attributeChangedCallback(attr, oldStringValue, newStringValue)                	     	      
     	
         if(attr==='label'){
-        	if(this.__labelElement){
-        		 this.__labelElement.innerText= newStringValue;   
+        	if(this.__label){
+        		 this.__label.innerText= newStringValue;   
         	}                                           
         }	                   
     }  
