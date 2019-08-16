@@ -96,7 +96,7 @@ export default class TreezImageComboBox extends TreezComboBox {
    
     hideElements(booleanValue){
     	if(this.__container){                 		
-    		this.hide(this.__container, booleanValue); 
+    		LabeledTreezElement.hide(this.__container, booleanValue); 
     	}
     }	
 

@@ -14,7 +14,11 @@ export default class SqLiteAppender extends Model {
 
 		this.sourceFilePath = 'C:/output.sqlite';
 		this.targetFilePath = 'C:/cumulatedOutput.sqlite';
-        this.password = '';        
+				
+		this.isAppendingExplicitTables = false;
+		this.explicitTableNames = [];
+
+		this.__explicitTableNamesSelection = undefined;
         
 	}	
 
@@ -47,7 +51,18 @@ export default class SqLiteAppender extends Model {
 		sectionContent.append('treez-file-path')
 	        .label('Target') 
 	        .nodeAttr('pathMapProvider', this)
-	        .bindValue(this,()=>this.targetFilePath); 		
+			.bindValue(this,()=>this.targetFilePath); 
+			
+		sectionContent.append('treez-check-box')
+	        .label('Only append explicit tables') 
+	        .onChange(()=>this.__showOrHideDependendComponents())	       
+			.bindValue(this,()=>this.isAppendingExplicitTables); 
+			
+		this.__explicitTableNamesSelection = sectionContent.append('treez-string-list')
+	        .label('Names of tables to append') 	       
+	        .bindValue(this,()=>this.explicitTableNames);
+
+	    this.__showOrHideDependendComponents();
 	}
 	
 
@@ -61,7 +76,10 @@ export default class SqLiteAppender extends Model {
 		                     '" (studyId: ' + this.studyId + ', jobId: ' + this.jobId + ').';
 		monitor.info(startMessage);
 
-		var tableNames = await SqLiteImporter.tableNames(this.fullPath(this.sourceFilePath), this.password);		
+		var tableNames = this.isAppendingExplicitTables
+			?this.explicitTableNames
+			:await SqLiteImporter.tableNames(this.fullPath(this.sourceFilePath), this.password);	
+				
 		monitor.totalWork = tableNames.length;			
 		
 		for(var tableName of tableNames){
@@ -74,6 +92,16 @@ export default class SqLiteAppender extends Model {
 
 		return null;
     } 
+
+	__showOrHideDependendComponents(){
+		if(this.isAppendingExplicitTables){
+			this.__explicitTableNamesSelection.show();
+		} else {
+			this.__explicitTableNamesSelection.hide();
+		}
+	}
+
+    
     
     async __appendTable(tableName){
 

@@ -51,8 +51,8 @@ export default class TreezTextArea extends LabeledTreezElement {
    
     hideElements(booleanValue){
     	if(this.__label){   
-    		this.hide(this.__label, booleanValue);
-    		this.hide(this.__container, booleanValue); 
+    		LabeledTreezElement.hide(this.__label, booleanValue);
+    		LabeledTreezElement.hide(this.__container, booleanValue); 
     	}
     }
                               

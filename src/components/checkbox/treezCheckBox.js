@@ -42,23 +42,9 @@ export default class TreezCheckBox extends LabeledTreezElement {
     	if(this.__checkBox){  
 			this.__checkBox.checked = booleanValue;
     	}
-    }	
-    
-    __checkBoxChanged(){
-    	this.value = this.__checkBox.checked;                	
-    }  
-    
-    convertFromStringValue(stringValue){
-		return !(stringValue === null);
-	}
+	}	
 	
-	convertToStringValue(booleanValue){
-		return booleanValue
-				?''
-				:null;						
-	}
-   
-    disableElements(booleanValue){
+	disableElements(booleanValue){
     	if(this.__checkBox){   
     		this.__checkBox.disabled = booleanValue;
     	}
@@ -68,7 +54,21 @@ export default class TreezCheckBox extends LabeledTreezElement {
     	if(this.__container){   
     		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}
-    }                
+    }  
+       
+    convertFromStringValue(stringValue){
+		return !(stringValue === null);
+	}
+	
+	convertToStringValue(booleanValue){
+		return booleanValue
+				?''
+				:null;						
+	}
+
+	__checkBoxChanged(){
+    	this.value = this.__checkBox.checked;                	
+    }                 
               
 }
 

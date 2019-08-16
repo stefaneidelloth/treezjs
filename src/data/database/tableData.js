@@ -17,7 +17,7 @@ export default class TableData {
 		for(var line of lines){	
 			if(line){
 				var cells = line.trim().split(columnSeparator);
-				cells.shift(); //removes index column
+				//cells.shift(); //removes index column
 				data.push(cells);
 			}	
 		}

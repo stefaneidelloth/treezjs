@@ -112,8 +112,8 @@ export default class TreezModelPath extends LabeledTreezElement {
    
     hideElements(booleanValue){
     	if(this.__label){ 
-    		this.hide(this.__label, booleanValue);
-    		this.hide(this.__comboBox, booleanValue); 
+    		LabeledTreezElement.hide(this.__label, booleanValue);
+    		LabeledTreezElement.hide(this.__comboBox, booleanValue); 
     	}
     }	
     

@@ -7,6 +7,7 @@ export default class TreeView {
 
 	constructor(treez){
 		this.__treez = treez;	
+		this.dTreez = treez.dTreez;
 		this.content = undefined;	
 		this.__lastAtomShownInPropertiesView = undefined;
 	}
