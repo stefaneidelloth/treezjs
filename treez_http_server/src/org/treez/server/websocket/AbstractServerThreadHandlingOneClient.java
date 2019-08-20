@@ -192,13 +192,22 @@ public abstract class AbstractServerThreadHandlingOneClient extends Thread {
 						}
 						
 						try(var jsonReader = Json.createReader(new StringReader(message))){
-							var jsonObject = jsonReader.readObject();
+							JsonObject jsonObject;
+							try {
+								jsonObject = jsonReader.readObject();
+							} catch(Exception exception) {
+								System.out.println("Could not parse byte message:" + message);
+								
+								continue;
+							}
+							
 							var command = jsonObject.getString("command");
 							
 							if(!command.isEmpty()) {
 							
 								try {
 									handleClientMessage(command);
+									System.out.println("");
 								} catch (Exception exception) {
 									throw new IllegalStateException("Could not handle client message " + message, exception);
 								}

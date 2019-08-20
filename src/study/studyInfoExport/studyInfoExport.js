@@ -8,7 +8,7 @@ export default class StudyInfoExport extends Model {
 		this.image = 'studyInfoExport.png';
 		this.isRunnable = true;
 
-		this.type = StudyInfoExportType.textFile;
+		this.targetType = StudyInfoExportType.textFile;
 		this.filePath = '';
 		this.host = '';
 		this.port = '';
@@ -16,6 +16,8 @@ export default class StudyInfoExport extends Model {
 		this.password = '';
 		this.schema = '';
 
+		this.__studyInfoTableName = 'study_info';
+		this.__jobInfoTableName = 'job_info';
 		this.__filePathSelection = undefined;	
 		this.__hostSelection = undefined;		
 		this.__portSelection = undefined;		
@@ -41,14 +43,12 @@ export default class StudyInfoExport extends Model {
 		monitor.totalWork = 1;	
 		
 		var study = this.parent;
-	    var inputGenerator = study.modelInputGenerator;
+	    var inputGenerator = study.inputGenerator;
 		await this.__exportStudyInfo(inputGenerator, monitor);
 	
 		monitor.done();
 		
     }  
-
-
 	
 	__createStudyInfoSection(tab) {
 
@@ -71,9 +71,9 @@ export default class StudyInfoExport extends Model {
 
         sectionContent.append('treez-enum-combo-box')
             .label('Type')           
-            .onChange(() => this.__showAndHideDependentComponents())	
+            .onChange(() => this.__showAndHideDependentComponents())	            
             .nodeAttr('options', StudyInfoExportType)
-            .bindValue(this,()=>this.type);
+            .bindValue(this,()=>this.targetType);
 
         this.__filePathSelection = sectionContent.append('treez-file-path')
             .label('File path')  
@@ -108,7 +108,7 @@ export default class StudyInfoExport extends Model {
 
 	__showAndHideDependentComponents(){
 
-		switch (this.type) {
+		switch (this.targetType) {
 			case StudyInfoExportType.textFile:
 				this.__filePathSelection.show();
 				this.__hostSelection.hide();
@@ -134,15 +134,15 @@ export default class StudyInfoExport extends Model {
 				this.__schemaSelection.show();
 				break;
 			default:
-				throw new Error('The export type "' + this.type + '" has not yet been implemented.');
+				throw new Error('The export type "' + this.targetType + '" has not yet been implemented.');
 			}
 
 		
 	}
 
-	__exportStudyInfo(modelInputGenerator, monitor) {		
+	async __exportStudyInfo(inputGenerator, monitor) {		
 
-		switch (this.type) {
+		switch (this.targetType) {
 		
 			case StudyInfoExportType.textFile:
 				if (!this.filePath) {
@@ -151,7 +151,7 @@ export default class StudyInfoExport extends Model {
 					monitor.warn(message);
 					return;
 				}
-				modelInputGenerator.exportStudyInfoToTextFile(filePath);
+				inputGenerator.exportStudyInfoToTextFile(this.filePath);
 				monitor.info('Exported study info totextfile: ' + this.filePath);
 				return;
 			case StudyInfoExportType.sqLite:
@@ -161,117 +161,157 @@ export default class StudyInfoExport extends Model {
 					monitor.warn(message);
 					return;
 				}
-				this.__exportStudyInfoToSqLiteDatabase(modelInputGenerator, this.filePath);
-				monitor.info('Exported study info to SqLite database: ' + filePath);
+				await this.__exportStudyInfoToSqLiteDatabase(inputGenerator)
+				.catch(error=>{
+					console.log(error);
+				});
+				monitor.info('Exported study info to SqLite database: ' + this.filePath);
 				return;
 			case StudyInfoExportType.mySql:
-				this.__exportStudyInfoToMySqlDatabase(modelInputGenerator);
+				await this.__exportStudyInfoToMySqlDatabase(inputGenerator);
 				var message = 'Exported study info to MySql database: ' + this.host + ':' + this.port + '/' + this.schema;
 				monitor.info(message);
 				break;
 			default:
-				var message = 'The export type "' + exportType + '" has not yet been implemented.';
+				var message = 'The export type "' + this.exportType + '" has not yet been implemented.';
 				throw new Error(message);
 		}
 
 	}
 
-	__exportStudyInfoToSqLiteDatabase(modelInputGenerator, filePath) {
-		var database = new SqLiteDatabase(filePath);
-		this.__writeStudyInfo(modelInputGenerator, database);
-		this.__writeJobInfo(modelInputGenerator, database);
-
+	async __exportStudyInfoToSqLiteDatabase(inputGenerator) {	
+	    var a=1;		
+		await this.__writeSqLiteStudyInfo(inputGenerator);
+		await this.__writeSqLiteJobInfo(inputGenerator);
 	}
 
-	__exportStudyInfoToMySqlDatabase(inputGenerator) {
-		var url = this.host + ':' + this.port;
-		var database = new MySqlDatabase(url, this.user, this.password);
-		this.__writeStudyInfo(inputGenerator, database, this.schema);
-		this.__writeJobInfo(inputGenerator, database, this.schema);
+	async __exportStudyInfoToMySqlDatabase(inputGenerator) {		
+		await this.__writeMySqlStudyInfo(inputGenerator);
+		await this.__writeMySqlJobInfo(inputGenerator);
 	}
 
-	__writeStudyInfo(inputGenerator, database) {
-		var studyInfoTableName = "study_info";
-		createStudyInfoTableIfNotExists(database, studyInfoTableName);
-		deleteOldEntriesForStudyIfExist(database, studyInfoTableName);
-		inputGenerator.fillStudyInfo(database, studyInfoTableName, getStudyIdFromParent());
+	async __writeSqLiteStudyInfo(inputGenerator) {		
+		await this.__createSqLiteStudyInfoTableIfNotExists(this.connectionString, this.__studyInfoTableName);
+		await this.__deleteOldSqLiteEntriesForStudyIfExist(this.connectionString, this.__studyInfoTableName);
+		await inputGenerator.fillSqLiteStudyInfo(this.connectionString, this.__studyInfoTableName);
+	}	
+
+	async __writeMySqlStudyInfo(inputGenerator) {		
+		await this.__createMySqlStudyInfoTableIfNotExists(this.connectionString, this.__studyInfoTableName);
+		await this.__deleteOldMySqlEntriesForStudyIfExist(this.connectionString, this.__studyInfoTableName);
+		await inputGenerator.fillMySqlStudyInfo(this.connectionString, this.schema, this.__studyInfoTableName);
 	}
 
-	__writeStudyInfo(inputGenerator, database, schema) {
-		var studyInfoTableName = "study_info";
-		createStudyInfoTableIfNotExists(database, schema, studyInfoTableName);
-		deleteOldEntriesForStudyIfExist(database, schema, studyInfoTableName);
-		inputGenerator.fillStudyInfo(database, schema, studyInfoTableName, getStudyIdFromParent());
+	async __createSqLiteStudyInfoTableIfNotExists(connectionString, tableName) {
+		var query = "CREATE TABLE IF NOT EXISTS '" + tableName
+				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, variable TEXT, value TEXT);";
+		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
+		.catch((error)=>{
+					console.log(error);
+				});
 	}
 
-	__createStudyInfoTableIfNotExists(database, tableName) {
-		var query = 'CREATE TABLE IF NOT EXISTS ´' + tableName
-				+ '´ (id INTEGER PRIMARY KEY NOT NULL, study TEXT, variable TEXT, value TEXT);';
-		database.execute(query);
-	}
-
-	__createStudyInfoTableIfNotExists(database, schema, tableName) {
+	async __createMySqlStudyInfoTableIfNotExists(connectionString, schema, tableName) {
 		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
-		database.execute(query);
+		await database.mySqLQuery(connectionString, query, false)
+		.catch((error)=>{
+					console.log(error);
+				});
 	}
 
-	__deleteOldEntriesForStudyIfExist(database, tableName) {
-		var query = "DELETE FROM '" + tableName + "' WHERE study = '" + getStudyIdFromParent() + "';";
-		database.execute(query);
+	async __deleteOldSqLiteEntriesForStudyIfExist(connectionString, tableName) {
+		var query = "DELETE FROM '" + tableName + "' WHERE study = '" + this.studyId + "';";
+		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
+		.catch((error)=>{
+					console.log(error);
+				});
 	}
 
-	__deleteOldEntriesForStudyIfExist(database, schema, tableName) {
+	async __deleteOldMySqlEntriesForStudyIfExist(connectionString, schema, tableName) {
 		var query = "DELETE FROM `" + schema + "`.`" + tableName + "` WHERE study = '" + getStudyIdFromParent()
 				+ "';";
-		database.execute(query);
+		await window.treezTerminal.mySqlQuery(connectionString, query, false)
+		.catch((error)=>{
+					console.log(error);
+				});
 	}
 
-	__writeJobInfo(inputGenerator, database) {
-		var jobInfoTableName = "job_info";
-		createJobInfoTableIfNotExists(database, jobInfoTableName);
-		deleteOldEntriesForStudyIfExist(database, jobInfoTableName);
-		var studyId = getStudyIdFromParent();
-
-		for (var modelInput of inputGenerator.createModelInputs()) {
-			var jobId = modelInput.getJobId();
-			varvariablePaths = modelInput.all;
+	async __writeSqLiteJobInfo(inputGenerator) {
+		
+		await this.__createSqLiteJobInfoTableIfNotExists(this.connectionString, this.__jobInfoTableName);
+		await this.__deleteOldSqLiteEntriesForStudyIfExist(this.connectionString, this.__jobInfoTableName);
+		
+		var studyId = this.studyId;
+		for (var modelInput of inputGenerator.modelInputs) {
+			var jobId = modelInput.jobId;
+			var variablePaths = modelInput.all;
 			for (var variablePath of variablePaths) {
-				var value = modelInput.getVariableValue(variablePath);
-				var query = "INSERT INTO '" + jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
+				var value = modelInput.get(variablePath);
+				var query = "INSERT INTO '" + this.__jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
 						+ "', '" + variablePath + "','" + value + "')";
-				database.execute(query);
+				await window.treezTerminal.sqLiteQuery(this.connectionString, query, false)
+				.catch((error)=>{
+					console.log(error);
+				});
 			}
 		}
 	}
 
-	__writeJobInfo(inputGenerator, database, schema) {
-		var jobInfoTableName = "job_info";
-		createJobInfoTableIfNotExists(database, schema, jobInfoTableName);
-		deleteOldEntriesForStudyIfExist(database, schema, jobInfoTableName);
-		var studyId = getStudyIdFromParent();
+	async __writeMySqlJobInfo(inputGenerator) {
+		
+		await this.__createMySqlJobInfoTableIfNotExists(this.connectionString, this.schema, this.__jobInfoTableName);
+		await this.__deleteOldMySqlEntriesForStudyIfExist(this.connectionString, this.schema, this.jobInfoTableName);
+		var studyId = this.studyId;
 		for (var modelInput of inputGenerator.createModelInputs()) {
 			var jobId = modelInput.getJobId();
 			var variablePaths = modelInput.all;
 			for (var variablePath of variablePaths) {
-				var value = modelInput.getVariableValue(variablePath);
-				var query = "INSERT INTO `" + schema + "`.`" + jobInfoTableName + "` VALUES(null, '" + studyId
+				var value = modelInput.get(variablePath);
+				var query = "INSERT INTO `" + this.schema + "`.`" + this.__jobInfoTableName + "` VALUES(null, '" + studyId
 						+ "', '" + jobId + "', '" + variablePath + "','" + value + "')";
-				database.execute(query);
+				await window.treezTerminal.mySqlQuery(this.connectionString, query, false)
+				.catch((error)=>{
+					console.log(error);
+				});			
 			}
 		}
 	}
 
-	__createJobInfoTableIfNotExists(database, tableName) {
+	async __createSqLiteJobInfoTableIfNotExists(connectionString, tableName) {
 		var query = "CREATE TABLE IF NOT EXISTS '" + tableName
 				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, job TEXT, variable TEXT, value TEXT);";
-		database.execute(query);
+		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
+			.catch((error)=>{
+				console.log(error);
+			});
 	}
 
-	__createJobInfoTableIfNotExists(database, schema, tableName) {
+	async __createMySqlJobInfoTableIfNotExists(connectionString, schema, tableName) {
 		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, job TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
-		database.execute(query);
+		await window.treezTerminal.mySqlQuery(connectionString, query, false)
+		.catch((error)=>{
+					console.log(error);
+				});
 	}	
+
+	get connectionString(){
+		switch(this.targetType){
+			case StudyInfoExportType.textFile:
+				throw new Error('Text file should not need a connection string.')
+			case StudyInfoExportType.sqLite:				
+				return this.fullPath(this.filePath);
+			case StudyInfoExportType.mySql:
+				return this.host + ':' + this.port; //TODO check this
+			default:
+				var message = 'The export type "' + this.exportType + '" has not yet been implemented.';
+				throw new Error(message);
+		}
+	}
+
+	get studyId(){
+		return this.parent.id;
+	}
 
 }

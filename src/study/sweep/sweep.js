@@ -10,6 +10,7 @@ import StringRange from './../../variable/range/stringRange.js';
 import StringItemRange from './../../variable/range/stringItemRange.js';
 import FilePathRange from './../../variable/range/filePathRange.js';
 import DirectoryPathRange from './../../variable/range/directoryPathRange.js';
+import StudyInfoExport from './../studyInfoExport/studyInfoExport.js';
 
 export default class Sweep extends Study {	
 		

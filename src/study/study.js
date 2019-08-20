@@ -124,10 +124,10 @@ export default class Study extends ComponentAtom {
 		monitor.info(startMessage);		
 	
 		var studyTitle = "Running " + className;
-		monitor.title = studyTitle;
+		monitor.title = studyTitle;		
 
 		var numberOfSimulations = this.inputGenerator.numberOfSimulations;
-		monitor.totalWork = numberOfSimulations;
+		monitor.totalWork = numberOfSimulations + this.numberOfRunnableChildren;
 				
 		monitor.info("Total number of simulations: " + numberOfSimulations);
 
@@ -158,11 +158,13 @@ export default class Study extends ComponentAtom {
 			} else {
 				await this.__executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, studyOutputAtom, monitor, jobFinishedHook);
 			}
-		}		
+		}
+
+				
 	}
 	
 	
-	__finishOrCancelIfDone(treeView, monitor) {
+	async __finishOrCancelIfDone(treeView, monitor) {
 
 		if (this.__isCanceled) {
 				return;
@@ -191,6 +193,7 @@ export default class Study extends ComponentAtom {
 			if (monitor.isChildCanceled) {
 				monitor.cancel();
 			} else {
+				await this.__runExecutableChildren(treeView, monitor);
 				monitor.done();
 			}
 
@@ -198,6 +201,16 @@ export default class Study extends ComponentAtom {
 
 			this.__logEndMessage(monitor);
 		}
+	}
+
+	async __runExecutableChildren(treeView, monitor){
+		for (const child of this.children){
+			if(child.isRunnable){
+				var subMonitor = monitor.createChild(child.name, treeView, child.name, 1);					
+				await child.execute(treeView, subMonitor);
+			}
+		}	
+
 	}
 
 	__executeTargetModelConcurrently(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {

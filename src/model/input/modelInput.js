@@ -1,6 +1,4 @@
 export default class ModelInput {
-	
-	//nextId is defined below class definition
 
 	constructor(studyModelPath, studyId, studyDescription, jobId, totalNumberOfJobs) {
 		this.studyModelPath = studyModelPath;
@@ -11,29 +9,11 @@ export default class ModelInput {
 		
 		this.totalNumberOfJobs = totalNumberOfJobs;
 		
-		this.__variableModelPathToValueMap = {};
-		
-	}
-	
-	static getNextId() {
-		var currentNextId = ModelInput.nextId;
-		 ModelInput.nextId++;
-		return currentNextId;
-	}
+		this.__variableModelPathToValueMap = {};		
+	}	
 
-	static resetIdCounter() {
-		ModelInput.nextId = 1;
-	}
-	
-	
-
-	increaseJobId() {
-		this.jobId = ModelInput.getNextId();
-	}
-
-	copy() {
-		var jobId = ModelInput.getNextId();
-		var modelInput = new ModelInput(this.studyModelPath, this.studyId, this.studyDescription, jobId, this.totalNumberOfJobs);
+	copy() {		
+		var modelInput = new ModelInput(this.studyModelPath, this.studyId, this.studyDescription, this.jobId, this.totalNumberOfJobs);
 		modelInput.__variableModelPathToValueMap = this.__copyMap(this.__variableModelPathToValueMap);
 		return modelInput;
 	}
@@ -73,4 +53,4 @@ export default class ModelInput {
 
 }
 
-ModelInput.nextId = 1;
+

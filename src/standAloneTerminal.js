@@ -5,7 +5,8 @@ export default class StandAloneTerminal {
 
 		this.__onMessage =  undefined;
 		this.__onError =  undefined;
-		this.__onFinished = undefined;		
+		this.__onFinished = undefined;
+		this.__isExecutingQuery = false;		
 		
 		this.__webSocket= new WebSocket("ws://localhost:8001/");    				
 		  
@@ -66,9 +67,9 @@ export default class StandAloneTerminal {
 		this.__onError = errorHandler;
 		this.__onFinished = finishedHandler;
 		this.__send(command + " & exit");	
-	}		
+	}	
 
-	async sqLiteQuery(connectionString, query, isExpectingOutput) {			
+	async mySqlQuery(connectionString, query, isExpectingOutput) {			
 
 		if(isExpectingOutput){
 			
@@ -81,9 +82,9 @@ export default class StandAloneTerminal {
 					resolve(tableArray);
 				};
 				self.__onError = (message) => reject(message);
-				self.__onFinished = () => resolve('SqLite query finished.');
+				self.__onFinished = () => resolve('MySql query finished.');
 				
-				self.__sendQuery('sqlite:' + connectionString, query);	
+				self.__sendQuery('mysql:' + connectionString, query);	
 			}); 
 
 			throw new Error('Not yet implemented');           
@@ -96,6 +97,56 @@ export default class StandAloneTerminal {
 				self.__onMessage = (message) => resolve(message);
 				self.__onError = (message) => reject(message);
 				self.__onFinished = resolve();
+				
+				self.__sendQuery("mysql:" + connectionString, query);	
+			}); 			
+				
+		}
+	}	
+
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {	
+		
+		var self = this;
+
+		if(self.__isExecutingQuery){
+			throw new Error('There is a running query. Must await previous query before starting a new query.');
+		} else {
+			self.__isExecutingQuery = query;
+		}
+
+		if(isExpectingOutput){			
+
+			return new Promise(function(resolve, reject) { 			    
+				self.__onMessage = (message) => {
+					
+					var tableArray =  TableData.parseTableTextTo2DArray(message, '|');
+					resolve(tableArray);
+				};
+				self.__onError = (message) => {
+					self.__isExecutingQuery = false;
+					reject(message)
+				};
+
+				self.__onFinished = () => {
+					self.__isExecutingQuery = false;
+					resolve('SqLite query finished.');
+				};
+				
+				self.__sendQuery('sqlite:' + connectionString, query);	
+			}); 			      
+
+		} else {
+
+			return new Promise(function(resolve, reject) { 			    
+				self.__onMessage = (message) => resolve(message);
+				self.__onError = (message) => {
+					self.__isExecutingQuery = false;
+					reject(message)
+				};
+				self.__onFinished = () => {
+					self.__isExecutingQuery = false;
+					resolve();
+				};
 				
 				self.__sendQuery("sqlite:" + connectionString, query);	
 			}); 			

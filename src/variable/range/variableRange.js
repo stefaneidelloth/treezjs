@@ -27,17 +27,11 @@ export default class VariableRange extends ComponentAtom {
 	
 	createVariableControl(parent, dTreez){
     	throw new Error('Must be overridden by inheriting variable class.')
-    }	
-	
-	getSourceModelPath(){
-		var study = this.parent;
-		return study.sourceModelPath;	
-	}
+    }
 	
 	createCodeAdaption(){
 		return new VariableRangeCodeAdaption(this);
-	}
-		
+	}		
 	
 	get values(){
 		return eval(this.__rangeString);
@@ -53,6 +47,11 @@ export default class VariableRange extends ComponentAtom {
 
 	set value(array){
 		this.values = array;		
+	}
+
+	get sourceModelPath(){
+		var study = this.parent;
+		return study.sourceModelPath;	
 	}
 	
 		

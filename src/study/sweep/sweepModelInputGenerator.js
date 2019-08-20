@@ -10,49 +10,72 @@ export default class SweepModelInputGenerator {
 	exportStudyInfoToTextFile(filePath) {
 		
 		var studyInfo = '---------- StudyInfo ----------\r\n\r\n' + //
-				'Total number of simulations:\r\n' + this.numberOfSimulations + '\r\n\r\n' + //
-				'Variable model paths and values:\r\n\r\n';
+				'#Total number of simulations:\r\n' + this.numberOfSimulations + '\r\n\r\n' + //
+				'#Variable model paths and values:\r\n\r\n';
 		
 		this.enabledRanges.forEach(range => {
-			var variablePath = range.sourceVariableModelPath;
-			studyInfo += variablePath + '\r\n';
+			if(range.values.length>0){
+				var variablePath = range.variablePath;
+				studyInfo += variablePath + '\r\n';
+
+				range.values.forEach(value=>{
+					studyInfo += '' + value + '\r\n';
+				});
+
+				studyInfo += '\r\n';
+			} else {
+				var variablePath = range.variablePath;
+				studyInfo += variablePath + ' (warning: range is empty: [])\r\n';
+			}
 			
-			range.values.forEach(value=>{
-				studyInfo += '' + value + '\r\n';
-			});
-			
-			studyInfo += '\r\n';
 		});		
 
+		studyInfo += '---------- JobInfo ------------\r\n\r\n';
+		studyInfo += '\r\n';
+
+		for (var modelInput of this.modelInputs) {
+			var jobId = modelInput.jobId;
+			studyInfo += 'jobId: ' + jobId + '\r\n';
+			var variablePaths = modelInput.all;
+			for (var variablePath of variablePaths) {
+				var value = modelInput.get(variablePath);
+				studyInfo += variablePath + ': ' + value + '\r\n';				
+			}
+			studyInfo += '\r\n';
+		}
+
 		try {
-			window.treezTerminal.writeFile(filePath, studyInfo);
+			window.treezTerminal.writeTextFile(filePath, studyInfo);
 		} catch (error) {
 			var message = 'Could not export study info to "' + filePath + '". Maybe the path is not valid.';
-			console.error(message);
+			console.error(message, error);
 		}
 	}
 
-	fillStudyInfo(database, tableName, studyId) {	
-		this.enabledRanges.forEach(range=>{
-			var variablePath = range.sourceVariableModelPath;
-			range.values.forEach(value=>{
-				var query = 'INSERT INTO `' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
-				database.execute(query);
-			});
-			
-		});
-		
+	async fillSqLiteStudyInfo(connectionString, tableName) {
+		for (var range of this.enabledRanges){
+			var variablePath = range.variablePath;
+			for (var value of range.values){
+				var query = "INSERT INTO '" + tableName + "' VALUES(null, '" + this.studyId + "', '" + variablePath + "','" + value + "')";
+				await window.treezTerminal.sqLiteQuery(connectionString, query, false)
+				.catch((error)=>{
+					console.log(error);
+				});
+			}			
+		}		
 	}
 
-	fillStudyInfoForSchema(database, schemaName, tableName, studyId) {		
-		this.enabledRanges.forEach(range=>{
-			var variablePath = range.sourceVariableModelPath;
-			range.values.forEach(value=>{
-				var query = 'INSERT INTO `' + schemaName + '.' + tableName + '` VALUES(null, "' + studyId + '", "' + variablePath + '","' + value + '")';
-				database.execute(query);
-			});
-			
-		});		
+	async fillMySqlStudyInfo(connectionString, schemaName, tableName) {		
+		for (var range of this.enabledRanges){
+			var variablePath = range.variablePath;
+			for (var value of range.values){
+				var query = 'INSERT INTO `' + schemaName + '.' + tableName + '` VALUES(null, "' + this.studyId + '", "' + variablePath + '","' + value + '")';
+				await window.treezTerminal.mySqlQuery(connectionString, query, false)
+				.catch((error)=>{
+					console.log(error);
+				});
+			}			
+		}		
 	}	
 	
 	__createModelInputs(variableRanges) {
@@ -65,63 +88,63 @@ export default class SweepModelInputGenerator {
 			var firstRange = variableRanges[0];
 			var remainingRanges = variableRanges.slice(1, variableRanges.length);
 			
-			var variableModelPath = firstRange.variablePath;
+			var variableModelPath = firstRange.variablePath;			
 			
-			var study = firstRange.parent;
-			var studyId = study.id;
-			var studyDescription = study.description;
-
 			firstRange.values.forEach(value=>{
 				//create model input that initially contains the current value
-				var dummyJobId = -1;
-				var initialInput = self.__createInitialModelInput(variableModelPath, studyId, studyDescription, value, dummyJobId, totalNumberOfJobs);
+				
+				var inputBlueprint = self.__createModelInputBlueprint(variableModelPath, this.studyId, this.studyDescription, value, totalNumberOfJobs);
 
-				//copy and extended the initial model input using the remaining variable values
-				var modelInputsWithCurrentValue = self.__extendModelInputs(initialInput, remainingRanges);
+				//copy and extended the model input blueprint, using the remaining variable values
+				var modelInputsWithCurrentValue = self.__extendModelInputs(inputBlueprint, remainingRanges);
 				modelInputs = modelInputs.concat(modelInputsWithCurrentValue);
 			});
 			
 		}
+
+		var counter = 1;
+		for(var modelInput of modelInputs){
+			modelInput.jobId = counter;
+			counter++;
+		}
 		return modelInputs;
 	}
 
-	__extendModelInputs(initialInput, variableRanges) {
+	__extendModelInputs(inputBlueprint, variableRanges) {
 		
 		var self=this;
 		var modelInputs = [];
+		
+		//the model input blueprint needs to be duplicated and extended using the remaining variable ranges
+		var firstRange = variableRanges[0];
+		var variableModelPath = firstRange.variablePath;
+		var values = firstRange.values;
+		var remainingRanges = variableRanges.slice(1, variableRanges.length);
 
-		var isLastEntry = variableRanges.length === 0;
-		if (isLastEntry) {
-			modelInputs.push(initialInput.copy());
-			return modelInputs;
-		} else {
-			//the initial model input needs to be duplicated and extended using the remaining variable ranges
-			var firstRange = variableRanges[0];
-			var variableModelPath = firstRange.variablePath;
-			var values = firstRange.values;
-			var remainingRanges = variableRanges.slice(1, variableRanges.length);
+		for(var value of values){		
+			
+			var modelInput = inputBlueprint.copy();
 
-			var counter = 1;
-			values.forEach(value=>{
-				//copy initial model input (automatically gets next jobId)
-				var modelInput = initialInput.copy();
+			//add current quantity
+			modelInput.set(variableModelPath, value);
 
-				//add current quantity
-				modelInput.set(variableModelPath, value);
+			if(remainingRanges.length>0){
 				//copy and extend with remaining variable ranges
 				var modelInputsWithCurrentQuantities = self.__extendModelInputs(modelInput, remainingRanges);
-				modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);
-				counter++;				
-			});						
-			return modelInputs;
-		}
+				modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);	
+			} else {
+				modelInputs.push(modelInput);
+			}	
+		}						
+		return modelInputs;		
 	}
 	
-	__createInitialModelInput(variableModelPath, studyId, studyDescription, value, jobId, totalNumberOfJobs) {
+	__createModelInputBlueprint(variableModelPath, studyId, studyDescription, value, totalNumberOfJobs) {
 		var studyModelPath = this.__study.treePath;
-		var initialInput = new ModelInput(studyModelPath, studyId, studyDescription, jobId, totalNumberOfJobs);
-		initialInput.set(variableModelPath, value);
-		return initialInput;
+		var dummyJobId = -1;
+		var inputBlueprint = new ModelInput(studyModelPath, studyId, studyDescription, dummyJobId, totalNumberOfJobs);
+		inputBlueprint.set(variableModelPath, value);
+		return inputBlueprint;
 	}
 	
 	__numberOfSimulations(variableRanges){
@@ -177,6 +200,14 @@ export default class SweepModelInputGenerator {
 
 	get numberOfSimulations() {		
 		return this.__numberOfSimulations(this.enabledRanges);
+	}
+
+	get studyId(){
+		return this.__study.id;
+	}
+
+	get studyDescription(){
+		return this.__study.description;
 	}
 
 }

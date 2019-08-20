@@ -48,23 +48,31 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 
 		System.out.println("#Processing web socket command line command:\n" + message);
 		
-		
+		var exitValue = -1;
+		try {
 
-		printWriter.println(message);
-		
-		readAndHandleProcessOutput(message);
-		
-		while(process.isAlive()) {
+			printWriter.println(message);
+			
 			readAndHandleProcessOutput(message);
+			
+			while(process.isAlive()) {
+				readAndHandleProcessOutput(message);
+			}
+			
+			readAndHandleProcessOutput(message);
+			
+			exitValue = process.exitValue();
+		} catch(Exception exception) {
+			System.out.println("Could not process web socket command line command:");
+			exception.printStackTrace();
+			sendFinishedErrorToClient("Process failed:\n" + exception.getMessage() );
 		}
-		
-		readAndHandleProcessOutput(message);
-		
-		var exitValue = process.exitValue();
 		
 		if(exitValue == 0) {
 			sendFinishedToClient();
-		} else {			
+			System.out.println("#Finished web socket command line command.");
+		} else {
+			System.out.println("Could not handle client message:");
 			sendFinishedErrorToClient("Process failed with exit value " + exitValue );
 		}	
 		
@@ -74,7 +82,7 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 	
 	@Override
 	protected void handleClientQuery(String connectionString, String query) {
-		System.out.println("#Processing web socket query");
+		System.out.println("#Processing web socket query...");
 		System.out.println(connectionString);
 		System.out.println(query);		
 		
@@ -83,6 +91,9 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 			var statement = connection.createStatement();
 		){
 			var hasResults = statement.execute(query);
+			
+			System.out.println("#Web socket query has been executed... processing results");
+			
 			if(hasResults) {
 				var resultSet = statement.getResultSet();
 				
@@ -111,16 +122,19 @@ public class CommandLineServerThread extends AbstractServerThreadHandlingOneClie
 				       tableText += String.join(columnDelimiter, rowEntries) +  rowDelimiter;
 				   }					
 				
-				//System.out.println("Query result:\n" + tableText);
+				System.out.println("Query result:\n" + tableText);
 				
-				sendMessageToClient(tableText);	
+				sendMessageToClient(tableText);				
 			}
 			
+			System.out.println("#Finished web socket query.");
+			sendFinishedToClient();			
 			
 		} catch(Exception exception) {
 			var message = "Could not execute database query '" + query 
 					+ "' with connection string '" + connectionString + "'!";
-			throw new IllegalStateException(message, exception);
+			System.out.println(message);
+			exception.printStackTrace();			
 		}          
 	         
 	}
