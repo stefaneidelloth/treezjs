@@ -2,17 +2,17 @@
 <html>
 
 	<head>			
-		 <link type="text/css" rel="stylesheet" href="treezCheckBox.css" />
+		 <link type="text/css" rel="stylesheet" href="../../../src/components/checkBox/treezCheckBox.css" />
 	</head>
 
 	<body>
 		<treez-check-box label="checkBox:" id="checkBox"></treez-check-box>		
 
 		<script type="module">
-		   import TreezCheckBox from './treezCheckBox.js';
+		   import TreezCheckBox from '../../../src/components/checkBox/treezCheckBox.js';
 
            var checkBox = document.getElementById('checkBox');
-           checkBox.disabled = true;
+           //checkBox.disabled = true;
            checkBox.hidden = false;          
            
            checkBox.label = "Hallo";

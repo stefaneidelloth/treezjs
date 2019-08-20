@@ -1,8 +1,7 @@
 <!doctype html>
 <html>
-
 	<head>
-		<link type="text/css" rel="stylesheet" href="treezColor.css" />		
+		<link type="text/css" rel="stylesheet" href="../../../src/components/color/treezColor.css" />		
 	</head>
 
 	<body>	
@@ -10,13 +9,12 @@
 		<treez-color label="Color: " id="color"></treez-color>
 
 		<script type = "module">
-		    import Color from './color.js';	
-		    import TreezColor from './treezColor.js';	
+		    import Color from '../../../src/components/color/color.js';	
+		    import TreezColor from '../../../src/components/color/treezColor.js';	
 
 			var treezColor = document.getElementById('color');          
            	treezColor.value = Color.blue;    
-		</script>	
-
+		</script>
 		
 	</body>
 </html>
