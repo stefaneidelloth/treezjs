@@ -18,7 +18,7 @@ export default class SelectionManager {
 		this.__updateCtrlState();	
 		var cell = parent[index];
 		if(!this.__ctrlIsPressed){
-			this.__resetSelectionAndHighlighting();
+			this.resetSelectionAndHighlighting();
 		}
 		
 		this.__selectCell(cell);
@@ -36,10 +36,10 @@ export default class SelectionManager {
 	}
 	
 	rowClicked(row, index, parent){		
-		this.__highlightRow(index);		
+		this.highlightRow(index);		
 	}
 
-	__highlightRow(index){
+	highlightRow(index){
 		this.__highlightedRows.push(index);
 
 		this.tableSelection //
@@ -83,7 +83,7 @@ export default class SelectionManager {
 			.classed('highlighted', false);
 	}
 
-	__resetSelectionAndHighlighting(){
+	resetSelectionAndHighlighting(){
 		this.__unselectCells();
 		this.__unHighlightColumns();
 		this.__unHighlightRows();
@@ -121,6 +121,10 @@ export default class SelectionManager {
 	
 	get tableSelection(){
 		return this.__table.tableSelection;
+	}
+
+	get highlightedRowIndices(){
+		return this.__highlightedRows;		
 	}
 
 	get dTreez(){

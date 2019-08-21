@@ -21,7 +21,7 @@ export default class TreezTextLabel extends TreezElement {
     }	
    
     hideElements(booleanValue){                	
-    	LabeledTreezElement.hide(this, booleanValue);            		
+    	TreezElement.hide(this, booleanValue);            		
     }	  
 }
 

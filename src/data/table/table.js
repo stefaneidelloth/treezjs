@@ -76,7 +76,7 @@ export default class Table extends ComponentAtom {
 
         actions.push(new AddChildAtomTreeViewAction(
 							ColumnFolder,
-							'columns',
+							'Columns',
 							'columnFolder.png',
 							parentSelection,
 							this,
@@ -245,7 +245,7 @@ export default class Table extends ComponentAtom {
 		
 		this.__tableSelection = tableSelection;
 		
-		var displayColumns = [{header:'&nbsp;'}].concat(this.columns);
+		var displayColumns = [{header:'&emsp;'}].concat(this.columns);
 				
 		tableSelection.append('thead')			
 			.append('tr')
@@ -258,7 +258,17 @@ export default class Table extends ComponentAtom {
 		
 		var headers = this.headers;
 	   
-	    tableSelection.append('tbody')
+	    this.__recreateTableBody();       
+		
+	}
+
+	__recreateTableBody(){
+
+		this.__tableSelection
+			.selectAll('tbody')
+			.remove();
+
+		this.__tableSelection.append('tbody')
 	        .selectAll('tr')
 	        .data(this.pagedRows).enter()
 	        .append('tr')	
@@ -275,8 +285,7 @@ export default class Table extends ComponentAtom {
 	        })
 	        .onClick((data, index, parent) => this.__selectionManager.cellClicked(data, index, parent))
 	        .onMouseUp((data, index, parent) => this.__selectionManager.cellMouseUp(data, index, parent))
-	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));	       
-		
+	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));
 	}
 	
 	
@@ -414,26 +423,86 @@ export default class Table extends ComponentAtom {
 		.className('treez-table-width-button')
 		.title('Optimize column width')
 		.onClick(()=>this.__optimizeColumnWidth());	
-	}
-	
-	
-	
-	
-	
+	}	
+		
 	__addRow(){
+		var rowIndices = this.__selectionManager.highlightedRowIndices;
+		if(rowIndices.length < 1){
+			this.addEmptyRow();
+		} else {
+			var rowIndex = rowIndices[0];
+			var selectedRow = this.__rows[rowIndex];
+			var newRow = this.createRow(selectedRow.values);
+			this.addRow(newRow);
+		}
+
+		this.__recreateTableBody();
 		
 	}
 	
 	__deleteRow(){
-		
+		var rowIndices = this.__selectionManager.highlightedRowIndices;
+		if(rowIndices.length < 1){
+			alert('Please select a row to be deleted before using the Delete action.');
+			return;
+		} else {
+			var rowIndex = rowIndices[0];
+			this.__rows.splice(rowIndex,1);	
+			this.__selectionManager.resetSelectionAndHighlighting();		
+		}
+
+		this.__recreateTableBody();
 	}
 	
 	__moveRowUp(){
-		
+		var rowIndices = this.__selectionManager.highlightedRowIndices;
+		if(rowIndices.length < 1){
+			alert('Please select a row to be moved up before using the Move up action.');
+			return;
+		} else {
+			var rowIndex = rowIndices[0];
+			var tempRow = this.__rows[rowIndex];
+			if(rowIndex > 0){
+				this.__rows[rowIndex] = this.__rows[rowIndex-1];
+				this.__rows[rowIndex-1] = tempRow;
+				this.__selectionManager.resetSelectionAndHighlighting();
+				this.__selectionManager.highlightRow(rowIndex-1);
+			} else {
+				this.__rows.splice(0, 1);
+				this.__rows.push(tempRow);
+				this.__selectionManager.resetSelectionAndHighlighting();
+				this.__selectionManager.highlightRow(this.__rows.length-1);
+			}			
+					
+		}
+
+		this.__recreateTableBody();
 	}
 	
 	__moveRowDown(){
-		
+		var rowIndices = this.__selectionManager.highlightedRowIndices;
+		if(rowIndices.length < 1){
+			alert('Please select a row to be moved down before using the Move down action.');
+			return;
+		} else {
+			var rowIndex = rowIndices[0];
+			var tempRow = this.__rows[rowIndex];
+			var lastIndex = this.__rows.length -1;
+			if(rowIndex < lastIndex){
+				this.__rows[rowIndex] = this.__rows[rowIndex+1];
+				this.__rows[rowIndex+1] = tempRow;
+				this.__selectionManager.resetSelectionAndHighlighting();
+				this.__selectionManager.highlightRow(rowIndex+1);
+			} else {
+				this.__rows.pop();
+				this.__rows.splice(0,0,tempRow);
+				this.__selectionManager.resetSelectionAndHighlighting();
+				this.__selectionManager.highlightRow(0);
+			}			
+					
+		}
+
+		this.__recreateTableBody();
 	}
 	
 	__optimizeColumnWidth(){
