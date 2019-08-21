@@ -367,8 +367,7 @@ public class CustomSensitivity extends AbstractParameterVariation {
 		//initialize progress monitor
 		monitor.beginTask("", numberOfSimulations);
 
-		//reset job index to 1
-		HashMapModelInput.resetIdCounter();
+		
 
 		//create model inputs
 		List<ModelInput> modelInputs = inputGenerator.createModelInputs();

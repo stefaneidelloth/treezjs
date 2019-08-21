@@ -130,24 +130,16 @@ export default class Study extends ComponentAtom {
 		monitor.totalWork = numberOfSimulations + this.numberOfRunnableChildren;
 				
 		monitor.info("Total number of simulations: " + numberOfSimulations);
-
-		//reset job index to 1
-		ModelInput.resetIdCounter();
-
-		//create model inputs
+				
 		var modelInputs = this.inputGenerator.modelInputs;
-
-		//prepare result structure
+		
 		this.prepareResultStructure(monitor);
 		treeView.refresh();
-
-		//get study output atom		
+		
 		var studyOutputAtom = this.childFromRoot(this.studyOutputAtomPath);
-
-		//remove all old children if they exist
+		
 		studyOutputAtom.removeAllChildren();
-
-		//execute target model for all model inputs
+		
 		this.__numberOfRemainingModelJobs = numberOfSimulations;
 
 		if (!monitor.isCanceled) {
