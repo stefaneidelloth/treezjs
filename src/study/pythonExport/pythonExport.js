@@ -100,14 +100,18 @@ export default class PythonExport extends ComponentAtom {
     			var columnValues = table.getColumnValues(outcomeName);
     						
     			var outcomeReference = "outcomes['" + outcomeName + "']"
-    			pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
-    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), numpy.nan)\n"
-    			              );
+    			
     			
     			var isStringColumn = table.columnType(outcomeName).name === ColumnType.string.name;
     			if(isStringColumn){
+    				pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
+    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), '')\n"
+    			              );
     				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = ['" + columnValues.join("', '") +"']\n"
     			} else {
+    				pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
+    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), numpy.nan)\n"
+    			              );
     				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = [" + columnValues.join(", ") +"]\n"
     			}
     			              
