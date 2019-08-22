@@ -210,7 +210,7 @@ export default class JupyterTerminal {
 						console.error("Could not execute python code.", error);
 						throw error;
 					});
-			return TableData.parseTableTextTo2DArray(text, '|');
+			return TableData.parseTableTextTo2DArray(text, '|', true);
 		} else {
 
 			var pythonCode = '%%python\n' +
@@ -241,7 +241,7 @@ export default class JupyterTerminal {
             + '    print(dtype)\n';		
 		
 		var text = await this.executePythonCode(pythonCode, true);
-		return TableData.parseTableTextTo2DArray(text, ',');		
+		return TableData.parseTableTextTo2DArray(text, ',', false);		
 	}
 	
 

@@ -10,14 +10,16 @@ export default class TableData {
 		this.__extractHeadersFromColumnBlueprints();
 	}
 
-	static parseTableTextTo2DArray(text, columnSeparator){
+	static parseTableTextTo2DArray(text, columnSeparator, isRemovingFirstColumn=false){
 		var lines = text.trim().split('\n');
 
 		var data = [];
 		for(var line of lines){	
 			if(line){
 				var cells = line.trim().split(columnSeparator);
-				//cells.shift(); //removes index column
+				if(isRemovingFirstColumn){
+					cells.shift(); 
+				}				
 				data.push(cells);
 			}	
 		}
