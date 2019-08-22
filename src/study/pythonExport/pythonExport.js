@@ -104,7 +104,7 @@ export default class PythonExport extends ComponentAtom {
     			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), numpy.nan)\n"
     			              );
     			
-    			var isStringColumn = table.columnType(outcomeName) === ColumnType.string;
+    			var isStringColumn = table.columnType(outcomeName).name === ColumnType.string.name;
     			if(isStringColumn){
     				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = ['" + columnValues.join("', '") +"']\n"
     			} else {
