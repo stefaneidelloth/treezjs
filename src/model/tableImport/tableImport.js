@@ -483,7 +483,8 @@ export default class TableImport extends Model {
 
 			if(headers){				
 				for (var header of headers) {
-					columnFolder.createColumn(header, ColumnType.double);
+					var columnType = tableData.columnType(header)
+					columnFolder.createColumn(header, columnType);
 				}
 			}
 		}
