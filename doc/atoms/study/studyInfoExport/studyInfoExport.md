@@ -75,11 +75,13 @@ A password only needs to be specified if a source database is password protected
 
 ## Example output
 
+### Text file
+
 ```
 ---------- StudyInfo ----------
 
 #Total number of simulations:
-27
+9
 
 #Variable model paths and values:
 
@@ -131,6 +133,10 @@ jobId: 9
 root.models.genericInput.a: 3
 root.models.genericInput.b: 30
 ```
+
+### Database
+
+![](../../../images/study_info_export_tables.png)
 
 ----
 
