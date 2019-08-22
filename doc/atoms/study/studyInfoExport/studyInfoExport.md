@@ -73,8 +73,70 @@ The user name, for example "root".
 
 A password only needs to be specified if a source database is password protected.
 
+## Example output
 
+### Text file
 
+```
+---------- StudyInfo ----------
+
+#Total number of simulations:
+9
+
+#Variable model paths and values:
+
+root.models.genericInput.a
+1
+2
+3
+
+root.models.genericInput.b
+10
+20
+30
+
+---------- JobInfo ------------
+
+jobId: 1
+root.models.genericInput.a: 1
+root.models.genericInput.b: 10
+
+jobId: 2
+root.models.genericInput.a: 1
+root.models.genericInput.b: 20
+
+jobId: 3
+root.models.genericInput.a: 1
+root.models.genericInput.b: 30
+
+jobId: 4
+root.models.genericInput.a: 2
+root.models.genericInput.b: 10
+
+jobId: 5
+root.models.genericInput.a: 2
+root.models.genericInput.b: 20
+
+jobId: 6
+root.models.genericInput.a: 2
+root.models.genericInput.b: 30
+
+jobId: 7
+root.models.genericInput.a: 3
+root.models.genericInput.b: 10
+
+jobId: 8
+root.models.genericInput.a: 3
+root.models.genericInput.b: 20
+
+jobId: 9
+root.models.genericInput.a: 3
+root.models.genericInput.b: 30
+```
+
+### Database
+
+![](../../../images/study_info_export_tables.png)
 
 ----
 
