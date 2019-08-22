@@ -6,7 +6,7 @@ export default class PythonExport extends ComponentAtom {
 	constructor(name) {		
 		super(name);
 		this.image = 'pythonExport.png';
-		this.isRunnable=true;	
+		this.isRunnable=false;	
 
 		this.structureName = 'results';	
 		this.__outcomeNames = {};
