@@ -8,7 +8,7 @@ The purpose of the ![](../../../../icons/pythonExport.png) PythonExport atom is 
 
 This atom requires python support and is not supported in the Stand-alone installation.
 
-Lets assume that each job of a sweep generates a table. The ![](../../../../icons/pythonExport.png) PythonExport atom exports that table to the python kernel and puts it in a data structure. That data structure is called "results" by default (its name can be modified if wanted).
+Lets assume that each job of a sweep generates a table (due to a ![](../../../../icons/tableImport.png) [TableImport](../../model/tableImport/tableImport.md) atom). The ![](../../../../icons/pythonExport.png) PythonExport atom exports that table to the python kernel and puts it in a data structure. That data structure is called "results" by default (its name can be modified if wanted).
 
 The results data structure is compatible to the [EMA workbench](https://emaworkbench.readthedocs.io/en/latest/indepth_tutorial/general-introduction.html?highlight=results#Processing-the-results-of-the-experiments):
 
