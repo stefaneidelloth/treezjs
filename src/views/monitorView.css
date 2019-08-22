@@ -25,7 +25,7 @@
 	font-size: 12px;	
 	vertical-align: middle;
 	height:25px;	
-	padding:0;
+	padding:0px;
 }
 
 .treez-monitor-progress-collapsible-symbol {	
@@ -36,30 +36,32 @@
 
 .treez-monitor-progress-title {
 	color: black;	
-	padding-left:15px;		
+	padding-left:15px;	
 }
 
 .treez-monitor-progress-description {
-	color: black;
+	color: black;	
 }
 
 .treez-monitor-progress-toolbar {
-	padding-right: 10px;
+	padding-right: 10px;	
 	float: right;
+	margin-top: 4px;
 }
 
 .treez-monitor-progress-label {
-	padding-right: 10px;
-	color: black;
+	padding-right: 10px;	
+	color: black;	
+	vertical-align:middle;
 }
 
 .treez-monitor-progress-cancel-button {
-	height: 12px;
-	padding-bottom: 2px;
-	border: none;
+	height: 12px;	
+	border: none;	
 	-webkit-border-radius: 3px;
 	box-shadow: inset 0 0 0 1px #e82734, inset 0 0 0 2px #f69b9c;
 	background-color: #e82734;
+	vertical-align:middle;
 }
 
 .treez-monitor-progress-canceled-symbol {
@@ -72,7 +74,7 @@
 	background-color: lightgray;
 	height: 3px;
 	padding:0;
-	margin-top: 2px;
+	margin-top: -1px;
 }
 
 .treez-monitor-progress-bar {	
