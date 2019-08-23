@@ -51,6 +51,12 @@
 	border-width: 0px 1px 1px 0px;
 }
 
+.treez-table TR:first-child TH :hover {
+	resize:horizontal;
+	overflow:auto;
+}
+
+
 .treez-table TR:first-child TH.highlighted {
 	background-color: #ccd9e8;
 }
