@@ -371,8 +371,14 @@ export default class Study extends ComponentAtom {
 				modelOutput.name = modelOutputName;
 				outputAtom.addChild(modelOutput);
 				
-				if(pythonExport){
+				if(pythonExport){					
 					pythonExport.exportTablesToPythonContext(modelInput, modelOutput);
+				}
+			} else {
+				if(pythonExport){
+					var warningMessage = 'There is a PythonExport atom but the executed model of the study does ' +
+										'not provides results to export. You might want to add a TableImport atom.';
+					monitor.warn(warningMessage);
 				}
 			}			
 
