@@ -1,0 +1,49 @@
+
+#root {
+    width: 100%;
+    overflow: auto;
+}
+
+#navigation {
+    overflow: scroll;
+    scroll-vertical:auto;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 15%;
+    height: 100%;
+
+    //background-color: lightgray;
+}
+
+.details-content {
+    padding-left:10px;
+}
+
+.level0 {
+    color:green;
+}
+
+.level1 {
+    color:black;
+}
+
+.level2 {
+    color:orange;
+}
+
+button {
+    color:blue;
+    border:none;
+    background-color:white;
+}
+
+#demo-window {
+    position: absolute;
+    top: 0px;
+    left: 15%;
+    width: 85%;
+    height: 100%;
+    padding:10px;
+    //background-color:lightblue;
+}

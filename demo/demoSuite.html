@@ -1,29 +1,161 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="../bower_components/jquery/dist/jquery.js"></script>        
+		<script src="../bower_components/jquery/dist/jquery.js"></script>     
+		<link rel="stylesheet" href="./demoSuite.css"></link>     
 	</head>
 
 	<body>	
 	
-		<div id = "root"> </div>
+		<div id = "root"> 
+			<div id ="navigation"></div>
+			<div id ="demo-window">Demo Suite<br>Please select some *.html file from the navigation</div>
+		</div>
 
 		<script type = "module">
 		    
 		    import StandAloneTerminal from '../src/standAloneTerminal.js'; 
 		    var terminal = new StandAloneTerminal();
 
+		    createContentNavigation();
+		    
 
+		    async function createContentNavigation(){
 
-		    terminal.execute('dir', (message)=>{
+		    	var demoDir;
 
-		         $("#root").load("./components/checkBox/treezCheckBoxDemo.html"); 
+		    	await executePromise('cd').then(async message => {
+		    		 var currentDirectory = message.split('\n').pop();
+		    	 	 demoDir = currentDirectory + '/demo';
+		    	});
 
-		    }, (error)=>{
-                console.log(error);
-		    }, ()=>{
-		        console.log('finished');
-		    });
+				var folders = undefined;		
+		    	await executePromise('cd ' + demoDir + ' && dir').then(async message => {
+		    		folders = getFolders(message);
+		    	});		
+
+		    	var navigation = document.getElementById('navigation');    	
+
+				for(var folder of folders){
+					await createFolderNodeAndChildren(demoDir, folder, navigation, 0);
+				}	
+		    } 
+
+			function executePromise(command){
+				return new Promise(function(resolve,reject){
+					terminal.execute(command,message=>{
+						resolve(message);
+					}, error=>{
+						reject(error);
+					}, ()=>{
+						//console.log('finished');
+					})
+				});
+			}
+		    
+
+		    async function createFolderNodeAndChildren(parentPath, folder, parentElement, level){
+		    	var details = document.createElement('details');
+		    	details.open = true;		    	
+		    	parentElement.appendChild(details);
+
+		    	var summary = document.createElement('summary');		    			    	
+		    	summary.innerText = folder;
+		    	details.className = 'level' + level;
+		    	details.appendChild(summary);
+
+		    	var contentDiv = document.createElement('div');
+		    	contentDiv.className = 'details-content';
+		    	details.appendChild(contentDiv);
+
+		    	await createSubNodes(parentPath, folder, contentDiv, level+1);
+		    }
+
+		    async function createSubNodes(parentPath, folder, contentDiv, level){
+
+		    	var folderPath = parentPath + '/' + folder;
+
+		    	var command = 'cd ' + folderPath + ' && dir';
+
+		    	var subFolders;
+		    	var htmlFiles;
+
+		    	await executePromise(command).then(message =>{
+		    		 subFolders = getFolders(message);
+					 htmlFiles = getHtmlFiles(message);	
+		    	});
+
+		    	for(var subFolder of subFolders){
+					await createFolderNodeAndChildren(folderPath, subFolder, contentDiv, level);
+				}
+
+				for(var htmlFile of htmlFiles){
+					await createDemoNode(folderPath, htmlFile, contentDiv);
+				}		
+
+			}
+
+			function createDemoNode(parentPath, htmlFile, contentDiv){
+
+				var parts = parentPath.split('/demo/');
+				var parentUrl = './' + parts[1];
+				var url = parentUrl + '/' + htmlFile;
+		    	
+		    	var div = document.createElement('div');
+		    	contentDiv.appendChild(div);
+
+		    	var button = document.createElement('button');
+		    	button.innerText = htmlFile;
+		    	button.onclick = ()=>{		    		
+		    		$('#demo-window').load(url, ()=>{
+		    			console.log('loaded demo ' + url);
+		    		},error=>{
+		    			console.log(error);
+		    		});
+		    	};
+		    	div.appendChild(button);
+		    	
+		    }
+
+		    function getFolders(message){
+		    	var folders = [];
+		    	var lines = message.split('\n')
+		    	lines.splice(0,7)
+		    	lines.splice(lines.length-2,2);
+		    	for(var line of lines){
+		    		if(line.indexOf('<DIR>') === -1){
+		    			continue;
+		    		}
+
+		    		var parts = line.split('<DIR>');
+		    		var folder = parts[1].trim();		    		
+					folders.push(folder);
+		    		
+		    	}
+		    	return folders;
+		    }
+
+		    function getHtmlFiles(message){
+		    	var htmlFiles = [];
+		    	var lines = message.split('\n')
+		    	lines.splice(0,7)
+		    	lines.splice(lines.length-2,2);
+		    	for(var line of lines){
+		    		if(line.indexOf('<DIR>') > -1){
+		    			continue;
+		    		}
+
+		    		if(line.indexOf('.html') === -1){
+		    			continue;
+		    		}
+
+		    		var parts = line.split(' ');
+		    		var htmlFile = parts.pop().trim();		    		
+					htmlFiles.push(htmlFile);
+		    		
+		    	}
+		    	return htmlFiles;
+		    }
 		     
           
             

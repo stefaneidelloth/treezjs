@@ -11,7 +11,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
         this.__textArea = undefined;  
         this.__codeMirror = undefined; 
         				
-		Treez.importCssStyleSheet('/' + window.treezConfig.moduleFolder + '/codemirror/lib/codemirror.css');                                      
+		Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');                                      
     }   
 
     static get observedAttributes() {
@@ -64,6 +64,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
 			self.disableElements(self.disabled)
 			self.hideElements(self.hidden); 
+		}, function(error){
+			console.log(error);
 		});        
     }    
     

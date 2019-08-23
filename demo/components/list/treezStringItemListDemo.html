@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<link type="text/css" rel="stylesheet" href="./treezStringList.css" />
+		<link type="text/css" rel="stylesheet" href="../../../src/components/list/treezStringList.css" />
 	</head>
 
 	<body>	
@@ -10,10 +10,10 @@
 		<treez-string-item-list id="stringItemList" label="Title" options="a,b,c,d" value="a,b"></treez-string-item-list>	
 
 		<script type="module">
-			import TreezStringItemList from './treezStringItemList.js';
+			import TreezStringItemList from '../../../src/components/list/treezStringItemList.js';
 
             var stringItemList = document.getElementById('stringItemList'); 
-            stringItemList.value = 'a,b,c'; 
+            stringItemList.value = ['a','b','c']; 
 		</script>
 		
 	</body>
