@@ -1,7 +1,7 @@
 
 #root {
     width: 100%;
-    overflow: auto;
+    overflow: auto;   
 }
 
 #navigation {
@@ -9,7 +9,7 @@
     scroll-vertical:auto;
     position: absolute;
     top: 0px;
-    left: 0px;
+    left: 3px;
     width: 15%;
     height: 100%;
 

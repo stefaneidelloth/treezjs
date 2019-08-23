@@ -9,7 +9,7 @@
 	
 		<div id = "root"> 
 			<div id ="navigation"></div>
-			<div id ="demo-window">Demo Suite<br>Please select some *.html file from the navigation</div>
+			<div id ="demo-window">Loading demo Suite...</div>
 		</div>
 
 		<script type = "module">
@@ -29,17 +29,72 @@
 		    	 	 demoDir = currentDirectory + '/demo';
 		    	});
 
-				var folders = undefined;		
-		    	await executePromise('cd ' + demoDir + ' && dir').then(async message => {
-		    		folders = getFolders(message);
+				var paths = undefined;		
+		    	await executePromise('cd ' + demoDir + ' && tree /A /F').then(message => {
+		    		paths = getPaths(message);
 		    	});		
 
-		    	var navigation = document.getElementById('navigation');    	
+		    	var navigation = document.getElementById('navigation');
 
-				for(var folder of folders){
-					await createFolderNodeAndChildren(demoDir, folder, navigation, 0);
-				}	
+		    	var parentPath = demoDir;
+		    	var parentContent = navigation;
+		    	var parentLevel = -1;    	
+
+				for(var relativePath of paths){
+					var isDirectory = relativePath.indexOf('html') === -1;
+					if(isDirectory){
+
+						var parts = relativePath.split('/');
+						var level = parts.length-1;
+						var directory = parts.pop();
+
+						if(level>parentLevel){
+							parentContent = createFolderNode(parentContent, directory, level);							
+						} else {							
+							parentContent = getParentContent(parentContent, parentLevel, level);
+							parentContent = createFolderNode(parentContent, directory, level);							
+						}
+						parentLevel = level;
+
+
+					} else {
+						createDemoNode(demoDir, relativePath, parentContent);
+					}
+					
+				}
+
+				var demoWindow = document.getElementById('demo-window');
+				demoWindow.innerText = 'Loading finished. Please select some *.html file from the navigation.'
+
+				console.log('initial loading finished');
 		    } 
+
+		    function getParentContent(parentContent, parentLevel, level){
+                var currentLevel = level
+                var content = parentContent;
+		    	while(currentLevel <= parentLevel){
+		    		content = content.parentNode.parentNode;
+		    		currentLevel = currentLevel+1;
+		    	}
+		    	return content;
+		    }
+
+		    function createFolderNode(parentContent, directory, level){
+		    	var details = document.createElement('details');
+				details.open = true;		    	
+				parentContent.appendChild(details);
+
+				var summary = document.createElement('summary');		    			    	
+				summary.innerText = directory;
+				details.className = 'level' + level;
+				details.appendChild(summary);
+
+				var contentDiv = document.createElement('div');
+				contentDiv.className = 'details-content';
+				contentDiv.tag = directory;
+				details.appendChild(contentDiv);
+				return contentDiv;
+		    }
 
 			function executePromise(command){
 				return new Promise(function(resolve,reject){
@@ -52,54 +107,15 @@
 					})
 				});
 			}
-		    
 
-		    async function createFolderNodeAndChildren(parentPath, folder, parentElement, level){
-		    	var details = document.createElement('details');
-		    	details.open = true;		    	
-		    	parentElement.appendChild(details);
-
-		    	var summary = document.createElement('summary');		    			    	
-		    	summary.innerText = folder;
-		    	details.className = 'level' + level;
-		    	details.appendChild(summary);
-
-		    	var contentDiv = document.createElement('div');
-		    	contentDiv.className = 'details-content';
-		    	details.appendChild(contentDiv);
-
-		    	await createSubNodes(parentPath, folder, contentDiv, level+1);
-		    }
-
-		    async function createSubNodes(parentPath, folder, contentDiv, level){
-
-		    	var folderPath = parentPath + '/' + folder;
-
-		    	var command = 'cd ' + folderPath + ' && dir';
-
-		    	var subFolders;
-		    	var htmlFiles;
-
-		    	await executePromise(command).then(message =>{
-		    		 subFolders = getFolders(message);
-					 htmlFiles = getHtmlFiles(message);	
-		    	});
-
-		    	for(var subFolder of subFolders){
-					await createFolderNodeAndChildren(folderPath, subFolder, contentDiv, level);
-				}
-
-				for(var htmlFile of htmlFiles){
-					await createDemoNode(folderPath, htmlFile, contentDiv);
-				}		
-
-			}
-
-			function createDemoNode(parentPath, htmlFile, contentDiv){
+		   
+			function createDemoNode(parentPath, relativePath, contentDiv){
 
 				var parts = parentPath.split('/demo/');
-				var parentUrl = './' + parts[1];
-				var url = parentUrl + '/' + htmlFile;
+				var parentUrl = '.';
+				var url = parentUrl + '/' + relativePath;
+
+				var htmlFile = relativePath.split('/').pop();
 		    	
 		    	var div = document.createElement('div');
 		    	contentDiv.appendChild(div);
@@ -116,48 +132,81 @@
 		    	div.appendChild(button);
 		    	
 		    }
-
-		    function getFolders(message){
-		    	var folders = [];
+			
+			function getPaths(message){
+		    	var paths = [];
 		    	var lines = message.split('\n')
-		    	lines.splice(0,7)
-		    	lines.splice(lines.length-2,2);
-		    	for(var line of lines){
-		    		if(line.indexOf('<DIR>') === -1){
-		    			continue;
-		    		}
+		    	lines.splice(0,3)
 
-		    		var parts = line.split('<DIR>');
-		    		var folder = parts[1].trim();		    		
-					folders.push(folder);
+		    	var parentPath = '';
+		    	var parentLevel = 0;
+		    	
+		    	for(var line of lines){
+		    		var directoryIndex = line.indexOf('---');
+		    		var isDirectory = directoryIndex > -1;
+		    		
+		    		if(isDirectory){
+						var level = directoryLevel(directoryIndex);
+						var directory = getDirectory(line);
+
+						if(directory==='data'){
+							var a=2;
+						}
+
+						if(level > parentLevel){
+							parentPath += '/' + directory;
+							paths.push(trimFirstChar(parentPath));
+						} else if(level === parentLevel){
+							var parts = parentPath.split('/');
+							parts.pop()
+							parts.push(directory);
+							parentPath = parts.join('/');
+							paths.push(trimFirstChar(parentPath));
+						} else {
+							var parts = parentPath.split('/');
+							var relevantParts = parts.splice(0,level);
+							relevantParts.push(directory);
+							parentPath = relevantParts.join('/');
+							paths.push(trimFirstChar(parentPath));
+						}
+
+						parentLevel=level;
+
+		    		} else {
+		    			if (parentLevel>0){
+		    				var file = line.split(' ').pop();
+							if(file.indexOf('.html')>-1){
+								paths.push(trimFirstChar(parentPath) + '/' + file);
+							}
+		    			}						
+		    		} 
 		    		
 		    	}
-		    	return folders;
+		    	return paths;
 		    }
 
-		    function getHtmlFiles(message){
-		    	var htmlFiles = [];
-		    	var lines = message.split('\n')
-		    	lines.splice(0,7)
-		    	lines.splice(lines.length-2,2);
-		    	for(var line of lines){
-		    		if(line.indexOf('<DIR>') > -1){
-		    			continue;
-		    		}
-
-		    		if(line.indexOf('.html') === -1){
-		    			continue;
-		    		}
-
-		    		var parts = line.split(' ');
-		    		var htmlFile = parts.pop().trim();		    		
-					htmlFiles.push(htmlFile);
-		    		
-		    	}
-		    	return htmlFiles;
+		    function trimFirstChar(path){
+		    	return path.slice(1, path.length-1);
 		    }
-		     
-          
+
+		    function getDirectory(line){
+		    	return line.split('---').pop();
+		    }
+
+		    function directoryLevel(directoryIndex){
+				switch(directoryIndex){
+							case 1:
+								return 1;
+							case 5:
+								return 2;
+							case 9:
+								return 3;
+							case 13:
+								return 4;
+							default:
+								throw new Error('Unknown directory level');
+				}
+		    }        
             
 			
 		</script>
