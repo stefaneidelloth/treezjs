@@ -1,16 +1,16 @@
-.treez-image-combo-box-container {   
-    with: auto; 
+.treez-image-combo-box-container {  
     vertical-align: top;   
 }
 
-.treez-image-combo-box-display {
+.treez-image-combo-box-display { 
   padding:0px;	
   margin:0px;
 }
 
 .treez-image-combo-box-label {
-	vertical-alin: top;
-	 display:inline-block;	
+	padding-top:3px;
+	vertical-align: top;
+	display:inline-block;	
 }
 
 .treez-image-combo-box {

@@ -13,7 +13,7 @@
 			
 		</script>
 	
-		<treez-tab-folder id="root">
+		<treez-tab-folder id="tab-folder">
 			<treez-tab label="First tab">
 				<div>           
 				First tab content
@@ -30,11 +30,11 @@
 	
 		<script type="module"> 		
 
-		    var root = document.getElementById('root');
+		    var tabFolder = document.getElementById('tab-folder');
 			  
             var treezTab = document.createElement('treez-tab');
 			treezTab.label = 'Third tab';
-			root.appendChild(treezTab);
+			tabFolder.appendChild(treezTab);
 
 			var content = document.createElement('div');
 			content.innerText = 'Third tab content';

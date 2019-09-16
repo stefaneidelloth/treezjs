@@ -1,28 +1,38 @@
-.treez-string-list-container {   
-    with: auto; 
-    vertical-align: top;    
+.treez-list-container { 
+    vertical-align: top; 
+    padding:0px;
+    margin:0px;
 }
 
-.treez-list-label {  
-    vertical-align: middle;	
+.treez-list-label {     
+   
 }
 
 .treez-list-button {   
     with: auto; 
     height:25px;
     vertical-align: middle;
-    margin-right:5px;	
+    margin-right:5px;
+    margin-top:5px;	
 }
 
 .treez-list-table {
 	width: 100%;
 	margin-top:5px;	
 	margin-bottom:5px;
+	margin-left:0px;
+	margin-right:0px;
+	padding:0px;	
+	border:none;	
 	border-collapse: collapse;
 }
 
-.treez-list-tr {
-	border: 1px solid lightgrey;
+.treez-list-tr {	
+	margin: 0px;
+	padding: 0px;
+}
+
+.treez-list-td {
 	margin: 0px;
 	padding: 0px;
 }
