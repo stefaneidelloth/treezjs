@@ -96,8 +96,10 @@ export default class SweepModelInputGenerator {
 				var inputBlueprint = self.__createModelInputBlueprint(variableModelPath, this.studyId, this.studyDescription, value, totalNumberOfJobs);
 
 				//copy and extended the model input blueprint, using the remaining variable values
+				
 				var modelInputsWithCurrentValue = self.__extendModelInputs(inputBlueprint, remainingRanges);
 				modelInputs = modelInputs.concat(modelInputsWithCurrentValue);
+
 			});
 			
 		}
@@ -117,26 +119,33 @@ export default class SweepModelInputGenerator {
 		
 		//the model input blueprint needs to be duplicated and extended using the remaining variable ranges
 		var firstRange = variableRanges[0];
-		var variableModelPath = firstRange.variablePath;
-		var values = firstRange.values;
-		var remainingRanges = variableRanges.slice(1, variableRanges.length);
-
-		for(var value of values){		
+		if(firstRange){
+			var variableModelPath = firstRange.variablePath;
+			var values = firstRange.values;
+			var remainingRanges = variableRanges.slice(1, variableRanges.length);
+			for(var value of values){		
 			
-			var modelInput = inputBlueprint.copy();
+				var modelInput = inputBlueprint.copy();
 
-			//add current quantity
-			modelInput.set(variableModelPath, value);
+				//add current quantity
+				modelInput.set(variableModelPath, value);
 
-			if(remainingRanges.length>0){
-				//copy and extend with remaining variable ranges
-				var modelInputsWithCurrentQuantities = self.__extendModelInputs(modelInput, remainingRanges);
-				modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);	
-			} else {
-				modelInputs.push(modelInput);
+				if(remainingRanges.length>0){
+					//copy and extend with remaining variable ranges
+					var modelInputsWithCurrentQuantities = self.__extendModelInputs(modelInput, remainingRanges);
+					modelInputs = modelInputs.concat(modelInputsWithCurrentQuantities);	
+				} else {
+					modelInputs.push(modelInput);
+				}	
 			}	
-		}						
-		return modelInputs;		
+			return modelInputs;					
+		} else {
+          return [inputBlueprint];
+		}
+		
+
+			
+			
 	}
 	
 	__createModelInputBlueprint(variableModelPath, studyId, studyDescription, value, totalNumberOfJobs) {
