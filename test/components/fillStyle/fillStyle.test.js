@@ -1,7 +1,12 @@
-//import LabeledTreezElement from '../../src/components/.js';
+import FillStyle from '../../../src/components/fillStyle/fillStyle.js';
 
-describe('', ()=>{
-    it('', ()=>{
-    
+
+describe('FillStyle', ()=>{
+
+    it('number of values', ()=>{  
+        expect(FillStyle.values.length).toBe(4);   
     });
+
+    
+
 });

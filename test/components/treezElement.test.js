@@ -6,7 +6,9 @@ import puppeteerToIstanbul from 'puppeteer-to-istanbul';
 
 jest.setTimeout(10000);
 
-describe('TreezElement', ()=>{    
+describe('TreezElement', ()=>{   
+    
+    var id = 'treez-element';
 
     var page;      
 
@@ -18,14 +20,14 @@ describe('TreezElement', ()=>{
 
     beforeEach(async () => {
         await TestUtils.clearBody(page);
-        await TestUtils.createCustomElement(page, 'treez-element', 'TreezElement', '../src/components/treezElement.js');
+        await TestUtils.createCustomElement(page, id, 'TreezElement', '../src/components/treezElement.js');
     });
     
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#treez-element', element=> element.id);       
-            expect(property).toBe('treez-element');
+            var property = await page.$eval('#' + id, element=> element.id);       
+            expect(property).toBe(id);
          });
      
      

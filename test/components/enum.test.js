@@ -1,5 +1,4 @@
 import Enum from '../../src/components/enum.js';
-import { exportAllDeclaration } from '@babel/types';
 
 describe('Enum', ()=>{
     

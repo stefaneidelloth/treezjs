@@ -1,7 +1,12 @@
-//import LabeledTreezElement from '../../src/components/.js';
+import ErrorBarStyle from '../../../src/components/errorBarStyle/errorBarStyle.js';
 
-describe('', ()=>{
-    it('', ()=>{
-    
+
+describe('ErrorBarStyle', ()=>{
+
+    it('number of values', ()=>{  
+        expect(ErrorBarStyle.values.length).toBe(16);   
     });
+
+    
+
 });
