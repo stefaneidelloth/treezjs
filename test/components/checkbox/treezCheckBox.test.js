@@ -53,49 +53,57 @@ describe('TreezCheckBox', ()=>{
             var success = await page.evaluate(({id})=>{
                 var element = document.getElementById(id);
 
-                //remove existing children
-                element.__checkBox = undefined;
-                while(element.firstChild){
-                    element.firstChild.remove();
-                }                
+                removeExistingChildren(element);
+                var methodCalls = prepareMocks(element);
 
-                //prepare mocks 
-                var methodCalls = {};
-                element.value = true;
-                element.label = 'labelText';
-                element.updateElements = (value) =>{
-                    methodCalls['updateElements'] = value;
-                };
-
-                element.disableElements = (disabled) =>{
-                    methodCalls['disableElements'] = disabled;
-                };
-
-                element.hideElements = (hidden) =>{
-                    methodCalls['hideElements'] = hidden;
-                };
-
-                //recreate children
                 element.connectedCallback();
 
-                //checks
+                var methodsAreCalled = (methodCalls['updateElements'] === true) &&
+                (methodCalls['disableElements'] === false) &&
+                (methodCalls['hideElements'] === false);
+                console.log('methods are called:' + methodsAreCalled);
+
                 var containerIsCreated = element.childNodes.length === 1;
+                console.log('container is created:' + containerIsCreated);
 
                 var container = element.firstChild;
                 var checkBox = container.firstChild;
                 var checkBoxIsCreated = checkBox.type === 'checkbox';
+                console.log('checkBox is created:' + checkBoxIsCreated);
 
                 var label = container.lastChild;
                 var labelIsSet = label.innerText === 'labelText';
-
-                var methodsAreCalled = (methodCalls['updateElements'] === true) &&
-                                        (methodCalls['disableElements'] === false) &&
-                                        (methodCalls['hideElements'] === false);
+                console.log('label is set:' + labelIsSet);               
 
                 return containerIsCreated && 
                     checkBoxIsCreated &&
                     labelIsSet &&
                     methodsAreCalled;
+
+                function removeExistingChildren(element){
+                    element.__checkBox = undefined;
+                    while(element.firstChild){
+                        element.firstChild.remove();
+                    } 
+                }                        
+                
+                function prepareMocks(element){
+                    var methodCalls = {};
+                    element.value = true;
+                    element.label = 'labelText';
+                    element.updateElements = (value) =>{
+                        methodCalls['updateElements'] = value;
+                    };
+    
+                    element.disableElements = (disabled) =>{
+                        methodCalls['disableElements'] = disabled;
+                    };
+    
+                    element.hideElements = (hidden) =>{
+                        methodCalls['hideElements'] = hidden;
+                    };
+                    return methodCalls;
+                }   
 
             },{id});
             expect(success).toBe(true);                   
@@ -216,7 +224,6 @@ describe('TreezCheckBox', ()=>{
                             valueIsTrueAfterUpdate;
                 },{id});
                 expect(success).toBe(true);
-
         });
     });
    
@@ -229,8 +236,7 @@ describe('TreezCheckBox', ()=>{
         //run following command to create index.html inside coverage folder:
         //nyc report --reporter=html
 
-        await TestUtils.close(page);         
-            
+        await TestUtils.close(page);  
     });     
 
 });

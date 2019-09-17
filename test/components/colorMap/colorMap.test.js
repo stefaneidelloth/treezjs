@@ -1,7 +1,9 @@
-//import LabeledTreezElement from '../../src/components/.js';
+import ColorMap from '../../../src/components/colorMap/colorMap.js';
 
-describe('', ()=>{
-    it('', ()=>{
-    
-    });
+describe('ColorMap', ()=>{
+
+    it('number of values', ()=>{  
+        expect(ColorMap.values.length).toBe(20);   
+    });    
+
 });

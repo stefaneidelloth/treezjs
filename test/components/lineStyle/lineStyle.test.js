@@ -1,7 +1,12 @@
-//import LabeledTreezElement from '../../src/components/.js';
+import LineStyle from '../../../src/components/lineStyle/lineStyle.js';
 
-describe('', ()=>{
-    it('', ()=>{
-    
+
+describe('LineStyle', ()=>{
+
+    it('number of values', ()=>{  
+        expect(LineStyle.values.length).toBe(21);   
     });
+
+    
+
 });

@@ -235,7 +235,7 @@ export default class Table extends ComponentAtom {
 
 		this.__createDownButton(toolbar, treeView);
 
-		this.__createColumnWidthButton(toolbar, treeView);
+		//this.__createColumnWidthButton(toolbar, treeView);
 	}
 	
 	__createTableView(parent, treeView){
@@ -251,10 +251,11 @@ export default class Table extends ComponentAtom {
 			.append('tr')
 	        .selectAll('th')
 	        .data(displayColumns).enter()
-	        .append('th')	       
+			.append('th')	
+			.append('div')       
 	        .html((column)=>{	        	
 	        	return column.header;
-	        });
+			});			
 		
 		var headers = this.headers;
 	   
@@ -279,10 +280,15 @@ export default class Table extends ComponentAtom {
 	        	return displayRow;	        		            	            
 	        })
 	        .enter()
-	        .append('td')	       
+	        .append('td')	
+	        .append('div')     
+	        .attr('contenteditable',true)  	        
 	        .html((cellValue)=>{	        	
 	        	return cellValue;
-	        })
+	        })	 
+	        .onInput((data, index, parent)=>{
+	        	var a=1;
+	        })      
 	        .onClick((data, index, parent) => this.__selectionManager.cellClicked(data, index, parent))
 	        .onMouseUp((data, index, parent) => this.__selectionManager.cellMouseUp(data, index, parent))
 	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));

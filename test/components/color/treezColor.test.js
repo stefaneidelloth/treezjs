@@ -13,17 +13,19 @@ jest.mock('../../../src/components/labeledTreezElement.js', function(){
 	}
 );
 
-import TreezCheckBox from '../../../src/components/checkbox/treezCheckBox.js';
+import Color from '../../../src/components/color/color.js'; //TODO: mock after jest supports testing custom components
+
+import TreezColor from '../../../src/components/color/treezColor.js';
 
 import TestUtils from '../../testUtils.js';
 
 import puppeteerToIstanbul from 'puppeteer-to-istanbul';
 
-jest.setTimeout(10000);
+jest.setTimeout(100000);
 
-describe('TreezCheckBox', ()=>{   
+describe('TreezColor', ()=>{   
     
-    var id = 'treez-check-box';
+    var id = 'treez-color';
 
     var page;      
 
@@ -35,7 +37,7 @@ describe('TreezCheckBox', ()=>{
 
     beforeEach(async () => {
         await TestUtils.clearBody(page);
-        await TestUtils.createCustomElement(page, id, 'TreezCheckBox', '../../src/components/checkbox/treezCheckBox.js');
+        await TestUtils.createCustomElement(page, id, 'TreezColor', '../../src/components/color/treezColor.js');
     });
     
     describe('State after construction', ()=>{
@@ -47,71 +49,104 @@ describe('TreezCheckBox', ()=>{
         
     });
 
-    describe('Public API', ()=>{  
+    describe('Public API', ()=>{         
        
-        it('connectedCallback', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+        it('connectedCallback', async ()=>{                         
 
-                //remove existing children
-                element.__checkBox = undefined;
-                while(element.firstChild){
-                    element.firstChild.remove();
-                }                
+            var success = await page.evaluate(({id})=>{ 
 
-                //prepare mocks 
-                var methodCalls = {};
-                element.value = true;
-                element.label = 'labelText';
-                element.updateElements = (value) =>{
-                    methodCalls['updateElements'] = value;
-                };
+                var color = window.Color.blue;
 
-                element.disableElements = (disabled) =>{
-                    methodCalls['disableElements'] = disabled;
-                };
+                var element = document.getElementById(id);                
+                removeExistingAttributesAndChildren(element);
+                var methodCalls = prepareMocks(element);
 
-                element.hideElements = (hidden) =>{
-                    methodCalls['hideElements'] = hidden;
-                };
-
-                //recreate children
                 element.connectedCallback();
 
-                //checks
-                var containerIsCreated = element.childNodes.length === 1;
-
-                var container = element.firstChild;
-                var checkBox = container.firstChild;
-                var checkBoxIsCreated = checkBox.type === 'checkbox';
-
-                var label = container.lastChild;
-                var labelIsSet = label.innerText === 'labelText';
-
-                var methodsAreCalled = (methodCalls['updateElements'] === true) &&
+                var methodsAreCalled = (methodCalls['updateElements'] === color) &&
                                         (methodCalls['disableElements'] === false) &&
                                         (methodCalls['hideElements'] === false);
+                console.log('methods are called: ' + methodsAreCalled);
+
+                var containerIsCreated = element.childNodes.length === 1;
+                console.log('container is created: ' + containerIsCreated);
+
+                var container = element.firstChild;
+
+                var label = container.firstChild;
+                var labelIsCreated = label.constructor.name === 'HTMLLabelElement';
+                var labelIsSet = label.innerText === 'labelText';
+                console.log('label is created and set: ' + (labelIsCreated && labelIsSet));
+
+                var colorPicker = container.lastChild;
+                var colorPickerIsCreated = colorPicker.type === 'color';  
+                console.log('color picker is created: ' + (colorPickerIsCreated));
 
                 return containerIsCreated && 
-                    checkBoxIsCreated &&
+                    labelIsCreated &&
                     labelIsSet &&
+                    colorPickerIsCreated &&
                     methodsAreCalled;
 
+
+                function removeExistingAttributesAndChildren(element){
+                    element.__container = undefined;
+                    element.__label = undefined;
+                    element.__colorPicker = undefined;
+                    while(element.firstChild){
+                        element.firstChild.remove();
+                    }   
+                }
+
+                function prepareMocks(element){
+                    var methodCalls = {};
+                    element.value = color;
+                    element.label = 'labelText';
+                    element.updateElements = (value) =>{
+                        methodCalls['updateElements'] = value;
+                    };
+    
+                    element.disableElements = (disabled) =>{
+                        methodCalls['disableElements'] = disabled;
+                    };
+    
+                    element.hideElements = (hidden) =>{
+                        methodCalls['hideElements'] = hidden;
+                    };
+                    return methodCalls;
+                }  
+
             },{id});
+
             expect(success).toBe(true);                   
 
-        });
+        });       
        
         it('updateElements', async ()=>{           
             var success = await page.evaluate(({id})=>{
                 var element = document.getElementById(id);
 
-                var isNotCheckedBefore = element.__checkBox.checked === false;
-                element.updateElements(true);
-                var isCheckedAfter = element.__checkBox.checked === true;
+                var colorPicker = element.__colorPicker;
 
-                return isNotCheckedBefore &&
-                    isCheckedAfter;
+                console.log('initial color value: ' + colorPicker.value);
+                var valueIsBlackBefore = colorPicker.value === window.Color.black.hexString;
+                console.log('value is black before: ' + valueIsBlackBefore);
+
+                console.log('initial title: ' + colorPicker.title);
+                var titleIsBlackBefore = colorPicker.title === "black";
+                console.log('title is black before: ' + titleIsBlackBefore);
+                
+                var color = window.Color.blue;
+                element.updateElements(color);
+
+                var valueIsDefinedAfter = colorPicker.value === color.hexString;
+                console.log('value is defined after: ' + valueIsDefinedAfter);
+
+                var titleIsDefinedAfter = colorPicker.title === color.name;
+                console.log('title is defined after: ' + titleIsDefinedAfter);
+
+                return valueIsBlackBefore && titleIsBlackBefore &&
+                        valueIsDefinedAfter && titleIsDefinedAfter;
             },{id});
             expect(success).toBe(true);
         });  
@@ -121,9 +156,9 @@ describe('TreezCheckBox', ()=>{
             var success = await page.evaluate(({id})=>{
                 var element = document.getElementById(id);
 
-                var isNotDisabledBefore = element.__checkBox.disabled === false;
+                var isNotDisabledBefore = element.__colorPicker.disabled === false;
                 element.disableElements(true);
-                var isDisabledAfter = element.__checkBox.disabled === true;
+                var isDisabledAfter = element.__colorPicker.disabled === true;
 
                 return isNotDisabledBefore &&
                     isDisabledAfter;
@@ -156,69 +191,118 @@ describe('TreezCheckBox', ()=>{
             var success = await page.evaluate(({id})=>{
                 var element = document.getElementById(id);
 
-                var falseValue = element.convertFromStringValue(null); //only null is interpreted as false
+                var defaultValue = element.convertFromStringValue(null);
+                console.log('default value: ' + defaultValue);
 
-                var trueValue1 = element.convertFromStringValue('false');
+                var blueValue = element.convertFromStringValue('#0000ff'); 
+                console.log('blue value: ' + blueValue);
 
-                var trueValue2 = element.convertFromStringValue('');
+                var customValue = element.convertFromStringValue('#112233');  
+                console.log('custom value: ' + customValue);             
 
-                var trueValue3 = element.convertFromStringValue('true');
-
-                return (falseValue === false) &&
-                        (trueValue1 === true) &&
-                        (trueValue2 === true) &&
-                        (trueValue3 === true);
+                return  (defaultValue = window.Color.black) &&
+                        (blueValue === window.Color.blue) &&
+                        (customValue.hexString === '#112233' && customValue.name === 'custom'); 
 
             },{id});
             expect(success).toBe(true);                       
 
         }); 
-        
+         
         it('convertToStringValue', async ()=>{
 
             var success = await page.evaluate(({id})=>{
                 var element = document.getElementById(id);
 
-                var emptyString1 = element.convertToStringValue(true); 
+                var colorMock = {hexString: '#112233'}
 
-                var emptyString2 = element.convertToStringValue(1); 
+                var colorString = element.convertToStringValue(colorMock); 
 
-                var nullValue = element.convertToStringValue(false);                
-
-                return (emptyString1 === '') &&
-                        (emptyString2 === '') &&
-                        (nullValue === null);
+                return (colorString === '#112233') 
 
             },{id});
             expect(success).toBe(true);
 
-        }); 
+        });          
+        
+        describe('set value', async () =>{
+
+            it('set value with Color instance', async () =>{
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                         
+                    element.value = window.Color.blue; 
+    
+                    return (element.getAttribute('value') === '#0000ff'); 
+    
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('set value with color string', async () =>{
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                         
+                    element.value = 'blue'; 
+    
+                    return (element.getAttribute('value') === '#0000ff'); 
+    
+                },{id});
+                expect(success).toBe(true);
+            });
+
+        });        
         
     });   
+
+  
     
-    describe('Private API', ()=>{  
+    describe('Private API', ()=>{          
        
-        it('__checkBoxChanged', async ()=>{
+        it('__colorChanged', async ()=>{
            
                 var success = await page.evaluate(({id})=>{
                     var element = document.getElementById(id);
 
-                    var valueisFalseBefore = element.value === false;
-                    element.__checkBox.checked = true;
-                    var valueIsFalseBeforeUpdate = element.value === false;
+                    console.log('initial element value: ' + element.value);
+                    var valueisBlackBefore = element.value === window.Color.black;                    
 
-                    element.__checkBoxChanged();
+                    element.__colorPicker.value = window.Color.blue.hexString;
 
-                    var valueIsTrueAfterUpdate = element.value === true;
+                    var valueIsBlackBeforeUpdate = element.value === window.Color.black;
 
-                    return valueisFalseBefore &&
-                            valueIsFalseBeforeUpdate &&
-                            valueIsTrueAfterUpdate;
+                    element.__colorChanged();
+
+                    var valueIsSetAfterUpdate = element.value === window.Color.blue;
+
+                    return valueisBlackBefore &&
+                    valueIsBlackBeforeUpdate &&
+                    valueIsSetAfterUpdate;
                 },{id});
                 expect(success).toBe(true);
 
         });
+
+        describe('__getHexStringFromStringColor', ()=>{
+
+            it('hex string', () =>{
+                expect(TreezColor.__getHexStringFromStringColor('#112233')).toBe('#112233');               
+            });
+
+            it('named color string', () =>{
+                expect(TreezColor.__getHexStringFromStringColor('blue')).toBe('#0000ff');
+            });
+
+            it('unknown color name', () =>{  
+                expect(()=>{TreezColor.__getHexStringFromStringColor('lightblue')}).toThrowError();
+            }); 
+        
+        });
+
+        
     });
+
+   
    
     afterAll(async () => {
 

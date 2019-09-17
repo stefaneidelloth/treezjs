@@ -2,7 +2,21 @@
 <html>
 
 	<head>
-		<link type="text/css" rel="stylesheet" href="./treezCodeArea.css" />
+		<link type="text/css" rel="stylesheet" href="../../../src/components/text/code/treezCodeArea.css" />
+		<script src="../../../node_modules/requirejs/require.js"></script>
+
+		<script>			
+			window.treezConfig = {
+				home: '..'
+			}
+
+			requirejs.config({
+					baseUrl : '.',
+					paths : {			
+						'codemirror' : '../../../bower_components/codemirror'						
+					}
+			});
+		</script>
 	</head>
 
 	<body>
@@ -10,10 +24,14 @@
 			
 		</treez-code-area>	
 
-		<script type="module">
-			import TreezCodeArea from './treezCodeArea.js';
+		
 
+		<script type="module">
+			import TreezCodeArea from '../../../src/components/text/code/treezCodeArea.js';
+			
             var codeArea = document.getElementById('codeArea');
+            codeArea.style.width= '300px';
+            codeArea.style.height ='300px'
             codeArea.label = 'New Label:';
             codeArea.value = 'alert("Hello world!");';
 		</script>

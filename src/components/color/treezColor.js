@@ -42,7 +42,7 @@ export default class TreezColor extends LabeledTreezElement {
     updateElements(color){
     	if(this.__colorPicker){                    	
 			this.__colorPicker.value= color.hexString; 
-			this.__colorPicker.title = color.hexString;
+			this.__colorPicker.title = color.name;
     	}
     }
     
@@ -55,7 +55,11 @@ export default class TreezColor extends LabeledTreezElement {
     	try{
     		return Color.forHexString(colorHexString);
     	} catch (error){
-    		return new Color('custom', colorHexString);
+    		if(colorHexString){
+    			return new Color('custom', colorHexString);
+    		} else {
+    			return Color.black;
+    		}    		
     	}                	
     }
 
@@ -75,7 +79,7 @@ export default class TreezColor extends LabeledTreezElement {
     	}
     }	     
 
-    __getColorHexString(value){
+    static __getHexStringFromStringColor(value){
     	
     	if(value.startsWith('#')){
     		return value;
@@ -99,7 +103,7 @@ export default class TreezColor extends LabeledTreezElement {
   	  if(value instanceof Color){
   		colorHexString = this.convertToStringValue(value);
   	  }	else {
-  		colorHexString = this.__getColorHexString(value);
+  		colorHexString = TreezColor.__getHexStringFromStringColor(value);
   	  } 
   	  this.setAttribute('value', colorHexString);  				  
   	}	

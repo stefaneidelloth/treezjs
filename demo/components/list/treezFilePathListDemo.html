@@ -2,18 +2,19 @@
 <html>
 
 	<head>
-		<link type="text/css" rel="stylesheet" href="./treezStringList.css" />
+		<link type="text/css" rel="stylesheet" href="../../../src/components/list/treezStringList.css" />
+		<link type="text/css" rel="stylesheet" href="../../../src/components/file/treezFilePath.css"/>
 	</head>
 
 	<body>	
 	
-		<treez-file-path-list id="pathList" label="File paths" value="c:\foo.txt,c:\baa.txt"></treez-file-path-list>	
+		<treez-file-path-list id="pathList" label="File paths" value="['c:/foo.txt','c:/baa.txt']"></treez-file-path-list>	
 
 		<script type="module">
-			import TreezFilePathList from './treezFilePathList.js';
+			import TreezFilePathList from '../../../src/components/list/treezFilePathList.js';
 
             var pathList = document.getElementById('pathList'); 
-            pathList.value = 'c:\foo.txt,c:\baa.txt,c:\qux.txt'; 
+            pathList.value = ['c:/foo.txt','c:/baa.txt','c:/qux.txt']; 
 		</script>
 		
 	</body>

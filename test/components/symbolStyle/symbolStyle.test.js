@@ -1,7 +1,12 @@
-//import LabeledTreezElement from '../../src/components/.js';
+import SymbolStyle from '../../../src/components/symbolStyle/symbolStyle.js';
 
-describe('', ()=>{
-    it('', ()=>{
-    
+
+describe('SymbolStyle', ()=>{
+
+    it('number of values', ()=>{  
+        expect(SymbolStyle.values.length).toBe(8);   
     });
+
+    
+
 });

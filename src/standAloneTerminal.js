@@ -8,12 +8,23 @@ export default class StandAloneTerminal {
 		this.__onFinished = undefined;
 		this.__isExecutingQuery = false;		
 		
-		this.__webSocket= new WebSocket("ws://localhost:8001/");    				
-		  
-	    this.__webSocket.onopen = (event)=>this.__webSocketOnOpen(event);
-	    this.__webSocket.onmessage = (event)=>this.__webSocketOnMessage(event); 
-	    this.__webSocket.onerror = (event)=>this.__webSocketOnError(event); 
-			
+		this.__webSocketPromise = undefined;  			
+	}
+
+	get webSocketPromise() {
+		if (!this.__webSocketPromise) {
+		  this.__webSocketPromise = new Promise((resolve, reject) => {
+								  	let webSocket = new WebSocket("ws://localhost:8001/");	
+								  	webSocket.onopen = (event)=>this.__webSocketOnOpen(event);
+									webSocket.onmessage = (event)=>this.__webSocketOnMessage(event); 
+									webSocket.onerror = (event)=>this.__webSocketOnError(event); 							
+								  	webSocket.onopen = () => {									
+									resolve(webSocket);
+								  };
+								  webSocket.onerror = error => reject(error);
+							});
+		}
+		return this.__webSocketPromise;
 	}
 	
 	async browseFilePath(initialDirectory){   	
@@ -160,14 +171,30 @@ export default class StandAloneTerminal {
 			connectionString: connectionString,
 			query: query
 		};
-		this.__webSocket.send(JSON.stringify(jsonObject));	
+
+		this.webSocketPromise
+		  .then( webSocket =>{
+		  	webSocket.send(JSON.stringify(jsonObject));
+		  })
+		  .catch( error => {
+		  	console.log("Could not send query to WebSocket:")
+		  	console.log(error);
+		  });	
 	}
 	
 	__send(command){
 		var jsonObject = {
 			command: command
 		};
-		this.__webSocket.send(JSON.stringify(jsonObject));	
+
+		this.webSocketPromise
+		  .then( webSocket =>{
+		  	webSocket.send(JSON.stringify(jsonObject));
+		  })
+		  .catch( error => {
+		  	console.log("Could not send message to WebSocket:")
+		  	console.log(error);
+		  });		
 	}
 
 	__replaceForwardWithBackwardSlash(command){

@@ -38,8 +38,15 @@ export default class TreezComboBox extends LabeledTreezElement {
                this.__recreateOptionTags();	                           
 			}                                     		
         }
+
+        var initialValue;
+        try{
+        	initialValue = this.value;
+        } catch(error){
+        	
+        }
         
-        this.updateElements(this.value);	
+        this.updateElements(initialValue);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
     }  	

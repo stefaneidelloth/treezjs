@@ -1,4 +1,5 @@
 import TreezStringList from './treezStringList.js';
+import TreezFilePath from './../file/treezFilePath.js';
 
 export default class TreezFilePathList extends TreezStringList {
 

@@ -34,7 +34,7 @@ export default class TreezStringList extends TreezElement {
     
     __createContainer(){
     	var container = document.createElement('div');  
-		container.setAttribute("class","treez-string-list-container");
+		container.setAttribute("class","treez-list-container");
 		this.appendChild(container);
 		return container;
     }
@@ -183,6 +183,7 @@ export default class TreezStringList extends TreezElement {
     	if(value){
     		this.setCellValue(cell, value);    		
     	}
+    	this.styleCell(cell, value);
     }
     
     getCellValue(cell){
@@ -190,7 +191,13 @@ export default class TreezStringList extends TreezElement {
     }
     
     setCellValue(cell, value){
-    	cell.innerText = value;	
+    	cell.innerText = value;	    	
+    }
+
+    styleCell(cell, value){
+    	cell.style.border ='solid 1px lightgrey';
+    	cell.style.backgroundColor = 'white';
+    	cell.style.padding= '0px';
     }
     
 	__deleteRow(){
