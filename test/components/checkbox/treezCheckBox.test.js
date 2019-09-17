@@ -35,7 +35,7 @@ describe('TreezCheckBox', ()=>{
 
     beforeEach(async () => {
         await TestUtils.clearBody(page);
-        await TestUtils.createCustomElement(page, id, 'TreezCheckBox', '../../src/components/checkbox/treezCheckBox.js');
+        await TestUtils.createCustomElement(page, id, 'TreezCheckBox', '../../src/components/checkBox/treezCheckBox.js');
     });
     
     describe('State after construction', ()=>{

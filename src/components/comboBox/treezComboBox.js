@@ -83,24 +83,27 @@ export default class TreezComboBox extends LabeledTreezElement {
 			comboBox.removeChild(comboBox.lastChild);
 		}
 
-		var optionEntries = this.getAttribute('options').split(',');
-		optionEntries.forEach(option=>{
-			var optionTag = this.__createOptionTag(option)						
-		    comboBox.appendChild(optionTag);
-		});
+		var options = this.getAttribute('options');
+		if(options){
+			var optionEntries = options.split(',');
+			optionEntries.forEach(option=>{
+				var optionTag = TreezComboBox.__createOptionTag(option)						
+				comboBox.appendChild(optionTag);
+			});
 
-		if(oldValue){
-			if (optionEntries.indexOf(oldValue) > -1){
-				comboBox.value = oldValue;
-			} else {
-				if (optionEntries.length > 0 ){
-					comboBox.value = optionEntries[0];
+			if(oldValue){
+				if (optionEntries.indexOf(oldValue) > -1){
+					comboBox.value = oldValue;
+				} else {
+					if (optionEntries.length > 0 ){
+						this.value = optionEntries[0];
+					}
 				}
-			}
-		}	
+			}	
+		}		
 	}	
 	
-	__createOptionTag(option){
+	static __createOptionTag(option){
 		var optionTag = document.createElement('option')
 	 	optionTag.innerText=option;
 		return optionTag;
