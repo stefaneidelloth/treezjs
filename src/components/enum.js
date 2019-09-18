@@ -2,7 +2,9 @@
 export default class Enum {
 
 	static get values(){
-		var keys = Object.keys(this).filter(key=>!key.startsWith('__'));		
+		var keys = Object.keys(this)
+					.filter(key=>!key.startsWith('__'))
+					.filter(key=>!(this[key] instanceof Function));		
 		return keys.map(key=>this[key]);
 	}	
 

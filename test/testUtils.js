@@ -56,6 +56,18 @@ export default class TestUtils {
         },{moduleScript}); 
     }
 
+    static async importModule(page, className, importPath){  
+
+        var moduleScript = "import " + className + " from '" + importPath + "';\n"; 
+
+        await page.evaluate(({moduleScript}) => {            
+            var script = document.createElement('script');
+            script.type = 'module';
+            script.innerHTML = moduleScript; 
+            document.head.appendChild(script);            
+        },{moduleScript}); 
+    }
+
     static async clearBody(page){
         await page.evaluate(()=>{
             while(document.body.firstChild){

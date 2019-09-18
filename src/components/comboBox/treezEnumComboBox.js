@@ -13,18 +13,17 @@ export default class TreezEnumComboBox extends TreezComboBox {
 			throw new Error('Options have to be set before retrieving value');
 		}
 
-    	if(stringValue!=='undefined'){
-			return this.__enumClass.forName(stringValue);
-		} else {
+    	if(stringValue === 'undefined'){
 			return this.__enumClass.values[0];
-		}                	
-    } 
-	
+		}
+		
+		return this.__enumClass.forName(stringValue);
+		                	
+	} 
+		
 	set options(enumClass) {
-		this.__enumClass = enumClass;
-
-		var names = enumClass.values.map((enumValue)=>enumValue.name);
-		var optionsString = names.join(',');
+		this.__enumClass = enumClass;		
+		var optionsString = enumClass.names.join(',');
 	  	this.setAttribute('options', optionsString);	
 	}              		
                           
