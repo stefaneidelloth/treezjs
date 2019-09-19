@@ -103,7 +103,7 @@ describe('TreezElement', ()=>{
 
             var updatedWidth = await page.$eval('#treez-element', element=> element.style.width);
 
-            expect(updatedWidth).toBe(''); //style.width cannot be set for a pure HTMLElement without content
+            expect(updatedWidth).toBe('100%'); 
                       
         });
 

@@ -42,7 +42,7 @@ export default class TreezElement extends HTMLElement {
 	//(This method is automatically called after the corresponding attribute has been changed
 	//and should not be manually called. Also see method attributeChangedCallback) 
     updateWidth(width){		
-		this.style.width = width + ' !important';
+		this.style.width = width;
     }	
 
 	//Should be overridden by inheriting classes

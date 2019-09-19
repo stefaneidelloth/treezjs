@@ -19,7 +19,7 @@ import TreezEnumComboBox from './../../components/comboBox/treezEnumComboBox.js'
 
 import TreezDirectoryPath from './../../components/file/treezDirectoryPath.js';
 import TreezDirectoryPathList from './../../components/list/treezDirectoryPathList.js';
-import TreezDouble from './../../components/double/treezDouble.js';
+import TreezDouble from './../../components/number/treezDouble.js';
 
 import TreezErrorBarStyle from './../../components/errorBarStyle/treezErrorBarStyle.js';
 import ErrorBarStyle from './../../components/errorBarStyle/errorBarStyle.js';
@@ -34,7 +34,7 @@ import FillStyle from './../../components/fillStyle/fillStyle.js';
 import TreezFont from './../../components/font/treezFont.js';
 
 import TreezImageComboBox from './../../components/imageComboBox/treezImageComboBox.js';	
-import TreezInteger from './../../components/integer/treezInteger.js';
+import TreezInteger from './../../components/number/treezInteger.js';
 
 import TreezLineStyle from './../../components/lineStyle/treezLineStyle.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
@@ -77,19 +77,18 @@ export default class ComponentAtom extends Atom {
     	Treez.importCssStyleSheet('/src/components/checkBox/treezCheckBox.css');    	
     	Treez.importCssStyleSheet('/src/components/color/treezColor.css'); 		
     	Treez.importCssStyleSheet('/src/components/comboBox/treezComboBox.css'); 
-    	
-    	Treez.importCssStyleSheet('/src/components/double/treezDouble.css');	
 
     	Treez.importCssStyleSheet('/src/components/file/treezDirectoryPath.css');  
     	Treez.importCssStyleSheet('/src/components/file/treezFileOrDirectoryPath.css');
     	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    
-    	Treez.importCssStyleSheet('/src/components/imageComboBox/treezImageComboBox.css');	
-    	Treez.importCssStyleSheet('/src/components/integer/treezInteger.css');	
+    	Treez.importCssStyleSheet('/src/components/imageComboBox/treezImageComboBox.css');	    		
     	
     	Treez.importCssStyleSheet('/src/components/list/treezStringList.css');
 		
-    	Treez.importCssStyleSheet('/src/components/modelPath/treezModelPath.css');
+		Treez.importCssStyleSheet('/src/components/modelPath/treezModelPath.css');
+
+		Treez.importCssStyleSheet('/src/components/number/treezNumber.css');
        
     	Treez.importCssStyleSheet('/src/components/section/treezSection.css');
       
