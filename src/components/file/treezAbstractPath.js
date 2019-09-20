@@ -23,10 +23,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 		}					    
     }    
     
-    textFieldChanged(){
-    	this.value = this.__textField.value;                	             	
-    }
-   
+      
     disableElements(booleanValue){
     	if(this.__textField){   
     		this.__textField.disabled = booleanValue;
@@ -43,7 +40,11 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__container, booleanValue); 
     	}
-    }	
+	}
+	
+	textFieldChanged(){
+    	this.value = this.__textField.value;                	             	
+    }
 
     execute(){
     	var command = this.fullPath;
@@ -56,11 +57,13 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     } 
     
     injectPathMap(path){    	
-    	
-    	var pathMap = this.__pathMapProvider
-			?this.__pathMapProvider.pathMap
-			:[];
 		
+		if(!this.__pathMapProvider){
+			return path;
+		}
+
+    	var pathMap = this.__pathMapProvider.pathMap;
+				
     	var entryToInject = undefined;
 		for(var entry of pathMap){
 
@@ -86,10 +89,12 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     }
     
     static replacePathVariables(pathIncludingVariables, pathMap){
-    	var fullPath = pathIncludingVariables;
-    	if(!fullPath){
-    		return undefined;
-    	}
+    	
+    	if(!pathIncludingVariables){
+    		return pathIncludingVariables;
+		}
+		
+		var fullPath = pathIncludingVariables;
     	for(var entry of pathMap.reverse()){
     		var placeHolder = '{$' + entry.name + '$}';
     		var path = entry.value;
@@ -111,12 +116,17 @@ export default class TreezAbstractPath extends LabeledTreezElement {
        }
        
        if(fullPath.endsWith('/')){
-       		return fullPath;
+       		return fullPath.slice(0, fullPath.length-1);
        }
                                              
-       var items = fullPath.split('/');
-       var itemArray = items.slice(0, items.length-1);
-       return itemArray.join('/');
+	   var items = fullPath.split('/');
+	   var lastItem = items[items.length-1];
+	   if(lastItem.includes('.')){
+			var itemArray = items.slice(0, items.length-1);
+       		return itemArray.join('/');
+	   } else {
+			return fullPath;
+	   }       
        
     } 
     
@@ -128,28 +138,11 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     }
     
     get fullPath(){
-    	
-    	var fullPath = this.value;
-
-    	if(!fullPath){
-    		return fullPath;
-    	}
-    	
-    	var pathMap = this.__pathMapProvider
-    							?this.__pathMapProvider.pathMap
-    							:[];
-    							
-    	for(var entry of pathMap.reverse()){
-    		var placeHolder = '{$' + entry.name + '$}';
-    		var path = entry.value;
-    		fullPath = fullPath.replace(placeHolder, path);
-    	}
-    	
-    	if(fullPath.includes('{$')){
-    		console.warn('File path including unknown path variable: "' + fullPath + '"');
-    	}
-    	
-    	return fullPath;
+		if(!this.__pathMapProvider){
+			return this.value;
+		}
+		var pathMap = this.__pathMapProvider.pathMap;
+		return TreezAbstractPath.replacePathVariables(this.value, pathMap); 
     }
    
 }
