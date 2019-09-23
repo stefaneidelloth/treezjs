@@ -106,30 +106,64 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     	}
     	
     	return fullPath;
+	}
+	
+	//the stored element value might inlclude variable expressions/relative paths, e.g. {$workingDir}
+	//the fullPath does not include variable expressions but the absolute path
+	get fullPath(){
+		if(!this.__pathMapProvider){
+			return this.value;
+		}
+		var pathMap = this.__pathMapProvider.pathMap;
+		return TreezAbstractPath.replacePathVariables(this.value, pathMap); 
     }
 
         
-    get directory(){
+    get fullDirectory(){
        var fullPath = this.fullPath;
        if(!fullPath){
        		return null;
-       }
+	   }   
        
-       if(fullPath.endsWith('/')){
-       		return fullPath.slice(0, fullPath.length-1);
-       }
-                                             
-	   var items = fullPath.split('/');
-	   var lastItem = items[items.length-1];
-	   if(lastItem.includes('.')){
-			var itemArray = items.slice(0, items.length-1);
-       		return itemArray.join('/');
+	   if(this.isFile){	
+		    var items = fullPath.split('/');	    
+			var parentItemArray = items.slice(0, items.length-1);
+       		return parentItemArray.join('/');
 	   } else {
-			return fullPath;
+			if(fullPath.endsWith('/')){
+				return fullPath.slice(0, fullPath.length-1);
+	       	} else {
+				return fullPath;
+			}			
 	   }       
        
-    } 
-    
+	} 
+
+	get fullParentDirectory(){
+		var fullPath = this.fullPath;
+		if(!fullPath){
+			return null;
+		}	                                      
+		
+		if(fullPath.endsWith('/')){
+			fullPath = fullPath.slice(0, fullPath.length-1);
+		} 
+
+		var items = fullPath.split('/');
+		var parentItemArray = items.slice(0, items.length-1);
+		return parentItemArray.join('/'); 
+	 } 
+
+	get isFile(){
+		if(!this.value){
+			return false;
+		}
+
+		var items = this.value.split('/');
+		var lastItem = items[items.length-1];
+		return lastItem.includes('.');
+	}
+	    
     set pathMapProvider(provider){
     	this.__pathMapProvider = provider;
     	if(this.__textField){
@@ -137,13 +171,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     	}
     }
     
-    get fullPath(){
-		if(!this.__pathMapProvider){
-			return this.value;
-		}
-		var pathMap = this.__pathMapProvider.pathMap;
-		return TreezAbstractPath.replacePathVariables(this.value, pathMap); 
-    }
+    
    
 }
 

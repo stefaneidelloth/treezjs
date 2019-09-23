@@ -4,7 +4,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 	   
     constructor(){
         super();           
-        this.__isFile = true;
+        this.__isFileMode = true;
         this.__isFileButton = undefined;
     }            	
 
@@ -43,16 +43,16 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             rightSpan.style.verticalAlign = 'middle';
             container.appendChild(rightSpan); 
 
-              var isFileButton = document.createElement('input');
+            var isFileButton = document.createElement('input');
 			isFileButton.type='button';
 			isFileButton.onclick = ()=>{
-				if(this.__isFile){
-					this.__isFile = false;
+				if(this.__isFileMode){
+					this.__isFileMode = false;
 					isFileButton.style.background = 'url("' + urlPrefix + '/icons/directoryToggle.png")';
 					 this.__browseButton.style.background = 'url("' + urlPrefix + '/icons/browseDirectory.png")';
 					  this.__browseButton.title='browse directory path';	
 				} else {
-					this.__isFile = true;
+					this.__isFileMode = true;
 					isFileButton.style.background = 'url("' + urlPrefix + '/icons/fileToggle.png")';
 					 this.__browseButton.style.background = 'url("' + urlPrefix + '/icons/browse.png")';		
 					 this.__browseButton.title='browse file path';			
@@ -111,14 +111,14 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 
     __browseFileOrDirectoryPath(){  
 
-       if(this.__isFile){
-			window.treezTerminal.browseFilePath(this.directory).then((newValue)=>{
+       if(this.__isFileMode){
+			window.treezTerminal.browseFilePath(this.fullDirectory).then((newValue)=>{
 				if(newValue){				  
 					this.value = this.injectPathMap(newValue.trim());
 				}                    	
 			}); 
        } else {
-			window.treezTerminal.browseDirectoryPath(this.directory).then((newValue)=>{
+			window.treezTerminal.browseDirectoryPath(this.fullParentDirectory).then((newValue)=>{
 				if(newValue){
 					this.value = this.injectPathMap(newValue.trim());	
 				}                    	

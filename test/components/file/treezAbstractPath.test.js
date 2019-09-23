@@ -318,7 +318,7 @@ describe('TreezAbstractPath', ()=>{
 
         }); 
 
-        describe('get directory', ()=>{
+        describe('get fullDirectory', ()=>{
 
             it('full path is falsy', async ()=>{
 
@@ -327,7 +327,7 @@ describe('TreezAbstractPath', ()=>{
                     element.value = null;
                     console.log('full path: ' + element.fullPath);
 
-                    return element.directory === null; 
+                    return element.fullDirectory === null; 
     
                 },{id});
                 expect(success).toBe(true);
@@ -341,7 +341,7 @@ describe('TreezAbstractPath', ()=>{
                     element.value = 'c:/foo/baa';
                     console.log('full path: ' + element.fullPath);
 
-                    return element.directory === 'c:/foo/baa'; 
+                    return element.fullDirectory === 'c:/foo/baa'; 
     
                 },{id});
                 expect(success).toBe(true);
@@ -355,7 +355,7 @@ describe('TreezAbstractPath', ()=>{
                     element.value = 'c:/foo/baa/';
                     console.log('full path: ' + element.fullPath);
 
-                    return element.directory === 'c:/foo/baa'; 
+                    return element.fullDirectory === 'c:/foo/baa'; 
     
                 },{id});
                 expect(success).toBe(true);
@@ -369,12 +369,73 @@ describe('TreezAbstractPath', ()=>{
                     element.value = 'c:/foo/baa/qux.txt';
                     console.log('full path: ' + element.fullPath);
 
-                    return element.directory === 'c:/foo/baa'; 
+                    return element.fullDirectory === 'c:/foo/baa'; 
+    
+                },{id});
+                expect(success).toBe(true);
+    
+            });            
+
+        });        
+
+        describe('get fullParentDirectory', ()=>{
+
+            it('full path is falsy', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                    element.value = null;
+                    console.log('full path: ' + element.fullPath);
+
+                    return element.fullParentDirectory === null; 
     
                 },{id});
                 expect(success).toBe(true);
     
             }); 
+
+            it('full path is directory', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                    element.value = 'c:/foo/baa';
+                    console.log('full path: ' + element.fullPath);
+
+                    return element.fullParentDirectory === 'c:/foo'; 
+    
+                },{id});
+                expect(success).toBe(true);
+    
+            }); 
+
+            it('full path is directory with ending slash', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                    element.value = 'c:/foo/baa/';
+                    console.log('full path: ' + element.fullPath);
+
+                    return element.fullParentDirectory === 'c:/foo'; 
+    
+                },{id});
+                expect(success).toBe(true);
+    
+            }); 
+
+            it('full path is file path', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+                    element.value = 'c:/foo/baa/qux.txt';
+                    console.log('full path: ' + element.fullPath);
+
+                    return element.fullParentDirectory === 'c:/foo/baa'; 
+    
+                },{id});
+                expect(success).toBe(true);
+    
+            });            
+
         });        
 
         it('set pathMapProvider', async ()=>{

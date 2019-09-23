@@ -65,7 +65,7 @@ export default class TreezFilePath extends TreezAbstractPath {
     }    
    
     __browseFilePath(){    
-       window.treezTerminal.browseFilePath(this.directory).then((filePath)=>{
+       window.treezTerminal.browseFilePath(this.fullDirectory).then((filePath)=>{
        	 if(filePath){			
 			this.value = this.injectPathMap(filePath.trim());
 			this.dispatchChangeEvent();	
