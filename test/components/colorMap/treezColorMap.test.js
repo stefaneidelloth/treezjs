@@ -68,16 +68,16 @@ describe('TreezColorMap', ()=>{
        
        
         
-        describe('get value', async () =>{
+        describe('get value', () =>{
 
             it('default value', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);                    
+                var success = await page.evaluate(async ({id})=>{
+                    var element = await document.getElementById(id);
                          
-                    var value = element.value  
+                    var value = element.value;
                     console.log('default value: ' + value);
     
-                    return value === null; 
+                    return value === window.ColorMap.blank;
     
                 },{id});
                 expect(success).toBe(true);

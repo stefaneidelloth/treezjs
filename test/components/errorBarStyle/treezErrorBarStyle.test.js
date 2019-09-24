@@ -68,13 +68,13 @@ describe('TreezErrorBarStyle', ()=>{
         describe('get value', async () =>{
 
             it('default value', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);                    
+                var success = await page.evaluate(async ({id})=>{
+                    var element = await document.getElementById(id);
                          
                     var value = element.value  
                     console.log('default value: ' + value);
     
-                    return value === null; 
+                    return value === window.ErrorBarStyle.bar;
     
                 },{id});
                 expect(success).toBe(true);
