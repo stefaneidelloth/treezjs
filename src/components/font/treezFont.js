@@ -7,18 +7,17 @@ export default class TreezFont extends TreezComboBox {
     } 
 
     connectedCallback() {
-    	this.options=this.getAvailableFonts();
+    	this.options = this.__availableFonts;
     	super.connectedCallback();
     }
     
-    getAvailableFonts(){
+    get __availableFonts(){
     	return 'serif,sans-serif,cursive,fantasy,monospace';                   
     }
     
-    __createOptionTag(option){
-		var optionTag = document.createElement('option')
-	 	optionTag.innerText=option;
-		optionTag.style.fontFamily=option;
+    static __createOptionTag(option){
+		var optionTag = TreezComboBox.__createOptionTag(option);	 	
+		optionTag.style.fontFamily = option;
 		return optionTag;
 	}  
                          
