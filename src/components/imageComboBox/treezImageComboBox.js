@@ -19,9 +19,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			this.__container = container;
 			container.setAttribute('class','treez-image-combo-box-container');
 			this.appendChild(container);      
-
-			var labelDiv = document.createElement('div');
-			container.appendChild(labelDiv);
+	
 			
 			var label = document.createElement('label');
 			this.__label = label;
@@ -35,8 +33,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			comboBox.setAttribute('class','treez-image-combo-box');	
 			comboBox.tabIndex=0; //required for onblur event to work
 			comboBox.onblur = () => this.__collapseComboBox();
-			
-			
+						
 			var comboBoxDisplay = document.createElement('div');
 			comboBoxDisplay.setAttribute('class','treez-image-combo-box-display');	
 			comboBox.appendChild(comboBoxDisplay);
@@ -48,7 +45,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			imageLabel.onclick = ()=>this.__expandComboBox();
 
             var comboButton = document.createElement('span');
-            this.__comboBotton = comboButton;
+            this.__comboButton = comboButton;
             comboBoxDisplay.appendChild(comboButton);						
 			comboButton.setAttribute('class','treez-image-combo-box-button');	
 			comboButton.innerText = '▾';
@@ -83,11 +80,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			this.__updateImageLabel(); 			
     	}					    
     } 
-    
-    __comboBoxChanged(option){
-    	this.value = option;    		
-    }
-   
+       
     disableElements(booleanValue){
     	if(this.__comboButton){                   		
     		this.__comboButton.disabled = booleanValue;                		
@@ -98,10 +91,14 @@ export default class TreezImageComboBox extends TreezComboBox {
     	if(this.__container){                 		
     		TreezComboBox.hide(this.__container, booleanValue); 
     	}
-    }	
+	}	
+	
+	__comboBoxChanged(option){
+    	this.value = option;    		
+    }
 
     __updateImageLabel(){
-    	let imageUrl = this.__selectedImageUrl();
+    	let imageUrl = this.__selectedImageUrl;
     	
 		if(imageUrl){
 			this.__imageLabel.setAttribute('src', imageUrl);							
@@ -109,26 +106,28 @@ export default class TreezImageComboBox extends TreezComboBox {
     }
 
 	__expandComboBox(){
-		this.__optionPanel.style='display:block;';
+		this.__optionPanel.style.display = 'block';
 	}	
 
 	__collapseComboBox(){
-		this.__optionPanel.style='display:none;';
+		this.__optionPanel.style.display = 'none';
 	}	
 
-	__selectedImageUrl(){
-		let val = this.getAttribute('value');
-		if (val){
-			return this.__nameToImageUrl(val);
-		} else {
+	get __selectedImageUrl(){
+		let value = this.getAttribute('value');
+
+		if(value === null || value === undefined || value === 'undefined' || value === 'null'){
 			if (this.options){
 				let optionEntries = this.options.split(',')
-				if(optionEntries.length>0){					
+				if(optionEntries.length>0){
 					return this.__nameToImageUrl(optionEntries[0]);
 				}
 			}
 			return undefined;
 		}
+
+		return this.__nameToImageUrl(value);
+
 	}
 
 	__nameToImageUrl(name){
@@ -141,12 +140,10 @@ export default class TreezImageComboBox extends TreezComboBox {
 	        				?window.treezConfig.home
 	        				:'';
 
-		return urlPrefix + '/src/components/' + folderName + '/' + name + this.__imageFormat()
+		return urlPrefix + '/src/components/' + folderName + '/' + name + this.__imageFormat
 	}		
 
-	__imageFormat(){
-		return '.png';
-	}
+	
 
 	__recreateOptionTags(){
 
@@ -154,7 +151,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 
 		this.__clearOptionPanel();					
 
-		this.__optionItems().forEach(option=>{					
+		this.__optionItems.forEach(option=>{					
 			let optionElement = document.createElement('div')
 			optionElement.setAttribute('class','treez-image-combo-box-option');
 			self.__optionPanel.appendChild(optionElement);
@@ -187,31 +184,35 @@ export default class TreezImageComboBox extends TreezComboBox {
 		}
 	}
 
-	__optionItems(){
-		return this.options.split(',');
-	}
-
 	__hasOption(option){
-		return this.__optionItems().indexOf(option) > -1
+		return this.__optionItems.indexOf(option) > -1
 	}
 
 	__refreshSelectedValue(){				
 		let oldValue = this.getAttribute('value');
-		if(oldValue){
-			if (!this.__hasOption(oldValue)){						
-				this.__tryToSelectFirstOption()
-			}					
-		} else {
+		if (!this.__hasOption(oldValue)){
 			this.__tryToSelectFirstOption()
 		}
+
 	}
 
 	__tryToSelectFirstOption(){
-		var optionItems = this.__optionItems();
+		var optionItems = this.__optionItems;
 		if (optionItems.length > 0 ){								
-			this.setAttribute('value_', optionItems[0]);
+			this.setAttribute('value', optionItems[0]);
 		}	
-	}                         
+	}  
+	
+	get __imageFormat(){
+		return '.png';
+	}
+
+	get __optionItems(){
+		if(!this.options){
+			return [];
+		}
+		return this.options.split(',');
+	}
 }
 
 window.customElements.define('treez-image-combo-box', TreezImageComboBox);    
