@@ -68,12 +68,18 @@ export default class TreezColor extends LabeledTreezElement {
     }
    
     disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__colorPicker){   
     		this.__colorPicker.disabled = booleanValue;
     	}
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__container){  
     		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}

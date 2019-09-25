@@ -7,6 +7,9 @@ export default class TreezElement extends HTMLElement {
 	} 
 	
 	static hide(element, booleanValue){
+		if(booleanValue === undefined){
+			throw Error('Please pass a boolean value as second argument of this method');
+		}
     	element.style.display = booleanValue
 				         			?'none'
 				         			:null;
@@ -49,13 +52,19 @@ export default class TreezElement extends HTMLElement {
 	//(This method is automatically called after the corresponding attribute has been changed
 	//and should not be manually called. Also see method attributeChangedCallback) 
     disableElements(booleanValue){
-    	console.warn('disableElements is not yet implemented for ' + this.constructor.name);
-    }	
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
+		console.warn('disableElements is not yet implemented for ' + this.constructor.name);
+	}
 
 	//Should be overridden by inheriting classes
 	//(This method is automatically called after the corresponding attribute has been changed
 	//and should not be manually called. Also see method attributeChangedCallback) 
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	console.warn('hideElements is not yet implemented for ' + this.constructor.name);
     }	
 		

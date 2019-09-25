@@ -20,7 +20,10 @@ export default class TreezTextLabel extends TreezElement {
 		//nothing to do
     }	
    
-    hideElements(booleanValue){                	
+    hideElements(booleanValue){
+        if(booleanValue === undefined){
+            throw Error('This method expects a boolean argument');
+        }
     	TreezElement.hide(this, booleanValue);            		
     }	  
 }

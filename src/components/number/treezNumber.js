@@ -111,6 +111,9 @@ export default class TreezNumber extends LabeledTreezElement {
     }	
    
     hideElements(booleanValue){
+        if(booleanValue === undefined){
+            throw Error('This method expects a boolean argument');
+        }
     	if(this.__label){   
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__numberInput, booleanValue); 

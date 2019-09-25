@@ -25,6 +25,9 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     
       
     disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__textField){   
     		this.__textField.disabled = booleanValue;
     		if(booleanValue){
@@ -36,6 +39,9 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__label){   
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__container, booleanValue); 

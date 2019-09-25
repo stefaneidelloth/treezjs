@@ -64,12 +64,18 @@ export default class TreezComboBox extends LabeledTreezElement {
     } 
    
     disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__comboBox){   
     		this.__comboBox.disabled = booleanValue;
     	}
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__container){   
     		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}

@@ -78,12 +78,18 @@ export default class TreezCodeArea extends LabeledTreezElement {
     }    
     
     disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__textArea){   
     		this.__textArea.disabled = booleanValue;
     	}
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__label){   
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		tLabeledTreezElement.hide(this.__container, booleanValue); 

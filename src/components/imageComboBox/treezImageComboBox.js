@@ -82,12 +82,18 @@ export default class TreezImageComboBox extends TreezComboBox {
     } 
        
     disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__comboButton){                   		
     		this.__comboButton.disabled = booleanValue;                		
     	}
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__container){                 		
     		TreezComboBox.hide(this.__container, booleanValue); 
     	}

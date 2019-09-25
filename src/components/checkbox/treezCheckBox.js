@@ -45,12 +45,18 @@ export default class TreezCheckBox extends LabeledTreezElement {
 	}	
 	
 	disableElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__checkBox){   
     		this.__checkBox.disabled = booleanValue;
     	}
     }	
    
     hideElements(booleanValue){
+		if(booleanValue === undefined){
+			throw Error('This method expects a boolean argument');
+		}
     	if(this.__container){   
     		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}
