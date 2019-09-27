@@ -5,7 +5,15 @@ export default class TreezFilePathList extends TreezStringList {
 
     constructor(){
         super();       
-    }  
+    }
+
+	getCellValue(cell){
+		return cell.children[0].value;
+	}
+
+	setCellValue(cell, value){
+		cell.children[0].value = value;
+	}
 
     __createRow(value){
     	var row = document.createElement('tr');
@@ -18,22 +26,16 @@ export default class TreezFilePathList extends TreezStringList {
     	cell.className = 'treez-list-td';
     	row.appendChild(cell);    	
     	
-    	var filePath = document.createElement('treez-file-path');    
-    	filePath.onchange = (event) => this.__filePathChanged(event); 	                                           
-		cell.appendChild(filePath);		
+    	var path = document.createElement('treez-file-path');
+		path.onchange = (event) => this.__filePathChanged(event);
+		cell.appendChild(path);
 		if(value){
-			filePath.value = value;
+			path.value = value;
     	}
     	
     	row.tabIndex=row.rowIndex;    	
     	cell.onblur = (event)=>this.__cellLostFocus(event); 
     }
-
-     __focusCell(rowIndex){
-    	var row = this.__tableBody.children[rowIndex];
-    	var cell = row.children[0];    	
-    	cell.focus();
-    }  
     
     __filePathChanged(event){  
         var filePath = event.srcElement;
@@ -51,15 +53,12 @@ export default class TreezFilePathList extends TreezStringList {
     	
     	this.__focusCell(rowIndex);
     }
-         
-    getCellValue(cell){
-    	return cell.children[0].value;
-    }
-    
-    setCellValue(cell, value){
-    	cell.children[0].value = value;
-    }
-    	                           
+
+	__focusCell(rowIndex){
+		var row = this.__tableBody.children[rowIndex];
+		var cell = row.children[0];
+		cell.focus();
+	}
 }
 
 window.customElements.define('treez-file-path-list', TreezFilePathList);

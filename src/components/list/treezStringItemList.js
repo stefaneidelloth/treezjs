@@ -9,9 +9,26 @@ export default class TreezStringItemList extends TreezStringList {
     
     static get observedAttributes() {
 		return TreezStringList.observedAttributes.concat(['options']);                    
-    }  
-    
-    info(item, info){
+    }
+
+	attributeChangedCallback(attr, oldValue, newValue) {
+		super.attributeChangedCallback(attr, oldValue, newValue)
+		if(attr==='options'){
+			if(this.__tableBody){
+				this.__recreateTableRows();
+			}
+		}
+	}
+
+	getCellValue(cell){
+		return cell.children[0].value;
+	}
+
+	setCellValue(cell, value){
+		cell.children[0].value = value;
+	}
+
+	info(item, info){
     	if(info === undefined){
     		return this.__itemInfoMap[item];
     	} else {
@@ -21,17 +38,6 @@ export default class TreezStringItemList extends TreezStringList {
     		}        	
     	}    	
     }
-    
-    get hasItemInfo(){
-    	return Object.keys(this.__itemInfoMap).length > 0;
-    }     
-   
-    
-    __focusCell(rowIndex){
-    	var row = this.__tableBody.children[rowIndex];
-    	var cell = row.children[0];    	
-    	cell.focus();
-    }   
 
     __createRow(value){
     	var row = document.createElement('tr');
@@ -43,8 +49,13 @@ export default class TreezStringItemList extends TreezStringList {
     	var cell = document.createElement('td');
     	cell.className = 'treez-list-td';
     	row.appendChild(cell);
-    	
-    	if(this.hasItemInfo){ 
+
+		var comboBox = document.createElement('select');
+		comboBox.className = 'treez-list-select';
+		comboBox.onchange = () => this.__comboBoxChanged(comboBox);
+		cell.appendChild(comboBox);
+
+		if(this.__hasItemInfo){
     		var infoCell = document.createElement('td');
     		infoCell.className = 'treez-list-td';
     		var info = this.__itemInfoMap[value];
@@ -52,12 +63,7 @@ export default class TreezStringItemList extends TreezStringList {
     			infoCell.innerText = info;
     		}  
     		row.appendChild(infoCell);  		
-    	} 
-    	
-    	var comboBox = document.createElement('select'); 
-    	comboBox.className = 'treez-list-select';
-    	comboBox.onchange = () => this.__comboBoxChanged(comboBox);                                              
-		cell.appendChild(comboBox); 		
+    	}
 		
 		if(this.getAttribute('options')){
            this.__recreateOptionTags(comboBox);	                           
@@ -71,8 +77,8 @@ export default class TreezStringItemList extends TreezStringList {
     	cell.onblur = (event)=>this.__cellLostFocus(event);                	
     	 
     }
-    
-    __comboBoxChanged(comboBox){
+
+	__comboBoxChanged(comboBox){
     	let cell = comboBox.parentElement;
     	let newValue = comboBox.value;
     	let rowIndex = cell.parentElement.rowIndex;  
@@ -84,20 +90,11 @@ export default class TreezStringItemList extends TreezStringList {
     	this.__focusCell(rowIndex);
     }
 
-     get __defaultValue(){
-     	if(!this.options){
-     		return '';
-     	}
-     	return this.options.split(',')[0];    	
-    } 
-    
-    getCellValue(cell){
-    	return cell.children[0].value;
-    }
-    
-    setCellValue(cell, value){
-    	cell.children[0].value = value;
-    }
+	__focusCell(rowIndex){
+		var row = this.__tableBody.children[rowIndex];
+		var cell = row.children[0];
+		cell.focus();
+	}
     
     __recreateOptionTags(comboBox){	  
 	    var oldValue = comboBox.value;
@@ -106,43 +103,48 @@ export default class TreezStringItemList extends TreezStringList {
 			comboBox.removeChild(comboBox.lastChild);
 		}
 
-		var optionEntries = this.options.split(',');
-		optionEntries.forEach(option=>{
-			var optionTag = this.__createOptionTag(option)						
-		    comboBox.appendChild(optionTag);
-		});
+		if(this.options){
+			let optionEntries = this.options.split(',');
+			optionEntries.forEach(option=>{
+				var optionTag = TreezStringItemList.__createOptionTag(option)
+				comboBox.appendChild(optionTag);
+			});
 
-		if(oldValue){
-			if (optionEntries.indexOf(oldValue) > -1){
-				comboBox.value = oldValue;
-			} else {
-				if (optionEntries.length > 0 ){
-					comboBox.value = optionEntries[0];
+			if(oldValue){
+				if (optionEntries.indexOf(oldValue) > -1){
+					comboBox.value = oldValue;
+				} else {
+					if (optionEntries.length > 0 ){
+						comboBox.value = optionEntries[0];
+					}
 				}
+				this.__comboBoxChanged(comboBox);
 			}
-		}	
+		}
+
 	}	
 	
-	__createOptionTag(option){
+	static __createOptionTag(option){
 		var optionTag = document.createElement('option')
 	 	optionTag.innerText=option;
 		return optionTag;
 	}
-	
-	attributeChangedCallback(attr, oldValue, newValue) {
-    	super.attributeChangedCallback(attr, oldValue, newValue) 
-        if(attr==='options'){
-        	if(this.__tableBody){
-        		this.__recreateTableRows();        		
-        	}                                           
-        } 					
-		
-    } 	
+
+	get __defaultValue(){
+		if(!this.options){
+			return '';
+		}
+		return this.options.split(',')[0];
+	}
+
+	get __hasItemInfo(){
+		return Object.keys(this.__itemInfoMap).length > 0;
+	}
 	
 	get options() {
-	  var optionString = this.getAttribute('options');
-	  return optionString
-	  			?optionString
+	  var optionsString = this.getAttribute('options');
+	  return optionsString
+	  			?optionsString
 	  			:'';
 	}
 
