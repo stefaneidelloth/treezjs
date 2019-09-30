@@ -69,47 +69,14 @@ export default class TreezModelPath extends LabeledTreezElement {
             	}                        	
             }						
 		}					    
-    } 
-    
-    __comboBoxChanged(){
-    	this.value = this.convertFromStringValue(this.__comboBox.value);
-    }
-    
-    convertFromStringValue(comboBoxValue){
-    	if(!comboBoxValue){
-			return null;
-		}
-
-    	if(this.isUsingRelativeRoot){
-    		if(comboBoxValue.startsWith('root')){
-    			return comboBoxValue;
-    		}
-			return this.rootPath + comboBoxValue;
-    	} else {
-    		return comboBoxValue;	
-    	}
-
-    }
-
-    convertToStringValue(absolutePath){
-
-		if(!absolutePath){
-			return null;
-		}
-
-		if(this.isUsingRelativeRoot){
-			return absolutePath.substring(this.rootPath.length);
-    	} else {
-    		return absolutePath;	
-    	}
     }
    
     disableElements(booleanValue){
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__comboButton){                   		
-    		this.__comboButton.disabled = booleanValue;                		
+    	if(this.__comboBox){
+    		this.__comboBox.disabled = booleanValue;
     	}
     }	
    
@@ -121,7 +88,40 @@ export default class TreezModelPath extends LabeledTreezElement {
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__comboBox, booleanValue); 
     	}
-    }	
+    }
+
+	convertFromStringValue(comboBoxValue){
+		if(!comboBoxValue){
+			return null;
+		}
+
+		if(this.isUsingRelativeRoot){
+			if(comboBoxValue.startsWith('root')){
+				return comboBoxValue;
+			}
+			return this.rootPath + comboBoxValue;
+		} else {
+			return comboBoxValue;
+		}
+
+	}
+
+	convertToStringValue(absolutePath){
+
+		if(!absolutePath){
+			return null;
+		}
+
+		if(this.isUsingRelativeRoot){
+			return absolutePath.substring(this.rootPath.length);
+		} else {
+			return absolutePath;
+		}
+	}
+
+	__comboBoxChanged(){
+		this.value = this.convertFromStringValue(this.__comboBox.value);
+	}
     
     __updateOptionsAndRelativeRoot(){                	
 
@@ -130,8 +130,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     	} 
     	                	             	
         var modelPaths = [null].concat(this.__getAvailableModelPaths(this.root, this.hasToBeEnabled, this.filterDelegate));
-        
-		
+
 		var newComboBoxValue = this.__tryToGetUpdatedModelPath(modelPaths);
 		var newValue = this.convertFromStringValue(newComboBoxValue);
 		if(this.value !== newValue){
@@ -153,8 +152,12 @@ export default class TreezModelPath extends LabeledTreezElement {
     		return null;
     	}
 
-    	if(newAvailableModelPaths.length < 2){
-    		return oldModelPath; 
+		if(newAvailableModelPaths.length === 0){
+			return null;
+		}
+
+    	if(newAvailableModelPaths.length === 1){
+    		return newAvailableModelPaths[0];
     	}
 
     	if(newAvailableModelPaths.indexOf(oldModelPath) >-1){
@@ -176,7 +179,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 
     __updateRelativeRootLabel(){
 		if(this.isUsingRelativeRoot){
-			this.__relativeRootLabel.textContent = this.root.treePath;
+			this.__relativeRootLabel.textContent = this.rootPath;
 			this.__relativeRootLabel.style.display='inline-block';
 		} else {
 			this.__relativeRootLabel.textContent ='';
@@ -198,13 +201,10 @@ export default class TreezModelPath extends LabeledTreezElement {
         } 
     }
     
-    __getAvailableModelPaths(atom, hasToBeEnabled, filterDelegate){ 
-
+    __getAvailableModelPaths(atom, hasToBeEnabled, filterDelegate){
     	
     	var classes = this.__atomClasses;
     	var functionNames = this.__atomFunctionNames;
-    	    	
-    	
     	            		            		
 		var availablePaths = [];
 		
@@ -241,7 +241,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 
     __addAvailablePathByClass(availablePaths, child, classes, filterDelegate){
 
-		var rootPath = this.root.treePath;
+		var rootPath = this.rootPath;
     	var paths = availablePaths;
 		for(var clazz of classes){           						
 			if (!(child instanceof clazz)) {
@@ -261,16 +261,29 @@ export default class TreezModelPath extends LabeledTreezElement {
 		return paths;
 	}
 
-	__addAvailablePathByInterface(availablePaths, child, functionNames){		
+	__addAvailablePathByInterface(availablePaths, child, functionNames, filterDelegate){		
 		var paths = availablePaths;
-		return this.__containsAllFunctions(child, functionNames)
-			? this.__addPathForChild(availablePaths, child)
-			:paths;		
+		var hasInterface =  this.__containsAllFunctions(child, functionNames)
+
+		if(hasInterface){
+
+			if (filterDelegate) {
+				var passedFilter = filterDelegate(child);
+				if (passedFilter) {
+					paths = this.__addPathForChild(paths, child);
+				}
+			} else {
+				paths = this.__addPathForChild(paths, child);
+			}
+
+		}
+
+		return paths;
 	}
 
 	__addPathForChild(availablePaths, child){
 
-		var rootPath = this.root.treePath;
+		var rootPath = this.rootPath;
 		var paths = availablePaths;
 		var path = child.treePath;
 
