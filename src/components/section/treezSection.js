@@ -4,39 +4,13 @@ import TreezSectionAction from './treezSectionAction.js';
 export default class TreezSection extends HTMLElement {
 
     static get observedAttributes() {
-        return ['label','collapsed','actions'];
+        return ['label','collapsed'];
     }
-    
-    get label() {
-	  return this.getAttribute('label');
-	}
-
-	set label(newValue) {
-	  this.setAttribute('label', newValue);	  
-
-	}  
-
-    get actions(){
-		return this.__actionArray;
-	}
-
-	set actions(actions){
-		this.__actionArray=actions;
-	}                  
-
-    set children(children){
-        super.children=children;
-	}
-	
-	get children(){
-        return super.children;
-	}
 
     constructor(){
         super();
         this.__sectionHeader=undefined;
         this.__isInitiallyExpanded=true;
-        this.__actionArray=[];
     }            	
 
     connectedCallback() {
@@ -57,59 +31,52 @@ export default class TreezSection extends HTMLElement {
             this.__processSectionActions(toolbar);
                           
             sectionHeader.onclick = () => this.__toggleExpansion();
-            this.insertBefore(sectionHeader, this.firstChild); 
+            this.insertBefore(sectionHeader, this.firstChild); //first child/content is not created here but must come from
+			                                                  //constructing code; header is just inserted above
 
             if(!this.__isInitiallyExpanded){
             	this.__toggleExpansion();
             }                       
         }
     }
-    
-    expand(){                	
-        let header = this.children[0];
-    	let content = this.__getSectionContentDiv()
-    	let style = content.style;
-    	
-		style.display='block';
-		header.classList.remove('collapsed');                  	
+
+	attributeChangedCallback(attr, oldValue, newValue) {
+		if(attr==='label'){
+			if(this.__sectionHeader){
+				this.__sectionHeader.innerText= newValue;
+			}
+		} else if(attr==='collapsed'){
+			this.__isInitiallyExpanded = (newValue === null);
+		}
+	}
+
+	disconnectedCallback(){
+		while (this.firstChild) {
+			this.removeChild(this.firstChild);
+		}
+	}
+
+    expand(){
+    	this.__sectionContent.style.display='block';
+		this.__sectionHeader.classList.remove('collapsed');
     }
 
     collapse(){
-    	
-        let header = this.children[0];
-    	let content = this.__getSectionContentDiv();
-    	let style = content.style;
-    	
-		style.display='none';
-    	header.classList.add('collapsed'); 
-    	
+    	this.__sectionContent.style.display='none';
+    	this.__sectionHeader.classList.add('collapsed');
     }
 
-    __toggleExpansion(){ 
-       
-    	let content = this.__getSectionContentDiv()
-    	let style = content.style;
-    	if(style['display']==='none'){
+    __toggleExpansion(){
+    	if(this.isCollapsed){
 			this.expand();
     	} else {
     		this.collapse();
     	}                 	
-    }  
-    
-    __getSectionContentDiv(){
-
-        for(let child of this.children){
-			if(child.tagName ==='DIV'){
-				return child;
-			}
-		  } 
-		  return this.children[1]; 
-      }
+    }
 
     __processSectionActions(toolbar){ 
 
-    	for(let index=0; index < this.children.length;index++){
-    		let child = this.children[index];
+    	for(let child of this.children){
     		if(child instanceof TreezSectionAction){
     			this.__processSectionAction(child, toolbar);                			
     		}
@@ -144,41 +111,30 @@ export default class TreezSection extends HTMLElement {
     	
     }
 
-    disconnectedCallback(){
-    	while (this.firstChild) {
-			this.removeChild(this.firstChild);
+	get label() {
+		return this.getAttribute('label');
+	}
+
+	set label(newValue) {
+		this.setAttribute('label', newValue);
+	}
+
+	get isCollapsed(){
+		return this.__sectionHeader.classList.contains('collapsed');
+	}
+
+	get __sectionContent(){
+
+		for(let child of this.children){
+			let isContent = child.constructor.name !=='TreezSectionHeader' &&
+				child.constructor.name !=='TreezSectionAction';
+			if(isContent){
+				return child;
+			}
 		}
-    }
 
-    attributeChangedCallback(attr, oldValue, newValue) {
-        if(attr==='label'){
-        	if(this.__sectionHeader){
-        		 this.__sectionHeader.innerText= newValue;   
-        	}                                           
-        } else if(attr==='collapsed'){
-			this.__isInitiallyExpanded = (newValue === null);
-        }
-    }
-
-    observeChildren(){
-    	//also see documentation at https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-		var observer = new MutationObserver(this.__childrenChanged);
-		var config = { 					              
-		               childList: true 
-		             };
-		observer.observe(this, config);
-    }
-
-    __childrenChanged(mutations){
-    	mutations.forEach((mutation)=>{
-    		console.log('A child node has been added or removed.');
-    		if(this.__isInitiallyExpanded){
-    			this.children[1].style.display="block";
-    		} else {
-    			this.children[1].style.display="none";
-    		}
-    	});						
-    } 
+		return null;
+	}
 	
 }
 
