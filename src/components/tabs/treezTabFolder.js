@@ -6,22 +6,31 @@ export default class TreezTabFolder extends HTMLElement {
 
     constructor(){
         super();
-        this.__tabFolderHeader=undefined;
+        this.__tabFolderHeader = undefined;
     }
 
     connectedCallback() {
     	
         if(!this.__tabFolderHeader){
-            this.style.display='block';   
+            this.style.display='block';
+
             var tabfolderHeader =  document.createElement('treez-tab-folder-header');
+            tabfolderHeader.style.display = 'block';
+
             this.__tabFolderHeader = tabfolderHeader;
             this.insertBefore(tabfolderHeader, this.firstChild);																	            
         }                    
-    }               
+    }
+
+    disconnectedCallback(){
+        while (this.firstChild) {
+            this.removeChild(this.firstChild);
+        }
+    }
 
     createTabHeaderForTabIfNotExists(tab){
     	if(!tab.tabHeader){
-    		let tabFolderHeader = this.children[0]; 
+
 			let newTabHeader = document.createElement('treez-tab-header');  
         	newTabHeader.innerText = tab.label;
         	newTabHeader.onclick=()=>{                    	
@@ -30,15 +39,14 @@ export default class TreezTabFolder extends HTMLElement {
                 newTabHeader.classList.add('selected')                        
             };
         	tab.tabHeader = newTabHeader;
-        	tabFolderHeader.appendChild(newTabHeader);
+            this.__tabFolderHeader.appendChild(newTabHeader);
         	this.__showFirstTab();
     	} 					 
     }
 
     __hideAllTabs(){
     	let children = this.children;
-    	let tabFolderHeader = children[0];
-    	let tabHeaders = tabFolderHeader.children;
+    	let tabHeaders = this.__tabFolderHeader.children;
     	for(let index=1;index<children.length;index++){ 
 			let tab = children[index];                        
 			tab.style.display='none';
@@ -49,24 +57,18 @@ export default class TreezTabFolder extends HTMLElement {
         }   
     }
 
-    __showFirstTab(){                	
-    	let children = this.children;
-    	let tabFolderHeader = children[0];
+    __showFirstTab(){
 
-		let firstTabHeader = tabFolderHeader.children[0];
-		firstTabHeader.classList.add('selected')
-        tabFolderHeader.style.display="block"                    
-        for(let index=1;index<children.length;index++){                            
-            children[index].style.display="none";
-        }   
-        children[1].style.display="block";                      
+        this.__hideAllTabs();
+
+        let firstTabHeader = this.__tabFolderHeader.firstChild;
+		firstTabHeader.classList.add('selected');
+
+		let firstTab = this.children[1];
+		firstTab.style.display = 'block';
     }               
 
-    disconnectedCallback(){
-        while (this.firstChild) {
-			this.removeChild(this.firstChild);
-		}
-    }
+
 }
 
 window.customElements.define('treez-tab-folder', TreezTabFolder);

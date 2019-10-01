@@ -1,27 +1,15 @@
 import TreezTabFolder from './treezTabFolder.js';
 
 export default class TreezTab extends HTMLElement {
-            	
-	static get observedAttributes() {
-		return TreezElement.observedAttributes.concat(['label']);                    
-    }
-	
-	get label() {
-	  return this.getAttribute('label');
-	}
 
-	set label(newValue) {
-	  this.setAttribute('label', newValue);	
-	} 
+    static get observedAttributes() {
+        return ['label'];
+    }
 
     constructor(){
         super();                   
-        this.tabHeader=undefined;
+        this.tabHeader=undefined; //also see usage in TreezTabFolder
     }
-
-    static get observedAttributes() {
-        return ['label']; 
-    }               
 
     connectedCallback() { 
 		let tabFolder = this.parentElement;
@@ -30,23 +18,26 @@ export default class TreezTab extends HTMLElement {
 		}               
     }
 
+    attributeChangedCallback(attr, oldValue, newValue) {
+        if(attr==='label' && this.tabHeader){
+            this.tabHeader.innerText= newValue;
+        }
+    }
+
     disconnectedCallback(){
-    	//console.log('disconnected callback');
     	while (this.firstChild) {
 			this.removeChild(this.firstChild);
 		}
     }
 
-    adoptedCallback(){
-        //console.log('adopted callback');
+    get label() {
+        return this.getAttribute('label');
     }
 
-    attributeChangedCallback(attr, oldValue, newValue) {
-        if(attr==='label' && this.tabHeader){
-            this.tabHeader.innerText= newValue;                       
-        }
-    } 
-   
+    set label(newValue) {
+        this.setAttribute('label', newValue);
+    }
+
 }
 
 window.customElements.define('treez-tab', TreezTab);
