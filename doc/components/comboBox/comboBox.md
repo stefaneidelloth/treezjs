@@ -18,7 +18,7 @@ The ComboBox component is used to select some option from a list of predefiend o
     ...
     sectionContent.append('treez-combo-box')
 		  .label('Mode')
-		  .options('foo,baa,qux')
+		  .attr('options','foo,baa,qux')
 		  .onChange(()=> this.showAndHideDependentComponents())
 		  .bindValue(this, ()=>this.mode);	
    ...
