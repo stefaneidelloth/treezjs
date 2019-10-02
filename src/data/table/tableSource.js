@@ -58,9 +58,9 @@ export default class TableSource extends ComponentAtom  {
 			
 		var sectionContent = section.append('div');
 		
-		sectionContent.append('treez-combo-box')
+		sectionContent.append('treez-enum-combo-box')
 			.label('Source type')
-			.values(TableSourceType.values)
+			.options(TableSourceType)
 			.onChange(()=> this.showAndHideDependentComponents())
 			.bindValue(this, ()=>this.type);		
 
