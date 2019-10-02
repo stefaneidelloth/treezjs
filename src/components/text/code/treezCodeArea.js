@@ -4,11 +4,8 @@ import Treez from './../../../treez.js';
 export default class TreezCodeArea extends LabeledTreezElement {    
 
     constructor(){
-        super();                            
-        this.__listeners = [];      
-        this.__label = undefined;  
+        super();
         this.__container = undefined;
-        this.__textArea = undefined;  
         this.__codeMirror = undefined; 
         				
 		Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');                                      
@@ -62,14 +59,25 @@ export default class TreezCodeArea extends LabeledTreezElement {
 				});
 			}        
 
-			self.disableElements(self.disabled)
+			self.updateElements(self.value);
+			self.disableElements(self.disabled);
 			self.hideElements(self.hidden); 
 		}, function(error){
 			console.log(error);
 		});        
-    }    
-    
-    updateElements(newValue){
+    }
+
+	attributeChangedCallback(attr, oldStringValue, newStringValue) {
+		super.attributeChangedCallback(attr, oldStringValue, newStringValue)
+
+		if(attr==='mode'){
+			if(this.__codeMirror){
+				this.__codeMirror.setOption('mode', newStringValue);
+			}
+		}
+	}
+
+	updateElements(newValue){
     	if(this.__codeMirror){ 
     		if(this.__codeMirror.getValue() !== newValue) {
     			this.__codeMirror.setValue(newValue);
@@ -81,8 +89,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__textArea){   
-    		this.__textArea.disabled = booleanValue;
+    	if(this.__codeMirror){
+    		this.__codeMirror.disabled = booleanValue;
     	}
     }	
    
@@ -90,21 +98,11 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__label){   
-    		LabeledTreezElement.hide(this.__label, booleanValue);
-    		tLabeledTreezElement.hide(this.__container, booleanValue); 
+    	if(this.__codeMirror){
+    		LabeledTreezElement.hide(this.__container, booleanValue);
     	}
-    }	
-    
-    attributeChangedCallback(attr, oldStringValue, newStringValue) {
-    	super.attributeChangedCallback(attr, oldStringValue, newStringValue)                	     	      
-    	
-        if(attr==='mode'){
-        	if(this.__codeMirror){
-        		 this.__codeMirror.setOption('mode', newStringValue);  
-        	}                                           
-        }	                   
-    }  
+    }
+
     
     get mode() {
 		 return this.getAttribute('mode');

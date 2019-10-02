@@ -37,11 +37,7 @@ export default class TreezTextArea extends LabeledTreezElement {
     	if(this.__textArea){                    	
 			this.__textArea.value = newValue; 
     	}					    
-    }  
-    
-    __textAreaChanged(){
-    	this.value = this.__textArea.value;                	
-    }  
+    }
     
     disableElements(booleanValue){
         if(booleanValue === undefined){
@@ -61,7 +57,11 @@ export default class TreezTextArea extends LabeledTreezElement {
     		LabeledTreezElement.hide(this.__container, booleanValue); 
     	}
     }
-                              
+
+    __textAreaChanged(){
+        this.value = this.__textArea.value;
+    }
+
 }
 
 window.customElements.define('treez-text-area', TreezTextArea);

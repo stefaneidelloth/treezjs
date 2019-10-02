@@ -10,10 +10,12 @@ export default class TreezTextField extends LabeledTreezElement {
 
     connectedCallback() {
     	
-        if(!this.__label){   
-        	if(this.label){
-        		this.__createTextFieldLabel();
-        	}           
+        if(!this.__label){
+            this.__createTextFieldLabel();
+            if(!this.label){
+                LabeledTreezElement.hide(this.__label, true);
+            }
+
         }
         
         if(!this.__textField){
@@ -21,7 +23,7 @@ export default class TreezTextField extends LabeledTreezElement {
         }
 
         if(!this.width){
-        	this.width='99%';
+        	this.width = '99%';
         }
         
         this.updateElements(this.value);	
@@ -29,35 +31,15 @@ export default class TreezTextField extends LabeledTreezElement {
 		this.hideElements(this.hidden); 
     }
     
-    __createTextFieldLabel(){
-    	var label = document.createElement('label');  
-        this.__label = label;                     
-        label.innerHTML = this.label;  
-        label.className = 'treez-text-field-label';
-        this.appendChild(label); 
-    }
-    
-    __createTextField(){
-    	var textField = document.createElement('input'); 
-        this.__textField = textField;
-        this.appendChild(textField); 
-        textField.className = 'treez-text-field-field';                
-        textField.onchange = () => this.__textFieldChanged();
-    }
-    
     updateElements(newValue){
     	if(this.__textField){                    	
 			this.__textField.value= newValue; 
     	}					    
     }
-    
-    __textFieldChanged(){
-    	this.value = this.__textField.value;                	
-    }  
 
     updateWidth(width){
     	if(this.__textField){ 
-    		this.__textField.style.width = width;  //TODO: consider label width?   
+    		this.__textField.style.width = width;
     	}                	
     }                 
 
@@ -71,11 +53,36 @@ export default class TreezTextField extends LabeledTreezElement {
         if(booleanValue === undefined){
             throw Error('This method expects a boolean argument');
         }
-    	if(this.__label){   
-    		LabeledTreezElement.hide(this.__label, booleanValue);
+    	if(this.__label){
+    	    if(this.label){
+                LabeledTreezElement.hide(this.__label, booleanValue);
+            } else {
+                LabeledTreezElement.hide(this.__label, true);
+            }
+
     		LabeledTreezElement.hide(this.__textField, booleanValue); 
     	}
-    }    
+    }
+
+    __textFieldChanged(){
+        this.value = this.__textField.value;
+    }
+
+    __createTextFieldLabel(){
+        var label = document.createElement('label');
+        this.__label = label;
+        label.innerHTML = this.label;
+        label.className = 'treez-text-field-label';
+        this.appendChild(label);
+    }
+
+    __createTextField(){
+        var textField = document.createElement('input');
+        this.__textField = textField;
+        this.appendChild(textField);
+        textField.className = 'treez-text-field-field';
+        textField.onchange = () => this.__textFieldChanged();
+    }
                           
 }
 
