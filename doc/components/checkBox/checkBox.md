@@ -4,7 +4,7 @@
 
 # CheckBox
 		
-The CheckBox represents a boolean value (true or false). 
+The CheckBox represents a boolean value (**true** or **false**). 
 	
 ![](../../images/treez_check_box.png)
 		
@@ -33,20 +33,49 @@ The CheckBox represents a boolean value (true or false).
 
 ## HTML String Attributes
 
-* **value**: Represents the current value. If you want to specify false:
+### value
 
-** Do not specify the 'value' attribute in the html tag 'treez-check-box' or
-** Use element.setAttribute('value',null)
+Represents the current value. If you want to specify **false**:
 
-If you want to specify true:
+* Do not specify the 'value' attribute in the html tag 'treez-check-box'.
+
+* Use element.setAttribute('value',null)
+
+If you want to specify **true**:
+
 ** Set the 'value' attribute in the html tag 'treez-check-box' to any value (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
+
 ** Use element.setAttribute('value','') (or set it to any other value that is not equal to null). 
 
-* **disabled**: Do not specify the 'disabled' attribute (or use element.setAttribute('disabled', null)) to enable the check box and set to any other value to disable the check box. 
+### disabled
 
-* **hidden**: Do not specifiy the 'hidden' atttribute (or use element.setAttribute('hidden', null) to show the check box and set to any other value to hide the check box. 
+If you want to enable the check box:
 
-* **width**: The total css width of the check box. 
+* Do not specify the 'disabled' attribute in the html tag
+
+* Use element.setAttribute('disabled', null)) 
+
+If you want to disable the check box:
+
+* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
+
+* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
+
+### hidden
+
+If you want to show the check box:
+
+* Do not specify the 'hidden' attribute in the html tag
+
+* Use element.setAttribute('hidden', null)) 
+
+If you want to hide the check box:
+
+* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
+
+* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
+
+* **width**: The total css width of the check box, e.g. '500px'
 
 * **label**: The label text that is shown before the check box.
 
