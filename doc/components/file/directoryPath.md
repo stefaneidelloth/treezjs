@@ -33,6 +33,7 @@ The DirectoryPath component allows to select the path to a directory of the file
     sectionContent.append('treez-directory-path')
 		  .label('Directory:')		
 		  .value('C:\')
+		  .nodeAttr('pathMapProvider', this)
 		  .bindValue(this, () => this.directoryPath);	
    ...
 ```
@@ -41,7 +42,27 @@ The DirectoryPath component allows to select the path to a directory of the file
 
 ### value
 
-The directory path as a string. 
+The directory path as a string. If a pathMapProvider is given, the directory path might be a relative path.  
+
+### pathMapProvider
+
+A pathMapProvider is an object that has an attribute 'pathMap'. The pathMap itself is a dictionary, mapping
+from directory names to directory paths, e.g.
+
+{
+  'workingDir': 'C:/myProject',
+  'imageDir': '{$workingDir$}/images'
+}
+
+If you select a directory and the path of that directory includes a path from the pathMap (e.g. 'C:/myProject'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/foo').  
+
+### fullDirectory
+
+Returns the full/absolute path of the directory (the 'value' attribute might contain a relative path).
+
+### fullParentDirectory
+
+Rerturns the full/absolute path to the parent directory (or null if there is no parent directry). 
 
 ### disabled
 
