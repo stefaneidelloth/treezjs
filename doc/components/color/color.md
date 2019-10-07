@@ -39,7 +39,7 @@ Color.red => ![#ff0000](https://placehold.it/15/ff0000/000000?text=+) '#ff0000'
 
 Color.white => ![#ffffff](https://placehold.it/15/ffffff/000000?text=+) '#ffffff'
 
-Color.yellow => '#ffff00'
+Color.yellow => ![#ffff00](https://placehold.it/15/ffff00/000000?text=+) '#ffff00'
 
 		
 ## Source code
