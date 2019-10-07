@@ -32,8 +32,8 @@ The DirectoryPath component allows to select the path to a directory of the file
 ```javascript
     ...
     sectionContent.append('treez-directory-path')
-		  .label('Mode')		
-		  .value('D')
+		  .label('Directory:')		
+		  .value('C:\')
 		  .onChange(() => this.showAndHideDependentComponents())
 		  .bindValue(this, () => this.directoryPath);	
    ...
