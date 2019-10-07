@@ -33,11 +33,18 @@ The CheckBox represents a boolean value (true or false).
 
 ## HTML String Attributes
 
-* **value**: The current value, where null represents false and an empty string '' represents true. 
+* **value**: Represents the current value. If you want to specify false:
 
-* **disabled**: Set to null to enable the combo box and set to any other value to disable the check box. 
+** Do not specify the 'value' attribute in the html tag 'treez-check-box' or
+** Use element.setAttribute('value',null)
 
-* **hidden**: Set to null to show the combo box and set to any other value to hide the check box. 
+If you want to specify true:
+** Set the 'value' attribute in the html tag 'treez-check-box' to any value (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
+** Use element.setAttribute('value','') (or set it to any other value that is not equal to null). 
+
+* **disabled**: Do not specify the 'disabled' attribute (or use element.setAttribute('disabled', null)) to enable the check box and set to any other value to disable the check box. 
+
+* **hidden**: Do not specifiy the 'hidden' atttribute (or use element.setAttribute('hidden', null) to show the check box and set to any other value to hide the check box. 
 
 * **width**: The total css width of the check box. 
 
