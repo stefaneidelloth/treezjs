@@ -38,11 +38,11 @@ predefined style options, that are used with the JavaScript attribute 'value' (a
 
 * ![](../../../src/components/errorBarStyle/linehorz.png) ErrorBarStyle.lineHorz  
 
-* ErrorBarStyle.lineHorzBar => ![](../../../src/components/errorBarStyle/linehorzbar.png)
+* ![](../../../src/components/errorBarStyle/linehorzbar.png) ErrorBarStyle.lineHorzBar
 
-* ErrorBarStyle.lineVert => ![](../../../src/components/errorBarStyle/linevert.png)
+* ![](../../../src/components/errorBarStyle/linevert.png) ErrorBarStyle.lineVert
 
-* ErrorBarStyle.lineVertBar => ![](../../../src/components/errorBarStyle/linevertbar.png)
+* ![](../../../src/components/errorBarStyle/linevertbar.png) ErrorBarStyle.lineVertBar
 
 		
 ## Source code
