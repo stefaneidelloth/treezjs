@@ -6,19 +6,19 @@
 		
 The CodeArea allows to edit some source code. 
 	
-![](../../images/treez_code_area.png)
+![](../../../images/treez_code_area.png)
 		
 ## Source code
 
-[./src/components/text/code/treezCodeArea.js](../../../src/components/text/code/treezCodeArea.js)
+[./src/components/text/code/treezCodeArea.js](../../../../src/components/text/code/treezCodeArea.js)
 
 ## Test
 
-[./test/components/text/code/treezCodeArea.test.js](../../../test/components/text/code/treezCodeArea.test.js)
+[./test/components/text/code/treezCodeArea.test.js](../../../../test/components/text/code/treezCodeArea.test.js)
 
 ## Demo
 
-[./demo/components/text/code/treezCodeAreaDemo.html](../../../demo/components/text/code/treezCodeAreaDemo.html)
+[./demo/components/text/code/treezCodeAreaDemo.html](../../../../demo/components/text/code/treezCodeAreaDemo.html)
 
 ## Construction
 
