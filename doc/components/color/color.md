@@ -13,9 +13,9 @@ that are used with the JavaScript attribute 'value' (also see below).
 
 
 
-Color.black => '#000000' ![#000000](https://placehold.it/15/000000/000000?text=+) `#000000`
+Color.black => '#000000' ![#000000](https://placehold.it/15/000000/000000?text=+) 
 
-Color.blue => '#0000ff'
+Color.blue => '#0000ff' ![#0000ff](https://placehold.it/15/0000ff/000000?text=+) 
 
 Color.cyan => '#00ffff'
 
