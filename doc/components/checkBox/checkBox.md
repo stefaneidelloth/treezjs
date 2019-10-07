@@ -33,7 +33,7 @@ The CheckBox represents a boolean value (true or false).
 
 ## HTML String Attributes
 
-* **value**: The current value, where '' represents true and null represents false. 
+* **value**: The current value, where null represents false and an empty string '' represents true. 
 
 * **disabled**: Set to null to enable the combo box and set to any other value to disable the check box. 
 
