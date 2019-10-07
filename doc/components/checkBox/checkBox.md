@@ -27,21 +27,31 @@ The CheckBox represents a boolean value (**true** or **false**).
     sectionContent.append('treez-check-box')
 		  .label('Hallo')		  
 		  .value('')		
-		  .bindValue(this, () => this.isUsingBoost);	
+		  .bindValue(this, () => this.isShowingHalloMessage);	
    ...
 ```
 
 ## JavaScript Attributes
 
-* **value**: The current value as a boolean value. 
+### value
 
-* **disabled**: The disabled state as a boolean value. 
+The current value as a boolean value. 
 
-* **hidden**: The hidden state as a boolean value.
+### disabled
 
-* **width**: The total css width as a string, e.g. '500px'.
+The disabled state as a boolean value. 
 
-* **label**: The label text that is shown before the check box as a string.
+### hidden
+
+The hidden state as a boolean value.
+
+### width
+
+The total css width as a string, e.g. '500px'.
+
+### label
+
+The label text that is shown before the check box as a string.
 
 ## HTML String Attributes
 
@@ -61,13 +71,13 @@ If you want to specify **true**:
 
 ### disabled
 
-If you want to enable the check box:
+If you want to enable the component:
 
 * Do not specify the 'disabled' attribute in the html tag
 
 * Use element.setAttribute('disabled', null)) 
 
-If you want to disable the check box:
+If you want to disable the component:
 
 * Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
 
@@ -75,21 +85,25 @@ If you want to disable the check box:
 
 ### hidden
 
-If you want to show the check box:
+If you want to show the component:
 
 * Do not specify the 'hidden' attribute in the html tag
 
 * Use element.setAttribute('hidden', null)) 
 
-If you want to hide the check box:
+If you want to hide the component:
 
 * Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
 
 * Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
 
-* **width**: The total css width of the check box, e.g. '500px'
+### width
 
-* **label**: The label text that is shown before the check box.
+The total css width of the component, e.g. '500px'
+
+### label
+
+The label text.
 
  
 
