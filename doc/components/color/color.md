@@ -13,7 +13,7 @@ that are used with the JavaScript attribute 'value' (also see below).
 
 
 ```javascript
-Color.black => '#000000'
+Color.black => '#000000' &#x1F534;
 Color.blue => '#0000ff'
 Color.cyan => '#00ffff'
 Color.darkblue => '#00008b'
@@ -52,29 +52,75 @@ Color.yellow => '#ffff00'
    ...
 ```
 
-## HTML String Attributes
-
-* **value**: Returns the current color value as hex string, e.g. '#0000ff'. 'In order to set the value, you can either use a hex string or the name of a predefined color, e.g. 'blue'.  
-
-* **disabled**: Set to null to enable the component and set to any other value to disable the component. 
-
-* **hidden**: Set to null to show the component and set to any other value to hide the component. 
-
-* **width**: The total css width of the component. 
-
-* **label**: The label text that is shown before the color.
-
 ## JavaScript Attributes
 
-* **value**: Returns the current color as enum value. If the color does not belong to the predefined, colors an enum value with the name 'custom' and a custom hex string is returned. In orde to set the value, you can either use an enum value or a string value (hex code or color name).  
+### value
 
-* **disabled**: The disabled state as a boolean value. 
+Returns the current color as enum value. If the color does not belong to the predefined colors, an enum value with the name 'custom' (including the custom hex string) is returned. 
 
-* **hidden**: The hidden state as a boolean value.
+In orde to set the value, you can either use an enum value or a string value (including the hex code or the name of the color).  
 
-* **width**: The total css width as a string, e.g. '500px'.
+### disabled
 
-* **label**: The label text that is shown before the color as a string. 
+The disabled state as a boolean value. 
+
+### hidden
+
+The hidden state as a boolean value.
+
+### width
+
+The total css width as a string, e.g. '500px'.
+
+### label
+
+The label text that is shown before the color as a string. 
+
+## HTML String Attributes
+
+### value
+
+In order to set the value, you can either use a hex string (e.g. value = '#0000ff') or the name of a predefined color, e.g. value = 'blue'.  
+
+If you access the value with element.getAttribute('value'), the hex code of the color is returned as a string. 
+
+### disabled
+
+If you want to enable the component:
+
+* Do not specify the 'disabled' attribute in the html tag
+
+* Use element.setAttribute('disabled', null)) 
+
+If you want to disable the component:
+
+* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
+
+* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
+
+### hidden
+
+If you want to show the component:
+
+* Do not specify the 'hidden' attribute in the html tag
+
+* Use element.setAttribute('hidden', null)) 
+
+If you want to hide the component:
+
+* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
+
+* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
+
+### width
+
+The total css width of the component, e.g. '500px'
+
+### label
+
+The label text.
+
+
 
 
 ----
