@@ -96,4 +96,4 @@ If you want to hide the check box:
 
 ----
 
-[Color](../color/color.md)
+[CodeArea](../codeArea/codeArea.md)
