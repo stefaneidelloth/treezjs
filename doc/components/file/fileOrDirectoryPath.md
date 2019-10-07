@@ -10,9 +10,9 @@ The FileOrDirectoryPath component allows to select the path of a file or directo
 
 * Toggle the **selection mode** with the mode toggle button:
 
-  * ![](../../../icons/fileToggle.png): select file
+  * ![](../../../icons/fileToggle.png): file selection mode
 
-  * ![](../../../icons/directoryToggle.png): select directory
+  * ![](../../../icons/directoryToggle.png): directory selection mode
 
 (Unfortunately, Google Chrome does not provide a dialog that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
 
