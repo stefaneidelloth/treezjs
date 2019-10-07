@@ -4,11 +4,13 @@
 
 # Color
 		
-The Color component allows to select a color. Click on the color to open a color section dialog.
+The Color component allows to select a color. Click on the color to open a color selection dialog.
 	
 ![](../../images/treez_color.png)
 
-The enum [./src/components/color/Color.js](../../../src/components/color/color.js) provides some predefined color values:
+The enum [./src/components/color/Color.js](../../../src/components/color/color.js) provides some predefined color values, 
+that are used with the JavaScript attribute 'value' (also see below). 
+
 
 ```javascript
 Color.black => '#000000'
@@ -52,7 +54,7 @@ Color.yellow => '#ffff00'
 
 ## HTML String Attributes
 
-* **value**: The current collor value as hex string, e.g. '#' 
+* **value**: Returns the current color value as hex string, e.g. '#0000ff'. 'In order to set the value, you can either use a hex string or the name of a predefined color, e.g. 'blue'.  
 
 * **disabled**: Set to null to enable the component and set to any other value to disable the component. 
 
@@ -64,7 +66,7 @@ Color.yellow => '#ffff00'
 
 ## JavaScript Attributes
 
-* **value**: The current value as a string. 
+* **value**: Returns the current color as enum value. If the color does not belong to the predefined, colors an enum value with the name 'custom' and a custom hex string is returned. In orde to set the value, you can either use an enum value or a string value (hex code or color name).  
 
 * **disabled**: The disabled state as a boolean value. 
 
