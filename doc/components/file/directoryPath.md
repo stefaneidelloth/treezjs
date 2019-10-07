@@ -13,7 +13,6 @@ The DirectoryPath component allows to select the path to a directory of the file
 * Manually enter the path in the text field. 
 
 * Click on the play button ![](../../../icons/run_triangle.png) to open the directory.
-
 		
 ## Source code
 
@@ -34,7 +33,6 @@ The DirectoryPath component allows to select the path to a directory of the file
     sectionContent.append('treez-directory-path')
 		  .label('Directory:')		
 		  .value('C:\')
-		  .onChange(() => this.showAndHideDependentComponents())
 		  .bindValue(this, () => this.directoryPath);	
    ...
 ```
@@ -43,7 +41,7 @@ The DirectoryPath component allows to select the path to a directory of the file
 
 ### value
 
-The current value (= selected option) as a string. 
+The directory path as a string. 
 
 ### disabled
 
@@ -59,17 +57,14 @@ The css width as a string, e.g. '500px'.
 
 ### label
 
-The label text that is shown before the combo box as a string. 
+Some label text. 
 
-### options
-
-The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
 
 ## HTML String Attributes
 
 ### value
 
-The current value (=selected option). 
+The directory path as a string. 
 
 ### disabled
 
@@ -105,12 +100,7 @@ The total css width of the component, e.g. '500px'
 
 ### label
 
-The label text.
-
-### options
-
-The predefined options that can be selected, separated by comma, e.g. 'C,D'
-
+Some label text.
 
 
 ----
