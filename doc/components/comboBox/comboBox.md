@@ -12,6 +12,16 @@ The ComboBox component is used to select some option from a list of predefiend o
 
 [./src/components/comboBox/comboBox.js](../../../../src/components/comboBox/comboBox.js)
 
+## Test
+
+[./test/components/comboBox/comboBoxTest.js](../../../../test/components/comboBox/comboBoxTest.js)
+
+## Demo
+
+[./demo/components/comboBox/comboBoxDemo.js](../../../../demo/components/comboBox/comboBoxDemo.js)
+
+
+
 ## Construction
 
 ```javascript
