@@ -13,31 +13,31 @@ that are used with the JavaScript attribute 'value' (also see below).
 
 
 
-Color.black => '#000000' ![#000000](https://placehold.it/15/000000/000000?text=+) 
+Color.black => ![#000000](https://placehold.it/15/000000/000000?text=+) '#000000'
 
-Color.blue => '#0000ff' ![#0000ff](https://placehold.it/15/0000ff/000000?text=+) 
+Color.blue => ![#0000ff](https://placehold.it/15/0000ff/000000?text=+) '#0000ff'
 
-Color.cyan => '#00ffff'
+Color.cyan => ![#00ffff](https://placehold.it/15/00ffff/000000?text=+) '#00ffff'
 
-Color.darkblue => '#00008b'
+Color.darkblue => ![#00008b](https://placehold.it/15/00008b/000000?text=+) '#00008b'
 
-Color.darkcyan => '#008b8b' 
+Color.darkcyan => ![#008b8b](https://placehold.it/15/008b8b/000000?text=+) '#008b8b' 
 
-Color.darkgreen => '#006400'
+Color.darkgreen => ![#006400](https://placehold.it/15/006400/000000?text=+) '#006400'
 
-Color.darkmagenta => '#8b008b'
+Color.darkmagenta => ![#8b008b](https://placehold.it/15/8b008b/000000?text=+) '#8b008b'
 
-Color.darkred => '#8b0000'
+Color.darkred => ![#8b0000](https://placehold.it/15/8b0000/000000?text=+) '#8b0000'
 
-Color.green => '#008000'
+Color.green => ![#008000](https://placehold.it/15/008000/000000?text=+) '#008000'
 
-Color.grey => '#808080'
+Color.grey => ![#808080](https://placehold.it/15/808080/000000?text=+) '#808080'
 
-Color.magenta => '#ff00ff'
+Color.magenta => ![#ff00ff](https://placehold.it/15/ff00ff/000000?text=+) '#ff00ff'
 
-Color.red => '#ff0000'
+Color.red => ![#ff0000](https://placehold.it/15/ff0000/000000?text=+) '#ff0000'
 
-Color.white => '#ffffff'
+Color.white => ![#ffffff](https://placehold.it/15/ffffff/000000?text=+) '#ffffff'
 
 Color.yellow => '#ffff00'
 
