@@ -12,46 +12,46 @@ The enum [./src/components/colorMap/colorMap.js](../../../src/components/colorMa
 
 ColorMap.blank => ![](../../../src/components/colorMap/blank.png)                 
 ColorMap.blue => ![](../../../src/components/colorMap/blue.png)           
-ColorMap.bluegreen => new ColorMap('bluegreen');                    
-ColorMap.bluegreenStep => new ColorMap('bluegreen-step');                    
-ColorMap.complement => new ColorMap('complement');                    
-ColorMap.complementStep => new ColorMap('complement-step');                    
-ColorMap.green => new ColorMap('green');                    
-ColorMap.grey => new ColorMap('grey');                    
-ColorMap.greyStep5 => new ColorMap('grey-step5');                    
-ColorMap.greyStep6 => new ColorMap('grey-step6');                    
-ColorMap.heat => new ColorMap('heat');                    
-ColorMap.red => new ColorMap('red');                    
-ColorMap.rojal => new ColorMap('rojal');                    
-ColorMap.rojalStep => new ColorMap('rojal-step');                    
-ColorMap.spectrum => new ColorMap('spectrum');                    
-ColorMap.spectrumStep => new ColorMap('spectrum-step');                    
-ColorMap.spectrum2 => new ColorMap('spectrum2');                    
-ColorMap.spectrum2Step => new ColorMap('spectrum2-step');                    
-ColorMap.transblack => new ColorMap('transblack');                    
-ColorMap.transblackStep => new ColorMap('transblack-step');
+ColorMap.bluegreen => ![](../../../src/components/colorMap/bluegreen.png)               
+ColorMap.bluegreenStep => ![](../../../src/components/colorMap/bluegreen-step.png)                
+ColorMap.complement => ![](../../../src/components/colorMap/complement.png)                    
+ColorMap.complementStep => ![](../../../src/components/colorMap/complement-step.png)                  
+ColorMap.green => ![](../../../src/components/colorMap/green.png)            
+ColorMap.grey => ![](../../../src/components/colorMap/grey.png)            
+ColorMap.greyStep5 => ![](../../../src/components/colorMap/grey-step5.png)                
+ColorMap.greyStep6 => ![](../../../src/components/colorMap/grey-tep6.png)                     
+ColorMap.heat => ![](../../../src/components/colorMap/heat.png)                 
+ColorMap.red => ![](../../../src/components/colorMap/red.png)    ;                    
+ColorMap.rojal => ![](../../../src/components/colorMap/rojal.png)             
+ColorMap.rojalStep => ![](../../../src/components/colorMap/rojal-step.png)                     
+ColorMap.spectrum => ![](../../../src/components/colorMap/spectrum.png)                
+ColorMap.spectrumStep => ![](../../../src/components/colorMap/spectrum-step.png)                        
+ColorMap.spectrum2 => ![](../../../src/components/colorMap/spectrum2.png)                      
+ColorMap.spectrum2Step => ![](../../../src/components/colorMap/spectrum2-step.png)                    
+ColorMap.transblack => ![](../../../src/components/colorMap/transblack.png)          
+ColorMap.transblackStep => ![](../../../src/components/colorMap/transblack-step.png)    
 
 		
 ## Source code
 
-[./src/components/color/treezColor.js](../../../src/components/color/treezColor.js)
+[./src/components/colorMap/treezColorMap.js](../../../src/components/colorMap/treezColorMap.js)
 
 ## Test
 
-[./test/components/color/treezColor.test.js](../../../test/components/color/treezColor.test.js)
+[./test/components/colorMap/treezColorMap.test.js](../../../test/components/colorMap/treezColorMap.test.js)
 
 ## Demo
 
-[./demo/components/color/treezColorDemo.html](../../../demo/components/color/treezColorDemo.html)
+[./demo/components/colorMap/treezColorMapDemo.html](../../../demo/components/colorMap/treezColorMapDemo.html)
 
 ## Construction
 
 ```javascript
     ...
-    sectionContent.append('treez-color')
-		  .label('Color')		  
+    sectionContent.append('treez-color-map')
+		  .label('')		  
 		  .value('blue')		
-		  .bindValue(this, () => this.color);	
+		  .bindValue(this, () => this.colorMap);	
    ...
 ```
 
