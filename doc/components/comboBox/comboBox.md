@@ -34,7 +34,7 @@ The ComboBox component is used to select an option (string) from a list of prede
 
 ## HTML Attributes
 
-* value: The current value 
+* **value**: The current value 
 
 * disabled: Set to null to enable the combo box and set to any other value to disable the combo box. 
 
