@@ -39,7 +39,7 @@ The CheckBox represents a boolean value (true or false).
 
 * **hidden**: Set to null to show the combo box and set to any other value to hide the check box. 
 
-* **width**: The total width of the check box. 
+* **width**: The total css width of the check box. 
 
 * **label**: The label text that is shown before the check box.
 
@@ -51,7 +51,7 @@ The CheckBox represents a boolean value (true or false).
 
 * **hidden**: The hidden state as a boolean value.
 
-* **width**: The css width as a string, e.g. '500px'.
+* **width**: The total css width as a string, e.g. '500px'.
 
 * **label**: The label text that is shown before the check box as a string. 
 
