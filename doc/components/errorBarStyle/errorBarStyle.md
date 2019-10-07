@@ -12,22 +12,37 @@ The enum [./src/components/errorBarStyle/errorBarStyle.js](../../../src/componen
 predefined style options, that are used with the JavaScript attribute 'value' (also see below). 
 
 
-ErrorBarStyle.bar => ![](../../../src/components/errorBarStyle/bar.png)         
-ErrorBarStyle.barBox => ![](../../../src/components/errorBarStyle/barbox.png)                 
-ErrorBarStyle.barCurve => ![](../../../src/components/errorBarStyle/barcurve.png)              
-ErrorBarStyle.barDiamond => ![](../../../src/components/errorBarStyle/bardiamond.png)                
-ErrorBarStyle.barEnds => ![](../../../src/components/errorBarStyle/barends.png)               
-ErrorBarStyle.box => ![](../../../src/components/errorBarStyle/box.png)          
-ErrorBarStyle.boxFill => ![](../../../src/components/errorBarStyle/boxfill.png)      
-ErrorBarStyle.curve => ![](../../../src/components/errorBarStyle/curve.png)             
-ErrorBarStyle.diamond => ![](../../../src/components/errorBarStyle/diamond.png)              
-ErrorBarStyle.diamondFill => ![](../../../src/components/errorBarStyle/diamondfill.png)      
-ErrorBarStyle.fillHorz => ![](../../../src/components/errorBarStyle/fillhorz.png) 
-ErrorBarStyle.fillVert => ![](../../../src/components/errorBarStyle/fillvert.png) 
-ErrorBarStyle.lineHorz => ![](../../../src/components/errorBarStyle/linehorz.png) 
-ErrorBarStyle.lineHorzBar => ![](../../../src/components/errorBarStyle/linehorzBar.png) 
-ErrorBarStyle.lineVert => ![](../../../src/components/errorBarStyle/linevert.png) 
-ErrorBarStyle.lineVertBar => ![](../../../src/components/errorBarStyle/linevertbar.png) 
+ErrorBarStyle.bar => ![](../../../src/components/errorBarStyle/bar.png)
+
+ErrorBarStyle.barBox => ![](../../../src/components/errorBarStyle/barbox.png)
+
+ErrorBarStyle.barCurve => ![](../../../src/components/errorBarStyle/barcurve.png)
+
+ErrorBarStyle.barDiamond => ![](../../../src/components/errorBarStyle/bardiamond.png)
+
+ErrorBarStyle.barEnds => ![](../../../src/components/errorBarStyle/barends.png)
+
+ErrorBarStyle.box => ![](../../../src/components/errorBarStyle/box.png)
+
+ErrorBarStyle.boxFill => ![](../../../src/components/errorBarStyle/boxfill.png)
+
+ErrorBarStyle.curve => ![](../../../src/components/errorBarStyle/curve.png)
+
+ErrorBarStyle.diamond => ![](../../../src/components/errorBarStyle/diamond.png)
+
+ErrorBarStyle.diamondFill => ![](../../../src/components/errorBarStyle/diamondfill.png)
+
+ErrorBarStyle.fillHorz => ![](../../../src/components/errorBarStyle/fillhorz.png)
+
+ErrorBarStyle.fillVert => ![](../../../src/components/errorBarStyle/fillvert.png)
+
+ErrorBarStyle.lineHorz => ![](../../../src/components/errorBarStyle/linehorz.png)
+
+ErrorBarStyle.lineHorzBar => ![](../../../src/components/errorBarStyle/linehorzBar.png)
+
+ErrorBarStyle.lineVert => ![](../../../src/components/errorBarStyle/linevert.png)
+
+ErrorBarStyle.lineVertBar => ![](../../../src/components/errorBarStyle/linevertbar.png)
 
 		
 ## Source code
