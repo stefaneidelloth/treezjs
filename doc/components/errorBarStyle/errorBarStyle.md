@@ -47,7 +47,7 @@ ErrorBarStyle.lineVertBar => ![](../../../src/components/errorBarStyle/linevertb
 ```javascript
     ...
     sectionContent.append('treez-error-bar-style')
-		  .label('Style')		  
+		  .label('Error bar style:')		  
 		  .value('diamond')		
 		  .bindValue(this, () => this.errorBarStyle);	
    ...
