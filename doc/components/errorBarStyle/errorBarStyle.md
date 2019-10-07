@@ -38,7 +38,7 @@ ErrorBarStyle.fillVert => ![](../../../src/components/errorBarStyle/fillvert.png
 
 ErrorBarStyle.lineHorz => ![](../../../src/components/errorBarStyle/linehorz.png)
 
-ErrorBarStyle.lineHorzBar => ![](../../../src/components/errorBarStyle/linehorzBar.png)
+ErrorBarStyle.lineHorzBar => ![](../../../src/components/errorBarStyle/linehorzbar.png)
 
 ErrorBarStyle.lineVert => ![](../../../src/components/errorBarStyle/linevert.png)
 
