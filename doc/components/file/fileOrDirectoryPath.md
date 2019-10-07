@@ -9,7 +9,9 @@ The FileOrDirectoryPath component allows to select the path of a file or directo
 ![](../../images/treez_file_or_directory_path.png)
 
 * Toggle the **selection mode**:
+
 ** ![](../../../icons/fileToggle.png): select file
+
 ** ![](../../../icons/directoryToggle.png): select directory
 
 (Unfortunately, Google Chrome does not provide a dialog that allows to select both, files and directories. Therefore, we need to toggle the mode and use seperate dialogs.)
