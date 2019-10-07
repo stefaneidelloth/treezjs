@@ -4,7 +4,7 @@
 
 # ComboBox
 		
-The ComboBox component is used to select some option from a list of predefiend options. 
+The ComboBox component is used to select an option (string) from a list of predefiend options. 
 	
 ![](../../images/treez_combo_box.png)
 		
