@@ -35,7 +35,11 @@ The CodeArea allows to edit some source code.
 
 ### value
 
-The current value as a boolean value. 
+The source code as string. 
+
+### mode
+
+In order to influcence highlighting you can choose from following modes: 'javascript' (default), 'sql' or 'python'.
 
 ### disabled
 
@@ -51,23 +55,14 @@ The total css width as a string, e.g. '500px'.
 
 ### label
 
-The label text that is shown before the check box as a string.
+Some label text that is shown above the code area.
+
 
 ## HTML String Attributes
 
 ### value
 
-Represents the current value. If you want to specify **false**:
-
-* Do not specify the 'value' attribute in the html tag 'treez-check-box'.
-
-* Use element.setAttribute('value',null)
-
-If you want to specify **true**:
-
-* Set the 'value' attribute in the html tag 'treez-check-box' to any value (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
-
-* Use element.setAttribute('value','') (or set it to any other value that is not equal to null). 
+The source code.
 
 ### disabled
 
@@ -103,7 +98,7 @@ The total css width of the component, e.g. '500px'
 
 ### label
 
-The label text.
+Some label text that is shown above the code area.
 
  
 
