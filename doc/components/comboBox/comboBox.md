@@ -18,7 +18,7 @@ The ComboBox component is used to select an option (string) from a list of prede
 
 ## Demo
 
-[./demo/components/comboBox/treezComboBoxDemo.js](../../../demo/components/comboBox/treezComboBoxDemo.js)
+[./demo/components/comboBox/treezComboBoxDemo.html](../../../demo/components/comboBox/treezComboBoxDemo.html)
 
 
 
