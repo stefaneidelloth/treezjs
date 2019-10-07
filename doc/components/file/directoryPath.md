@@ -49,10 +49,12 @@ The directory path as a string. If a pathMapProvider is given, the directory pat
 A pathMapProvider is an object that has an attribute 'pathMap'. The pathMap itself is a dictionary, mapping
 from directory names to directory paths, e.g.
 
+```javascript
 {
   'workingDir': 'C:/myProject',
   'imageDir': '{$workingDir$}/images'
 }
+```
 
 If you select a directory and the path of that directory includes a path from the pathMap (e.g. 'C:/myProject'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/foo').  
 
