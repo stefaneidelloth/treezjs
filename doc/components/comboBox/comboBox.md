@@ -10,15 +10,15 @@ The ComboBox component is used to select an option (string) from a list of prede
 		
 ## Source code
 
-[./src/components/comboBox/comboBox.js](../../../../src/components/comboBox/comboBox.js)
+[./src/components/comboBox/comboBox.js](../../../src/components/comboBox/comboBox.js)
 
 ## Test
 
-[./test/components/comboBox/comboBoxTest.js](../../../../test/components/comboBox/comboBoxTest.js)
+[./test/components/comboBox/comboBoxTest.js](../../../test/components/comboBox/comboBoxTest.js)
 
 ## Demo
 
-[./demo/components/comboBox/comboBoxDemo.js](../../../../demo/components/comboBox/comboBoxDemo.js)
+[./demo/components/comboBox/comboBoxDemo.js](../../../demo/components/comboBox/comboBoxDemo.js)
 
 
 
