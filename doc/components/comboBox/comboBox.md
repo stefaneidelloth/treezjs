@@ -45,7 +45,7 @@ The ComboBox component is used to select an option (string) from a list of prede
 
 * **label**: The label text that is shown before the combo box.
 
-* **options**: The predefined options that can be selected, given as a comma separated string, e.g. 'foo,baa,qux'
+* **options**: The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
 
 ----
 
