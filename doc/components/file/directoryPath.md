@@ -12,7 +12,7 @@ The DirectoryPath component allows to select the path to a directory of the file
 
 * Manually enter the path in the text field. 
 
-* Click on the play button ![](../../../icons/run.png) to open the directory.
+* Click on the play button ![](../../../icons/run_triangle.png) to open the directory.
 
 		
 ## Source code
