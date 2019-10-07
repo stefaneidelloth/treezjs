@@ -8,9 +8,12 @@ The DirectoryPath component allows to select the path to a directory of the file
 	
 ![](../../images/treez_directory_path.png)
 
-* Click on the browse button to open a selection dialog.
+* Click on the browse button ![](../../../icons/browse.png) to open a selection dialog or
 
-* Click on the play button to open the directory.
+* Manually enter the path in the text field. 
+
+* Click on the play button ![](../../../icons/play.png) to open the directory.
+
 		
 ## Source code
 
