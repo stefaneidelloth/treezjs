@@ -71,7 +71,7 @@ Color.yellow => ![#ffff00](https://placehold.it/15/ffff00/000000?text=+) '#ffff0
 
 Returns the current color as enum value. If the color does not belong to the predefined colors, an enum value with the name 'custom' (including the custom hex string) is returned. 
 
-In orde to set the value, you can either use an enum value or a string value (including the hex code or the name of the color).  
+In order to set the value, you can either use an enum value or a string value (including the hex code or the name of the color).  
 
 ### disabled
 
