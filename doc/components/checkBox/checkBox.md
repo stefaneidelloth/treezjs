@@ -10,15 +10,15 @@ The CheckBox represents a boolean value (true or false).
 		
 ## Source code
 
-[./src/components/checkBox/treezCheckBox.js](../../src/components/checkBox/treezCheckBox.js)
+[./src/components/checkBox/treezCheckBox.js](../../../src/components/checkBox/treezCheckBox.js)
 
 ## Test
 
-[./test/components/checkBox/treezCheckBox.test.js](../../test/components/checkBox/treezCheckBox.test.js)
+[./test/components/checkBox/treezCheckBox.test.js](../../../test/components/checkBox/treezCheckBox.test.js)
 
 ## Demo
 
-[./demo/components/checkBox/treezCheckBoxDemo.html](../../demo/components/checkBox/treezCheckBoxDemo.html)
+[./demo/components/checkBox/treezCheckBoxDemo.html](../../../demo/components/checkBox/treezCheckBoxDemo.html)
 
 ## Construction
 
