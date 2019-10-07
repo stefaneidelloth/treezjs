@@ -33,33 +33,79 @@ The ComboBox component is used to select an option (string) from a list of prede
    ...
 ```
 
-## HTML String Attributes
-
-* **value**: The current value 
-
-* **disabled**: Set to null to enable the combo box and set to any other sring value to disable the combo box. 
-
-* **hidden**: Set to null to show the combo box and set to any other string value to hide the cobo box. 
-
-* **width**: The total css width of the combo box. 
-
-* **label**: The label text that is shown before the combo box.
-
-* **options**: The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
-
 ## JavaScript Attributes
 
-* **value**: The current value as a string. 
+### value
 
-* **disabled**: The disabled state as a boolean value. 
+The current value (= selected option) as a string. 
 
-* **hidden**: The hidden state as a boolean value.
+### disabled
 
-* **width**: The css width as a string, e.g. '500px'.
+The disabled state as a boolean value. 
 
-* **label**: The label text that is shown before the combo box as a string. 
+### hidden
 
-* **options**: The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
+The hidden state as a boolean value.
+
+### width
+
+The css width as a string, e.g. '500px'.
+
+### label
+
+The label text that is shown before the combo box as a string. 
+
+### options
+
+The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
+
+## HTML String Attributes
+
+### value
+
+The current value (=selected option). 
+
+### disabled
+
+If you want to enable the component:
+
+* Do not specify the 'disabled' attribute in the html tag
+
+* Use element.setAttribute('disabled', null)) 
+
+If you want to disable the component:
+
+* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
+
+* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
+
+### hidden
+
+If you want to show the component:
+
+* Do not specify the 'hidden' attribute in the html tag
+
+* Use element.setAttribute('hidden', null)) 
+
+If you want to hide the component:
+
+* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
+
+* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
+
+### width
+
+The total css width of the component, e.g. '500px'
+
+### label
+
+The label text.
+
+### options
+
+The predefined options that can be selected, separated by comma, e.g. 'C,D'
+
+
 
 ----
 
