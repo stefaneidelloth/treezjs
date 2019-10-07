@@ -21,7 +21,7 @@ ColorMap.grey => ![](../../../src/components/colorMap/grey.png)
 ColorMap.greyStep5 => ![](../../../src/components/colorMap/grey-step5.png)                
 ColorMap.greyStep6 => ![](../../../src/components/colorMap/grey-tep6.png)                     
 ColorMap.heat => ![](../../../src/components/colorMap/heat.png)                 
-ColorMap.red => ![](../../../src/components/colorMap/red.png)    ;                    
+ColorMap.red => ![](../../../src/components/colorMap/red.png)                        
 ColorMap.rojal => ![](../../../src/components/colorMap/rojal.png)             
 ColorMap.rojalStep => ![](../../../src/components/colorMap/rojal-step.png)                     
 ColorMap.spectrum => ![](../../../src/components/colorMap/spectrum.png)                
@@ -50,7 +50,7 @@ ColorMap.transblackStep => ![](../../../src/components/colorMap/transblack-step.
     ...
     sectionContent.append('treez-color-map')
 		  .label('')		  
-		  .value('blue')		
+		  .value('rojal')		
 		  .bindValue(this, () => this.colorMap);	
    ...
 ```
@@ -59,9 +59,9 @@ ColorMap.transblackStep => ![](../../../src/components/colorMap/transblack-step.
 
 ### value
 
-Returns the current color as enum value. If the color does not belong to the predefined colors, an enum value with the name 'custom' (including the custom hex string) is returned. 
+Returns the current colorMap as enum value. 
 
-In orde to set the value, you can either use an enum value or a string value (including the hex code or the name of the color).  
+In orde to set the value, you can either use an enum value or a string value (= name of the colorMap).  
 
 ### disabled
 
@@ -77,15 +77,13 @@ The total css width as a string, e.g. '500px'.
 
 ### label
 
-The label text that is shown before the color as a string. 
+Some label text that is shown before the color map as a string. 
 
 ## HTML String Attributes
 
 ### value
 
-In order to set the value, you can either use a hex string (e.g. value = '#0000ff') or the name of a predefined color, e.g. value = 'blue'.  
-
-If you access the value with element.getAttribute('value'), the hex code of the color is returned as a string. 
+The name of the color map. 
 
 ### disabled
 
@@ -121,11 +119,9 @@ The total css width of the component, e.g. '500px'
 
 ### label
 
-The label text.
-
-
+Some label text that is shown before the color map as a string. 
 
 
 ----
 
-[ColorMap](../colorMap/colorMap.md)
+[ComboBox](../comboBox/comboBox.md)
