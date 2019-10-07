@@ -109,4 +109,4 @@ The predefined options that can be selected, separated by comma, e.g. 'C,D'
 
 ----
 
-[ErrorBarStyle](../errorBarStyle/errorBarStyle.md)
+[DirectoryPath](../file/directoryPath.md)
