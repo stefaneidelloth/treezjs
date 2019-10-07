@@ -4,7 +4,7 @@
 
 # CheckBox
 		
-The CheckBox component is used to specify a boolean value (true or false). 
+The CheckBox represents a boolean value (true or false). 
 	
 ![](../../images/treez_check_box.png)
 		
@@ -14,36 +14,47 @@ The CheckBox component is used to specify a boolean value (true or false).
 
 ## Test
 
-[./test/components/checkBox/treezComboBox.test.js](../../../test/components/checkBox/treezComboBox.test.js)
+[./test/components/checkBox/treezCheckBox.test.js](../../../test/components/checkBox/treezCheckBox.test.js)
 
 ## Demo
 
-[./demo/components/checkBox/treezComboBoxDemo.html](../../../demo/components/checkBox/treezComboBoxDemo.html)
+[./demo/components/checkBox/treezCheckBoxDemo.html](../../../demo/components/checkBox/treezCheckBoxDemo.html)
 
 ## Construction
 
 ```javascript
     ...
     sectionContent.append('treez-check-box')
-		  .label('IsUsingBoost')		  
-		  .value('true')		
+		  .label('Hallo')		  
+		  .value('')		
 		  .bindValue(this, () => this.isUsingBoost);	
    ...
 ```
 
 ## HTML String Attributes
 
-* **value**: The current value 
+* **value**: The current value, where '' represents true and null represents false. 
 
-* **disabled**: Set to null to enable the combo box and set to any other value to disable the combo box. 
+* **disabled**: Set to null to enable the combo box and set to any other value to disable the check box. 
 
-* **hidden**: Set to null to show the combo box and set to any other value to hide the cobo box. 
+* **hidden**: Set to null to show the combo box and set to any other value to hide the check box. 
 
-* **width**: The total width of the combo box. 
+* **width**: The total width of the check box. 
 
-* **label**: The label text that is shown before the combo box.
+* **label**: The label text that is shown before the check box.
 
-* **options**: The predefined options that can be selected, given as a comma separated string, e.g. 'foo,baa,qux'
+## JavaScript Attributes
+
+* **value**: The current value as a boolean value. 
+
+* **disabled**: The disabled state as a boolean value. 
+
+* **hidden**: The hidden state as a boolean value.
+
+* **width**: The css width as a string, e.g. '500px'.
+
+* **label**: The label text that is shown before the check box as a string. 
+
 
 ----
 
