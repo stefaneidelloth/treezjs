@@ -31,8 +31,8 @@ The FilePath component allows to select the path to a file.
 ```javascript
     ...
     sectionContent.append('treez-file-path')
-		  .label('File:')		
-		  .value('C:\')
+		  .label('File path')		
+		  .value('C:\test.txt')
 		  .nodeAttr('pathMapProvider', this)
 		  .bindValue(this, () => this.filePath);	
    ...
@@ -51,12 +51,12 @@ from directory names to directory paths, e.g.
 
 ```javascript
 {
-  'workingDir': 'C:/myProject',
+  'workingDir': 'C:/',
   'imageDir': '{$workingDir$}/images'
 }
 ```
 
-If you select a file and the path of that file includes a path from the pathMap (e.g. 'C:/myProject'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/foo.txt').  
+If you select a file and the path of that file includes a path from the pathMap (e.g. 'C:/'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/test.txt').  
 
 
 ### fullPath
