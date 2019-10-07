@@ -11,10 +11,10 @@ The Color component allows to select a color. Click on the color to open a color
 The enum [./src/components/color/Color.js](../../../src/components/color/color.js) provides some predefined color values, 
 that are used with the JavaScript attribute 'value' (also see below). 
 
-&#x1F534;
+&#\xE2534;
 
-```javascript
-Color.black => '#000000' 
+
+Color.black => '#000000' ![#000000](https://placehold.it/15/f000000/000000?text=+) `#000000`
 Color.blue => '#0000ff'
 Color.cyan => '#00ffff'
 Color.darkblue => '#00008b'
@@ -28,7 +28,7 @@ Color.magenta => '#ff00ff'
 Color.red => '#ff0000'
 Color.white => '#ffffff'
 Color.yellow => '#ffff00'
-```
+
 		
 ## Source code
 
