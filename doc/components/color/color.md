@@ -4,9 +4,28 @@
 
 # Color
 		
-The Color component allows to select a color. 
+The Color component allows to select a color. Click on the color to open a color section dialog.
 	
 ![](../../images/treez_color.png)
+
+The enum [./src/components/color/Color.js](../../../src/components/color/color.js) provides some predefined color values:
+
+```javascript
+Color.black => '#000000'
+Color.blue => '#0000ff'
+Color.cyan => '#00ffff'
+Color.darkblue => '#00008b'
+Color.darkcyan => '#008b8b' 
+Color.darkgreen => '#006400'
+Color.darkmagenta => '#8b008b'
+Color.darkred => '#8b0000'
+Color.green => '#008000'
+Color.grey => '#808080'
+Color.magenta => '#ff00ff'
+Color.red => '#ff0000'
+Color.white => '#ffffff'
+Color.yellow => '#ffff00'
+```
 		
 ## Source code
 
