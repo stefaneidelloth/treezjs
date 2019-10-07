@@ -79,4 +79,4 @@ Color.yellow => '#ffff00'
 
 ----
 
-[Color](../colorMap/colorMap.md)
+[ColorMap](../colorMap/colorMap.md)
