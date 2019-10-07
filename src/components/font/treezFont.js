@@ -15,8 +15,8 @@ export default class TreezFont extends TreezComboBox {
     	return 'serif,sans-serif,cursive,fantasy,monospace';                   
     }
     
-    static __createOptionTag(option){
-		var optionTag = TreezComboBox.__createOptionTag(option);	 	
+    __createOptionTag(option){
+		var optionTag = super.__createOptionTag(option);	 	
 		optionTag.style.fontFamily = option;
 		return optionTag;
 	}  

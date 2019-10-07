@@ -93,7 +93,7 @@ export default class TreezComboBox extends LabeledTreezElement {
 		if(options){
 			var optionEntries = options.split(',');
 			optionEntries.forEach(option=>{
-				var optionTag = TreezComboBox.__createOptionTag(option)						
+				var optionTag = this.__createOptionTag(option)						
 				comboBox.appendChild(optionTag);
 			});
 
@@ -109,7 +109,7 @@ export default class TreezComboBox extends LabeledTreezElement {
 		}		
 	}	
 	
-	static __createOptionTag(option){
+	__createOptionTag(option){
 		var optionTag = document.createElement('option')
 	 	optionTag.innerText=option;
 		return optionTag;

@@ -9,12 +9,31 @@
 	
 		<treez-model-path label="Model path:" id="modelPath"></treez-model-path>	
 
-		<script type="module">			
+		<script type="module">	
+
+			import Treez from '../../../src/treez.js';
+
+
+			Treez.config({
+				home: '.',
+				isSupportingPython: false	
+			});		
+			
+
+			import Root from '../../../src/root/root.js';
+			import Models from '../../../src/model/models.js';
+
+			let root = new Root();
+			root.createModels('first');
+			root.createModels('second');
+
 			import TreezModelPath from '../../../src/components/modelPath/treezModelPath.js';
 
-            var filePath = document.getElementById('modelPath');           
-            filePath.label = 'Model path';
-            filePath.value = 'root.model.genericInput';
+            var modelPath = document.getElementById('modelPath');  
+            modelPath.relativeRootAtom = root;
+            modelPath.atomClasses = [Models];         
+            modelPath.label = 'Model path';
+           
 		</script>
 		
 	</body>
