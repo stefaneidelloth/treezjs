@@ -105,4 +105,4 @@ Some label text that is shown above the code area.
 
 ----
 
-[Color](../../color/Color.md)
+[Color](../../color/color.md)
