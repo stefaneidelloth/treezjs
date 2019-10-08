@@ -111,4 +111,4 @@ The total css width of the component, e.g. '500px'
 
 ----
 
-[CodeArea](../codeArea/codeArea.md)
+[CodeArea](../text/code/codeArea.md)
