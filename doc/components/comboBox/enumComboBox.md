@@ -26,9 +26,9 @@ The available options are given by an enum class, inheriting from [Enum](../../.
 ```javascript
     ...
     sectionContent.append('treez-enum-combo-box')
-		  .label('Mode')
-		  .nodeAttr('options', Color)
-		  .value('blue')		
+		  .label('Hallo')
+		  .nodeAttr('options', MyEnumClass)
+		  .value('secondValue')		
 		  .bindValue(this, () => this.mode);	
    ...
 ```
