@@ -4,7 +4,7 @@
 
 # Components
 
-Treez provides custom [web components](https://developers.google.com/web/fundamentals/web-components) that are used to build the content of the [Properties View](../views/propertyView.md):
+Treez provides custom [web components](https://developers.google.com/web/fundamentals/web-components) that are used to build the content of the [Properties View](../views/propertyView.md) when selecting an atom in the [Tree View](../views/treeView.md):
 
 * [CheckBox](./checkBox/checkBox.md)
 * [CodeArea](./text/code/codeArea.md)
