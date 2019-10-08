@@ -26,7 +26,7 @@ The Font component allows to select a font family.
     ...
     sectionContent.append('treez-font')
 		  .label('Font:')		  
-		  .value('solid')		
+		  .value('serif')		
 		  .bindValue(this, () => this.font);	
    ...
 ```
