@@ -45,7 +45,7 @@ predefined style options, that are used with the JavaScript attribute 'value' (a
     ...
     sectionContent.append('treez-symbol-style')
 		  .label('Symbol style:')		  
-		  .value('circle')		
+		  .value('cross')		
 		  .bindValue(this, () => this.symbolStyle);	
    ...
 ```
