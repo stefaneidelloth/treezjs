@@ -39,7 +39,7 @@ Please note that the corresponding image files have to be located in the same fo
 
 ### options
 
-The names of the png images (without *.png ending) that can be selected, separated by comma, e.g. 'A,B,C'. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
+A string array that contains the names of png images (without *.png ending) that can be selected, e.g. \['A','B','C'\]. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
 
 ### value
 
@@ -64,7 +64,7 @@ The css width as a string, e.g. '500px'.
 ## HTML String Attributes
 
 ### options
-The names of the png images (without *.png ending) that can be selected, separated by comma, e.g. 'A,B,C'. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
+The names of the png images (without *.png ending) that can be selected, given by a string that can be evaluated as array, e.g. '\["A","B","C"\]'. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
 
 ### value
 
