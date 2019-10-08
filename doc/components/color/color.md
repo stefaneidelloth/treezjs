@@ -73,6 +73,10 @@ Returns the current color as enum value. If the color does not belong to the pre
 
 In order to set the value, you can either use an enum value or a string value (including the hex code or the name of the color).  
 
+### label
+
+Some label text that is shown before the color as a string. 
+
 ### disabled
 
 The disabled state as a boolean value. 
@@ -85,9 +89,7 @@ The hidden state as a boolean value.
 
 The total css width as a string, e.g. '500px'.
 
-### label
 
-The label text that is shown before the color as a string. 
 
 ## HTML String Attributes
 
@@ -96,6 +98,10 @@ The label text that is shown before the color as a string.
 In order to set the value, you can either use a hex string (e.g. value = '#0000ff') or the name of a predefined color, e.g. value = 'blue'.  
 
 If you access the value with element.getAttribute('value'), the hex code of the color is returned as a string. 
+
+### label
+
+Some label text.
 
 ### disabled
 
@@ -128,12 +134,6 @@ If you want to hide the component:
 ### width
 
 The total css width of the component, e.g. '500px'
-
-### label
-
-The label text.
-
-
 
 
 ----
