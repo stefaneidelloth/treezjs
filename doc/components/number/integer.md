@@ -36,8 +36,8 @@ code of the Editor View.
 ```javascript
     ...
     sectionContent.append('treez-integer')
-		  .label('Label:')		
-		  .value('4')		
+		  .label('Integer:')		
+		  .value('5')		
 		  .bindValue(this, () => this.numberOfUsers);	
    ...
 ```
