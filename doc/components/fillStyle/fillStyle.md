@@ -30,7 +30,7 @@ predefined style options, that are used with the JavaScript attribute 'value' (a
 
 ## Demo
 
-[./demo/components/errorBarStyle/treezFillStyleDemo.html](../../../demo/components/fillStyle/treezFillStyleDemo.html)
+[./demo/components/fillStyle/treezFillStyleDemo.html](../../../demo/components/fillStyle/treezFillStyleDemo.html)
 
 ## Construction
 
