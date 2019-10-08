@@ -37,7 +37,7 @@ The ComboBox component is used to select an option (string) from a list of prede
 
 ### options
 
-The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
+The predefined options that can be selected, given as string array, e.g. \['C','D'\]
 
 ### value
 
@@ -63,7 +63,7 @@ The css width as a string, e.g. '500px'.
 
 ### options
 
-The predefined options that can be selected, separated by comma, e.g. 'C,D'
+The predefined options that can be selected, given as a string that can be evaluated as array, e.g. '\["C","D"\]'
 
 ### value
 
