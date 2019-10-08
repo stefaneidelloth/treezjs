@@ -6,7 +6,7 @@
 		
 The StringItemList component allows to specify a list of string values, where each item can be selected from a predefined list. 
 	
-![](../../images/treez_string_item_list.png)
+![](../../images/treez_sting_item_list.png)
 
 Use the buttons and combo boxes to edit the entries of the list:
 
@@ -33,8 +33,8 @@ Use the buttons and combo boxes to edit the entries of the list:
     ...
     sectionContent.append('treez-string-item-list')
 		  .label('Title')		  
-      .attr('options','["a","b","c","d"]')
-		  .value('["a","b","c","d"]')		
+      		  .attr('options','["a","b","c","d"]')
+		  .value('["a","b","c"]')		
 		  .bindValue(this, () => this.modeList);	
    ...
 ```
