@@ -4,9 +4,12 @@
 
 # ImageComboBox
 		
-The ImageComboBox component is used to select an image from a list of predefiend images. 
+The ImageComboBox component is used to select an image from a list of predefiend images. It serves as a parent class
+for specific image combo box implementations (e.g. [ErrorBarStyle](../errorBarStyle/errorBarStyle.md)). 
 	
 ![](../../images/treez_image_combo_box.png)
+
+Please note that the corresponding image files have to be located in the same folder as the class file. Therefore, it does not make much sense to use the ImageComboBox directly. If you want to create a custom image combo box, you should create a new class in an extra folder and include some corresponding image files. 
 		
 ## Source code
 
@@ -27,7 +30,7 @@ The ImageComboBox component is used to select an image from a list of predefiend
     sectionContent.append('treez-image-combo-box')
 		  .label('Hallo')
 		  .nodeAttr('options', 'A,B,C')
-		  .value('A')		
+		  .value('B')		
 		  .bindValue(this, () => this.imageName);	
    ...
 ```
@@ -36,11 +39,11 @@ The ImageComboBox component is used to select an image from a list of predefiend
 
 ### options
 
-The enum class that provides the available options that can be selected.
+The names of the png images (without *.png ending) that can be selected, separated by comma, e.g. 'A,B,C'. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
 
 ### value
 
-The current value (= selected option) as an enum value. 
+The name of the currently selected image (without *.png ending). 
 
 ### label
 
@@ -61,12 +64,11 @@ The css width as a string, e.g. '500px'.
 ## HTML String Attributes
 
 ### options
-
-The predefined options that can be selected, separated by comma, e.g. 'firstValue,secondValue'
+The names of the png images (without *.png ending) that can be selected, separated by comma, e.g. 'A,B,C'. The images have to be located in the same folder as the implementing class that inherits from TreezImageComboBox. 
 
 ### value
 
-The current value string (=selected option). 
+The name of the currently selected image (without *.png ending). 
 
 ### label
 
@@ -107,4 +109,4 @@ The total css width of the component, e.g. '500px'
 
 ----
 
-[ErrorBarStyle](../errorBarStyle/errorBarStyle.md)
+[Integer](../number/integer.md)
