@@ -8,7 +8,11 @@ The StringList component allows to specify a list of string values.
 	
 ![](../../images/treez_string_list.png)
 
-
+Use the buttons and text fields to edit the entries of the list:
+* ![](../../../../icons/add.png) Add entry
+* ![](../../../../icons/delete.png) Delete entry
+* ![](../../../../icons/up.png) Move entry up
+* ![](../../../../icons/down.png) Move entry down 
 		
 ## Source code
 
@@ -27,8 +31,8 @@ The StringList component allows to specify a list of string values.
 ```javascript
     ...
     sectionContent.append('treez-string-list')
-		  .label('Entries')		  
-		  .value('solid')		
+		  .label('Title')		  
+		  .value('["a","b","c","d"]')		
 		  .bindValue(this, () => this.names);	
    ...
 ```
@@ -37,12 +41,11 @@ The StringList component allows to specify a list of string values.
 
 ### value
 
-Returns the current symbol style as enum value. 
-In order to set the value, you can either use an enum value or a string value (= name of StringList). 
+An array of strings, e.g. \["a","b","c","d"\]. 
 
 ### label
 
-Some label text that is shown before the style combo box as a string. 
+Some label text that is shown above the list. 
 
 ### disabled
 
@@ -62,11 +65,11 @@ The total css width as a string, e.g. '500px'.
 
 ### value
 
-The name of the StringList.
+A string that can be evaluated to an array of strings, e.g. '\["a","b","c","d"\]'
 
 ### label
 
-Some label text.
+Some label text that is shown above the list. 
 
 ### disabled
 
@@ -103,4 +106,4 @@ The total css width of the component, e.g. '500px'
 
 ----
 
-[Font](../font/font.md)
+[StringItemList](./stringItemList.md)
