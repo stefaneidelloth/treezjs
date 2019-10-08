@@ -37,6 +37,10 @@ The CheckBox represents a boolean value (**true** or **false**).
 
 The current value as a boolean value. 
 
+### label
+
+The label text that is shown before the check box as a string.
+
 ### disabled
 
 The disabled state as a boolean value. 
@@ -49,9 +53,7 @@ The hidden state as a boolean value.
 
 The total css width as a string, e.g. '500px'.
 
-### label
 
-The label text that is shown before the check box as a string.
 
 ## HTML String Attributes
 
@@ -68,6 +70,10 @@ If you want to specify **true**:
 * Set the 'value' attribute in the html tag 'treez-check-box' to any value (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
 
 * Use element.setAttribute('value','') (or set it to any other value that is not equal to null). 
+
+### label
+
+The label text.
 
 ### disabled
 
@@ -101,11 +107,6 @@ If you want to hide the component:
 
 The total css width of the component, e.g. '500px'
 
-### label
-
-The label text.
-
- 
 
 
 ----
