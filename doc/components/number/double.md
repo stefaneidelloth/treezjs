@@ -14,7 +14,7 @@ In order to avoid confusion, we recomment to use "English (United States)" in th
 This way, the decimal separator of the Properties View of Treez is the same as the one used in the source
 code of the Editor View.
 
-* Please note that JavaScript comes with some limitation for the precision of numbers. Also see 
+* Please note that JavaScript comes with some **limitation for the precision** of numbers. Also see 
   * https://stackoverflow.com/questions/22838588/javascript-max-int
   * https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
 		
