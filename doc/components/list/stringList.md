@@ -9,8 +9,8 @@ The StringList component allows to specify a list of string values.
 ![](../../images/treez_string_list.png)
 
 Use the buttons and text fields to edit the entries of the list:
-* ![](../../../../icons/add.png) Add entry
-* ![](../../../../icons/delete.png) Delete entry
+* ![](../../../icons/add.png) Add entry
+* ![](../../../../../icons/delete.png) Delete entry
 * ![](../../../../icons/up.png) Move entry up
 * ![](../../../../icons/down.png) Move entry down 
 		
