@@ -28,8 +28,8 @@ Please note that the corresponding image files have to be located in the same fo
 ```javascript
     ...
     sectionContent.append('treez-image-combo-box')
-		  .label('Hallo')
-		  .nodeAttr('options', 'A,B,C')
+		  .label('ImageComboBox:')
+		  .attr('options', 'A,B,C')
 		  .value('B')		
 		  .bindValue(this, () => this.imageName);	
    ...
