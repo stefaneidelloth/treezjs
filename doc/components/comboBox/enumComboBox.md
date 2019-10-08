@@ -35,6 +35,10 @@ The available options are given by an enum class, inheriting from [Enum](../../.
 
 ## JavaScript Attributes
 
+### options
+
+The enum class that provides the available options that can be selected.
+
 ### value
 
 The current value (= selected option) as an enum value. 
@@ -55,11 +59,13 @@ The css width as a string, e.g. '500px'.
 
 The label text that is shown before the combo box as a string. 
 
-### options
 
-The enum class that provides the available options that can be selected.
 
 ## HTML String Attributes
+
+### options
+
+The predefined options that can be selected, separated by comma, e.g. 'firstValue,secondValue'
 
 ### value
 
@@ -100,11 +106,6 @@ The total css width of the component, e.g. '500px'
 ### label
 
 The label text.
-
-### options
-
-The predefined options that can be selected, separated by comma, e.g. 'firstValue,secondValue'
-
 
 
 ----
