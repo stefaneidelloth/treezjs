@@ -17,7 +17,7 @@ Use the buttons and text fields to edit the entries of the list:
 		
 ## Source code
 
-[./src/components/list/treezStringList.js](../../../src/components/list/treezErrorBarStyle.js)
+[./src/components/list/treezStringList.js](../../../src/components/list/treezStringList.js)
 
 ## Test
 
