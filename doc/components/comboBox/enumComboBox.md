@@ -63,7 +63,7 @@ The css width as a string, e.g. '500px'.
 
 ### options
 
-The predefined options that can be selected, separated by comma, e.g. 'firstValue,secondValue'
+The predefined options that can be selected, given as a string that can be evaluated as array, e.g. '\["firstValue","secondValue"\]'
 
 ### value
 
