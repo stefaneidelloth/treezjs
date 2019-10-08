@@ -57,7 +57,7 @@ The label text that is shown before the combo box as a string.
 
 ### options
 
-The enum class that provides the values that can be selected.
+The enum class that provides the available options that can be selected.
 
 ## HTML String Attributes
 
@@ -103,7 +103,7 @@ The label text.
 
 ### options
 
-The predefined options that can be selected, separated by comma, e.g. 'C,D'
+The predefined options that can be selected, separated by comma, e.g. 'firstValue,secondValue'
 
 
 
