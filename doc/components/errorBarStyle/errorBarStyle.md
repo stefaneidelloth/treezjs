@@ -47,11 +47,11 @@ predefined style options, that are used with the JavaScript attribute 'value' (a
 		
 ## Source code
 
-[./src/components/errorBarStyle/errorBarStyle.js](../../../src/components/errorBarStyle/treezErrorBarStyle.js)
+[./src/components/errorBarStyle/treezErrorBarStyle.js](../../../src/components/errorBarStyle/treezErrorBarStyle.js)
 
 ## Test
 
-[./test/components/errorBarStyle/errorBarStyle.test.js](../../../test/components/errorBarStyle/treezErrorBarStyle.test.js)
+[./test/components/errorBarStyle/treezErrorBarStyle.test.js](../../../test/components/errorBarStyle/treezErrorBarStyle.test.js)
 
 ## Demo
 
