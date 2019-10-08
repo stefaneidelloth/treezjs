@@ -33,13 +33,17 @@ The CodeArea allows to edit some source code.
 
 ## JavaScript Attributes
 
+### mode
+
+In order to influcence highlighting you can choose from following modes: 'javascript' (default), 'sql' or 'python'.
+
 ### value
 
 The source code as string. 
 
-### mode
+### label
 
-In order to influcence highlighting you can choose from following modes: 'javascript' (default), 'sql' or 'python'.
+Some label text that is shown above the code area.
 
 ### disabled
 
@@ -53,16 +57,19 @@ The hidden state as a boolean value.
 
 The total css width as a string, e.g. '500px'.
 
-### label
-
-Some label text that is shown above the code area.
-
-
 ## HTML String Attributes
+
+### mode
+
+In order to influcence highlighting you can choose from following modes: 'javascript' (default), 'sql' or 'python'.
 
 ### value
 
 The source code.
+
+### label
+
+Some label text that is shown above the code area.
 
 ### disabled
 
@@ -96,9 +103,7 @@ If you want to hide the component:
 
 The total css width of the component, e.g. '500px'
 
-### label
 
-Some label text that is shown above the code area.
 
  
 
