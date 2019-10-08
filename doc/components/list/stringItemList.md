@@ -41,9 +41,14 @@ Use the buttons and combo boxes to edit the entries of the list:
 
 ## JavaScript Attributes
 
+
+### options
+
+The array of available string values/items, e.g. \['a','b','c','d'\]. 
+
 ### value
 
-An array of strings, e.g. \['a','b','c','d'\]. 
+The array of specified string values/items, e.g. \['a','b','c'\]. 
 
 ### label
 
@@ -65,9 +70,13 @@ The total css width as a string, e.g. '500px'.
 
 ## HTML String Attributes
 
+### options
+
+A string that can be evaluated to an array of strings and represents the available values/items, e.g. '\["a","b","c","d"\]'
+
 ### value
 
-A string that can be evaluated to an array of strings, e.g. '\["a","b","c","d"\]'
+A string that can be evaluated to an array of strings and represents the selected values/items, e.g. '\["a","b","c"]'
 
 ### label
 
