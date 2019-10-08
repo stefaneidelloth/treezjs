@@ -11,21 +11,22 @@
 		</treez-enum-combo-box>	
 
 		<script type="module">
+			
 			import TreezEnumComboBox from '../../../src/components/comboBox/treezEnumComboBox.js';
-            import Enum from '../../../src/components/enum.js';
+            		import Enum from '../../../src/components/enum.js';
 		
-		   class MyEnum extends Enum {}		   
-		   MyEnum.firstValue = new MyEnum('firstValue');
-		   MyEnum.secondValue = new MyEnum('secondValue');
+		   	class MyEnum extends Enum {}		   
+		   	MyEnum.firstValue = new MyEnum('firstValue');
+		   	MyEnum.secondValue = new MyEnum('secondValue');
 		   	  	  
 
-           var enumComboBox = document.getElementById('enumComboBox');
-           
-           enumComboBox.label = 'Hallo';
-           enumComboBox.options = MyEnum;
-           enumComboBox.value = MyEnum.secondValue;
-           
-           console.info('Name of current combo box value: ' + enumComboBox.value.name);    
+			var enumComboBox = document.getElementById('enumComboBox');
+
+			enumComboBox.label = 'Hallo';
+			enumComboBox.options = MyEnum;
+			enumComboBox.value = MyEnum.secondValue;
+
+			console.info('Name of current combo box value: ' + enumComboBox.value.name);    
            
 		</script>
 	</body>
