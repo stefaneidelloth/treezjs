@@ -11,15 +11,15 @@ The available options are given by an enum class, inheriting from [Enum](../../.
 		
 ## Source code
 
-[./src/components/enumComboBox/treezEnumComboBox.js](../../../src/components/enumComboBox/treezEnumComboBox.js)
+[./src/components/comboBox/treezEnumComboBox.js](../../../src/components/comboBox/treezEnumComboBox.js)
 
 ## Test
 
-[./test/components/enumComboBox/treezEnumComboBox.test.js](../../../test/components/enumComboBox/treezEnumComboBox.test.js)
+[./test/components/comboBox/treezEnumComboBox.test.js](../../../test/components/comboBox/treezEnumComboBox.test.js)
 
 ## Demo
 
-[./demo/components/enumComboBox/treezEnumComboBoxDemo.html](../../../demo/components/enumComboBox/treezEnumComboBoxDemo.html)
+[./demo/components/comboBox/treezEnumComboBoxDemo.html](../../../demo/components/comboBox/treezEnumComboBoxDemo.html)
 
 ## Construction
 
