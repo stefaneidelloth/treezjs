@@ -42,7 +42,7 @@ Use the buttons and text fields to edit the entries of the list:
 
 ### value
 
-An array of strings, e.g. \["a","b","c","d"\]. 
+An array of strings, e.g. \['a','b','c','d'\]. 
 
 ### label
 
