@@ -29,9 +29,9 @@ Please note that the corresponding image files have to be located in the same fo
     ...
     sectionContent.append('treez-image-combo-box')
 		  .label('ImageComboBox:')
-		  .attr('options', 'A,B,C')
+		  .attr('options', '["A","B","C"]')
 		  .value('B')		
-		  .bindValue(this, () => this.imageName);	
+		  .bindValue(this, () => this.imageName);
    ...
 ```
 

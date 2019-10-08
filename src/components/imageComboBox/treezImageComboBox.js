@@ -55,11 +55,8 @@ export default class TreezImageComboBox extends TreezComboBox {
 			this.__optionPanel = optionPanel;						
 			comboBox.appendChild(optionPanel);
 			optionPanel.setAttribute('class','treez-image-combo-box-option-panel');	
-			
-			if(this.options){
-               this.__recreateOptionTags();						  
-			}  
-			
+
+			this.__recreateOptionTags();
 			this.__collapseComboBox();                                                              		
         }
         
@@ -123,11 +120,8 @@ export default class TreezImageComboBox extends TreezComboBox {
 		let value = this.getAttribute('value');
 
 		if(value === null || value === undefined || value === 'undefined' || value === 'null'){
-			if (this.options){
-				let optionEntries = this.options.split(',')
-				if(optionEntries.length>0){
-					return this.__nameToImageUrl(optionEntries[0]);
-				}
+			if (this.hasOptions){
+				return this.__nameToImageUrl(this.options[0]);
 			}
 			return undefined;
 		}
@@ -157,7 +151,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 
 		this.__clearOptionPanel();					
 
-		this.__optionItems.forEach(option=>{					
+		this.options.forEach(option=>{
 			let optionElement = document.createElement('div')
 			optionElement.setAttribute('class','treez-image-combo-box-option');
 			self.__optionPanel.appendChild(optionElement);
@@ -190,22 +184,16 @@ export default class TreezImageComboBox extends TreezComboBox {
 		}
 	}
 
-	__hasOption(option){
-		return this.__optionItems.indexOf(option) > -1
-	}
-
 	__refreshSelectedValue(){				
 		let oldValue = this.getAttribute('value');
-		if (!this.__hasOption(oldValue)){
-			this.__tryToSelectFirstOption()
+		if (!this.hasOption(oldValue)){
+			this.__tryToSelectFirstOption();
 		}
-
 	}
 
 	__tryToSelectFirstOption(){
-		var optionItems = this.__optionItems;
-		if (optionItems.length > 0 ){								
-			this.setAttribute('value', optionItems[0]);
+		if (this.hasOptions){
+			this.setAttribute('value', this.options[0]);
 		}	
 	}  
 	
@@ -213,12 +201,6 @@ export default class TreezImageComboBox extends TreezComboBox {
 		return '.png';
 	}
 
-	get __optionItems(){
-		if(!this.options){
-			return [];
-		}
-		return this.options.split(',');
-	}
 }
 
 window.customElements.define('treez-image-combo-box', TreezImageComboBox);    

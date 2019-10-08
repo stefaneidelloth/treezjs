@@ -60,7 +60,7 @@ export default class TickLabels extends GraphicsAtom {
 
 		sectionContent.append('treez-combo-box')
 			.label('Rotation')
-			.attr('options','-180,-135,-90,-45,0,45,90,135,180')
+			.attr('options','["-180","-135","-90","-45","0","45","90","135","180"]')
 			.bindValue(this, ()=>this.rotation);
 	
 		sectionContent.append('treez-text-field')

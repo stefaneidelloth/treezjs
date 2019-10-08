@@ -3,7 +3,7 @@ import TreezComboBox from '../../../src/components/comboBox/treezComboBox.js';
 import Color from '../../../src/components/color/color.js';
 
 jest.mock('../../../src/components/comboBox/treezComboBox.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -24,9 +24,9 @@ jest.setTimeout(100000);
 
 describe('TreezEnumComboBox', ()=>{   
     
-    var id = 'treez-enum-combo-box';
+    let id = 'treez-enum-combo-box';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -42,7 +42,7 @@ describe('TreezEnumComboBox', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -53,11 +53,11 @@ describe('TreezEnumComboBox', ()=>{
         describe('convertFromStringValue', ()=>{   
 
             it('without options an error is thrown', async ()=>{   
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
                     try{
-                        var value = element.convertFromStringValue('undefined');
+                        let value = element.convertFromStringValue('undefined');
                         return false;
                     } catch (error){
                         return true;
@@ -68,23 +68,23 @@ describe('TreezEnumComboBox', ()=>{
             }); 
 
             it('undefined string', async ()=>{ 
-                var success = await page.evaluate(({id})=>{                    
+                let success = await page.evaluate(({id})=>{                    
 
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
                     element.options = window.Color;
                     console.log('Options: ' + element.options);
 
-                    var value = element.convertFromStringValue('undefined');
+                    let value = element.convertFromStringValue('undefined');
                     return value === window.Color.black;
                 },{id});
                 expect(success).toBe(true);  
             }); 
 
             it('enum value string', async ()=>{   
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.options = window.Color;
-                    var value = element.convertFromStringValue('blue');
+                    let value = element.convertFromStringValue('blue');
                     return value === window.Color.blue;
                 },{id});
                 expect(success).toBe(true);  
@@ -93,13 +93,13 @@ describe('TreezEnumComboBox', ()=>{
         }); 
        
         it('set options', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 console.log('options before: ' + element.options);
-                var hasNoOptionsBefore = element.getAttribute('options') === null;
+                let hasNoOptionsBefore = element.getAttribute('options') === null;
                 element.options = window.Color;                
-                var hasOptionsAfter = element.getAttribute('options') === window.Color.names.join(',');
+                let hasOptionsAfter = element.getAttribute('options') === '["' + window.Color.names.join('","') + '"]';
                 
                 return hasNoOptionsBefore && 
                         hasOptionsAfter;

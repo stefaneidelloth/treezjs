@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import LabeledTreezElement from '../../../src/components/labeledTreezElement.js';
 jest.mock('../../../src/components/labeledTreezElement.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -23,9 +23,9 @@ jest.setTimeout(100000);
 
 describe('TreezComboBox', ()=>{   
     
-    var id = 'treez-combo-box';
+    let id = 'treez-combo-box';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -41,7 +41,7 @@ describe('TreezComboBox', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -54,32 +54,32 @@ describe('TreezComboBox', ()=>{
         }); 
        
         it('connectedCallback', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 removeExistingChildren(element);
-                var methodCalls = prepareMocks(element);
+                let methodCalls = prepareMocks(element);
 
                 element.connectedCallback();
 
                 console.log('call to updateElements with:' + methodCalls['updateElements']);
 
-                var methodsAreCalled = (methodCalls['updateElements'] === null) &&
+                let methodsAreCalled = (methodCalls['updateElements'] === null) &&
                                         (methodCalls['disableElements'] === false) &&
                                         (methodCalls['hideElements'] === false);
                 console.log('methods are called:' + methodsAreCalled);
 
-                var containerIsCreated = element.childNodes.length === 1;
+                let containerIsCreated = element.childNodes.length === 1;
                 console.log('container is created:' + containerIsCreated);
 
-                var container = element.firstChild;
+                let container = element.firstChild;
 
-                var label = container.firstChild;
-                var labelIsSet = label.innerText === 'labelText';
+                let label = container.firstChild;
+                let labelIsSet = label.innerText === 'labelText';
                 console.log('label is set:' + labelIsSet);  
 
-                var comboBox = container.lastChild;
-                var comboBoxIsCreated = comboBox.constructor.name === 'HTMLSelectElement';
+                let comboBox = container.lastChild;
+                let comboBoxIsCreated = comboBox.constructor.name === 'HTMLSelectElement';
                 console.log('comboBox is created:' + comboBoxIsCreated);
 
                 return  methodsAreCalled && 
@@ -96,7 +96,7 @@ describe('TreezComboBox', ()=>{
                 }                        
                 
                 function prepareMocks(element){
-                    var methodCalls = {};                   
+                    let methodCalls = {};                   
                     element.label = 'labelText';
                     element.updateElements = (value) =>{
                         methodCalls['updateElements'] = value;
@@ -120,16 +120,16 @@ describe('TreezComboBox', ()=>{
         describe('updateElements', async ()=>{     
             
             it('without options', async () => {
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
     
                     console.log('combo box value before: ' + element.__comboBox.value);
     
-                    var valueIsEmptyStringBefore = element.__comboBox.value === '';
+                    let valueIsEmptyStringBefore = element.__comboBox.value === '';
                     element.updateElements('foo');
     
                     console.log('combo box value after: ' + element.__comboBox.value);
-                    var valueIsStillNotDefinedAfter = element.__comboBox.value === '';
+                    let valueIsStillNotDefinedAfter = element.__comboBox.value === '';
     
                     return valueIsEmptyStringBefore &&
                     valueIsStillNotDefinedAfter;
@@ -138,17 +138,17 @@ describe('TreezComboBox', ()=>{
             });
 
             it('with options', async () => {
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
     
                     console.log('combo box value before: ' + element.__comboBox.value);
     
-                    var valueIsEmptyStringBefore = element.__comboBox.value === '';
-                    element.options = 'foo,baa';
+                    let valueIsEmptyStringBefore = element.__comboBox.value === '';
+                    element.options = ['foo','baa'];
                     element.updateElements('foo');
     
                     console.log('combo box value after: ' + element.__comboBox.value);
-                    var valueIsDefinedAfter = element.__comboBox.value === 'foo';
+                    let valueIsDefinedAfter = element.__comboBox.value === 'foo';
     
                     return valueIsEmptyStringBefore &&
                     valueIsDefinedAfter;
@@ -160,12 +160,12 @@ describe('TreezComboBox', ()=>{
 
         it('disableElements', async ()=>{
            
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var isNotDisabledBefore = element.__comboBox.disabled === false;
+                let isNotDisabledBefore = element.__comboBox.disabled === false;
                 element.disableElements(true);
-                var isDisabledAfter = element.__comboBox.disabled === true;
+                let isDisabledAfter = element.__comboBox.disabled === true;
 
                 return isNotDisabledBefore &&
                     isDisabledAfter;
@@ -176,16 +176,16 @@ describe('TreezComboBox', ()=>{
 
         it('hideElements', async ()=>{
         
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 //TODO: mock hide method of TreezLabeledElement ... once
                 //jest directly supports the test of custom web elements
                 //For now it does not seem to mock stuff in browser
                 
-                var isNotHiddenBefore = element.__container.style.display === '';
+                let isNotHiddenBefore = element.__container.style.display === '';
                 element.hideElements(true);
-                var isHiddenAfter = element.__container.style.display === 'none';
+                let isHiddenAfter = element.__container.style.display === 'none';
                 return isNotHiddenBefore &&
                     isHiddenAfter;
             },{id});
@@ -195,11 +195,11 @@ describe('TreezComboBox', ()=>{
         
         it('attributeChangedCallback', async ()=>{
            
-            var success = await page.evaluate(({id})=>{
+            let success = await page.evaluate(({id})=>{
 
-                var element = document.getElementById(id);              
+                let element = document.getElementById(id);              
 
-                var methodCalls = {};
+                let methodCalls = {};
 
                 element.__recreateOptionTags = ()=>{
                     methodCalls['__recreateOptionTags'] = true;
@@ -218,9 +218,9 @@ describe('TreezComboBox', ()=>{
         describe('set value', ()=>{
 
             it('set undefined value causes error', async () =>{
-                var success = await page.evaluate(({id})=>{
+                let success = await page.evaluate(({id})=>{
 
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
 
                     try{
                         element.value = undefined;
@@ -234,8 +234,8 @@ describe('TreezComboBox', ()=>{
             });
 
             it('without options', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'foo';
 
                     return element.value === 'foo';
@@ -246,9 +246,9 @@ describe('TreezComboBox', ()=>{
 
             describe('with options', () =>{
                 it('with known option', async () =>{
-                    var success = await page.evaluate(({id})=>{
-                        var element = document.getElementById(id);
-                        element.options = 'foo,baa';
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
+                        element.options = ['foo','baa'];
 
                         element.value = 'baa';
     
@@ -259,9 +259,9 @@ describe('TreezComboBox', ()=>{
                 });
 
                 it('with unknown option', async () =>{
-                    var success = await page.evaluate(({id})=>{
-                        var element = document.getElementById(id);
-                        element.options = 'foo, baa';
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
+                        element.options = ['foo','baa'];
 
                         try{
                             element.value = 'qux';
@@ -283,17 +283,17 @@ describe('TreezComboBox', ()=>{
        
         it('__comboBoxChanged', async ()=>{
            
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var valueIsNullBefore = element.value === null;
-                    element.options = 'foo, baa';
+                    let valueIsNullBefore = element.value === null;
+                    element.options = ['foo','baa'];
                     element.__comboBox.value = 'foo';
-                    var valueIsNullBeforeUpdate = element.value === null;
+                    let valueIsNullBeforeUpdate = element.value === null;
 
                     element.__comboBoxChanged();
 
-                    var valueIsSetAfterUpdate = element.value === 'foo';
+                    let valueIsSetAfterUpdate = element.value === 'foo';
 
                     return valueIsNullBefore &&
                     valueIsNullBeforeUpdate &&
@@ -306,22 +306,22 @@ describe('TreezComboBox', ()=>{
 
             it('child nodes are removed', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var comboBox = element.__comboBox;
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let comboBox = element.__comboBox;
 
-                    var hasNoChildrenBefore = comboBox.childNodes.length === 0;
+                    let hasNoChildrenBefore = comboBox.childNodes.length === 0;
                     console.log('has no children before:' + hasNoChildrenBefore);
 
-                    var optionToDelete = document.createElement('option');
+                    let optionToDelete = document.createElement('option');
                     comboBox.appendChild(optionToDelete);
-                    var hasChildren = comboBox.childNodes.length === 1;
+                    let hasChildren = comboBox.childNodes.length === 1;
                     console.log('has children:' + hasChildren);
 
                     element.options = "";
                     element.__recreateOptionTags();
 
-                    var hasNoChildrenAfter = comboBox.childNodes.length === 0;
+                    let hasNoChildrenAfter = comboBox.childNodes.length === 0;
                     console.log('has no children after:' + hasNoChildrenAfter);
 
                     return hasNoChildrenBefore && hasChildren && hasNoChildrenAfter;
@@ -332,17 +332,17 @@ describe('TreezComboBox', ()=>{
 
             it('options are created', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var comboBox = element.__comboBox;
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let comboBox = element.__comboBox;
 
-                    var hasNoChildrenBefore = comboBox.childNodes.length === 0;
+                    let hasNoChildrenBefore = comboBox.childNodes.length === 0;
                     console.log('has no children before:' + hasNoChildrenBefore);
                    
-                    element.options = 'foo,baa,qux';
+                    element.options = ['foo','baa','qux'];
                     element.__recreateOptionTags();    
                     
-                    var hasChildrenAfter = comboBox.childNodes.length === 3;
+                    let hasChildrenAfter = comboBox.childNodes.length === 3;
 
                     return hasNoChildrenBefore && hasChildrenAfter;
                 },{id});
@@ -352,16 +352,16 @@ describe('TreezComboBox', ()=>{
 
             it('value is restored if it is included in new options', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var comboBox = element.__comboBox;                  
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let comboBox = element.__comboBox;                  
                    
                     element.value = 'qux';
-                    element.options = 'foo,baa,qux';
+                    element.options = ['foo','baa','qux'];
                     element.__recreateOptionTags();    
                     
-                    var hasChildrenAfter = comboBox.childNodes.length === 3;
-                    var valueIsSet = element.value === 'qux'
+                    let hasChildrenAfter = comboBox.childNodes.length === 3;
+                    let valueIsSet = element.value === 'qux'
 
                     return hasChildrenAfter && valueIsSet;
                 },{id});
@@ -370,17 +370,17 @@ describe('TreezComboBox', ()=>{
             });
 
             it('first value is selected if old value exists and if it is not in new options', async ()=>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var comboBox = element.__comboBox;                  
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let comboBox = element.__comboBox;                  
                    
-                    element.options = 'foo,baa,qux';                   
+                    element.options = ['foo','baa','qux'];
                     element.value = 'qux';
 
-                    element.options = 'foo,baa';                    
+                    element.options = ['foo','baa'];
                     
-                    var hasChildrenAfter = comboBox.childNodes.length === 2;
-                    var firstValueIsSet = element.value === 'foo'
+                    let hasChildrenAfter = comboBox.childNodes.length === 2;
+                    let firstValueIsSet = element.value === 'foo'
 
                     return hasChildrenAfter && firstValueIsSet;
                 },{id});
@@ -389,10 +389,19 @@ describe('TreezComboBox', ()=>{
 
         });
 
-        it('__createOptionTag', ()=>{
-            var optionTag = TreezComboBox.__createOptionTag('foo');
-            expect(optionTag.constructor.name).toBe('HTMLOptionElement');
-            expect(optionTag.innerText).toBe('foo');
+        it('__createOptionTag', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
+
+                let optionTag = element.__createOptionTag('foo');
+
+                let tagIsCreated = optionTag.constructor.name === 'HTMLOptionElement';
+                let textIsSet = optionTag.innerText === 'foo';
+
+                return tagIsCreated && textIsSet;
+            },{id});
+            expect(success).toBe(true);
+
         });
     });
    

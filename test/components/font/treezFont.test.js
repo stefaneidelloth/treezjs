@@ -8,7 +8,7 @@ import puppeteerToIstanbul from 'puppeteer-to-istanbul';
 
 import TreezComboBox from '../../../src/components/comboBox/treezComboBox.js';
 jest.mock('../../../src/components/comboBox/treezComboBox.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	                	
                 return this;			
@@ -26,9 +26,9 @@ jest.setTimeout(10000);
 
 describe('TreezFont', ()=>{   
     
-    var id = 'treez-font';
+    let id = 'treez-font';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -44,7 +44,7 @@ describe('TreezFont', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -54,14 +54,20 @@ describe('TreezFont', ()=>{
 
         it('connectedCallback', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 element.connectedCallback();
 
                 console.log('options: ' + element.options);
 
-                return element.options === 'serif,sans-serif,cursive,fantasy,monospace';
+                return element.options.toString() === [
+                    'serif',
+                    'sans-serif',
+                    'cursive',
+                    'fantasy',
+                    'monospace'
+                ].toString();
                 
             },{id});
             expect(success).toBe(true);           
@@ -74,10 +80,16 @@ describe('TreezFont', ()=>{
 
         it('__availableFonts', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);               
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);               
 
-                return element.__availableFonts === 'serif,sans-serif,cursive,fantasy,monospace';
+                return element.__availableFonts.toString()  === [
+                    'serif',
+                    'sans-serif',
+                    'cursive',
+                    'fantasy',
+                    'monospace'
+                ].toString();
                 
             },{id});
             expect(success).toBe(true);           
@@ -85,9 +97,19 @@ describe('TreezFont', ()=>{
         });     
         
         it('__createOptionTag', async ()=>{
-            var optionTag = TreezFont.__createOptionTag('serif'); 
-            expect(optionTag.constructor.name).toBe('HTMLOptionElement');
-            expect(optionTag.style.fontFamily).toBe('serif');
+
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
+
+                let optionTag = element.__createOptionTag('serif');
+
+                let tagIsCreated = optionTag.constructor.name === 'HTMLOptionElement';
+                let fontFamilyIsSet = optionTag.style.fontFamily === 'serif';
+
+                return tagIsCreated && fontFamilyIsSet;
+
+            },{id});
+            expect(success).toBe(true);
         });    
         
     });      

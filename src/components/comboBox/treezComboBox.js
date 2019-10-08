@@ -32,11 +32,10 @@ export default class TreezComboBox extends LabeledTreezElement {
 			this.__comboBox = comboBox;	
 			comboBox.className = 'treez-combo-box-select';
 			comboBox.onchange = () => this.__comboBoxChanged();                                              
-			container.appendChild(comboBox); 
-			
-			if(this.getAttribute('options')){
-               this.__recreateOptionTags();	                           
-			}                                     		
+			container.appendChild(comboBox);
+
+			this.__recreateOptionTags();
+
         }
 
         var initialValue;
@@ -49,20 +48,24 @@ export default class TreezComboBox extends LabeledTreezElement {
         this.updateElements(initialValue);	
         this.disableElements(this.disabled)
 		this.hideElements(this.hidden); 
-    }  	
+    }
+
+	attributeChangedCallback(attr, oldValue, newValue) {
+		super.attributeChangedCallback(attr, oldValue, newValue)
+
+		if(attr==='options'){
+			if(this.__comboBox){
+				this.__recreateOptionTags();
+			}
+		}
+	}
     
     updateElements(newValue){
     	if(this.__comboBox){                    	
 			this.__comboBox.value= '' + newValue; 
     	}	
     }
-    
-    __comboBoxChanged(){
-	    let index = this.__comboBox.selectedIndex;	
-	    let newInputValue = this.__comboBox.options[index].value; 				   	
-    	this.value =  this.convertFromStringValue(newInputValue);    	
-    } 
-   
+
     disableElements(booleanValue){
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
@@ -79,7 +82,17 @@ export default class TreezComboBox extends LabeledTreezElement {
     	if(this.__container){   
     		LabeledTreezElement.hide(this.__container, booleanValue);                		
     	}
-    }    
+    }
+
+	hasOption(option){
+		return this.options.indexOf(option) > -1
+	}
+
+	__comboBoxChanged(){
+		let index = this.__comboBox.selectedIndex;
+		let newInputValue = this.__comboBox.options[index].value;
+		this.value =  this.convertFromStringValue(newInputValue);
+	}
 
 	__recreateOptionTags(){
 	    var comboBox = this.__comboBox;
@@ -89,21 +102,17 @@ export default class TreezComboBox extends LabeledTreezElement {
 			comboBox.removeChild(comboBox.lastChild);
 		}
 
-		var options = this.getAttribute('options');
-		if(options){
-			var optionEntries = options.split(',');
-			optionEntries.forEach(option=>{
+		if(this.hasOptions){
+			this.options.forEach(option=>{
 				var optionTag = this.__createOptionTag(option)						
 				comboBox.appendChild(optionTag);
 			});
 
 			if(oldValue){
-				if (optionEntries.indexOf(oldValue) > -1){
+				if (this.hasOption(oldValue)){
 					comboBox.value = oldValue;
 				} else {
-					if (optionEntries.length > 0 ){
-						this.value = optionEntries[0];
-					}
+					this.value = this.options[0];
 				}
 			}	
 		}		
@@ -115,15 +124,19 @@ export default class TreezComboBox extends LabeledTreezElement {
 		return optionTag;
 	}
 
-    attributeChangedCallback(attr, oldValue, newValue) {
-    	super.attributeChangedCallback(attr, oldValue, newValue)                     
-		
-		if(attr==='options'){
-        	if(this.__comboBox){                    		
-        		 this.__recreateOptionTags();
-        	}                                           
-        } 
-    }
+	__arrayToString(stringArray){
+		let optionsString = '[]';
+		if(stringArray){
+			if(stringArray.length > 0){
+				optionsString = '["' + stringArray.join('","') + '"]';
+			}
+		}
+		return optionsString;
+	}
+
+	hasOption(option){
+		return this.options.indexOf(option) > -1
+	}
     
   	get value(){
   		return super.value;
@@ -142,10 +155,8 @@ export default class TreezComboBox extends LabeledTreezElement {
   		
   		let stringValue = newValue.toString();
 
-  		var options = this.getAttribute('options');
-  		if(options){
-  			var optionEntries = options.split(',');
-  			if (optionEntries.indexOf(stringValue) > -1){
+  		if(this.hasOptions){
+  			if (this.hasOption(stringValue)){
   				this.setAttribute('value', stringValue);	
   			} else {
   				throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
@@ -156,12 +167,22 @@ export default class TreezComboBox extends LabeledTreezElement {
   	}  
   	
   	get options() {
-  		return this.getAttribute('options');
+    	let optionsString = this.getAttribute('options');
+    	if(optionsString){
+    		return eval(optionsString);
+		} else {
+    		return [];
+		}
     }
 
-    set options(newValue) {
-    	this.setAttribute('options', newValue);	
-    } 
+    set options(optionsArray) {
+    	let optionsString = this.__arrayToString(optionsArray);
+    	this.setAttribute('options', optionsString);
+    }
+
+	get hasOptions(){
+		return this.options.length > 0;
+	}
                             
 }
 

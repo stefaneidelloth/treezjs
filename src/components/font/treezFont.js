@@ -12,7 +12,13 @@ export default class TreezFont extends TreezComboBox {
     }
     
     get __availableFonts(){
-    	return 'serif,sans-serif,cursive,fantasy,monospace';                   
+    	return [
+    	    'serif',
+            'sans-serif',
+            'cursive',
+            'fantasy',
+            'monospace'
+        ];
     }
     
     __createOptionTag(option){
