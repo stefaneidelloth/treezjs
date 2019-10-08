@@ -55,6 +55,10 @@ The minimum value that can be entered (default is Number.MIN_SAFE_INTEGER = -900
 
 The maximum value that can be entered (default is Number.MAX_SAFE_INTEGER = 9007199254740991).
 
+### label
+
+Some label text that is shown before the input field as a string. 
+
 ### disabled
 
 The disabled state as a boolean value. 
@@ -71,9 +75,7 @@ The css width as a string, e.g. '500px'.
 
 the css width of the number input field as as string, e.g. '100px'.
 
-### label
 
-The label text that is shown before the combo box as a string. 
 
 
 ## HTML String Attributes
@@ -89,6 +91,10 @@ The minimum value that can be entered as a string (default is '-9007199254740991
 ### max
 
 The maximum value that can be entered as a string (default is '9007199254740991').
+
+### label
+
+Some label text.
 
 ### disabled
 
@@ -125,10 +131,6 @@ The total css width of the component, e.g. '500px'.
 ### input-width
 
 the css width of the number input field as as string, e.g. '100px'.
-
-### label
-
-The label text.
 
 
 ----
