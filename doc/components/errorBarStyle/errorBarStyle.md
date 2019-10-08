@@ -73,7 +73,11 @@ predefined style options, that are used with the JavaScript attribute 'value' (a
 ### value
 
 Returns the current error bar style as enum value. 
-In order to set the value, you can either use an enum value or a string value (= name of ErrorBarStyle).  
+In order to set the value, you can either use an enum value or a string value (= name of ErrorBarStyle). 
+
+### label
+
+Some label text that is shown before the style combo box as a string. 
 
 ### disabled
 
@@ -87,15 +91,17 @@ The hidden state as a boolean value.
 
 The total css width as a string, e.g. '500px'.
 
-### label
 
-The label text that is shown before the style as a string. 
 
 ## HTML String Attributes
 
 ### value
 
 The name of the ErrorBarStyle.
+
+### label
+
+Some label text.
 
 ### disabled
 
@@ -129,9 +135,7 @@ If you want to hide the component:
 
 The total css width of the component, e.g. '500px'
 
-### label
 
-The label text.
 
 
 ----
