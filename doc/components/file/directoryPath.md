@@ -58,6 +58,10 @@ from directory names to directory paths, e.g.
 
 If you select a directory and the path of that directory includes a path from the pathMap (e.g. 'C:/myProject'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/foo').  
 
+### label
+
+Some label text. 
+
 ### fullDirectory
 
 Returns the full/absolute path of the directory (the 'value' attribute might contain a relative path).
@@ -78,16 +82,16 @@ The hidden state as a boolean value.
 
 The css width as a string, e.g. '500px'.
 
-### label
-
-Some label text. 
-
 
 ## HTML String Attributes
 
 ### value
 
 The directory path as a string. 
+
+### label
+
+Some label text.
 
 ### disabled
 
@@ -121,9 +125,6 @@ If you want to hide the component:
 
 The total css width of the component, e.g. '500px'
 
-### label
-
-Some label text.
 
 
 ----
