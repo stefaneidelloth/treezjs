@@ -63,6 +63,10 @@ Returns the current colorMap as enum value.
 
 In orde to set the value, you can either use an enum value or a string value (= name of the colorMap).  
 
+### label
+
+Some label text that is shown before the color map as a string. 
+
 ### disabled
 
 The disabled state as a boolean value. 
@@ -75,15 +79,17 @@ The hidden state as a boolean value.
 
 The total css width as a string, e.g. '500px'.
 
-### label
 
-Some label text that is shown before the color map as a string. 
 
 ## HTML String Attributes
 
 ### value
 
 The name of the color map. 
+
+### label
+
+Some label text that is shown before the color map as a string. 
 
 ### disabled
 
@@ -116,10 +122,6 @@ If you want to hide the component:
 ### width
 
 The total css width of the component, e.g. '500px'
-
-### label
-
-Some label text that is shown before the color map as a string. 
 
 
 ----
