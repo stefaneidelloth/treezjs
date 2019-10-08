@@ -8,11 +8,15 @@ The Double component is used to specify a double number.
 	
 ![](../../images/treez_double.png)
 
-Please note that the shown decimal separator might depend on the language settings of your browser. 
+* Please note that the shown **decimal separator** might depend on the language settings of your browser. 
 In order to avoid confusion, we recomment to use "English (United States)" in the language settings 
 (e.g. Settings => Advanced => Languages => This language is used to display the Google Chrome UI). 
 This way, the decimal separator of the Properties View of Treez is the same as the one used in the source
 code of the Editor View.
+
+* Please note that JavaScript comes with some limitation for the precision of numbers. Also see 
+  * https://stackoverflow.com/questions/22838588/javascript-max-int
+  * https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
 		
 ## Source code
 
@@ -33,7 +37,7 @@ code of the Editor View.
     sectionContent.append('treez-double')
 		  .label('Label:')		
 		  .value('4.12')		
-		  .bindValue(this, () => this.foo);	
+		  .bindValue(this, () => this.increaseFactor);	
    ...
 ```
 
@@ -42,6 +46,14 @@ code of the Editor View.
 ### value
 
 The current value as a number. 
+
+### min
+
+The minimum value that can be entered (default is Number.MIN_SAFE_INTEGER = -9007199254740991).
+
+### max
+
+The maximum value that can be entered (default is Number.MAX_SAFE_INTEGER = 9007199254740991).
 
 ### disabled
 
@@ -55,17 +67,28 @@ The hidden state as a boolean value.
 
 The css width as a string, e.g. '500px'.
 
+### input-width
+
+the css width of the number input field as as string, e.g. '100px'.
+
 ### label
 
 The label text that is shown before the combo box as a string. 
-
 
 
 ## HTML String Attributes
 
 ### value
 
-The current value as a string.
+The current value string.
+
+### min
+
+The minimum value that can be entered as a string (default is '-9007199254740991').
+
+### max
+
+The maximum value that can be entered as a string (default is '9007199254740991').
 
 ### disabled
 
@@ -97,15 +120,17 @@ If you want to hide the component:
 
 ### width
 
-The total css width of the component, e.g. '500px'
+The total css width of the component, e.g. '500px'.
+
+### input-width
+
+the css width of the number input field as as string, e.g. '100px'.
 
 ### label
 
 The label text.
 
 
-
-
 ----
 
-[DirectoryPath](../file/directoryPath.md)
+[EnumComboBox](../enumComboBox/enumComboBox.md)
