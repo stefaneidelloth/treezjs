@@ -43,6 +43,10 @@ The enum class that provides the available options that can be selected.
 
 The current value (= selected option) as an enum value. 
 
+### label
+
+Some label text that is shown before the combo box as a string. 
+
 ### disabled
 
 The disabled state as a boolean value. 
@@ -55,12 +59,6 @@ The hidden state as a boolean value.
 
 The css width as a string, e.g. '500px'.
 
-### label
-
-The label text that is shown before the combo box as a string. 
-
-
-
 ## HTML String Attributes
 
 ### options
@@ -70,6 +68,10 @@ The predefined options that can be selected, separated by comma, e.g. 'firstValu
 ### value
 
 The current value string (=selected option). 
+
+### label
+
+Some label text.
 
 ### disabled
 
@@ -102,10 +104,6 @@ If you want to hide the component:
 ### width
 
 The total css width of the component, e.g. '500px'
-
-### label
-
-The label text.
 
 
 ----
