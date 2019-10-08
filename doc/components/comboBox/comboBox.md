@@ -35,9 +35,17 @@ The ComboBox component is used to select an option (string) from a list of prede
 
 ## JavaScript Attributes
 
+### options
+
+The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
+
 ### value
 
 The current value (= selected option) as a string. 
+
+### label
+
+The label text that is shown before the combo box as a string. 
 
 ### disabled
 
@@ -51,19 +59,19 @@ The hidden state as a boolean value.
 
 The css width as a string, e.g. '500px'.
 
-### label
-
-The label text that is shown before the combo box as a string. 
+## HTML String Attributes
 
 ### options
 
-The predefined options that can be selected, given as a comma separated string, e.g. 'C,D'
-
-## HTML String Attributes
+The predefined options that can be selected, separated by comma, e.g. 'C,D'
 
 ### value
 
 The current value (=selected option). 
+
+### label
+
+The label text.
 
 ### disabled
 
@@ -96,15 +104,6 @@ If you want to hide the component:
 ### width
 
 The total css width of the component, e.g. '500px'
-
-### label
-
-The label text.
-
-### options
-
-The predefined options that can be selected, separated by comma, e.g. 'C,D'
-
 
 
 ----
