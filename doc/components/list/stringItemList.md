@@ -117,4 +117,4 @@ The total css width of the component, e.g. '500px'
 
 ----
 
-[StringItemList](./stringItemList.md)
+[ModelPath](../modelPath/modelPath.md)
