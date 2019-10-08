@@ -135,4 +135,4 @@ the css width of the number input field as as string, e.g. '100px'.
 
 ----
 
-[EnumComboBox](../enumComboBox/enumComboBox.md)
+[EnumComboBox](../comboBox/enumComboBox.md)
