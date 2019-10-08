@@ -31,8 +31,8 @@ code of the Editor View.
 ```javascript
     ...
     sectionContent.append('treez-double')
-		  .label('Size')		
-		  .value('2.5')		
+		  .label('Label:')		
+		  .value('4.12')		
 		  .bindValue(this, () => this.foo);	
    ...
 ```
