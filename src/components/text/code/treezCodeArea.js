@@ -41,6 +41,10 @@ export default class TreezCodeArea extends LabeledTreezElement {
 					self.mode = 'javascript';
 				}
 
+				if(!self.value){
+					self.value = '';
+				}
+
 				//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
 				self.__codeMirror = CodeMirror(container,  
 				  {
