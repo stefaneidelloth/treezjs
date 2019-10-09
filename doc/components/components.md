@@ -19,7 +19,7 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 * [FilePath](./file/filePath.md) ![](../images/treez_file_path.png)
 * [FillStyle](./fillStyle/fillStyle.md) ![](../images/treez_fill_style.png)
 * [Font](./font/font.md) ![](../images/treez_font.png)
-* [ImageComboBox](./imageComboBox/imageComboBox.md) ![](../images/treez_image_combo_box.png)
+* [ImageComboBox](./comboBox/imageComboBox.md) ![](../images/treez_image_combo_box.png)
 * [Integer](./number/integer.md) ![](../images/treez_integer.png)
 * [LineStyle](./lineStyle/lineStyle.md) ![](../images/treez_line_style.png)
 * [StringList](./list/stringList.md) 

@@ -6,7 +6,7 @@
 	</head>
 
 	<body>
-		<treez-enum-combo-box label="ComboBox:" id="enumComboBox">
+		<treez-enum-combo-box label="EnumComboBox:" id="enumComboBox">
 			
 		</treez-enum-combo-box>	
 
@@ -22,8 +22,8 @@
 
 			var enumComboBox = document.getElementById('enumComboBox');
 
-			enumComboBox.label = 'Hallo';
-			enumComboBox.options = MyEnum;
+			enumComboBox.label = 'Enum combo box:';
+			enumComboBox.enum = MyEnum;
 			enumComboBox.value = MyEnum.secondValue;
 
 			console.info('Name of current combo box value: ' + enumComboBox.value.name);    

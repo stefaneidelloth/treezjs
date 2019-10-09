@@ -28,7 +28,7 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Interpolation mode')
-			.nodeAttr('options', InterpolationMode)
+			.nodeAttr('enum', InterpolationMode)
 			.bindValue(this, ()=>this.interpolationMode);		
 
 		//line.createCheckBox(bezierJoin, this).setLabel('Bezier join');

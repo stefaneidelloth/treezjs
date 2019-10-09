@@ -135,35 +135,39 @@ export default class TreezComboBox extends LabeledTreezElement {
 	}
 
 	hasOption(option){
-		return this.options.indexOf(option) > -1
+		return this.options.indexOf(option) > -1;
 	}
     
   	get value(){
   		return super.value;
-  	} 	
+  	} 
+
+  	set value(value) {
+	  var stringValue = this.convertToStringValue(value);
+	  if(stringValue === null){
+		  this.removeAttribute('value');
+	  } else {
+	  	this.setAttribute('value', stringValue);	  	
+	  }
+	}	
 
   	set value(newValue) {
+  		let stringValue = this.convertToStringValue(newValue);
 
-  		if(newValue === undefined){
-  			throw new Error("Value for combo box must not be undefined!");
-  		}
-
-  		if(newValue === null){
-  			this.setAttribute('value', null);
-  			return;
-		}
-  		
-  		let stringValue = newValue.toString();
-
-  		if(this.hasOptions){
-  			if (this.hasOption(stringValue)){
-  				this.setAttribute('value', stringValue);	
-  			} else {
-  				throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
-  			}   
-  		} else {
-  			this.setAttribute('value', stringValue);
-  		}
+  		if(stringValue === null){
+		  this.removeAttribute('value');
+		} else {
+			
+			if(this.hasOptions){
+				if (this.hasOption(newValue)){
+					this.setAttribute('value', stringValue);	
+				} else {
+					throw new Error("The option '"+ stringValue +"' is not known by the combo box. Available options: " + this.options);
+				}   
+			} else {
+				this.setAttribute('value', stringValue); //stores value to use it as default, for the case that it is included in the options to set
+			}	
+		}   		
   	}  
   	
   	get options() {

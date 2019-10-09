@@ -54,7 +54,7 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Data mode')
-			.nodeAttr('options', DataMode)
+			.nodeAttr('enum', DataMode)
 			.onChange(()=>this.__dataModeChanged())
 			.bindValue(this, ()=>this.dataMode);
 		
@@ -79,7 +79,7 @@ export default class Data extends GraphicsAtom {
 
 		sectionContent.append('treez-enum-combo-box')
 			.label('Sorting mode')
-			.nodeAttr('options', SortingMode)			
+			.nodeAttr('enum', SortingMode)
 			.bindValue(this, ()=>this.sortingMode);
 
 		sectionContent.append('treez-text-field')

@@ -1,28 +1,19 @@
-import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
+import TreezEnumImageComboBox from '../comboBox/treezEnumImageComboBox.js';
 import SymbolStyle from './symbolStyle.js';
 
-export default class TreezSymbolStyle extends TreezImageComboBox {  
+export default class TreezSymbolStyle extends TreezEnumImageComboBox {  
      	
     constructor(){
         super();                     
     }
 
     beforeConnectedCallbackHook(){
-    	this.options = SymbolStyle.names;
-	} 
-    
-    get value() {
-		 let stringValue = this.getAttribute('value');
-		 try{
-		 	return SymbolStyle.forName(stringValue);
-		 } catch(error){
-			 return null;
-		 }
-	}  
-	
-	set value(symbolStyle) {
-		super.value = symbolStyle;	
-	}                    
+        this.enum = SymbolStyle;
+    }
+
+    get folderName(){
+		return 'symbolStyle';
+	}                
 }
 
 window.customElements.define('treez-symbol-style', TreezSymbolStyle);

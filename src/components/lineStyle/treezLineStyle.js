@@ -1,28 +1,19 @@
-import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
+import TreezEnumImageComboBox from '../comboBox/treezEnumImageComboBox.js';
 import LineStyle from './lineStyle.js';
 
-export default class TreezLineStyle extends TreezImageComboBox {  
+export default class TreezLineStyle extends TreezEnumImageComboBox {  
     	
-    constructor(){
-        super();                    
-    }  
-    
+   constructor(){
+        super();                     
+    }
+
     beforeConnectedCallbackHook(){
-    	 this.options=LineStyle.names;
+        this.enum = LineStyle;
+    }
+
+    get folderName(){
+		return 'lineStyle';
 	}
-    
-    get value() {
-		 let stringValue = this.getAttribute('value');
-		 try{
-		 	return LineStyle.forName(stringValue);
-		 } catch(error){
-			 return null;
-		 }
-	}  
-	
-	set value(lineStyle) {
-		super.value = lineStyle;	
-	}  	
                          
 }
 

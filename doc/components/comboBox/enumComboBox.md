@@ -27,7 +27,7 @@ The available options are given by an enum class, inheriting from [Enum](../../.
     ...
     sectionContent.append('treez-enum-combo-box')
 		  .label('Hallo')
-		  .nodeAttr('options', MyEnumClass)
+		  .nodeAttr('enum', MyEnumClass)
 		  .value('secondValue')		
 		  .bindValue(this, () => this.mode);	
    ...

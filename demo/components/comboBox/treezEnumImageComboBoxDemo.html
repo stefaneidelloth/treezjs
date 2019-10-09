@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="../../../src/components/comboBox/treezImageComboBox.css" />
+	</head>
+
+	<body>
+		<treez-enum-image-combo-box label="EnumImageComboBox:" id="enumImageComboBox">
+			
+		</treez-enum-image-combo-box>
+
+		<script type="module">
+			
+			import TreezEnumImageComboBox from '../../../src/components/comboBox/treezEnumImageComboBox.js';
+            import Enum from '../../../src/components/enum.js';
+		
+		   	class MyEnum extends Enum {}		   
+		   	MyEnum.A = new MyEnum('A');
+		   	MyEnum.B = new MyEnum('B');
+		   	  	  
+
+			var enumImageComboBox = document.getElementById('enumImageComboBox');
+
+			enumImageComboBox.label = 'Enum image combo box:';
+			enumImageComboBox.enum = MyEnum;
+			enumImageComboBox.value = MyEnum.B;
+
+			console.info('Name of current combo box value: ' + enumImageComboBox.value.name);
+           
+		</script>
+	</body>
+</html>

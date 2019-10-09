@@ -31,7 +31,7 @@ export default class Labels extends GraphicsAtom {
 
 		sectionContent.append('treez-enum-combo-box')
 			.label('Label mode')
-			.nodeAttr('options', LabelMode)
+			.nodeAttr('enum', LabelMode)
 			.bindValue(this, ()=>this.labelMode);
 		
 		sectionContent.append('treez-font')

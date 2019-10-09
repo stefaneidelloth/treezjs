@@ -11,7 +11,7 @@ export default class TreezEnumComboBox extends TreezComboBox {
     convertFromStringValue(stringValue){
 
     	if(!this.__enumClass){
-			throw new Error('Options have to be set before retrieving value');
+			throw new Error('Enum class has to be set before retrieving value');
 		}
 
     	if(stringValue === 'undefined'){
@@ -21,29 +21,38 @@ export default class TreezEnumComboBox extends TreezComboBox {
 		return this.__enumClass.forName(stringValue);
 		                	
 	} 
-		
-	set options(enumClass) { //using/overriding attribute name "options" ensures that the super attribute "options" of TreezComboBox is not used by mistake.
+
+	convertToStringValue(value){
+
+    	if(value instanceof Enum){
+			return value.name;
+		} else {
+			return value;
+		}
+		                	
+	} 	
+
+	set enum(enumClass) {
 		this.__enumClass = enumClass;		
 		var optionsString = this.__arrayToString(enumClass.names);
 	  	this.setAttribute('options', optionsString);	
 	}
 
-	get options(){
+	get enum(){
     	return this.__enumClass;
+	}	
+
+	set options(value) { 
+		throw new Error('Options cannot be set directly. Please set enumClass instead.');		
 	}
 
-	get value(){
-		let stringValue = super.value;
-		return this.__enumClass.forName(stringValue);
-	}
-
-	set value(value) {
-    	if(value instanceof Enum){
-			super.value = enumValue.name;
+	get options(){
+		if(this.__enumClass){
+			return this.__enumClass.values;
 		} else {
-			super.value = value;
-		}
-	}
+			return [];
+		}    	
+	}	
                           
 }
 

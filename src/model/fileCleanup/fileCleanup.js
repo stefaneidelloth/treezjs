@@ -63,7 +63,7 @@ export default class FileCleanup extends Model {
 
        	this.__modeComponent = sectionContent.append('treez-enum-combo-box')
         	.label('Mode')  
-        	.nodeAttr('options', DirectoryCleanupMode)          	    	
+        	.nodeAttr('enum', DirectoryCleanupMode)
         	.bindValue(this, ()=>this.mode);
 
        

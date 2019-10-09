@@ -77,13 +77,13 @@ export default class Data extends GraphicsAtom {
 
 		sectionContent.append('treez-enum-combo-box')			
 			.label('Mode')
-			.nodeAttr('options', AxisMode)	
+			.nodeAttr('enum', AxisMode)
 			.onChange(()=>this.__axisModeChanged())
 			.bindValue(this,()=>this.mode);
 
 		sectionContent.append('treez-enum-combo-box')			
 			.label('Direction')
-			.nodeAttr('options', Direction)				
+			.nodeAttr('enum', Direction)
 			.bindValue(this,()=>this.direction);		
 
 		sectionContent.append('treez-check-box')
@@ -112,7 +112,7 @@ export default class Data extends GraphicsAtom {
 
 		this.__borderMinSelection = sectionContent.append('treez-enum-combo-box')			
 			.label('Border min')
-			.nodeAttr('options', BorderMode)				
+			.nodeAttr('enum', BorderMode)
 			.bindValue(this,()=>this.borderMin);
 		
 		this.__minSelection = sectionContent.append('treez-text-field')
@@ -132,7 +132,7 @@ export default class Data extends GraphicsAtom {
 	
 		this.__borderMaxSelection = sectionContent.append('treez-enum-combo-box')			
 			.label('Border max')
-			.nodeAttr('options', BorderMode)				
+			.nodeAttr('enum', BorderMode)
 			.bindValue(this,()=>this.borderMax);
 		
 		this.__maxSelection = sectionContent.append('treez-text-field')

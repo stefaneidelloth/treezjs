@@ -46,7 +46,7 @@ export default class Column extends ComponentAtom {
 
 		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
 									.label('Type')
-									.nodeAttr('options', ColumnType)
+									.nodeAttr('enum', ColumnType)
 									.bindValue(this, ()=>this.type);
 		
 		this.__isNullableSelection = sectionContent.append('treez-check-box')

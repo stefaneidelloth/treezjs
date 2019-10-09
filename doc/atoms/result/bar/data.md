@@ -42,7 +42,7 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Bar direction')
-			.nodeAttr('options',Direction)
+			.nodeAttr('enum',Direction)
 			.bindValue(this, ()=>this.barDirection);
 
 		sectionContent.append('treez-text-field')

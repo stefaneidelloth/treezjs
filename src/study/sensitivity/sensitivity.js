@@ -55,13 +55,13 @@ export default class Sensitivity extends AbstractSampleStudy {
 	__extendSensitivitySection(sectionContent) {	
 		sectionContent.append('treez-enum-combo-box')
 			.label('Type')
-			.nodeAttr('options', SensitivityType)
+			.nodeAttr('enum', SensitivityType)
 			.onChange(() => this.__typeChanged())
 			.bindValue(this, () => this.type);
 		
 		this.__relationTypeSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Relation type')
-			.nodeAttr('options', RelationType)
+			.nodeAttr('enum', RelationType)
 			.onChange(() => this.__relationTypeChanged())
 			.bindValue(this, () => this.relationType);		
 		

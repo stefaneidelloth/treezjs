@@ -1,28 +1,19 @@
-import TreezImageComboBox from './../imageComboBox/treezImageComboBox.js';
+import TreezEnumImageComboBox from '../comboBox/treezEnumImageComboBox.js';
 import ErrorBarStyle from './errorBarStyle.js';
 
-export default class TreezErrorBarStyle extends TreezImageComboBox {  
+export default class TreezErrorBarStyle extends TreezEnumImageComboBox {  
      	
-    constructor(){
+   constructor(){
         super();                     
-    }  
+    }
 
     beforeConnectedCallbackHook(){
-    	 this.options=ErrorBarStyle.names;
+        this.enum = ErrorBarStyle;
+    }
+
+    get folderName(){
+		return 'errorBarStyle';
 	}
-    
-    get value() {
-		 let stringValue = this.getAttribute('value');
-		 try{
-		 	return ErrorBarStyle.forName(stringValue);
-		 } catch(error){
-		 	return null;
-		 }
-	}  
-	
-	set value(errorBarStyle) {
-		super.value = errorBarStyle;	
-	}  
                          
 }
 

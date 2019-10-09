@@ -55,7 +55,7 @@ export default class PickingProbe extends Probe {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Type')
-			.nodeAttr('options', DomainType)
+			.nodeAttr('enum', DomainType)
 			.onChange(() => this.__showOrHideComponents())
 			.bindValue(this, ()=>this.domainType);
 		

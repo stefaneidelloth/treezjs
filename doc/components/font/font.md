@@ -100,4 +100,4 @@ The total css width of the component, e.g. '500px'
 
 ----
 
-[ImageComboBox](../imageComboBox/imageComboBox.md)
+[ImageComboBox](../comboBox/imageComboBox.md)

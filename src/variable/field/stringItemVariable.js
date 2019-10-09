@@ -35,7 +35,7 @@ export default class StringItemVariable extends Variable {
 	createVariableControl(parent, dTreez){
 		this.__comboBox = parent.append('treez-combo-box')
 			.label(this.name)
-			.nodeAttr('options', this.options)
+			.nodeAttr('enum', this.options)
 			.bindValue(this, ()=>this.value);
     }
 

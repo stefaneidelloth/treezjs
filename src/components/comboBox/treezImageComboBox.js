@@ -1,4 +1,4 @@
-import TreezComboBox from './../comboBox/treezComboBox.js';
+import TreezComboBox from './treezComboBox.js';
 
 export default class TreezImageComboBox extends TreezComboBox {                
 				
@@ -116,34 +116,18 @@ export default class TreezImageComboBox extends TreezComboBox {
 		this.__optionPanel.style.display = 'none';
 	}	
 
-	get __selectedImageUrl(){
-		let value = this.getAttribute('value');
-
-		if(value === null || value === undefined || value === 'undefined' || value === 'null'){
-			if (this.hasOptions){
-				return this.__nameToImageUrl(this.options[0]);
-			}
-			return undefined;
-		}
-
-		return this.__nameToImageUrl(value);
-
-	}
+	
 
 	__nameToImageUrl(name){
 
-        var trimmedName = this.constructor.name.substring(5);
-
-        var folderName = trimmedName[0].toLowerCase() + trimmedName.substring(1);
+        var trimmedName = this.constructor.name.substring(5);       
         
         var urlPrefix = window.treezConfig
 	        				?window.treezConfig.home
 	        				:'';
 
-		return urlPrefix + '/src/components/' + folderName + '/' + name + this.__imageFormat
-	}		
-
-	
+		return urlPrefix + '/src/components/' + this.folderName + '/' + name + this.__imageFormat
+	}	
 
 	__recreateOptionTags(){
 
@@ -196,10 +180,28 @@ export default class TreezImageComboBox extends TreezComboBox {
 			this.setAttribute('value', this.options[0]);
 		}	
 	}  
+
+	get __selectedImageUrl(){
+		let value = this.getAttribute('value');
+
+		if(value === null || value === undefined || value === 'undefined' || value === 'null'){
+			if (this.hasOptions){
+				return this.__nameToImageUrl(this.options[0]);
+			}
+			return undefined;
+		}
+
+		return this.__nameToImageUrl(value);
+
+	}
 	
 	get __imageFormat(){
 		return '.png';
 	}
+
+	get folderName(){
+		return 'comboBox';
+	}	
 
 }
 

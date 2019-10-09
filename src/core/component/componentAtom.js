@@ -33,7 +33,7 @@ import FillStyle from './../../components/fillStyle/fillStyle.js';
 
 import TreezFont from './../../components/font/treezFont.js';
 
-import TreezImageComboBox from './../../components/imageComboBox/treezImageComboBox.js';	
+import TreezImageComboBox from '../../components/comboBox/treezImageComboBox.js';
 import TreezInteger from './../../components/number/treezInteger.js';
 
 import TreezLineStyle from './../../components/lineStyle/treezLineStyle.js';
@@ -82,7 +82,7 @@ export default class ComponentAtom extends Atom {
     	Treez.importCssStyleSheet('/src/components/file/treezFileOrDirectoryPath.css');
     	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    
-    	Treez.importCssStyleSheet('/src/components/imageComboBox/treezImageComboBox.css');	    		
+    	Treez.importCssStyleSheet('/src/components/comboBox/treezImageComboBox.css');
     	
     	Treez.importCssStyleSheet('/src/components/list/treezStringList.css');
 		

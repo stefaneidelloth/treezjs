@@ -1,5 +1,5 @@
 import CustomElementsMock from '../../customElementsMock.js';
-import TreezImageComboBox from '../../../src/components/imageComboBox/treezImageComboBox.js'; //TODO: mock after jest supports testing custom components
+import TreezImageComboBox from '../../../src/components/comboBox/treezImageComboBox.js'; //TODO: mock after jest supports testing custom components
 import ErrorBarStyle from '../../../src/components/errorBarStyle/errorBarStyle.js'; //TODO: mock after jest supports testing custom components
 
 import TestUtils from '../../testUtils.js';

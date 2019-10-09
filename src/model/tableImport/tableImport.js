@@ -91,7 +91,7 @@ export default class TableImport extends Model {
 		 
 		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Type')
-			.nodeAttr('options', TableSourceType)		
+			.nodeAttr('enum', TableSourceType)
 			.onChange(()=>this.__showAndHideDependentComponents())	
 			.bindValue(this,()=>this.type);			
 		

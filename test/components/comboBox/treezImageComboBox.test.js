@@ -1,6 +1,6 @@
 import CustomElementsMock from '../../customElementsMock.js';
 
-import TreezImageComboBox from '../../../src/components/imageComboBox/treezImageComboBox.js';
+import TreezImageComboBox from '../../../src/components/comboBox/treezImageComboBox.js';
 
 import TestUtils from '../../testUtils.js';
 
@@ -38,7 +38,7 @@ describe('TreezImageComboBox', ()=>{
 
     beforeEach(async () => {
         await TestUtils.clearBody(page);
-        await TestUtils.createCustomElement(page, id, 'TreezImageComboBox', '../../src/components/imageComboBox/treezImageComboBox.js');
+        await TestUtils.createCustomElement(page, id, 'TreezImageComboBox', '../../src/components/comboBox/treezImageComboBox.js');
     });
     
     describe('State after construction', ()=>{
@@ -357,7 +357,7 @@ describe('TreezImageComboBox', ()=>{
                 const element = document.getElementById(id);
 
                 let url = element.__nameToImageUrl('A');
-                return url === '/src/components/imageComboBox/A.png';
+                return url === '/src/components/comboBox/A.png';
 
             }, {id});
             expect(success).toBe(true);           

@@ -83,7 +83,7 @@ export default class DatabaseModifier extends CodeModel {
         
         sectionContent.append('treez-enum-combo-box')
         	.label('Type')
-        	.nodeAttr('options', TableTargetType)
+        	.nodeAttr('enum', TableTargetType)
         	.onChange(() => this.__showAndHideComponents())
         	.bindValue(this, ()=>this.targetType);
 
