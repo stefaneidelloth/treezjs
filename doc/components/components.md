@@ -24,12 +24,12 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 | [ImageComboBox](./comboBox/imageComboBox.md)| ![](../images/treez_image_combo_box.png)|
 | [Integer](./number/integer.md)| ![](../images/treez_integer.png)|
 | [LineStyle](./lineStyle/lineStyle.md)| ![](../images/treez_line_style.png)|
-| [StringList](./list/stringList.md) ||
-| [StringItemList](./list/stringItemList.md)| |
+| [StringList](./list/stringList.md) | ![](../images/treez_string_list.png) |
+| [StringItemList](./list/stringItemList.md)| ![](../images/treez_string_item_list.png) |
 | [ModelPath](./modelPath/modelPath.md)| ![](../images/treez_model_path.png)|
-| [Section](./section/section.md)| |
+| [Section](./section/section.md)|![](../images/treez_section.png) |
 | [Size](./size/size.md)| ![](../images/treez_size.png)|
 | [SymbolStyle](./symbolStyle/symbolStyle.md)| ![](../images/treez_symbol_style.png)|
-| [TextArea](./text/area/textArea.md)| |
+| [TextArea](./text/area/textArea.md)|![](../images/treez_text_area.png) |
 | [TextField](./text/field/textField.md)| ![](../images/treez_text_field.png)|
 | [TextLabel](./text/label/textLabel.md)| ![](../images/treez_text_label.png)|
