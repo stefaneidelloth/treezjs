@@ -9,7 +9,7 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 |||
 --- | --- |
 | [CheckBox](./checkBox/checkBox.md) | ![](../images/treez_check_box.png)|
-| [CodeArea](./text/code/codeArea.md) ||
+| [CodeArea](./text/code/codeArea.md) | ![](../images/treez_code_area.png) |
 | [Color](./color/color.md)| ![](../images/treez_color.png)|
 | [ColorMap](./colorMap/colorMap.md)| ![](../images/treez_color_map.png)|
 | [ComboBox](./comboBox/comboBox.md)| ![](../images/treez_combo_box.png)|
