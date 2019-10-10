@@ -25,7 +25,7 @@ The CheckBox represents a boolean value (**true** or **false**).
 ```javascript
     ...
     sectionContent.append('treez-check-box')
-		  .label('Hallo')		  
+		  .label('Check box')		  
 		  .value('')		
 		  .bindValue(this, () => this.isShowingHalloMessage);	
    ...
