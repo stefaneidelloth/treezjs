@@ -134,4 +134,4 @@ The label text.
 
 ----
 
-[LineStyle](../lineStyle/lineStyle.md)
+[LabeledTreezElement](../labeledTreezElement.md)
