@@ -34,7 +34,7 @@ The available sizes are:
     ...
     sectionContent.append('treez-size')
 		  .label('Size:')		  
-		  .value('0.25pt')		
+		  .value('0.5pt')		
 		  .bindValue(this, () => this.size);	
    ...
 ```
