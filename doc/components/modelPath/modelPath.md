@@ -35,6 +35,7 @@ Furthermore, the found atoms can be confined with a custom filter method.
 		  .label('Model path:')		  
                   .nodeAttr('atomClasses',[Models])
 		  .nodeAttr('relativeRootAtom', this)
+		  .nodeAttr('filterDelegate', (atom) =>{return atom.name[0] === 's'; })
 		  .value('root.second')		
 		  .bindValue(this, () => this.modelPath);	
    ...
@@ -52,7 +53,11 @@ An array of atom classes (e.g. [Models]), used to filter the available model pat
 
 ### atomFunctionNames
 
-An array of function names (e.g. ["run","paint"]), used to filter the available model paths. Each of the found atoms needs to have all the given methods. 
+An array of function names (e.g. ["run","paint"]), used to filter the available model paths. Each of the found atoms needs to have all the given methods.
+
+### filterDelegate
+
+A Method used to filter the available model paths, e.g. (atom) =>{return atom.name[0] === 's'; }.
 
 ### relativeRootAtom
 
