@@ -1,4 +1,4 @@
-[Components](../components.md)
+[Components](./components.md)
 
 ----
 
