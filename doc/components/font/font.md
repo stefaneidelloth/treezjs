@@ -7,6 +7,14 @@
 The Font component allows to select a font family. 
 	
 ![](../../images/treezFont.png)
+
+Available fonts families:
+
+*  <span style="font-family: 'serif';">serif</span>
+* sans-serif
+* cursive
+* fantasy
+* monospace
 		
 ## Source code
 
