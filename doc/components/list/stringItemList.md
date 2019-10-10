@@ -73,4 +73,4 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ----
 
-[ModelPath](../modelPath/modelPath.md)
+[SymbolStyle](../symbolStyle/symbolStyle.md)
