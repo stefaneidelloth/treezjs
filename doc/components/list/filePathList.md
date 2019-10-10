@@ -63,4 +63,4 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ----
 
-[FillStyle](../fillStyl/fillStyle.md)
+[FillStyle](../fillStyle/fillStyle.md)
