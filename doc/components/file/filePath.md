@@ -31,8 +31,8 @@ The FilePath component allows to select the path to a file.
 ```javascript
     ...
     sectionContent.append('treez-file-path')
-		  .label('File path')		
-		  .value('C:\test.txt')
+		  .label('File path:')		
+		  .value('C:/test.txt')
 		  .nodeAttr('pathMapProvider', this)
 		  .bindValue(this, () => this.filePath);	
    ...
