@@ -11,10 +11,10 @@ The Font component allows to select a font family.
 Available fonts families:
 
 *  <span style="font-family: 'serif';">serif</span>
-* sans-serif
-* cursive
-* fantasy
-* monospace
+*  <span style="font-family: 'sans-serif';">sans-serif</span>
+*  <span style="font-family: 'cursive';">cursive</span>
+*  <span style="font-family: 'fantasy';">fantasy</span>
+*  <span style="font-family: 'monospace';">monospace</span>
 		
 ## Source code
 
