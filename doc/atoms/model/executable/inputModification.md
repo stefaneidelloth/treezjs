@@ -7,7 +7,7 @@
 
 The purpose of the ![](../../../../icons/inputModification.png) InputModification atom is to dynamically modify the input file or directory path of its parent atom by including the date and/or jobId.
 
-![](../../../images/input_modification.png)
+![](../../../images/inputModification.png)
 
 This makes sense if you run the parent atom many times, for example as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have different input paths for each execution.
 

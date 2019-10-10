@@ -7,7 +7,7 @@
 The purpose of the ![](../../../../icons/javaScript.png) JavaScriptModel atom is to execute some JavaScript code.
 The code might contain variable placeholders (e.g. {$jobId$}) that are replaced with the actual variable values before the code is executed. 
 	
-![](../../../images/java_script_model.png)
+![](../../../images/javaScriptModel.png)
 		
 ## Source code
 

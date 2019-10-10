@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/stringItemVariable.png) StringItemVariable atom provides a combo box to select a single text item from a list of predefined options: 
 
-![](../../../images/string_item_variable.png)
+![](../../../images/stringItemVariable.png)
 
 ## Source code
 

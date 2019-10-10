@@ -6,7 +6,7 @@
 		
 The Double component is used to specify a double number.  
 	
-![](../../images/treez_double.png)
+![](../../images/treezDouble.png)
 
 * Please note that the shown **decimal separator** might depend on the language settings of your browser. 
 In order to avoid confusion, we recomment to use "English (United States)" in the language settings 

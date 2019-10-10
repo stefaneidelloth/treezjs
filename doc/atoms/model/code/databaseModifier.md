@@ -6,7 +6,7 @@
 		
 The purpose of the ![](../../../../icons/databaseModifier.png) DatabaseModifier atom is to modify a database by executing a query.
 	
-![](../../../images/database_modifier.png)
+![](../../../images/databaseModifier.png)
 		
 ## Source code
 

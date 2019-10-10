@@ -9,7 +9,7 @@ The purpose of the ![](../../../../icons/fileCleanup.png) FileCleanup atom is to
 * delete all files and sub directories in a directory
 * delete a directory
 	
-![](../../../images/file_cleanup.png)
+![](../../../images/fileCleanup.png)
 		
 ## Source code
 

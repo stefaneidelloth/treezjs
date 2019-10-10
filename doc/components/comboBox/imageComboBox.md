@@ -7,7 +7,7 @@
 The ImageComboBox component is used to select an image from a list of predefiend images. It serves as a parent class
 for specific image combo box implementations (e.g. [ErrorBarStyle](../errorBarStyle/errorBarStyle.md)). 
 	
-![](../../images/treez_image_combo_box.png)
+![](../../images/treezImageComboBox.png)
 
 Please note that the corresponding image files have to be located in the same folder as the class file. Therefore, it does not make much sense to use the ImageComboBox directly. If you want to create a custom image combo box, you should create a new class in an extra folder and include some corresponding image files. 
 		

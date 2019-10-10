@@ -8,30 +8,30 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 
 |||
 --- | --- |
-| [CheckBox](./checkBox/checkBox.md) | ![](../images/treez_check_box.png)|
-| [CodeArea](./text/code/codeArea.md) | ![](../images/treez_code_area.png) |
-| [Color](./color/color.md)| ![](../images/treez_color.png)|
-| [ColorMap](./colorMap/colorMap.md)| ![](../images/treez_color_map.png)|
-| [ComboBox](./comboBox/comboBox.md)| ![](../images/treez_combo_box.png)|
-| [DirectoryPath](./file/directoryPath.md)| ![](../images/treez_directory_path.png)|
-| [DirectoryPathList](./list/directoryPathList.md)| ![](../images/treez_directory_path_list.png)|
-| [Double](./number/double.md)| ![](../images/treez_double.png)|
-| [EnumComboBox](./comboBox/enumComboBox.md)| ![](../images/treez_enum_combo_box.png)|
-| [ErrorBarStyle](./errorBarStyle/errorBarStyle.md)| ![](../images/treez_error_bar_style.png)|
-| [FileOrDirectoryPath](./file/fileOrDirectoryPath.md)| ![](../images/treez_file_or_directory_path.png)|
-| [FilePath](./file/filePath.md)| ![](../images/treez_file_path.png)|
-| [FilePathList](./list/filePathList.md)| ![](../images/treez_file_path_list.png)|
-| [FillStyle](./fillStyle/fillStyle.md)| ![](../images/treez_fill_style.png)|
-| [Font](./font/font.md)| ![](../images/treez_font.png)|
-| [ImageComboBox](./comboBox/imageComboBox.md)| ![](../images/treez_image_combo_box.png)|
-| [Integer](./number/integer.md)| ![](../images/treez_integer.png)|
-| [LineStyle](./lineStyle/lineStyle.md)| ![](../images/treez_line_style.png)|
-| [StringList](./list/stringList.md) | ![](../images/treez_string_list.png) |
-| [StringItemList](./list/stringItemList.md)| ![](../images/treez_string_item_list.png) |
-| [ModelPath](./modelPath/modelPath.md)| ![](../images/treez_model_path.png)|
-| [Section](./section/section.md)|![](../images/treez_section.png) |
-| [Size](./size/size.md)| ![](../images/treez_size.png)|
-| [SymbolStyle](./symbolStyle/symbolStyle.md)| ![](../images/treez_symbol_style.png)|
-| [TextArea](./text/area/textArea.md)|![](../images/treez_text_area.png) |
-| [TextField](./text/field/textField.md)| ![](../images/treez_text_field.png)|
-| [TextLabel](./text/label/textLabel.md)| ![](../images/treez_text_label.png)|
+| [CheckBox](./checkBox/checkBox.md) | ![](../images/treezCheckBox.png)|
+| [CodeArea](./text/code/codeArea.md) | ![](../images/treezCodeArea.png) |
+| [Color](./color/color.md)| ![](../images/treezColor.png)|
+| [ColorMap](./colorMap/colorMap.md)| ![](../images/treezColorMap.png)|
+| [ComboBox](./comboBox/comboBox.md)| ![](../images/treezComboBox.png)|
+| [DirectoryPath](./file/directoryPath.md)| ![](../images/treezDirectoryPath.png)|
+| [DirectoryPathList](./list/directoryPathList.md)| ![](../images/treezDirectoryPathList.png)|
+| [Double](./number/double.md)| ![](../images/treezDouble.png)|
+| [EnumComboBox](./comboBox/enumComboBox.md)| ![](../images/treezEnumComboBox.png)|
+| [ErrorBarStyle](./errorBarStyle/errorBarStyle.md)| ![](../images/treezErrorBarStyle.png)|
+| [FileOrDirectoryPath](./file/fileOrDirectoryPath.md)| ![](../images/treezFileOrDirectoryPath.png)|
+| [FilePath](./file/filePath.md)| ![](../images/treezFilePath.png)|
+| [FilePathList](./list/filePathList.md)| ![](../images/treezFilePathList.png)|
+| [FillStyle](./fillStyle/fillStyle.md)| ![](../images/treezFillStyle.png)|
+| [Font](./font/font.md)| ![](../images/treezFont.png)|
+| [ImageComboBox](./comboBox/imageComboBox.md)| ![](../images/treezImageComboBox.png)|
+| [Integer](./number/integer.md)| ![](../images/treezInteger.png)|
+| [LineStyle](./lineStyle/lineStyle.md)| ![](../images/treezLineStyle.png)|
+| [StringList](./list/stringList.md) | ![](../images/treezStringList.png) |
+| [StringItemList](./list/stringItemList.md)| ![](../images/treezStringItemList.png) |
+| [ModelPath](./modelPath/modelPath.md)| ![](../images/treezModelPath.png)|
+| [Section](./section/section.md)|![](../images/treezSection.png) |
+| [Size](./size/size.md)| ![](../images/treezSize.png)|
+| [SymbolStyle](./symbolStyle/symbolStyle.md)| ![](../images/treezSymbolStyle.png)|
+| [TextArea](./text/area/textArea.md)|![](../images/treezTextArea.png) |
+| [TextField](./text/field/textField.md)| ![](../images/treezTextField.png)|
+| [TextLabel](./text/label/textLabel.md)| ![](../images/treezTextLabel.png)|

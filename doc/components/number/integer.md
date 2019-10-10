@@ -6,7 +6,7 @@
 		
 The Integer component is used to specify an integer number.  
 	
-![](../../images/treez_integer.png)
+![](../../images/treezInteger.png)
 
 * If you use scientific notation (e.g. 1.5e3), please note that the shown **decimal separator** might depend on 
 the language settings of your browser. In order to avoid confusion, we recomment to use "English (United States)" 

@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/quantityVariable.png) QuanityVariable atom is used to specify a physical quantity. The value of a ![](../../../../icons/quantityVariable.png) QuanityVariable consists of a **number and a unit**: 
 
-![](../../../images/quantity_variable.png)
+![](../../../images/quantityVariable.png)
 
 QuantityVariables are thought to be used by some model, e.g. the ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model. 
 

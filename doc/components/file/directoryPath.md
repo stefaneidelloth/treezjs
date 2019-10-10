@@ -6,7 +6,7 @@
 		
 The DirectoryPath component allows to select the path to a directory of the file system. 
 	
-![](../../images/treez_directory_path.png)
+![](../../images/treezDirectoryPath.png)
 
 * Click on the browse button ![](../../../icons/browse.png) to open a selection dialog or
 

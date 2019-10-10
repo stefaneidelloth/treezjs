@@ -6,7 +6,7 @@
 		
 The ColorMap component allows to select a colorMap from a list of colorMaps. 
 	
-![](../../images/treez_color_map.png)
+![](../../images/treezColorMap.png)
 
 The enum [./src/components/colorMap/colorMap.js](../../../src/components/colorMap/colorMap.js) provides some predefined colorMaps, that are used with the JavaScript attribute 'value' (also see below). 
 

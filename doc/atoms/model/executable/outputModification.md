@@ -8,7 +8,7 @@
 The purpose of the ![](../../../../icons/outputModification.png) OutputModification atom is to modify the output file or directory path of its parent atom.
 
 
-![](../../../images/output_modification.png)
+![](../../../images/outputModification.png)
 
 This makes sense if you run the parent atom many times, for example as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, and you want to have different output paths for each execution.
 

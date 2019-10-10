@@ -6,7 +6,7 @@
 		
 The CheckBox represents a boolean value (**true** or **false**). 
 	
-![](../../images/treez_check_box.png)
+![](../../images/treezCheckBox.png)
 		
 ## Source code
 

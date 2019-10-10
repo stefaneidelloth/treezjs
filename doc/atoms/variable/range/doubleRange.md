@@ -6,7 +6,7 @@
 	
 The purpose of the ![](../../../../icons/doubleRange.png) DoubleRange atom is to edit a range of double values. 
 		
-![](../../../images/double_range.png)
+![](../../../images/doubleRange.png)
 
 The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		

@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/stringVariable.png) StringVariable atom is used to specify a text value: 
 
-![](../../../images/string_variable.png)
+![](../../../images/stringVariable.png)
 
 ## Source code
 

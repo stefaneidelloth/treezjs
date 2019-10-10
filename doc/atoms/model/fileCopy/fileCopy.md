@@ -6,7 +6,7 @@
 		
 The purpose of the ![](../../../../icons/fileCopy.png) FileCopy atom is to copy a file. Use it for example to copy (dynamically created) input files to some output folder. 
 	
-![](../../../images/file_copy.png)
+![](../../../images/fileCopy.png)
 		
 ## Source code
 

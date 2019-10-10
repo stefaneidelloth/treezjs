@@ -20,7 +20,7 @@ experiments, outcomes = results;
 
 Therefore, the evaluation methods of the EMA workbench can be applied to the results structure that is exported by the ![](../../../../icons/pythonExport.png) PythonExport atom.
 
-![](../../../images/python_export.png)
+![](../../../images/pythonExport.png)
 		
 ## Source code
 

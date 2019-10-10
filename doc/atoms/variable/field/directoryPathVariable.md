@@ -7,7 +7,7 @@
 
 The ![](../../../../icons/directoryPathVariable.png) DirectoryPathVariable atom is used to specify directories (for example as part of a ![](../../../../icons/path.png) [Path](../../model/path/path.md) or ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) atom):
 
-![](../../../images/directory_path_variable.png)
+![](../../../images/directoryPathVariable.png)
 
 You can **edit** the directory by
 * entering the directory directly in the **text field**

@@ -6,7 +6,7 @@
 		
 The FileOrDirectoryPath component allows to select the path of a file or directory. 
 	
-![](../../images/treez_file_or_directory_path.png)
+![](../../images/treezFileOrFirectory_path.png)
 
 * Toggle the **selection mode** with the mode toggle button:
 

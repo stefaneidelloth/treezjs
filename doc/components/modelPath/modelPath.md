@@ -6,7 +6,7 @@
 		
 The ModelPath component allows to select atoms from the tree model, fulfilling certain criteria.  
 	
-![](../../images/treez_model_path.png)
+![](../../images/treezModelPath.png)
 
 The criteria for the available atoms (whose tree paths are shown in the combo box menu) might be:
 

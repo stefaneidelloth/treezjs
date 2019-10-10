@@ -6,7 +6,7 @@
 		
 The LineStyle component allows to select the style for lines in a plot. 
 	
-![](../../images/treez_line_style.png)
+![](../../images/treezLineStyle.png)
 
 The enum [./src/components/lineStyle/lineStyle.js](../../../src/components/lineStyle/lineStyle.js) provides 
 predefined style options, that are used with the JavaScript attribute 'value' (also see below). 

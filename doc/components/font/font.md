@@ -6,7 +6,7 @@
 		
 The Font component allows to select a font family. 
 	
-![](../../images/treez_font.png)
+![](../../images/treezFont.png)
 		
 ## Source code
 

@@ -6,7 +6,7 @@
 		
 The FillStyle component allows to select the style for fills in a plot. 
 	
-![](../../images/treez_fill_style.png)
+![](../../images/treezFillStyle.png)
 
 The enum [./src/components/fillStyle/fillStyle.js](../../../src/components/fillStyle/fillStyle.js) provides 
 predefined style options, that are used with the JavaScript attribute 'value' (also see below). 

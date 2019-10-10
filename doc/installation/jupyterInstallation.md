@@ -6,7 +6,7 @@
 
 Treez can be installed as an extension of the [Jupyter notebook](https://www.dataquest.io/blog/jupyter-notebook-tutorial/): 
 
-![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_treez_views.png)
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyterTreezViews.png)
 
 The Jupyter notebook already comes with a server that allows access to the file system. Treez connects to this server to
 access the local file system and to execute python code.
@@ -134,11 +134,11 @@ https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
 If you now start the Jupyter Notebook, you should see an extra tab "Nbextensions" on the Home page.
 Please enable the required extension "Workspace module" (and all other extensions you would like to use):
 
-![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_nbextensions_tab.png)
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyterNbextensionsTab.png)
 
 If you now open a notebook file, the script "workspace.js" will be automatically executed. The content of workspace.js links to the script "treezJupyterNotebook.js" and is responsible for starting treez. As a result, the user interface of the Jupyter Notebook is modified to include the views of treez:
 
-![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyter_treez_views.png)
+![Nbextensions](https://raw.githubusercontent.com/stefaneidelloth/treezjs/master/doc/images/jupyterTreezViews.png)
 
 If you did not download treez to the working directory of the Jupyter Notebook but to a custom folder, you must adapt the script workspace.js to point to the right location of "treezJupyterNotebook.js". 
 

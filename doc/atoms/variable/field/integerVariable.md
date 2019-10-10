@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/integerVariable.png) IntegerVariable atom is used to specify an integer input value for a model, e.g. for a ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model):
 
-![](../../../images/integer_variable.png)
+![](../../../images/integerVariable.png)
 
 You can enter a value directly or use the arrow buttons on the right side of the input field to increase/decrease the number by 1. 
 

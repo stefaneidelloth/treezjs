@@ -1,7 +1,7 @@
 [Views](./views.md)
 
 ----
-<img align="right" width="400" src="../images/properties_view.png">
+<img align="right" width="400" src="../images/propertiesView.png">
 
 # Properties View
 

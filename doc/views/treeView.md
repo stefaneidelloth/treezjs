@@ -2,7 +2,7 @@
 
 ----
 
-<img align="right" width="300" src="../images/tree_view.png">
+<img align="right" width="300" src="../images/treeView.png">
 
 # Tree View
 
@@ -25,7 +25,7 @@ Users can modify the tree model using mouse actions:
 *	**Left-click** on node label: **Show the properties** of a node/atom in the [Properties View](./propertiesView.md).
 *	**Double-click** on node label: **Fully expand or collapse** a tree node and its children.
 *	**Right-click** on node label: Show the **context menu** of a tree node, for example:<br>
-![Tree View](../images/context_menu.png)
+![Tree View](../images/contextMenu.png)
 
 
 ----

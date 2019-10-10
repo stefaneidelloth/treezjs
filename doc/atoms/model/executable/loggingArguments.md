@@ -8,7 +8,7 @@
 The purpose of the ![](../../../../icons/loggingArguments.png) LoggingArguments atom is to append additional logging arguments to its parent atom.
 
 
-![](../../../images/logging_arguments.png)
+![](../../../images/loggingArguments.png)
 
 ## Source code
 

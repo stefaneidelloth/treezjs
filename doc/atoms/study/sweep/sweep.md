@@ -56,11 +56,11 @@ The ranges can be **enabled/disabled** through their context menu. If a range is
 
 If there are for example two parameter ranges [10,20,30,40], [100,200], you can imagine a 4 x 2 table or a grid with 8 nodes, where each node represents the input for a job (e.g. {10,100} or {30,200}). The first value of the first range (e.g. 10) is included in the first job. That value is kept constant while the remaining range is varied.
 
-![](../../../images/sweep_table.png)
+![](../../../images/sweepTable.png)
 
 The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be understood as a tree structure, where the elements of the first range build the main tree nodes, the elements of the second range build sub level tree nodes and so on. Each existing path in the tree (e.g. 10 => 100 or 30 => 200) corresponds to an individual job of the ![](../../../../icons/sweep.png) Sweep study.
 
-![](../../../images/sweep_tree.png)
+![](../../../images/sweepTree.png)
 
 
 ## Sections

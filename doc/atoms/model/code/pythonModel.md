@@ -10,7 +10,7 @@ The code might contain variable placeholders (e.g. {$jobId$}) that are replaced 
 This atom does not work for the [stand-alone](../../../installation/standaloneInstallation.md) installation but only with the 
 installation as [Jupyter notebook extension](../../../installation/jupyterInstallation.md).
 
-![](../../../images/python_model.png)
+![](../../../images/pythonModel.png)
 		
 ## Source code
 

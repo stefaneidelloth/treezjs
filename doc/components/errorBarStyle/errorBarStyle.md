@@ -6,7 +6,7 @@
 		
 The ErrorBarStyle component allows to select the style for error bars in a plot. 
 	
-![](../../images/treez_error_bar_style.png)
+![](../../images/treezErrorBarStyle.png)
 
 The enum [./src/components/errorBarStyle/errorBarStyle.js](../../../src/components/errorBarStyle/errorBarStyle.js) provides 
 predefined style options, that are used with the JavaScript attribute 'value' (also see below). 

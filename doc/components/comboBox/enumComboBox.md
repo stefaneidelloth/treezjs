@@ -7,7 +7,7 @@
 The EnumComboBox component is used to select an option from a list of predefiend options. 
 The available options are given by an enum class, inheriting from [Enum](../../../src/components/enum.js). 
 	
-![](../../images/treez_enum_combo_box.png)
+![](../../images/treezEnumComboBox.png)
 		
 ## Source code
 

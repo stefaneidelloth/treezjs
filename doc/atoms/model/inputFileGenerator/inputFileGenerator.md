@@ -8,7 +8,7 @@ The purpose of the ![](../../../../icons/inputFile.png) InputFileGenerator atom 
 
 The generated input file (= target) contains variable values. Those values are typlically provided by a ![](../../../../icons/genericInput.png) [GenericInput](../genericInput/genericInput.md) atom (= source).
 	
-![](../../../images/input_file_generator.png)
+![](../../../images/inputFileGenerator.png)
 
 The transformation from the source variable model to the target input file is described by a template, using placeholders and some styles. This generation strategy provides a very flexible way to produce all kinds of text based input files (\*.txt, \*.xml, \*.json, ...).  
 

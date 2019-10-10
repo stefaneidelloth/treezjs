@@ -6,7 +6,7 @@
 	
 The purpose of the ![](../../../../icons/quantityRange.png) QuantityRange atom is to edit a range of (physical) quantities.
 The unit is the same for all quantities. The numbers are given by a commo separated list of (double) values in square brackets. 		
-![](../../../images/quantity_range.png)
+![](../../../images/quantityRange.png)
 
 The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		

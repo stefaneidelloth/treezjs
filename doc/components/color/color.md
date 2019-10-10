@@ -6,7 +6,7 @@
 		
 The Color component allows to select a color. Click on the color to open a color selection dialog.
 	
-![](../../images/treez_color.png)
+![](../../images/treezColor.png)
 
 The enum [./src/components/color/color.js](../../../src/components/color/color.js) provides some predefined color values, 
 that are used with the JavaScript attribute 'value' (also see below). 

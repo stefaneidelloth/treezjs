@@ -6,7 +6,7 @@
 		
 The FilePath component allows to select the path to a file. 
 	
-![](../../images/treez_file_path.png)
+![](../../images/treezFilePath.png)
 
 * Click on the browse button ![](../../../icons/browse.png) to open a selection dialog or
 

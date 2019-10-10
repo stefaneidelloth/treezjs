@@ -6,7 +6,7 @@
 		
 The SymbolStyle component allows to select the style for symbols in a plot. 
 	
-![](../../images/treez_symbol_style.png)
+![](../../images/treezSymbolStyle.png)
 
 The enum [./src/components/symbolStyle/symbolStyle.js](../../../src/components/symbolStyle/symbolStyle.js) provides 
 predefined style options, that are used with the JavaScript attribute 'value' (also see below). 

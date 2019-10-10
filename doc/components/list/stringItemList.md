@@ -6,7 +6,7 @@
 		
 The StringItemList component allows to specify a list of string values, where each item can be selected from a predefined list. 
 	
-![](../../images/treez_string_item_list.png)
+![](../../images/treezStringItemList.png)
 
 Use the buttons and combo boxes to edit the entries of the list:
 

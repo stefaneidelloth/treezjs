@@ -6,7 +6,7 @@
 	
 The purpose of the ![](../../../../icons/booleanRange.png) BooleanRange atom is to select a range of boolean values.
 		
-![](../../../images/boolean_range.png)
+![](../../../images/booleanRange.png)
 
 The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		

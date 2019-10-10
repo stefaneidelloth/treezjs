@@ -10,7 +10,7 @@ The graphics of Treez are based on [d3.js](https://d3js.org/) and can be **inter
 
 Also try to double click on the Graphics View to **export its content** as scalable vector graphics *.svg file. 
 
-<img width="650" src="../images/graphics_view.png">
+<img width="650" src="../images/graphicsView.png">
 
 ----
 [Monitor View](./monitorView.md)

@@ -8,7 +8,7 @@ The purpose of the ![](../../../../icons/tableImport.png) TableImport atom is to
 
 The imported table is attached as child to the ![](../../../../icons/tableImport.png) TableImport atom. If the TableImport is executed remotely, for example as part of a ![](../../../../icons/sweep.png) [Sweep](../../study/sweep/sweep.md) study, the table is also returned as model output and probably attached to the data in the ![](../../../../icons/results.png) [Results](../../result/results.md) branch of the tree.  
 
-![](../../../images/table_import.png)
+![](../../../images/tableImport.png)
 		
 ## Source code
 

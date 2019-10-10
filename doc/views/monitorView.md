@@ -6,7 +6,7 @@
 
 Some of the atoms can be executed and the Monitor View shows the corresponding progress by **progress bars** in the tab "Progress" and **log messages** in the tab "Log". 
 
-<img src="../images/monitor_view.png">
+<img src="../images/monitorView.png">
 
 The progress bar(s) might consist of a hierarchical structure (you could call it another "tree" if you want). Click on the **triangle** symbol at the front of a progress bar to expand the progress bar and **inspect its nested progress bars**. 
 

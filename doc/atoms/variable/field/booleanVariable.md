@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/booleanVariable.png) BooleanVariable atom is used to specify a boolean value (true or false): 
 
-![](../../../images/boolean_variable.png)
+![](../../../images/booleanVariable.png)
 
 ## Source code
 

@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/doubleVariable.png) DoubleVariable atom is used to specify a double input value (=floating point number) for a model, e.g. for a ![](../../../../icons/genericInput.png) [GenericInput](../../model/genericInput/genericInput.md) model):
 
-![](../../../images/double_variable.png)
+![](../../../images/doubleVariable.png)
 
 The **number format** might depend on the language settings of your Google Chrome browser (e.g. "." for English and "," for German or French settings). In order to be **consistent** with the point-**decimal separator** that is used for numbers in the the source code of the [Editor View](../../views/editorView), we recomment to use "English (United States)" as language: Settings => Advanced => Languages => "English (United States)". 
 

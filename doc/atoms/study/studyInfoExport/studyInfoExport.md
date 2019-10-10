@@ -9,7 +9,7 @@ The purpose of the ![](../../../../icons/studyInfoExport.png) StudyInfoExport at
 
 If you select a database type for the export, two tables "study_info" and "job_info" will be created (if they do not yet exist) in the database.
 
-![](../../../images/study_info_export.png)
+![](../../../images/studyInfoExport.png)
 		
 ## Source code
 
@@ -136,7 +136,7 @@ root.models.genericInput.b: 30
 
 ### Database
 
-![](../../../images/study_info_export_tables.png)
+![](../../../images/studyInfoExportTables.png)
 
 ----
 

@@ -6,7 +6,7 @@
 	
 The purpose of the ![](../../../../icons/filePathRange.png) FilePathRange atom is to edit a range of file paths. 
 		
-![](../../../images/file_path_range.png)
+![](../../../images/filePathRange.png)
 
 The range can be disabled/enabled through the context menu of the atom. The disabled state is shown by a ![](../../../../icons/disabled.png) decorator icon in the [Tree View](../../../views/treeView.md).
 		

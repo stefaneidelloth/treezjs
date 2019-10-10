@@ -6,7 +6,7 @@
 		
 The StringList component allows to specify a list of string values. 
 	
-![](../../images/treez_string_list.png)
+![](../../images/treezStringList.png)
 
 Use the buttons and text fields to edit the entries of the list:
 

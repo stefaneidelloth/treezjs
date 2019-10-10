@@ -10,7 +10,7 @@ The purpose of the ![](../../../../icons/java.png) JavaExecutable atom is to exe
 "D:/jdk/bin/java.exe" -Xms1G -Xmx8G -cp "D:/logProcessor/logProcessor.jar" org.treez.LogProcessor -input C:/system.log -output D:\output.log  
 ```
 	
-![](../../../images/java_executable.png)
+![](../../../images/javaExecutable.png)
 		
 ## Source code
 

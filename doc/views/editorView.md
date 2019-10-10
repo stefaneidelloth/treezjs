@@ -23,11 +23,11 @@ The appearance of the Editor View might be slightly different, depending on how 
 
 * [**Stand-alone**](../standaloneInstallation.md): [Orion](http://wiki.eclipse.org/Orion) is used as source code editor and line numbers are shown by default. There is no extra border and only one "cell".
 
-<img width="400" src="../images/editor_view_stand-alone.png">
+<img width="400" src="../images/editorViewStandAlone.png">
 
 * [**Jupyter Notebook extension**](../jupyterInstallation.md): The first [cell](https://jupyter-notebook.readthedocs.io/en/stable/notebook.html#structure-of-a-notebook-document) of the [Jupyter Notebook](https://jupyter.org/) is used as JavaScript source code editor. The cells of the Jupyter Notebook are based on [CodeMirror](https://codemirror.net/). You can [enable line numbers](https://stackoverflow.com/questions/10979667/showing-line-numbers-in-ipython-jupyter-notebooks) if you want. Further cells (containing python code or any other [supported content](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels)) can be added to the Jupyter Notebook below. Each cell has a border indicating its current state/[edit mode](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Modal-editor) (green = edit mode, blue = command mode). In addition to the buttons of the Editor View from treez, the standard [buttons of the Jupyter Notebook](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Notebook%20Basics.html#Mouse-navigation) can be used, e.g. to open or save complete *.ipynb notebook files. 
 
-<img width="400" src="../images/editor_view.png">
+<img width="400" src="../images/editorView.png">
 
 ----
 [Graphics View](./graphicsView.md)

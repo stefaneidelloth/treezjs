@@ -6,7 +6,7 @@
 		
 The CodeArea allows to edit some source code. 
 	
-![](../../../images/treez_code_area.png)
+![](../../../images/treezCodeArea.png)
 		
 ## Source code
 

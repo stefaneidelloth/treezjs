@@ -14,7 +14,7 @@ The extended tables are then attached to the target database.
 
 The ![](../../../../icons/databaseAppender.png) SqLiteAppender is only thought for small amounts of data and might be very slow for large databases. The current implementation is done in the client and all the data is send back and forth through string based http requests. 
 	
-![](../../../images/sqlite_appender.png)
+![](../../../images/sqliteAppender.png)
 		
 ## Source code
 
