@@ -63,29 +63,29 @@ A string reprsentation of the current value.
 
 ### disabled
 
-If you want to enable the component:
+If you want to **enable** the component:
 
 * Do not specify the 'disabled' attribute in the html tag (e.g. <treez-foo id="myComponent" ></treez-foo>) or
 
 * Use element.setAttribute('disabled', null)) 
 
-If you want to disable the component:
+If you want to **disable** the component:
 
-* Specify the 'disabled' attribute in the html tag (e.g. <treez-foo id="myComponent" disabled ></treez-foo>) or
+* Specify the 'disabled' attribute in the html tag (e.g. <treez-foo id="myComponent" disabled ></treez-foo>). An assigned value is ignored and always interpreted as true (e.g. disabled = '' or disabled = null or disabled = 'true' or disabled = 'False'). Only the existance matters. You can also:
 
 * Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
 
 ### hidden
 
-If you want to show the component:
+If you want to **show** the component:
 
 * Do not specify the 'hidden' attribute in the html tag (e.g. <treez-foo id="myComponent" ></treez-foo>) or
 
 * Use element.setAttribute('hidden', null)) 
 
-If you want to hide the component:
+If you want to **hide** the component:
 
-* Specify the 'hidden' attribute in the html tag (e.g. <treez-foo id="myComponent" hidden ></treez-foo>) or
+* Specify the 'hidden' attribute in the html tag (e.g. <treez-foo id="myComponent" hidden ></treez-foo>). An assigned value is ignored and always interpreted as true (e.g. hidden = '' or hidden = null or hidden = 'true' or hidden = 'False'). Only the existance matters.
 
 * Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
 
