@@ -58,10 +58,6 @@ from directory names to directory paths, e.g.
 
 If you select a directory and the path of that directory includes a path from the pathMap (e.g. 'C:/myProject'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/foo').  
 
-### label
-
-Some label text. 
-
 ### fullDirectory
 
 Returns the full/absolute path of the directory (the 'value' attribute might contain a relative path).
@@ -70,17 +66,9 @@ Returns the full/absolute path of the directory (the 'value' attribute might con
 
 Rerturns the full/absolute path to the parent directory (or null if there is no parent directry). 
 
-### disabled
+### Inherited attributes
 
-The disabled state as a boolean value. 
-
-### hidden
-
-The hidden state as a boolean value.
-
-### width
-
-The css width as a string, e.g. '500px'.
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value).
 
 
 ## HTML String Attributes
@@ -89,42 +77,9 @@ The css width as a string, e.g. '500px'.
 
 The directory path as a string. 
 
-### label
+### Inherited attributes
 
-Some label text.
-
-### disabled
-
-If you want to enable the component:
-
-* Do not specify the 'disabled' attribute in the html tag
-
-* Use element.setAttribute('disabled', null)) 
-
-If you want to disable the component:
-
-* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
-
-* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
-
-### hidden
-
-If you want to show the component:
-
-* Do not specify the 'hidden' attribute in the html tag
-
-* Use element.setAttribute('hidden', null)) 
-
-If you want to hide the component:
-
-* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
-
-* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
-
-### width
-
-The total css width of the component, e.g. '500px'
-
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value-1).
 
 
 ----
