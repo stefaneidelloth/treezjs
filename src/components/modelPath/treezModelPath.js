@@ -18,7 +18,8 @@ export default class TreezModelPath extends LabeledTreezElement {
 
             var label = document.createElement('label');  
             this.__label = label;                     
-            label.innerText = this.label;                       
+            label.innerText = this.label;
+            label.className = 'treez-model-path-label';                       
             this.appendChild(label);
 
             var container = document.createElement('div');
@@ -33,26 +34,16 @@ export default class TreezModelPath extends LabeledTreezElement {
             
 			var uniqueOptionsId = 'options' + new Date().valueOf() + Math.random();
 
-            var comboBox = document.createElement('input');
-            this.__comboBox = comboBox;  
-            comboBox.setAttribute('type', 'text')
-            comboBox.setAttribute('list', uniqueOptionsId);
-            comboBox.onchange = () => this.__comboBoxChanged();
-             
+            var comboBox = document.createElement('select');
+            this.__comboBox = comboBox;
+            comboBox.onchange = () => this.__comboBoxChanged();             
             comboBox.className='treez-model-path-select';                                            
-            container.appendChild(comboBox);
-
-            var comboBoxOptions = document.createElement('dataList');
-            this.__comboBoxOptions = comboBoxOptions; 
-            comboBoxOptions.setAttribute('id', uniqueOptionsId);
-            container.appendChild(comboBoxOptions);
+            container.appendChild(comboBox);           
            
         }
         
         this.__updateOptionsAndRelativeRoot(); 
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+        this.update();	       
     }
     
     updateElements(newValue){
@@ -70,6 +61,10 @@ export default class TreezModelPath extends LabeledTreezElement {
             }						
 		}					    
     }
+
+	updateContentWidth(width){
+		this.updateWidthFor(this.__comboBox, width);
+	}
    
     disableElements(booleanValue){
 		if(booleanValue === undefined){
@@ -125,7 +120,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     
     __updateOptionsAndRelativeRoot(){                	
 
-    	if(!this.__parentAtom){
+    	if(!this.root){
     		return;
     	} 
     	                	             	
@@ -188,8 +183,8 @@ export default class TreezModelPath extends LabeledTreezElement {
     }
 
     __removeOptions(){
-    	while (this.__comboBoxOptions.firstChild) {
-			this.__comboBoxOptions.removeChild(this.__comboBoxOptions.firstChild);
+    	while (this.__comboBox.firstChild) {
+			this.__comboBox.removeChild(this.__comboBox.firstChild);
 		} 
     }
 
@@ -197,7 +192,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     	 for(var item of items){
         	 var option = document.createElement('option');
        		 option.innerText = item;
-       		 this.__comboBoxOptions.appendChild(option); 
+       		 this.__comboBox.appendChild(option); 
         } 
     }
     
@@ -228,7 +223,7 @@ export default class TreezModelPath extends LabeledTreezElement {
     		} else {
 
     			if(!functionNames){
-    				throw new Error('Either atomClasses or atomFunctionNames need to be specified to identify allowed atoms.')
+    				throw new Error('Either atomClasses or atomFunctionNames already need to be specified to identify allowed atoms.')
     			}
 
 				availablePaths = this.__addAvailablePathByInterface(availablePaths, child, functionNames);

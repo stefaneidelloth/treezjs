@@ -1,11 +1,11 @@
-import TreezElement from './../treezElement.js';
+import LabeledTreezElement from './../labeledTreezElement.js';
 
-export default class TreezStringList extends TreezElement {
+export default class TreezStringList extends LabeledTreezElement {
 
     constructor(){
         super();
 		this.__container = undefined;
-        this.__labelElement = undefined; 
+        this.__label = undefined; 
         this.__table = undefined; 
         this.__tableBody = undefined;
         this.__selectedRowIndex = undefined;
@@ -17,7 +17,7 @@ export default class TreezStringList extends TreezElement {
     } 
     
     static get observedAttributes() {
-		return TreezElement.observedAttributes.concat(['label']);                    
+		return LabeledTreezElement.observedAttributes.concat(['label']);                    
     }
 
     connectedCallback() {  
@@ -29,22 +29,21 @@ export default class TreezStringList extends TreezElement {
 			this.__createButtons();
 			this.__createTable();
         }
-    }
 
-	attributeChangedCallback(attr, oldValue, newValue) {
-		super.attributeChangedCallback(attr, oldValue, newValue)
-		if(attr === 'label'){
-			if(this.__labelElement){
-				this.__labelElement.innerText= newValue;
-			}
-		}
-	}
+        this.update();
+    } 
+	
 
-	updateElements(stringArray){
+	updateElements(){
     	if(this.__table){
     		this.__recreateTableRows();
     	} 		    
     }
+
+	updateContentWidth(width){
+		this.updateWidthFor(this.__container, width);
+		
+	}
 
 	disableElements(booleanValue){
     	if(booleanValue === undefined){
@@ -67,7 +66,7 @@ export default class TreezStringList extends TreezElement {
 			throw Error('This method expects a boolean argument');
 		}
 		if(this.__container){
-			TreezElement.hide(this.__container, booleanValue);
+			LabeledTreezElement.hide(this.__container, booleanValue);
 		}
 	}
 
@@ -112,7 +111,7 @@ export default class TreezStringList extends TreezElement {
     
     __createLabelElement(){
     	var labelElement = document.createElement('label');
-		this.__labelElement = labelElement;
+		this.__label = labelElement;
 		labelElement.className = 'treez-list-label'
 		labelElement.innerText = this.label;
 		this.__container.appendChild(labelElement);

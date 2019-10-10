@@ -8,9 +8,11 @@
 }
 
 .treez-image-combo-box-label {
-	padding-top:3px;
+	padding-top:6px;
 	vertical-align: top;
-	display:inline-block;	
+	display:inline-block;
+	font-family: Consolas;
+	font-size: 12px;
 }
 
 .treez-image-combo-box {

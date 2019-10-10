@@ -12,12 +12,13 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
 
             var label = document.createElement('label');  
             this.__label = label;                     
-            label.innerText = this.label;                       
+            label.innerText = this.label;  
+            label.className = 'treez-directory-path-label';
             this.appendChild(label);  
 
             var container = document.createElement('div');
             this.__container = container;
-            container.className ='treez-directory-path-container';                       
+            container.className = 'treez-directory-path-container';
             this.appendChild(container);  
 
             var leftSpan = document.createElement('span');
@@ -26,10 +27,9 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             var textField = document.createElement('input');
             this.__textField = textField; 
             textField.type='text' 
-            textField.className='treez-directory-path-text-field' 
-            textField.title = this.fullPath;
-            textField.onchange = ()=>this.textFieldChanged();             
-            
+            textField.className='treez-directory-path-text-field'             
+            textField.onchange = ()=>this.textFieldChanged();    
+            textField.title = this.fullPath;   
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
@@ -51,18 +51,17 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
 
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
-            executeButton.className='treez-directory-path-play-button';	
-            executeButton.type='button';
-            executeButton.title='Open directory';
+            executeButton.className = 'treez-directory-path-play-button';	
+            executeButton.type = 'button';
+            executeButton.title = 'Open directory';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton);                    		
         }
         
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+        this.update();
+
     }
 
     execute(){    	

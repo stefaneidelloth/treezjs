@@ -1,11 +1,12 @@
-.treez-list-container { 
-    vertical-align: top; 
-    padding:0px;
-    margin:0px;
+.treez-list-container {	
+	padding:0px;
+	margin:0px;
 }
 
-.treez-list-label {     
-   
+.treez-list-label {
+	display:inline-block;
+	font-family: Consolas;
+	font-size: 12px;	
 }
 
 .treez-list-button {   
@@ -24,7 +25,7 @@
 	margin-right:0px;
 	padding:0px;	
 	border:none;	
-	border-collapse: collapse;
+	border-collapse: collapse;	
 }
 
 .treez-list-tr {	
@@ -35,9 +36,14 @@
 .treez-list-td {
 	margin: 0px;
 	padding: 0px;
+	font-family: Consolas;
+	font-size: 12px;
+	height: 20px;
 }
 
 .treez-list-select {
 	width: 100%;
+	font-family: Consolas;
+	font-size: 12px;
 }
 

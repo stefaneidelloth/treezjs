@@ -4,12 +4,17 @@
 }
 
 .treez-number-label {
-	margin-right:5px;	
+	margin-right:5px;
+	padding-top:2px;
 	float: left;
+	font-family: Consolas;
+	font-size: 12px;
+
 }
 
 .treez-number-input {
     font-family: Consolas;
     font-size: 12px;
-    width:96%;   
+    width:96%;
+
 }

@@ -7,32 +7,35 @@
 
 	<body>
 	
-		<treez-model-path label="Model path:" id="modelPath"></treez-model-path>	
+		<treez-model-path label="Model path" id="modelPath" content-width="300px"></treez-model-path>
 
 		<script type="module">	
 
 			import Treez from '../../../src/treez.js';
 
-
 			Treez.config({
-				home: '.',
+				home: '',
 				isSupportingPython: false	
-			});		
-			
+			});
 
 			import Root from '../../../src/root/root.js';
 			import Models from '../../../src/model/models.js';
 
 			let root = new Root();
-			root.createModels('first');
+			let model = root.createModels('first');
+			model.modelPath = '';
+
 			root.createModels('second');
 
 			import TreezModelPath from '../../../src/components/modelPath/treezModelPath.js';
 
-            var modelPath = document.getElementById('modelPath');  
+            var modelPath = document.getElementById('modelPath');
+			modelPath.label = 'Model path:';
+			 modelPath.atomClasses = [Models];
             modelPath.relativeRootAtom = root;
-            modelPath.atomClasses = [Models];         
-            modelPath.label = 'Model path';
+           
+            modelPath.bindValue(model, (model)=>model.modelPath);
+
            
 		</script>
 		

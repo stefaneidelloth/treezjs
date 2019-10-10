@@ -1,15 +1,20 @@
 treez-file-or-directory-path {	
-    font-family: Consolas;
-    font-size: 12px;     
+      
 }
 
 .treez-file-or-directory-path-container {
     display:'inline-block';
-    white-space: nowrap;
-     margin-bottom:10px;
+    white-space: nowrap;    
+}
+
+.treez-file-or-directory-path-label {
+	display: inline-block;
+	font-family: Consolas;
+    font-size: 12px;   
 }
 
 .treez-file-or-directory-path-is-file-button {	
+	background-repeat: no-repeat;
 	border: none;
 	width:33px;	
 	height:15px;	
@@ -22,7 +27,8 @@ treez-file-or-directory-path {
 	
 }
 
-.treez-file-or-directory-path-browse-button {		
+.treez-file-or-directory-path-browse-button {	
+	background-repeat: no-repeat;	
 	border: none;
 	width:17px;
 	color:transparent;
@@ -30,7 +36,8 @@ treez-file-or-directory-path {
 	vertical-align: middle;	
 }
 
-.treez-file-or-directory-path-play-button {		
+.treez-file-or-directory-path-play-button {	
+	background-repeat: no-repeat;	
 	border: none;
 	width:16px;
 	color:transparent;
@@ -41,5 +48,7 @@ treez-file-or-directory-path {
     margin-right:4px;
     margin-left:0;
     vertical-align: middle;
-    width:84%
+    width:84%;
+	font-family: Consolas;
+	font-size: 12px;
 }

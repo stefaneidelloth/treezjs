@@ -34,10 +34,12 @@ export default class TreezColor extends LabeledTreezElement {
 			          		
         }
         
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
-    }               
+        this.update();
+    }
+
+	updateContentWidth(width){
+		this.updateWidthFor(this.__colorPicker, width);
+	}
 
     updateElements(color){
     	if(this.__colorPicker){                    	

@@ -19,7 +19,6 @@ export default class TreezEnumComboBox extends TreezComboBox {
 		}
 		
 		return this.__enumClass.forName(stringValue);
-		                	
 	} 
 
 	convertToStringValue(value){
@@ -29,7 +28,6 @@ export default class TreezEnumComboBox extends TreezComboBox {
 		} else {
 			return value;
 		}
-		                	
 	} 	
 
 	set enum(enumClass) {

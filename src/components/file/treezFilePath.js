@@ -12,7 +12,8 @@ export default class TreezFilePath extends TreezAbstractPath {
 
             var label = document.createElement('label');  
             this.__label = label;                     
-            label.innerText = this.label;                       
+            label.innerText = this.label;  
+            label.className = 'treez-file-path-label';                     
             this.appendChild(label);  
 
             var container = document.createElement('div');
@@ -50,7 +51,7 @@ export default class TreezFilePath extends TreezAbstractPath {
 
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
-            executeButton.className='treez-file-path-play-button';	
+            executeButton.className = 'treez-file-path-play-button';	
             executeButton.type = 'button';
             executeButton.title = 'Open (or execute) file';
             executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
@@ -58,10 +59,8 @@ export default class TreezFilePath extends TreezAbstractPath {
             executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton);                    		
         }
-        
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+
+        this.update();
     }    
    
     __browseFilePath(){    

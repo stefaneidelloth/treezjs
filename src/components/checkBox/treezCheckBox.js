@@ -29,20 +29,24 @@ export default class TreezCheckBox extends LabeledTreezElement {
 			this.__label = label;
 			label.innerText = this.label;   
 			label.className = 'treez-check-box-label';
-			container.appendChild(label);                                               
-                                                  		
+			container.appendChild(label);
         }
-        
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+
+        this.update();
+
     } 
 		
     updateElements(booleanValue){
     	if(this.__checkBox){  
 			this.__checkBox.checked = booleanValue;
     	}
-	}	
+	}
+
+	updateContentWidth(contentWidth){
+		if(this.__checkBox){
+			this.__checkBox.style.width = contentWidth;
+		}
+	}
 	
 	disableElements(booleanValue){
 		if(booleanValue === undefined){

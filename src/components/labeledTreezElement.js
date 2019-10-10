@@ -9,18 +9,72 @@ export default class LabeledTreezElement extends TreezElement {
 	} 
 
 	static get observedAttributes() {
-		return TreezElement.observedAttributes.concat(['label']);                    
+		return TreezElement.observedAttributes.concat(['label','label-width','content-width']);
     } 				           
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
     	super.attributeChangedCallback(attr, oldStringValue, newStringValue)                	     	      
     	
         if(attr==='label'){
-        	if(this.__label){
-        		 this.__label.innerText= newStringValue;   
-        	}                                           
-        }	                   
-    }  
+			if(this.__label){
+				this.__label.innerText= newStringValue;
+			}
+		}
+
+		if(attr==='label-width'){
+			if(this.__label){
+				this.updateLabelWidth(newStringValue);
+			}
+		}
+
+		if(attr==='content-width'){
+			if(this.__label){
+				this.updateContentWidth(newStringValue);
+			}
+		}
+	}
+
+	update(){
+
+		var initialValue;
+		try{
+			initialValue = this.value;
+		} catch(error){
+
+		}
+
+		this.updateElements(initialValue);
+
+		this.disableElements(this.disabled)
+		this.hideElements(this.hidden);		
+		this.updateLabelWidth(this.labelWidth);
+		this.updateContentWidth(this.contentWidth);
+		this.updateWidth(this.width);
+	}
+
+	updateLabelWidth(labelWidth){
+		this.updateWidthFor(this.__label, labelWidth);		
+	}
+
+	//might be overridden by inheriting class
+	updateContentWidth(contentWidth){
+
+	}
+
+	updateWidthFor(element, width){
+		if(element){
+			if(width){
+				element.style.width = width;
+			} else {
+				if(width ==='0' || width === 0){
+					throw new Error('Width must not be zero. Please use attribute "hidden" instead.')
+				}
+				element.style.width = '';
+			}
+		}
+	}
+
+
 	
 	get label() {
 		 return this.getAttribute('label');
@@ -28,6 +82,22 @@ export default class LabeledTreezElement extends TreezElement {
 
 	set label(newValue) {
 		 this.setAttribute('label', newValue);	
-	} 
+	}
+
+	get labelWidth() {
+		return this.getAttribute('label-width');
+	}
+
+	set labelWidth(newValue) {
+		this.setAttribute('label-width', newValue);
+	}
+
+	get contentWidth() {
+		return this.getAttribute('content-width');
+	}
+
+	set contentWidth(newValue) {
+		this.setAttribute('content-width', newValue);
+	}
 
 }

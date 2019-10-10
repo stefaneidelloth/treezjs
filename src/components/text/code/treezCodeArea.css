@@ -1,6 +1,11 @@
 
+.treez-code-area-label {
+    font-family: Consolas;
+    font-size: 12px;
+}
+
 .treez-code-area-container {
-    font-family: arial;
+    font-family: Consolas;
     font-size: 12px;    
     border: 1px solid lightgrey;
     margin-top: 5px;

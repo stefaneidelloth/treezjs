@@ -33,7 +33,8 @@ treez-section-header {
     background-image:linear-gradient(#e0e8f1, white);
     color: #194c7f; 
     font-weight: bold;
-    
+    font-family: Consolas;
+    font-size: 12px;
    
 }
 

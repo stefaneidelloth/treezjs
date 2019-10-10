@@ -15,7 +15,8 @@ export default class TreezTextArea extends LabeledTreezElement {
 
             var label = document.createElement('label');  
             this.__label = label;                     
-            label.innerText = this.label;                       
+            label.innerText = this.label;
+            label.className = 'treez-text-area-label';
             this.appendChild(label);  
 
             var container = document.createElement('div');
@@ -28,15 +29,18 @@ export default class TreezTextArea extends LabeledTreezElement {
             container.appendChild(textArea);    		
         }
         
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+        this.update();	
+       
     }
     
     updateElements(newValue){
     	if(this.__textArea){                    	
 			this.__textArea.value = newValue; 
     	}					    
+    }
+
+    updateContentWidth(width){
+        this.updateWidthFor(this.__container, width);
     }
     
     disableElements(booleanValue){

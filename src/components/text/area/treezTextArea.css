@@ -6,3 +6,8 @@ textarea {
     resize:vertical;   
 }
 
+.treez-text-area-label {
+    font-family: Consolas;
+    font-size: 12px;
+}
+

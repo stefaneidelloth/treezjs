@@ -1,14 +1,16 @@
-.treez-color-container {   
-    with: auto; 
-    vertical-align: top;      
+.treez-color-container { 
+    vertical-align: top;   
 }
 
-.treez-color-label {  
-     vertical-align: middle;	
-}
-
-.treez-color-input {   
-    with: auto; 
+.treez-color-label {
+    display: inline-block;
     vertical-align: middle;
-    margin-left: 5px;	
+    font-family: Consolas;
+    font-size: 12px;   
+}
+
+.treez-color-input {     
+    with: auto; 
+    margin-left: 3px;
+    vertical-align: middle;
 }

@@ -5,14 +5,17 @@
 }
 
 .treez-check-box-input {   
+	display:inline-block;	
     with: auto; 
     padding-bottom: -3px;   
     margin-top:3px;  
-    height: 23px; 
+    height: 19px;
 }
 
 .treez-check-box-label {  
 	display:inline-block;	
  	padding-left:3px;
- 	vertical-align:super; 	    
+ 	vertical-align:super;
+	font-family: Consolas;
+	font-size: 12px;
 }

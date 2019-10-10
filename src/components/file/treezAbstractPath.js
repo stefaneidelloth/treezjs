@@ -21,8 +21,11 @@ export default class TreezAbstractPath extends LabeledTreezElement {
             }	
             this.__textField.title = this.fullPath;										
 		}					    
-    }    
-    
+    }
+
+	updateContentWidth(width){
+		this.updateWidthFor(this.__container, width);
+	}
       
     disableElements(booleanValue){
 		if(booleanValue === undefined){

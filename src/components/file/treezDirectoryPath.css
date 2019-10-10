@@ -1,15 +1,19 @@
-
 treez-directory-path {   
+    
+}
+
+.treez-directory-path-container {   
+    white-space: nowrap;   
+}
+
+.treez-directory-path-label { 
+	display: block;  
     font-family: Consolas;
     font-size: 12px;
 }
 
-.treez-directory-path-container {
-    display:'inline-block';
-    white-space: nowrap;   
-}
-
-.treez-directory-path-browse-button {		
+.treez-directory-path-browse-button {	
+	background-repeat: no-repeat;	
 	border: none;
 	width:16px;
 	color:transparent;
@@ -17,7 +21,8 @@ treez-directory-path {
 	vertical-align: middle;
 }
 
-.treez-directory-path-play-button {		
+.treez-directory-path-play-button {	
+    background-repeat: no-repeat;	
 	border: none;
 	width:16px;
 	color:transparent;
@@ -29,4 +34,6 @@ treez-directory-path {
     margin-right:4px;
     margin-left:0;
     vertical-align: middle;
+	font-family: Consolas;
+	font-size: 12px;
 }

@@ -60,10 +60,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			this.__collapseComboBox();                                                              		
         }
         
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
-        
+        this.update();
         
     }  
 	
@@ -76,7 +73,7 @@ export default class TreezImageComboBox extends TreezComboBox {
     	if(this.__imageLabel){                    	
 			this.__updateImageLabel(); 			
     	}					    
-    } 
+    }
        
     disableElements(booleanValue){
 		if(booleanValue === undefined){
@@ -114,9 +111,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 
 	__collapseComboBox(){
 		this.__optionPanel.style.display = 'none';
-	}	
-
-	
+	}
 
 	__nameToImageUrl(name){
 

@@ -14,7 +14,8 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 
             var label = document.createElement('label');  
             this.__label = label;                     
-            label.innerText = this.label;                       
+            label.innerText = this.label;
+            label.className = 'treez-file-or-directory-path-label';                     
             this.appendChild(label);  
 
             var container = document.createElement('div');
@@ -91,10 +92,8 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton); 
         }
-        
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+
+        this.update();
     } 
 
     disableElements(booleanValue){

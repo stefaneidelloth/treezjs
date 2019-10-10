@@ -1,12 +1,15 @@
-
 treez-file-path {   
-    font-family: Consolas;
-    font-size: 12px;         
+  
 }
 
-.treez-file-path-container {
-    display:'inline-block';
-    white-space: nowrap;   
+.treez-file-path-container {       
+    white-space: nowrap;      
+}
+
+.treez-file-path-label { 
+	display: block;
+    font-family: Consolas;
+    font-size: 12px;         
 }
 
 .treez-file-path-browse-button {
@@ -31,4 +34,6 @@ treez-file-path {
     margin-right:4px;
     margin-left:0;
     vertical-align: middle;
+	font-family: Consolas;
+	font-size: 12px;
 }

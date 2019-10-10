@@ -15,20 +15,14 @@ export default class TreezTextField extends LabeledTreezElement {
             if(!this.label){
                 LabeledTreezElement.hide(this.__label, true);
             }
-
         }
         
         if(!this.__textField){
         	 this.__createTextField();
         }
 
-        if(!this.width){
-        	this.width = '99%';
-        }
-        
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+       
+        this.update();	       
     }
     
     updateElements(newValue){
@@ -37,10 +31,20 @@ export default class TreezTextField extends LabeledTreezElement {
     	}					    
     }
 
+    updateContentWidth(width){
+        this.updateWidthFor(this.__textField, width);
+    }  
+
     updateWidth(width){
-    	if(this.__textField){ 
-    		this.__textField.style.width = width;
-    	}                	
+    	super.updateWidth(width);
+    	if(!this.labelWidth){
+    		this.updateLabelWidth(width);
+    	}
+
+    	if(!this.contentWidth){
+    		this.updateContentWidth(width);
+    	}    	
+        
     }                 
 
     disableElements(newValue){

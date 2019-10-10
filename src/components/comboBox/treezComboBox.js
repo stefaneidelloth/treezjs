@@ -38,16 +38,7 @@ export default class TreezComboBox extends LabeledTreezElement {
 
         }
 
-        var initialValue;
-        try{
-        	initialValue = this.value;
-        } catch(error){
-        	
-        }
-        
-        this.updateElements(initialValue);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+        this.update();
     }
 
 	attributeChangedCallback(attr, oldValue, newValue) {
@@ -65,6 +56,10 @@ export default class TreezComboBox extends LabeledTreezElement {
 			this.__comboBox.value= '' + newValue; 
     	}	
     }
+
+	updateContentWidth(width){
+		this.updateWidthFor(this.__comboBox, width);
+	}
 
     disableElements(booleanValue){
 		if(booleanValue === undefined){

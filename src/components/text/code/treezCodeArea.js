@@ -5,6 +5,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
     constructor(){
         super();
+        this.__label = undefined;
         this.__container = undefined;
         this.__codeMirror = undefined; 
         				
@@ -26,7 +27,16 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			'codemirror/mode/python/python'		
 		], function(
 			 CodeMirror
-		) {		
+		) {	
+
+			if(!self.__label){
+				var label = document.createElement('label');  
+				self.__label = label;                     
+				label.innerText = self.label;
+				label.className = 'treez-code-area-label';
+				self.appendChild(label);  
+			}
+			
 		
 
 			if(!self.__container){
@@ -64,6 +74,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			}        
 
 			self.updateElements(self.value);
+			self.updateWidth(self.width);
 			self.disableElements(self.disabled);
 			self.hideElements(self.hidden); 
 		}, function(error){
@@ -88,13 +99,34 @@ export default class TreezCodeArea extends LabeledTreezElement {
     		}    	  
     	}					    
     }    
+
+    updateContentWidth(width){
+		super.updateWidth(width);
+		this.updateWidthFor(this.__container, width);
+    	if(this.__codeMirror){
+    		this.__codeMirror.setSize(width, null);
+    	}
+    }
+
+	updateWidth(newValue){
+		this.updateContentWidth(newValue)
+	}
     
     disableElements(booleanValue){
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
     	if(this.__codeMirror){
-    		this.__codeMirror.disabled = booleanValue;
+    		this.__codeMirror.options.disableInput = booleanValue;
+
+    		let parentDiv = this.__codeMirror.getScrollerElement().parentNode;
+
+    		if(booleanValue){
+				parentDiv.style.backgroundColor = '#ebebeb';
+    		} else {
+    			parentDiv.style.backgroundColor = 'white';
+    		}
+    		
     	}
     }	
    
@@ -103,6 +135,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			throw Error('This method expects a boolean argument');
 		}
     	if(this.__codeMirror){
+    		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__container, booleanValue);
     	}
     }

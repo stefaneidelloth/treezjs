@@ -10,7 +10,7 @@ export default class TreezNumber extends LabeledTreezElement {
     }  
     
     static get observedAttributes() {
-		return LabeledTreezElement.observedAttributes.concat(['min','max','input-width']);                    
+		return LabeledTreezElement.observedAttributes.concat(['min','max']);                    
     }  
 
     connectedCallback() {
@@ -37,10 +37,7 @@ export default class TreezNumber extends LabeledTreezElement {
             this.appendChild(numberInput); 
             
         }
-
-        if(!this.inputWidth){
-        	this.inputWidth ='100px';
-        }
+       
 
         if(Number.isNaN(this.min)){
             this.min = Number.MIN_SAFE_INTEGER;       
@@ -50,9 +47,8 @@ export default class TreezNumber extends LabeledTreezElement {
             this.max = Number.MAX_SAFE_INTEGER; 
         }
         
-        this.updateElements(this.value);	
-        this.disableElements(this.disabled)
-		this.hideElements(this.hidden); 
+        this.update();	
+       
     }    			        
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
@@ -69,18 +65,17 @@ export default class TreezNumber extends LabeledTreezElement {
         		 this.__numberInput.max = newStringValue;   
         	}                                           
         }
-
-        if(attr==='input-width'){
-            if(this.__numberInput){
-        		 this.__numberInput.style.width = newStringValue;   
-        	}  
-        }	
+       
     }  	
     
     updateElements(newValue){
     	if(this.__numberInput){ 
     		this.__numberInput.value = this.convertToStringValue(newValue); 
     	}					    
+    }
+
+    updateContentWidth(width){
+        this.updateWidthFor(this.__numberInput, width);
     }
 
     convertFromStringValue(stringValue){
@@ -190,15 +185,8 @@ export default class TreezNumber extends LabeledTreezElement {
 
     set max(newValue) {
         this.setAttribute('max', this.convertToStringValue(newValue));	
-    } 
-
-    get inputWidth() {
-        return this.getAttribute('input-width');
     }
-
-    set inputWidth(newValue) {
-        this.setAttribute('input-width', newValue);	
-    } 
+   
                           
 }
 

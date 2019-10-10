@@ -7,8 +7,13 @@
     with: auto; 
     vertical-align: middle;
     margin-left:5px;
+    font-family: Consolas;
+    font-size: 12px;
 }
 
 .treez-combo-box-label {  
-     vertical-align: middle;	
+    display: inline-block;
+    vertical-align: middle;
+    font-family: Consolas;
+    font-size: 12px;
 }
