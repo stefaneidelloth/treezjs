@@ -46,7 +46,7 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ### value
 
-Represents the current value. If you want to specify **false**:
+Represents the current value as string. If you want to specify **false**:
 
 * Do not specify the 'value' attribute in the html tag 'treez-check-box'.
 
