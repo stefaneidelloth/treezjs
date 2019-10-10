@@ -6,19 +6,19 @@
 		
 The TextArea component allows to specify some (multi-line) text.  
 	
-![](../../images/treezTextArea.png)
+![](../../../images/treezTextArea.png)
 		
 ## Source code
 
-[./src/components/textArea/treezTextArea.js](../../../src/components/textArea/treezTextArea.js)
+[./src/components/textArea/treezTextArea.js](../../../../src/components/textArea/treezTextArea.js)
 
 ## Test
 
-[./test/components/textArea/treezTextArea.test.js](../../../test/components/textArea/treezTextArea.test.js)
+[./test/components/textArea/treezTextArea.test.js](../../../../test/components/textArea/treezTextArea.test.js)
 
 ## Demo
 
-[./demo/components/textArea/treezTextAreaDemo.html](../../../demo/components/textArea/treezTextAreaDemo.html)
+[./demo/components/textArea/treezTextAreaDemo.html](../../../../demo/components/textArea/treezTextAreaDemo.html)
 
 ## Construction
 
@@ -55,4 +55,4 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ----
 
-[TExtField](./textField.md)
+[TextField](../field/textField.md)
