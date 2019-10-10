@@ -49,7 +49,7 @@ ColorMap.transblackStep => ![](../../../src/components/colorMap/transblack-step.
 ```javascript
     ...
     sectionContent.append('treez-color-map')
-		  .label('')		  
+		  .label('Color map:')		  
 		  .value('rojal')		
 		  .bindValue(this, () => this.colorMap);	
    ...
