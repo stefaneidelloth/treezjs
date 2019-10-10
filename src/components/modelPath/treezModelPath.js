@@ -8,6 +8,7 @@ export default class TreezModelPath extends LabeledTreezElement {
         this.__comboBox = undefined;
         this.__atomClasses = undefined;   //used to identify allowed atoms by their class
         this.__atomFunctionNames = undefined; //used to identify allowed atoms by their functions/interface
+		this.filterDelegate = undefined;
         this.__relativeRootAtom = undefined; 
         this.__relativeRootLabel = undefined;                 
     }            	
