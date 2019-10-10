@@ -39,7 +39,7 @@ The current value as a boolean value.
 
 ### Inherited attributes
 
-Also see attributes of parent component [LabeledTreezElement](../labeledTreezElement.md)
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value).
 
 
 ## HTML String Attributes
@@ -60,7 +60,7 @@ If you want to specify **true**:
 
 ### Inherited attributes
 
-Also see attributes of parent component [LabeledTreezElement](../labeledTreezElement.md)
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#html-string-attributes#value).
 
 
 
