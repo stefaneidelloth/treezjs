@@ -32,7 +32,7 @@ Use the buttons and combo boxes to edit the entries of the list:
 ```javascript
     ...
     sectionContent.append('treez-string-item-list')
-		  .label('Title')		  
+		  .label('String item list:')		  
       		  .attr('options','["a","b","c","d"]')
 		  .value('["a","b","c"]')		
 		  .bindValue(this, () => this.modeList);	
