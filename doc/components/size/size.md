@@ -63,4 +63,4 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ----
 
-[StringList](../stringList/stringList.md)
+[StringList](../list/stringList.md)
