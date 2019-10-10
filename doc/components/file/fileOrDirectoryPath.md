@@ -40,7 +40,7 @@ The FileOrDirectoryPath component allows to select the path of a file or directo
     ...
     sectionContent.append('treez-file-or-directory-path')
 		  .label('File or directory path:')		
-		  .value('C:\test.txt')
+		  .value('C:/test.txt')
 		  .nodeAttr('pathMapProvider', this)
 		  .bindValue(this, () => this.fileOrDirectoryPath);	
    ...
