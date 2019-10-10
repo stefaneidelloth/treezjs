@@ -32,7 +32,7 @@ Use the buttons and text fields to edit the entries of the list:
 ```javascript
     ...
     sectionContent.append('treez-string-list')
-		  .label('Title')		  
+		  .label('String list:')		  
 		  .value('["a","b","c","d"]')		
 		  .bindValue(this, () => this.names);	
    ...
