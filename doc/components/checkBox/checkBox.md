@@ -60,9 +60,7 @@ If you want to specify **true**:
 
 ### Inherited attributes
 
-Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#html-string-attributes#value).
-
-
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value-1).
 
 ----
 
