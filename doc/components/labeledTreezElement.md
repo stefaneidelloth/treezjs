@@ -108,4 +108,4 @@ Some label text that is shown before the content.
 
 ----
 
-[LineStyle](../lineStyle/lineStyle.md)
+[LineStyle](./lineStyle/lineStyle.md)
