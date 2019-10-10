@@ -32,87 +32,48 @@ Furthermore, the found atoms can be confined with a custom filter method.
 ```javascript
     ...
     sectionContent.append('treez-model-path')
-		  .label('Title')		  
-      .attr('options','["a","b","c","d"]')
-		  .value('["a","b","c"]')		
-		  .bindValue(this, () => this.modeList);	
+		  .label('Model path:')		  
+                  .nodeAttr('atomClasses',[Models])
+		  .nodeAttr('relativeRootAtom', this)
+		  .value('root.second')		
+		  .bindValue(this, () => this.modelPath);	
    ...
 ```
 
 ## JavaScript Attributes
 
-
-### options
-
-The array of available string values/items, e.g. \['a','b','c','d'\]. 
-
 ### value
 
-The array of specified string values/items, e.g. \['a','b','c'\]. 
+The selected model path as string, e.g. 'root.second'. 
 
-### label
+### atomClasses
 
-Some label text that is shown above the list. 
+An array of atom classes (e.g. [Models]), used to filter the available model paths. 
 
-### disabled
+### atomFunctionNames
 
-The disabled state as a boolean value. 
+An array of function names (e.g. ["run","paint"]), used to filter the available model paths. Each of the found atoms needs to have all the given methods. 
 
-### hidden
+### relativeRootAtom
 
-The hidden state as a boolean value.
+An atom that is used as relative root. If a relative root atom is specified, the model path is split in two parts. This way, the available model paths shown in the combo box become shorter and easier to select.  
 
-### width
+### Inherited attributes
 
-The total css width as a string, e.g. '500px'.
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value).
 
 
 
 ## HTML String Attributes
 
-### options
-
-A string that can be evaluated to an array of strings and represents the available values/items, e.g. '\["a","b","c","d"\]'
 
 ### value
 
-A string that can be evaluated to an array of strings and represents the selected values/items, e.g. '\["a","b","c"]'
+The selected model path as string, e.g. 'root.second'.
 
-### label
+### Inherited attributes
 
-Some label text that is shown above the list. 
-
-### disabled
-
-If you want to enable the component:
-
-* Do not specify the 'disabled' attribute in the html tag
-
-* Use element.setAttribute('disabled', null)) 
-
-If you want to disable the component:
-
-* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
-
-* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
-
-### hidden
-
-If you want to show the component:
-
-* Do not specify the 'hidden' attribute in the html tag
-
-* Use element.setAttribute('hidden', null)) 
-
-If you want to hide the component:
-
-* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
-
-* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
-
-### width
-
-The total css width of the component, e.g. '500px'
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value-1).
 
 
 ----
