@@ -25,7 +25,7 @@ The CodeArea allows to edit some source code.
 ```javascript
     ...
     sectionContent.append('treez-code-area')
-		  .label('')		  
+		  .label('Code area:')		  
 		  .value('alert("Hello world!")')		
 		  .bindValue(this, () => this.code);	
    ...
