@@ -100,4 +100,4 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ----
 
-[StringList](../list/stringList.md)
+[ModelPath](../modelPath/modelPath.md)
