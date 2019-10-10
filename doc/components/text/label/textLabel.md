@@ -56,7 +56,7 @@ If you want to **show** the label:
 
 If you want to **hide** the label:
 
-* Specify the 'hidden' attribute in the html tag (e.g. <treez-label value="Hello world" hidden></treez-label>). 
+* Specify the 'hidden' attribute in the html tag (e.g. \<treez-label value="Hello world" hidden></treez-label>). 
 An assigned value is ignored and always interpreted as true (e.g. hidden = '' or hidden = null or hidden = 'true' or 
 hidden = 'False'). Only the existance matters.
 
