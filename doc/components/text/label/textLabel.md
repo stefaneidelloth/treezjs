@@ -50,7 +50,7 @@ The label text.
 
 If you want to **show** the label:
 
-* Do not specify the 'hidden' attribute in the html tag (e.g. <treez-label value="Hello world" ></treez-label>) or
+* Do not specify the 'hidden' attribute in the html tag (e.g. \<treez-label value="Hello world" ></treez-label>) or
 
 * Use element.setAttribute('hidden', null)) 
 
