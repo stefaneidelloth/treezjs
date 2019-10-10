@@ -25,6 +25,7 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 | [Font](./font/font.md)| ![](../images/treezFont.png)|
 | [ImageComboBox](./comboBox/imageComboBox.md)| ![](../images/treezImageComboBox.png)|
 | [Integer](./number/integer.md)| ![](../images/treezInteger.png)|
+| [LabeledTreezElement](./labeledTreezElement.md)| This is not indented for direct usage but as a parent component.|
 | [LineStyle](./lineStyle/lineStyle.md)| ![](../images/treezLineStyle.png)|
 | [StringList](./list/stringList.md) | ![](../images/treezStringList.png) |
 | [StringItemList](./list/stringItemList.md)| ![](../images/treezStringItemList.png) |
