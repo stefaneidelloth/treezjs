@@ -35,7 +35,7 @@ code of the Editor View.
 ```javascript
     ...
     sectionContent.append('treez-double')
-		  .label('Label:')		
+		  .label('Double:')		
 		  .value('4.12')		
 		  .bindValue(this, () => this.increaseFactor);	
    ...
