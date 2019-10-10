@@ -33,7 +33,7 @@ Use the buttons and text fields to edit the entries of the list:
     ...
     sectionContent.append('treez-directory-path-list')
 		  .label('Directory path list:')		  
-		  .value('["C:/","b","c","d"]')		
+		  .value('["c:/foo","c:/baa","c:/qux"]')		
 		  .bindValue(this, () => this.names);	
    ...
 ```
@@ -42,7 +42,7 @@ Use the buttons and text fields to edit the entries of the list:
 
 ### value
 
-An array of strings, e.g. \['a','b','c','d'\]. 
+An array of strings, e.g. \['c:/foo','c:/baa','c:/qux'\]. 
 
 ### Inherited attributes
 
@@ -54,7 +54,7 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ### value
 
-A string that can be evaluated to an array of strings, e.g. '\["a","b","c","d"\]'
+A string that can be evaluated to an array of strings, e.g. '\["c:/foo","c:/baa","c:/qux"\]'
 
 ### Inherited attributes
 
