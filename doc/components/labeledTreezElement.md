@@ -9,7 +9,7 @@ The LabeledTreezElement serves as a parent component. You can imagine it to cons
 * a label and
 * some content
 
-The content is created by some inheriting class. 
+(The actual label and content elements need to be constructed by some inheriting class.) 
 
 The LabeledTreezElement provides some attributes and methods that can be used by those inheriting components. 
 LabeledTreezElement itself inherits from TreezElement and you can find all relevant attributes below. 
