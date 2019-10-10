@@ -37,22 +37,9 @@ The Font component allows to select a font family.
 
 The current font family as string. 
 
-### label
+### Inherited attributes
 
-Some label text that is shown before the style combo box as a string. 
-
-### disabled
-
-The disabled state as a boolean value. 
-
-### hidden
-
-The hidden state as a boolean value.
-
-### width
-
-The total css width as a string, e.g. '500px'.
-
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value).
 
 
 ## HTML String Attributes
@@ -61,41 +48,9 @@ The total css width as a string, e.g. '500px'.
 
 The current font family as string.
 
-### label
+### Inherited attributes
 
-Some label text.
-
-### disabled
-
-If you want to enable the component:
-
-* Do not specify the 'disabled' attribute in the html tag
-
-* Use element.setAttribute('disabled', null)) 
-
-If you want to disable the component:
-
-* Specify the 'disabled' attribute in the html tag, e.g. disabled = ''
-
-* Use element.setAttribute('disabled','') or set it to any other value not equal to null. 
-
-### hidden
-
-If you want to show the component:
-
-* Do not specify the 'hidden' attribute in the html tag
-
-* Use element.setAttribute('hidden', null)) 
-
-If you want to hide the component:
-
-* Specify the 'hidden' attribute in the html tag, e.g. hidden = ''
-
-* Use element.setAttribute('hidden','') or set it to any other value not equal to null. 
-
-### width
-
-The total css width of the component, e.g. '500px'
+Also see the attributes that are inherited from [LabeledTreezElement](../labeledTreezElement.md#value-1).
 
 
 ----
