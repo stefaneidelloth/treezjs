@@ -27,9 +27,10 @@ Treez provides custom [web components](https://developers.google.com/web/fundame
 | [Integer](./number/integer.md)| ![](../images/treezInteger.png)|
 | [LabeledTreezElement](./labeledTreezElement.md)| This is not indented for direct usage but as a parent component.|
 | [LineStyle](./lineStyle/lineStyle.md)| ![](../images/treezLineStyle.png)|
+| [ModelPath](./modelPath/modelPath.md)| ![](../images/treezModelPath.png)|
 | [StringList](./list/stringList.md) | ![](../images/treezStringList.png) |
 | [StringItemList](./list/stringItemList.md)| ![](../images/treezStringItemList.png) |
-| [ModelPath](./modelPath/modelPath.md)| ![](../images/treezModelPath.png)|
+
 | [Section](./section/section.md)|![](../images/treezSection.png) |
 | [Size](./size/size.md)| ![](../images/treezSize.png)|
 | [SymbolStyle](./symbolStyle/symbolStyle.md)| ![](../images/treezSymbolStyle.png)|
