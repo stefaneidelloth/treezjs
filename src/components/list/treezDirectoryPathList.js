@@ -4,7 +4,8 @@ import TreezDirectoryPath from './../file/treezDirectoryPath.js';
 export default class TreezDirectoryPathList extends TreezStringList {
 
     constructor(){
-        super();       
+        super();
+		this.__pathMapProvider = undefined;
     }
 
 	getCellValue(cell){
@@ -27,6 +28,7 @@ export default class TreezDirectoryPathList extends TreezStringList {
     	row.appendChild(cell);    	
     	
     	var path = document.createElement('treez-directory-path');
+		path.pathMapProvider = this.__pathMapProvider;
 		path.onchange = (event) => this.__directoryPathChanged(event);
 		cell.appendChild(path);
 		if(value){
@@ -58,6 +60,11 @@ export default class TreezDirectoryPathList extends TreezStringList {
 		var row = this.__tableBody.children[rowIndex];
 		var cell = row.children[0];
 		cell.focus();
+	}
+
+	set pathMapProvider(provider){
+		this.__pathMapProvider = provider;
+		this.__recreateTableRows();
 	}
 
 
