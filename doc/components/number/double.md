@@ -64,7 +64,11 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 ### value
 
-The current value string.
+Returns the current value as string. 
+
+Setting the attribute does not only work with strings but also without quotes in Google Chrome, e.g. 
+* element.setAttribute('value', 4.12) or
+* <treez-integer value = 4.12 ></treez-integer>
 
 ### min
 
