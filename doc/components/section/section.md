@@ -65,13 +65,13 @@ Some label text that is shown in the section header.
 
 If you want to **expand** the section:
 
-* Do not specify the 'collapsed' attribute in the html tag (e.g. <treez-section id="mySection" ></treez-section>) or
+* Do not specify the 'collapsed' attribute in the html tag (e.g. \<treez-section id="mySection" ></treez-section>) or
 
 * Use section.setAttribute('collapsed', null)) 
 
 If you want to **collapse** the section:
 
-* Specify the 'collapsed' attribute in the html tag (e.g. <treez-section id="myComponent" collapsed ></treez-section>). 
+* Specify the 'collapsed' attribute in the html tag (e.g. \<treez-section id="myComponent" collapsed ></treez-section>). 
 An assigned value is ignored and always interpreted as true (e.g. collapsed = '' or collapsed = null or collapsed = 'true' or
 collapsed = 'False'). Only the existance matters. You can also:
 

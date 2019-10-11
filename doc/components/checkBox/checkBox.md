@@ -48,13 +48,13 @@ Also see the attributes that are inherited from [LabeledTreezElement](../labeled
 
 Represents the current value as string. If you want to specify **false**:
 
-* Do not specify the 'value' attribute in the html tag 'treez-check-box' (e.g. <treez-check-box id="checkBox" ></treez-check-box>).
+* Do not specify the 'value' attribute in the html tag 'treez-check-box' (e.g. \<treez-check-box id="checkBox" ></treez-check-box>).
 
 * Use element.setAttribute('value',null)
 
 If you want to specify **true**:
 
-* Specify the 'value' attribute in the html tag 'treez-check-box' (e.g. <treez-check-box id="checkBox" value></treez-check-box>). An assigned value is ignored and always interpreted as true (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
+* Specify the 'value' attribute in the html tag 'treez-check-box' (e.g. \<treez-check-box id="checkBox" value></treez-check-box>). An assigned value is ignored and always interpreted as true (e.g. value = '' or value = null or value = 'true' or value = 'False'). Only the existance matters.
 
 * Use element.setAttribute('value','') (or set it to any other value that is not equal to null). 
 
