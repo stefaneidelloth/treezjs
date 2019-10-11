@@ -1,6 +1,7 @@
 treez-section {
+    display: block;
     background-color:white;
-    width:100%;
+    width: 99.5%;
     font-family: Consolas;
     font-size: 12px;
     margin-top:1px;
@@ -18,7 +19,7 @@ treez-section div {
 
 treez-section-header {
     display:inline-block;
-    width:100%;
+    width:99.5%;
     height:14px;
     padding:4px;  
     border-radius:6px; 
