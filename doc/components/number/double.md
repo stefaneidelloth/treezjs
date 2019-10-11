@@ -68,7 +68,7 @@ Returns the current value as string.
 
 Setting the attribute does not only work with strings but also without quotes in Google Chrome, e.g. 
 * element.setAttribute('value', 4.12) or
-* <treez-integer value = 4.12 ></treez-integer>
+* \<treez-integer value = 4.12 ></treez-integer>
 
 ### min
 
