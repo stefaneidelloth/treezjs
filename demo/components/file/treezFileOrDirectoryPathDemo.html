@@ -12,6 +12,17 @@
 
 		<script type="module">
             import TreezFileOrDirectoryPath from '../../../src/components/file/treezFileOrDirectoryPath.js';
+
+            import Treez from '../../../src/treez.js'; 
+			import StandAloneTerminal from '../../../src/standAloneTerminal.js'; 
+
+
+            Treez.config({
+				home: '..',
+				isSupportingPython: false	
+			});	
+
+            window.treezTerminal = new StandAloneTerminal();
             
 			var fileOrDirectoryPath = document.getElementById('fileOrDirectoryPath');           
             fileOrDirectoryPath.label = 'File or directory path:';

@@ -10,8 +10,18 @@
 			
 		</treez-directory-path>	
 
-		<script type="module">	
+		<script type="module">				
             import TreezDirectoryPath from '../../../src/components/file/treezDirectoryPath.js';
+            import Treez from '../../../src/treez.js'; 
+			import StandAloneTerminal from '../../../src/standAloneTerminal.js'; 
+
+
+            Treez.config({
+				home: '..',
+				isSupportingPython: false	
+			});	
+
+            window.treezTerminal = new StandAloneTerminal();
 			
             var directoryPath = document.getElementById('directoryPath');           
             directoryPath.label = 'Directory path:';

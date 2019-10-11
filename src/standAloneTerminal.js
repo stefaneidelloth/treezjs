@@ -1,4 +1,5 @@
 import TableData from './data/database/tableData.js';
+
 export default class StandAloneTerminal {
 
 	constructor(){
@@ -27,16 +28,24 @@ export default class StandAloneTerminal {
 		return this.__webSocketPromise;
 	}
 	
-	async browseFilePath(initialDirectory){   	
-      return jQuery.get('browseFilePath', initialDirectory);    
+	async browseFilePath(initialDirectory){	
+      return jQuery.get(this.urlPrefix + '/browseFilePath', initialDirectory);    
+    }
+
+    get urlPrefix(){    	
+		if(window.treezConfig){
+			return window.treezConfig.home;
+		}  else {
+			return '.';
+		}
     }
 
     async browseDirectoryPath(initialDirectory){   	
-      return jQuery.get('browseDirectoryPath', initialDirectory);    
+      return jQuery.get(this.urlPrefix + '/browseDirectoryPath', initialDirectory);    
     }
 
     async browseFileOrDirectoryPath(initialDirectory){   	
-    	return jQuery.get('browseFileOrDirectoryPath', initialDirectory);    
+    	return jQuery.get(this.urlPrefix + '/browseFileOrDirectoryPath', initialDirectory);    
     }
 
     async readTextFile(filePath){
@@ -45,20 +54,20 @@ export default class StandAloneTerminal {
     	}
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
-		return jQuery.get('readTextFile', uri); 
+		return jQuery.get(this.urlPrefix + '/readTextFile', uri); 
 	}
     
     async writeTextFile(filePath, text){		
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var message = dosPath + '<#Separator#>' + text;
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(message);
-		return jQuery.get('writeTextFile', uri);	
+		return jQuery.get(this.urlPrefix + '/writeTextFile', uri);	
 	}
 
     async deleteFile(filePath){
 		var dosPath =  this.__replaceForwardWithBackwardSlash(filePath);
 		var uri = this.__replaceSpecialCharactersToWorkAsUri(dosPath);
-		return jQuery.get('deleteFile', uri);			
+		return jQuery.get(this.urlPrefix + '/deleteFile', uri);			
 	}	
 
 	openDirectory(directoryPath, errorHandler, finishedHandler){
