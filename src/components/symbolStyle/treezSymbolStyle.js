@@ -11,7 +11,7 @@ export default class TreezSymbolStyle extends TreezEnumImageComboBox {
         this.enum = SymbolStyle;
     }
 
-    get folderName(){
+    get imageFolderPath(){
 		return 'symbolStyle';
 	}                
 }

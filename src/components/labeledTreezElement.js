@@ -13,9 +13,9 @@ export default class LabeledTreezElement extends TreezElement {
     } 				           
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
-    	super.attributeChangedCallback(attr, oldStringValue, newStringValue)                	     	      
-    	
-        if(attr==='label'){
+    	super.attributeChangedCallback(attr, oldStringValue, newStringValue)
+
+		if(attr==='label'){
 			if(this.__label){
 				this.__label.innerText= newStringValue;
 			}
@@ -33,6 +33,8 @@ export default class LabeledTreezElement extends TreezElement {
 			}
 		}
 	}
+
+
 
 	update(){
 
@@ -52,29 +54,30 @@ export default class LabeledTreezElement extends TreezElement {
 		this.updateWidth(this.width);
 	}
 
-	updateLabelWidth(labelWidth){
-		this.updateWidthFor(this.__label, labelWidth);		
-	}
-
 	//might be overridden by inheriting class
 	updateContentWidth(contentWidth){
 
 	}
 
+	updateLabelWidth(labelWidth){
+		this.updateWidthFor(this.__label, labelWidth);		
+	}
+
 	updateWidthFor(element, width){
 		if(element){
 			if(width){
+				if(width === '0'){
+					throw new Error('Width must not be zero. Please use attribute "hidden" instead.')
+				}
 				element.style.width = width;
 			} else {
-				if(width ==='0' || width === 0){
+				if(width === 0){
 					throw new Error('Width must not be zero. Please use attribute "hidden" instead.')
 				}
 				element.style.width = '';
 			}
 		}
 	}
-
-
 	
 	get label() {
 		 return this.getAttribute('label');

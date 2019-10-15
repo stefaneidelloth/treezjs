@@ -84,4 +84,26 @@ export default class TestUtils {
         });
     }
 
+    static expectCoverage(coverageArray, index, minExpectedCoverage){
+        let report = coverageArray[index];
+
+        let  totalBytes = report.text.length;
+        let usedBytes = 0;
+        for (const range of report.ranges) {
+            usedBytes += range.end - range.start;
+        }
+
+        const coverage = ((usedBytes / totalBytes)* 100);
+
+        try{
+            expect(coverage).toBeGreaterThanOrEqual(minExpectedCoverage);
+            let message = 'Coverage check succeeded for ' + report.url +'.\nCoverage is ' + coverage + '.';
+            console.log(message);
+        } catch(error){
+            let message = 'Coverage check failed for ' + report.url +'.\nCoverage is ' + coverage + ', being less than ' + minExpectedCoverage +'.'
+            console.error(message);
+        }
+
+    }
+
 }

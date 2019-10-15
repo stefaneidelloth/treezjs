@@ -23,7 +23,7 @@ Color.forHexString = function(colorHexString){
 			return color;
 		}
 	}
-	throw new Error('Unknown color hex string "' + name + '"');
+	throw new Error('Unknown color hex string "' + colorHexString + '"');
 };
 
 if(window.Color){

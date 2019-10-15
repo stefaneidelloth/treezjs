@@ -32,32 +32,32 @@ describe('TreezElement', ()=>{
      
      
          it('get value',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.value);       
+             var property = await page.$eval('#' + id, element=> element.value);       
              expect(property).toBe(null);
          });
      
          it('get disabled',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.disabled);       
+             var property = await page.$eval('#' + id, element=> element.disabled);       
              expect(property).toBe(false);
          });
      
          it('get hidden',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.hidden);       
+             var property = await page.$eval('#' + id, element=> element.hidden);       
              expect(property).toBe(false);
          });
      
          it('get width',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.width);       
+             var property = await page.$eval('#' + id, element=> element.width);       
              expect(property).toBe(null);
          });
      
          it('__parentAtom',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.__parentAtom);       
+             var property = await page.$eval('#' +id, element=> element.__parentAtom);       
              expect(property).toBe(undefined);
          });
      
          it('__listeners',  async ()=>{   
-             var property = await page.$eval('#treez-element', element=> element.__listeners);       
+             var property = await page.$eval('#' + id, element=> element.__listeners);       
              expect(property).toEqual([]);
           });
     });
@@ -79,40 +79,72 @@ describe('TreezElement', ()=>{
         });
 
         it('convertFromStringValue', async ()=>{
-            var value = await page.$eval('#treez-element', element=> element.convertFromStringValue('stringValue'));       
+            var value = await page.$eval('#' + id, element=> element.convertFromStringValue('stringValue'));       
             expect(value).toEqual('stringValue');           
         });
 
         it('convertToStringValue', async ()=>{
-            var value = await page.$eval('#treez-element', element=> element.convertToStringValue('stringValue'));       
+            var value = await page.$eval('#' +id, element=> element.convertToStringValue('stringValue'));       
             expect(value).toEqual('stringValue');           
         });
 
-        it('updateElements', async ()=>{ 
-            await page.$eval('#treez-element', element=> element.updateElements('newValue'));                     
+        describe('disableElements',  ()=> {
+
+            it('undefined', async ()=>{
+                var success = await page.evaluate(()=>{
+                    var element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                });
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async ()=>{
+                page.$eval('#' + id, element=> element.disableElements(true));
+            });
+        });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                var success = await page.evaluate(() => {
+                    var element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                });
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                page.$eval('#' + id, element => element.hideElements(true));
+            });
+        });
+
+        it('updateElements', async ()=>{
+            await page.$eval('#' + id, element=> element.updateElements('newValue'));
         });
 
         it('updateWidth', async ()=>{ 
-            var width = await page.$eval('#treez-element', element=> element.style.width);
+            var width = await page.$eval('#' + id, element=> element.style.width);
             expect(width).toBe('');
                         
             await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
                 element.updateWidth('100%');
             });
 
-            var updatedWidth = await page.$eval('#treez-element', element=> element.style.width);
+            var updatedWidth = await page.$eval('#' + id, element=> element.style.width);
 
             expect(updatedWidth).toBe('100%'); 
                       
-        });
-
-        it('disableElements', async ()=>{ 
-            page.$eval('#treez-element', element=> element.disableElements(true));                       
-        });
-
-        it('hideElements', async ()=>{ 
-            page.$eval('#treez-element', element=> element.hideElements(true));         
         });
 
         describe('bindValue', ()=>{ 
@@ -123,26 +155,26 @@ describe('TreezElement', ()=>{
                     var atomMock = {property: '33'}; 
                     window.atomMock = atomMock;
 
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.bindValue(atomMock, () => atomMock.property);
                 });
             });
 
             it('element value should equal atom value after binding', async ()=>{
-                var bindedElementValue = await page.$eval('#treez-element', element=> element.value);
+                var bindedElementValue = await page.$eval('#' + id, element=> element.value);
                 expect(bindedElementValue).toBe('33');
             });
 
             it('changing element value should change atom value', async ()=>{
                 await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.value = '66';
                 });
     
-                var updatedElementValue = await page.$eval('#treez-element', element=> element.value);
+                var updatedElementValue = await page.$eval('#' + id, element=> element.value);
                 expect(updatedElementValue).toBe('66');
     
-                var atomProperty = await page.$eval('#treez-element', element=> window.atomMock.property);
+                var atomProperty = await page.$eval('#' + id, element=> window.atomMock.property);
                 expect(atomProperty).toBe('66'); 
             });
 
@@ -151,7 +183,7 @@ describe('TreezElement', ()=>{
                     window.atomMock.property='99';
                 });
     
-                var newElementValue = await page.$eval('#treez-element', element=> element.value);
+                var newElementValue = await page.$eval('#' + id, element=> element.value);
                 expect(newElementValue).toBe('99');
             }); 
                      
@@ -161,7 +193,7 @@ describe('TreezElement', ()=>{
 
             it('value', async ()=>{ 
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
 
                     var methodCalls = {};
                    
@@ -188,7 +220,7 @@ describe('TreezElement', ()=>{
             describe('disabled', ()=>{ 
                 it('value changed to true (!==null)', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.disableElements = (value)=>{
@@ -204,7 +236,7 @@ describe('TreezElement', ()=>{
 
                 it('value changed to null', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.disableElements = (value)=>{
@@ -220,7 +252,7 @@ describe('TreezElement', ()=>{
 
                 it('value did not change', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.disableElements = (value)=>{
@@ -240,7 +272,7 @@ describe('TreezElement', ()=>{
 
                 it('value changed to true (!==null)', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.hideElements = (value)=>{
@@ -256,7 +288,7 @@ describe('TreezElement', ()=>{
 
                 it('value changed to null', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.hideElements = (value)=>{
@@ -272,7 +304,7 @@ describe('TreezElement', ()=>{
 
                 it('value did not change', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.hideElements = (value)=>{
@@ -291,7 +323,7 @@ describe('TreezElement', ()=>{
             describe('width', ()=>{ 
                 it('value changed', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.updateWidth = (value)=>{
@@ -307,7 +339,7 @@ describe('TreezElement', ()=>{
 
                 it('value did not change', async ()=>{
                     var success = await page.evaluate(()=>{
-                        var element = document.getElementById('treez-element');
+                        var element = document.getElementById(id);
 
                         var methodCalls = {};                   
                         element.updateWidth = (value)=>{
@@ -326,7 +358,7 @@ describe('TreezElement', ()=>{
 
         it('dispatchChangeEvent', async ()=>{
             var success = await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
 
                 var methodCalls = {};                   
                 element.dispatchEvent = (value)=>{
@@ -344,7 +376,7 @@ describe('TreezElement', ()=>{
 
         it('disconnectedCallback', async ()=>{
             var success = await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
 
                 var firstChild = document.createElement('div');
                 element.appendChild(firstChild);
@@ -362,7 +394,7 @@ describe('TreezElement', ()=>{
         describe('set value', ()=>{
             it('converted string value is not null', async ()=>{ 
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
     
                     element.value = '33'; 
                     return element.getAttribute('value') === '33';
@@ -372,7 +404,7 @@ describe('TreezElement', ()=>{
 
             it('converted string vlaue is null', async ()=>{ 
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.convertToStringValue = () => null;    
                     element.value = 'dummyValue'; 
                     return element.getAttribute('value') === null;
@@ -381,13 +413,11 @@ describe('TreezElement', ()=>{
             });
         });
 
-        
-
         describe('set disabled', ()=>{ 
 
             it('truthy', async ()=>{
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.disabled = 'xy'; 
                     return element.getAttribute('disabled') === '';
                 });
@@ -396,7 +426,7 @@ describe('TreezElement', ()=>{
 
             it('falsy', async ()=>{
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.disabled = 0; 
                     return element.getAttribute('disabled') === null;
                 });
@@ -408,7 +438,7 @@ describe('TreezElement', ()=>{
         describe('set hidden', ()=>{ 
             it('truthy', async ()=>{
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.hidden = true; 
                     return element.getAttribute('hidden') === '';
                 });
@@ -417,7 +447,7 @@ describe('TreezElement', ()=>{
 
             it('falsy', async ()=>{
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                     element.hidden = undefined; 
                     return element.getAttribute('hidden') === null;
                 });
@@ -427,7 +457,7 @@ describe('TreezElement', ()=>{
 
         it('set width', async ()=>{ 
             var success = await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
                 element.width = '5 px'; 
                 return element.getAttribute('width') === '5 px';
             });
@@ -439,7 +469,7 @@ describe('TreezElement', ()=>{
     describe('Private API', ()=>{
         it('__updateExternalProperties', async ()=>{
             var success = await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
 
                 var methodCalls = {};
                 var firstAtomMock = {
@@ -494,7 +524,7 @@ describe('TreezElement', ()=>{
 
         it('__addListenerToUpdateExternalPropertyOnAttributeChanges', async ()=>{
             var success = await page.evaluate(()=>{
-                var element = document.getElementById('treez-element');
+                var element = document.getElementById(id);
                
                 var atomMock = {
                     myProperty: ''
@@ -514,7 +544,7 @@ describe('TreezElement', ()=>{
 
             it('Property without existing getter and setter', async ()=>{
                 var success = await page.evaluate(()=>{
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                    
                     var atomMock = {
                         myProperty: ''
@@ -545,7 +575,7 @@ describe('TreezElement', ()=>{
                         }
                     }
 
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                    
                     var atomMock = new AtomMock();
                                        
@@ -581,7 +611,7 @@ describe('TreezElement', ()=>{
                             this.__myProperty=newValue; 
                         }
                     }
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                    
                     var atomMock = new AtomMock();
                                        
@@ -628,7 +658,7 @@ describe('TreezElement', ()=>{
                             this.__myProperty=newValue; 
                         }
                     }
-                    var element = document.getElementById('treez-element');
+                    var element = document.getElementById(id);
                    
                     var atomMock = new AtomMock();
                                        
@@ -651,7 +681,7 @@ describe('TreezElement', ()=>{
 
             it('Property that already has been binded to another element; both element values are updated', async ()=>{
 
-                await TestUtils.createCustomElement(page, 'treez-element', 'TreezElement', '../src/components/treezElement.js','second-treez-element');
+                await TestUtils.createCustomElement(page, id, 'TreezElement', '../src/components/treezElement.js','second-treez-element');
 
                 var success = await page.evaluate(()=>{                   
 
@@ -670,7 +700,7 @@ describe('TreezElement', ()=>{
                         }
                     }
 
-                    var firstElement = document.getElementById('treez-element');
+                    var firstElement = document.getElementById(id);
                     var secondElement = document.getElementById('second-treez-element');                    
                    
                     var atomMock = new AtomMock();
@@ -693,7 +723,9 @@ describe('TreezElement', ()=>{
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

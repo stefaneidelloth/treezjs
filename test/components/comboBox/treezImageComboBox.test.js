@@ -62,16 +62,29 @@ describe('TreezImageComboBox', ()=>{
 
                 element.connectedCallback();
 
-                console.log('methodCalls[updateElements]: ' + methodCalls['updateElements']);
-                console.log('methodCalls[__recreateOptionTags]: ' + methodCalls['__recreateOptionTags']);
-
-                const methodsAreCalled = (methodCalls['updateElements'] === null) &&
-                    (methodCalls['disableElements'] === false) &&
-                    (methodCalls['hideElements'] === false) &&
-                    (methodCalls['__recreateOptionTags'] === undefined) &&
-                    (methodCalls['__collapseComboBox'] === true);
+                const methodsAreCalled =
+                    (methodCalls['__recreateOptionTags'] === true) &&
+                    (methodCalls['__collapseComboBox'] === true) &&
+                    (methodCalls['update'] === true);
 
                 console.log('methods are called:' + methodsAreCalled);
+
+                methodCalls['__collapseComboBox'] = false;
+                let blurEvent =  document.createEvent('HTMLEvents');
+                blurEvent.initEvent('blur', false, true);
+                element.__comboBox.dispatchEvent(blurEvent);
+
+                let collapseIsCalled = methodCalls['__collapseComboBox'] === true;
+
+                let clickEvent =  document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+                element.__imageLabel.dispatchEvent(clickEvent);
+
+                let expandIsCalled = methodCalls['__expandComboBox'] === true;
+
+                methodCalls['__expandComboBox'] = false;
+                element.__comboButton.dispatchEvent(clickEvent);
+                let  expandIsCalledOnCombo = methodCalls['__expandComboBox'] === true;
 
                 const containerIsCreated = element.childNodes.length === 1;
                 console.log('container is created:' + containerIsCreated);
@@ -102,6 +115,9 @@ describe('TreezImageComboBox', ()=>{
 
 
                 return methodsAreCalled &&
+                    collapseIsCalled &&
+                    expandIsCalled &&
+                    expandIsCalledOnCombo &&
                     containerIsCreated &&
                     labelIsCreated &&
                     comboBoxIsCreated &&
@@ -127,16 +143,9 @@ describe('TreezImageComboBox', ()=>{
                 function prepareMocks(element) {
                     const methodCalls = {};
                     element.label = 'labelText';
-                    element.updateElements = (value) => {
-                        methodCalls['updateElements'] = value;
-                    };
 
-                    element.disableElements = (disabled) => {
-                        methodCalls['disableElements'] = disabled;
-                    };
-
-                    element.hideElements = (hidden) => {
-                        methodCalls['hideElements'] = hidden;
+                    element.update = () => {
+                        methodCalls['update'] = true;
                     };
 
                     element.__recreateOptionTags = () => {
@@ -145,6 +154,10 @@ describe('TreezImageComboBox', ()=>{
 
                     element.__collapseComboBox = () => {
                         methodCalls['__collapseComboBox'] = true;
+                    };
+
+                    element.__expandComboBox = () => {
+                      methodCalls['__expandComboBox'] = true;
                     };
 
                     return methodCalls;
@@ -182,43 +195,71 @@ describe('TreezImageComboBox', ()=>{
             }, {id});
             expect(success).toBe(true);           
 
-        });    
+        });
 
-        it('disableElements', async ()=>{
+        describe('disableElements',  ()=> {
 
-            const success = await page.evaluate(({id}) => {
-                const element = document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                const isNotDisabledBefore = element.__comboButton.disabled === false;
+            it('common usage', async ()=>{
+                const success = await page.evaluate(({id}) => {
+                    const element = document.getElementById(id);
 
-                element.disableElements(true);
+                    const isNotDisabledBefore = element.__comboButton.disabled === false;
 
-                const isDisabledAfter = element.__comboButton.disabled === true;
+                    element.disableElements(true);
 
-                return isNotDisabledBefore && isDisabledAfter;
+                    const isDisabledAfter = element.__comboButton.disabled === true;
 
-            }, {id});
-            expect(success).toBe(true);           
+                    return isNotDisabledBefore && isDisabledAfter;
 
-        });    
+                }, {id});
+                expect(success).toBe(true);
+            });
+        });
 
-        it('hideElements', async ()=>{
+        describe('hideElements',  ()=> {
 
-            const success = await page.evaluate(({id}) => {
-                const element = document.getElementById(id);
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                const isNotHiddenBefore = element.__container.style.display === '';
+            it('common usage', async () => {
+                const success = await page.evaluate(({id}) => {
+                    const element = document.getElementById(id);
 
-                element.hideElements(true);
+                    const isNotHiddenBefore = element.__container.style.display === '';
 
-                const isHiddenAfter = element.__container.style.display === 'none';
+                    element.hideElements(true);
 
-                return isNotHiddenBefore && isHiddenAfter;
+                    const isHiddenAfter = element.__container.style.display === 'none';
 
-            }, {id});
-            expect(success).toBe(true);           
+                    return isNotHiddenBefore && isHiddenAfter;
 
-        });   
+                }, {id});
+                expect(success).toBe(true);
+            });
+        });
         
     });      
 
@@ -317,8 +358,10 @@ describe('TreezImageComboBox', ()=>{
 
                 const success = await page.evaluate(({id}) => {
                     let element = document.getElementById(id);
+
+                    element.options = ['A','B','C'];
                     element.value = null;
-                    element.options = 'A,B,C';
+
                     const methodCalls = {}
                     element.__nameToImageUrl = (value) => {
                         methodCalls['__nameToImageUrl'] = value;
@@ -349,37 +392,81 @@ describe('TreezImageComboBox', ()=>{
 
             });
 
-        });   
-    
-        it('__nameToImageUrl', async ()=>{
+        });
 
-            const success = await page.evaluate(({id}) => {
-                const element = document.getElementById(id);
+        describe('__nameToImageUrl',  ()=>{
 
-                let url = element.__nameToImageUrl('A');
-                return url === '/src/components/comboBox/A.png';
+            it('with treez config', async ()=>{
 
-            }, {id});
-            expect(success).toBe(true);           
+                const success = await page.evaluate(({id}) => {
+                    const element = document.getElementById(id);
 
-        });   
+                    window.treezConfig = {
+                        home: 'foo'
+                    };
+
+                    let url = element.__nameToImageUrl('A');
+
+                    window.treezConfig = undefined;
+
+                    return url === 'foo/src/components/comboBox/A.png';
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('without treez config', async ()=>{
+
+                const success = await page.evaluate(({id}) => {
+                    const element = document.getElementById(id);
+
+                    let url = element.__nameToImageUrl('A');
+                    return url === '/src/components/comboBox/A.png';
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+        });
+
 
         it('__recreateOptionTags', async ()=>{
 
             const success = await page.evaluate(({id}) => {
                 const element = document.getElementById(id);
 
+                let methodCalls = {};
+                element.__comboBoxChanged = (value) =>{
+                    methodCalls['__comboBoxChanged'] = value;
+                };
+
+                element.__collapseComboBox = () =>{
+                    methodCalls['__collapseComboBox'] = true;
+                };
+
                 let optionPanel = element.__optionPanel;
 
                 let hasNoOptionTagsBefore = optionPanel.childNodes.length === 0;
                 element.attributeChangedCallback = () => {};
-                element.options ='A,B';
+                element.options = ['A','B'];
 
                 element.__recreateOptionTags();
 
                 let hasOptionTagsAfter = optionPanel.childNodes.length === 2;
 
-                return hasNoOptionTagsBefore && hasOptionTagsAfter;
+                let clickEvent =  document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+
+                let optionElement = element.__optionPanel.firstChild;
+                optionElement.dispatchEvent(clickEvent);
+
+
+                let comboBoxChangedIsCalled = methodCalls['__comboBoxChanged'] === 'A';
+                let collapseIsCalled = methodCalls['__collapseComboBox'] === true;
+
+                return hasNoOptionTagsBefore && hasOptionTagsAfter &&
+                    comboBoxChangedIsCalled && collapseIsCalled;
 
             }, {id});
             expect(success).toBe(true);           
@@ -403,33 +490,7 @@ describe('TreezImageComboBox', ()=>{
             expect(success).toBe(true);           
 
         });
-    
-        describe('__hasOption',  ()=>{
 
-            it('existing option', async ()=>{
-
-                const success = await page.evaluate(({id}) => {
-                    const element = document.getElementById(id);
-                    element.options = 'A,B,C';
-                    return element.__hasOption('C') === true;
-
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-            it('missing option', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-                    element.options = 'A,B,C';
-                    return element.__hasOption('D') === false;
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-        });   
     
         describe('__refreshSelectedValue',  ()=>{
 
@@ -438,7 +499,7 @@ describe('TreezImageComboBox', ()=>{
                 const success = await page.evaluate(({id}) => {
                     const element = document.getElementById(id);
 
-                    element.__hasOption = ()=>{return true};
+                    element.hasOption = ()=>{return true};
                     let methodCalls = {};
                     element.__tryToSelectFirstOption = ()=>{
                       methodCalls['tryToSelectFirstOption'] = true;
@@ -458,7 +519,7 @@ describe('TreezImageComboBox', ()=>{
                 const success = await page.evaluate(({id}) => {
                     const element = document.getElementById(id);
 
-                    element.__hasOption = ()=>{return false};
+                    element.hasOption = ()=>{return false};
                     let methodCalls = {};
                     element.__tryToSelectFirstOption = ()=>{
                         methodCalls['tryToSelectFirstOption'] = true;
@@ -496,7 +557,7 @@ describe('TreezImageComboBox', ()=>{
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
                     element.value = 'C';
-                    element.options = 'A,B,C';
+                    element.options = ['A','B','C'];
 
                     element.__tryToSelectFirstOption();
 
@@ -520,26 +581,14 @@ describe('TreezImageComboBox', ()=>{
 
         });
 
-        it('get __optionItems', async ()=>{
-
-            const success = await page.evaluate(({id}) => {
-                const element = document.getElementById(id);
-                element.options = 'foo,baa,qux';
-                let array = element.__optionItems;
-
-                return array.length === 3 && array[0] === 'foo' && array[2] === 'qux';
-
-            }, {id});
-            expect(success).toBe(true);
-
-        });
-
     });      
     
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

@@ -34,92 +34,41 @@ describe('TreezSymbolStyle', ()=>{
         
     });
 
-    describe('Public API', ()=>{         
-       
-        it('beforeConnectedCallbackHook', async ()=>{                         
+    describe('Public API', ()=>{
 
-            var success = await page.evaluate(({id})=>{ 
-                
-                var element = document.getElementById(id);                
-                removeExistingAttributesAndChildren(element);
-                console.log('options before:' + element.options);
-               
+        it('beforeConnectedCallbackHook', async ()=>{
 
-                element.beforeConnectedCallbackHook(); 
-                
-                console.log('options after:' + element.options);
-                var optionsAreSet = element.options === window.SymbolStyle.names.join(','); 
-                console.log('options are set: ' + optionsAreSet);
+            var success = await page.evaluate(({id})=>{
 
-                return optionsAreSet;
+                var element = document.getElementById(id);
 
-                function removeExistingAttributesAndChildren(element){
-                    element.options = undefined;                   
-                    while(element.firstChild){
-                        element.firstChild.remove();
-                    }   
-                }                
+                element.enum = undefined;
+
+                element.beforeConnectedCallbackHook();
+
+                return element.enum === window.SymbolStyle;
 
             },{id});
 
-            expect(success).toBe(true);                   
+            expect(success).toBe(true);
 
-        });       
-       
-       
-        
-        describe('get value', async () =>{
+        });
 
-            it('default value', async () =>{
-                var success = await page.evaluate(async ({id})=>{
-                    var element = await document.getElementById(id);
-                         
-                    var value = element.value  
-                    console.log('default value: ' + value);
-    
-                    return value === window.SymbolStyle.none;
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-            it('known SymbolStyle name', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);  
-                    
-                    element.setAttribute('value',window.SymbolStyle.square);
-                         
-                    var value = element.value  
-    
-                    return value === window.SymbolStyle.square; 
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-            it('unknown SymbolStyle name results in null value', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-
-                    var method = window.SymbolStyle.forName;
-                    window.SymbolStyle.forName = () => {throw 'error'};
-                    
-                    var value = element.value;
-                    window.SymbolStyle.forName = method;
-
-                    return value === null;                                      
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-        });        
+        it('imageFolderPath', async () =>{
+            var success = await page.evaluate(async ({id})=>{
+                var element = await document.getElementById(id);
+                return element.imageFolderPath === 'symbolStyle';
+            },{id});
+            expect(success).toBe(true);
+        });
         
     });  
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

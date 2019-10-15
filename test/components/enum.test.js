@@ -39,6 +39,10 @@ describe('Enum', ()=>{
         expect(demoEnumClass.importLocation).toBe('Could not find location of Enum definition. (Only works inside /src/ folder).');        
     });
 
+    it('__determineImportLocation', () => {
+        expect(demoEnumClass.__determineImportLocation()).toBe('Could not find location of Enum definition. (Only works inside /src/ folder).');
+    })
+
     it('toString', ()=>{        
         expect(demoEnumClass.first.toString()).toBe('first');    
         expect(demoEnumClass.second.toString()).toBe('second');      

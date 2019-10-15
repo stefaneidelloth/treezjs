@@ -42,10 +42,8 @@ export default class TreezCheckBox extends LabeledTreezElement {
     	}
 	}
 
-	updateContentWidth(contentWidth){
-		if(this.__checkBox){
-			this.__checkBox.style.width = contentWidth;
-		}
+	updateContentWidth(width){
+        this.updateWidthFor(this.__checkBox, width);
 	}
 	
 	disableElements(booleanValue){

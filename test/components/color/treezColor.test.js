@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import LabeledTreezElement from '../../../src/components/labeledTreezElement.js';
 jest.mock('../../../src/components/labeledTreezElement.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -25,9 +25,9 @@ jest.setTimeout(100000);
 
 describe('TreezColor', ()=>{   
     
-    var id = 'treez-color';
+    let id = 'treez-color';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -43,7 +43,7 @@ describe('TreezColor', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -53,40 +53,47 @@ describe('TreezColor', ()=>{
        
         it('connectedCallback', async ()=>{                         
 
-            var success = await page.evaluate(({id})=>{ 
+            let success = await page.evaluate(({id})=>{ 
 
-                var color = window.Color.blue;
+                let color = window.Color.blue;
 
-                var element = document.getElementById(id);                
+                let element = document.getElementById(id);                
                 removeExistingAttributesAndChildren(element);
-                var methodCalls = prepareMocks(element);
+                let methodCalls = prepareMocks(element);
 
                 element.connectedCallback();
 
-                var methodsAreCalled = (methodCalls['updateElements'] === color) &&
+                let methodsAreCalled = (methodCalls['updateElements'] === color) &&
                                         (methodCalls['disableElements'] === false) &&
                                         (methodCalls['hideElements'] === false);
                 console.log('methods are called: ' + methodsAreCalled);
 
-                var containerIsCreated = element.childNodes.length === 1;
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__colorPicker.dispatchEvent(event);
+
+                let changedMethodIsCalled = methodCalls['__colorChanged'] === true;
+
+                let containerIsCreated = element.childNodes.length === 1;
                 console.log('container is created: ' + containerIsCreated);
 
-                var container = element.firstChild;
+                let container = element.firstChild;
 
-                var label = container.firstChild;
-                var labelIsCreated = label.constructor.name === 'HTMLLabelElement';
-                var labelIsSet = label.innerText === 'labelText';
+                let label = container.firstChild;
+                let labelIsCreated = label.constructor.name === 'HTMLLabelElement';
+                let labelIsSet = label.innerText === 'labelText';
                 console.log('label is created and set: ' + (labelIsCreated && labelIsSet));
 
-                var colorPicker = container.lastChild;
-                var colorPickerIsCreated = colorPicker.type === 'color';  
+                let colorPicker = container.lastChild;
+                let colorPickerIsCreated = colorPicker.type === 'color';  
                 console.log('color picker is created: ' + (colorPickerIsCreated));
 
                 return containerIsCreated && 
                     labelIsCreated &&
                     labelIsSet &&
                     colorPickerIsCreated &&
-                    methodsAreCalled;
+                    methodsAreCalled &&
+                    changedMethodIsCalled;
 
 
                 function removeExistingAttributesAndChildren(element){
@@ -99,7 +106,7 @@ describe('TreezColor', ()=>{
                 }
 
                 function prepareMocks(element){
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.value = color;
                     element.label = 'labelText';
                     element.updateElements = (value) =>{
@@ -113,6 +120,10 @@ describe('TreezColor', ()=>{
                     element.hideElements = (hidden) =>{
                         methodCalls['hideElements'] = hidden;
                     };
+
+                    element.__colorChanged = ()=>{
+                      methodCalls['__colorChanged'] = true;
+                    };
                     return methodCalls;
                 }  
 
@@ -123,100 +134,157 @@ describe('TreezColor', ()=>{
         });       
        
         it('updateElements', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var colorPicker = element.__colorPicker;
+                let colorPicker = element.__colorPicker;
 
                 console.log('initial color value: ' + colorPicker.value);
-                var valueIsBlackBefore = colorPicker.value === window.Color.black.hexString;
+                let valueIsBlackBefore = colorPicker.value === window.Color.black.hexString;
                 console.log('value is black before: ' + valueIsBlackBefore);
 
                 console.log('initial title: ' + colorPicker.title);
-                var titleIsBlackBefore = colorPicker.title === "black";
+                let titleIsBlackBefore = colorPicker.title === "black";
                 console.log('title is black before: ' + titleIsBlackBefore);
                 
-                var color = window.Color.blue;
+                let color = window.Color.blue;
                 element.updateElements(color);
 
-                var valueIsDefinedAfter = colorPicker.value === color.hexString;
+                let valueIsDefinedAfter = colorPicker.value === color.hexString;
                 console.log('value is defined after: ' + valueIsDefinedAfter);
 
-                var titleIsDefinedAfter = colorPicker.title === color.name;
+                let titleIsDefinedAfter = colorPicker.title === color.name;
                 console.log('title is defined after: ' + titleIsDefinedAfter);
 
                 return valueIsBlackBefore && titleIsBlackBefore &&
                         valueIsDefinedAfter && titleIsDefinedAfter;
             },{id});
             expect(success).toBe(true);
-        });  
+        });
 
-        it('disableElements', async ()=>{
-           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var isNotDisabledBefore = element.__colorPicker.disabled === false;
-                element.disableElements(true);
-                var isDisabledAfter = element.__colorPicker.disabled === true;
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                return isNotDisabledBefore &&
-                    isDisabledAfter;
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__colorPicker;
             },{id});
-            expect(success).toBe(true);                 
+            expect(success).toBe(true);
+        });
 
-        }); 
+        describe('disableElements',  ()=> {
 
-        it('hideElements', async ()=>{
-        
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                //TODO: mock hide method of TreezLabeledElement ... once
-                //jest directly supports the test of custom web elements
-                //For now it does not seem to mock stuff in browser
-                
-                var isNotHiddenBefore = element.__container.style.display === '';
-                element.hideElements(true);
-                var isHiddenAfter = element.__container.style.display === 'none';
-                return isNotHiddenBefore &&
-                    isHiddenAfter;
-            },{id});
-            expect(success).toBe(true);             
+            it('common usage', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-        }); 
-        
-        it('convertFromStringValue', async ()=>{
-           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+                    let isNotDisabledBefore = element.__colorPicker.disabled === false;
+                    element.disableElements(true);
+                    let isDisabledAfter = element.__colorPicker.disabled === true;
 
-                var defaultValue = element.convertFromStringValue(null);
-                console.log('default value: ' + defaultValue);
+                    return isNotDisabledBefore &&
+                        isDisabledAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
 
-                var blueValue = element.convertFromStringValue('#0000ff'); 
-                console.log('blue value: ' + blueValue);
+        describe('hideElements',  ()=> {
 
-                var customValue = element.convertFromStringValue('#112233');  
-                console.log('custom value: ' + customValue);             
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                return  (defaultValue = window.Color.black) &&
-                        (blueValue === window.Color.blue) &&
-                        (customValue.hexString === '#112233' && customValue.name === 'custom'); 
+            it('common usage', async () => {
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-            },{id});
-            expect(success).toBe(true);                       
+                    //TODO: mock hide method of TreezLabeledElement ... once
+                    //jest directly supports the test of custom web elements
+                    //For now it does not seem to mock stuff in browser
 
-        }); 
+                    let isNotHiddenBefore = element.__container.style.display === '';
+                    element.hideElements(true);
+                    let isHiddenAfter = element.__container.style.display === 'none';
+                    return isNotHiddenBefore &&
+                        isHiddenAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
+
+        describe('convertFromStringValue',  ()=>{
+
+            it('predefined color', async ()=>{
+
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let defaultValue = element.convertFromStringValue(null);
+                    console.log('default value: ' + defaultValue);
+
+                    let blueValue = element.convertFromStringValue('#0000ff');
+                    console.log('blue value: ' + blueValue);
+
+                    return  (defaultValue = window.Color.black) &&
+                        (blueValue === window.Color.blue);
+
+                },{id});
+                expect(success).toBe(true);
+
+            });
+
+            it('custom color', async ()=>{
+
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let customValue = element.convertFromStringValue('#112233');
+                    console.log('custom value: ' + customValue);
+
+                    return  (customValue.hexString === '#112233' && customValue.name === 'custom');
+
+                },{id});
+                expect(success).toBe(true);
+
+            });
+        });
          
         it('convertToStringValue', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var colorMock = {hexString: '#112233'}
+                let colorMock = {hexString: '#112233'}
 
-                var colorString = element.convertToStringValue(colorMock); 
+                let colorString = element.convertToStringValue(colorMock); 
 
                 return (colorString === '#112233') 
 
@@ -225,11 +293,11 @@ describe('TreezColor', ()=>{
 
         });          
         
-        describe('set value', async () =>{
+        describe('set value',  () =>{
 
             it('set value with Color instance', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                          
                     element.value = window.Color.blue; 
     
@@ -240,8 +308,8 @@ describe('TreezColor', ()=>{
             });
 
             it('set value with color string', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                          
                     element.value = 'blue'; 
     
@@ -261,19 +329,19 @@ describe('TreezColor', ()=>{
        
         it('__colorChanged', async ()=>{
            
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
                     console.log('initial element value: ' + element.value);
-                    var valueisBlackBefore = element.value === window.Color.black;                    
+                    let valueisBlackBefore = element.value === window.Color.black;                    
 
                     element.__colorPicker.value = window.Color.blue.hexString;
 
-                    var valueIsBlackBeforeUpdate = element.value === window.Color.black;
+                    let valueIsBlackBeforeUpdate = element.value === window.Color.black;
 
                     element.__colorChanged();
 
-                    var valueIsSetAfterUpdate = element.value === window.Color.blue;
+                    let valueIsSetAfterUpdate = element.value === window.Color.blue;
 
                     return valueisBlackBefore &&
                     valueIsBlackBeforeUpdate &&
@@ -285,16 +353,38 @@ describe('TreezColor', ()=>{
 
         describe('__getHexStringFromStringColor', ()=>{
 
-            it('hex string', () =>{
-                expect(TreezColor.__getHexStringFromStringColor('#112233')).toBe('#112233');               
+            it('hex string', async () =>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let hexString = element.constructor.__getHexStringFromStringColor('#1100ff');
+                    return hexString === '#1100ff';
+                },{id});
+                expect(success).toBe(true);
+
             });
 
-            it('named color string', () =>{
-                expect(TreezColor.__getHexStringFromStringColor('blue')).toBe('#0000ff');
+            it('named color string', async() =>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let hexString = element.constructor.__getHexStringFromStringColor('blue');
+                    return hexString === '#0000ff';
+                },{id});
+                expect(success).toBe(true);
             });
 
-            it('unknown color name', () =>{  
-                expect(()=>{TreezColor.__getHexStringFromStringColor('lightblue')}).toThrowError();
+            it('unknown color name', async () =>{
+
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.constructor.__getHexStringFromStringColor('lightblue');
+                        return false;
+                    } catch(error){
+                        return true;
+                    }
+
+                },{id});
+                expect(success).toBe(true);
             }); 
         
         });
@@ -306,7 +396,9 @@ describe('TreezColor', ()=>{
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

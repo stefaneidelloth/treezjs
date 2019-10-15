@@ -11,7 +11,7 @@ export default class TreezErrorBarStyle extends TreezEnumImageComboBox {
         this.enum = ErrorBarStyle;
     }
 
-    get folderName(){
+    get imageFolderPath(){
 		return 'errorBarStyle';
 	}
                          

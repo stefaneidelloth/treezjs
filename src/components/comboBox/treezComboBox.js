@@ -128,25 +128,16 @@ export default class TreezComboBox extends LabeledTreezElement {
 		}
 		return optionsString;
 	}
-
-	hasOption(option){
-		return this.options.indexOf(option) > -1;
-	}
     
   	get value(){
   		return super.value;
-  	} 
-
-  	set value(value) {
-	  var stringValue = this.convertToStringValue(value);
-	  if(stringValue === null){
-		  this.removeAttribute('value');
-	  } else {
-	  	this.setAttribute('value', stringValue);	  	
-	  }
-	}	
+  	}
 
   	set value(newValue) {
+  		if(newValue === undefined){
+			throw new Error('Value must not be undefined');
+  		}
+  		
   		let stringValue = this.convertToStringValue(newValue);
 
   		if(stringValue === null){

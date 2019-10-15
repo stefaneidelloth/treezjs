@@ -11,7 +11,7 @@ export default class TreezColorMap extends TreezEnumImageComboBox {
         this.enum = ColorMap;
     }
 
-    get folderName(){
+    get imageFolderPath(){
 		return 'colorMap';
 	}
                          

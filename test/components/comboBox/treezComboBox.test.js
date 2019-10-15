@@ -51,7 +51,29 @@ describe('TreezComboBox', ()=>{
         
         it('observedAttributes', ()=>{                        
             expect(TreezComboBox.observedAttributes).toEqual(['mockedObservedAttribute','options']);
-        }); 
+        });
+
+        it('attributeChangedCallback', async ()=>{
+
+            let success = await page.evaluate(({id})=>{
+
+                let element = document.getElementById(id);
+
+                let methodCalls = {};
+
+                element.__recreateOptionTags = ()=>{
+                    methodCalls['__recreateOptionTags'] = true;
+                    console.log('__recreateOptionTags has been called;')
+                }
+
+                element.attributeChangedCallback('options','oldValueMock', 'newValueMock');
+
+                return methodCalls['__recreateOptionTags'] === true;
+
+            },{id});
+            expect(success).toBe(true);
+
+        });
        
         it('connectedCallback', async ()=>{           
             let success = await page.evaluate(({id})=>{
@@ -68,6 +90,12 @@ describe('TreezComboBox', ()=>{
                                         (methodCalls['disableElements'] === false) &&
                                         (methodCalls['hideElements'] === false);
                 console.log('methods are called:' + methodsAreCalled);
+
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__comboBox.dispatchEvent(event);
+
+                let changedMethodIsCalled = methodCalls['__comboBoxChanged'] === true;
 
                 let containerIsCreated = element.childNodes.length === 1;
                 console.log('container is created:' + containerIsCreated);
@@ -109,6 +137,10 @@ describe('TreezComboBox', ()=>{
                     element.hideElements = (hidden) =>{
                         methodCalls['hideElements'] = hidden;
                     };
+
+                    element.__comboBoxChanged = () => {
+                      methodCalls['__comboBoxChanged'] = true;
+                    };
                     return methodCalls;
                 }   
 
@@ -116,23 +148,23 @@ describe('TreezComboBox', ()=>{
             expect(success).toBe(true);                   
 
         });
-       
-        describe('updateElements', async ()=>{     
-            
+
+        describe('updateElements',  ()=>{
+
             it('without options', async () => {
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
-    
+
                     console.log('combo box value before: ' + element.__comboBox.value);
-    
+
                     let valueIsEmptyStringBefore = element.__comboBox.value === '';
                     element.updateElements('foo');
-    
+
                     console.log('combo box value after: ' + element.__comboBox.value);
                     let valueIsStillNotDefinedAfter = element.__comboBox.value === '';
-    
+
                     return valueIsEmptyStringBefore &&
-                    valueIsStillNotDefinedAfter;
+                        valueIsStillNotDefinedAfter;
                 },{id});
                 expect(success).toBe(true);
             });
@@ -140,80 +172,125 @@ describe('TreezComboBox', ()=>{
             it('with options', async () => {
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
-    
+
                     console.log('combo box value before: ' + element.__comboBox.value);
-    
+
                     let valueIsEmptyStringBefore = element.__comboBox.value === '';
                     element.options = ['foo','baa'];
                     element.updateElements('foo');
-    
+
                     console.log('combo box value after: ' + element.__comboBox.value);
                     let valueIsDefinedAfter = element.__comboBox.value === 'foo';
-    
+
                     return valueIsEmptyStringBefore &&
-                    valueIsDefinedAfter;
+                        valueIsDefinedAfter;
                 },{id});
                 expect(success).toBe(true);
             });
-            
-        });  
 
-        it('disableElements', async ()=>{
-           
+        });
+
+        it('updateContentWidth', async ()=>{
             let success = await page.evaluate(({id})=>{
                 let element = document.getElementById(id);
-
-                let isNotDisabledBefore = element.__comboBox.disabled === false;
-                element.disableElements(true);
-                let isDisabledAfter = element.__comboBox.disabled === true;
-
-                return isNotDisabledBefore &&
-                    isDisabledAfter;
-            },{id});
-            expect(success).toBe(true);                 
-
-        }); 
-
-        it('hideElements', async ()=>{
-        
-            let success = await page.evaluate(({id})=>{
-                let element = document.getElementById(id);
-
-                //TODO: mock hide method of TreezLabeledElement ... once
-                //jest directly supports the test of custom web elements
-                //For now it does not seem to mock stuff in browser
-                
-                let isNotHiddenBefore = element.__container.style.display === '';
-                element.hideElements(true);
-                let isHiddenAfter = element.__container.style.display === 'none';
-                return isNotHiddenBefore &&
-                    isHiddenAfter;
-            },{id});
-            expect(success).toBe(true);             
-
-        }); 
-        
-        it('attributeChangedCallback', async ()=>{
-           
-            let success = await page.evaluate(({id})=>{
-
-                let element = document.getElementById(id);              
 
                 let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                element.__recreateOptionTags = ()=>{
-                    methodCalls['__recreateOptionTags'] = true;
-                    console.log('__recreateOptionTags has been called;')
-                }               
-
-                element.attributeChangedCallback('options','oldValueMock', 'newValueMock');             
-              
-                return methodCalls['__recreateOptionTags'] === true;               
-
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__comboBox;
             },{id});
-            expect(success).toBe(true);                      
+            expect(success).toBe(true);
+        });
 
-        }); 
+        describe('disableElements',  ()=> {
+
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let isNotDisabledBefore = element.__comboBox.disabled === false;
+                    element.disableElements(true);
+                    let isDisabledAfter = element.__comboBox.disabled === true;
+
+                    return isNotDisabledBefore &&
+                        isDisabledAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                }, {id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+
+                    //TODO: mock hide method of TreezLabeledElement ... once
+                    //jest directly supports the test of custom web elements
+                    //For now it does not seem to mock stuff in browser
+
+                    let isNotHiddenBefore = element.__container.style.display === '';
+                    element.hideElements(true);
+                    let isHiddenAfter = element.__container.style.display === 'none';
+                    return isNotHiddenBefore &&
+                        isHiddenAfter;
+                }, {id});
+                expect(success).toBe(true);
+            });
+
+        });
+
+        describe('hasOption',  ()=>{
+
+            it('existing option', async () => {
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    element.options = ['A','B','C'];
+                    let hasOption = element.hasOption('A');
+                    return hasOption;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('missing option', async () => {
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    element.options = ['A','B','C'];
+                    return !element.hasOption('D');
+                },{id});
+                expect(success).toBe(true);
+            });
+
+        });
         
         describe('set value', ()=>{
 
@@ -227,10 +304,21 @@ describe('TreezComboBox', ()=>{
                         return false;
                     } catch(error){
                         return true;
-                    }                   
-      
-                  },{id});
-                  expect(success).toBe(true);
+                    }
+
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('null removes attribute', async () =>{
+                let success = await page.evaluate(({id})=>{
+
+                    let element = document.getElementById(id);
+                    element.value = null;
+                    return element.getAttribute('value') === null;
+
+                },{id});
+                expect(success).toBe(true);
             });
 
             it('without options', async () =>{
@@ -407,7 +495,9 @@ describe('TreezComboBox', ()=>{
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

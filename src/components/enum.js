@@ -24,11 +24,22 @@ export default class Enum {
 		}
 		throw new Error('Unknown value "' + name + '"');
 	}
+
+	static __determineImportLocation(){
+		var stack = new Error().stack;
+		var lastLine = stack.split('\n').pop();
+		var startIndex = lastLine.indexOf('/src/');
+		if(startIndex === -1){
+			return 'Could not find location of Enum definition. (Only works inside /src/ folder).';
+		}
+		var endIndex = lastLine.indexOf('.js:') + 3;
+		return lastLine.substring(startIndex, endIndex);
+	}
 		
 	constructor(name){
 		this.name = name;
 		if(!this.constructor.__importLocation){
-			this.constructor.__importLocation = this.determineImportLocation();
+			this.constructor.__importLocation = Enum.__determineImportLocation();
 		}						
 	}
 	
@@ -36,15 +47,6 @@ export default class Enum {
 		return this.name;
 	}
 
-	determineImportLocation(){
-		var stack = new Error().stack;
-		var lastLine = stack.split('\n').pop();
-		var startIndex = lastLine.indexOf('/src/');
-		if(startIndex=-1){
-			return 'Could not find location of Enum definition. (Only works inside /src/ folder).';
-		}
-		var endIndex = lastLine.indexOf('.js:') + 3;
-		return lastLine.substring(startIndex, endIndex);
-	}
+
 
 }

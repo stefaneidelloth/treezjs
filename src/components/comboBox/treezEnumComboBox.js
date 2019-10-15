@@ -28,13 +28,17 @@ export default class TreezEnumComboBox extends TreezComboBox {
 		} else {
 			return value;
 		}
-	} 	
-
-	set enum(enumClass) {
-		this.__enumClass = enumClass;		
-		var optionsString = this.__arrayToString(enumClass.names);
-	  	this.setAttribute('options', optionsString);	
 	}
+
+    set enum(enumClass) {
+        this.__enumClass = enumClass;
+        if(enumClass){
+            var optionsString = this.__arrayToString(enumClass.names);
+            this.setAttribute('options', optionsString);
+        } else {
+            this.setAttribute('options','[]');
+        }
+    }
 
 	get enum(){
     	return this.__enumClass;

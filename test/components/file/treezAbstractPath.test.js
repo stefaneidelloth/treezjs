@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import LabeledTreezElement from '../../../src/components/labeledTreezElement.js';
 jest.mock('../../../src/components/labeledTreezElement.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -23,14 +23,13 @@ jest.setTimeout(10000);
 
 describe('TreezAbstractPath', ()=>{   
     
-    var id = 'treez-abstract-path';
+    let id = 'treez-abstract-path';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
         await page.coverage.startJSCoverage();
-        
     }); 
 
     beforeEach(async () => {
@@ -41,7 +40,7 @@ describe('TreezAbstractPath', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -52,15 +51,15 @@ describe('TreezAbstractPath', ()=>{
         describe('updateElements', ()=>{
 
             it('undefined results in empty string', async ()=>{           
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var textField = document.createElement('input');
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let textField = document.createElement('input');
                     textField.value = 'oldValue';
                     element.__textField = textField;
     
-                    var isNotSetBefore = element.__textField.value === 'oldValue';
+                    let isNotSetBefore = element.__textField.value === 'oldValue';
                     element.updateElements(undefined);
-                    var isEmptyStringAfter = element.__textField.value === '';
+                    let isEmptyStringAfter = element.__textField.value === '';
     
                     return isNotSetBefore &&
                         isEmptyStringAfter;
@@ -69,21 +68,21 @@ describe('TreezAbstractPath', ()=>{
             });  
 
             it('normal value', async ()=>{           
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-                    var textField = document.createElement('input');
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let textField = document.createElement('input');
                     textField.value = 'oldValue';
                     element.__textField = textField;
     
-                    var isNotSetBefore = element.__textField.value === 'oldValue';
-                    var titleIsNotSetBefore = element.title === '';
+                    let isNotSetBefore = element.__textField.value === 'oldValue';
+                    let titleIsNotSetBefore = element.title === '';
 
                     element.updateElements('newValue');
                     
-                    var isSetAfter = element.__textField.value === 'newValue';
+                    let isSetAfter = element.__textField.value === 'newValue';
 
-                    console.log('full path: ' + element.fullPath)
-                    var titleIsSetAter = textField.title === '' + element.fullPath;
+                    console.log('full path: ' + element.fullPath);
+                    let titleIsSetAter = textField.title === '' + element.fullPath;
     
                     return isNotSetBefore &&
                         titleIsNotSetBefore &&
@@ -93,79 +92,123 @@ describe('TreezAbstractPath', ()=>{
                 expect(success).toBe(true);
             });  
 
-        });       
+        });
 
-        it('disableElements', async ()=>{
-           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
-                
-                var textField = document.createElement('input');               
-                element.__textField = textField;
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var button = document.createElement('button');
-                element.__browseButton = button;
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                var isNotDisabledBefore = element.__textField.disabled === false;
-                console.log('is not disabled before: ' + isNotDisabledBefore);
-
-                var browseButtonIsVisiableBefore = element.__browseButton.style.display === '';
-                console.log('browse button is visible before: ' + browseButtonIsVisiableBefore);
-
-                element.disableElements(true);
-
-                var isDisabledAfter = element.__textField.disabled === true;
-                console.log('is disabled after: ' + isDisabledAfter);
-
-                var browseButtonIsNotVisiableAfter = element.__browseButton.style.display === 'none';
-                console.log('browse button is not visible: ' + browseButtonIsNotVisiableAfter);
-
-                return isNotDisabledBefore && browseButtonIsVisiableBefore &&
-                    isDisabledAfter && browseButtonIsNotVisiableAfter;
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__container;
             },{id});
-            expect(success).toBe(true);                 
+            expect(success).toBe(true);
+        });
 
-        }); 
+        describe('disableElements',  ()=> {
 
-        it('hideElements', async ()=>{
-        
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                }, {id});
+                expect(success).toBe(true);
+            });
 
-                var label = document.createElement('label');               
-                element.__label = label;
+            it('common usage', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
 
-                var container = document.createElement('div');               
-                element.__container = container;              
-                
-                var labelIsNotHiddenBefore = element.__label.style.display === '';
-                var containerIsNotHiddenBefore = element.__container.style.display === '';
-                
-                element.hideElements(true);
-                var labelIsHiddenAfter = element.__label.style.display === 'none';
-                var containerIsHiddenAfter = element.__container.style.display === 'none';
-                return labelIsNotHiddenBefore && containerIsNotHiddenBefore &&
-                    labelIsHiddenAfter && containerIsHiddenAfter;
-            },{id});
-            expect(success).toBe(true);             
+                    let textField = document.createElement('input');
+                    element.__textField = textField;
 
-        }); 
+                    let button = document.createElement('button');
+                    element.__browseButton = button;
+
+                    let isNotDisabledBefore = element.__textField.disabled === false;
+                    console.log('is not disabled before: ' + isNotDisabledBefore);
+
+                    let browseButtonIsVisiableBefore = element.__browseButton.style.display === '';
+                    console.log('browse button is visible before: ' + browseButtonIsVisiableBefore);
+
+                    element.disableElements(true);
+
+                    let isDisabledAfter = element.__textField.disabled === true;
+                    console.log('is disabled after: ' + isDisabledAfter);
+
+                    let browseButtonIsNotVisiableAfter = element.__browseButton.style.display === 'none';
+                    console.log('browse button is not visible: ' + browseButtonIsNotVisiableAfter);
+
+                    return isNotDisabledBefore && browseButtonIsVisiableBefore &&
+                        isDisabledAfter && browseButtonIsNotVisiableAfter;
+                }, {id});
+                expect(success).toBe(true);
+            });
+
+        });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let label = document.createElement('label');
+                    element.__label = label;
+
+                    let container = document.createElement('div');
+                    element.__container = container;
+
+                    let labelIsNotHiddenBefore = element.__label.style.display === '';
+                    let containerIsNotHiddenBefore = element.__container.style.display === '';
+
+                    element.hideElements(true);
+                    let labelIsHiddenAfter = element.__label.style.display === 'none';
+                    let containerIsHiddenAfter = element.__container.style.display === 'none';
+                    return labelIsNotHiddenBefore && containerIsNotHiddenBefore &&
+                        labelIsHiddenAfter && containerIsHiddenAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
         
         it('textFieldChanged', async ()=>{
            
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var textField = document.createElement('input');  
+                let textField = document.createElement('input');  
                 textField.value = 'newValue';             
                 element.__textField = textField;
 
                 console.log('element value before: ' + element.value);
-                var valueIsNotSetBefore = element.value === null;
+                let valueIsNotSetBefore = element.value === null;
 
                 element.textFieldChanged();
 
-                var valueIsSetAfter = element.value === 'newValue';
+                let valueIsSetAfter = element.value === 'newValue';
                
 
                 return valueIsNotSetBefore && valueIsSetAfter;
@@ -177,10 +220,10 @@ describe('TreezAbstractPath', ()=>{
 
         it('execute', async ()=>{   
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var terminalMock = { 
+                let terminalMock = { 
                     command: undefined,
                     finishedHanlder: undefined,
                     errorHandler: undefined
@@ -199,13 +242,26 @@ describe('TreezAbstractPath', ()=>{
 
                 element.execute();
 
-                var terminalIsCalled = terminalMock.command === 'commandMock';
+                let terminalIsCalled = terminalMock.command === 'commandMock';
                 console.log('terminal is called: ' + terminalIsCalled);
 
-                var errorHandlerIsDefined = terminalMock.errorHandler !== undefined;
+                let executionErrorMock = 'executionErrorMock';
+
+                let methodCalls = {};
+                let alert = window.alert;
+                window.alert = (value)=>{
+                    methodCalls['alert'] = value;
+                };
+
+                terminalMock.errorHandler(executionErrorMock);
+                window.alert = alert;
+
+                let alertIsCalled = methodCalls['alert'] === executionErrorMock;
+
+                let errorHandlerIsDefined = terminalMock.errorHandler !== undefined;
                 console.log('error handler is defined: ' + errorHandlerIsDefined);
 
-                return terminalIsCalled && errorHandlerIsDefined;
+                return terminalIsCalled && errorHandlerIsDefined && alertIsCalled;
 
             },{id});
             expect(success).toBe(true);
@@ -216,11 +272,11 @@ describe('TreezAbstractPath', ()=>{
 
             it('without path map provider', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var path = 'c:/foo/baa';
-                    var pathWithInjections = element.injectPathMap(path);
+                    let path = 'c:/foo/baa';
+                    let pathWithInjections = element.injectPathMap(path);
     
                     return pathWithInjections === path;
     
@@ -233,30 +289,49 @@ describe('TreezAbstractPath', ()=>{
 
                 it('path includes sub path from map', async ()=>{
 
-                    var success = await page.evaluate(({id})=>{
-                        var element = document.getElementById(id);
-                        var pathMap = [{name: 'projectDir', fullPath: 'c:/foo'}];
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
+                        element.label = 'myPath';
+                        let pathMap = [{name: 'projectDir', fullPath: 'c:/foo'},{name: 'myPath', fullPath: 'd:/baa'}];
                         element.__pathMapProvider = {pathMap: pathMap};
 
-                        var path = 'c:/foo/baa';
-                        var pathWithInjections = element.injectPathMap(path);
+                        let path = 'c:/foo/baa';
+                        let pathWithInjections = element.injectPathMap(path);
         
                         return pathWithInjections === '{$projectDir$}/baa';
         
                     },{id});
                     expect(success).toBe(true);
         
-                }); 
+                });
+
+                it('path includes several sub paths from map', async ()=>{
+
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
+
+                        let pathMap = [{name: 'projectDir', fullPath: 'c:/foo'},{name: 'myPath', fullPath: 'c:/foo/baa'}];
+                        element.__pathMapProvider = {pathMap: pathMap};
+
+                        let path = 'c:/foo/baa/qux';
+                        let pathWithInjections = element.injectPathMap(path);
+
+                        return pathWithInjections === '{$myPath$}/qux';
+
+                    },{id});
+                    expect(success).toBe(true);
+
+                });
 
                 it('path does not include sub path from map', async ()=>{
 
-                    var success = await page.evaluate(({id})=>{
-                        var element = document.getElementById(id);
-                        var pathMap = [{name: 'projectDir', fullPath: 'c:/qux'}];
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
+                        let pathMap = [{name: 'projectDir', fullPath: 'c:/qux'}];
                         element.__pathMapProvider = {pathMap: pathMap};
 
-                        var path = 'c:/foo/baa';
-                        var pathWithInjections = element.injectPathMap(path);
+                        let path = 'c:/foo/baa';
+                        let pathWithInjections = element.injectPathMap(path);
         
                         return pathWithInjections === path;
         
@@ -269,50 +344,68 @@ describe('TreezAbstractPath', ()=>{
 
         }); 
 
-        describe('replacePathVariables', async ()=>{
+        describe('replacePathVariables', ()=>{
 
-            it('falsy path', ()=>{
-                var pathWithInjectedVariables = TreezAbstractPath.replacePathVariables('', 'pathMapMock');    
-                expect(pathWithInjectedVariables).toBe('');                 
+            it('falsy path', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let treezAbstractPath = element.constructor;
+                    let pathWithInjectedVariables = treezAbstractPath.replacePathVariables('', 'pathMapMock');
+                    return pathWithInjectedVariables === '';
+                },{id});
+                expect(success).toBe(true);
             }); 
 
-            it('normal usage', ()=>{
-                var pathMap = [
-                    { name: 'workingDir', 
-                      value: 'c:/foo'
-                    },
-                    { name: 'subDir', 
-                      value: '{$workingDir$}/baa'
-                    }
-                ];
-                
-                var path = '{$subDir$}/qux.exe';
-                var pathWithInjectedVariables = TreezAbstractPath.replacePathVariables(path, pathMap);  
+            it('normal usage', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let treezAbstractPath = element.constructor;
 
-                expect(pathWithInjectedVariables).toBe('c:/foo/baa/qux.exe');                  
+                    let pathMap = [
+                        { name: 'workingDir',
+                            value: 'c:/foo'
+                        },
+                        { name: 'subDir',
+                            value: '{$workingDir$}/baa'
+                        }
+                    ];
+
+                    let path = '{$subDir$}/qux.exe';
+                    let pathWithInjectedVariables = treezAbstractPath.replacePathVariables(path, pathMap);
+
+                    return pathWithInjectedVariables === 'c:/foo/baa/qux.exe';
+                },{id});
+                expect(success).toBe(true);
+
             }); 
 
-            it('missing variable', ()=>{
-                var pathMap = [
-                    { name: 'subDir', 
-                      value: '{$workingDir$}/baa'
+            it('missing variable', async  ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let treezAbstractPath = element.constructor;
+
+                    let pathMap = [
+                        { name: 'subDir',
+                            value: '{$workingDir$}/baa'
+                        }
+                    ];
+
+                    let path = '{$subDir$}/qux.exe';
+
+                    let methodCalls = {};
+                    let warnMethod = console.warn;
+                    console.warn = (message)=>{
+                        methodCalls['warn'] = message;
                     }
-                ];
 
-                var path = '{$subDir$}/qux.exe';
+                    let pathWithInjectedVariables = treezAbstractPath.replacePathVariables(path, pathMap);
 
-                var methodCalls = {};
-                var warnMethod = console.warn;
-                console.warn = (message)=>{
-                    methodCalls['warn'] = message;
-                }
+                    console.warn = warnMethod;
 
-                var pathWithInjectedVariables = TreezAbstractPath.replacePathVariables(path, pathMap); 
-
-                console.warn = warnMethod;
-                
-                expect(pathWithInjectedVariables).toBe('{$workingDir$}/baa/qux.exe'); 
-                expect(methodCalls['warn']).toBeDefined();                
+                    return (pathWithInjectedVariables === '{$workingDir$}/baa/qux.exe') &&
+                        (methodCalls['warn'] !== undefined);
+                },{id});
+                expect(success).toBe(true);
                 
             }); 
 
@@ -322,8 +415,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is falsy', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = null;
                     console.log('full path: ' + element.fullPath);
 
@@ -336,8 +429,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is directory', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa';
                     console.log('full path: ' + element.fullPath);
 
@@ -350,8 +443,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is directory with ending slash', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/';
                     console.log('full path: ' + element.fullPath);
 
@@ -364,8 +457,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is file path', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/qux.txt';
                     console.log('full path: ' + element.fullPath);
 
@@ -382,8 +475,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is falsy', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = null;
                     console.log('full path: ' + element.fullPath);
 
@@ -396,8 +489,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is directory', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa';
                     console.log('full path: ' + element.fullPath);
 
@@ -410,8 +503,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is directory with ending slash', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/';
                     console.log('full path: ' + element.fullPath);
 
@@ -424,8 +517,8 @@ describe('TreezAbstractPath', ()=>{
 
             it('full path is file path', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/qux.txt';
                     console.log('full path: ' + element.fullPath);
 
@@ -436,32 +529,65 @@ describe('TreezAbstractPath', ()=>{
     
             });            
 
-        });        
+        });
+
+        describe('get isFile', ()=>{
+
+            it('without value', async ()=>{
+
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    element.value = null;
+                    return element.isFile === false;
+                },{id});
+                expect(success).toBe(true);
+
+            });
+
+            it('file', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    element.value = 'c:/foo.txt';
+                    return element.isFile === true;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('directory', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    element.value = 'c:/foo';
+                    return element.isFile === false;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+        });
 
         it('set pathMapProvider', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var textField = document.createElement('input');
+                let textField = document.createElement('input');
                 element.__textField = textField;
 
-                var path = '{$workingDir$}/foo';
+                let path = '{$workingDir$}/foo';
                 element.value = path;
                 console.log('full path: ' + element.fullPath);
 
-                var providerIsUndefinedBefore = element.__pathMapProvider === undefined;
-                var titleIsPathBefore = element.__textField.title === path;
+                let providerIsUndefinedBefore = element.__pathMapProvider === undefined;
+                let titleIsPathBefore = element.__textField.title === path;
 
-                var pathMapProviderMock = {
+                let pathMapProviderMock = {
                     pathMap: [{name:'workingDir', value: 'c:/baa'}]
                 }
                 element.pathMapProvider = pathMapProviderMock;
 
                 console.log('full path with provider: ' + element.fullPath);
 
-                var providerIsSetAfter = element.__pathMapProvider === pathMapProviderMock;
-                var titleIsUpdated = element.__textField.title === 'c:/baa/foo';
+                let providerIsSetAfter = element.__pathMapProvider === pathMapProviderMock;
+                let titleIsUpdated = element.__textField.title === 'c:/baa/foo';
 
                 return providerIsUndefinedBefore && titleIsPathBefore &&
                     providerIsSetAfter && titleIsUpdated;
@@ -471,12 +597,12 @@ describe('TreezAbstractPath', ()=>{
 
         }); 
 
-        describe('get fullPath', async ()=>{
+        describe('get fullPath', ()=>{
         
             it('without path map provider', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = 'c:/foo';
     
                     return element.fullPath === element.value;
@@ -488,11 +614,11 @@ describe('TreezAbstractPath', ()=>{
 
             it('with path map provider', async ()=>{
 
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = '{$workingDir$}/baa';
 
-                    var pathMapProviderMock = {
+                    let pathMapProviderMock = {
                         pathMap: [{name: 'workingDir', value: 'c:/foo'}]
                     };
                     element.__pathMapProvider = pathMapProviderMock;
@@ -512,7 +638,9 @@ describe('TreezAbstractPath', ()=>{
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

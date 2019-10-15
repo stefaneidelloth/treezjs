@@ -36,22 +36,22 @@ export default class TreezElement extends HTMLElement {
 	//This method has to update the plain html element(s) of your custom html element.
 	//This method must not set the javascript property 'value'.
 	//(The javascript proeprty 'value' has to be considered when listening to element changes, not
-	//when updating the elements.) 
-    updateElements(newValue){
+	//when updating the elements.)
+	updateElements(newValue){
 		console.warn('updateElements is not yet implemented for ' + this.constructor.name);
 	}
 	
 	//Can be overriden by inheriting classes
 	//(This method is automatically called after the corresponding attribute has been changed
-	//and should not be manually called. Also see method attributeChangedCallback) 
-    updateWidth(width){		
+	//and should not be manually called. Also see method attributeChangedCallback)
+	updateWidth(width){
 		this.style.width = width;
     }	
 
 	//Should be overridden by inheriting classes
 	//(This method is automatically called after the corresponding attribute has been changed
 	//and should not be manually called. Also see method attributeChangedCallback) 
-    disableElements(booleanValue){
+	disableElements(booleanValue){
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}

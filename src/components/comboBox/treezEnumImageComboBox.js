@@ -38,8 +38,12 @@ export default class TreezEnumImageComboBox extends TreezImageComboBox {
 
 	set enum(enumClass) {
 		this.__enumClass = enumClass;
-		var optionsString = this.__arrayToString(enumClass.names);
-		this.setAttribute('options', optionsString);
+		if(enumClass){
+			var optionsString = this.__arrayToString(enumClass.names);
+			this.setAttribute('options', optionsString);
+		} else {
+			this.setAttribute('options','[]');
+		}
 	}
 
 	get enum(){

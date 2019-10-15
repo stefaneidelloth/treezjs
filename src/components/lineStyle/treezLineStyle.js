@@ -11,7 +11,7 @@ export default class TreezLineStyle extends TreezEnumImageComboBox {
         this.enum = LineStyle;
     }
 
-    get folderName(){
+    get imageFolderPath(){
 		return 'lineStyle';
 	}
                          

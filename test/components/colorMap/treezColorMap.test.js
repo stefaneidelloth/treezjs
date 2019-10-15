@@ -40,86 +40,35 @@ describe('TreezColorMap', ()=>{
 
             var success = await page.evaluate(({id})=>{ 
                 
-                var element = document.getElementById(id);                
-                removeExistingAttributesAndChildren(element);
-                console.log('options before:' + element.options);
-               
+                var element = document.getElementById(id);
 
-                element.beforeConnectedCallbackHook(); 
-                
-                console.log('options after:' + element.options);
-                var optionsAreSet = element.options === window.ColorMap.names.join(','); 
-                console.log('options are set: ' + optionsAreSet);
+                element.enum = undefined;
 
-                return optionsAreSet;
+                element.beforeConnectedCallbackHook();
 
-                function removeExistingAttributesAndChildren(element){
-                    element.options = undefined;                   
-                    while(element.firstChild){
-                        element.firstChild.remove();
-                    }   
-                }                
+                return element.enum === window.ColorMap;
 
             },{id});
 
             expect(success).toBe(true);                   
 
-        });       
-       
-       
-        
-        describe('get value', () =>{
+        });
 
-            it('default value', async () =>{
-                var success = await page.evaluate(async ({id})=>{
-                    var element = await document.getElementById(id);
-                         
-                    var value = element.value;
-                    console.log('default value: ' + value);
-    
-                    return value === window.ColorMap.blank;
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-            it('known color map name', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);  
-                    
-                    element.setAttribute('value','blue');
-                         
-                    var value = element.value  
-    
-                    return value === window.ColorMap.blue; 
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-            it('unknown color map name results in null value', async () =>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
-
-                    var method = window.ColorMap.forName;
-                    window.ColorMap.forName = () => {throw 'error'};
-                    
-                    var value = element.value;
-                    window.ColorMap.forName = method;
-
-                    return value === null;                                      
-    
-                },{id});
-                expect(success).toBe(true);
-            });
-
-        });        
+        it('imageFolderPath', async () =>{
+            var success = await page.evaluate(async ({id})=>{
+                var element = await document.getElementById(id);
+                return element.imageFolderPath === 'colorMap';
+            },{id});
+            expect(success).toBe(true);
+        });
         
     });  
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import LabeledTreezElement from '../../../src/components/labeledTreezElement.js';
 jest.mock('../../../src/components/labeledTreezElement.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -23,9 +23,9 @@ jest.setTimeout(10000);
 
 describe('TreezCheckBox', ()=>{   
     
-    var id = 'treez-check-box';
+    let id = 'treez-check-box';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -41,7 +41,7 @@ describe('TreezCheckBox', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -50,35 +50,42 @@ describe('TreezCheckBox', ()=>{
     describe('Public API', ()=>{  
        
         it('connectedCallback', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 removeExistingChildren(element);
-                var methodCalls = prepareMocks(element);
+                let methodCalls = prepareMocks(element);
 
                 element.connectedCallback();
 
-                var methodsAreCalled = (methodCalls['updateElements'] === true) &&
+                let methodsAreCalled = (methodCalls['updateElements'] === true) &&
                 (methodCalls['disableElements'] === false) &&
                 (methodCalls['hideElements'] === false);
                 console.log('methods are called:' + methodsAreCalled);
 
-                var containerIsCreated = element.childNodes.length === 1;
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__checkBox.dispatchEvent(event);
+
+                let changedMethodIsCalled = methodCalls['__checkBoxChanged'] === true;
+
+                let containerIsCreated = element.childNodes.length === 1;
                 console.log('container is created:' + containerIsCreated);
 
-                var container = element.firstChild;
-                var checkBox = container.firstChild;
-                var checkBoxIsCreated = checkBox.type === 'checkbox';
+                let container = element.firstChild;
+                let checkBox = container.firstChild;
+                let checkBoxIsCreated = checkBox.type === 'checkbox';
                 console.log('checkBox is created:' + checkBoxIsCreated);
 
-                var label = container.lastChild;
-                var labelIsSet = label.innerText === 'labelText';
+                let label = container.lastChild;
+                let labelIsSet = label.innerText === 'labelText';
                 console.log('label is set:' + labelIsSet);               
 
                 return containerIsCreated && 
                     checkBoxIsCreated &&
                     labelIsSet &&
-                    methodsAreCalled;
+                    methodsAreCalled &&
+                    changedMethodIsCalled;
 
                 function removeExistingChildren(element){
                     element.__checkBox = undefined;
@@ -88,7 +95,7 @@ describe('TreezCheckBox', ()=>{
                 }                        
                 
                 function prepareMocks(element){
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.value = true;
                     element.label = 'labelText';
                     element.updateElements = (value) =>{
@@ -102,6 +109,11 @@ describe('TreezCheckBox', ()=>{
                     element.hideElements = (hidden) =>{
                         methodCalls['hideElements'] = hidden;
                     };
+
+                    element.__checkBoxChanged = () =>{
+                        methodCalls['__checkBoxChanged'] = true;
+                    };
+
                     return methodCalls;
                 }   
 
@@ -111,66 +123,109 @@ describe('TreezCheckBox', ()=>{
         });
        
         it('updateElements', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var isNotCheckedBefore = element.__checkBox.checked === false;
+                let isNotCheckedBefore = element.__checkBox.checked === false;
                 element.updateElements(true);
-                var isCheckedAfter = element.__checkBox.checked === true;
+                let isCheckedAfter = element.__checkBox.checked === true;
 
                 return isNotCheckedBefore &&
                     isCheckedAfter;
             },{id});
             expect(success).toBe(true);
-        });  
+        });
 
-        it('disableElements', async ()=>{
-           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var isNotDisabledBefore = element.__checkBox.disabled === false;
-                element.disableElements(true);
-                var isDisabledAfter = element.__checkBox.disabled === true;
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                return isNotDisabledBefore &&
-                    isDisabledAfter;
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__checkBox;
             },{id});
-            expect(success).toBe(true);                 
+            expect(success).toBe(true);
+        });
 
-        }); 
+        describe('disableElements',  ()=> {
 
-        it('hideElements', async ()=>{
-        
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                //TODO: mock hide method of TreezLabeledElement ... once
-                //jest directly supports the test of custom web elements
-                //For now it does not seem to mock stuff in browser
-                
-                var isNotHiddenBefore = element.__container.style.display === '';
-                element.hideElements(true);
-                var isHiddenAfter = element.__container.style.display === 'none';
-                return isNotHiddenBefore &&
-                    isHiddenAfter;
-            },{id});
-            expect(success).toBe(true);             
+            it('common usage', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-        }); 
+                    let isNotDisabledBefore = element.__checkBox.disabled === false;
+                    element.disableElements(true);
+                    let isDisabledAfter = element.__checkBox.disabled === true;
+
+                    return isNotDisabledBefore &&
+                        isDisabledAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    //TODO: mock hide method of TreezLabeledElement ... once
+                    //jest directly supports the test of custom web elements
+                    //For now it does not seem to mock stuff in browser
+
+                    let isNotHiddenBefore = element.__container.style.display === '';
+                    element.hideElements(true);
+                    let isHiddenAfter = element.__container.style.display === 'none';
+                    return isNotHiddenBefore &&
+                        isHiddenAfter;
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
         
         it('convertFromStringValue', async ()=>{
            
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var falseValue = element.convertFromStringValue(null); //only null is interpreted as false
+                let falseValue = element.convertFromStringValue(null); //only null is interpreted as false
 
-                var trueValue1 = element.convertFromStringValue('false');
+                let trueValue1 = element.convertFromStringValue('false');
 
-                var trueValue2 = element.convertFromStringValue('');
+                let trueValue2 = element.convertFromStringValue('');
 
-                var trueValue3 = element.convertFromStringValue('true');
+                let trueValue3 = element.convertFromStringValue('true');
 
                 return (falseValue === false) &&
                         (trueValue1 === true) &&
@@ -184,14 +239,14 @@ describe('TreezCheckBox', ()=>{
         
         it('convertToStringValue', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var emptyString1 = element.convertToStringValue(true); 
+                let emptyString1 = element.convertToStringValue(true); 
 
-                var emptyString2 = element.convertToStringValue(1); 
+                let emptyString2 = element.convertToStringValue(1); 
 
-                var nullValue = element.convertToStringValue(false);                
+                let nullValue = element.convertToStringValue(false);                
 
                 return (emptyString1 === '') &&
                         (emptyString2 === '') &&
@@ -208,16 +263,16 @@ describe('TreezCheckBox', ()=>{
        
         it('__checkBoxChanged', async ()=>{
            
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var valueisFalseBefore = element.value === false;
+                    let valueisFalseBefore = element.value === false;
                     element.__checkBox.checked = true;
-                    var valueIsFalseBeforeUpdate = element.value === false;
+                    let valueIsFalseBeforeUpdate = element.value === false;
 
                     element.__checkBoxChanged();
 
-                    var valueIsTrueAfterUpdate = element.value === true;
+                    let valueIsTrueAfterUpdate = element.value === true;
 
                     return valueisFalseBefore &&
                             valueIsFalseBeforeUpdate &&
@@ -229,7 +284,9 @@ describe('TreezCheckBox', ()=>{
    
     afterAll(async () => {
 
-        const jsCoverage = await page.coverage.stopJSCoverage();      
+        const jsCoverage = await page.coverage.stopJSCoverage();
+
+        TestUtils.expectCoverage(jsCoverage,1,100);
 
         puppeteerToIstanbul.write([...jsCoverage]); 
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul

@@ -11,7 +11,6 @@ export default class TreezImageComboBox extends TreezComboBox {
 	connectedCallback() {
 		
 		this.beforeConnectedCallbackHook();
-    	
 
         if(!this.__comboBox){   
 
@@ -121,7 +120,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 	        				?window.treezConfig.home
 	        				:'';
 
-		return urlPrefix + '/src/components/' + this.folderName + '/' + name + this.__imageFormat
+		return urlPrefix + '/src/components/' + this.imageFolderPath + '/' + name + this.__imageFormat
 	}	
 
 	__recreateOptionTags(){
@@ -194,7 +193,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 		return '.png';
 	}
 
-	get folderName(){
+	get imageFolderPath(){
 		return 'comboBox';
 	}	
 

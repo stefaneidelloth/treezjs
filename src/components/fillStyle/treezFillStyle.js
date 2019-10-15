@@ -11,7 +11,7 @@ export default class TreezFillStyle extends TreezEnumImageComboBox {
         this.enum = FillStyle;
     }
 
-    get folderName(){
+    get imageFolderPath(){
 		return 'fillStyle';
 	}
                          

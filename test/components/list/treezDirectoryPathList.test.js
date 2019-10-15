@@ -211,6 +211,8 @@ describe('TreezDirectoryPathList', ()=>{
 
         const jsCoverage = await page.coverage.stopJSCoverage();
 
+        TestUtils.expectCoverage(jsCoverage,1,100);
+
         puppeteerToIstanbul.write([...jsCoverage]);
         //also see https://github.com/istanbuljs/puppeteer-to-istanbul
         //run following command to create index.html inside coverage folder:
