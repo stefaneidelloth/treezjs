@@ -35,6 +35,7 @@ public class BrowseFileOrDirectoryPathHandler extends AbstractHttpQueryHandler {
 	protected String result(String initialDirectory) {
 
 		var dialog = new JFileChooser();
+		dialog.setDialogTitle("Please select a file or directory:");
 		dialog.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		if (initialDirectory != null) {

@@ -33,6 +33,7 @@ public class BrowseDirectoryPathHandler extends AbstractHttpQueryHandler {
 	protected String result(String initialDirectory) {
 		
 		var dialog = new JFileChooser();
+		dialog.setDialogTitle("Please select a directory:");
 		dialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		if (initialDirectory != null) {

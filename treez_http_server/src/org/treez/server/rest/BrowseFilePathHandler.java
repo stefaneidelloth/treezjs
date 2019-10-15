@@ -35,7 +35,7 @@ public class BrowseFilePathHandler extends AbstractHttpQueryHandler {
 
 	protected String result(String initialDirectory)  {			
 		
-		var fileDialog = new FileDialog(getFrame(), "Choose a file", FileDialog.LOAD);
+		var fileDialog = new FileDialog(getFrame(), "Please select a file:", FileDialog.LOAD);
 		fileDialog.setIconImage(getDialogIcon());
 		
 		if (initialDirectory!=null) {
