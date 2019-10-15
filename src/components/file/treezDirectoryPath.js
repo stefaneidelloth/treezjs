@@ -33,18 +33,14 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             leftSpan.appendChild(textField);
 
             var rightSpan = document.createElement('span');
-            container.appendChild(rightSpan); 
-            
-            var urlPrefix = window.treezConfig
-            					?window.treezConfig.home
-            					:'';
+            container.appendChild(rightSpan);
 
 		    var browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;	
 		    browseButton.className='treez-directory-path-browse-button';					   
 		    browseButton.type='button';
 		    browseButton.title='Select directory';
-		    browseButton.style.background = 'url("' + urlPrefix + '/icons/browseDirectory.png")';
+		    browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browseDirectory.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseDirectoryPath();				   
             rightSpan.appendChild(browseButton);   
@@ -54,7 +50,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             executeButton.className = 'treez-directory-path-play-button';	
             executeButton.type = 'button';
             executeButton.title = 'Open directory';
-            executeButton.style.background = 'url("' + urlPrefix + '/icons/run_triangle.png")';
+            executeButton.style.background = 'url("' + this.__urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
             rightSpan.appendChild(executeButton);                    		

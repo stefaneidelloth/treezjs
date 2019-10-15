@@ -60,10 +60,25 @@ describe('TreezFileOrDirectoryPath', ()=>{
 
                 console.log('call to updateElements with:' + methodCalls['updateElements']);
 
-                var methodsAreCalled = (methodCalls['updateElements'] === null) &&
-                                        (methodCalls['disableElements'] === false) &&
-                                        (methodCalls['hideElements'] === false);
+                var methodsAreCalled = (methodCalls['update'] === true);
                 console.log('methods are called:' + methodsAreCalled);
+
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__textField.dispatchEvent(event);
+                let textFieldChangedIsCalled = methodCalls['textFieldChanged'] === true;
+
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+
+                element.__isFileButton.dispatchEvent(clickEvent);
+                let isFileChangedIsCalled = methodCalls['__isFileChanged'] === true;
+
+                element.__browseButton.dispatchEvent(clickEvent);
+                let browseFileOrDirectoryPathIsCalled = methodCalls['__browseFileOrDirectoryPath'] === true;
+
+                element.__executeButton.dispatchEvent(clickEvent);
+                let executeIsCalled = methodCalls['execute'] === true;
 
                 var label = element.firstChild;
                 var labelIsSet = label.innerText === 'labelText';
@@ -94,7 +109,11 @@ describe('TreezFileOrDirectoryPath', ()=>{
                 console.log('execute button is created:' + executeButtonIsCreated);
                
 
-                return  methodsAreCalled && 
+                return  methodsAreCalled &&
+                        textFieldChangedIsCalled &&
+                        isFileChangedIsCalled &&
+                        browseFileOrDirectoryPathIsCalled &&
+                        executeIsCalled &&
                         labelIsSet &&
                         containerIsCreated &&                 
                         textFieldIsCreated &&
@@ -114,17 +133,27 @@ describe('TreezFileOrDirectoryPath', ()=>{
                 function prepareMocks(element){
                     var methodCalls = {};                   
                     element.label = 'labelText';
-                    element.updateElements = (value) =>{
-                        methodCalls['updateElements'] = value;
+
+                    element.update = () =>{
+                        methodCalls['update'] = true;
                     };
     
-                    element.disableElements = (disabled) =>{
-                        methodCalls['disableElements'] = disabled;
+                    element.textFieldChanged = () =>{
+                        methodCalls['textFieldChanged'] = true;
                     };
     
-                    element.hideElements = (hidden) =>{
-                        methodCalls['hideElements'] = hidden;
+                    element.__isFileChanged = () =>{
+                        methodCalls['__isFileChanged'] = true;
                     };
+
+                    element.__browseFileOrDirectoryPath = () =>{
+                        methodCalls['__browseFileOrDirectoryPath'] = true;
+                    };
+
+                    element.execute = () =>{
+                        methodCalls['execute'] = true;
+                    };
+
                     return methodCalls;
                 }   
 
@@ -169,9 +198,7 @@ describe('TreezFileOrDirectoryPath', ()=>{
             },{id});
             expect(success).toBe(true);                 
 
-        }); 
-
-        
+        });
         
     });   
     
@@ -270,6 +297,48 @@ describe('TreezFileOrDirectoryPath', ()=>{
                 expect(success).toBe(true);           
     
             });  
+
+        });
+
+        describe('__isFileChanged', ()=>{
+
+            it('file mode', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+
+                    element.__isFileMode = true;
+
+                    element.__isFileChanged();
+
+                    let isFileIsToggled = element.__isFileMode === false;
+                    let titleIsSet = element.__browseButton.title === 'Browse directory path';
+
+                    return isFileIsToggled && titleIsSet;
+
+                },{id});
+                expect(success).toBe(true);
+
+            });
+
+            it('directory mode', async ()=>{
+
+                var success = await page.evaluate(({id})=>{
+                    var element = document.getElementById(id);
+
+                    element.__isFileMode = false;
+
+                    element.__isFileChanged();
+
+                    let isFileIsToggled = element.__isFileMode === true;
+                    let titleIsSet = element.__browseButton.title === 'Browse file path';
+
+                    return isFileIsToggled && titleIsSet;
+
+                },{id});
+                expect(success).toBe(true);
+
+            });
 
         });
        

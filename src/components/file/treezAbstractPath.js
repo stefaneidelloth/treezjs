@@ -112,6 +112,12 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     	
     	return fullPath;
 	}
+
+	get __urlPrefix(){
+		return window.treezConfig
+			?window.treezConfig.home
+			:'';
+	}
 	
 	//the stored element value might inlclude variable expressions/relative paths, e.g. {$workingDir}
 	//the fullPath does not include variable expressions but the absolute path

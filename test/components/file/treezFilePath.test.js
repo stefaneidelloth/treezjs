@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import TreezAbstractPath from '../../../src/components/file/treezAbstractPath.js';
 jest.mock('../../../src/components/file/treezAbstractPath.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -22,9 +22,9 @@ jest.setTimeout(100000);
 
 describe('TreezFilePath', ()=>{   
     
-    var id = 'treez-file-path';
+    let id = 'treez-file-path';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -40,7 +40,7 @@ describe('TreezFilePath', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -49,44 +49,58 @@ describe('TreezFilePath', ()=>{
     describe('Public API', ()=>{   
        
         it('connectedCallback', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
                 element.label = 'labelText';
 
                 removeExistingChildren(element);
-                var methodCalls = prepareMocks(element);
+                let methodCalls = prepareMocks(element);
 
                 element.connectedCallback();
 
                 console.log('call to updateElements with:' + methodCalls['updateElements']);
 
-                var methodsAreCalled = (methodCalls['updateElements'] === null) &&
-                                        (methodCalls['disableElements'] === false) &&
-                                        (methodCalls['hideElements'] === false);
+                let methodsAreCalled = (methodCalls['update'] === true);
                 console.log('methods are called:' + methodsAreCalled);
 
-                var label = element.firstChild;
-                var labelIsSet = label.innerText === 'labelText';
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__textField.dispatchEvent(event);
+                let textFieldChangedIsCalled = methodCalls['textFieldChanged'] === true;
+
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+
+                element.__browseButton.dispatchEvent(clickEvent);
+                let browseFilePathIsCalled = methodCalls['__browseFilePath'] === true;
+
+                element.__executeButton.dispatchEvent(clickEvent);
+                let executeIsCalled = methodCalls['execute'] === true;
+
+                let label = element.firstChild;
+                let labelIsSet = label.innerText === 'labelText';
                 console.log('label is set:' + labelIsSet);
 
-                var containerIsCreated = element.childNodes.length === 2;
+                let containerIsCreated = element.childNodes.length === 2;
                 console.log('container is created:' + containerIsCreated);
 
-                var container = element.lastChild;                 
+                let container = element.lastChild;                 
 
-                var leftSpan = container.firstChild;
-                var textField = leftSpan.firstChild;
-                var textFieldIsCreated = textField.type === 'text';
+                let leftSpan = container.firstChild;
+                let textField = leftSpan.firstChild;
+                let textFieldIsCreated = textField.type === 'text';
 
-                var rightSpan = container.lastChild;
-                var browseButton = rightSpan.firstChild;
-                var browseButtonIsCreated = browseButton.type === 'button';
+                let rightSpan = container.lastChild;
+                let browseButton = rightSpan.firstChild;
+                let browseButtonIsCreated = browseButton.type === 'button';
 
-                var executeButton = rightSpan.lastChild;
-                var executeButtonIsCreated = executeButton.type === 'button';
-               
+                let executeButton = rightSpan.lastChild;
+                let executeButtonIsCreated = executeButton.type === 'button';               
 
-                return  methodsAreCalled && 
+                return  methodsAreCalled &&
+                        textFieldChangedIsCalled &&
+                        browseFilePathIsCalled &&
+                        executeIsCalled &&
                         labelIsSet &&
                         containerIsCreated &&                 
                         textFieldIsCreated &&
@@ -103,18 +117,23 @@ describe('TreezFilePath', ()=>{
                 }                        
                 
                 function prepareMocks(element){
-                    var methodCalls = {};                   
+                    let methodCalls = {};                   
                     element.label = 'labelText';
-                    element.updateElements = (value) =>{
-                        methodCalls['updateElements'] = value;
+
+                    element.update = () =>{
+                        methodCalls['update'] = true;
+                    };
+
+                    element.textFieldChanged = () =>{
+                        methodCalls['textFieldChanged'] = true;
                     };
     
-                    element.disableElements = (disabled) =>{
-                        methodCalls['disableElements'] = disabled;
+                    element.__browseFilePath = () =>{
+                        methodCalls['__browseFilePath'] = true;
                     };
     
-                    element.hideElements = (hidden) =>{
-                        methodCalls['hideElements'] = hidden;
+                    element.execute = () =>{
+                        methodCalls['execute'] = true;
                     };
                     return methodCalls;
                 }   
@@ -132,14 +151,14 @@ describe('TreezFilePath', ()=>{
 
         it('__browseFilePath', async ()=>{
 
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var terminalMock = { 
+                let terminalMock = { 
                     directoryPath: undefined                    
                 };
 
-                var resultMock = 'c:/foo/baa.txt';
+                let resultMock = 'c:/foo/baa.txt';
 
                 terminalMock.browseFilePath =  (directoryPath) => {
                     terminalMock.directoryPath = directoryPath;
@@ -157,12 +176,12 @@ describe('TreezFilePath', ()=>{
                 element.__browseFilePath();
 
                 console.log('directory Path for dialog: ' + terminalMock.directoryPath);
-                var terminalIsCalled = terminalMock.directoryPath === 'c:/qux';
+                let terminalIsCalled = terminalMock.directoryPath === 'c:/qux';
                 console.log('terminal is called: ' + terminalIsCalled);
 
                 console.log('filePath after: ' + element.value);
 
-                var pathMapIsInjected = element.value === '{$workingDir$}/baa.txt';
+                let pathMapIsInjected = element.value === '{$workingDir$}/baa.txt';
                 console.log('pathMap is injected: ' + pathMapIsInjected);                
 
                 return terminalIsCalled && pathMapIsInjected;

@@ -633,10 +633,38 @@ describe('TreezAbstractPath', ()=>{
             }); 
         });       
         
-    });      
-    
-   
-    afterAll(async () => {
+    });
+
+    describe('Private API', ()=>{
+
+        describe('get __urlPrefix', ()=>{
+
+            it('with treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let home = '..';
+                    window.treezConfig = {home: home};
+                    let prefix = element.__urlPrefix;
+                    window.treezConfig = undefined;
+
+                    return  prefix === home;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('without treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    return element.__urlPrefix === '';
+                },{id});
+                expect(success).toBe(true);
+            });
+        });
+
+    });
+        afterAll(async () => {
 
         const jsCoverage = await page.coverage.stopJSCoverage();
 
