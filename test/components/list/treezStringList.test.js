@@ -94,7 +94,7 @@ describe('TreezStringList', ()=>{
 
                     function removeExistingChildren(element) {
 
-                        element.__labelElement = undefined;
+                        element.__label = undefined;
                         element.__table = undefined;
                         element.__tableBody = undefined;
                         element.__selectedRowIndex = undefined;
@@ -133,7 +133,7 @@ describe('TreezStringList', ()=>{
 
                     function removeExistingChildren(element) {
 
-                        element.__labelElement = undefined;
+                        element.__label = undefined;
                         element.__table = undefined;
                         element.__tableBody = undefined;
                         element.__selectedRowIndex = undefined;
@@ -180,14 +180,14 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var labelElement = document.createElement('label');
-                element.__labelElement = labelElement;
+                let labelElement = document.createElement('label');
+                element.__label = labelElement;
 
-                var innerTextIsEmptyBefore = labelElement.innerText === '';
+                let innerTextIsEmptyBefore = labelElement.innerText === '';
 
                 element.attributeChangedCallback('label','oldStringValue','newStringValue');
 
-                var innerTextIsSetAfter = labelElement.innerText === 'newStringValue';
+                let innerTextIsSetAfter = labelElement.innerText === 'newStringValue';
 
                 return innerTextIsEmptyBefore && innerTextIsSetAfter;
 
@@ -201,7 +201,7 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = {};
+                let methodCalls = {};
                 element.__recreateTableRows = ()=>{
                     methodCalls['__recreateTableRows'] = true;
                 };
@@ -215,31 +215,45 @@ describe('TreezStringList', ()=>{
 
         });
 
-        it('disableElements', async ()=>{
+        describe('disableElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                var methodCalls = {};
-                element.__disableTable = (value)=>{
-                    methodCalls['__disableTable'] = value;
-                };
+            it('common usage', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                const addIsNotDisabledBefore = element.__addButton.disabled === false;
-                const deleteIsNotDisabledBefore = element.__deleteButton.disabled === false;
-                const upIsNotDisabledBefore = element.__upButton.disabled === false;
-                const downIsNotDisabledBefore = element.__downButton.disabled === false;
-                const tableIsNotDisabledBefore = methodCalls['__disableTable'] === undefined;
+                    let methodCalls = {};
+                    element.__disableTable = (value)=>{
+                        methodCalls['__disableTable'] = value;
+                    };
 
-                element.disableElements(true);
+                    const addIsNotDisabledBefore = element.__addButton.disabled === false;
+                    const deleteIsNotDisabledBefore = element.__deleteButton.disabled === false;
+                    const upIsNotDisabledBefore = element.__upButton.disabled === false;
+                    const downIsNotDisabledBefore = element.__downButton.disabled === false;
+                    const tableIsNotDisabledBefore = methodCalls['__disableTable'] === undefined;
 
-                const addIsDisabledAfter = element.__addButton.disabled === true;
-                const deleteIsDisabledAfter = element.__deleteButton.disabled === true;
-                const upIsDisabledAfter = element.__upButton.disabled === true;
-                const downIsDisabledAfter = element.__downButton.disabled === true;
-                const tableIsDisabledAfter = methodCalls['__disableTable'] === true;
+                    element.disableElements(true);
 
-                return (addIsNotDisabledBefore &&
+                    const addIsDisabledAfter = element.__addButton.disabled === true;
+                    const deleteIsDisabledAfter = element.__deleteButton.disabled === true;
+                    const upIsDisabledAfter = element.__upButton.disabled === true;
+                    const downIsDisabledAfter = element.__downButton.disabled === true;
+                    const tableIsDisabledAfter = methodCalls['__disableTable'] === true;
+
+                    return (addIsNotDisabledBefore &&
                         deleteIsNotDisabledBefore &&
                         upIsNotDisabledBefore &&
                         downIsNotDisabledBefore &&
@@ -252,28 +266,44 @@ describe('TreezStringList', ()=>{
                         tableIsDisabledAfter
                     );
 
-            }, {id});
-            expect(success).toBe(true);
-
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
-        it('hideElements', async ()=>{
+        describe('hideElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                const isNotHiddenBefore = element.__container.style.display === '';
+            it('common usage', async () => {
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                element.hideElements(true);
+                    const isNotHiddenBefore = element.__container.style.display === '';
 
-                const isHiddenAfter = element.__container.style.display === 'none';
+                    element.hideElements(true);
 
-                return isNotHiddenBefore && isHiddenAfter;
+                    const isHiddenAfter = element.__container.style.display === 'none';
 
-            }, {id});
-            expect(success).toBe(true);
+                    return isNotHiddenBefore && isHiddenAfter;
 
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
+
+
 
         describe('convertFromStringValue', ()=> {
             it('undefined array string', async () => {
@@ -339,7 +369,7 @@ describe('TreezStringList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                var cellMock = {innerText: 'innerTextMock'};
+                let cellMock = {innerText: 'innerTextMock'};
                 return element.getCellValue(cellMock) === 'innerTextMock';
             }, {id});
             expect(success).toBe(true);
@@ -350,7 +380,7 @@ describe('TreezStringList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                var cellMock = {innerText: 'innerTextMock'};
+                let cellMock = {innerText: 'innerTextMock'};
                 element.setCellValue(cellMock, 'newValue');
                 return cellMock.innerText === 'newValue';
             }, {id});
@@ -362,7 +392,7 @@ describe('TreezStringList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                var cellMock = document.createElement('div');
+                let cellMock = document.createElement('div');
                 element.styleCell(cellMock);
 
                 let borderIsStyled = cellMock.style.border === '1px solid lightgrey';
@@ -385,7 +415,7 @@ describe('TreezStringList', ()=>{
                 const element = await document.getElementById(id);
                 element.__container = undefined;
                 element.__createContainer();
-                var hasContainer = element.__container.constructor.name === 'HTMLDivElement';
+                let hasContainer = element.__container.constructor.name === 'HTMLDivElement';
                 return hasContainer;
             }, {id});
             expect(success).toBe(true);
@@ -396,9 +426,9 @@ describe('TreezStringList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                element.__labelElement = undefined;
+                element.__label = undefined;
                 element.__createLabelElement();
-                var hasLabel = element.__labelElement.constructor.name === 'HTMLLabelElement';
+                let hasLabel = element.__label.constructor.name === 'HTMLLabelElement';
                 return hasLabel;
             }, {id});
             expect(success).toBe(true);
@@ -410,7 +440,7 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = {};
+                let methodCalls = {};
                 element.__createTableBody = ()=>{
                     methodCalls['__createTableBody'] = true;
                 }
@@ -420,9 +450,9 @@ describe('TreezStringList', ()=>{
 
                 element.__table = undefined;
                 element.__createTable();
-                var hasTable = element.__table.constructor.name === 'HTMLTableElement';
+                let hasTable = element.__table.constructor.name === 'HTMLTableElement';
 
-                var methodsAreCalled = methodCalls['__createTableBody'] === true &&
+                let methodsAreCalled = methodCalls['__createTableBody'] === true &&
                     methodCalls['__recreateTableRows'] === true;
 
                 return hasTable &&
@@ -433,36 +463,60 @@ describe('TreezStringList', ()=>{
 
         });
 
-        it('__disableTable', async ()=>{
+        describe('__disableTable',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+            it('undefined', async ()=>{
 
-                var table = document.createElement('table');
-                element.__table = table;
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                var tableBody = document.createElement('tbody');
-                table.appendChild(tableBody);
+                    try{
+                        element.__disableTable();
+                        return false;
+                    } catch(error){
+                        return true;
+                    }
 
-                var row = document.createElement('tr');
-                tableBody.appendChild(row);
+                }, {id});
+                expect(success).toBe(true);
+            });
 
-                var firstCell = document.createElement('td');
-                firstCell.contentEditable = true;
-                row.appendChild(firstCell);
 
-                var secondCell = document.createElement('td');
-                secondCell.contentEditable = true;
-                row.appendChild(secondCell);
+            it('common usage', async ()=>{
 
-                element.__disableTable(true);
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                return firstCell.contentEditable === 'false' && secondCell.contentEditable === 'false';
+                    let table = document.createElement('table');
+                    element.__table = table;
 
-            }, {id});
-            expect(success).toBe(true);
+                    let tableBody = document.createElement('tbody');
+                    table.appendChild(tableBody);
+
+                    let row = document.createElement('tr');
+                    tableBody.appendChild(row);
+
+                    let firstCell = document.createElement('td');
+                    firstCell.contentEditable = true;
+                    row.appendChild(firstCell);
+
+                    let secondCell = document.createElement('td');
+                    secondCell.contentEditable = true;
+                    row.appendChild(secondCell);
+
+                    element.__disableTable(true);
+
+                    return firstCell.contentEditable === 'false' && secondCell.contentEditable === 'false';
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
 
         });
+
+
+
 
         it('__recreateTableRows', async ()=>{
 
@@ -471,7 +525,7 @@ describe('TreezStringList', ()=>{
 
                 element.value = ['firstRowMock','secondRowMock'];
 
-                var methodCalls = {
+                let methodCalls = {
                     __createRows: []
                 };
                 element.__deleteRows = ()=>{
@@ -483,8 +537,8 @@ describe('TreezStringList', ()=>{
 
                 element.__recreateTableRows();
 
-                var oldRowsAreDeleted = methodCalls['__deleteRows'] === true;
-                var newRowsAreCreated = methodCalls['__createRows'].length === 2;
+                let oldRowsAreDeleted = methodCalls['__deleteRows'] === true;
+                let newRowsAreCreated = methodCalls['__createRows'].length === 2;
 
                 return oldRowsAreDeleted && newRowsAreCreated;
             }, {id});
@@ -497,8 +551,8 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = mockElementMethods(element);
-                var eventMock = createCellChangedEventMock('secondCellContent');
+                let methodCalls = mockElementMethods(element);
+                let eventMock = createCellChangedEventMock('secondCellContent');
                 mockWindowSelection(17);
 
                 element.value = ['','foo'];
@@ -512,7 +566,7 @@ describe('TreezStringList', ()=>{
                 return valueIsUpdated && focusIsRestored;
 
                 function mockElementMethods(element){
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.__focusCell = (rowIndex, cursorPosition)=>{
                         methodCalls['__focusCell'] = {
                             rowIndex: rowIndex,
@@ -523,33 +577,33 @@ describe('TreezStringList', ()=>{
                 }
 
                 function createCellChangedEventMock(cellContent){
-                    var table = document.createElement('table');
+                    let table = document.createElement('table');
 
-                    var tableBody = document.createElement('tbody');
+                    let tableBody = document.createElement('tbody');
                     table.appendChild(tableBody);
 
-                    var firstRow = document.createElement('tr');
+                    let firstRow = document.createElement('tr');
                     tableBody.appendChild(firstRow);
 
-                    var secondRow = document.createElement('tr');
+                    let secondRow = document.createElement('tr');
                     tableBody.appendChild(secondRow);
 
-                    var cell = document.createElement('td');
+                    let cell = document.createElement('td');
                     cell.innerText = cellContent;
                     secondRow.appendChild(cell);
 
-                    var eventMock = {
+                    let eventMock = {
                         currentTarget: cell
                     };
                     return eventMock;
                 }
 
                 function mockWindowSelection(cursorPosition) {
-                    var rangeMock = {
+                    let rangeMock = {
                         startOffset: cursorPosition
                     };
 
-                    var selectionMock = {
+                    let selectionMock = {
                         getRangeAt: (index) => {
                             return rangeMock;
                         }
@@ -580,30 +634,30 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls ={};
+                let methodCalls ={};
 
-                var table = document.createElement('table');
+                let table = document.createElement('table');
                 table.id='mockedTable';
 
-                var tableBody = document.createElement('tbody');
+                let tableBody = document.createElement('tbody');
                 table.appendChild(tableBody);
                 element.__tableBody = tableBody;
 
-                var firstRow = document.createElement('tr');
+                let firstRow = document.createElement('tr');
                 firstRow.tabIndex=0;
                 tableBody.appendChild(firstRow);
 
-                var secondRow = document.createElement('tr');
+                let secondRow = document.createElement('tr');
                 secondRow.tabIndex=0;
                 tableBody.appendChild(secondRow);
 
-                var cell = document.createElement('td');
+                let cell = document.createElement('td');
                 cell.contentEditable = true;
                 cell.innerText = 'secondCellContent';
                 cell.tabIndex = 0;
                 secondRow.appendChild(cell);
 
-                var selectionMock = {
+                let selectionMock = {
                     collapse: (element, cursorPosition)=>{
                         methodCalls['collapseSelection'] = true;
                     }
@@ -612,10 +666,10 @@ describe('TreezStringList', ()=>{
 
                 element.__focusCell(1,17);
 
-                var cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
+                let cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
                 console.log('cell has focus: ' + cellHasFocus);
 
-                var cursorIsSetAtEndOfInput = methodCalls['collapseSelection'] == true;
+                let cursorIsSetAtEndOfInput = methodCalls['collapseSelection'] == true;
                 console.log('cursor is set: ' +cursorIsSetAtEndOfInput);
 
                 return cellHasFocus && cursorIsSetAtEndOfInput;
@@ -633,7 +687,7 @@ describe('TreezStringList', ()=>{
                     const element = await document.getElementById(id);
                     element.__lastSelectedRowIndex = undefined;
 
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.__appendNewRow = ()=>{
                         methodCalls['__appendNewRow'] = true;
                     };
@@ -642,7 +696,7 @@ describe('TreezStringList', ()=>{
                     }
 
                     element.__addRow();
-                    var rowIsAppended = methodCalls['__appendNewRow'] === true;
+                    let rowIsAppended = methodCalls['__appendNewRow'] === true;
                     return rowIsAppended;
 
                 }, {id});
@@ -656,7 +710,7 @@ describe('TreezStringList', ()=>{
                     const element = await document.getElementById(id);
                     element.__lastSelectedRowIndex = 0;
 
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.__appendNewRow = ()=>{
                         methodCalls['__appendNewRow'] = true;
                     };
@@ -679,7 +733,7 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = {};
+                let methodCalls = {};
                 element.__recreateTableRows = ()=>{
                     methodCalls['__recreateTableRows'] = true;
                 };
@@ -707,34 +761,93 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = {
-                    __createButton: []
-                };
-                element.constructor.__createButton = (buttonContainer, name, title)=>{
-                    methodCalls['__createButton'].push(name);
-                    return {onclick: undefined};
-                };
+                let methodCalls = createMocks(element);
 
                 element.__createButtons();
 
-                var calls = methodCalls['__createButton'];
-                var methodsAreCalled = calls.length === 4 && calls[0] === 'add' && calls[3] === 'down';
+                let calls = methodCalls['__createButton'];
+                let methodsAreCalled = calls.length === 4 && calls[0] === 'add' && calls[3] === 'down';
 
-                return methodsAreCalled;
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+
+                let buttonContainer = element.__container.firstChild;
+
+                let addButton = buttonContainer.children[0];
+                addButton.dispatchEvent(clickEvent);
+                let addRowIsCalled =  methodCalls['__addRow'] === true;
+
+                let deleteButton = buttonContainer.children[1];
+                deleteButton.dispatchEvent(clickEvent);
+                let deleteRowIsCalled =  methodCalls['__deleteRow'] === true;
+
+                let moveUpButton = buttonContainer.children[2];
+                moveUpButton.dispatchEvent(clickEvent);
+                let moveUpIsCalled =  methodCalls['__moveCurrentRowUp'] === true;
+
+                let moveDownButton = buttonContainer.children[3];
+                moveDownButton.dispatchEvent(clickEvent);
+                let moveDownIsCalled =  methodCalls['__moveCurrentRowDown'] === true;
+
+                return methodsAreCalled &&
+                    addRowIsCalled &&
+                    deleteRowIsCalled &&
+                    moveUpIsCalled &&
+                    moveDownIsCalled;
+
+                function createMocks(element){
+
+                    let methodCalls = {
+                        __createButton: []
+                    };
+
+                    element.__createButton = (buttonContainer, name, title)=>{
+                        methodCalls['__createButton'].push(name);
+                        return {onclick: undefined};
+                    };
+
+                    element.__addRow = () => {
+                      methodCalls['__addRow'] = true;
+                    };
+
+                    element.__deleteRow = () => {
+                        methodCalls['__deleteRow'] = true;
+                    };
+
+                    element.__moveCurrentRowUp = () => {
+                        methodCalls['__moveCurrentRowUp'] = true;
+                    };
+
+                    element.__moveCurrentRowDown = () => {
+                        methodCalls['__moveCurrentRowDown'] = true;
+                    };
+
+                    return methodCalls;
+                }
             }, {id});
             expect(success).toBe(true);
 
         });
 
         it('__createButton', async ()=>{
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
 
-            let container = document.createElement('div');
+                let container = document.createElement('div');
 
-            let button = TreezStringList.__createButton(container, 'nameMock','titleMock');
+                let button = element.__createButton(container, 'nameMock','titleMock');
 
-            expect(button.title).toBe('titleMock');
-            let image = button.firstChild;
-            expect(image.src).toBe('http://localhost/icons/nameMock.png');
+                let titleIsSet = button.title === 'titleMock';
+
+                let image = button.firstChild;
+
+                let imageSrcIsSet = image.src === 'http://localhost:4444/icons/nameMock.png';
+
+                return titleIsSet &&
+                    imageSrcIsSet;
+
+            }, {id});
+            expect(success).toBe(true);
 
         });
 
@@ -743,12 +856,26 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = {};
+                let methodCalls = {};
+
                 element.setCellValue = (cell, value)=>{
                     methodCalls['setCellValue'] = true;
                 };
+
                 element.styleCell = (cell, value)=>{
                     methodCalls['styleCell'] = true;
+                };
+
+                element.__rowClicked = ()=>{
+                    methodCalls['__rowClicked'] = true;
+                };
+
+                element.__cellChanged = ()=>{
+                    methodCalls['__cellChanged'] = true;
+                };
+
+                element.__cellLostFocus = ()=>{
+                    methodCalls['__cellLostFocus'] = true;
                 };
 
                 let tableIsEmptyBefore = element.__tableBody.children.length === 0;
@@ -757,13 +884,33 @@ describe('TreezStringList', ()=>{
 
                 let rows = element.__tableBody.children;
                 let rowIsCreated = rows.length === 1;
+                let row = rows[0];
+                let cell = row.firstChild;
 
                 let methodsAreCalled =  methodCalls['setCellValue'] === true &&
                 methodCalls['styleCell'] === true;
 
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+                row.dispatchEvent(clickEvent);
+                let rowClickedIsCalled =  methodCalls['__rowClicked'] === true;
+
+                let keyUpEvent = document.createEvent('HTMLEvents');
+                keyUpEvent.initEvent('keyup', false, true);
+                cell.dispatchEvent(keyUpEvent);
+                let cellChangedIsCalled =  methodCalls['__cellChanged'] === true;
+
+                let blurEvent = document.createEvent('HTMLEvents');
+                blurEvent.initEvent('blur', false, true);
+                cell.dispatchEvent(blurEvent);
+                let cellLostFocusIsCalled =  methodCalls['__cellLostFocus'] === true;
+
                 return tableIsEmptyBefore &&
                     rowIsCreated &&
-                    methodsAreCalled;
+                    methodsAreCalled &&
+                    rowClickedIsCalled &&
+                    cellChangedIsCalled &&
+                    cellLostFocusIsCalled;
 
             }, {id});
             expect(success).toBe(true);
@@ -846,38 +993,20 @@ describe('TreezStringList', ()=>{
 
             });
 
-            it('with explicit row index', async ()=>{
+            it('deletion with empty array is ignored', async ()=>{
 
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
-                    element.__lastSelectedRowIndex = 2;
-                    element.value = ['a','b','c'];
 
-                    let methodCalls = {};
+                    element.value = [];
 
-                    element.__recreateTableRows = ()=>{
-                        methodCalls['__recreateTableRows'] = true;
-                    };
-                    element.__updateSelectedRowIndexAfterDeletion = (index)=>{
-                        methodCalls['__updateSelectedRowIndexAfterDeletion'] = index;
-                    };
-                    element.dispatchChangeEvent = ()=>{
-                        methodCalls['dispatchChangeEvent'] = true;
-                    };
+                    try{
+                        element.__deleteRow();
+                        return true;
+                    } catch (error){
+                        return false;
+                    }
 
-                    let rowsExistBefore = element.__tableBody.children.length === 3;
-
-                    element.__deleteRow();
-
-                    let valueIsRemoved = element.values.length === 2 && element.values[0] === 'a';
-
-                    let methodsAreCalled = methodCalls['__recreateTableRows'] === true &&
-                        methodCalls['__updateSelectedRowIndexAfterDeletion'] === 2 &&
-                        methodCalls['dispatchChangeEvent'] === true;
-
-                    return rowsExistBefore &&
-                        valueIsRemoved &&
-                        methodsAreCalled;
                 }, {id});
                 expect(success).toBe(true);
 
@@ -1101,6 +1230,20 @@ describe('TreezStringList', ()=>{
                 expect(success).toBe(true);
 
             });
+
+            it('move for single entry is ignored', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+                    element.value = ['a'];
+                    try{
+                        element.__moveRowUp(0);
+                        return true;
+                    } catch (error){
+                        return false;
+                    }
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
         describe('__moveRowDown', ()=>{
@@ -1170,6 +1313,20 @@ describe('TreezStringList', ()=>{
                 expect(success).toBe(true);
 
             });
+
+            it('move for single entry is ignored', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+                    element.value = ['a'];
+                    try{
+                        element.__moveRowDown(0);
+                        return true;
+                    } catch (error){
+                        return false;
+                    }
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
         it('__rowClicked', async ()=>{
@@ -1206,24 +1363,24 @@ describe('TreezStringList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls ={};
+                let methodCalls ={};
 
-                var table = document.createElement('table');
+                let table = document.createElement('table');
                 table.id='mockedTable';
 
-                var tableBody = document.createElement('tbody');
+                let tableBody = document.createElement('tbody');
                 table.appendChild(tableBody);
                 element.__tableBody = tableBody;
 
-                var firstRow = document.createElement('tr');
+                let firstRow = document.createElement('tr');
                 firstRow.tabIndex=0;
                 tableBody.appendChild(firstRow);
 
-                var secondRow = document.createElement('tr');
+                let secondRow = document.createElement('tr');
                 secondRow.tabIndex=0;
                 tableBody.appendChild(secondRow);
 
-                var cell = document.createElement('td');
+                let cell = document.createElement('td');
                 cell.contentEditable = true;
                 cell.innerText = 'secondCellContent';
                 cell.tabIndex = 0;
@@ -1237,7 +1394,7 @@ describe('TreezStringList', ()=>{
                 let selectedRowIndexIsDefinedAfter = element.__selectedRowIndex === 1;
                 let lastSelectedRowIndexIsDefinedAfter = element.__lastSelectedRowIndex === 1;
 
-                var cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
+                let cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
                 console.log('cell has focus: ' + cellHasFocus);
 
                 return selectedRowIndexIsUndefinedBefore && lastSelectedRowIndexIsUndefinedBefore &&
@@ -1311,6 +1468,32 @@ describe('TreezStringList', ()=>{
 
             });
 
+        });
+
+        describe('get __urlPrefix', ()=>{
+
+            it('with treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let home = '..';
+                    window.treezConfig = {home: home};
+                    let prefix = element.__urlPrefix;
+                    window.treezConfig = undefined;
+
+                    return  prefix === home;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('without treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    return element.__urlPrefix === '';
+                },{id});
+                expect(success).toBe(true);
+            });
         });
 
     });

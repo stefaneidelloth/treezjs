@@ -17,17 +17,17 @@ export default class TreezFilePathList extends TreezStringList {
 	}
 
     __createRow(value){
-    	var row = document.createElement('tr');
+    	let row = document.createElement('tr');
     	row.className = 'treez-list-tr';
     	this.__tableBody.appendChild(row);                	
     	
     	row.onclick = (event)=>this.__rowClicked(event);
     	
-    	var cell = document.createElement('td');
+    	let cell = document.createElement('td');
     	cell.className = 'treez-list-td';
     	row.appendChild(cell);    	
     	
-    	var path = document.createElement('treez-file-path');
+    	let path = document.createElement('treez-file-path');
     	path.pathMapProvider = this.__pathMapProvider;
 		path.onchange = (event) => this.__filePathChanged(event);
 		cell.appendChild(path);
@@ -40,16 +40,16 @@ export default class TreezFilePathList extends TreezStringList {
     }
     
     __filePathChanged(event){  
-        var filePath = event.srcElement;
+        let filePath = event.srcElement;
 		if(filePath instanceof HTMLInputElement){
         	filePath = filePath.parentElement.parentElement.parentElement;  	
         }
         
-    	var cell = filePath.parentElement;
+    	let cell = filePath.parentElement;
     	let newValue = filePath.value;
     	let rowIndex = cell.parentElement.rowIndex;  
 
-    	var valueArray = this.values;                	
+    	let valueArray = this.values;                	
     	valueArray[rowIndex] = newValue;
     	this.value = valueArray;
     	
@@ -57,8 +57,8 @@ export default class TreezFilePathList extends TreezStringList {
     }
 
 	__focusCell(rowIndex){
-		var row = this.__tableBody.children[rowIndex];
-		var cell = row.children[0];
+		let row = this.__tableBody.children[rowIndex];
+		let cell = row.children[0];
 		cell.focus();
 	}
 

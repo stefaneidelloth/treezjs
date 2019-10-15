@@ -110,8 +110,26 @@ describe('TreezFont', ()=>{
 
             },{id});
             expect(success).toBe(true);
-        });    
-        
+        });
+
+        it('__comboBoxChanged', async ()=>{
+
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
+
+                element.value = 'cursive';
+
+                element.__comboBoxChanged();
+
+                let valueIsSet = element.value === 'cursive';
+                let styleIsSet = element.__comboBox.style.fontFamily === 'cursive';
+
+                return valueIsSet && styleIsSet;
+
+            },{id});
+            expect(success).toBe(true);
+        });
+
     });      
     
    

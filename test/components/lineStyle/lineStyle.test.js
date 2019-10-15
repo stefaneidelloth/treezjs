@@ -7,6 +7,4 @@ describe('LineStyle', ()=>{
         expect(LineStyle.values.length).toBe(21);   
     });
 
-    
-
 });

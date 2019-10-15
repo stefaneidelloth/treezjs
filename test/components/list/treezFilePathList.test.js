@@ -53,8 +53,8 @@ describe('TreezFilePathList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                var inputMock = {value:'cellValueMock'};
-                var cellMock = {children: [inputMock]};
+                let inputMock = {value:'cellValueMock'};
+                let cellMock = {children: [inputMock]};
                 return element.getCellValue(cellMock) === 'cellValueMock';
             }, {id});
             expect(success).toBe(true);
@@ -65,10 +65,31 @@ describe('TreezFilePathList', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
-                var inputMock = {value:'cellValueMock'};
-                var cellMock = {children: [inputMock]};
+                let inputMock = {value:'cellValueMock'};
+                let cellMock = {children: [inputMock]};
                 element.setCellValue(cellMock, 'newValue');
                 return inputMock.value === 'newValue';
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        it('set pathMapProvider', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                let methodCalls = {};
+                element.__recreateTableRows = () => {
+                    methodCalls['__recreateTableRows'] = true;
+                };
+
+                element.pathMapProvider = 'pathMapProviderMock';
+
+                let valueIsSet = element.__pathMapProvider = 'pathMapProviderMock';
+                let recreateIsCalled = methodCalls['__recreateTableRows'] = true;
+
+                return valueIsSet && recreateIsCalled;
             }, {id});
             expect(success).toBe(true);
 
@@ -83,6 +104,8 @@ describe('TreezFilePathList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
+                let methodCalls = createMocks(element);
+
                 let tableIsEmptyBefore = element.__tableBody.children.length === 0;
 
                 element.__createRow('newValue');
@@ -95,106 +118,215 @@ describe('TreezFilePathList', ()=>{
                 let path = cell.children[0];
                 let valueIsSet = path.value === 'newValue';
 
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+                row.dispatchEvent(clickEvent);
+                let rowClickedIsCalled =  methodCalls['__rowClicked'] === true;
+
+                let changeEvent = document.createEvent('HTMLEvents');
+                changeEvent.initEvent('change', false, true);
+                path.dispatchEvent(changeEvent);
+                let pathChangedIsCalled =  methodCalls['__filePathChanged'] === true;
+
+                let blurEvent = document.createEvent('HTMLEvents');
+                blurEvent.initEvent('blur', false, true);
+                cell.dispatchEvent(blurEvent);
+                let cellLostFocusIsCalled =  methodCalls['__cellLostFocus'] === true;
+
                 return tableIsEmptyBefore &&
                     rowIsCreated &&
-                    valueIsSet;
+                    valueIsSet &&
+                    rowClickedIsCalled &&
+                    pathChangedIsCalled &&
+                    cellLostFocusIsCalled;
 
-            }, {id});
-            expect(success).toBe(true);
+                function createMocks(element){
+                    let methodCalls = {};
 
-        });
-
-        it('__filePathChanged', async ()=>{
-
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
-
-                var methodCalls = mockElementMethods(element);
-                var eventMock = createEventMock('secondCellContent');
-
-
-                element.value = ['','foo'];
-                element.__filePathChanged(eventMock);
-
-                let valueIsUpdated =  element.value[1] === 'secondCellContent';
-
-                let focusArguments = methodCalls['__focusCell'];
-                let focusIsRestored = focusArguments.rowIndex === 1;
-
-                return valueIsUpdated && focusIsRestored;
-
-                function mockElementMethods(element){
-                    var methodCalls = {};
-                    element.__focusCell = (rowIndex)=>{
-                        methodCalls['__focusCell'] = {
-                            rowIndex: rowIndex
-                        };
+                    element.__rowClicked = () => {
+                        methodCalls['__rowClicked'] = true;
                     };
+
+                    element.__filePathChanged = () => {
+                        methodCalls['__filePathChanged'] = true;
+                    };
+
+                    element.__cellLostFocus = () => {
+                        methodCalls['__cellLostFocus'] = true;
+                    }
+
                     return methodCalls;
                 }
 
-                function createEventMock(cellContent){
-                    var table = document.createElement('table');
-
-                    var tableBody = document.createElement('tbody');
-                    table.appendChild(tableBody);
-
-                    var firstRow = document.createElement('tr');
-                    tableBody.appendChild(firstRow);
-
-                    var secondRow = document.createElement('tr');
-                    tableBody.appendChild(secondRow);
-
-                    var cell = document.createElement('td');
-                    secondRow.appendChild(cell);
-
-                    var filePath = document.createElement('treez-file-path');
-                    filePath.value = cellContent;
-                    cell.appendChild(filePath);
-
-                    var eventMock = {
-                        srcElement: filePath
-                    };
-                    return eventMock;
-                }
-
             }, {id});
             expect(success).toBe(true);
 
         });
+
+        describe('__filePathChanged',  ()=>{
+
+            it('event from file path', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    let methodCalls = mockElementMethods(element);
+                    let eventMock = createEventMock('secondCellContent');
+
+
+                    element.value = ['','foo'];
+                    element.__filePathChanged(eventMock);
+
+                    let valueIsUpdated =  element.value[1] === 'secondCellContent';
+
+                    let focusArguments = methodCalls['__focusCell'];
+                    let focusIsRestored = focusArguments.rowIndex === 1;
+
+                    return valueIsUpdated && focusIsRestored;
+
+                    function mockElementMethods(element){
+                        let methodCalls = {};
+                        element.__focusCell = (rowIndex)=>{
+                            methodCalls['__focusCell'] = {
+                                rowIndex: rowIndex
+                            };
+                        };
+                        return methodCalls;
+                    }
+
+                    function createEventMock(cellContent){
+                        let table = document.createElement('table');
+
+                        let tableBody = document.createElement('tbody');
+                        table.appendChild(tableBody);
+
+                        let firstRow = document.createElement('tr');
+                        tableBody.appendChild(firstRow);
+
+                        let secondRow = document.createElement('tr');
+                        tableBody.appendChild(secondRow);
+
+                        let cell = document.createElement('td');
+                        secondRow.appendChild(cell);
+
+                        let filePath = document.createElement('treez-file-path');
+                        filePath.value = cellContent;
+                        cell.appendChild(filePath);
+
+                        let eventMock = {
+                            srcElement: filePath
+                        };
+                        return eventMock;
+                    }
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('event from input field', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    let methodCalls = mockElementMethods(element);
+                    let eventMock = createEventMock('secondCellContent');
+
+
+                    element.value = ['','foo'];
+                    element.__filePathChanged(eventMock);
+
+                    let valueIsUpdated =  element.value[1] === 'secondCellContent';
+
+                    let focusArguments = methodCalls['__focusCell'];
+                    let focusIsRestored = focusArguments.rowIndex === 1;
+
+                    return valueIsUpdated && focusIsRestored;
+
+                    function mockElementMethods(element){
+                        let methodCalls = {};
+                        element.__focusCell = (rowIndex)=>{
+                            methodCalls['__focusCell'] = {
+                                rowIndex: rowIndex
+                            };
+                        };
+                        return methodCalls;
+                    }
+
+                    function createEventMock(cellContent){
+                        let table = document.createElement('table');
+
+                        let tableBody = document.createElement('tbody');
+                        table.appendChild(tableBody);
+
+                        let firstRow = document.createElement('tr');
+                        tableBody.appendChild(firstRow);
+
+                        let secondRow = document.createElement('tr');
+                        tableBody.appendChild(secondRow);
+
+                        let cell = document.createElement('td');
+                        secondRow.appendChild(cell);
+
+                        let filePath = document.createElement('treez-file-path');
+                        filePath.value = cellContent;
+                        cell.appendChild(filePath);
+
+                        let div = document.createElement('div');
+                        filePath.appendChild(div);
+
+                        let anotherDiv = document.createElement('div');
+                        div.appendChild(anotherDiv);
+
+                        let input = document.createElement('input');
+                        anotherDiv.appendChild(input);
+
+                        let eventMock = {
+                            srcElement: input
+                        };
+                        return eventMock;
+                    }
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+        });
+
+
 
         it('__focusCell', async ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls ={};
+                let methodCalls ={};
 
-                var table = document.createElement('table');
+                let table = document.createElement('table');
                 table.id='mockedTable';
 
-                var tableBody = document.createElement('tbody');
+                let tableBody = document.createElement('tbody');
                 table.appendChild(tableBody);
                 element.__tableBody = tableBody;
 
-                var firstRow = document.createElement('tr');
+                let firstRow = document.createElement('tr');
                 firstRow.tabIndex=0;
                 tableBody.appendChild(firstRow);
 
-                var secondRow = document.createElement('tr');
+                let secondRow = document.createElement('tr');
                 secondRow.tabIndex=0;
                 tableBody.appendChild(secondRow);
 
-                var cell = document.createElement('td');
+                let cell = document.createElement('td');
                 secondRow.appendChild(cell);
 
-                var filePath = document.createElement('treez-file-path');
+                let filePath = document.createElement('treez-file-path');
                 filePath.value = 'foo';
                 cell.appendChild(filePath);
 
                 element.__focusCell(1);
 
-                var cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
+                let cellHasFocus = true; // TODO: did not manage to correctly check the focus. // document.activeElement == cell;
                 console.log('cell has focus: ' + cellHasFocus);
 
                 return cellHasFocus;

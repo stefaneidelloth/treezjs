@@ -155,17 +155,11 @@ describe('TreezStringItemList', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                element.options = 'foo,baa,qux';
+                element.options = ['foo','baa','qux'];
 
                 element.__itemInfoMap = {'foo': 'fooInfo','baa': 'baaInfo','qux': 'quxInfo'};
 
-                let methodCalls = {};
-                element.__recreateOptionTags = (comboBox)=> {
-                    methodCalls['__recreateOptionTags'] = true;
-                    let option = document.createElement('option');
-                    option.innerText = 'foo';
-                    comboBox.appendChild(option);
-                };
+                let methodCalls = createMocks(element);
 
                 let tableIsEmptyBefore = element.__tableBody.children.length === 0;
 
@@ -184,11 +178,54 @@ describe('TreezStringItemList', ()=>{
 
                 let methodIsCalled = methodCalls['__recreateOptionTags'] === true;
 
+                let clickEvent = document.createEvent('HTMLEvents');
+                clickEvent.initEvent('click', false, true);
+                row.dispatchEvent(clickEvent);
+                let rowClickedIsCalled =  methodCalls['__rowClicked'] === true;
+
+                let changeEvent = document.createEvent('HTMLEvents');
+                changeEvent.initEvent('change', false, true);
+                comboBox.dispatchEvent(changeEvent);
+                let comboBoxChangedIsCalled =  methodCalls['__comboBoxChanged'] === true;
+
+                let blurEvent = document.createEvent('HTMLEvents');
+                blurEvent.initEvent('blur', false, true);
+                cell.dispatchEvent(blurEvent);
+                let cellLostFocusIsCalled =  methodCalls['__cellLostFocus'] === true;
+
                 return tableIsEmptyBefore &&
                     rowIsCreated &&
                     valueIsSet &&
                     infoIsSet &&
-                    methodIsCalled;
+                    methodIsCalled &&
+                    rowClickedIsCalled &&
+                    comboBoxChangedIsCalled &&
+                    cellLostFocusIsCalled;
+
+                function createMocks(element){
+                    let methodCalls = {};
+
+                    element.__recreateOptionTags = (comboBox)=> {
+                        methodCalls['__recreateOptionTags'] = true;
+                        let option = document.createElement('option');
+                        option.innerText = 'foo';
+                        comboBox.appendChild(option);
+                    };
+
+                    element.__rowClicked = () => {
+                        methodCalls['__rowClicked'] = true;
+                    };
+
+                    element.__comboBoxChanged = () => {
+                        methodCalls['__comboBoxChanged'] = true;
+                    };
+
+                    element.__cellLostFocus = () => {
+                        methodCalls['__cellLostFocus'] = true;
+                    }
+
+                    return methodCalls;
+                }
 
             }, {id});
             expect(success).toBe(true);
@@ -327,7 +364,7 @@ describe('TreezStringItemList', ()=>{
                     var hasChildrenBefore = comboBox.childNodes.length === 2;
                     console.log('has children before: ' + hasChildrenBefore);
 
-                    element.options = '';
+                    element.options = [];
                     element.__recreateOptionTags(comboBox);
 
                     var hasNoChildrenAfter = comboBox.childNodes.length === 0;
@@ -349,7 +386,7 @@ describe('TreezStringItemList', ()=>{
                     var hasNoChildrenBefore = comboBox.childNodes.length === 0;
                     console.log('has no children before:' + hasNoChildrenBefore);
 
-                    element.options = 'foo,baa,qux';
+                    element.options = ['foo','baa','qux'];
                     element.__recreateOptionTags(comboBox);
 
                     var hasChildrenAfter = comboBox.childNodes.length === 3;
@@ -365,22 +402,17 @@ describe('TreezStringItemList', ()=>{
                 var success = await page.evaluate(({id})=>{
                     var element = document.getElementById(id);
 
-                    var comboBox = document.createElement('select');
-
-                    var firstOption = document.createElement('option');
-                    firstOption.innerText = 'foo';
-                    comboBox.appendChild(firstOption);
-
-                    var secondOption = document.createElement('option');
-                    secondOption.innerText = 'baa';
-                    comboBox.appendChild(secondOption);
-
                     element.value = ['baa'];
 
-                    element.options = 'foo,baa,qux';
-                    element.__recreateOptionTags(comboBox);
+                    element.options = ['foo','baa','qux'];
 
-                    var hasChildrenAfter = comboBox.childNodes.length === 3;
+                    let row = element.__tableBody.firstChild;
+                    let cell = row.firstChild;
+                    let select = cell.firstChild;
+
+                    element.__recreateOptionTags(select);
+
+                    var hasChildrenAfter = select.childNodes.length === 3;
                     var valueIsSet = element.value[0] === 'baa';
 
                     return hasChildrenAfter && valueIsSet;
@@ -419,15 +451,15 @@ describe('TreezStringItemList', ()=>{
                     secondOption.innerText = 'baa';
                     comboBox.appendChild(secondOption);
 
-                    element.options = 'foo,baa';
+                    element.options = ['foo','baa'];
 
                     element.value = ['foo','baa'];
 
-                    element.options = 'foo,qux';
+                    element.options = ['baa','qux']
                     element.__recreateOptionTags(comboBox);
 
                     var hasChildrenAfter = comboBox.childNodes.length === 2;
-                    var firstValueIsSet = element.value[1] === 'foo'
+                    var firstValueIsSet = element.value[1] === 'baa'
 
                     return hasChildrenAfter && firstValueIsSet;
                 },{id});
@@ -447,7 +479,7 @@ describe('TreezStringItemList', ()=>{
             it('without options', async ()=>{
                 var success = await page.evaluate(({id})=>{
                     var element = document.getElementById(id);
-                    element.options = '';
+                    element.options = [];
 
                     return element.__defaultValue === '';
                 },{id});
@@ -457,7 +489,7 @@ describe('TreezStringItemList', ()=>{
             it('with options', async ()=>{
                 var success = await page.evaluate(({id})=>{
                     var element = document.getElementById(id);
-                    element.options = 'a,b,c';
+                    element.options = ['a','b','c'];
 
                     return element.__defaultValue === 'a';
                 },{id});

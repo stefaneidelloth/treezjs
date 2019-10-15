@@ -7,6 +7,4 @@ describe('FillStyle', ()=>{
         expect(FillStyle.values.length).toBe(4);   
     });
 
-    
-
 });
