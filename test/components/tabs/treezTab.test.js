@@ -99,6 +99,33 @@ describe('TreezTab', ()=>{
 
         });
 
+        it('get label', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                element.setAttribute('label','labelMock');
+                return element.label === 'labelMock';
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        it('set label', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                element.label = 'labelMock';
+
+                return element.getAttribute('label') === 'labelMock';
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
     });
 
     afterAll(async () => {

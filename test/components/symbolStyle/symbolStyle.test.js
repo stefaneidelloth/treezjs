@@ -7,6 +7,4 @@ describe('SymbolStyle', ()=>{
         expect(SymbolStyle.values.length).toBe(8);   
     });
 
-    
-
 });
