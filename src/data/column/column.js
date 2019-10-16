@@ -37,7 +37,7 @@ export default class Column extends ComponentAtom {
         const sectionContent = section.append('div'); 
         
         this.__headerSelection = sectionContent.append('treez-text-field')
-						        	.label('header')
+						        	.label('Header')
 						        	.bindValue(this,()=>this.header);
         
         this.__legendSelection = sectionContent.append('treez-text-field')
