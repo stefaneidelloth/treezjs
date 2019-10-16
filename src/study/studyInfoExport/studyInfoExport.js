@@ -279,7 +279,7 @@ export default class StudyInfoExport extends Model {
 			variableNames.push(variableName);
 		}
 
-		//The table is re-created and old data is deleted.
+		//The table is re-created and old data is deleted. This helps to avoid conflicts regarding the column names. 
 		//This way it is easiert to have a quick look at the current data.
 		//If you want to have all (historic) data, please have a look at the non-transposed version of the study info table.
 		await this.__reCreateSqLiteTransposedJobInfoTable(this.connectionString, this.__transposedJobInfoTableName, variableNames);
