@@ -8,9 +8,9 @@ jest.setTimeout(10000);
 
 describe('TreezElement', ()=>{   
     
-    var id = 'treez-element';
+    let id = 'treez-element';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -26,52 +26,91 @@ describe('TreezElement', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });
      
      
          it('get value',  async ()=>{   
-             var property = await page.$eval('#' + id, element=> element.value);       
+             let property = await page.$eval('#' + id, element=> element.value);       
              expect(property).toBe(null);
          });
      
          it('get disabled',  async ()=>{   
-             var property = await page.$eval('#' + id, element=> element.disabled);       
+             let property = await page.$eval('#' + id, element=> element.disabled);       
              expect(property).toBe(false);
          });
      
          it('get hidden',  async ()=>{   
-             var property = await page.$eval('#' + id, element=> element.hidden);       
+             let property = await page.$eval('#' + id, element=> element.hidden);       
              expect(property).toBe(false);
          });
      
          it('get width',  async ()=>{   
-             var property = await page.$eval('#' + id, element=> element.width);       
+             let property = await page.$eval('#' + id, element=> element.width);       
              expect(property).toBe(null);
          });
      
          it('__parentAtom',  async ()=>{   
-             var property = await page.$eval('#' +id, element=> element.__parentAtom);       
+             let property = await page.$eval('#' +id, element=> element.__parentAtom);       
              expect(property).toBe(undefined);
          });
      
          it('__listeners',  async ()=>{   
-             var property = await page.$eval('#' + id, element=> element.__listeners);       
+             let property = await page.$eval('#' + id, element=> element.__listeners);       
              expect(property).toEqual([]);
           });
     });
 
-    describe('Public API', ()=>{    
+    describe('Public API', ()=>{
 
-        it('hide', ()=>{
-            var elementMock = {style: { display: undefined}};
-    
-            TreezElement.hide(elementMock, true);
-            expect(elementMock.style.display).toBe('none');
-    
-            TreezElement.hide(elementMock, false);
-            expect(elementMock.style.display).toBe(null);
+        describe('hide', ()=>{
+
+            it('hide', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let elementMock = {style: { display: undefined}};
+
+                    element.constructor.hide(elementMock, true);
+                    let isHidden =  elementMock.style.display === 'none';
+                    return isHidden;
+
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('show', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let elementMock = {style: { display: undefined}};
+
+                    element.constructor.hide(elementMock, false);
+                    let isShown =  elementMock.style.display === null;
+
+                    return isShown;
+
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('undefined throws error', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let elementMock = {style: { display: undefined}};
+
+                    try{
+                        element.constructor.hide(elementMock);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+
+                },{id});
+                expect(success).toBe(true);
+            });
         });
     
         it('observedAttributes', ()=>{
@@ -79,27 +118,27 @@ describe('TreezElement', ()=>{
         });
 
         it('convertFromStringValue', async ()=>{
-            var value = await page.$eval('#' + id, element=> element.convertFromStringValue('stringValue'));       
+            let value = await page.$eval('#' + id, element=> element.convertFromStringValue('stringValue'));       
             expect(value).toEqual('stringValue');           
         });
 
         it('convertToStringValue', async ()=>{
-            var value = await page.$eval('#' +id, element=> element.convertToStringValue('stringValue'));       
+            let value = await page.$eval('#' +id, element=> element.convertToStringValue('stringValue'));       
             expect(value).toEqual('stringValue');           
         });
 
         describe('disableElements',  ()=> {
 
             it('undefined', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     try{
                         element.disableElements(undefined);
                         return false;
                     } catch (error){
                         return true;
                     }
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
@@ -111,15 +150,15 @@ describe('TreezElement', ()=>{
         describe('hideElements',  ()=> {
 
             it('undefined', async () => {
-                var success = await page.evaluate(() => {
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
                     try {
                         element.hideElements(undefined);
                         return false;
                     } catch (error) {
                         return true;
                     }
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
@@ -133,15 +172,15 @@ describe('TreezElement', ()=>{
         });
 
         it('updateWidth', async ()=>{ 
-            var width = await page.$eval('#' + id, element=> element.style.width);
+            let width = await page.$eval('#' + id, element=> element.style.width);
             expect(width).toBe('');
                         
-            await page.evaluate(()=>{
-                var element = document.getElementById(id);
+            await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
                 element.updateWidth('100%');
-            });
+            },{id});
 
-            var updatedWidth = await page.$eval('#' + id, element=> element.style.width);
+            let updatedWidth = await page.$eval('#' + id, element=> element.style.width);
 
             expect(updatedWidth).toBe('100%'); 
                       
@@ -151,39 +190,40 @@ describe('TreezElement', ()=>{
 
             beforeEach(async ()=>{
 
-                await page.evaluate(()=>{
-                    var atomMock = {property: '33'}; 
+                await page.evaluate(({id})=>{
+                    let atomMock = {property: '33'}; 
                     window.atomMock = atomMock;
 
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
                     element.bindValue(atomMock, () => atomMock.property);
-                });
+                },{id});
             });
 
             it('element value should equal atom value after binding', async ()=>{
-                var bindedElementValue = await page.$eval('#' + id, element=> element.value);
+                let bindedElementValue = await page.$eval('#' + id, element => element.value);
                 expect(bindedElementValue).toBe('33');
             });
 
             it('changing element value should change atom value', async ()=>{
-                await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.value = '66';
-                });
+                    return true;
+                },{id});
     
-                var updatedElementValue = await page.$eval('#' + id, element=> element.value);
+                let updatedElementValue = await page.$eval('#' + id, element => element.value);
                 expect(updatedElementValue).toBe('66');
     
-                var atomProperty = await page.$eval('#' + id, element=> window.atomMock.property);
+                let atomProperty = await page.$eval('#' + id, element => window.atomMock.property);
                 expect(atomProperty).toBe('66'); 
             });
 
             it('changing atom value should change element value', async ()=>{
-                await page.evaluate(()=>{               
-                    window.atomMock.property='99';
+                await page.evaluate( ()=>{
+                    window.atomMock.property = '99';
                 });
     
-                var newElementValue = await page.$eval('#' + id, element=> element.value);
+                let newElementValue = await page.$eval('#' + id, element=> element.value);
                 expect(newElementValue).toBe('99');
             }); 
                      
@@ -192,10 +232,10 @@ describe('TreezElement', ()=>{
         describe('attributeChangedCallback', ()=>{
 
             it('value', async ()=>{ 
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var methodCalls = {};
+                    let methodCalls = {};
                    
                     element.convertFromStringValue = (value)=>{
                         methodCalls['convertFromStringValue'] = 'convertedValueMock';
@@ -213,16 +253,16 @@ describe('TreezElement', ()=>{
                     element.attributeChangedCallback('value','oldStringValueMock','newStringValueMock');
 
                     return Object.keys(methodCalls).length === 3;
-                });
+                },{id});
                 expect(success).toBe(true); 
             });
 
             describe('disabled', ()=>{ 
                 it('value changed to true (!==null)', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.disableElements = (value)=>{
                             methodCalls['disableElements'] = value;                      
                         };
@@ -230,15 +270,15 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('disabled',null,'');
 
                         return methodCalls['disableElements'] === true;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
 
                 it('value changed to null', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.disableElements = (value)=>{
                             methodCalls['disableElements'] = value;                      
                         };
@@ -246,15 +286,15 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('disabled','',null);
 
                         return methodCalls['disableElements'] === false;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
 
                 it('value did not change', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.disableElements = (value)=>{
                             methodCalls['disableElements'] = value;                      
                         };
@@ -262,7 +302,7 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('disabled','','');
 
                         return Object.keys(methodCalls).length === 0;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
                      
@@ -271,10 +311,10 @@ describe('TreezElement', ()=>{
             describe('hidden', ()=>{ 
 
                 it('value changed to true (!==null)', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.hideElements = (value)=>{
                             methodCalls['hideElements'] = value;                      
                         };
@@ -282,15 +322,15 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('hidden',null,'');
 
                         return methodCalls['hideElements'] === true;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
 
                 it('value changed to null', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.hideElements = (value)=>{
                             methodCalls['hideElements'] = value;                      
                         };
@@ -298,15 +338,15 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('hidden','',null);
 
                         return methodCalls['hideElements'] === false;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
 
                 it('value did not change', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.hideElements = (value)=>{
                             methodCalls['hideElements'] = value;                      
                         };
@@ -314,7 +354,7 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('hidden','','');
 
                         return Object.keys(methodCalls).length === 0;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
                      
@@ -322,10 +362,10 @@ describe('TreezElement', ()=>{
 
             describe('width', ()=>{ 
                 it('value changed', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.updateWidth = (value)=>{
                             methodCalls['updateWidth'] = value;                      
                         };
@@ -333,15 +373,15 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('width','0 px', '10 px');
 
                         return methodCalls['updateWidth'] === '10 px';
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
 
                 it('value did not change', async ()=>{
-                    var success = await page.evaluate(()=>{
-                        var element = document.getElementById(id);
+                    let success = await page.evaluate(({id})=>{
+                        let element = document.getElementById(id);
 
-                        var methodCalls = {};                   
+                        let methodCalls = {};                   
                         element.updateWidth = (value)=>{
                             methodCalls['updateWidth'] = value;                      
                         };
@@ -349,7 +389,7 @@ describe('TreezElement', ()=>{
                         element.attributeChangedCallback('width','10 px','10 px');
 
                         return Object.keys(methodCalls).length === 0;
-                    });
+                    },{id});
                     expect(success).toBe(true); 
                 });
             });
@@ -357,58 +397,58 @@ describe('TreezElement', ()=>{
         });
 
         it('dispatchChangeEvent', async ()=>{
-            var success = await page.evaluate(()=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var methodCalls = {};                   
+                let methodCalls = {};                   
                 element.dispatchEvent = (value)=>{
                     methodCalls['dispatchEvent'] = value;                      
                 };
 
                 element.dispatchChangeEvent();
 
-                var event = methodCalls['dispatchEvent'];
+                let event = methodCalls['dispatchEvent'];
 
                 return event.type === 'change';
-            });
+            },{id});
             expect(success).toBe(true); 
         });
 
         it('disconnectedCallback', async ()=>{
-            var success = await page.evaluate(()=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                var firstChild = document.createElement('div');
+                let firstChild = document.createElement('div');
                 element.appendChild(firstChild);
 
-                var secondChild = document.createElement('div');
+                let secondChild = document.createElement('div');
                 element.appendChild(secondChild);
 
                 element.disconnectedCallback();
 
                 return element.hasChildNodes() === false;
-            });
+            },{id});
             expect(success).toBe(true);             
         });
 
         describe('set value', ()=>{
             it('converted string value is not null', async ()=>{ 
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
     
                     element.value = '33'; 
                     return element.getAttribute('value') === '33';
-                });
+                },{id});
                 expect(success).toBe(true);  
             });
 
             it('converted string vlaue is null', async ()=>{ 
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.convertToStringValue = () => null;    
                     element.value = 'dummyValue'; 
                     return element.getAttribute('value') === null;
-                });
+                },{id});
                 expect(success).toBe(true);  
             });
         });
@@ -416,20 +456,20 @@ describe('TreezElement', ()=>{
         describe('set disabled', ()=>{ 
 
             it('truthy', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.disabled = 'xy'; 
                     return element.getAttribute('disabled') === '';
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
             it('falsy', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.disabled = 0; 
                     return element.getAttribute('disabled') === null;
-                });
+                },{id});
                 expect(success).toBe(true);
             });
            
@@ -437,45 +477,46 @@ describe('TreezElement', ()=>{
 
         describe('set hidden', ()=>{ 
             it('truthy', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.hidden = true; 
                     return element.getAttribute('hidden') === '';
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
             it('falsy', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                     element.hidden = undefined; 
                     return element.getAttribute('hidden') === null;
-                });
+                },{id});
                 expect(success).toBe(true);
             });         
         });
 
         it('set width', async ()=>{ 
-            var success = await page.evaluate(()=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
                 element.width = '5 px'; 
                 return element.getAttribute('width') === '5 px';
-            });
+            },{id});
             expect(success).toBe(true);
         });
         
     });
     
     describe('Private API', ()=>{
-        it('__updateExternalProperties', async ()=>{
-            var success = await page.evaluate(()=>{
-                var element = document.getElementById(id);
 
-                var methodCalls = {};
-                var firstAtomMock = {
+        it('__updateExternalProperties', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
+
+                let methodCalls = {};
+                let firstAtomMock = {
                     property: ''
                 };
-                var secondAtomMock = {
+                let secondAtomMock = {
                     anotherProperty: ''
                 };
 
@@ -494,59 +535,83 @@ describe('TreezElement', ()=>{
                 
                 return firstAtomMock.property === 'newValueMock' && 
                        secondAtomMock.anotherProperty === 'newValueMock';
-            });
+            },{id});
             expect(success).toBe(true);
         });
 
         describe('__extractPropertyNameFromLambdaExpression', ()=>{
 
             it('common usage', async ()=>{
-                var parentAtomMock = { myProperty: 0};
-                var propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => atom.myProperty)
-                expect(propertyName).toBe('myProperty');
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let parentAtomMock = { myProperty: 0};
+                    let propertyName = element.constructor.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => atom.myProperty)
+                    return propertyName === 'myProperty';
+                },{id});
+                expect(success).toBe(true);
+
+
             });
 
             it('lambda expression without point', async ()=>{
-                var parentAtomMock = { myProperty: 0};
-                var throwingMethod = ()=>{
-                    TreezElement.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => myProperty);
-                };
-                expect(throwingMethod).toThrowError("Could not determine property name");
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    let parentAtomMock = { myProperty: 0};
+                    try{
+                        element.constructor.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => myProperty);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+
+                },{id});
+                expect(success).toBe(true);
+
             });
 
             it('wrong property name', async ()=>{
-                var parentAtomMock = { myProperty: 0};
-                var throwingMethod = ()=>{TreezElement.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => atom.fooProperty);};
-                expect(throwingMethod).toThrowError("Unknown property");
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let parentAtomMock = { myProperty: 0};
+                    try{
+                        element.constructor.__extractPropertyNameFromLambdaExpression(parentAtomMock, atom => atom.fooProperty);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
             });
 
         });
 
         it('__addListenerToUpdateExternalPropertyOnAttributeChanges', async ()=>{
-            var success = await page.evaluate(()=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
                
-                var atomMock = {
+                let atomMock = {
                     myProperty: ''
                 };        
                                    
                 element.__addListenerToUpdateExternalPropertyOnAttributeChanges(atomMock, 'myProperty');
 
-                var listener = element.__listeners[0];
+                let listener = element.__listeners[0];
                 
                 return listener.atom === atomMock && 
                     listener.propertyName === 'myProperty';
-            });
+            },{id});
             expect(success).toBe(true);
         });
 
         describe('__modifyExternalPropertyToUpdateValueOnPropertyChanges', ()=>{
 
             it('Property without existing getter and setter', async ()=>{
-                var success = await page.evaluate(()=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
                    
-                    var atomMock = {
+                    let atomMock = {
                         myProperty: ''
                     };        
                                        
@@ -555,12 +620,12 @@ describe('TreezElement', ()=>{
                     atomMock.myProperty = 'newValue';
 
                     return element.value === 'newValue'; 
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
             it('Property that only has a setter; should throw error', async ()=>{
-                var success = await page.evaluate(()=>{
+                let success = await page.evaluate(({id})=>{
                    
                     class AtomMock {
 
@@ -575,9 +640,9 @@ describe('TreezElement', ()=>{
                         }
                     }
 
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
                    
-                    var atomMock = new AtomMock();
+                    let atomMock = new AtomMock();
                                        
                     try{
                         element.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'atomProperty');
@@ -586,14 +651,14 @@ describe('TreezElement', ()=>{
                         return true;
                     }  
                     
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
             it('Property with predefined getter and setter', async ()=>{
-                var success = await page.evaluate(()=>{
+                let success = await page.evaluate(({id})=>{
 
-                    var methodCalls = [];
+                    let methodCalls = [];
 
                     class AtomMock {
 
@@ -611,36 +676,36 @@ describe('TreezElement', ()=>{
                             this.__myProperty=newValue; 
                         }
                     }
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
                    
-                    var atomMock = new AtomMock();
+                    let atomMock = new AtomMock();
                                        
                     element.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'myProperty');
 
-                    var getterStillWorksAfterBinding = atomMock.myProperty === 'foo';
-                    var existingGetterIsUsed = methodCalls[0].name === 'getMyProperty';
+                    let getterStillWorksAfterBinding = atomMock.myProperty === 'foo';
+                    let existingGetterIsUsed = methodCalls[0].name === 'getMyProperty';
     
                     atomMock.myProperty = 'newValue';
 
-                    var elementValueIsSet = element.value === 'newValue';    
-                    var existingSetterIsCalled = methodCalls.pop().name === 'setMyProperty'; 
-                    var getterStillWorks = atomMock.myProperty === 'newValue';
+                    let elementValueIsSet = element.value === 'newValue';    
+                    let existingSetterIsCalled = methodCalls.pop().name === 'setMyProperty'; 
+                    let getterStillWorks = atomMock.myProperty === 'newValue';
                     
                     return getterStillWorksAfterBinding &&
                         existingGetterIsUsed &&
                         elementValueIsSet &&
                         existingSetterIsCalled &&
                         getterStillWorks;                    
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
             
             
             it('Property that already has been binded to the same element; setter is only called once.', async ()=>{
-                var success = await page.evaluate(()=>{
+                let success = await page.evaluate(({id})=>{
 
-                    var methodCalls = [];
+                    let methodCalls = [];
 
                     class AtomMock {
 
@@ -658,24 +723,24 @@ describe('TreezElement', ()=>{
                             this.__myProperty=newValue; 
                         }
                     }
-                    var element = document.getElementById(id);
+                    let element = document.getElementById(id);
                    
-                    var atomMock = new AtomMock();
+                    let atomMock = new AtomMock();
                                        
                     element.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'myProperty');
                     element.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'myProperty');
     
                     atomMock.myProperty = 'newValue';
 
-                    var elementValueIsSet = element.value === 'newValue';
+                    let elementValueIsSet = element.value === 'newValue';
 
-                    var numberOfSetterCalls = methodCalls.filter(methodCall => methodCall.name === 'setMyProperty').length;                    
-                    var setterIsOnlyCalledOnce = numberOfSetterCalls === 1;
+                    let numberOfSetterCalls = methodCalls.filter(methodCall => methodCall.name === 'setMyProperty').length;                    
+                    let setterIsOnlyCalledOnce = numberOfSetterCalls === 1;
 
                     return elementValueIsSet && 
                         setterIsOnlyCalledOnce;                   
                     
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 
@@ -683,7 +748,7 @@ describe('TreezElement', ()=>{
 
                 await TestUtils.createCustomElement(page, id, 'TreezElement', '../src/components/treezElement.js','second-treez-element');
 
-                var success = await page.evaluate(()=>{                   
+                let success = await page.evaluate(({id})=>{
 
                     class AtomMock {
 
@@ -700,10 +765,10 @@ describe('TreezElement', ()=>{
                         }
                     }
 
-                    var firstElement = document.getElementById(id);
-                    var secondElement = document.getElementById('second-treez-element');                    
+                    let firstElement = document.getElementById(id);
+                    let secondElement = document.getElementById('second-treez-element');                    
                    
-                    var atomMock = new AtomMock();
+                    let atomMock = new AtomMock();
                                        
                     firstElement.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'myProperty');
                     secondElement.__modifyExternalPropertyToUpdateValueOnPropertyChanges(atomMock, 'myProperty');
@@ -713,7 +778,7 @@ describe('TreezElement', ()=>{
                     return firstElement.value === 'newValue' && 
                             secondElement.value === 'newValue';                   
                     
-                });
+                },{id});
                 expect(success).toBe(true);
             });
 

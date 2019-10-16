@@ -101,7 +101,7 @@ export default class TreezElement extends HTMLElement {
 	bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
 		this.__parentAtom = parentAtom;
 		
-		var propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
+		let propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
 
 		this.value = parentAtom[propertyName];					
 
@@ -113,7 +113,7 @@ export default class TreezElement extends HTMLElement {
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
 		if(attr==='value'){                      	                		
 		   if(newStringValue!==oldStringValue){
-			   var newValue = this.convertFromStringValue(newStringValue);
+			   let newValue = this.convertFromStringValue(newStringValue);
 			   this.updateElements(newValue);
 			   this.__updateExternalProperties(newValue);
 		   }
@@ -121,14 +121,14 @@ export default class TreezElement extends HTMLElement {
 
 		if(attr==='disabled'){                      	                		
 		   if(newStringValue!==oldStringValue){	
-			   var newValue = !(newStringValue === null);
+			   let newValue = !(newStringValue === null);
 			   this.disableElements(newValue);
 		   }
 		}  
 
 		if(attr==='hidden'){                      	                		
 		   if(newStringValue!==oldStringValue){	
-			   var newValue = !(newStringValue === null);
+			   let newValue = !(newStringValue === null);
 			   this.hideElements(newValue);							
 		   }
 		}   
@@ -142,7 +142,7 @@ export default class TreezElement extends HTMLElement {
 
    
    dispatchChangeEvent(){
-	   var event = new Event(
+	   let event = new Event(
 							 'change', 
 							 {
 							   'bubbles': true,
@@ -162,7 +162,7 @@ export default class TreezElement extends HTMLElement {
 	
     
     __updateExternalProperties(newValue){
- 	   for(var listener of this.__listeners){
+ 	   for(let listener of this.__listeners){
  			listener.atom[listener.propertyName] = newValue;
  	   } 
  	}     
@@ -171,7 +171,7 @@ export default class TreezElement extends HTMLElement {
     //therefore a lambda expression is passed to identify the property
     //this method extracts the property name using introspection
 	static __extractPropertyNameFromLambdaExpression(parentAtom, expression){
-		var propertyName = expression.toString().split(".").pop();
+		let propertyName = expression.toString().split(".").pop();
 		if(propertyName.indexOf("=>")>-1){		
 			throw new Error("Could not determine property name to create binding from lambda expression '" + expression + "'")
 		}
@@ -250,7 +250,7 @@ export default class TreezElement extends HTMLElement {
 					return setter;
 				} else {
 					//another element already has been binded to the atom; create extended setter
-					var setProxy = (newValue) => {
+					let setProxy = (newValue) => {
 						let oldValue = privateValue;
 						if(newValue != oldValue){							
 							setter.call(parentAtom, newValue); //call is used because setter(newValue) would not work due to missing this context
@@ -264,7 +264,7 @@ export default class TreezElement extends HTMLElement {
 			}
 
 			function __createPropertyValueSetProxyForExistingExternalSetter(setter){
-				var setProxy = (newValue) => {
+				let setProxy = (newValue) => {
 					let oldValue = privateValue;
 					if(newValue != oldValue){
 						setter.call(parentAtom, newValue);
@@ -277,7 +277,7 @@ export default class TreezElement extends HTMLElement {
 			}
 			
 			function __createNewPropertyValueSetProxy(){
-				var setProxy = (newValue) => {
+				let setProxy = (newValue) => {
 					let oldValue = privateValue;
 					if(newValue != oldValue){						
 						privateValue = newValue;
@@ -306,12 +306,12 @@ export default class TreezElement extends HTMLElement {
 	
 	
     get value() {
-	  var stringValue = this.getAttribute('value');
+	  let stringValue = this.getAttribute('value');
 	  return this.convertFromStringValue(stringValue);
 	}
 
 	set value(value) {
-	  var stringValue = this.convertToStringValue(value);
+	  let stringValue = this.convertToStringValue(value);
 	  if(stringValue === null){
 		  this.removeAttribute('value');
 	  } else {
@@ -320,7 +320,7 @@ export default class TreezElement extends HTMLElement {
 	}
 
 	get disabled() {
-		var stringValue = this.getAttribute('disabled')
+		let stringValue = this.getAttribute('disabled')
 	    return  !(stringValue === null);
 	}
 
@@ -333,7 +333,7 @@ export default class TreezElement extends HTMLElement {
 	}  
 
 	get hidden() {
-		var stringValue = this.getAttribute('hidden')
+		let stringValue = this.getAttribute('hidden')
 	    return  !(stringValue === null);
 	}
 
