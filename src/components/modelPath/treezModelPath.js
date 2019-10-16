@@ -17,25 +17,25 @@ export default class TreezModelPath extends LabeledTreezElement {
     	
         if(!this.__label){  
 
-            var label = document.createElement('label');  
+            let label = document.createElement('label');  
             this.__label = label;                     
             label.innerText = this.label;
             label.className = 'treez-model-path-label';                       
             this.appendChild(label);
 
-            var container = document.createElement('div');
+            let container = document.createElement('div');
             container.className='treez-model-path-container';
             this.appendChild(container);
 
-            var relativeRootLabel = document.createElement('span');
+            let relativeRootLabel = document.createElement('span');
             this.__relativeRootLabel = relativeRootLabel;
             relativeRootLabel.className='treez-model-path-relative-root-label';
             relativeRootLabel.style.display='none';
             container.appendChild(relativeRootLabel);  
             
-			var uniqueOptionsId = 'options' + new Date().valueOf() + Math.random();
+			let uniqueOptionsId = 'options' + new Date().valueOf() + Math.random();
 
-            var comboBox = document.createElement('select');
+            let comboBox = document.createElement('select');
             this.__comboBox = comboBox;
             comboBox.onchange = () => this.__comboBoxChanged();             
             comboBox.className='treez-model-path-select';                                            
@@ -50,14 +50,14 @@ export default class TreezModelPath extends LabeledTreezElement {
     updateElements(newValue){
     	if(this.__comboBox){ 
     		if(newValue){ 
-    		    var comboBoxValue = this.convertToStringValue(newValue);
+    		    let comboBoxValue = this.convertToStringValue(newValue);
     			if(this.__comboBox.value !== comboBoxValue){
     				this.__comboBox.value = comboBoxValue; 
     			}  
             	
             } else {
-            	if(this.__comboBox.value){
-            		this.__comboBox.value = null;
+            	if(this.__comboBox.value !== ''){
+            		this.__comboBox.value = '';
             	}                        	
             }						
 		}					    
@@ -109,7 +109,12 @@ export default class TreezModelPath extends LabeledTreezElement {
 		}
 
 		if(this.isUsingRelativeRoot){
-			return absolutePath.substring(this.rootPath.length);
+			if(absolutePath.includes(this.rootPath)){
+				return absolutePath.substring(this.rootPath.length);
+			} else {
+				return absolutePath;
+			}
+			
 		} else {
 			return absolutePath;
 		}
@@ -125,10 +130,10 @@ export default class TreezModelPath extends LabeledTreezElement {
     		return;
     	} 
     	                	             	
-        var modelPaths = [null].concat(this.__getAvailableModelPaths(this.root, this.hasToBeEnabled, this.filterDelegate));
+        let modelPaths = [null].concat(this.__getAvailableModelPaths(this.root, this.hasToBeEnabled, this.filterDelegate));
 
-		var newComboBoxValue = this.__tryToGetUpdatedModelPath(modelPaths);
-		var newValue = this.convertFromStringValue(newComboBoxValue);
+		let newComboBoxValue = this.__tryToGetUpdatedModelPath(modelPaths);
+		let newValue = this.convertFromStringValue(newComboBoxValue);
 		if(this.value !== newValue){
 			this.value = newValue;
 		}
@@ -142,7 +147,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 
      __tryToGetUpdatedModelPath(newAvailableModelPaths){
      
-    	var oldModelPath = this.value;
+    	let oldModelPath = this.value;
 
     	if(!oldModelPath){
     		return null;
@@ -164,7 +169,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 			return null;
 		}
 
-		var relativePath = oldModelPath.substring(this.rootPath.length);					
+		let relativePath = oldModelPath.substring(this.rootPath.length);					
 
     	if(newAvailableModelPaths.indexOf(relativePath) >-1){
     		return relativePath; 
@@ -190,8 +195,8 @@ export default class TreezModelPath extends LabeledTreezElement {
     }
 
     __createOptions(items){
-    	 for(var item of items){
-        	 var option = document.createElement('option');
+    	 for(let item of items){
+        	 let option = document.createElement('option');
        		 option.innerText = item;
        		 this.__comboBox.appendChild(option); 
         } 
@@ -199,12 +204,12 @@ export default class TreezModelPath extends LabeledTreezElement {
     
     __getAvailableModelPaths(atom, hasToBeEnabled, filterDelegate){
     	
-    	var classes = this.__atomClasses;
-    	var functionNames = this.__atomFunctionNames;
+    	let classes = this.__atomClasses;
+    	let functionNames = this.__atomFunctionNames;
     	            		            		
-		var availablePaths = [];
+		let availablePaths = [];
 		
-		for(var child of atom.children){
+		for(let child of atom.children){
 
 			if (hasToBeEnabled) {                					
 				if (!child.isEnabled) {
@@ -237,15 +242,15 @@ export default class TreezModelPath extends LabeledTreezElement {
 
     __addAvailablePathByClass(availablePaths, child, classes, filterDelegate){
 
-		var rootPath = this.rootPath;
-    	var paths = availablePaths;
-		for(var clazz of classes){           						
+		let rootPath = this.rootPath;
+    	let paths = availablePaths;
+		for(let clazz of classes){           						
 			if (!(child instanceof clazz)) {
 				continue;
 			}
 
 			if (filterDelegate) {
-				var passedFilter = filterDelegate(child);
+				let passedFilter = filterDelegate(child);
 				if (!passedFilter) {
 					continue;
 				}
@@ -258,13 +263,13 @@ export default class TreezModelPath extends LabeledTreezElement {
 	}
 
 	__addAvailablePathByInterface(availablePaths, child, functionNames, filterDelegate){		
-		var paths = availablePaths;
-		var hasInterface =  this.__containsAllFunctions(child, functionNames)
+		let paths = availablePaths;
+		let hasInterface =  this.__containsAllFunctions(child, functionNames)
 
 		if(hasInterface){
 
 			if (filterDelegate) {
-				var passedFilter = filterDelegate(child);
+				let passedFilter = filterDelegate(child);
 				if (passedFilter) {
 					paths = this.__addPathForChild(paths, child);
 				}
@@ -279,12 +284,12 @@ export default class TreezModelPath extends LabeledTreezElement {
 
 	__addPathForChild(availablePaths, child){
 
-		var rootPath = this.rootPath;
-		var paths = availablePaths;
-		var path = child.treePath;
+		let rootPath = this.rootPath;
+		let paths = availablePaths;
+		let path = child.treePath;
 
 		if(this.isUsingRelativeRoot){                					
-				var relativePath = path.substring(rootPath.length);
+				let relativePath = path.substring(rootPath.length);
 				paths.push(relativePath);
 		} else {
 				paths.push(path);
@@ -293,7 +298,7 @@ export default class TreezModelPath extends LabeledTreezElement {
 	}
 
 	__containsAllFunctions(child, functionNames){		
-		for(var functionName of functionNames){           						
+		for(let functionName of functionNames){           						
 			if (!(child[functionName])) {
 				return false;
 			}		
@@ -311,7 +316,7 @@ export default class TreezModelPath extends LabeledTreezElement {
   	} 
 
   	get atomFunctionNames() {   				
-  	  return this.__atomFunctionNames
+  	  return this.__atomFunctionNames;
   	}
 
   	set atomFunctionNames(value) {

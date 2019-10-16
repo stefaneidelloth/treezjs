@@ -60,11 +60,15 @@ describe('TreezModelPath', ()=>{
                 element.connectedCallback();
 
                 const methodsAreCalled = (methodCalls['__updateOptionsAndRelativeRoot'] === true) &&
-                    (methodCalls['updateElements'] === null) &&
-                    (methodCalls['disableElements'] === false) &&
-                    (methodCalls['hideElements'] === false);
+                    (methodCalls['update'] === true);
 
-                console.log('methods are called:' + methodsAreCalled);
+                console.log('methods are called: ' + methodsAreCalled);
+
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__comboBox.dispatchEvent(event);
+
+                let comboBoxChangedIsCalled = methodCalls['__comboBoxChanged'] === true;
 
                 let labelIsCreated = element.__label.constructor.name === 'HTMLLabelElement';
                 console.log('label is created: ' + labelIsCreated);
@@ -72,10 +76,14 @@ describe('TreezModelPath', ()=>{
                 let relativeRootLabelIsCreated = element.__relativeRootLabel.constructor.name === 'HTMLSpanElement';
                 console.log('relative root label is created: ' + relativeRootLabelIsCreated);
 
-                let comboBoxIsCreated = element.__comboBox.constructor.name === 'HTMLInputElement';
+                let comboBoxIsCreated = element.__comboBox.constructor.name === 'HTMLSelectElement';
                 console.log('combo box is created: ' + comboBoxIsCreated);
 
-                return methodsAreCalled && labelIsCreated && relativeRootLabelIsCreated && comboBoxIsCreated;
+                return methodsAreCalled &&
+                    comboBoxChangedIsCalled &&
+                    labelIsCreated &&
+                    relativeRootLabelIsCreated &&
+                    comboBoxIsCreated;
 
                 function prepareMocks(element) {
                     const methodCalls = {};
@@ -84,16 +92,12 @@ describe('TreezModelPath', ()=>{
                         methodCalls['__updateOptionsAndRelativeRoot'] = true;
                     };
 
-                    element.updateElements = (value) => {
-                        methodCalls['updateElements'] = value;
+                    element.update = () => {
+                        methodCalls['update'] = true;
                     };
 
-                    element.disableElements = (value) => {
-                        methodCalls['disableElements'] = value;
-                    };
-
-                    element.hideElements = (value) => {
-                        methodCalls['hideElements'] = value;
+                    element.__comboBoxChanged = () => {
+                        methodCalls['__comboBoxChanged'] = true;
                     };
 
                     return methodCalls;
@@ -101,10 +105,9 @@ describe('TreezModelPath', ()=>{
 
                 function removeExistingChildren(element) {
 
-                    element.__updateOptionsAndRelativeRoot = undefined;
-                    element.updateElements = undefined;
-                    element.disableElements = undefined;
-                    element.hideElements = undefined;
+                    element.__label = undefined;
+                    element.__relativeRootLabel = undefined;
+                    element.__comboBox = undefined;
 
                     while (element.firstChild) {
                         element.firstChild.remove();
@@ -124,11 +127,16 @@ describe('TreezModelPath', ()=>{
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
 
-                    element.convertToStringValue = (value)=>{return value;};
+                    element.convertToStringValue = value => value;
 
-                    element.updateElements('newValueMock');
+                    let newValueMock = 'newValueMock';
+                    let option = document.createElement('option');
+                    option.innerText = newValueMock;
+                    element.__comboBox.appendChild(option);
 
-                    return element.__comboBox.value === 'newValueMock';
+                    element.updateElements(newValueMock);
+
+                    return element.__comboBox.value === newValueMock;
 
                 }, {id});
                 expect(success).toBe(true);
@@ -140,8 +148,11 @@ describe('TreezModelPath', ()=>{
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
 
-                    element.convertToStringValue = (value)=>{return value;};
+                    element.convertToStringValue = value => value;
 
+                    let option = document.createElement('option');
+                    option.innerText = 'foo';
+                    element.__comboBox.appendChild(option);
                     element.__comboBox.value = 'foo';
                     element.updateElements(null);
 
@@ -153,51 +164,92 @@ describe('TreezModelPath', ()=>{
             });
         });
 
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-
-        it('disableElements', async ()=>{
-
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
-
-                var methodCalls = {};
-                element.__disableTable = (value)=>{
-                    methodCalls['__disableTable'] = value;
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
                 };
 
-                let comboBoxIsNotDisabledBefore = element.__comboBox.disabled === false;
-
-                element.disableElements(true);
-
-                let comboBoxIsDisabledAfter = element.__comboBox.disabled === true;
-
-                return comboBoxIsNotDisabledBefore &&
-                    comboBoxIsDisabledAfter;
-
-            }, {id});
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__comboBox;
+            },{id});
             expect(success).toBe(true);
-
         });
 
-        it('hideElements', async ()=>{
+        describe('disableElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                const labelIsNotHiddenBefore = element.__label.style.display === '';
-                const comboBoxIsNotHiddenBefore = element.__comboBox.style.display === '';
+            it('common usage', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                element.hideElements(true);
+                    let methodCalls = {};
+                    element.__disableTable = (value)=>{
+                        methodCalls['__disableTable'] = value;
+                    };
 
-                const labelIsHiddenAfter = element.__label.style.display === 'none';
-                const comboBoxIsHiddenAfter = element.__comboBox.style.display === 'none';
+                    let comboBoxIsNotDisabledBefore = element.__comboBox.disabled === false;
 
-                return labelIsNotHiddenBefore && comboBoxIsNotHiddenBefore &&
-                    labelIsHiddenAfter && comboBoxIsHiddenAfter;
+                    element.disableElements(true);
 
-            }, {id});
-            expect(success).toBe(true);
+                    let comboBoxIsDisabledAfter = element.__comboBox.disabled === true;
 
+                    return comboBoxIsNotDisabledBefore &&
+                        comboBoxIsDisabledAfter;
+
+                }, {id});
+                expect(success).toBe(true);
+            });
+        });
+
+        describe('hideElements', () => {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                }, {id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    const labelIsNotHiddenBefore = element.__label.style.display === '';
+                    const comboBoxIsNotHiddenBefore = element.__comboBox.style.display === '';
+
+                    element.hideElements(true);
+
+                    const labelIsHiddenAfter = element.__label.style.display === 'none';
+                    const comboBoxIsHiddenAfter = element.__comboBox.style.display === 'none';
+
+                    return labelIsNotHiddenBefore && comboBoxIsNotHiddenBefore &&
+                        labelIsHiddenAfter && comboBoxIsHiddenAfter;
+
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
         describe('convertFromStringValue', ()=> {
@@ -223,7 +275,8 @@ describe('TreezModelPath', ()=>{
                         const element = await document.getElementById(id);
 
                         element.relativeRootAtom = {
-                            treePath: 'root.results'
+                            treePath: 'root.results',
+                            children: []
                         };
 
                         let value = element.convertFromStringValue('root.results.foo');
@@ -240,7 +293,8 @@ describe('TreezModelPath', ()=>{
                         const element = await document.getElementById(id);
 
                         element.relativeRootAtom = {
-                            treePath: 'root.results'
+                            treePath: 'root.results',
+                            children: []
                         };
 
                         let value = element.convertFromStringValue('.foo');
@@ -288,7 +342,8 @@ describe('TreezModelPath', ()=>{
                     const element = await document.getElementById(id);
 
                     element.relativeRootAtom = {
-                        treePath: 'root.results'
+                        treePath: 'root.results',
+                        children: []
                     };
 
                     let relativePath = element.convertToStringValue('root.results.foo');
@@ -314,6 +369,152 @@ describe('TreezModelPath', ()=>{
             });
         });
 
+        it('get atomClasses', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                element.__atomClasses = ['atomClassMock'];
+                let classes = element.atomClasses
+
+                return classes[0] === 'atomClassMock';
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        it('set atomClasses', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                let methodCalls = {};
+                element.__updateOptionsAndRelativeRoot = () =>{
+                    methodCalls['__updateOptionsAndRelativeRoot'] = true;
+                };
+
+                element.atomClasses = ['atomClassMock'];
+
+                let valueIsSet = element.__atomClasses[0] === 'atomClassMock';
+                let methodIsCalled = methodCalls['__updateOptionsAndRelativeRoot'] === true;
+
+                return valueIsSet && methodIsCalled;
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        it('get atomFunctionNames', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+                element.__atomFunctionNames = ['functionNameMock'];
+                let names = element.atomFunctionNames;
+                return names[0] === 'functionNameMock';
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        it('set atomFunctionNames', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                let methodCalls = {};
+                element.__updateOptionsAndRelativeRoot = () =>{
+                    methodCalls['__updateOptionsAndRelativeRoot'] = true;
+                };
+
+                element.atomFunctionNames = ['functionNameMock'];
+
+                let valueIsSet = element.__atomFunctionNames[0] === 'functionNameMock';
+                let methodIsCalled = methodCalls['__updateOptionsAndRelativeRoot'] === true;
+
+                return valueIsSet && methodIsCalled;
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
+        describe('get root',  ()=>{
+
+            it('with relative root atom', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    element.relativeRootAtom = {
+                        treePath:'root',
+                        children: []
+                    };
+
+                    return element.root.treePath === 'root';
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('from parent atom', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    element.__parentAtom = {root: {treePath:'parentRoot'}};
+
+                    return element.root.treePath === 'parentRoot';
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('without root', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    return element.root === null;
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+        });
+
+        describe('get rootPath', ()=>{
+
+            it('without root', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    return element.rootPath === '';
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('with root', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+                    element.relativeRootAtom = {
+                        treePath:'root',
+                        children: []
+                    };
+                    return element.rootPath === 'root';
+                }, {id});
+                expect(success).toBe(true);
+
+
+            });
+        });
+
     });
 
     describe('Private API', ()=>{
@@ -324,10 +525,15 @@ describe('TreezModelPath', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                var methodCalls = mockElementMethods(element);
+                let methodCalls = mockElementMethods(element);
 
-                element.value ='baa';
+                element.value = 'baa';
+                
+                let option = document.createElement('option');
+                option.innerText = 'foo';
+                element.__comboBox.appendChild(option);
                 element.__comboBox.value = 'foo';
+
                 element.__comboBoxChanged();
 
                 let valueIsUpdated =  element.value === 'foo';
@@ -336,7 +542,7 @@ describe('TreezModelPath', ()=>{
                 return valueIsUpdated && methodIsCalled;
 
                 function mockElementMethods(element){
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.convertFromStringValue = (value)=>{
                         methodCalls['convertFromStringValue'] = value;
                         return value;
@@ -354,9 +560,9 @@ describe('TreezModelPath', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                element.__parentAtom = 'parentAtomMock';
+                element.__parentAtom = {root: 'rootMock'};
 
-                var methodCalls = {};
+                let methodCalls = {};
                 element.__getAvailableModelPaths = () => {
                     methodCalls['__getAvailableModelPaths'] = true;
                     return ['root.a','root.b'];
@@ -433,6 +639,42 @@ describe('TreezModelPath', ()=>{
 
                 });
 
+                it('new available paths do not contain old path', async ()=>{
+
+                    const success = await page.evaluate(async ({id}) => {
+                        const element = await document.getElementById(id);
+                        element.value = 'root.foo';
+                        let modelPath = element.__tryToGetUpdatedModelPath(['root.baa','root.qux']);
+                        return modelPath === null;
+                    }, {id});
+                    expect(success).toBe(true);
+
+                });
+
+                it('old path is shorter than new root path', async ()=>{
+
+                    const success = await page.evaluate(async ({id}) => {
+                        const element = await document.getElementById(id);
+
+
+                        element.relativeRootAtom = {
+                            treePath: 'myRoot.bla.blub',
+                            children: []
+                        };
+
+                        let option = document.createElement('option');
+                        option.innerText = 'root.foo';
+                        element.__comboBox.appendChild(option);
+
+                        element.value = 'root.foo';
+
+                        let modelPath = element.__tryToGetUpdatedModelPath(['root.baa','root.qux']);
+                        return modelPath === null;
+                    }, {id});
+                    expect(success).toBe(true);
+
+                });
+
                 it('new available paths contain old path', async ()=>{
 
                     const success = await page.evaluate(async ({id}) => {
@@ -445,14 +687,17 @@ describe('TreezModelPath', ()=>{
 
                 });
 
-                it('new available paths contain old path as relative path', async ()=>{
+                it('new available paths contain old path as relative path', async () => {
 
                     const success = await page.evaluate(async ({id}) => {
                         const element = await document.getElementById(id);
+                        element.relativeRootAtom = {
+                            treePath: 'root',
+                            children: []
+                        };
                         element.value = 'root.foo';
-                        element.relativeRootAtom = {treePath: 'root'};
-                        let modelPath = element.__tryToGetUpdatedModelPath(['.baa','.foo']);
-                        return modelPath === '.foo';
+                        let path = element.__tryToGetUpdatedModelPath(['.baa','.foo']);
+                        return path === '.foo';
                     }, {id});
                     expect(success).toBe(true);
 
@@ -468,18 +713,19 @@ describe('TreezModelPath', ()=>{
 
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
-                    element.relativeRootAtom = {treePath: 'relative.root.path'};
+                    element.relativeRootAtom = {
+                        treePath: 'relative.root.path',
+                        children: []
+                    };
 
                     element.__relativeRootLabel.style.display = 'none';
-
-                    let isNotSetBefore = element.__relativeRootLabel.textContent === '';
-                    let isNotVisibleBefore = element.__relativeRootLabel.style.display === 'none';
+                    element.__relativeRootLabel.textContent = '';
+                    element.__relativeRootLabel.style.display = 'none';
                     element.__updateRelativeRootLabel();
                     let isSetAfter = element.__relativeRootLabel.textContent === 'relative.root.path';
                     let isVisibleAfter = element.__relativeRootLabel.style.display === 'inline-block';
 
-                    return isNotSetBefore && isNotVisibleBefore &&
-                        isSetAfter && isVisibleAfter;
+                    return isSetAfter && isVisibleAfter;
                 }, {id});
                 expect(success).toBe(true);
 
@@ -516,13 +762,13 @@ describe('TreezModelPath', ()=>{
                 const element = await document.getElementById(id);
 
                 let dummyChild = document.createElement('option');
-                element.__comboBoxOptions.appendChild(dummyChild);
+                element.__comboBox.appendChild(dummyChild);
 
-                let hasChildrenBefore = element.__comboBoxOptions.children.length > 0;
+                let hasChildrenBefore = element.__comboBox.children.length > 0;
 
                 element.__removeOptions();
 
-                let hasNoChildrenAfter = element.__comboBoxOptions.children.length === 0;
+                let hasNoChildrenAfter = element.__comboBox.children.length === 0;
 
                 return hasChildrenBefore && hasNoChildrenAfter;
             }, {id});
@@ -535,11 +781,11 @@ describe('TreezModelPath', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                let hasNoChildrenBefore = element.__comboBoxOptions.children.length === 0;
+                let hasNoChildrenBefore = element.__comboBox.children.length === 0;
 
                 element.__createOptions(['root.a','root.b']);
 
-                let hasChildrenAfter = element.__comboBoxOptions.children.length === 2;
+                let hasChildrenAfter = element.__comboBox.children.length === 2;
 
                 return hasNoChildrenBefore && hasChildrenAfter;
             }, {id});
@@ -556,7 +802,7 @@ describe('TreezModelPath', ()=>{
 
                     element.__atomClasses = ['AtomClassMock'];
 
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.__addAvailablePathByClass = ()=>{
                         methodCalls['__addAvailablePathByClass'] = true;
                         return ['root.available.path.by.class'];
@@ -566,8 +812,8 @@ describe('TreezModelPath', ()=>{
                         return ['root.available.path.by.interface'];
                     };
 
-                    var childMock = {children: []};
-                    var atomMock = {children: [childMock]};
+                    let childMock = {children: []};
+                    let atomMock = {children: [childMock]};
 
                     let paths = element.__getAvailableModelPaths(atomMock, false, undefined);
 
@@ -587,7 +833,7 @@ describe('TreezModelPath', ()=>{
 
                     element.__atomFunctionNames = ['atomFunctionNameMock'];
 
-                    var methodCalls = {};
+                    let methodCalls = {};
                     element.__addAvailablePathByClass = ()=>{
                         methodCalls['__addAvailablePathByClass'] = true;
                         return ['root.available.path.by.class'];
@@ -597,8 +843,8 @@ describe('TreezModelPath', ()=>{
                         return ['root.available.path.by.interface'];
                     };
 
-                    var childMock = {children: []};
-                    var atomMock = {children: [childMock]};
+                    let childMock = {children: []};
+                    let atomMock = {children: [childMock]};
 
                     let paths = element.__getAvailableModelPaths(atomMock, false, undefined);
 
@@ -611,11 +857,83 @@ describe('TreezModelPath', ()=>{
 
             });
 
+            it('specifying classes and interface throws error', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    element.__atomClasses = ['AtomClassMock'];
+                    element.__atomFunctionNames = ['atomFunctionNameMock'];
+
+                    let childMock = {children: []};
+                    let atomMock = {children: [childMock]};
+
+                    try {
+                        element.__getAvailableModelPaths(atomMock, false, undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('specifying no classes and no interface throws error', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    let childMock = {children: []};
+                    let atomMock = {children: [childMock]};
+
+                    try {
+                        element.__getAvailableModelPaths(atomMock, false, undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
+            it('has to be enabled', async ()=>{
+
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    element.__atomFunctionNames = ['atomFunctionNameMock'];
+
+                    let methodCalls = {};
+                    element.__addAvailablePathByClass = ()=>{
+                        methodCalls['__addAvailablePathByClass'] = true;
+                        return ['root.available.path.by.class'];
+                    };
+                    element.__addAvailablePathByInterface = ()=>{
+                        methodCalls['__addAvailablePathByInterface'] = true;
+                        return ['root.available.path.by.interface'];
+                    };
+
+                    let childMock = {children: [], isEnabled: true};
+                    let disabledChildMock = {children: [], isEnabled: false};
+                    let atomMock = {children: [childMock, disabledChildMock]};
+
+                    let paths = element.__getAvailableModelPaths(atomMock, true, undefined);
+
+                    return  paths[0] === 'root.available.path.by.interface';
+                }, {id});
+                expect(success).toBe(true);
+
+            });
+
         });
 
         describe('__addAvailablePathByClass', ()=>{
 
-            describe('matching class', async ()=>{
+            describe('matching class',  ()=>{
 
                 it('without filter', async ()=>{
 
@@ -633,10 +951,10 @@ describe('TreezModelPath', ()=>{
                             }
                         }
 
-                        var childMock = new DummyAtom('first');
+                        let childMock = new DummyAtom('first');
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], undefined);
+                        let paths = [];
+                        paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], undefined);
 
                         let pathIsIncluded =  paths[0] === 'found.path.mock';
                         return pathIsIncluded;
@@ -662,14 +980,14 @@ describe('TreezModelPath', ()=>{
                             }
                         }
 
-                        var childMock = new DummyAtom('first');
+                        let childMock = new DummyAtom('first');
 
-                        var filterDelegate = (child)=>{
+                        let filterDelegate = (child)=>{
                             return child.name === 'first';
                         }
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], filterDelegate);
+                        let paths = [];
+                        paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], filterDelegate);
 
                         let pathIsIncluded =  paths[0] === 'found.path.mock';
                         return pathIsIncluded;
@@ -695,14 +1013,14 @@ describe('TreezModelPath', ()=>{
                             }
                         }
 
-                        var childMock = new DummyAtom('first');
+                        let childMock = new DummyAtom('first');
 
-                        var filterDelegate = (child)=>{
+                        let filterDelegate = (child)=>{
                             return child.name === 'second';
                         }
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], filterDelegate);
+                        let paths = [];
+                        paths = element.__addAvailablePathByClass(paths, childMock, [DummyAtom], filterDelegate);
 
                         let pathIsNotIncluded =  paths.length === 0;
                         return pathIsNotIncluded;
@@ -736,10 +1054,10 @@ describe('TreezModelPath', ()=>{
                         }
                     }
 
-                    var childMock = new DummyAtom('first');
+                    let childMock = new DummyAtom('first');
 
-                    var paths = [];
-                    var paths = element.__addAvailablePathByClass(paths, childMock, [FooAtom], undefined);
+                    let paths = [];
+                    paths = element.__addAvailablePathByClass(paths, childMock, [FooAtom], undefined);
 
                     let pathIsNotIncluded =  paths.length === 0;
                     return pathIsNotIncluded;
@@ -768,8 +1086,8 @@ describe('TreezModelPath', ()=>{
                             return true;
                         };
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], undefined);
+                        let paths = [];
+                        paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], undefined);
 
                         let pathIsIncluded =  paths[0] === 'found.path.mock';
                         return pathIsIncluded;
@@ -792,12 +1110,12 @@ describe('TreezModelPath', ()=>{
                             return true;
                         };
 
-                        var filterDelegate = (child)=>{
+                        let filterDelegate = (child)=>{
                             return true;
                         };
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], filterDelegate);
+                        let paths = [];
+                        paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], filterDelegate);
 
                         let pathIsIncluded =  paths[0] === 'found.path.mock';
                         return pathIsIncluded;
@@ -820,12 +1138,12 @@ describe('TreezModelPath', ()=>{
                             return true;
                         };
 
-                        var filterDelegate = (child)=>{
+                        let filterDelegate = (child)=>{
                             return false;
                         };
 
-                        var paths = [];
-                        var paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], filterDelegate);
+                        let paths = [];
+                        paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], filterDelegate);
 
                         let pathIsNotIncluded =  paths.length === 0;
                         return pathIsNotIncluded;
@@ -851,8 +1169,8 @@ describe('TreezModelPath', ()=>{
                         return false;
                     };
 
-                    var paths = [];
-                    var paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], undefined);
+                    let paths = [];
+                    paths = element.__addAvailablePathByInterface(paths, 'childMock', ['firstMethod','secondMethod'], undefined);
 
                     let pathIsNotIncluded =  paths.length === 0;
                     return pathIsNotIncluded;
@@ -871,7 +1189,10 @@ describe('TreezModelPath', ()=>{
                 const success = await page.evaluate(async ({id}) => {
                     const element = await document.getElementById(id);
 
-                    element.relativeRootAtom = {treePath: 'root.foo'};
+                    element.relativeRootAtom = {
+                        treePath: 'root.foo',
+                        children: []
+                    };
 
                     let childMock = {treePath: 'root.foo.child'};
                     let paths = element.__addPathForChild([],childMock);
@@ -931,73 +1252,7 @@ describe('TreezModelPath', ()=>{
 
         });
 
-        describe('get root',  ()=>{
 
-            it('with relative root atom', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-
-                    element.relativeRootAtom = {treePath:'root'};
-
-                    return element.root.treePath === 'root';
-
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-            it('from parent atom', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-
-                    element.__parentAtom = {root: {treePath:'parentRoot'}};
-
-                    return element.root.treePath === 'parentRoot';
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-            it('without root', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-
-                    return element.root === null;
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-        });
-
-        describe('get rootPath', ()=>{
-
-            it('without root', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-
-                    return element.rootPath === '';
-                }, {id});
-                expect(success).toBe(true);
-
-            });
-
-            it('with root', async ()=>{
-
-                const success = await page.evaluate(async ({id}) => {
-                    const element = await document.getElementById(id);
-                    element.relativeRootAtom = {treePath:'root'};
-                    return element.rootPath === 'root';
-                }, {id});
-                expect(success).toBe(true);
-
-
-            });
-        });
 
     });
 
