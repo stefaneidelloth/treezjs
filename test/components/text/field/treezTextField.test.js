@@ -129,39 +129,84 @@ describe('TreezTextField', ()=>{
 
         });
 
-        it('disableElements', async ()=>{
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                element.disableElements(true);
-
-                let areaIsDisabled = element.__textField.disabled === true;
-
-                return areaIsDisabled;
-
-            }, {id});
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__textField;
+            },{id});
             expect(success).toBe(true);
-
         });
 
-        it('hideElements', async ()=>{
+        describe('disableElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
-                element.label = 'myLabel';
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                element.hideElements(true);
+            it('common usage', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                let labelIsHidden = element.__label.style.display === 'none';
-                let textFieldIsHidden = element.__textField.style.display === 'none';
+                    element.disableElements(true);
 
-                return labelIsHidden && textFieldIsHidden;
+                    let areaIsDisabled = element.__textField.disabled === true;
 
-            }, {id});
-            expect(success).toBe(true);
+                    return areaIsDisabled;
 
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+                    element.label = 'myLabel';
+
+                    element.hideElements(true);
+
+                    let labelIsHidden = element.__label.style.display === 'none';
+                    let textFieldIsHidden = element.__textField.style.display === 'none';
+
+                    return labelIsHidden && textFieldIsHidden;
+
+                }, {id});
+                expect(success).toBe(true);
+            });
+        });
+
+
 
     });
 
@@ -214,10 +259,17 @@ describe('TreezTextField', ()=>{
 
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
+
+
                 while (element.firstChild) {
                     element.firstChild.remove();
                 }
                 element.__textField = undefined;
+
+                let methodCalls = {};
+                element.__textFieldChanged = () => {
+                    methodCalls['__textFieldChanged'] = true;
+                };
 
                 element.__createTextField();
 
@@ -225,7 +277,14 @@ describe('TreezTextField', ()=>{
                 let textFieldIsCreated = textField.constructor.name === 'HTMLInputElement';
                 let textFieldIsAttached = element.firstChild === textField;
 
-                return textFieldIsCreated && textFieldIsAttached;
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__textField.dispatchEvent(event);
+                let changedMethodIsCalled = methodCalls['__textAreaChanged'] === true;
+
+                return textFieldIsCreated &&
+                    textFieldIsAttached &&
+                    changedMethodIsCalled;
 
             }, {id});
             expect(success).toBe(true);

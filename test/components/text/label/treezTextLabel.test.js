@@ -96,24 +96,42 @@ describe('TreezTextLabel', ()=>{
             const success = await page.evaluate(async ({id}) => {
                 const element = await document.getElementById(id);
 
-                element.disableElements(true);
-                return true;
+                try{
+                    element.disableElements(true);
+                    return false;
+                } catch(error){
+                    return true;
+                }
 
             }, {id});
             expect(success).toBe(true);
 
         });
 
-        it('hideElements', async ()=>{
+        describe('hideElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
-                element.hideElements(true);  
-                return element.style.display === 'none';
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-            }, {id});
-            expect(success).toBe(true);
+            it('common usage', async () => {
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+                    element.hideElements(true);
+                    return element.style.display === 'none';
 
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
     });

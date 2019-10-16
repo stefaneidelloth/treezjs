@@ -17,7 +17,7 @@ export default class TreezTextLabel extends TreezElement {
     }  
     
     disableElements(newValue){
-		//nothing to do
+		throw new Error('The label cannot be disabled. You might want to hide it instead. ')
     }	
    
     hideElements(booleanValue){

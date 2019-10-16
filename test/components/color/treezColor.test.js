@@ -71,7 +71,6 @@ describe('TreezColor', ()=>{
                 let event = document.createEvent('HTMLEvents');
                 event.initEvent('change', false, true);
                 element.__colorPicker.dispatchEvent(event);
-
                 let changedMethodIsCalled = methodCalls['__colorChanged'] === true;
 
                 let containerIsCreated = element.childNodes.length === 1;

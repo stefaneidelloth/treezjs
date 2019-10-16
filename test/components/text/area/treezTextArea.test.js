@@ -46,11 +46,14 @@ describe('TreezTextArea', ()=>{
 
                 element.connectedCallback();
 
-                const methodsAreCalled = (methodCalls['updateElements'] === null) &&
-                    (methodCalls['disableElements'] === false) &&
-                    (methodCalls['hideElements'] === false);
+                const methodsAreCalled = (methodCalls['update'] === true);
 
                 console.log('methods are called:' + methodsAreCalled);
+
+                let event = document.createEvent('HTMLEvents');
+                event.initEvent('change', false, true);
+                element.__textArea.dispatchEvent(event);
+                let changedMethodIsCalled = methodCalls['__textAreaChanged'] === true;
 
                 let labelIsCreated = element.__label.constructor.name === 'HTMLLabelElement';
                 console.log('label is created: ' + labelIsCreated);
@@ -63,21 +66,21 @@ describe('TreezTextArea', ()=>{
                 let textAreaIsCreated = textArea.constructor.name === 'HTMLTextAreaElement';
                 console.log('text area is created: ' + textAreaIsCreated);
 
-                return methodsAreCalled && labelIsCreated && containerIsCreated && textAreaIsCreated;
+                return methodsAreCalled &&
+                    changedMethodIsCalled &&
+                    labelIsCreated &&
+                    containerIsCreated &&
+                    textAreaIsCreated;
 
                 function prepareMocks(element) {
                     const methodCalls = {};
 
-                    element.updateElements = (value) => {
-                        methodCalls['updateElements'] = value;
+                    element.update = () => {
+                        methodCalls['update'] = true;
                     };
 
-                    element.disableElements = (value) => {
-                        methodCalls['disableElements'] = value;
-                    };
-
-                    element.hideElements = (value) => {
-                        methodCalls['hideElements'] = value;
+                    element.__textAreaChanged = () => {
+                        methodCalls['__textAreaChanged'] = true;
                     };
 
                     return methodCalls;
@@ -114,37 +117,80 @@ describe('TreezTextArea', ()=>{
 
         });
 
-        it('disableElements', async ()=>{
+        it('updateContentWidth', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+                let methodCalls = {};
+                element.updateWidthFor = (element, width) =>{
+                    methodCalls['updateWidthFor'] = element;
+                };
 
-                element.disableElements(true);
-
-                let areaIsDisabled = element.__textArea.disabled === true;
-
-                return areaIsDisabled;
-
-            }, {id});
+                element.updateContentWidth('widthMock');
+                return   methodCalls['updateWidthFor'] === element.__container;
+            },{id});
             expect(success).toBe(true);
-
         });
 
-        it('hideElements', async ()=>{
+        describe('disableElements',  ()=> {
 
-            const success = await page.evaluate(async ({id}) => {
-                const element = await document.getElementById(id);
+            it('undefined', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+                    try{
+                        element.disableElements(undefined);
+                        return false;
+                    } catch (error){
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
 
-                element.hideElements(true);
+            it('common usage', async ()=>{
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
 
-                let labelIsHidden = element.__label.style.display === 'none';
-                let containerIsHidden = element.__container.style.display === 'none';
+                    element.disableElements(true);
 
-                return labelIsHidden && containerIsHidden;
+                    let areaIsDisabled = element.__textArea.disabled === true;
 
-            }, {id});
-            expect(success).toBe(true);
+                    return areaIsDisabled;
 
+                }, {id});
+                expect(success).toBe(true);
+            });
+        });
+
+        describe('hideElements',  ()=> {
+
+            it('undefined', async () => {
+                let success = await page.evaluate(({id}) => {
+                    let element = document.getElementById(id);
+                    try {
+                        element.hideElements(undefined);
+                        return false;
+                    } catch (error) {
+                        return true;
+                    }
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('common usage', async () => {
+                const success = await page.evaluate(async ({id}) => {
+                    const element = await document.getElementById(id);
+
+                    element.hideElements(true);
+
+                    let labelIsHidden = element.__label.style.display === 'none';
+                    let containerIsHidden = element.__container.style.display === 'none';
+
+                    return labelIsHidden && containerIsHidden;
+
+                }, {id});
+                expect(success).toBe(true);
+            });
         });
 
     });
