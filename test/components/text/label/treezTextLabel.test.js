@@ -46,7 +46,7 @@ describe('TreezTextLabel', ()=>{
                 element.connectedCallback();
 
                 const methodsAreCalled = (methodCalls['updateElements'] === null) &&
-                    (methodCalls['disableElements'] === false) &&
+                    (methodCalls['disableElements'] === undefined) &&
                     (methodCalls['hideElements'] === false);
 
                 console.log('methods are called:' + methodsAreCalled);

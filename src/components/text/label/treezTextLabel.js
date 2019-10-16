@@ -7,8 +7,7 @@ export default class TreezTextLabel extends TreezElement {
     }            	
 
     connectedCallback() { 
-    	this.updateElements(this.value);										
-		this.disableElements(this.disabled)
+    	this.updateElements(this.value);
 		this.hideElements(this.hidden); 
     }                  
 
