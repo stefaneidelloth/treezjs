@@ -8,7 +8,7 @@ export default class TreezDouble extends TreezNumber {
 
     connectedCallback() {
         super.connectedCallback();
-        var numberInput = this.__numberInput;
+        let numberInput = this.__numberInput;
         numberInput.step = 'any';        
     }  
                           

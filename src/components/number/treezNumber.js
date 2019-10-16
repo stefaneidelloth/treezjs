@@ -18,26 +18,21 @@ export default class TreezNumber extends LabeledTreezElement {
         if(!this.__label){                       
 
             this.className = 'treez-number';
-            var label = document.createElement('label');  
+            let label = document.createElement('label');  
             this.__label = label;                     
             label.innerText = this.label;  
             label.className = 'treez-number-label';
             this.appendChild(label);                                                            
 
-            var numberInput = document.createElement('input'); 
+            let numberInput = document.createElement('input');
+            this.__numberInput = numberInput;
             numberInput.type = 'number'; 
             numberInput.min = this.min;
             numberInput.max = this.max;
             numberInput.className = 'treez-number-input';                
-            numberInput.onchange = (event)=>{
-            	event.stopPropagation();
-            	this.__numberInputChanged();
-            }
-            this.__numberInput = numberInput;
-            this.appendChild(numberInput); 
-            
+            numberInput.onchange = (event)=> this.__numberInputChanged(event);
+            this.appendChild(numberInput);
         }
-       
 
         if(Number.isNaN(this.min)){
             this.min = Number.MIN_SAFE_INTEGER;       
@@ -47,8 +42,7 @@ export default class TreezNumber extends LabeledTreezElement {
             this.max = Number.MAX_SAFE_INTEGER; 
         }
         
-        this.update();	
-       
+        this.update();
     }    			        
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
@@ -92,16 +86,19 @@ export default class TreezNumber extends LabeledTreezElement {
     		return '';
     	}
  
-    	var directNotation = '' + value;
-    	var scientificNotation = value.toExponential().replace('+','');
+    	let directNotation = '' + value;
+    	let scientificNotation = value.toExponential().replace('+','');
     	return (scientificNotation.length < directNotation.length)
     		?scientificNotation
     		:directNotation;    	
     }                
 
-    disableElements(newValue){
+    disableElements(booleanValue){
+        if(booleanValue === undefined){
+            throw Error('This method expects a boolean argument');
+        }
 		if(this.__numberInput){                    	
-			this.__numberInput.disabled= newValue; 
+			this.__numberInput.disabled = booleanValue;
     	}
     }	
    
@@ -113,14 +110,12 @@ export default class TreezNumber extends LabeledTreezElement {
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__numberInput, booleanValue); 
     	}
-    }     
-    
-    
+    }
 
     validateValue(value){        
 
         if(value > this.max){
-            var message = 'Number ' + value + ' exceeds max value ' + this.max + '. ';
+            let message = 'Number ' + value + ' exceeds max value ' + this.max + '. ';
             if(this.max === Number.MAX_SAFE_INTEGER){
                 message += ('This might cause incorrect calculations. Also see '+
                 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER');
@@ -132,7 +127,7 @@ export default class TreezNumber extends LabeledTreezElement {
         }
 
         if(value < this.min){
-            var message = 'Number ' + value + ' goes below min value ' + this.min + '. ';
+            let message = 'Number ' + value + ' goes below min value ' + this.min + '. ';
             if(this.min === Number.MIN_SAFE_INTEGER){
                 message += ('This might cause incorrect calculations. Also see '+
                             'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_SAFE_INTEGER');
@@ -150,9 +145,10 @@ export default class TreezNumber extends LabeledTreezElement {
         };  
     }
 
-    __numberInputChanged(){
-        var value = this.convertFromStringValue(this.__numberInput.value); //yea, value form input element is a string and needs to be converted    
-        var validationState = this.validateValue(value);
+    __numberInputChanged(event){
+        event.stopPropagation();
+        let value = this.convertFromStringValue(this.__numberInput.value); //yea, value form input element is a string and needs to be converted    
+        let validationState = this.validateValue(value);
         if(validationState.isValid) {
             this.__resetErrorState();
             this.value = value;

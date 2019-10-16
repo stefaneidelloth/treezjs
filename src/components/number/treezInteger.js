@@ -8,17 +8,17 @@ export default class TreezInteger extends TreezNumber {
 
     connectedCallback() {
         super.connectedCallback();
-        var numberInput = this.__numberInput;
+        let numberInput = this.__numberInput;
         numberInput.step = '1';    	
     }
 
     validateValue(value){
-        var superValidationState = super.validateValue(value);
+        let superValidationState = super.validateValue(value);
         if(!superValidationState.isValid){
             return superValidationState;
         }
 
-        var isInteger = Math.floor(value) === value;
+        let isInteger = Math.floor(value) === value;
         if(!isInteger){
             return {
                 isValid: false,
@@ -31,6 +31,7 @@ export default class TreezInteger extends TreezNumber {
             errorMessage: undefined
         };
     }   
+   
                           
 }
 

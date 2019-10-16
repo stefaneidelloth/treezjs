@@ -1,7 +1,7 @@
 import CustomElementsMock from '../../customElementsMock.js';
 import TreezNumber from '../../../src/components/number/treezNumber.js';
 jest.mock('../../../src/components/number/treezNumber.js', function(){
-        var constructor = jest.fn();
+        let constructor = jest.fn();
 		constructor.mockImplementation(
 			function(){	  
 				return this;				
@@ -22,9 +22,9 @@ jest.setTimeout(100000);
 
 describe('TreezInteger', ()=>{   
     
-    var id = 'treez-integer';
+    let id = 'treez-integer';
 
-    var page;      
+    let page;      
 
     beforeAll(async () => { 
         page = await TestUtils.createBrowserPage(); 
@@ -40,7 +40,7 @@ describe('TreezInteger', ()=>{
     describe('State after construction', ()=>{
 
         it('id',  async ()=>{   
-            var property = await page.$eval('#' + id, element=> element.id);       
+            let property = await page.$eval('#' + id, element=> element.id);       
             expect(property).toBe(id);
          });           
         
@@ -50,17 +50,17 @@ describe('TreezInteger', ()=>{
        
        
         it('connectedCallback', async ()=>{           
-            var success = await page.evaluate(({id})=>{
-                var element = document.getElementById(id);
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
                 removeExistingChildren(element);
                
 
                 element.connectedCallback();               
 
-                var numberInput = element.lastChild;
+                let numberInput = element.lastChild;
 
-                var stepIsOne = numberInput.step === '1';
+                let stepIsOne = numberInput.step === '1';
 
                 return  stepIsOne;                   
 
@@ -79,21 +79,38 @@ describe('TreezInteger', ()=>{
         
         describe('validateValue', ()=>{
 
-            it('valid integer', async ()=>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+            it('super validation fails', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var validationState = element.validateValue(33);
+                    let superMethod = element.constructor.__proto__.prototype.validateValue;
+                    element.constructor.__proto__.prototype.validateValue = () =>{
+                        return {isValid: false};
+                    };
+
+                    let validationState = element.validateValue(33);
+
+                    element.constructor.__proto__.prototype.validateValue = superMethod;
+                    return  validationState.isValid === false;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('valid integer', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let validationState = element.validateValue(33);
                     return  validationState.isValid === true;     
                 },{id});
                 expect(success).toBe(true);  
             });
 
             it('double caused error', async ()=>{
-                var success = await page.evaluate(({id})=>{
-                    var element = document.getElementById(id);
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
 
-                    var validationState = element.validateValue(33.3);
+                    let validationState = element.validateValue(33.3);
                     return  validationState.isValid === false;     
                 },{id});
                 expect(success).toBe(true);
