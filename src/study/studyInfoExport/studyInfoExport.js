@@ -18,6 +18,7 @@ export default class StudyInfoExport extends Model {
 
 		this.__studyInfoTableName = 'study_info';
 		this.__jobInfoTableName = 'job_info';
+		this.__transposedJobInfoTableName = 'job_info_transposed';
 		this.__filePathSelection = undefined;	
 		this.__hostSelection = undefined;		
 		this.__portSelection = undefined;		
@@ -42,8 +43,8 @@ export default class StudyInfoExport extends Model {
 		
 		monitor.totalWork = 1;	
 		
-		var study = this.parent;
-	    var inputGenerator = study.inputGenerator;
+		let study = this.parent;
+	    let inputGenerator = study.inputGenerator;
 		await this.__exportStudyInfo(inputGenerator, monitor);
 	
 		monitor.done();
@@ -179,10 +180,10 @@ export default class StudyInfoExport extends Model {
 
 	}
 
-	async __exportStudyInfoToSqLiteDatabase(inputGenerator) {	
-	    var a=1;		
+	async __exportStudyInfoToSqLiteDatabase(inputGenerator) {
 		await this.__writeSqLiteStudyInfo(inputGenerator);
 		await this.__writeSqLiteJobInfo(inputGenerator);
+		await this.__writeSqLiteTransposedJobInfo(inputGenerator);
 	}
 
 	async __exportStudyInfoToMySqlDatabase(inputGenerator) {		
@@ -194,7 +195,9 @@ export default class StudyInfoExport extends Model {
 		await this.__createSqLiteStudyInfoTableIfNotExists(this.connectionString, this.__studyInfoTableName);
 		await this.__deleteOldSqLiteEntriesForStudyIfExist(this.connectionString, this.__studyInfoTableName);
 		await inputGenerator.fillSqLiteStudyInfo(this.connectionString, this.__studyInfoTableName);
-	}	
+	}
+
+
 
 	async __writeMySqlStudyInfo(inputGenerator) {		
 		await this.__createMySqlStudyInfoTableIfNotExists(this.connectionString, this.__studyInfoTableName);
@@ -203,7 +206,7 @@ export default class StudyInfoExport extends Model {
 	}
 
 	async __createSqLiteStudyInfoTableIfNotExists(connectionString, tableName) {
-		var query = "CREATE TABLE IF NOT EXISTS '" + tableName
+		let query = "CREATE TABLE IF NOT EXISTS '" + tableName
 				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, variable TEXT, value TEXT);";
 		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
 		.catch((error)=>{
@@ -211,8 +214,10 @@ export default class StudyInfoExport extends Model {
 				});
 	}
 
+
+
 	async __createMySqlStudyInfoTableIfNotExists(connectionString, schema, tableName) {
-		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
+		let query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
 		await database.mySqLQuery(connectionString, query, false)
 		.catch((error)=>{
@@ -221,7 +226,7 @@ export default class StudyInfoExport extends Model {
 	}
 
 	async __deleteOldSqLiteEntriesForStudyIfExist(connectionString, tableName) {
-		var query = "DELETE FROM '" + tableName + "' WHERE study = '" + this.studyId + "';";
+		let query = "DELETE FROM '" + tableName + "' WHERE study = '" + this.studyId + "';";
 		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
 		.catch((error)=>{
 					console.log(error);
@@ -229,7 +234,7 @@ export default class StudyInfoExport extends Model {
 	}
 
 	async __deleteOldMySqlEntriesForStudyIfExist(connectionString, schema, tableName) {
-		var query = "DELETE FROM `" + schema + "`.`" + tableName + "` WHERE study = '" + getStudyIdFromParent()
+		let query = "DELETE FROM `" + schema + "`.`" + tableName + "` WHERE study = '" + getStudyIdFromParent()
 				+ "';";
 		await window.treezTerminal.mySqlQuery(connectionString, query, false)
 		.catch((error)=>{
@@ -242,13 +247,13 @@ export default class StudyInfoExport extends Model {
 		await this.__createSqLiteJobInfoTableIfNotExists(this.connectionString, this.__jobInfoTableName);
 		await this.__deleteOldSqLiteEntriesForStudyIfExist(this.connectionString, this.__jobInfoTableName);
 		
-		var studyId = this.studyId;
-		for (var modelInput of inputGenerator.modelInputs) {
-			var jobId = modelInput.jobId;
-			var variablePaths = modelInput.all;
-			for (var variablePath of variablePaths) {
-				var value = modelInput.get(variablePath);
-				var query = "INSERT INTO '" + this.__jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
+		let studyId = this.studyId;
+		for (let modelInput of inputGenerator.modelInputs) {
+			let jobId = modelInput.jobId;
+			let variablePaths = modelInput.all;
+			for (let variablePath of variablePaths) {
+				let value = modelInput.get(variablePath);
+				let query = "INSERT INTO '" + this.__jobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId
 						+ "', '" + variablePath + "','" + value + "')";
 				await window.treezTerminal.sqLiteQuery(this.connectionString, query, false)
 				.catch((error)=>{
@@ -258,17 +263,59 @@ export default class StudyInfoExport extends Model {
 		}
 	}
 
+	async __writeSqLiteTransposedJobInfo(inputGenerator) {
+
+		let variableNames = [];
+		let firstInput = inputGenerator.modelInputs[0];
+		let variablePaths = firstInput.all;
+		for (let variablePath of variablePaths) {
+			let items = variablePath.split('.');
+			let variableName = items.pop();
+			if(variableNames.includes(variableName)){
+				let message = 'The transposed format requires unique variable names. Please adapt variable name "' + variableName +'."';
+				console.error(message);
+				throw new Error(message);
+			}
+			variableNames.push(variableName);
+		}
+
+		//The table is re-created and old data is deleted.
+		//This way it is easiert to have a quick look at the current data.
+		//If you want to have all (historic) data, please have a look at the non-transposed version of the study info table.
+		await this.__reCreateSqLiteTransposedJobInfoTable(this.connectionString, this.__transposedJobInfoTableName, variableNames);
+		await this.__deleteOldSqLiteEntriesForStudyIfExist(this.connectionString, this.__transposedJobInfoTableName);
+
+		let studyId = this.studyId;
+		for (let modelInput of inputGenerator.modelInputs) {
+			let jobId = modelInput.jobId;
+			let variablePaths = modelInput.all;
+
+			let query = "INSERT INTO '" + this.__transposedJobInfoTableName + "' VALUES(null, '" + studyId + "', '" + jobId + "'";
+
+			for (let variablePath of variablePaths) {
+				let value = modelInput.get(variablePath);
+				query += ", '" + value + "'"
+			}
+			query += ")";
+
+			await window.treezTerminal.sqLiteQuery(this.connectionString, query, false)
+				.catch((error)=>{
+					console.log(error);
+				});
+		}
+	}
+
 	async __writeMySqlJobInfo(inputGenerator) {
 		
 		await this.__createMySqlJobInfoTableIfNotExists(this.connectionString, this.schema, this.__jobInfoTableName);
 		await this.__deleteOldMySqlEntriesForStudyIfExist(this.connectionString, this.schema, this.jobInfoTableName);
-		var studyId = this.studyId;
-		for (var modelInput of inputGenerator.createModelInputs()) {
-			var jobId = modelInput.getJobId();
-			var variablePaths = modelInput.all;
-			for (var variablePath of variablePaths) {
-				var value = modelInput.get(variablePath);
-				var query = "INSERT INTO `" + this.schema + "`.`" + this.__jobInfoTableName + "` VALUES(null, '" + studyId
+		let studyId = this.studyId;
+		for (let modelInput of inputGenerator.createModelInputs()) {
+			let jobId = modelInput.getJobId();
+			let variablePaths = modelInput.all;
+			for (let variablePath of variablePaths) {
+				let value = modelInput.get(variablePath);
+				let query = "INSERT INTO `" + this.schema + "`.`" + this.__jobInfoTableName + "` VALUES(null, '" + studyId
 						+ "', '" + jobId + "', '" + variablePath + "','" + value + "')";
 				await window.treezTerminal.mySqlQuery(this.connectionString, query, false)
 				.catch((error)=>{
@@ -279,7 +326,7 @@ export default class StudyInfoExport extends Model {
 	}
 
 	async __createSqLiteJobInfoTableIfNotExists(connectionString, tableName) {
-		var query = "CREATE TABLE IF NOT EXISTS '" + tableName
+		let query = "CREATE TABLE IF NOT EXISTS '" + tableName
 				+ "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, job TEXT, variable TEXT, value TEXT);";
 		await window.treezTerminal.sqLiteQuery(connectionString, query, false)
 			.catch((error)=>{
@@ -287,8 +334,27 @@ export default class StudyInfoExport extends Model {
 			});
 	}
 
+	async __reCreateSqLiteTransposedJobInfoTable(connectionString, tableName, variableNames) {
+		let deleteQuery = "DROP TABLE IF EXISTS '" + tableName + "'";
+		await window.treezTerminal.sqLiteQuery(connectionString, deleteQuery, false)
+		.catch((error)=>{
+			console.log(error);
+		});
+
+		let createQuery = "CREATE TABLE  '" + tableName + "' (id INTEGER PRIMARY KEY NOT NULL, study TEXT, job TEXT";
+		for(let variableName of variableNames){
+			createQuery += ", '" + variableName + "' TEXT";
+		}
+		createQuery += ");";
+
+		await window.treezTerminal.sqLiteQuery(connectionString, createQuery, false)
+		.catch((error)=>{
+			console.log(error);
+		});
+	}
+
 	async __createMySqlJobInfoTableIfNotExists(connectionString, schema, tableName) {
-		var query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
+		let query = "CREATE TABLE IF NOT EXISTS `" + schema + "`.`" + tableName
 				+ "` (id int NOT NULL AUTO_INCREMENT, study TEXT, job TEXT, variable TEXT, value TEXT, PRIMARY KEY(id));";
 		await window.treezTerminal.mySqlQuery(connectionString, query, false)
 		.catch((error)=>{
@@ -305,7 +371,7 @@ export default class StudyInfoExport extends Model {
 			case StudyInfoExportType.mySql:
 				return this.host + ':' + this.port; //TODO check this
 			default:
-				var message = 'The export type "' + this.exportType + '" has not yet been implemented.';
+				let message = 'The export type "' + this.exportType + '" has not yet been implemented.';
 				throw new Error(message);
 		}
 	}

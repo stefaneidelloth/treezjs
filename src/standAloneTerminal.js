@@ -75,7 +75,7 @@ export default class StandAloneTerminal {
 	}
 
 
-	executeWithoutWait(command, undefined, errorHandler, finishedHandler){
+	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){
 		this.__onMessage = messageHandler;
 		this.__onError = errorHandler;
 		this.__onFinished = finishedHandler;
