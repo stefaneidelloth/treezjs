@@ -96,32 +96,18 @@ export default class TreezSection extends HTMLElement {
     		
     	};  
     	
-    	var urlPrefix = window.treezConfig
-    						?window.treezConfig.home
-    						:'';
+
     	
     	if(sectionAction.image){
-    		img.src= urlPrefix + '/icons/' + sectionAction.image;
+    		img.src = this.__urlPrefix + '/icons/' + sectionAction.image;
     	} else {
-    		img.src= urlPrefix + '/icons/root.png';
+    		img.src = this.__urlPrefix + '/icons/root.png';
     		console.warn('Section action has no image! (label: "'+ sectionAction.label +'")')
     	}             	
     	
     	toolbar.appendChild(img);
     	
     }
-
-	get label() {
-		return this.getAttribute('label');
-	}
-
-	set label(newValue) {
-		this.setAttribute('label', newValue);
-	}
-
-	get isCollapsed(){
-		return this.__sectionHeader.classList.contains('collapsed');
-	}
 
 	get __sectionContent(){
 
@@ -135,6 +121,26 @@ export default class TreezSection extends HTMLElement {
 
 		return null;
 	}
+
+	get __urlPrefix(){
+		return window.treezConfig
+			?window.treezConfig.home
+			:'';
+	}
+
+	get label() {
+		return this.getAttribute('label');
+	}
+
+	set label(newValue) {
+		this.setAttribute('label', newValue);
+	}
+
+	get isCollapsed(){
+		return this.__sectionHeader.classList.contains('collapsed');
+	}
+
+
 	
 }
 

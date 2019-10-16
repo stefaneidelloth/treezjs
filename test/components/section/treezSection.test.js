@@ -72,11 +72,18 @@ describe('TreezSection', ()=>{
 
                     console.log('methods are called:' + methodsAreCalled);
 
+                    let event = document.createEvent('HTMLEvents');
+                    event.initEvent('click', false, true);
+                    element.__sectionHeader.dispatchEvent(event);
+
+                    let toggleExpansionIsCalled = methodCalls['__toggleExpansion'] === true;
+
                     return headerIsCreated &&
                         headerIsInserted &&
                         labelIsCreated &&
                         toolbarIsCreated &&
-                        methodsAreCalled;
+                        methodsAreCalled &&
+                        toggleExpansionIsCalled;
 
                     function prepareMocks(element) {
                         const methodCalls = {};
@@ -260,6 +267,20 @@ describe('TreezSection', ()=>{
 
         });
 
+        it('set label', async ()=>{
+
+            const success = await page.evaluate(async ({id}) => {
+                const element = await document.getElementById(id);
+
+                element.label = 'labelMock';
+
+                return element.getAttribute('label') === 'labelMock';
+
+            }, {id});
+            expect(success).toBe(true);
+
+        });
+
     });
 
     describe('Private API', ()=>{
@@ -315,7 +336,6 @@ describe('TreezSection', ()=>{
             expect(success).toBe(true);
 
         });
-
 
         describe('__processSectionAction', ()=>{
 
@@ -410,6 +430,32 @@ describe('TreezSection', ()=>{
 
             });
 
+        });
+
+        describe('get __urlPrefix', ()=>{
+
+            it('with treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    let home = '..';
+                    window.treezConfig = {home: home};
+                    let prefix = element.__urlPrefix;
+                    window.treezConfig = undefined;
+
+                    return  prefix === home;
+                },{id});
+                expect(success).toBe(true);
+            });
+
+            it('without treez config', async ()=>{
+                let success = await page.evaluate(({id})=>{
+                    let element = document.getElementById(id);
+
+                    return element.__urlPrefix === '';
+                },{id});
+                expect(success).toBe(true);
+            });
         });
 
     });
