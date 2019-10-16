@@ -239,41 +239,20 @@ describe('TreezColor', ()=>{
             });
         });
 
-        describe('convertFromStringValue',  ()=>{
+        it('convertFromStringValue', async ()=>{
 
-            it('predefined color', async ()=>{
+            let success = await page.evaluate(({id})=>{
+                let element = document.getElementById(id);
 
-                let success = await page.evaluate(({id})=>{
-                    let element = document.getElementById(id);
+                let method = window.Color.forHexString;
+                window.Color.forHexString = () => 'colorMock';
+                let color = element.convertFromStringValue('colorHexStringMock');
+                window.Color.forHexString = method;
 
-                    let defaultValue = element.convertFromStringValue(null);
-                    console.log('default value: ' + defaultValue);
+                return  color === 'colorMock';
 
-                    let blueValue = element.convertFromStringValue('#0000ff');
-                    console.log('blue value: ' + blueValue);
-
-                    return  (defaultValue = window.Color.black) &&
-                        (blueValue === window.Color.blue);
-
-                },{id});
-                expect(success).toBe(true);
-
-            });
-
-            it('custom color', async ()=>{
-
-                let success = await page.evaluate(({id})=>{
-                    let element = document.getElementById(id);
-
-                    let customValue = element.convertFromStringValue('#112233');
-                    console.log('custom value: ' + customValue);
-
-                    return  (customValue.hexString === '#112233' && customValue.name === 'custom');
-
-                },{id});
-                expect(success).toBe(true);
-
-            });
+            },{id});
+            expect(success).toBe(true);
         });
          
         it('convertToStringValue', async ()=>{

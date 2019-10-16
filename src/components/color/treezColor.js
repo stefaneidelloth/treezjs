@@ -53,16 +53,7 @@ export default class TreezColor extends LabeledTreezElement {
     }
     
     convertFromStringValue(colorHexString){
-    	var color;
-    	try{
-    		return Color.forHexString(colorHexString);
-    	} catch (error){
-    		if(colorHexString){
-    			return new Color('custom', colorHexString);
-    		} else {
-    			return Color.black;
-    		}    		
-    	}                	
+		return Color.forHexString(colorHexString);
     }
 
     convertToStringValue(color){

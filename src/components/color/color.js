@@ -18,12 +18,21 @@ export default class Color extends Enum {
 }
 
 Color.forHexString = function(colorHexString){
-	for(var color of this.values){
+	for(let color of this.values){
 		if(color.hexString === colorHexString){
 			return color;
 		}
 	}
-	throw new Error('Unknown color hex string "' + colorHexString + '"');
+
+	if(colorHexString){
+		if(colorHexString[0] === '#' && colorHexString.length === 7){
+			return new Color('custom', colorHexString);
+		} else {
+			throw new Error('Invalid color hex string: ' + colorHexString);
+		}
+	} else {
+		return Color.black;
+	}
 };
 
 if(window.Color){
