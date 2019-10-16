@@ -24,7 +24,7 @@
 	position: relative;
 	font-size: 12px;	
 	vertical-align: middle;
-	height:25px;	
+	height:26px;	
 	padding:0px;
 }
 
@@ -35,12 +35,13 @@
 }
 
 .treez-monitor-progress-title {
+	display: inline-block;
 	color: black;	
-	padding-left:15px;	
+	padding-left:15px;
 }
 
 .treez-monitor-progress-description {
-	color: black;	
+	color: black;
 }
 
 .treez-monitor-progress-toolbar {
@@ -51,7 +52,7 @@
 .treez-monitor-progress-label {
 	padding-right: 10px;	
 	color: black;	
-	vertical-align:middle;
+	vertical-align: middle;
 }
 
 .treez-monitor-progress-cancel-button {
@@ -73,7 +74,7 @@
 	background-color: lightgray;
 	height: 3px;
 	padding:0;
-	margin-top: 2px;
+	margin-top: -4px;
 }
 
 .treez-monitor-progress-bar {	
