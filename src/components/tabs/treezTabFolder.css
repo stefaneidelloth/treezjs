@@ -1,6 +1,9 @@
-treez-tab-folder {  
-	height:100%;   
-	width:100%;
+treez-tab-folder {
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
     padding-top:2px;   
     font-family: Consolas;
     font-size: 12px;   
@@ -14,6 +17,8 @@ treez-tab-folder-header {
 treez-tab-header {  	
     background-color:#f2f2f2;
     display:inline-block;
+    position: absolute;
+    top: 14px;
     margin-left: 2px;   
     padding:8px;
     padding-top:1px;

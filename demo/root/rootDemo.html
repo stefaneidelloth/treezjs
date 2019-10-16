@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+	<body >
+		
+		<treez-tab-folder id="tab-folder"></treez-tab-folder>			
+
+		<script src = "../../../bower_components/d3/d3.min.js" ></script>
+
+		<script type="module">
+
+			import Treez from '../../../src/treez.js'; 
+			import DTreez from '../../../src/core/dtreez/dTreez.js';
+
+			Treez.config({
+				home: '..',
+				isSupportingPython: false	
+			});
+
+			let dTreez = new DTreez(d3);
+			let tabFolder = dTreez.select('#tab-folder');
+
+			import Root from '../../src/root/root.js'; 			
+
+			let root = new Root();
+			root.createComponentControl(tabFolder);
+
+		</script>
+
+	</body>
+
+</html>
