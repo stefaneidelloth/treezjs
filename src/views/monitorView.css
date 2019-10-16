@@ -45,8 +45,7 @@
 
 .treez-monitor-progress-toolbar {
 	padding-right: 10px;	
-	float: right;
-	margin-top: 4px;
+	float: right;	
 }
 
 .treez-monitor-progress-label {
@@ -74,7 +73,7 @@
 	background-color: lightgray;
 	height: 3px;
 	padding:0;
-	margin-top: -1px;
+	margin-top: 2px;
 }
 
 .treez-monitor-progress-bar {	
