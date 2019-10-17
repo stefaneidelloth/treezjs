@@ -7,20 +7,68 @@ export default class TreezCodeArea extends LabeledTreezElement {
         super();
         this.__label = undefined;
         this.__container = undefined;
-        this.__codeMirror = undefined; 
-        				
-		Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');                                      
+        this.__codeMirror = undefined;      
     }   
 
     static get observedAttributes() {
 		return LabeledTreezElement.observedAttributes.concat(['mode']);                    
     } 	   	
 
-    async connectedCallback() {  
+    async connectedCallback() {         
+       
 
-        var self = this;  
+		if(!this.__label){
+			var label = document.createElement('label');  
+			this.__label = label;                     
+			label.innerText = this.label;
+			label.className = 'treez-code-area-label';
+			this.appendChild(label);  
+		}
 
-        if(!window.requirejs){
+
+		if(!this.__container){
+
+			var container = document.createElement('div');
+			container.className = 'treez-code-area-container';
+			this.__container = container;
+
+			this.appendChild(container);   
+
+			if(!this.mode){
+				this.mode = 'javascript';
+			}
+
+			if(!this.value){
+				this.value = '';
+			}
+
+			//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
+			await this.initializeCodeMirror();
+
+			var self = this; 
+			this.__codeMirror = window.CodeMirror(container,  
+			  {
+				value: self.value,
+				mode: self.mode,
+				lineNumbers: false, //showing line numbers somehow misaligns the cursor position
+				matchBrackets: true,
+				continueComments: "Enter",
+				extraKeys: {"Ctrl-Q": "toggleComment"}
+			  }
+			);            
+
+			this.__codeMirror.on('change', function(codeMirror, change){ 
+			   var newValue = codeMirror.getValue();               
+			   self.value = newValue; 
+			});
+		}        
+
+		this.update();
+		      
+    }
+
+    async initializeCodeMirror(){
+    	if(!window.requirejs){
         	 window.requirejs = await Treez.importScript('/bower_components/requirejs/require.js','require')
                     .catch(error => {
                         console.log(error);
@@ -35,66 +83,28 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			});
         }
 
-		window.requirejs([
-			'codemirror/lib/codemirror',						
-			'codemirror/mode/sql/sql',
-			'codemirror/mode/javascript/javascript',
-			'codemirror/mode/python/python'		
-		], function(
-			 CodeMirror
-		) {	
+        if(!window.CodeMirror){
 
-			if(!self.__label){
-				var label = document.createElement('label');  
-				self.__label = label;                     
-				label.innerText = self.label;
-				label.className = 'treez-code-area-label';
-				self.appendChild(label);  
-			}
-			
-		
+        	Treez.importCssStyleSheet('/bower_components/codemirror/lib/codemirror.css');  
 
-			if(!self.__container){
-
-				var container = document.createElement('div');
-				container.className = 'treez-code-area-container';
-				self.__container = container;
-
-				self.appendChild(container);   
-				
-				if(!self.mode){
-					self.mode = 'javascript';
-				}
-
-				if(!self.value){
-					self.value = '';
-				}
-
-				//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
-				self.__codeMirror = CodeMirror(container,  
-				  {
-					value: self.value,
-					mode: self.mode,
-					lineNumbers: false, //showing line numbers somehow misaligns the cursor position
-					matchBrackets: true,
-					continueComments: "Enter",
-					extraKeys: {"Ctrl-Q": "toggleComment"}
-				  }
-				);            
-
-				self.__codeMirror.on('change', function(codeMirror, change){ 
-				   var newValue = codeMirror.getValue();               
-				   self.value = newValue; 
+        	await new Promise((resolve, reject) => {
+				window.requirejs([
+					'codemirror/lib/codemirror',						
+					'codemirror/mode/sql/sql',
+					'codemirror/mode/javascript/javascript',
+					'codemirror/mode/python/python'		
+				], function(
+					 CodeMirror
+				) {	
+					window.CodeMirror=CodeMirror;
+					resolve();
+				}, function(error){
+					console.log(error);
+					reject(error);
 				});
-			}        
-
-			self.updateElements(self.value);
-			self.updateWidth(self.width);
-			self.disableElements(self.disabled);
-			self.hideElements(self.hidden); 
-		}, function(error){
-			console.log(error);
-		});        
+			});
+			
+		}    
     }
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {

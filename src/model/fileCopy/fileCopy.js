@@ -110,7 +110,12 @@ export default class FileCopy extends Model {
 	};
 
 	__pathFromInputPathProvider(){
-		var inputPathProvider = this.childFromRoot(this.pathOfInputPathProvider);
+		var inputPathProvider = undefined;
+		try{
+			inputPathProvider = this.childFromRoot(this.pathOfInputPathProvider);
+		} catch(error){
+			console.warn('Could not find input path provider "' + this.pathOfInputPathProvider + '"');
+		}
 		
 		return inputPathProvider
 			?inputPathProvider.provideInputPath()
@@ -118,7 +123,12 @@ export default class FileCopy extends Model {
 	}
 
 	__pathFromOutputPathProvider(){
-		var outputPathProvider = this.childFromRoot(this.pathOfOutputPathProvider);
+		var outputPathProvider = undefined;
+		try {
+			outputPathProvider = this.childFromRoot(this.pathOfOutputPathProvider);
+		} catch(error){
+			console.warn('Could not find output path provider "' + this.pathOfOutputPathProvider + '"');
+		}
 		
 		return outputPathProvider
 			?outputPathProvider.providePath()

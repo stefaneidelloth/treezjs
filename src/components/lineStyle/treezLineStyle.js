@@ -4,11 +4,11 @@ import LineStyle from './lineStyle.js';
 export default class TreezLineStyle extends TreezEnumImageComboBox {  
     	
    constructor(){
-        super();                     
+        super();        
     }
 
     beforeConnectedCallbackHook(){
-        this.enum = LineStyle;
+        this.enum = LineStyle; 
     }
 
     get imageFolderPath(){

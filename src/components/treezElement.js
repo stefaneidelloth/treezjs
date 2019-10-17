@@ -101,7 +101,11 @@ export default class TreezElement extends HTMLElement {
 	bindValue(parentAtom, lambdaExpressionEncodingPropertyToBind){
 		this.__parentAtom = parentAtom;
 		
-		let propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind)
+		let propertyName = TreezElement.__extractPropertyNameFromLambdaExpression(parentAtom, lambdaExpressionEncodingPropertyToBind);
+
+		if(this.beforeConnectedCallbackHook){
+			this.beforeConnectedCallbackHook(); //see lineStyle for an example use case; enum values have to be set before retrieving property value
+		}
 
 		this.value = parentAtom[propertyName];					
 
