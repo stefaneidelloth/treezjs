@@ -70,17 +70,64 @@ export default class Treez {
 		document.head.appendChild(link);
 	}	
 
-	static importScript(src){
-		var script = document.createElement('script');
-		script.setAttribute('src', window.treezConfig.home + src);		
-		document.head.appendChild(script);
+	static async importScript(url, expressionToEvaluateAndReturn){
+
+		let prefix = window.treezConfig
+			?window.treezConfig.home
+			:'';
+
+		let src = prefix + url; 
+
+		return new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.async = true;
+			script.src = src;
+			script.addEventListener('load', (event)=>{
+				if(expressionToEvaluateAndReturn){
+					try{
+						let result = eval(expressionToEvaluateAndReturn);
+						resolve(result);
+					} catch(error){
+						reject(error);
+					}
+					
+				} else {
+					resolve();
+				}
+			});
+			script.addEventListener('error', () => reject('Error loading script "' + src + '"'));
+			script.addEventListener('abort', () => reject('Script loading aborted for "' + src + '"'));
+			document.head.appendChild(script);
+		});    
+		
 	}	
 
-	static importStaticScript(src){
-		var script = document.createElement('script');
-		script.setAttribute('src', src);		
-		document.head.appendChild(script);
-	}
+	static async importStaticScript(src, expressionToEvaluateAndReturn){
+
+		
+		return new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.async = true;
+			script.src = src;
+			script.addEventListener('load', (event)=>{
+				if(expressionToEvaluateAndReturn){
+					try{
+						let result = eval(expressionToEvaluateAndReturn);
+						resolve(result);
+					} catch(error){
+						reject(error);
+					}
+					
+				} else {
+					resolve();
+				}
+			});
+			script.addEventListener('error', () => reject('Error loading script "' + src + '"'));
+			script.addEventListener('abort', () => reject('Script loading aborted for "' + src + '"'));
+			document.head.appendChild(script);
+		});    
+		
+	}	
 	
 	static imagePath(imageName){
 		return window.treezConfig.home + '/icons/' + imageName;

@@ -284,7 +284,12 @@ export default class ComponentAtom extends Atom {
 		
 		var pathVariables = [];
 		
-		var models = this.childFromRoot('root.models');
+		var models = undefined;
+		try {
+			models = this.childFromRoot('root.models');
+		} catch(error){
+			
+		}
 		
 		if(models){			
 			for(var child of models.children){

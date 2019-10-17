@@ -521,8 +521,6 @@ export default class Atom {
 		return fullName;
 	}
 
-
-
 	createHelpAction(section, relativeUrl){
 		if(relativeUrl){
 			section.append('treez-section-action')
@@ -742,9 +740,6 @@ export default class Atom {
 		return true;
 	}
 
-	/**
-	 * Returns the root atom of the tree this atom is included in. Returns null if the parent node of this atom is null.
-	 */
 	get root() {
 
 		if (this.name === 'root') {
@@ -771,11 +766,8 @@ export default class Atom {
 		} catch (error){
 			return '';
 		}
-	}
-	
-	/**
-	 * Returns true if this atom can be moved down in the children of its parent
-	 */
+	}	
+
 	get canBeMovedDown() {		
 		if (this.parent) {
 			var currentChildren = this.parent.children;
@@ -804,9 +796,6 @@ export default class Atom {
 			return numberOfChildren;
 		}
 		
-	/**
-	 * Returns true if this atom can be moved up in the children of its parent
-	 */
 	get canBeMovedUp() {		
 		if (this.parent) {
 			var currentChildren = this.parent.children;

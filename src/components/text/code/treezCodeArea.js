@@ -16,11 +16,26 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		return LabeledTreezElement.observedAttributes.concat(['mode']);                    
     } 	   	
 
-    connectedCallback() {  
+    async connectedCallback() {  
 
-        var self = this;  	
+        var self = this;  
 
-		require([
+        if(!window.requirejs){
+        	 window.requirejs = await Treez.importScript('/bower_components/requirejs/require.js','require')
+                    .catch(error => {
+                        console.log(error);
+                        throw error;
+                    });
+
+			window.requirejs.config({
+				baseUrl : '..',
+				paths : {
+					'codemirror' : 'bower_components/codemirror'
+				}
+			});
+        }
+
+		window.requirejs([
 			'codemirror/lib/codemirror',						
 			'codemirror/mode/sql/sql',
 			'codemirror/mode/javascript/javascript',

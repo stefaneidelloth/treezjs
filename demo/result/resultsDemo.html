@@ -1,32 +1,19 @@
 <!doctype html>
 <html>
 
-<body >
+    <body>
 
-<treez-tab-folder id="tab-folder"></treez-tab-folder>
+        <div id = "treez-properties" ></div>
 
-<script src = "../../../bower_components/d3/d3.min.js" ></script>
+        <script type="module">
 
-<script type="module">
+            import DemoUtils from '../../demo/demoUtils.js';
+            import Results from '../../src/result/results.js';
 
-    import Treez from '../../../src/treez.js';
-    import DTreez from '../../../src/core/dtreez/dTreez.js';
+            DemoUtils.createDemo(Results);
 
-    Treez.config({
-        home: '..',
-        isSupportingPython: false
-    });
+        </script>
 
-    let dTreez = new DTreez(d3);
-    let tabFolder = dTreez.select('#tab-folder');
-
-    import Results from '../../src/result/results.js';
-
-    let atom = new Results();
-    atom.createComponentControl(tabFolder);
-
-</script>
-
-</body>
+    </body>
 
 </html>
