@@ -27,7 +27,7 @@ export default class VariableRangeCodeAdaption extends AtomCodeAdaption {
 		var variableValuesString = this.valueString(this.__atom.values);		
 		
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+			codeContainer.extendBulk(this.indent + 'let ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
 					+ className + "('" + name + "', " + variableValuesString + ");");
 		} else {			
 			throw new Error('The atom "'+ name+'" has no parent atom.');			

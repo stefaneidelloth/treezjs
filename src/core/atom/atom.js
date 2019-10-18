@@ -36,13 +36,14 @@ export default class Atom {
 		this.__helpId = undefined;			
 		this.__isExpanded=true;
 		this.__expandedNodes = [];		
-		this.__isRunnable = false;		
+		this.__isRunnable = false;			
 	}	
 	
 	//#region METHODS
 	
 	static create(name, value){
-		return Atom.__createAtom(this, name, value);
+		let atom =  Atom.__createAtom(this, name, value);		
+		return atom;
 	}	
 
 	copy() {
@@ -259,7 +260,8 @@ export default class Atom {
 	/**
 	 * Add the given Atom as a child and removes it from the old parent if an old parent exists.
 	 */
-	addChild(child) {		
+	addChild(child) {
+		child.__initializeProperties();		
 		var oldParent = child.parent;		
 		this.children.push(child);
 		if (oldParent !== undefined) {			
@@ -268,15 +270,6 @@ export default class Atom {
 		child.parent = this;
 	}
 
-	/**
-	 * Adds the given Atom as a child but does not set the parent of the child. The given Atom
-	 * will be listed as a child of this Atom. If the given Atom is asked for its parent, the old
-	 * parent will be returned. This way, an Atom can be used in several trees as a child while the 'one and
-	 * only real parent' is kept.
-	 */
-	addChildReference(child) {
-		children.add(child);
-	}
 
 	/**
 	 * Get child atom with given child name/sub model path. Throws an Error if the child could not be found.
@@ -347,7 +340,7 @@ export default class Atom {
 		} else {
 			atom = new atomClass(name)
 		}
-		atom.__initializeProperties();
+		
 		return atom;
 	}
 

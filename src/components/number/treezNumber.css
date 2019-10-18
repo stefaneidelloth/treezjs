@@ -1,5 +1,4 @@
-.treez-number {
-	position: absolute;
+.treez-number {	
 	display: flex;
 }
 
@@ -9,12 +8,10 @@
 	float: left;
 	font-family: Consolas;
 	font-size: 12px;
-
 }
 
 .treez-number-input {
     font-family: Consolas;
     font-size: 12px;
     width:96%;
-
 }

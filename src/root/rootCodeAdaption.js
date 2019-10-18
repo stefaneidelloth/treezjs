@@ -13,15 +13,21 @@ export default class rootCodeAdaption extends ComponentAtomCodeAdaption {
             codeContainer = new CodeContainer();
         }
 
+
         var name = this.__atom.name;
+        let hasDefaultName = name === this.__atom.__defaultName;
         var className = this.getClassName(this.__atom);
         var hasParent = this.__atom.hasParent;
+
+        let constructorArgs = hasDefaultName
+            ?"()"
+            :"('" + name + "')";
 
         if (hasParent) {
             throw new Error('Root atom must not have parent.');
 
         } else {
-            codeContainer.extendBulk(this.indent + "let root = new Root('" + name + "');");
+            codeContainer.extendBulk(this.indent + "let root = new Root"+ constructorArgs + ";");
         }
         return codeContainer;
     }

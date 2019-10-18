@@ -122,6 +122,11 @@ export default class AbstractAtomCodeAdaption {
 		var defaultValues = atom.__treezProperties;
 		for (var propertyName of propertyNames) {			
 			var propertyValue = atom[propertyName];
+
+			//continue loop for name property
+			if(propertyName === 'name'){				
+				continue;				
+			}	
 			
 			//continue loop if value equals default value
 			if(defaultValues){
@@ -133,7 +138,9 @@ export default class AbstractAtomCodeAdaption {
 						}
 					}
 				}
-			}			
+			}	
+			
+				
 			
 			propertyContainer = this.extendCodeForProperty(propertyContainer, propertyName, propertyValue, propertyParentName);			
 		}

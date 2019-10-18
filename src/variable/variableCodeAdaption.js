@@ -27,7 +27,7 @@ export default class VariableCodeAdaption extends AtomCodeAdaption {
 		var variableValueString = this.valueString(this.__atom.value);		
 		
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+			codeContainer.extendBulk(this.indent + 'let ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
 					+ className + "('" + name + "', " + variableValueString + ");");
 		} else {		
 			throw new Error('The atom "'+ name+'" has no parent atom.');			

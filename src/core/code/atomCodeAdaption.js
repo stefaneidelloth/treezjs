@@ -22,7 +22,7 @@ import Root from './../../root/root.js';
 
 	postProcessAllChildrenCodeContainer(allChildrenCodeContainer) {
 
-		var bulkIsEmpty = allChildrenCodeContainer.hasEmptyBulk;
+		let bulkIsEmpty = allChildrenCodeContainer.hasEmptyBulk;
 		if (!bulkIsEmpty) {
 			//make sure that the bulk code ends with an extra line if the bulk code is not empty
 			//(this creates some distance to the code for the next sibling or uncle)
@@ -37,13 +37,18 @@ import Root from './../../root/root.js';
 			codeContainer = new CodeContainer();
 		}
 
-		var name = this.__atom.name;	
-		var className = this.getClassName(this.__atom);		
-		var hasParent = this.__atom.hasParent;		
+		let name = this.__atom.name;
+		let hasDefaultName = name === this.__atom.__defaultName;
+		let className = this.getClassName(this.__atom);		
+		let hasParent = this.__atom.hasParent;
+
+		let constructorArgs = hasDefaultName
+			?"()"
+			:"('" + name + "')";
 		
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'var ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
-					+ className + "('" + name + "');");
+			codeContainer.extendBulk(this.indent + 'let ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+					+ className + constructorArgs + ";");
 		} else {			
 			
 			if(!this.__atom instanceof Root){
@@ -51,7 +56,8 @@ import Root from './../../root/root.js';
 			}
 			
 			codeContainer.extendBulkWithEmptyLine();
-			codeContainer.extendBulk(this.indent +	'var ' + variableName + ' = new ' + className + "('" + name + "');");
+			codeContainer.extendBulk(this.indent +	'let ' + variableName + ' = new ' + className + constructorArgs + ";");
+
 		}
 		return codeContainer;
 	}
@@ -66,14 +72,20 @@ import Root from './../../root/root.js';
 			codeContainer = new CodeContainer();
 		}
 
-		var name = this.__atom.name;	
-		var className = this.getClassName(this.__atom);		
-		var hasParent = this.__atom.hasParent;
+		let name = this.__atom.name;
+		let hasDefaultName = name === this.__atom.__defaultName;
+
+		let className = this.getClassName(this.__atom);		
+		let hasParent = this.__atom.hasParent;
+
+		let constructorArgs = hasDefaultName
+			?"()"
+			:"('" + name + "')";
 				
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + this.__parentVariableNamePlaceholder + '.create' + className + "('" + name + "');");
+			codeContainer.extendBulk(this.indent + this.__parentVariableNamePlaceholder + '.create' + className + constructorArgs + ";");
 		} else {
-			var message = 'The atom "' + name
+			let message = 'The atom "' + name
 					+ '" has no parent atom and no code to create children or set properties. '
 					+ 'Creating it would be useless. If it is a root atom wihout children create a custom code adaption for it.';
 			console.warn(message);
@@ -85,9 +97,9 @@ import Root from './../../root/root.js';
 				
 		this.createImportsForValue(propertyContainer, propertyValue);		
 
-		var propertyValueString = this.valueString(propertyValue); 
+		let propertyValueString = this.valueString(propertyValue); 
 				
-		var additionalLine = this.indent + this.__variableNamePlaceholder + '.' + propertyName + ' = ' + propertyValueString + ';';	
+		let additionalLine = this.indent + this.__variableNamePlaceholder + '.' + propertyName + ' = ' + propertyValueString + ';';	
 		propertyContainer.extendBulk(additionalLine);
 
 
@@ -106,7 +118,7 @@ import Root from './../../root/root.js';
 			return this.__createValueStringForString(value);			
 		}
 
-		var isPrimitive = value !== Object(value);
+		let isPrimitive = value !== Object(value);
 		if (isPrimitive) {
 			return '' + value;			
 		}		
@@ -115,7 +127,7 @@ import Root from './../../root/root.js';
 			return this.__createValueStringForEnum(value);			
 		}		
 
-		var isArray = value instanceof Array;
+		let isArray = value instanceof Array;
 		if (isArray) {
 			return this.__createValueStringForArray(value);
 		}
@@ -132,9 +144,9 @@ import Root from './../../root/root.js';
 	}
 
 	__createEnumImport(enumValue){
-		var constructor = enumValue.constructor;
+		let constructor = enumValue.constructor;
 		
-		var urlPrefix = window.treezConfig
+		let urlPrefix = window.treezConfig
 								?window.treezConfig.home
 								:'.';
 		
@@ -142,7 +154,7 @@ import Root from './../../root/root.js';
 	}
 		
 	__createValueStringForString(value) {
-		var valueString = value;
+		let valueString = value;
 		valueString = valueString.replace(/\\/g, '\\\\');
 		if(value.includes("'")){
 			return '"' + valueString + '"';		
@@ -157,9 +169,9 @@ import Root from './../../root/root.js';
 	}
 	
 	__createValueStringForArray(array) {
-		var valueStrings = [];
-		for (var value of array) {
-			var valueString = this.valueString(value);
+		let valueStrings = [];
+		for (let value of array) {
+			let valueString = this.valueString(value);
 			valueStrings.push(valueString);
 		}
 		return '[' + valueStrings.join(', ') + ']';		
