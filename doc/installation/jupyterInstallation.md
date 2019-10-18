@@ -42,7 +42,7 @@ The individual extensions are located in the sub folder nbextensions, for exampl
 
 >D:\EclipsePython\App\WinPython\python-3.7.2.amd64\Lib\site-packages\jupyter_contrib_nbextensions\nbextensions
 
-Now we are ready to isntall a custom extension in that folder, see the next steps. 
+Now we are ready to install a custom extension in that folder, see the next steps. 
 
 Also see:
 
