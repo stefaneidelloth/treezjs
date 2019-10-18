@@ -1,4 +1,8 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import Data from './Data.js';
+import Fill from './fill.js';
+import Lines from './lines.js';
+
 
 export default class Contour extends PagedGraphicsAtom {
 
@@ -22,9 +26,7 @@ export default class Contour extends PagedGraphicsAtom {
 
 		this.lines =  Lines.create();
 		factories.push(this.lines);
-
-		this.colorbar =  ColorBar.create();
-		factories.push(this.colorbar);
+		
 
 		//label = Label.create();
 		

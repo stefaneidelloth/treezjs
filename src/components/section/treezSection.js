@@ -62,8 +62,13 @@ export default class TreezSection extends HTMLElement {
     }
 
     collapse(){
-    	this.__sectionContent.style.display='none';
-    	this.__sectionHeader.classList.add('collapsed');
+    	if(this.__sectionContent){
+    		this.__sectionContent.style.display='none';
+    	}
+    	if(this.__secitonHeader){
+    		this.__sectionHeader.classList.add('collapsed');
+    	}
+    	
     }
 
     __toggleExpansion(){

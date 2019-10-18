@@ -1,4 +1,8 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
+import Main from './main.js';
+import Text from './text.js';
+import Background from '../graphics/background.js';
+import Border from '../graphics/border.js';
 
 export default class Legend extends PagedGraphicsAtom {
 
