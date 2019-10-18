@@ -1,8 +1,19 @@
 import Treez from './treez.js'; 
 import JupyterTerminal from './jupyterTerminal.js';
 
+
+let url = document.URL;
+let startIndex = url.indexOf('notebooks');
+let subUrl = url.substring(startIndex);
+let depth = subUrl.split('/').length-2;
+
+let home = '../notebooks/treezjs';
+for(let index = 0; index <depth; index++){
+	home = '../' + home;
+}
+
 Treez.config({
-	home: '../notebooks/treezjs',
+	home: home,
 	isSupportingPython: true
 });
 
@@ -17,6 +28,8 @@ require([
 	 d3	
 ) {	
 	
+	
+
 
 
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');	
