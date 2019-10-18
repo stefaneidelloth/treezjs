@@ -1,4 +1,5 @@
-import ComponentAtomCodeAdaption from "../core/component/componentAtomCodeAdaption";
+import ComponentAtomCodeAdaption from '../core/component/componentAtomCodeAdaption.js';
+import CodeContainer from '../core/code/codeContainer.js';
 
 export default class rootCodeAdaption extends ComponentAtomCodeAdaption {
 

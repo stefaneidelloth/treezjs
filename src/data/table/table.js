@@ -76,7 +76,7 @@ export default class Table extends ComponentAtom {
 
         actions.push(new AddChildAtomTreeViewAction(
 							ColumnFolder,
-							'Columns',
+							'columns',
 							'columnFolder.png',
 							parentSelection,
 							this,

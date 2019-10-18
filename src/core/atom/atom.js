@@ -151,7 +151,8 @@ export default class Atom {
 		}
 
 		//delete
-		actions.push(new TreeViewAction(
+		if (this.parent){
+			actions.push(new TreeViewAction(
 						'Delete',
 						'delete.png',
 						this,
@@ -159,6 +160,8 @@ export default class Atom {
 						()=>this.delete())
 					);
 
+		}
+		
 		return actions;
 	}
 
@@ -481,8 +484,11 @@ export default class Atom {
 		this.children.forEach(child =>{
 			child.delete();
 		});	
-		var childIndex = this.parent.children.indexOf(this);
-		this.parent.children.splice(childIndex,1);		
+		if(this.parent){
+			var childIndex = this.parent.children.indexOf(this);
+			this.parent.children.splice(childIndex,1);
+		}
+				
 	}
 
 	removeChild(child) {

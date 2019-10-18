@@ -4,7 +4,7 @@ import Models from './../model/models.js';
 import Studies from './../study/studies.js';
 import Results from './../result/results.js';
 import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
-import RootCodeAdaption from "./rootCodeAdaption";
+import RootCodeAdaption from './rootCodeAdaption.js';
 
 export default class Root extends ComponentAtom {	
    

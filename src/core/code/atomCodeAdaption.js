@@ -73,7 +73,7 @@ import Root from './../../root/root.js';
 		if (hasParent) {
 			codeContainer.extendBulk(this.indent + this.__parentVariableNamePlaceholder + '.create' + className + "('" + name + "');");
 		} else {
-			var message = 'The atom ' + name
+			var message = 'The atom "' + name
 					+ '" has no parent atom and no code to create children or set properties. '
 					+ 'Creating it would be useless. If it is a root atom wihout children create a custom code adaption for it.';
 			console.warn(message);
@@ -144,7 +144,12 @@ import Root from './../../root/root.js';
 	__createValueStringForString(value) {
 		var valueString = value;
 		valueString = valueString.replace(/\\/g, '\\\\');
-		return "'" + valueString + "'";		
+		if(value.includes("'")){
+			return '"' + valueString + '"';		
+		} else {
+			return "'" + valueString + "'";		
+		}
+		
 	}
 
 	__createValueStringForEnum(enumValue) {	
