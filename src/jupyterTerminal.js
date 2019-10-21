@@ -54,6 +54,9 @@ export default class JupyterTerminal {
     	if(!filePath){
     		return null;
     	}
+
+    	filePath = filePath.replace(/\\/g,'\\\\');
+    	
 		var pythonCode = '%%python\n' +
 		    '# -*- coding: utf-8 -*-\n' +
 			'file = open("' + filePath + '", "r", encoding="utf-8")\n' +
@@ -64,7 +67,9 @@ export default class JupyterTerminal {
     
     async writeTextFile(filePath, text){
 
-		var textString = this.__escapeSpecialCharacters(text);		
+		var textString = this.__escapeSpecialCharacters(text);	
+
+		filePath = filePath.replace(/\\/g,'\\\\');	
 
 		var pythonCode = '%%python\n' +
 			'# -*- coding: utf-8 -*-\n' +
@@ -119,10 +124,16 @@ export default class JupyterTerminal {
 
 	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
 			
+		/*
 		var pythonCode = '%%python\n' +
 						 '# -*- coding: utf-8 -*-\n' +	
 		                 'from subprocess import Popen\n' +		                
                          'Popen(\'cmd /k ' + command + '\')';	
+        */
+
+        var pythonCode = '!' + command;
+
+						
 
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	

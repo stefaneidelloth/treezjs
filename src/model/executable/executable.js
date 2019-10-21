@@ -255,7 +255,11 @@ export default class Executable extends Model {
 	}	
 
 	__buildCommand(){
-		let command = '"' + this.fullPath(this.executablePath) + '"';
+		let fullExecutablePath = this.fullPath(this.executablePath);
+		let command = '';
+		if(fullExecutablePath){
+			command = command + '"' + fullExecutablePath + '"';
+		} 
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);
 		command = this.__addLoggingArguments(command);
@@ -266,7 +270,10 @@ export default class Executable extends Model {
 		let command = commandToExtend;
 		if (this.inputArguments) {
 			const modifiedInputArguments = this.__injectStudyAndJobInfoIfPlaceholdersAreUsed(this.inputArguments);
-			command += ' ' + modifiedInputArguments;
+			if(command){
+				command += ' ';
+			}
+			command += modifiedInputArguments;
 		}
 
 		if (this.inputPath) {
@@ -329,7 +336,7 @@ export default class Executable extends Model {
 		
 		return outputModification
 			?outputModification.getModifiedPath(this)
-			:this.outputPath;		
+			:this.fullPath(this.outputPath);		
 	}
 
 	__addOutputArguments(commandToExtend){
