@@ -138,9 +138,7 @@ export default class AbstractAtomCodeAdaption {
 						}
 					}
 				}
-			}	
-			
-				
+			}
 			
 			propertyContainer = this.extendCodeForProperty(propertyContainer, propertyName, propertyValue, propertyParentName);			
 		}

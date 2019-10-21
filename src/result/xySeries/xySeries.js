@@ -130,7 +130,7 @@ export default class XySeries extends GraphicsAtom {
 		var axisList = this.__getAllAxisFromParentGraph();
 
 		var domainAxis;
-		if (axisList.size() > 0) {
+		if (axisList.length > 0) {
 			domainAxis = axisList[0];
 			var domainAxisLimits = this.__getDomainLimits(sourceTable);
 			domainAxis.data.min = domainAxisLimits[0];
@@ -201,7 +201,7 @@ export default class XySeries extends GraphicsAtom {
 	__getRangeLimits(sourceTable) {		
 		var numberOfColumns = sourceTable.numberOfColumns;
 		if (numberOfColumns > 1) {
-			var limits = [ Double.MAX_VALUE, Double.MIN_VALUE ]; //TODO
+			var limits = [ Number.MAX_VALUE, Number.MIN_VALUE ]; //TODO
 			for (var columnIndex = 1; columnIndex < numberOfColumns; columnIndex++) {
 				var rangeColumn = sourceTable.getColumnByIndex(columnIndex);
 				var rangeValues = rangeColumn.numericValues;
