@@ -39,10 +39,11 @@ export default class DatabaseModifier extends CodeModel {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
+		this.createCodeSection(page);	
 		this.createSourceModelSection(page); 
 		this.__createTargetDatabaseSection(page); 
 		this.__showAndHideComponents();
-		this.createCodeSection(page);		
+			
         this.createStatusSection(page);
 	}
 
@@ -56,9 +57,9 @@ export default class DatabaseModifier extends CodeModel {
     	
     	switch(this.targetType){
     		case TableTargetType.sqLite:
-    			var connectionString = this.fullPath(this.targetFilePath);
-    			var query = this.buildCode();
-    			await window.treezTerminal.sqLiteQuery(connectionString, query, false)
+    			var connectionString = this.fullPath(this.targetFilePath);    			
+    			let singleLineQuery = query.replace(/\n/g,'')
+    			await window.treezTerminal.sqLiteQuery(connectionString, singleLineQuery, false)
     				.catch((error)=>{
     					monitor.error(error);
     					monitor.cancel();

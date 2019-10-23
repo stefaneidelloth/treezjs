@@ -120,6 +120,7 @@ export default class TreezElement extends HTMLElement {
 			   let newValue = this.convertFromStringValue(newStringValue);
 			   this.updateElements(newValue);
 			   this.__updateExternalProperties(newValue);
+			   this.dispatchChangeEvent(); //required for customElementSelection.onChange( () => {..}) to work correctly
 		   }
 		}    
 

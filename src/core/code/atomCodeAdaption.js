@@ -156,6 +156,7 @@ import Root from './../../root/root.js';
 	__createValueStringForString(value) {
 		let valueString = value;
 		valueString = valueString.replace(/\\/g, '\\\\');
+		valueString = valueString.replace(/\n/g, '\\n');
 		if(value.includes("'")){
 			return '"' + valueString + '"';		
 		} else {

@@ -230,7 +230,7 @@ export default class JupyterTerminal {
 				'import pandas\n'	+
 				'with sqlite3.connect("' + connectionString + '") as connection:\n' +
 				'    cursor = connection.cursor()\n' +
-				'    cursor.execute("' + query + '")\n';
+				'    cursor.executescript("' + query + '")\n';
 			
 			return this.executePythonCode(pythonCode, false)
 				.catch(error=>{

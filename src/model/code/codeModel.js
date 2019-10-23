@@ -30,8 +30,9 @@ export default class CodeModel extends Model {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 		
+		this.createCodeSection(page);   
 		this.createSourceModelSection(page); 		
-		this.createCodeSection(page);       
+		    
         this.createStatusSection(page);
 	}
 
