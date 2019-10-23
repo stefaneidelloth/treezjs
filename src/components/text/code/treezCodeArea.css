@@ -21,7 +21,8 @@
     caret-color: white;
     cursor: text;
     text-align:top;
-   
+     font-family: Consolas;
+    font-size: 12px;   
 }
 
 .treez-code-area-container .CodeMirror-cursor {
