@@ -5,11 +5,27 @@
 }
 
 .treez-code-area-container {
-    font-family: Consolas;
-    font-size: 12px;    
+   
     border: 1px solid lightgrey;
-    margin-top: 5px;
-    margin-bottom: 5px;  
+   
     resize: vertical;
-    overflow: auto !important; 
+    overflow: auto !important;   
+}
+
+
+.treez-code-area-container .CodeMirror pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    height:18px;
+    caret-color: white;
+    cursor: text;
+    text-align:top;
+   
+}
+
+.treez-code-area-container .CodeMirror-cursor {
+	
+	margin-left:1px;	
+	
 }
