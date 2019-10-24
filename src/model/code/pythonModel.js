@@ -22,13 +22,9 @@ export default class PythonModel extends CodeModel {
 		const page = tabFolder.append('treez-tab')
             .label('Data');
 
-		this.createSourceModelSection(page); 		
-		this.createCodeSection(page); 
-		
-		this.__codeSelection.attr('mode','python');
-		
+		this.createCodeSection(page);		
+		this.createSourceModelSection(page);
         this.createStatusSection(page);
-        
         this.__createOutputSection(page);
 	}
 

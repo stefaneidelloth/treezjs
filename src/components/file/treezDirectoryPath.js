@@ -72,7 +72,8 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
     __browseDirectoryPath(){                  
         window.treezTerminal.browseDirectoryPath(this.fullParentDirectory).then((result)=>{
             if(result){
-                this.value = this.injectPathMap(result.trim());               
+            	let pathWithForwardSlashes = TreezAbstractPath.replacePathSeparators(result.trim());		
+                this.value = this.injectPathMap(pathWithForwardSlashes);               
             }                    	
         }); 
     }   

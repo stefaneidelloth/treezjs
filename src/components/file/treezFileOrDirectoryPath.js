@@ -82,14 +82,16 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 
        if(this.__isFileMode){
 			window.treezTerminal.browseFilePath(this.fullDirectory).then((newValue)=>{
-				if(newValue){				  
-					this.value = this.injectPathMap(newValue.trim());
+				if(newValue){
+					let pathWithForwardSlashes = TreezAbstractPath.replacePathSeparators(newValue.trim());					  
+					this.value = this.injectPathMap(pathWithForwardSlashes);
 				}                    	
 			}); 
        } else {
 			window.treezTerminal.browseDirectoryPath(this.fullParentDirectory).then((newValue)=>{
 				if(newValue){
-					this.value = this.injectPathMap(newValue.trim());	
+					let pathWithForwardSlashes = TreezAbstractPath.replacePathSeparators(newValue.trim());		
+					this.value = this.injectPathMap(pathWithForwardSlashes);	
 				}                    	
 			}); 
        }               

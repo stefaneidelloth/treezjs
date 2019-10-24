@@ -85,16 +85,24 @@ export default class InputModification extends ComponentAtom {
 		let inputPath = executable.fullPath(executable.inputPath);
 
 		//split path with point to determine file extension if one exists
-		const subStrings = inputPath.split(".");
+		let items = inputPath.split('/');
 
-		let pathBase = subStrings[0];
+		let parentItemArray = items.slice(0, items.length-1);
+       	let parentPath = parentItemArray.join('/');
+       	
+		
+		let lastItem = items[items.length-1];
+
+		const subStrings = lastItem.split('.');
+
+		let pathBase = parentPath + '/' + subStrings[0];
 		let fileNameWithoutExtension = "";
         let pathPostFix = "";
         const hasFileExtension = subStrings.length > 1;
 		if (hasFileExtension) {
 			pathPostFix = "." + subStrings[1];
-			fileNameWithoutExtension = Utils.extractFileName(pathBase);
-			pathBase = Utils.extractParentFolder(pathBase);
+			fileNameWithoutExtension = subStrings[0];
+			pathBase = parentPath;
 		}
 
 		let inputPathExpression = pathBase;

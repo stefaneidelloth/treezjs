@@ -91,7 +91,7 @@ export default class JavaExecutable extends Executable {
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-text-area')
-			.label('Arguments for tweaking Java Virtual Maschine')
+			.label('Arguments for tweaking Java Virtual Machine')
 			.onChange(()=>this.refreshStatus())
 			.bindValue(this,()=>this.jvmArguments);	
 

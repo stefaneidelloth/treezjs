@@ -257,7 +257,11 @@ export default class ComponentAtom extends Atom {
 	}
 	
 	fullPath(pathIncludingVariables){
-		return TreezAbstractPath.replacePathVariables(pathIncludingVariables, this.pathMap);
+		return  TreezAbstractPath.replacePathVariables(pathIncludingVariables, this.pathMap);		
+	}
+
+	absolutePath(relativeOrAbsolutePath){
+		return TreezAbstractPath.convertToAbsolutePathIfRelative(relativeOrAbsolutePath);
 	}
 	
 	get isEnabled(){

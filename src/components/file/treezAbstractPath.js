@@ -48,7 +48,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 	}
 	
 	textFieldChanged(){
-    	this.value = this.__textField.value;                	             	
+    	this.value = TreezAbstractPath.replacePathSeparators(this.__textField.value.trim());                	             	
     }
 
     execute(){
@@ -92,6 +92,12 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 				:path;		
 		
     }
+
+    static replacePathSeparators(path){
+    	let pathWithForwardSlashes = path.replace(/\\/g,'/');
+    	let pathWithSingleForwardSlashes = pathWithForwardSlashes.replace(/\/\//g,'/');
+    	return pathWithSingleForwardSlashes;
+    }
     
     static replacePathVariables(pathIncludingVariables, pathMap){
     	
@@ -111,6 +117,30 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     	}
     	
     	return fullPath;
+	}
+
+	static convertToAbsolutePathIfRelative(path){
+		
+
+        let isRelative = path[0] === '.' || path[0] === '/' || path[0] === '\\';
+        if(!isRelative){
+        	return path;
+        }
+
+        let documentFilePath = document.URL;
+        let documentDirectory = this.directoryFromFilePath(documentFilePath);
+        let separator = '/';
+        if(path[0] === '/'){
+        	separator = '';
+        }
+
+		return documentDirectory + separator + path;
+	}
+
+	directoryFromFilePath(filePath){
+		let items = filePath.split('/');	    
+		let parentItemArray = items.slice(0, items.length-1);
+       	return parentItemArray.join('/');
 	}
 
 	get __urlPrefix(){
@@ -137,9 +167,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 	   }   
        
 	   if(this.isFile){	
-		    let items = fullPath.split('/');	    
-			let parentItemArray = items.slice(0, items.length-1);
-       		return parentItemArray.join('/');
+		    return this.directoryFromFilePath(fullPath);
 	   } else {
 			if(fullPath.endsWith('/')){
 				return fullPath.slice(0, fullPath.length-1);
