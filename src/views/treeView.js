@@ -9,13 +9,13 @@ export default class TreeView {
 		this.__treez = treez;	
 		this.dTreez = treez.dTreez;
 		this.content = undefined;	
-		this.__lastAtomShownInPropertiesView = undefined;
+		this.__lastAtomPathShownInPropertiesView = undefined;
 	}
 
 	buildView(){		
 		var parentSelection = this.__treez.dTreez.select('#treez-tree');
 		this.buildToolBar(parentSelection);
-		this.buildContent(parentSelection);
+		this.buildContent(parentSelection);		
 	}	
 
     buildToolBar(parentSelection){
@@ -95,13 +95,13 @@ export default class TreeView {
 			script.innerHTML = sourceCode + '\n' + 
 							   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 			
 			body.appendChild(script); 
-        });     
+        }); 
 
-		
+        this.refreshPropertiesView();		
     }
 
     clearPropertiesView(){
-    	var propertiesView = this.__treez.dTreez.select('#treez-properties');
+    	var propertiesView = this.propertiesView;
     	propertiesView.selectAll('treez-tab-folder').remove();	
 		propertiesView.selectAll('div').remove();
     };  
@@ -119,15 +119,30 @@ export default class TreeView {
     	this.editor.setText(sourceCode);    	    	
     }
 
-    refresh(sourceAtom){
+    refresh(){
     	this.content.selectAll('div').remove(); 
     	this.content.selectAll('details').remove();   	
     	this.model.createTreeNodeAdaption(this.content, this);
-    	this.clearPropertiesView();
-    	if(this.__lastAtomShownInPropertiesView){
-			 this.showProperties(this.__lastAtomShownInPropertiesView);
-    	}
+
+    	this.refreshPropertiesView();
     }   
+
+    refreshPropertiesView(){
+    	this.clearPropertiesView();
+    	if(this.__lastAtomPathShownInPropertiesView){
+    		let lastAtom = null;
+    		
+    		try{
+    			lastAtom = this.model.childFromRoot(this.__lastAtomPathShownInPropertiesView);
+    		} catch(error){
+
+    		}
+
+    		if(lastAtom){
+    			this.showProperties(lastAtom);
+    		} 			 
+    	}
+    }
 
     showHelp(){
 		var url = 'https://github.com/stefaneidelloth/treezjs/blob/master/README.md'
@@ -135,10 +150,9 @@ export default class TreeView {
 		newWindow.focus();    	
     }
 
-    showProperties(atom){    	
-    	var propertiesView = this.__treez.dTreez.select('#treez-properties');    	
-    	atom.createControlAdaption(propertiesView, this);
-    	this.__lastAtomShownInPropertiesView=atom;
+    showProperties(atom){ 
+    	atom.createControlAdaption(this.propertiesView, this);
+    	this.__lastAtomPathShownInPropertiesView=atom.treePath;
     }  
     
     setFocus(atom){
@@ -156,6 +170,10 @@ export default class TreeView {
 
 	get graphicsView(){
 		return this.__treez.graphicsView;
+	}
+
+	get propertiesView(){
+		return this.__treez.dTreez.select('#treez-properties');
 	}
 
 }

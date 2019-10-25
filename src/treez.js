@@ -19,7 +19,8 @@ export default class Treez {
 		this.__treeView = new TreeView(this);	
 		this.__monitorView = new MonitorView(this);		
 		this.__graphicsView = new GraphicsView(this);		
-		this.__editorView = new EditorView(this);		
+		this.__editorView = new EditorView(this);
+				
 	}
 	
 	static config(treezConfig){
@@ -52,6 +53,12 @@ export default class Treez {
 		treez.__monitorView.buildView();
 		treez.__graphicsView.buildView();
 		treez.__editorView.buildView(editorFactory); //also calls setEditorViewer to set the editor viewer of the editor view
+
+		try{
+			treez.__treeView.toTree();
+		} catch(error){
+			
+		}
 	}
 	
 	static importCssStyleSheet(href){
