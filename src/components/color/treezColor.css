@@ -6,7 +6,8 @@
     display: inline-block;
     vertical-align: middle;
     font-family: Consolas;
-    font-size: 12px;   
+    font-size: 12px;  
+    margin:0px;	 
 }
 
 .treez-color-input {     

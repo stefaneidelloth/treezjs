@@ -549,7 +549,11 @@ export default class Atom {
 		//store initial values of treez properties to be able to know if a value 
 		//has been modified from its initial state
 		for(var propertyName of publicPropertyNames){
-			this.__treezProperties[propertyName] = this[propertyName];
+
+			if(this.__treezProperties[propertyName] === undefined){
+				this.__treezProperties[propertyName] = this[propertyName];
+			}			
+			
 		}		
 	}
 

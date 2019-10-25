@@ -40,7 +40,7 @@ export default class TreezImageComboBox extends TreezComboBox {
             var imageLabel = document.createElement('img');
 			comboBoxDisplay.appendChild(imageLabel);
 			this.__imageLabel = imageLabel;
-			imageLabel.setAttribute('class','treez-image-combo-box-image-label');															
+			imageLabel.setAttribute('class','treez-image-combo-box-image-label');																
 			imageLabel.onclick = ()=>this.__expandComboBox();
 
             var comboButton = document.createElement('span');
@@ -162,9 +162,8 @@ export default class TreezImageComboBox extends TreezComboBox {
 		}
 	}
 
-	__refreshSelectedValue(){				
-		let oldValue = this.getAttribute('value');
-		if (!this.hasOption(oldValue)){
+	__refreshSelectedValue(){
+		if (!this.hasOption(this.value)){
 			this.__tryToSelectFirstOption();
 		}
 	}

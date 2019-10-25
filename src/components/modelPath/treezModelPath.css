@@ -7,6 +7,7 @@ treez-model-path {
 .treez-model-path-label {	
 	font-family: Consolas;
     font-size: 12px; 
+    margin:0px;
 }
 
 .treez-model-path-container {	

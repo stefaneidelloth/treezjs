@@ -3,6 +3,16 @@
     vertical-align: top; 
 }
 
+.treez-combo-box-label {  
+    display: inline-block;
+    margin:0px;	
+    margin-top:2px; 
+    vertical-align: top;
+    font-family: Consolas;
+    font-size: 12px;
+   
+}
+
 .treez-combo-box-select {   
     with: auto; 
     vertical-align: middle;
@@ -11,9 +21,3 @@
     font-size: 12px;
 }
 
-.treez-combo-box-label {  
-    display: inline-block;
-    vertical-align: middle;
-    font-family: Consolas;
-    font-size: 12px;
-}

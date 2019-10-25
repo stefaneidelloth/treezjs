@@ -149,7 +149,7 @@ export default class AbstractAtomCodeAdaption {
 		var propertyNames = Object.getOwnPropertyNames(atom);		
 		
 		var publicPropertyNames =  propertyNames.filter((name)=>{
-			return !name.startsWith('__')
+			return !name.startsWith('__') && name !== 'null';
 		});
 		
 		return publicPropertyNames;

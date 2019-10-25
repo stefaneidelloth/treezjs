@@ -157,36 +157,42 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-check-box')
 			.label('Log')			
 			.bindValue(this, ()=>this.isLog);		
-	}
-	
+	}	
 	
 	
 	__axisModeChanged(){
-		if(this.mode.isOrdinal){
-			this.__domainSelection.hide();
-		} else {
-			this.__domainSelection.show();
-		}
+		if(this.__domainSectionSelection){
+			if(this.mode.isOrdinal){
+				this.__domainSectionSelection.hide();
+			} else {
+				this.__domainSectionSelection.show();
+			}
+		}		
 	}
 	
 	__autoMinChanged(){
-		if(this.hasAutoMin){
-			this.__borderMinSelection.hide();
-			this.__minSelection.hide();
-		} else {
-			this.__borderMinSelection.show();
-			this.__minSelection.show();
-		}		
+		if(this.__borderMinSelection){
+			if(this.hasAutoMin){
+				this.__borderMinSelection.hide();
+				this.__minSelection.hide();
+			} else {
+				this.__borderMinSelection.show();
+				this.__minSelection.show();
+			}	
+		}			
 	}
 	
 	__autoMaxChanged(){
-		if(this.hasAutoMax){
-			this.__borderMaxSelection.hide();
-			this.__maxSelection.hide();
-		} else {
-			this.__borderMaxSelection.show();
-			this.__maxSelection.show();
-		}		
+		if(this.__borderMaxSelection){
+			if(this.hasAutoMax){
+				this.__borderMaxSelection.hide();
+				this.__maxSelection.hide();
+			} else {
+				this.__borderMaxSelection.show();
+				this.__maxSelection.show();
+			}	
+		}
+			
 	}	
 
 	__addUpdateListeners(dTreez, graph) {
