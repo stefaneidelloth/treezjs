@@ -44,13 +44,13 @@ export default class Axis extends PagedGraphicsAtom {
 		factories.push(this.majorTicks);
 
 		this.minorTicks = MinorTicks.create();
-		factories.push(this.minorTicks);		
-
-		this.axisLabel = AxisLabel.create();
-		factories.push(this.axisLabel);
+		factories.push(this.minorTicks);
 
 		this.tickLabels = TickLabels.create();
 		factories.push(this.tickLabels);
+
+		this.axisLabel = AxisLabel.create(); //is created after ticks to consider tick height for label position
+		factories.push(this.axisLabel);
 
 		return factories;
 	}
