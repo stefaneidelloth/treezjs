@@ -75,20 +75,29 @@ export default class OutputModification extends ComponentAtom {
    }  
    
    getModifiedPath(executable) {
-		
-		//split path with point to determine file extension if one exists
-	   var outputPath = executable.fullPath(executable.outputPath);
-       const subStrings = outputPath.split(".");
 
-       let pathBase = subStrings[0];
-       let fileNameWithoutExtension = "";
-       let pathPostFix = "";
-       const hasFileExtension = subStrings.length > 1;
+   		let outputPath = executable.fullPath(executable.outputPath);
+		
+		let items = outputPath.split('/');
+
+		let parentItemArray = items.slice(0, items.length-1);
+       	let parentPath = parentItemArray.join('/');
+       	
+		
+		let lastItem = items[items.length-1];
+
+		const subStrings = lastItem.split('.');
+
+		let pathBase = parentPath + '/' + subStrings[0];
+		let fileNameWithoutExtension = "";
+        let pathPostFix = "";
+        const hasFileExtension = subStrings.length > 1;
 		if (hasFileExtension) {
 			pathPostFix = "." + subStrings[1];
-			fileNameWithoutExtension = Utils.extractFileName(pathBase);
-			pathBase = Utils.extractParentFolder(pathBase);
-		}
+			fileNameWithoutExtension = subStrings[0];
+			pathBase = parentPath;
+		}	
+		
 
 		let outputPathExpression = pathBase;
 

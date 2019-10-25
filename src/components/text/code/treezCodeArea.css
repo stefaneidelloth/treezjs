@@ -14,9 +14,6 @@
 
 
 .treez-code-area-container .CodeMirror pre {
-    white-space: pre-wrap;
-    word-break: break-all;
-    word-wrap: break-word;
     height:18px;
     caret-color: white;
     cursor: text;

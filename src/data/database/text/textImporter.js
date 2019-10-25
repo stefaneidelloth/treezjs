@@ -1,5 +1,7 @@
 import Importer from './../importer.js';
 import ColumnType from './../../column/columnType.js';
+import TableData from './../tableData.js';
+import ColumnBlueprint from './../../column/columnBlueprint.js';
 
 export default class TextImporter extends Importer {
 
@@ -33,12 +35,14 @@ export default class TextImporter extends Importer {
 		TextImporter.__checkDataSizes(headers, rows, firstRowIndex);
 		
 		//TODO: implement filtering of rows for jobId
-						
-		var tableData = {
-				heades: headers,
-				rows: rows,
-				columnType: ColumnType.string
-		}			
+
+		let columnBlueprints = [];
+		for(let header of headers){
+			let columnBlueprint = new ColumnBlueprint(header, header, ColumnType.string);
+			columnBlueprints.push(columnBlueprint);			
+		}
+
+		let tableData = new TableData(columnBlueprints, rows);
 
 		return tableData;
 	}

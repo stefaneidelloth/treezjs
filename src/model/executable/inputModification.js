@@ -83,13 +83,11 @@ export default class InputModification extends ComponentAtom {
 	getModifiedPath(executable){	
 
 		let inputPath = executable.fullPath(executable.inputPath);
-
-		//split path with point to determine file extension if one exists
+		
 		let items = inputPath.split('/');
 
 		let parentItemArray = items.slice(0, items.length-1);
-       	let parentPath = parentItemArray.join('/');
-       	
+       	let parentPath = parentItemArray.join('/');       	
 		
 		let lastItem = items[items.length-1];
 

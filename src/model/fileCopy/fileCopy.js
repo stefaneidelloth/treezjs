@@ -101,7 +101,7 @@ export default class FileCopy extends Model {
 		if(this.isUsingOutputPathProvider){
 			this.__pathOfOutputPathProviderComponent.show();
 			this.__outputDirectoryPathComponent.disable();
-			this.ouputDirectoryPath = this.__pathFromOutputPathProvider();
+			this.outputDirectoryPath = this.__pathFromOutputPathProvider();
 		} else {
 			this.__pathOfOutputPathProviderComponent.hide();
 			this.__outputDirectoryPathComponent.enable();
@@ -154,7 +154,7 @@ export default class FileCopy extends Model {
     __buildCommand(){ 
         var fileName = Utils.extractFileName(this.inputPath);
     	return 'if not exist "' + this.outputPath + '" mkdir "' + this.outputPath + '" &' 
-    	+ ' copy /Y "' + this.inputPath + '" "' + this.outputPath + '\\' + fileName + '"';    		
+    	+ ' copy /Y "' + this.inputPath + '" "' + this.outputPath + '\\\\' + fileName + '"';    		
 	} 	
     
     async __executeCommand(command, monitor){
@@ -198,26 +198,17 @@ export default class FileCopy extends Model {
     }	
 
 	get inputPath(){
-		if(this.isUsingInputPathProvider){
-			var path = this.__pathFromInputPathProvider();
-			return path
-				?path.replace(/\//g, '\\\\')
-				:'';	
-			
-		} else {
-			return this.inputFilePath.replace(/\//g, '\\\\');
-		}		
+		let path = this.isUsingInputPathProvider
+			? this.__pathFromInputPathProvider()
+			:this.inputFilePath;
+		return path.replace(/\//g,'\\\\');			
 	}	
 
 	get outputPath(){
-		if(this.isUsingOutputPathProvider){
-			var path = this.__pathFromOutputPathProvider();
-			return path
-				?path.replace(/\//g, '\\\\')
-				:'';			
-		} else {
-			return this.outputDirectoryPath.replace(/\//g, '\\\\');
-		}		
+		let path = this.isUsingOutputPathProvider
+			? this.__pathFromOutputPathProvider()
+			:this.outputDirectoryPath;
+		return path.replace(/\//g,'\\\\');		
 	}
 
 	

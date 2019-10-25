@@ -50,7 +50,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			  {
 				value: self.value,
 				mode: self.mode,
-				lineNumbers: false, //showing line numbers somehow misaligns the cursor position
+				lineNumbers: false, 
 				matchBrackets: true,
 				continueComments: "Enter",
 				extraKeys: {"Ctrl-Q": "toggleComment"}

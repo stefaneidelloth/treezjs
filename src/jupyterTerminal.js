@@ -111,12 +111,14 @@ export default class JupyterTerminal {
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	
 
-	openDirectory(directoryPath, errorHandler, finishedHandler){	
+	openDirectory(directoryPath, errorHandler, finishedHandler){
+
+		let path = directoryPath.replace(/\//g, "\\");
 			
 		var pythonCode = '%%python\n' +
 						 '# -*- coding: utf-8 -*-\n' +
 					     'from subprocess import Popen\n' +		                
-                         'Popen(\'cmd /k start ' + directoryPath + '\')';	
+                         'Popen(\'cmd /k start ' + path + '\')';	
 
 		this.__executePythonCode(pythonCode, undefined, errorHandler, finishedHandler);		
 	}

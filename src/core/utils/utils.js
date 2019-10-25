@@ -16,8 +16,8 @@ export default class Utils {
     }
 
     static extractFileName(pathWithoutExtension) {
-        const path = pathWithoutExtension.replace("\\", "/");
-        const subStrings = path.split("/");
+        const path = pathWithoutExtension.replace(/\\/g, '/');
+        const subStrings = path.split('/');
         const fileName = subStrings[subStrings.length - 1];
         return fileName;
     }
@@ -26,15 +26,15 @@ export default class Utils {
      * Includes a postFix in front of the last point in a file name
      */
     static includeNumberInFileName(fileName, postFix) {
-        const subStrings = fileName.split("\\.");
+        const subStrings = fileName.split('\\.');
         let newFileName = subStrings[0];
         if (subStrings.length > 2) {
             for (let index = 1; index < subStrings.length - 2; index++) {
-                newFileName += "." + subStrings[index];
+                newFileName += '.' + subStrings[index];
             }
         }
         newFileName += postFix;
-        newFileName += "." + subStrings[subStrings.length - 1];
+        newFileName += '.' + subStrings[subStrings.length - 1];
         return newFileName;
     }
 
@@ -51,10 +51,10 @@ export default class Utils {
      */
     static isFilePath(outputPath) {
         if(outputPath){
-            const outputPathString = outputPath.replace("\\", "/");
-            const subStrings = outputPathString.split("/");
+            const outputPathString = outputPath.replace(/\\/g, '/');
+            const subStrings = outputPathString.split('/');
             const lastSubString = subStrings[subStrings.length - 1];
-            return lastSubString.indexOf(".") > -1;
+            return lastSubString.indexOf('.') > -1;
         } else {
             throw Error ('Output path must not be null.');
         }
