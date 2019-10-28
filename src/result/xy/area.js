@@ -8,13 +8,13 @@ export default class Area extends GraphicsAtom {
 		
 		this.aboveColor = Color.white;
 		//this.aboveFillStyle = 'solid';
-		this.aboveTransparency = '0';
+		this.aboveTransparency = 0;
 		this.aboveIsHidden = true;
 		//this.aboveIsHiddenErrorFill = true;		
 
 		this.belowColor = Color.white; 		
 		//this.belowFillStyle = 'solid';
-		this.belowTransparency = '0';
+		this.belowTransparency = 0;
 		this.belowIsHidden = true;		
 		//this.belowHideErrorFill = true;		
 	}
@@ -36,16 +36,21 @@ export default class Area extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color')
+			.labelWidth('90px')		
 			.bindValue(this, ()=>this.aboveColor);	
 	
 		//fillAbove.createFillStyle(aboveFillStyle, 'style', 'Style');
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')		
+			.min('0')
+			.max('0')
 			.bindValue(this, ()=>this.aboveTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('90px')		
 			.bindValue(this, ()=>this.aboveIsHidden);		
 	
 		//fillAbove.createCheckBox(aboveHideErrorFill, 'hideErrorFill', 'Hide error fill');
@@ -59,16 +64,21 @@ export default class Area extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color')
+			.labelWidth('90px')		
 			.bindValue(this, ()=>this.belowColor);	
 	
 		//fillAbove.createFillStyle(belowFillStyle, 'style', 'Style');
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')		
+			.min('0')
+			.max('0')
 			.bindValue(this, ()=>this.belowTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('90px')		
 			.bindValue(this, ()=>this.belowIsHidden);		
 	
 		//fillAbove.createCheckBox(belowHideErrorFill, 'hideErrorFill', 'Hide error fill');

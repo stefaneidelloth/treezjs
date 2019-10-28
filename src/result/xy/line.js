@@ -10,9 +10,9 @@ export default class Line extends GraphicsAtom {
 		this.interpolationMode = InterpolationMode.linear;
 		//this.bezierJoin = false;
 		this.color = Color.black;
-		this.width = '3';
+		this.width = 3;
 		this.style = LineStyle.solid;
-		this.transparency = '0';
+		this.transparency = 0;
 		this.isHidden = false;
 	}
 	
@@ -28,29 +28,38 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Interpolation mode')
+			.labelWidth('120px')
 			.nodeAttr('enum', InterpolationMode)
 			.bindValue(this, ()=>this.interpolationMode);		
 
 		//line.createCheckBox(bezierJoin, this).setLabel('Bezier join');
 		
 		sectionContent.append('treez-color')
-			.label('Color mode')	
+			.label('Color mode')
+			.labelWidth('120px')			
 			.bindValue(this, ()=>this.color);	
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')	
+			.labelWidth('120px')
+			.min('0')
 			.bindValue(this, ()=>this.width);	
 		
 		sectionContent.append('treez-line-style')
 			.label('Style')	
+			.labelWidth('120px')
 			.bindValue(this, ()=>this.style);
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')	
+			.labelWidth('120px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.transparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('120px')
 			.bindValue(this, ()=>this.isHidden);
 		
 	}

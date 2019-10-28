@@ -10,19 +10,19 @@ export default class Symbol extends GraphicsAtom {
 	constructor(){
 		super();
 		this.style = SymbolStyle.circle;	
-		this.size = '64';	
+		this.size = 64;	
 		this.isHidden = false;	
 		
 		//this.errorStyle = new Wrap<>();	
 		this.fillColor = Color.black;
 		//this.fillStyle = new Wrap<>();	
-		this.fillTransparency = '0';
+		this.fillTransparency = 0;
 		this.isHiddenFill = false;
 		
 		this.lineColor = Color.black;	
-		this.lineWidth = '0.5';	
+		this.lineWidth = 0.5;	
 		this.lineStyle = LineStyle.solid;
-		this.lineTransparency = '0';
+		this.lineTransparency = 0;
 		this.isHiddenLine = false;	
 		
 		//this.colorMap = new Wrap<>();	
@@ -50,16 +50,20 @@ export default class Symbol extends GraphicsAtom {
 		
 		sectionContent.append('treez-symbol-style')
 			.label('Type')
+			.labelWidth('90px')
 			.bindValue(this,()=>this.style);		
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Size')
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.size);		
 
 		//symbol.createTextField(thinMarkers, 'thinMarkers', 'Thin markers', '1');		
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.isHidden);
 
 		//symbol.createErrorBarStyle(errorStyle, 'errorStyle', 'Error style');
@@ -75,16 +79,21 @@ export default class Symbol extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.fillColor);
 
 		//fill.createFillStyle(fillStyle, 'style', 'Style');	
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.fillTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.isHiddenFill);
 
 		//markerFill.createColorMap(colorMap, this, 'Color map');
@@ -102,22 +111,30 @@ export default class Symbol extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.lineColor);
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.lineWidth);
 		
 		sectionContent.append('treez-line-style')
 			.label('Style')
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.lineStyle);		
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.lineTransparency);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.isHiddenLine);
 		
 	}	
