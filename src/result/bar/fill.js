@@ -12,7 +12,7 @@ export default class Fill extends GraphicsAtom {
 	
 		//this.fillStyle = new Wrap<>();
 	
-		this.transparency = '0';
+		this.transparency = 0;
 		this.isHidden = false;
 		this.__rectsGroupSelection = undefined;
 		this.__rectsSelection = undefined;
@@ -29,16 +29,21 @@ export default class Fill extends GraphicsAtom {
 		var sectionContent = section.append('div');
 
 		sectionContent.append('treez-color')
-			.label('Color mode')	
+			.label('Color mode')
+			.labelWidth('90px')	
 			.bindValue(this, () => this.color);	
 
 		//fill.createFillStyle(fillStyle, 'style', 'Style');
 
-		sectionContent.append('treez-text-field')
-			.label('Transparency')	
+		sectionContent.append('treez-double')
+			.label('Transparency')
+			.labelWidth('90px')	
+			.min('0')
+			.max('1')	
 			.bindValue(this, ()=>this.transparency);
 		
 		sectionContent.append('treez-check-box')
+			.contentWidth('90px')	
 			.label('IsHidden')	
 			.bindValue(this, ()=>this.isHidden);
 		

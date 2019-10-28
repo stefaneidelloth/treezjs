@@ -12,7 +12,7 @@ export default class Data extends GraphicsAtom {
 		this.barLengths = 'root.data.table.columns.y';	
 		
 		this.barDirection = Direction.vertical;	
-		this.barFillRatio = '0.75';	
+		this.barFillRatio = 0.75;	
 		
 		this.legendText = '';	
 		
@@ -42,11 +42,15 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Bar direction')
+			.labelWidth('90px')		
 			.nodeAttr('enum',Direction)
 			.bindValue(this, ()=>this.barDirection);
 
-		sectionContent.append('treez-text-field')
-			.label('Bar fill rato')			
+		sectionContent.append('treez-double')
+			.label('Bar fill rato')	
+			.labelWidth('90px')		
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.barFillRatio);
 		
 		sectionContent.append('treez-text-field')
