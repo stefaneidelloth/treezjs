@@ -6,14 +6,14 @@ export default class TickLabels extends GraphicsAtom {
 	constructor(){
 		super();
 		this.font = 'sans-serif';
-		this.size = '22';
+		this.size = 22;
 		this.color = 'black';
 		this.format = ''
 		this.isItalic = false;
 		this.isBold = false;
 		this.hasUnderline = false;
 		this.rotation = '0';
-		this.offset = '4';
+		this.offset = 4;
 		this.isHidden= false;
 		
 		this.tickLabelHeight = 0.0;
@@ -29,46 +29,57 @@ export default class TickLabels extends GraphicsAtom {
 			.label('Tick labels');
 	
 		var sectionContent = section.append('div');
-		
-		sectionContent.append('treez-font')
-			.label('Font')
-			.bindValue(this, ()=>this.font);
-		
-		sectionContent.append('treez-text-field')
-			.label('Size')
-			.bindValue(this, ()=>this.size);
-	
-		sectionContent.append('treez-color')
-			.label('Color')
-			.bindValue(this, ()=>this.color);
-		
+
 		sectionContent.append('treez-text-field')
 			.label('Format')
 			.bindValue(this, ()=>this.format);
 		
+		sectionContent.append('treez-font')
+			.label('Font')
+			.labelWidth('55px')
+			.bindValue(this, ()=>this.font);
+		
+		sectionContent.append('treez-double')
+			.label('Size')
+			.labelWidth('55px')
+			.min('0')
+			.bindValue(this, ()=>this.size);
+	
+		sectionContent.append('treez-color')
+			.label('Color')
+			.labelWidth('55px')
+			.bindValue(this, ()=>this.color);
+		
+		
 		sectionContent.append('treez-check-box')
 			.label('Italic')
+			.contentWidth('55px')
 			.bindValue(this, ()=>this.isItalic);
 		
 		sectionContent.append('treez-check-box')
 			.label('Bold')
+			.contentWidth('55px')
 			.bindValue(this, ()=>this.isBold);
 		
 		sectionContent.append('treez-check-box')
 			.label('Has underline')
+			.contentWidth('55px')
 			.bindValue(this, ()=>this.hasUnderline);		
 
 		sectionContent.append('treez-combo-box')
 			.label('Rotation')
+			.labelWidth('55px')
 			.attr('options','["-180","-135","-90","-45","0","45","90","135","180"]')
 			.bindValue(this, ()=>this.rotation);
 	
-		sectionContent.append('treez-text-field')
-			.label('Offset')		
+		sectionContent.append('treez-double')
+			.label('Offset')
+			.labelWidth('55px')		
 			.bindValue(this, ()=>this.offset);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('55px')
 			.bindValue(this, ()=>this.isHidden);
 
 	}

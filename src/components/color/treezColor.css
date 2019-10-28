@@ -1,5 +1,6 @@
 .treez-color-container { 
-    vertical-align: top;   
+    vertical-align: top;  
+    margin-bottom: -1px; 
 }
 
 .treez-color-label {
@@ -7,11 +8,13 @@
     vertical-align: middle;
     font-family: Consolas;
     font-size: 12px;  
-    margin:0px;	 
+  
+    margin: 0px;
 }
 
 .treez-color-input {     
     with: auto; 
     margin-left: 3px;
+    margin-bottom: 0px;
     vertical-align: middle;
 }

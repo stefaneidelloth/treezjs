@@ -17,13 +17,13 @@ export default class Data extends GraphicsAtom {
 		
 		this.hasAutoMin = true;
 		this.borderMin = BorderMode.two;
-		this.min = '0';
+		this.min = 0;
 
 		//this.minTime = 
 
 		this.hasAutoMax = true;
 		this.borderMax = BorderMode.two;
-		this.max = '1';
+		this.max = 1;
 
 		//this.maxTime = 
 		//this.timeFormat = 
@@ -77,21 +77,25 @@ export default class Data extends GraphicsAtom {
 
 		sectionContent.append('treez-enum-combo-box')			
 			.label('Mode')
+			.labelWidth('70px')			
 			.nodeAttr('enum', AxisMode)
 			.onChange(()=>this.__axisModeChanged())
 			.bindValue(this,()=>this.mode);
 
 		sectionContent.append('treez-enum-combo-box')			
 			.label('Direction')
+			.labelWidth('70px')
 			.nodeAttr('enum', Direction)
 			.bindValue(this,()=>this.direction);		
 
 		sectionContent.append('treez-check-box')
 			.label('Auto mirror')
+			.contentWidth('70px')
 			.bindValue(this, ()=>this.isMirroring);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('70px')
 			.bindValue(this, ()=>this.isHidden);		
 	}
 	
@@ -107,16 +111,20 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('Auto min')
+			.contentWidth('70px')
 			.onChange(()=>this.__autoMinChanged())
 			.bindValue(this, ()=>this.hasAutoMin);
 
 		this.__borderMinSelection = sectionContent.append('treez-enum-combo-box')			
 			.label('Border min')
+			.labelWidth('70px')
 			.nodeAttr('enum', BorderMode)
 			.bindValue(this,()=>this.borderMin);
 		
-		this.__minSelection = sectionContent.append('treez-text-field')
-			.label('Min')			
+		this.__minSelection = sectionContent.append('treez-double')
+			.label('Min')
+			.labelWidth('70px')	
+			.contentWidth('20%')		
 			.bindValue(this, ()=>this.min)
 			.hide();
 		
@@ -127,16 +135,19 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-check-box')
 			.label('Auto max')
+			.contentWidth('70px')
 			.onChange(()=>this.__autoMaxChanged())
 			.bindValue(this, ()=>this.hasAutoMax);
 	
 		this.__borderMaxSelection = sectionContent.append('treez-enum-combo-box')			
 			.label('Border max')
+			.labelWidth('70px')
 			.nodeAttr('enum', BorderMode)
 			.bindValue(this,()=>this.borderMax);
 		
-		this.__maxSelection = sectionContent.append('treez-text-field')
-			.label('Max')			
+		this.__maxSelection = sectionContent.append('treez-double')
+			.label('Max')		
+			.labelWidth('70px')	
 			.bindValue(this, ()=>this.max)
 			.hide();
 			
@@ -155,7 +166,8 @@ export default class Data extends GraphicsAtom {
 		*/
 
 		sectionContent.append('treez-check-box')
-			.label('Log')			
+			.label('Log')
+			.contentWidth('70px')			
 			.bindValue(this, ()=>this.isLog);		
 	}	
 	

@@ -54,6 +54,11 @@ export default class DTreezSelection {
 		let selection = this.__d3Selection.attr('class', className);		
 		return new DTreezSelection(selection);
 	}
+
+	contentWidth(width){
+		this.__d3Selection.attr('content-width', width);		
+		return this;
+	}
 	
 	data(data, callBack){
 		var selection = this.__d3Selection.data(data, callBack);
@@ -97,6 +102,21 @@ export default class DTreezSelection {
 	
 	label(label){
 		this.__d3Selection.attr('label', label);		
+		return this;
+	}
+
+	labelWidth(labelWidth){
+		this.__d3Selection.attr('label-width', labelWidth);		
+		return this;
+	}
+
+	min(min){
+		this.__d3Selection.attr('min', min);		
+		return this;
+	}
+
+	max(max){
+		this.__d3Selection.attr('max', max);		
 		return this;
 	}
 	

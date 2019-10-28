@@ -1,21 +1,21 @@
 
 .treez-check-box-container {
+	margin-left:1px;
 	margin-bottom:3px;  
 	padding:0px;   
 }
 
-.treez-check-box-input {   
+.treez-check-box-input {
 	display:inline-block;
-	vertical-align: middle;	
-    with: auto; 
-    padding-bottom: -3px;  
-    height: 19px;
+	vertical-align: middle;
+	width: 20px;
+	padding-bottom: -3px;	
 }
 
 .treez-check-box-label {  
 	display:inline-block;	
 	vertical-align: sub;	
- 	padding-left:3px;
+ 	padding-left:0px;
  	margin:0px;		
  	
 	font-family: Consolas;

@@ -60,7 +60,12 @@ export default class LabeledTreezElement extends TreezElement {
 	}
 
 	updateLabelWidth(labelWidth){
-		this.updateWidthFor(this.__label, labelWidth);		
+		this.updateWidthFor(this.__label, labelWidth);	
+		if(labelWidth){
+			this.__label.style.textAlign = 'right';
+		}	else {
+			this.__label.style.textAlign = '';
+		}
 	}
 
 	updateWidthFor(element, width){
@@ -69,12 +74,12 @@ export default class LabeledTreezElement extends TreezElement {
 				if(width === '0'){
 					throw new Error('Width must not be zero. Please use attribute "hidden" instead.')
 				}
-				element.style.width = width;
+				element.style.width = width;				
 			} else {
 				if(width === 0){
 					throw new Error('Width must not be zero. Please use attribute "hidden" instead.')
 				}
-				element.style.width = '';
+				element.style.width = '';				
 			}
 		}
 	}

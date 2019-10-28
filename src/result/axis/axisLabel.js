@@ -6,14 +6,14 @@ export default class AxisLabel extends GraphicsAtom {
 	constructor(){	
 		super();	
 		this.font = 'sans-serif';
-		this.size = '22';
+		this.size = 22;
 		this.color = 'black';
 		this.isItalic = false;
 		this.isBold = false;
 		this.hasUnderline = false;
 		//this.atEdge = undefined;
 		this.rotation = '0';
-		this.labelOffset = '4';
+		this.labelOffset = 4;
 		this.position = 'centre';
 		this.isHidden = false;
 	}	
@@ -30,30 +30,38 @@ export default class AxisLabel extends GraphicsAtom {
 		
 		sectionContent.append('treez-font')
 			.label('Font')
+			.labelWidth('80px')
 			.bindValue(this, ()=>this.font);
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Size')
+			.labelWidth('80px')
+			.min('0')
 			.bindValue(this, ()=>this.size);
 
 		sectionContent.append('treez-color')
 			.label('Color')
+			.labelWidth('80px')
 			.bindValue(this, ()=>this.color);
 		
 		sectionContent.append('treez-check-box')
 			.label('Italic')
+			.contentWidth('80px')
 			.bindValue(this, ()=>this.isItalic);
 		
 		sectionContent.append('treez-check-box')
 			.label('Bold')
+			.contentWidth('80px')
 			.bindValue(this, ()=>this.isBold);
 		
 		sectionContent.append('treez-check-box')
 			.label('Has underline')
+			.contentWidth('80px')
 			.bindValue(this, ()=>this.hasUnderline);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('80px')
 			.bindValue(this, ()=>this.isHidden);
 		
 		//sectionContent.append('treez-check-box')
@@ -62,15 +70,18 @@ export default class AxisLabel extends GraphicsAtom {
 					
 		sectionContent.append('treez-combo-box')
 			.label('Rotation')
+			.labelWidth('80px')
 			.attr('options','["-180","-135","-90","-45","0","45","90","135","180"]')
 			.bindValue(this, ()=>this.rotation);
 		
-		sectionContent.append('treez-text-field')
-			.label('Label offset')		
+		sectionContent.append('treez-double')
+			.label('Label offset')	
+			.labelWidth('80px')	
 			.bindValue(this, ()=>this.labelOffset);
 
 		sectionContent.append('treez-combo-box')
 			.label('Position')
+			.labelWidth('80px')
 			.attr('options','["at-minimum","centre","at-maximum"]')
 			.bindValue(this, ()=>this.position);
 	}

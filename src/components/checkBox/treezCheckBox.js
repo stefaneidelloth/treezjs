@@ -43,7 +43,23 @@ export default class TreezCheckBox extends LabeledTreezElement {
 	}
 
 	updateContentWidth(width){
-        this.updateWidthFor(this.__checkBox, width);
+        //this.updateWidthFor(this.__checkBox, width);
+
+        if(!width){
+        	this.__checkBox.style.marginLeft = '';
+        	return;
+        }
+
+        if(!width.includes('px')){
+        	throw new Error("Width for checkbox needs to be specified in px");
+        }
+
+        let totalWidth = parseFloat(width.substring(0, width.length-2));
+        let leftMargin = totalWidth-17;
+        
+        this.__checkBox.style.marginLeft = leftMargin + 'px';
+        
+        
 	}
 	
 	disableElements(booleanValue){

@@ -1,9 +1,9 @@
 .treez-number {	
 	display: flex;
+	margin-bottom:3px;
 }
 
-.treez-number-label {
-	margin-right:5px;
+.treez-number-label {	
 	padding-top:2px;
 	float: left;
 	font-family: Consolas;
@@ -12,7 +12,9 @@
 }
 
 .treez-number-input {
+	margin-left:4px;
     font-family: Consolas;
     font-size: 12px;
-    width:96%;
+    width:20%;
+
 }

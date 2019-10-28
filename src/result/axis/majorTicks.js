@@ -6,12 +6,12 @@ export default class MajorTicks extends GraphicsAtom {
 	
 	constructor(){	
 		super();	
-		this.number = '6'; 
+		this.number = 6; 
 		this.color = Color.black;
-		this.width = '2'
-		this.length = '10';
+		this.width = 2
+		this.length = 10;
 		this.style = LineStyle.solid;
-		this.transparency = '0';
+		this.transparency = 0;
 		this.isHidden = false;
 	}	
 
@@ -25,32 +25,43 @@ export default class MajorTicks extends GraphicsAtom {
 
 		var sectionContent = section.append('div');
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-integer')
 			.label('Number')
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.number);
 		
 		sectionContent.append('treez-color')
 			.label('Color')
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.color);
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.width);
 		
-		sectionContent.append('treez-text-field')
-			.label('Length')
+		sectionContent.append('treez-double')
+			.label('Length')		
+			.labelWidth('90px')	
 			.bindValue(this, ()=>this.length);
 		
 		sectionContent.append('treez-line-style')
 			.label('Line style')
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.style);
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.transparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.isHidden);		
 
 	}

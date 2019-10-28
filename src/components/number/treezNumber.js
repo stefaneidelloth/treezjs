@@ -85,6 +85,10 @@ export default class TreezNumber extends LabeledTreezElement {
         if(value === undefined || value === null || Number.isNaN(value)){
     		return '';
     	}
+
+    	if(typeof value === 'string' || value instanceof String){
+    	    throw new Error('The passed value must not be a string but is "'+ value +'"');
+    	}
  
     	let directNotation = '' + value;
     	let scientificNotation = value.toExponential().replace('+','');
