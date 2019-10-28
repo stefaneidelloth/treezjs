@@ -23,17 +23,22 @@ export default class Background extends GraphicsAtom {
 
 		sectionContent.append('treez-color')
 			.label('Color')
+			.labelWidth('90px')	
 			.bindValue(this, ()=>this.color);
 
 		//sectionContent.append('treez-fill-style')
 		//	.label('Style');
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')
+			.labelWidth('90px')	
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.transparency);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')
+			.contentWidth('90px')	
 			.bindValue(this, ()=>this.isHidden);
 		
 	}
