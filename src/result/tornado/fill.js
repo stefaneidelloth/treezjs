@@ -11,11 +11,11 @@ export default class Fill extends GraphicsAtom {
 		this.__graphicsToBarRatioForSingleBar = 3;
 		
 		this.leftColor = Color.grey;	
-		this.leftTransparency = '0';	
+		this.leftTransparency = 0;	
 		this.leftIsHidden = false;
 	
 		this.rightColor = Color.green;	
-		this.rightTransparency = '0';	
+		this.rightTransparency = 0;	
 		this.rightIsHidden = false;
 	
 		this.__rectsLeftSelection = undefined;	
@@ -38,14 +38,19 @@ export default class Fill extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color mode')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.leftColor);	
 			
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')	
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.leftTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.leftIsHidden);
 	}
 	
@@ -56,15 +61,20 @@ export default class Fill extends GraphicsAtom {
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-color')
-			.label('Color mode')	
+			.label('Color mode')
+			.labelWidth('90px')	
 			.bindValue(this, ()=>this.rightColor);	
 			
-		sectionContent.append('treez-text-field')
-			.label('Transparency')	
+		sectionContent.append('treez-double')
+			.label('Transparency')			
+			.labelWidth('90px')	
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.rightTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.rightIsHidden);
 	}
 

@@ -6,15 +6,15 @@ export default class Line extends GraphicsAtom {
 		super();
 
 		this.leftColor = Color.black;
-		this.leftWidth = '3';
+		this.leftWidth = 3;
 		this.leftStyle = LineStyle.solid;
-		this.leftTransparency = '0';
+		this.leftTransparency = 0;
 		this.leftIsHidden = false;
 	
 		this.rightColor = Color.black;
-		this.rightWidth = '3';
+		this.rightWidth = 3;
 		this.rightStyle = LineStyle.solid;
-		this.rightTransparency = '0';
+		this.rightTransparency = 0;
 		this.rightIsHidden = false;
 	}
 	
@@ -33,24 +33,32 @@ export default class Line extends GraphicsAtom {
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-color')
-			.label('Color mode')	
+			.label('Color mode')
+			.labelWidth('90px')	
 			.bindValue(this, ()=>this.leftColor);
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')	
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.leftWidth);
 		
 		sectionContent.append('treez-line-style')
 			.label('Style')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.leftStyle);
 		
 			
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')	
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.leftTransparency);
 		
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth('90px')
 			.bindValue(this, ()=>this.leftIsHidden);
 	}
 	
@@ -62,22 +70,30 @@ export default class Line extends GraphicsAtom {
 		
 		sectionContent.append('treez-color')
 			.label('Color mode')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.rightColor);	
 		
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')	
+			.labelWidth('90px')
+			.min('0')
 			.bindValue(this, ()=>this.rightWidth);
 		
 		sectionContent.append('treez-line-style')
 			.label('Style')	
+			.labelWidth('90px')
 			.bindValue(this, ()=>this.rightStyle);
 			
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Transparency')	
+			.labelWidth('90px')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.rightTransparency);
 		
 		sectionContent.append('treez-check-box')
-			.label('IsHidden')	
+			.label('IsHidden')
+			.contentWidth('90px')	
 			.bindValue(this, ()=>this.rightIsHidden);
 	}
 	

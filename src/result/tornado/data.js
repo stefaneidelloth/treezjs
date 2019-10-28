@@ -16,7 +16,7 @@ export default class Data extends GraphicsAtom {
 		this.leftLegendText = 'left legend text';
 		this.rightLegendText = 'right legend text';		
 		this.sortingMode = SortingMode.largestDifference;
-		this.barFillRatio = '0.75';
+		this.barFillRatio = 0.75;
 		
 		this.labelAxis = 'root.results.page.graph.y';
 				
@@ -90,8 +90,10 @@ export default class Data extends GraphicsAtom {
 			.label('Right legend text')
 			.bindValue(this, ()=>this.rightLegendText);
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Bar fill ratio')
+			.min('0')
+			.max('1')
 			.bindValue(this, ()=>this.barFillRatio);
 		
 	}

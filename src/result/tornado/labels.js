@@ -10,7 +10,7 @@ export default class Labels extends GraphicsAtom {
 
 		this.labelMode = LabelMode.absolute;
 		this.font = 'serif';
-		this.size = '14';
+		this.size = 14;
 		this.color = Color.black;
 		this.isItalic = false;
 		this.isBold = false;
@@ -31,35 +31,44 @@ export default class Labels extends GraphicsAtom {
 
 		sectionContent.append('treez-enum-combo-box')
 			.label('Label mode')
+			.labelWidth('70px')	
 			.nodeAttr('enum', LabelMode)
 			.bindValue(this, ()=>this.labelMode);
 		
 		sectionContent.append('treez-font')
-			.label('Font')		
+			.label('Font')
+			.labelWidth('70px')		
 			.bindValue(this, ()=>this.font);
 		
-		sectionContent.append('treez-text-field')
-			.label('Size')		
+		sectionContent.append('treez-double')
+			.label('Size')	
+			.labelWidth('70px')		
+			.min('0')
 			.bindValue(this, ()=>this.size);
 		
 		sectionContent.append('treez-color')
-			.label('Color')		
+			.label('Color')	
+			.labelWidth('70px')		
 			.bindValue(this, ()=>this.color);
 		
 		sectionContent.append('treez-check-box')
-			.label('Italic')		
+			.label('Italic')
+			.contentWidth('70px')			
 			.bindValue(this, ()=>this.isItalic);
 		
 		sectionContent.append('treez-check-box')
-			.label('Bold')		
+			.label('Bold')	
+			.contentWidth('70px')			
 			.bindValue(this, ()=>this.isBold);
 		
 		sectionContent.append('treez-check-box')
-			.label('Underline')		
+			.label('Underline')	
+			.contentWidth('70px')			
 			.bindValue(this, ()=>this.hasUnderline);
 		
 		sectionContent.append('treez-check-box')
-			.label('IsHidden')		
+			.label('IsHidden')
+			.contentWidth('70px')				
 			.bindValue(this, ()=>this.isHidden);	
 
 	}
