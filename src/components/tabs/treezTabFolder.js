@@ -15,7 +15,7 @@ export default class TreezTabFolder extends HTMLElement {
             this.style.display='block';
 
             var tabfolderHeader =  document.createElement('treez-tab-folder-header');
-            tabfolderHeader.style.display = 'block';
+           
 
             this.__tabFolderHeader = tabfolderHeader;
             this.insertBefore(tabfolderHeader, this.firstChild);																	            

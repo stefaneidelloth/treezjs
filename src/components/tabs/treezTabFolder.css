@@ -9,9 +9,11 @@ treez-tab-folder {
     font-size: 12px;   
 }
 
-treez-tab-folder-header {   	
+treez-tab-folder-header {   
+    display: inline-block;	
     color: #777777;   
-    height: 21px;	
+    height: 21px;   
+    white-space: nowrap;    
 }
 
 treez-tab-header {  	
