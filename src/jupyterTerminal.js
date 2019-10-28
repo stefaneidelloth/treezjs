@@ -7,7 +7,7 @@ export default class JupyterTerminal {
 		this.__kernel = this.__notebook.kernel;
 	}
 	
-	async browseFilePath(initialDirectory){  
+	async browseFilePath(initialDirectory, initialFile){  
 
 		var pythonCode = '%%python\n' +
 						 '# -*- coding: utf-8 -*-\n' +
@@ -17,15 +17,20 @@ export default class JupyterTerminal {
 						 'root = tkinter.Tk()\n' +
 						 'root.withdraw() #use to hide tkinter window\n';
 
+		if(!initialFile){
+			initialFile = '';
+		}
+
 		if(initialDirectory){
-			pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, initialdir="' + initialDirectory + '", title="Browse file path")\n';
+			pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, initialdir="' + initialDirectory + '", initialfile = "'+ initialFile +'", title="Browse file path")\n';
 		} else {
-				pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, title="Browse file path")\n';			
+				pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, title="Browse file path", initialfile = "' + initialFile + '")\n';			
 		}
 
 		pythonCode = pythonCode + 'print(tempdir)\n';				
 
-		return await this.executePythonCode(pythonCode, true);		 
+		let path =  await this.executePythonCode(pythonCode, true);		 
+		return path.trim();
     }	
 
    

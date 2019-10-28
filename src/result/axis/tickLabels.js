@@ -167,7 +167,7 @@ export default class TickLabels extends GraphicsAtom {
 	}
 
 	__applyTransformation(tickLabels, x, y, rotation) {
-		var transformString = 'translate(' + x + ',' + y + '),rotate(' + rotation + ')';
+		var transformString = 'translate(' + x + ',' + y + ') rotate(' + rotation + ')';
 		tickLabels.attr('transform', transformString);
 	}	
 

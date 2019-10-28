@@ -24,7 +24,7 @@ export default class GraphicsView {
 		
 		var svgXml = (new XMLSerializer).serializeToString(svgElement);
 		
-		var filePath = await window.treezTerminal.browseFilePath('./treez.svg');
+		var filePath = await window.treezTerminal.browseFilePath(null, 'treez.svg');
 		await window.treezTerminal.writeTextFile(filePath, svgXml);
 	}
 }
