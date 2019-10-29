@@ -101,18 +101,24 @@ export default class PythonExport extends ComponentAtom {
     						
     			var outcomeReference = "outcomes['" + outcomeName + "']"
     			
-    			
+    			var length = columnValues.length;
     			var isStringColumn = table.columnType(outcomeName).name === ColumnType.string.name;
     			if(isStringColumn){
     				pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
-    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), '')\n"
+    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + length + "), '', dtype=object)\n"
     			              );
-    				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = ['" + columnValues.join("', '") +"']\n"
+    			   
+					pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = ['" + columnValues.join("', '") +"']\n"
+    			    
+    				
     			} else {
     				pythonCode += (  "if not '" + outcomeName + "' in outcomes:\n"
-    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + columnValues.length + "), numpy.nan)\n"
+    			               + "    " + outcomeReference + " = numpy.full((" + modelInput.totalNumberOfJobs + "," + length + "), NaN)\n"
     			              );
-    				pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = [" + columnValues.join(", ") +"]\n"
+    			   
+					pythonCode += outcomeReference + "[" + (modelInput.jobId-1) + "] = [" + columnValues.join(", ") +"]\n"
+    			    
+    				
     			}
     			              
     		}

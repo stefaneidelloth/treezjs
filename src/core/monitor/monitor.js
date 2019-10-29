@@ -79,14 +79,14 @@ export default class Monitor {
 	__assertChildWorkIsNotTooLarge(coveredWorkOfParentMonitor, title) {
 
 		var workNotCoveredByChildren = this.__totalWork - this.__workCoveredByChildren;
-		if (coveredWorkOfParentMonitor > workNotCoveredByChildren) {
+		if (coveredWorkOfParentMonitor > (workNotCoveredByChildren + 1e-10)) {
 			var message = 'The parent monitor "' + this.id + '" does not have enough uncovered work to create the child "' + title + '" ('
 					+ this.__coveredWorkOfParentMonitor + ' > ' + workNotCoveredByChildren + ')';
 			throw new Error(message);
 		}
 
 		var freeWork = this.__totalWork - this.__finishedWork;
-		if (coveredWorkOfParentMonitor > freeWork) {
+		if (coveredWorkOfParentMonitor > (freeWork + 1e-10)) {
 			var message = 'The parent monitor "' + this.id + '" does not have enough free work to create the child "' + title + '" ('
 					+ coveredWorkOfParentMonitor + ' > ' + freeWork + ')';
 			throw new Error(message);
