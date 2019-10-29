@@ -30,6 +30,15 @@ export default class TreezEnumComboBox extends TreezComboBox {
 		}
 	}
 
+	hasOption(option){
+		for(var currentOption of this.options){
+			if(currentOption.name === option.name){
+				return true;
+			}
+		}
+		return false;
+	}
+
     set enum(enumClass) {
         this.__enumClass = enumClass;
         if(enumClass){

@@ -10,7 +10,7 @@ export default class TableCodeAdaption extends AtomCodeAdaption {
 		var extendedContainer = allChildrenCodeContainer;
 
 		for (var row of this.__atom.rows) {
-			var rowLine = this.indent + this.__parentVariableNamePlaceholder + '.createRow(' + row + ');';
+			var rowLine = this.indent + this.__parentVariableNamePlaceholder + ".createRow(" + row + ");";
 			extendedContainer.extendBulk(rowLine);
 		}
 		

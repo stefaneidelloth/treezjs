@@ -13,9 +13,7 @@ import Row from './../../data/row/row.js';
  */
 export default class SweepProbe extends Probe {
 
-	static get columnNameSeparator(){
-		return '_';
-	}
+	
 
 	constructor(name) {
 		super(name);		
@@ -28,17 +26,7 @@ export default class SweepProbe extends Probe {
 		this.firstFamilyRangePath = '';	
 		
 		this.secondFamilyLegend = 'family2'; 
-		this.secondFamilyRangePath = '';	
-		
-		/**
-		 * If there is only one result column, this equals the name of the result column. If there are several
-		 * result columns, this will be used as name prefix. The family range indices will also be added to the result
-		 * column names.
-		 */
-		this.probeLabel = 'y';			
-		this.firstProbeTablePath = '';
-		this.columnIndex = 0;
-		this.rowIndex = 0;
+		this.secondFamilyRangePath = '';		
 
 		this.__firstProbeTableSelection = undefined;
 	}
@@ -135,13 +123,17 @@ export default class SweepProbe extends Probe {
 
 		this.__outputPathChanged();
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-integer')
 			.label('One based column index')
-			.bindValue(this, ()=>this.columnIndex);
+			.labelWidth('150px')
+			.min('1')
+			.bindValue(this, ()=>this.oneBasedColumnIndex);
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-integer')
 			.label('One based row index')
-			.bindValue(this, ()=>this.rowIndex);		
+			.labelWidth('150px')
+			.min('1')
+			.bindValue(this, ()=>this.oneBasedRowIndex);		
 	}
 
 	__outputPathChanged(){
@@ -170,14 +162,14 @@ export default class SweepProbe extends Probe {
 			var secondFamilyIsSpecified = secondFamilyRangeValues !== null;
 			var firstFamilyIndex = 1;
 			for (var firstFamilyRangeValue of firstFamilyRangeValues) {
-				var columnName = this.probeLabel + NAME_SEPARATOR + firstFamilyIndex;				
-				var legendText = this.firstFamilyLabel + ': ' + firstFamilyRangeValue;
+				var columnName = this.probeLabel + Probe.columnNameSeparator + firstFamilyIndex;				
+				var legendText = this.firstFamilyLegend + ': ' + firstFamilyRangeValue;
 				if (secondFamilyIsSpecified) {
 					var secondFamilyIndex = 1;
 					for (var secondFamilyRangeValue of secondFamilyRangeValues) {
-						var extendedColumnName = columnName + NAME_SEPARATOR + secondFamilyIndex;
+						var extendedColumnName = columnName + Probe.columnNameSeparator + secondFamilyIndex;
 						
-						var extendedLegendText = legendText + ', ' + secondFamilyLabelString + ': ' + secondFamilyRangeValue;
+						var extendedLegendText = legendText + ', ' + this.secondFamilyLegend + ': ' + secondFamilyRangeValue;
 						columnBlueprints.push(new ColumnBlueprint(extendedColumnName, extendedLegendText, probeColumnType));
 						secondFamilyIndex++;
 					}
@@ -202,7 +194,7 @@ export default class SweepProbe extends Probe {
 			domainRangeValues = rangeAtom.values;
 		}
 				
-		var columnNames = SweepProbe.__createColumnNames(this.domainLabel, this.probeLabel, this.firstFamilyRangeValues, this.secondFamilyRangeValues);
+		var columnNames = SweepProbe.__createColumnNames(this.domainLabel, this.probeLabel, this.__firstFamilyRangeValues, this.__secondFamilyRangeValues);
 		this.__fillProbeTable(table, domainRangeValues, columnNames, this.outputPath, this.relativeProbeTablePath, this.probeTablePrefix);
 
 		monitor.info('Filled probe table.');
@@ -217,60 +209,49 @@ export default class SweepProbe extends Probe {
         var secondFamilyIsSpecified = secondFamilyRangeValues !== null;	
 			
 		var sweepIndex = 1;
-		for (var rowIndex = 0; rowIndex < domainRangeValues.length; rowIndex++) {
+		for (var rowIndex = 0; rowIndex < domainRangeValues.length; rowIndex++) {			
 
-			var row = new Row(table);
-
-			var columnIndex = 0;
+			var row = new Row(table);			
 						
 			var domainValue = domainRangeValues[rowIndex];
 			var isQuantity = domainValue instanceof Quantity;
 			if (isQuantity) {				
 				domainValue = domainValue.value;
 			}
-			var columnName = columnNames[columnIndex];
-			row.setEntry(columnName, domainValue);
-			columnIndex++;
+			var domainColumnName = columnNames[0];
+			row.setEntry(domainColumnName, domainValue);
 
-			//first family
-			if(firstFamilyIsSpecified){
+			for(var columnIndex = 1; columnIndex < columnNames.length; columnIndex++){
+
 				var columnName = columnNames[columnIndex];
-				var firstFamilyValue = null; //TODO
-				row.setEntry(columnName, firstFamilyValue);
-				columnIndex++;
+				var tablePath = outputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;	
+				var probeValue = this.probeValue(tablePath);
+				row.setEntry(columnName, probeValue);				
+								
+				sweepIndex++;			
+				
 			}
 
-			//second family
-			if(secondFamilyIsSpecified){
-				var columnName = columnNames[columnIndex];
-				var secondFamilyValue = null; //TODO
-				row.setEntry(columnName, secondFamilyValue);
-				columnIndex++;
-			}
-
-			//probe value			
-			var tablePath = outputPath + '.' + prefix + sweepIndex + '.' + relativeProbeTablePath;
-			var probeValue = this.probeValue(tablePath);
-
-			var columnName = columnNames[columnIndex];
-			row.setEntry(columnName, probeValue);				
-			sweepIndex++;			
-			
-			table.addRow(row);
+			table.addRow(row);			
 
 		}
+
+
 	}	
 
 	static __createColumnNames(xColumnName, yColumnName, firstFamilyRangeValues, secondFamilyRangeValues) {
 		
+		var firstFamilyIsSpecified = firstFamilyRangeValues !== null;
+		var secondFamilyIsSpecified = secondFamilyRangeValues !== null;	
+
 		var columnNames = [];		
 		columnNames.push(xColumnName);		
-		if (firstFamilyRangeValues) {
+		if (firstFamilyIsSpecified) {
 			for (var firstFamilyIndex = 1; firstFamilyIndex <= firstFamilyRangeValues.length; firstFamilyIndex++) {
-				var columnName = yColumnName + SweepProbe.columnNameSeparator + firstFamilyIndex;
+				var columnName = yColumnName + Probe.columnNameSeparator + firstFamilyIndex;
 				if (secondFamilyIsSpecified) {
 					for (var secondFamilyIndex = 1; secondFamilyIndex <= secondFamilyRangeValues.length; secondFamilyIndex++) {
-						var extendedColumnName = columnName + SweepProbe.columnNameSeparator + secondFamilyIndex;
+						var extendedColumnName = columnName + Probe.columnNameSeparator + secondFamilyIndex;
 						columnNames.push(extendedColumnName);
 					}
 				} else {
@@ -302,8 +283,8 @@ export default class SweepProbe extends Probe {
 	}
 
 	get __secondFamilyRangeValues() {
-		if (this.firstFamilyRangePath) {
-			var rangeAtom = this.childFromRoot(this.firstFamilyRangePath);
+		if (this.secondFamilyRangePath) {
+			var rangeAtom = this.childFromRoot(this.secondFamilyRangePath);
 			return rangeAtom.values;
 		} else {
 			return null;

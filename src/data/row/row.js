@@ -9,41 +9,24 @@ export default class Row {
 		this.__hasValidationErrors = false;
 	}
 	
-	
-	get values(){
-		var headers = this.__table.headers
-        return headers.map(header=>this.__entryMap[header]);
-	}	
 
-	toString() {		
-		return '[' + this.values.join(', ') + ']';		
-	}
+	toString() {
+		let stringItems = [];
+		
+		for(var header of this.headers){
 
-	get isEmpty() {
-		var empty = true;
-		for (var header of this.__table.headers) {
-			var entry = this.__entryMap[header];
-			if (entry instanceof String) {
-				if (entry) {
-					empty = false;
-					break;
-				}
+			let value = this.entry(header);
+			let columnType = this.__table.columnType(header);
+			
+			if(columnType.isString){
+				stringItems.push('"' + value + '"');
+			} else {
+				stringItems.push('' + value);
 			}
+		}		
 
-			//TODO: check for other types
-
-		}
-		return empty;
-	}
-
-	get isLastRow() {
-		var size = this.__table.rows.length;
-		return (this.index === size - 1);
-	}
-
-	get index() {
-		return this.__table.rows.indexOf(this);
-	}
+		return '[' + stringItems.join(', ') + ']';		
+	}	
 
 	entry(columnHeader) {
 		return this.__entryMap[columnHeader];
@@ -89,6 +72,43 @@ export default class Row {
 	isNullString(value) {
 		return value === this.__NULL_STRING;		
 	}
+
+	get index() {
+		return this.__table.rows.indexOf(this);
+	}
+
+	get headers(){
+		return this.__table.headers;
+	}
+
+	get values(){		
+        return this.headers.map(header=>this.__entryMap[header]);
+	}	
+
+
+	get isEmpty() {
+		var empty = true;
+		for (var header of this.__table.headers) {
+			var entry = this.__entryMap[header];
+			if (entry instanceof String) {
+				if (entry) {
+					empty = false;
+					break;
+				}
+			}
+
+			//TODO: check for other types
+
+		}
+		return empty;
+	}
+
+	get isLastRow() {
+		var size = this.__table.rows.length;
+		return (this.index === size - 1);
+	}
+
+	
 
 	
 

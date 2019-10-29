@@ -10,12 +10,23 @@ export default class Probe extends ComponentAtom {
 		this.overlayImage = 'probe.png';
 		this.isRunnable=true;
 		
+		/**
+		 * If there is only one result column, the probe label equals the name of the result column. If there are several
+		 * result columns, the probe label will be used as name prefix. The family range indices will also be added to the result
+		 * column names.
+		 */
 		this.probeLabel = 'probe';	
+
 		this.studyPath = '';
 		this.outputPath = '';
 		this.firstProbeTablePath = '';
-		this.columnIndex = 0;
-		this.rowIndex = 0;
+
+		this.oneBasedColumnIndex = 1;
+		this.oneBasedRowIndex = 1;
+	}
+
+	static get columnNameSeparator(){
+		return '_';
 	}
 
 	async execute(treeView, monitor) {
@@ -96,6 +107,8 @@ export default class Probe extends ComponentAtom {
 		
 		var probeTableName = this.name + 'Table';
 		var table = this.createTable(probeTableName);	
+		this.addChild(table);
+		
 		table.createColumnFolder();	
 		this.createTableColumns(table, monitor);
 
@@ -120,7 +133,7 @@ export default class Probe extends ComponentAtom {
 		var columnHeader = probeTable.headers[this.zeroBasedColumnIndex];
 		var row = probeTable.rows[this.zeroBasedRowIndex];
 		if(!row){
-			var message = 'Could not get probe row with one based index '+ this.rowIndex +' from table "' 
+			var message = 'Could not get probe row with one based index '+ this.oneBasedRowIndex +' from table "' 
 							+ probeTablePath + '" (max index: ' + probeTable.rows.length + ' rows).'; 
 			throw new Error(message)
 		}
@@ -165,19 +178,24 @@ export default class Probe extends ComponentAtom {
 		if (this.firstProbeTablePath) {
 			var table = this.childFromRoot(this.firstProbeTablePath);				
 			var probeColumn = table.columnFolder.columnByIndex(this.zeroBasedColumnIndex);
-			return probeColumn.type;			
+			if(probeColumn){
+				return probeColumn.type;
+			} else {
+				throw new Error('Could not find a column with one based index ' + this.oneBasedColumnIndex + '.');
+			}
+						
 		} else {
-			var message = 'Could not determine the probe column type. Please make sure that a probe table is specified.';
+			var message = 'Could not determine the probe column type. Please make sure that the first probe table is specified.';
 			throw new Error(message);
 		}
 	}
 	
 	get zeroBasedColumnIndex(){
-		return parseInt(this.columnIndex) -1;
+		return parseInt(this.oneBasedColumnIndex) -1;
 	}	
 	
 	get zeroBasedRowIndex(){
-		return parseInt(this.rowIndex) -1;
+		return parseInt(this.oneBasedRowIndex) -1;
 	}
 	
 	

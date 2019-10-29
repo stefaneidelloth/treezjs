@@ -255,6 +255,9 @@ export default class Table extends ComponentAtom {
 			.append('div')       
 	        .html((column)=>{	        	
 	        	return column.header;
+			})
+			.title((column)=>{	        	
+	        	return column.legend;
 			});			
 		
 		var headers = this.headers;

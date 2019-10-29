@@ -8,15 +8,20 @@ export default class ColumnType extends Enum {
 	}
 	
 	get isNumeric() {
-		return !(this === ColumnType.string);
+		return !(this.name === ColumnType.string.name);
+	}
+
+	get isString() {
+		return this.name === ColumnType.string.name;
 	}
 
 	isCompatible(value){
+		
 		switch(typeof value){
 			case 'number':
 				return this.isNumeric;	
 			case 'string':
-				return (this === ColumnType.string);		
+				return this.isString;		
 			default:
 				return false;
 		}		
