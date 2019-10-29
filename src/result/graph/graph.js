@@ -8,6 +8,7 @@ import Bar from './../bar/bar.js';
 import Xy from './../xy/xy.js';
 import XySeries from './../xySeries/xySeries.js';
 import Tornado from './../tornado/tornado.js';
+import Legend from './../legend/legend.js';
 
 
 export default class Graph extends PagedGraphicsAtom {
@@ -105,8 +106,11 @@ export default class Graph extends PagedGraphicsAtom {
 				this,
 				treeView
 			)
-		);
-		
+		);	
+
+
+		*/
+
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				Legend,
@@ -117,9 +121,6 @@ export default class Graph extends PagedGraphicsAtom {
 				treeView
 			)
 		);	
-
-
-		*/
 
 
 		return actions

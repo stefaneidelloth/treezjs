@@ -1,4 +1,5 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Color from './../../components/color/color.js';
 
 export default class Text extends GraphicsAtom {
 	
@@ -6,8 +7,8 @@ export default class Text extends GraphicsAtom {
 		super();
 
 		this.font = 'serif';
-		this.size = '14';
-		this. color = Color.black;
+		this.size = 14;
+		this.color = Color.black;
 		this.isItalic = false;
 		this.isBold = false;
 		this.hasUnderline = false;
@@ -28,8 +29,9 @@ export default class Text extends GraphicsAtom {
 			.label('Font')
 			.bindValue(this, ()=>this.font);
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-integer')
 			.label('Size')
+			.min('0')
 			.bindValue(this, ()=>this.size);
 		
 		sectionContent.append('treez-color')
@@ -62,7 +64,7 @@ export default class Text extends GraphicsAtom {
 	formatText(textSelection, main) {
 
 		this.bindString(()=>this.font, textSelection, 'font-family');
-		this.bindString(()=>this.size, textSelection, 'font-size');
+		this.bindInteger(()=>this.size, textSelection, 'font-size');
 		this.bindString(()=>this.color, textSelection, 'fill');
 				
 		this.bindFontItalicStyle(()=>this.isItalic, textSelection);

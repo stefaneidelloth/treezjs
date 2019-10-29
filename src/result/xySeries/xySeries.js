@@ -1,6 +1,9 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import Table from './../../data/table/table.js';
 import Axis from './../axis/axis.js';
+import ColorBrewer from './../../components/colorMap/colorBrewer.js';
+import Xy from './../xy/xy.js';
+import Legend from './../legend/legend.js';
 
 export default class XySeries extends GraphicsAtom {
 
@@ -75,13 +78,47 @@ export default class XySeries extends GraphicsAtom {
 
 			var domainAxis = this.__updateDomainAxis(foundSourceTable);
 			var rangeAxis = this.__updateRangeAxis(foundSourceTable);
-			this.__removeAllChildren();
-			this.__createNewXyChildren(sourceTablePath, domainAxis, rangeAxis);
-			this.__createLegendForParentGraphIfNotExists();
+			this.removeAllChildren();
+			this.__createNewXyChildren(this.sourceTable, domainAxis, rangeAxis);
+			//this.__createLegendForParentGraphIfNotExists();
 		} else {
 			console.warn('The xy series "' + this.name + '" has no source table.');
 		}
 	}
+
+	plot(dTreez, graphSelection, treeView) {
+		this.treeView = treeView;
+
+		//remove old series group if it already exists
+		graphSelection.select('#' + this.name) //
+					  .remove();
+
+		//create new series group
+		this.__seriesGroupSelection = graphSelection //
+				.append('g') //
+				.onClick(() => this.handleMouseClick());
+		
+		this.bindString(()=>this.name, this.__seriesGroupSelection,'id');
+		
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.__seriesGroupSelection);		
+
+		this.updatePlot(dTreez);
+
+		return graphSelection;
+	}
+
+	updatePlot(dTreez) {
+
+		for (var child of this.children) {			
+			if (child instanceof Xy) {			
+				child.plot(dTreez, this.__seriesGroupSelection, null, this.__treeView);
+			}
+		}
+	}
+
+	createXy(name) {
+		return this.createChild(Xy, name);		
+	}	
 
 	__createLegendForParentGraphIfNotExists() {
 		var graph = this.parent;
@@ -111,7 +148,7 @@ export default class XySeries extends GraphicsAtom {
 			throw new Error(message);
 		}
 
-		var seriesColors = ColorBrewer.Category.get(colorMapSize); //TODO
+		var seriesColors = ColorBrewer.Category[colorMapSize]; 
 
 		var columnFolder = foundSourceTable.columnFolder;
 		var columnFolderName = columnFolder.name;
@@ -122,17 +159,17 @@ export default class XySeries extends GraphicsAtom {
 			var rangeColumn = columnFolder.column(rangeColumnName);
 			var rangeLegend = rangeColumn.header;
 			var color = seriesColors[rangeColumnIndex - 1];
-			this.__createNewXyChild(sourceTablePath, columnsName, domainAxis, domainColumnName, rangeAxis, rangeColumnName, rangeLegend, color);
+			this.__createNewXyChild(sourceTablePath, columnFolderName, domainAxis, domainColumnName, rangeAxis, rangeColumnName, rangeLegend, color);
 		}
 	}
 
 	__updateDomainAxis(sourceTable) {
-		var axisList = this.__getAllAxisFromParentGraph();
+		var axisList = this.__allAxisFromParentGraph();
 
 		var domainAxis;
 		if (axisList.length > 0) {
 			domainAxis = axisList[0];
-			var domainAxisLimits = this.__getDomainLimits(sourceTable);
+			var domainAxisLimits = this.__domainLimits(sourceTable);
 			domainAxis.data.min = domainAxisLimits[0];
 			domainAxis.data.max = domainAxisLimits[1];
 		} else {
@@ -145,20 +182,20 @@ export default class XySeries extends GraphicsAtom {
 		return domainAxis;
 	}
 
-	getDomainLimits(sourceTable) {
+	__domainLimits(sourceTable) {
 		var columnFolder = sourceTable.columnFolder;
 		var numberOfColumns = columnFolder.numberOfColumns;
 		if (numberOfColumns > 0) {
-			var domainColumn = sourceTable.columnfolder.getColumnByIndex(0);
+			var domainColumn = sourceTable.columnFolder.columnByIndex(0);
 			var domainValues = domainColumn.numericValues;
-			return this.__getLimits(domainValues, Double.MAX_VALUE, Double.MIN_VALUE); //TODO
+			return this.__limits(domainValues, Number.MAX_VALUE, Number.MIN_VALUE); 
 		} else {
 			return [0, 1];			
 		}
 
 	}
 
-	__getLimits(domainValues, initialMin, initialMax) {
+	__limits(domainValues, initialMin, initialMax) {
 
 		if (domainValues.length < 1) {
 			return [0, 1];			
@@ -179,7 +216,7 @@ export default class XySeries extends GraphicsAtom {
 	}
 
 	__updateRangeAxis(sourceTable) {
-		var axisList = this.__getAllAxisFromParentGraph();
+		var axisList = this.__allAxisFromParentGraph();
 		var rangeAxis;
 		if (axisList.length > 1) {
 			rangeAxis = axisList[1];
@@ -189,7 +226,7 @@ export default class XySeries extends GraphicsAtom {
 			rangeAxis = graph.createAxis('yAxis');
 
 			rangeAxis.data.direction = Direction.vertical;
-			var rangeAxisLimits = this.__getRangeLimits(sourceTable);
+			var rangeAxisLimits = this.__rangeLimits(sourceTable);
 			rangeAxis.data.min = rangeAxisLimits[0];
 			rangeAxis.data.max = rangeAxisLimits[1];
 		}
@@ -198,14 +235,14 @@ export default class XySeries extends GraphicsAtom {
 		return rangeAxis;
 	}
 
-	__getRangeLimits(sourceTable) {		
+	__rangeLimits(sourceTable) {		
 		var numberOfColumns = sourceTable.numberOfColumns;
 		if (numberOfColumns > 1) {
-			var limits = [ Number.MAX_VALUE, Number.MIN_VALUE ]; //TODO
+			var limits = [ Number.MAX_VALUE, Number.MIN_VALUE ]; 
 			for (var columnIndex = 1; columnIndex < numberOfColumns; columnIndex++) {
 				var rangeColumn = sourceTable.getColumnByIndex(columnIndex);
 				var rangeValues = rangeColumn.numericValues;
-				limits = this.__getLimits(rangeValues, limits[0], limits[1]);
+				limits = this.__limits(rangeValues, limits[0], limits[1]);
 			}
 			return limits;
 		} else {
@@ -213,12 +250,12 @@ export default class XySeries extends GraphicsAtom {
 		}
 	}
 
-	__getAllAxisFromParentGraph() {
+	__allAxisFromParentGraph() {
 		var graph = this.parent;
 		return graph.childrenByClass(Axis);		
 	}
 
-	createNewXyChild(
+	__createNewXyChild(
 			 sourceTablePath,
 			 columnsName,
 			 domainAxis,
@@ -242,38 +279,6 @@ export default class XySeries extends GraphicsAtom {
 
 	}
 
-	plot(dTreez, graphSelection, treeView) {
-		this.treeView = treeView;
-
-		//remove old series group if it already exists
-		graphSelection.select('#' + name) //
-					  .remove();
-
-		//create new series group
-		seriesGroupSelection = graphSelection //
-				.append('g') //
-				.onClick(() => this.handleMouseClick());
-		
-		this.bindString(()=>this.name, seriesGroupSelection,'id');
-		
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, seriesGroupSelection);		
-
-		this.updatePlot(d3);
-
-		return graphSelection;
-	}
-
-	updatePlot(dTreez) {
-
-		for (var child of children) {			
-			if (child instanceof Xy) {			
-				child.plot(dTreez, seriesGroupSelection, null, this.__treeView);
-			}
-		}
-	}
-
-	createXy(name) {
-		return this.createChild(Xy, name);		
-	}	
+	
 
 }

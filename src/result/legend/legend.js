@@ -17,7 +17,7 @@ export default class Legend extends PagedGraphicsAtom {
 		
 		var factories = [];
 
-		this.main = new Main();
+		this.main = new Main(this);
 		factories.push(this.main);
 
 		this.text = new Text();
