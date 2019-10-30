@@ -248,10 +248,10 @@ export default class Symbol extends GraphicsAtom {
 	
 	}
 
-	__plotLegendSymbol(dTreez, parentSelection, xSymbol, refreshable) {
-		this.addListener(()=>this.symbolType, ()=>refreshable.refresh());
+	plotLegendSymbol(dTreez, parentSelection, xSymbol, refreshable) {
+		this.addListener(()=>this.style, ()=>refreshable.refresh());
 		this.addListener(()=>this.size, ()=>refreshable.refresh());
-		this.__plotLegendSymbols(d3, parentSelection, xSymbol);
+		this.__plotLegendSymbols(dTreez, parentSelection, xSymbol);
 	}
 
 	__plotLegendSymbols(dTreez, parentSelection, xSymbol) {
@@ -261,26 +261,26 @@ export default class Symbol extends GraphicsAtom {
 				.remove();
 
 		
-		var isNoneSymbol = this.symbolType === SymbolType.none;
+		var isNoneSymbol = this.style === SymbolStyle.none;
 		if (!isNoneSymbol) {
 			
 			var symbolSquareSize = parseInt(this.size);
 
 			//symbol path generator
-			var symbol = d3 //
-					.svg() //
+			var symbolPathGenerator = dTreez //					
 					.symbol() //
-					.size(symbolSquareSize) //
-					.type(this.style);
+					.size(symbolSquareSize)
+					.type(dTreez[this.style.d3Name]);
+			
 
-			var symbolDString = symbol.generate();
-
+			var symbolDPath = symbolPathGenerator();
+			
 			//create symbol
 			var legendSymbol = parentSelection //
 					.append('path') //
+					.attr('d', symbolDPath)
 					.classed('legend-symbol', true) //
-					.attr('transform', 'translate(' + xSymbol + ',0)') //
-					.attr('d', symbolDString);
+					.attr('transform', 'translate(' + xSymbol + ',0)'); 
 
 			//bind attributes
 			

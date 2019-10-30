@@ -107,11 +107,10 @@ export default class Line extends GraphicsAtom {
 
 	plotLegendLine(dTreez, parentSelection, length) {
 
-		var linePathGenerator = d3 //
-				.svg()//
+		var linePathGenerator = dTreez //				
 				.line();
 
-		var path = linePathGenerator.generate('[[0,0],[' + length + ',0]]');
+		var path = linePathGenerator([[0, 0],[length, 0]]);
 
 		var legendLine = parentSelection //
 				.append('path') //

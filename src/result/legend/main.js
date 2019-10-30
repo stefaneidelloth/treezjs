@@ -2,15 +2,29 @@ import GraphicsAtom from './../graphics/graphicsAtom.js';
 import PositionReference from './positionReference.js';
 import HorizontalPosition from './horizontalPosition.js';
 import VerticalPosition from './verticalPosition.js';
+import Length from './../graphics/length.js';
 
 export default class Main extends GraphicsAtom {
 	
 	constructor(legend){
 		super();
 
+		this.__legend = legend;		
+		this.__dTreez = undefined;
+
 		this.__marginAroundLegendInPx = 20;
 		this.__horizontalSpacingInPx = 10;
 		this.__verticalSpacingInPx = 5;
+
+		this.__legendSelection = undefined;
+		this.__contentSelection = undefined;
+		this.__rectSelection = undefined;
+		
+		this.__positionReferenceSelection = undefined;
+		this.__horizontalPositionSelection = undefined;
+		this.__verticalPositionSelection = undefined;
+
+
 	
 		this.positionReference = PositionReference.graph;	
 		this.horizontalPosition = HorizontalPosition.right;	
@@ -30,75 +44,90 @@ export default class Main extends GraphicsAtom {
 	
 		this.isSwappingSymbol = false;
 	
-		this.isHidden = false;
-
-	
-		this.__dTreez = undefined;
-	
-		this.__legend = legend;
-	
-		this.__graph = legend.parent;
-	
-		this.__legendSelection = undefined;
-		this.__contentSelection = undefined;
-		this.__rectSelection = undefined;
-		
-		this.__positionReferenceSelection = undefined;
-		this.__horizontalPositionSelection = undefined;
-		this.__verticalPositionSelection = undefined;
+		this.isHidden = false;		
 	}
 	
 	createPage(root) {
 
 		 var page = root.append('treez-tab')
-			.label('Data');
+			.label('Main');
 
 		 var section = page.append('treez-section')
-			.label('Data');
+			.label('Main');
 	
 		var sectionContent = section.append('div');
 
+		let leftWidth = '175px';
+
+		let replotLegend = () => {
+				this.__legend.updatePlot(this.__dTreez);
+		};
+	
+
 		this.__positionReferenceSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Position reference')
+			.labelWidth(leftWidth)
 			.nodeAttr('enum',PositionReference)
+			.onChange(() => {
+				this.__convertManualPositions();
+				replotLegend();
+			})
 			.bindValue(this, ()=>this.positionReference);
 
 		this.__horizontalPositionSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Horizontal position')
+			.labelWidth(leftWidth)
 			.nodeAttr('enum',HorizontalPosition)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.horizontalPosition);
 
 		this.__verticalPositionSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Vertical position')
+			.labelWidth(leftWidth)
 			.nodeAttr('enum',VerticalPosition)
-			.bindValue(this, ()=>this.verticalPosition);
+			.onChange(replotLegend)
+			.bindValue(this, ()=>this.verticalPosition);		
 
-		sectionContent.append('treez-integer')
+
+		this.__manualHorizontalPositionSelection = sectionContent.append('treez-integer')
 			.label('Manual horizontal position')
+			.labelWidth(leftWidth)			
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.manualHorizontalPosition);
 
-		sectionContent.append('treez-integer')
+		this.__manualVerticalPositionSelection = sectionContent.append('treez-integer')
 			.label('Manual vertical position')
+			.labelWidth(leftWidth)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.manualVerticalPosition);
 
-		sectionContent.append('treez-integer')
+		this.__marginSizeSelection = sectionContent.append('treez-integer')
 			.label('Margin size')
+			.labelWidth(leftWidth)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.marginSize);
 
-		sectionContent.append('treez-integer')
+		this.__numberOfColumnsSelection = sectionContent.append('treez-integer')
 			.label('Number of columns')
+			.labelWidth(leftWidth)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.numberOfColumns);
 
-		sectionContent.append('treez-integer')
+		this.__keyLengthSelection = sectionContent.append('treez-integer')
 			.label('Key length')
+			.labelWidth(leftWidth)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.keyLength);
 
-		sectionContent.append('treez-check-box')
-			.label('Is swapping symbol')
+		this.__isSwappingSymbolSelection = sectionContent.append('treez-check-box')
+			.label('IsSwappingSymbol')
+			.contentWidth(leftWidth)
+			.onChange(replotLegend)
 			.bindValue(this, ()=>this.isSwappingSymbol);
 
-		sectionContent.append('treez-check-box')
-			.label('Is hidden')
+		sectionContent.append('treez-check-box')			
+			.label('IsHidden')
+			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.isHidden);
 
 	}
@@ -108,16 +137,15 @@ export default class Main extends GraphicsAtom {
 		this.__dTreez = dTreez;
 		this.__legendSelection = legendSelection;
 		this.__rectSelection = rectSelection;
-		this.__legend = legend;
-		this.__graph = legend.parent;
+		this.__legend = legend;		
 
 		//TODO
-		//Drag drag = d3.behavior().drag().onDrag(this);
+		//Drag drag = this.__dTreez.behavior().drag().onDrag(this);
 		//legendSelection.call(drag);
 
 		this.__replotLegendContentAndUpdateRect();
 
-		this.__listenForChanges(dTreez);
+		this.bindBooleanToNegatingDisplay(()=>this.isHidden, this.__legendSelection);
 
 		return legendSelection;
 	}
@@ -132,12 +160,12 @@ export default class Main extends GraphicsAtom {
 				.select('.legend-content') //
 				.remove();
 
-		var contentSelection = this.__legendSelection //
+		this.__contentSelection = this.__legendSelection //
 				.append('g') //
 				.classed('legend-content', true);
 
 		let legendEntrySelections = this.__createLegendEntries(this.__legendContributors);
-		this.setLegendEntryPositions(legendEntrySelections);
+		this.__setLegendEntryPositions(legendEntrySelections);
 
 		this.__updateRectSize();
 		this.__updateLegendPosition();
@@ -152,66 +180,42 @@ export default class Main extends GraphicsAtom {
 			margin = 0;
 		}
 		let bounds = this.__contentSelection.node().getBBox();
-		let contentWidth = bounds.getWidth();
-		let contentHeight = bounds.getHeight();
+		let contentWidth = bounds.width;
+		let contentHeight = bounds.height;
 
-		let contentIsEmpty = contentWidth.equals(0.0) || contentHeight.equals(0.0);
+		let contentIsEmpty = contentWidth == 0 || contentHeight == 0;
 		if (contentIsEmpty) {
-			rectSelection.attr('width', 0);
-			rectSelection.attr('height', 0);
+			this.__rectSelection.attr('width', 0);
+			this.__rectSelection.attr('height', 0);
 		} else {
 			let rectWidth = contentWidth + 2 * margin;
-			let rectHight = bounds.getHeight() + 2 * margin;
+			let rectHight = contentHeight + 2 * margin;
 
-			rectSelection.attr('width', rectWidth);
-			rectSelection.attr('height', rectHight);
+			this.__rectSelection.attr('width', rectWidth);
+			this.__rectSelection.attr('height', rectHight);
 		}
 	}
 
 	__updateLegendPosition() {
-		if (this.horizontalPosition.isManual()) {
+		if (this.horizontalPosition.isManual) {
 			this.__applyManualHorizontalPosition();
 		} else {
 			this.__applyAutomaticHorizontalPosition();
 		}
 
-		if (this.verticalPosition.isManual()) {
+		if (this.verticalPosition.isManual) {
 			this.__applyManualVerticalPosition();
 		} else {
 			this.__applyAutomaticVerticalPosition();
 		}
 	}
 
-	__listenForChanges(dTreez) {
-
-		this.bindDisplayToBooleanAttribute('hideGraph', this.__legendSelection, this.isHidden);
-
-		let replotLegend = () => {
-			this.__legend.updatePlotWithD3(dTreez);
-		};
-
-		this.__positionReferenceSelection.onChange(() => {
-			this.__convertManualPositions();
-			this.replotLegend();
-		});
-
-		this.__horizontalPositionSelection.onChange(replotLegend);
-		this.__verticalPositionSelection.onChange(replotLegend);
-
-		this.__manualHorizontalPositionSelection.onChange(replotLegend);
-		this.__manualVerticalPositionSelection.onChange(replotLegend);
-		this.__marginSizeSelection.onChange(replotLegend);
-		this.__numberOfColumnsSelection.onChange(replotLegend);
-		this.__keyLengthSelection.onChange(replotLegend);
-
-		this.__isSwappingSymbolSelection.onChange(replotLegend);
-	}
-
+	
 
 	__createLegendEntries(legendContributors) {
 		this.__removeOldLegendEntries();
 		let legendEntrySelections = [];
-		for (var contributor in legendContributors) {
+		for (var contributor of legendContributors) {
 			var legendEntrySelection = this.__createLegendEntry(contributor);
 			legendEntrySelections.push(legendEntrySelection);
 		}
@@ -232,7 +236,7 @@ export default class Main extends GraphicsAtom {
 				.append('g') //
 				.classed('legend-entry', true);
 
-		let symbolSelection = contributor.createLegendSymbolGroup(d3, entrySelection, symbolLengthInPx, this);
+		let symbolSelection = contributor.createLegendSymbolGroup(this.__dTreez, entrySelection, symbolLengthInPx, this);
 		let labelSelection = this.__createLegendLabel(entrySelection, contributor);
 
 		if (this.isSwappingSymbol) {
@@ -261,13 +265,13 @@ export default class Main extends GraphicsAtom {
 
 		let symbolBounds = symbolSelection.node().getBBox();
 		let labelBounds = labelSelection.node().getBBox();
-		let symbolHeight = symbolBounds.getHeight();
-		let symbolMinY = symbolBounds.getMinY();
-		let symbolWidth = symbolBounds.getWidth();
-		let symbolMinX = symbolBounds.getMinX();
+		let symbolHeight = symbolBounds.height;
+		let symbolMinY = symbolBounds.y;
+		let symbolWidth = symbolBounds.width;
+		let symbolMinX = symbolBounds.x;
 
-		let labelHeight = labelBounds.getHeight();
-		let labelMinY = labelBounds.getMinY();
+		let labelHeight = labelBounds.height;
+		let labelMinY = labelBounds.y;
 
 		let maxHeight = Math.max(symbolHeight, labelHeight);
 
@@ -284,13 +288,13 @@ export default class Main extends GraphicsAtom {
 
 		let symbolBounds = symbolSelection.node().getBBox();
 		let labelBounds = labelSelection.node().getBBox();
-		let symbolHeight = symbolBounds.getHeight();
-		let symbolMinX = symbolBounds.getMinX();
-		let symbolMinY = symbolBounds.getMinY();
+		let symbolHeight = symbolBounds.height;
+		let symbolMinX = symbolBounds.x;
+		let symbolMinY = symbolBounds.y;
 
-		let labelHeight = labelBounds.getHeight();
-		let labelMinY = labelBounds.getMinY();
-		let labelWidth = labelBounds.getWidth();
+		let labelHeight = labelBounds.height;
+		let labelMinY = labelBounds.y;
+		let labelWidth = labelBounds.width;
 
 		let maxHeight = Math.max(symbolHeight, labelHeight);
 
@@ -323,8 +327,8 @@ export default class Main extends GraphicsAtom {
 		for (let legendEntry of legendEntrySelections) {
 
 			let entryBounds = legendEntry.node().getBBox();
-			let entryHeight = entryBounds.getHeight();
-			let entryMinY = entryBounds.getMinY();
+			let entryHeight = entryBounds.height;
+			let entryMinY = entryBounds.y;
 			let y = y0 + rowHeight / 2 - entryHeight / 2 - entryMinY;
 
 			legendEntry.attr('transform', 'translate(' + x + ',' + y + ')');
@@ -356,7 +360,7 @@ export default class Main extends GraphicsAtom {
 			}
 
 			let bounds = entrySelection.node().getBBox();
-			let width = bounds.getWidth();
+			let width = bounds.width;
 			if (width > columnWidths[columnIndex]) {
 				columnWidths[columnIndex] = width;
 			}
@@ -370,7 +374,7 @@ export default class Main extends GraphicsAtom {
 		let maxHeight = 0;
 		for (var legendEntry of legendEntrySelections) {
 			let entryBounds = legendEntry.node().getBBox();
-			let height = entryBounds.getHeight();
+			let height = entryBounds.height;
 			if (height > maxHeight) {
 				maxHeight = height;
 			}
@@ -378,16 +382,7 @@ export default class Main extends GraphicsAtom {
 		return maxHeight;
 	}
 
-	get __legendContributors() {
-		let legendContributors = [];		
-		for (var graphChild of this.__graph.children) {
-			let isLegendContributorProvider = graphChild instanceof LegendContributorProvider;
-			if (isLegendContributorProvider) {				
-				graphChild.addLegendContributors(legendContributors);
-			}
-		}
-		return legendContributors;
-	}
+	
 
 	__convertManualPositions() {
 		let x = this.manualHorizontalPosition;
@@ -395,9 +390,8 @@ export default class Main extends GraphicsAtom {
 
 		let leftGraphMargin = Length.toPx(this.__graph.data.leftMargin);
 		let topGraphMargin = Length.toPx(this.__graph.data.topMargin);
-
-		let referencesPage = this.positionReference.isPage;
-		if (referencesPage) {
+		
+		if (this.positionReference.isPage) {
 			let pageX = x + Math.floor(leftGraphMargin);
 			this.manualHorizontalPosition = pageX;
 
@@ -412,16 +406,15 @@ export default class Main extends GraphicsAtom {
 		}
 	}
 
-	__applyManualHorizontalPosition(positionReference) {
-		let x = this.manualHorizontalPosition;
-		this.setXPosition(positionReference, x);
+	__applyManualHorizontalPosition() {		
+		this.__setXPosition(this.manualHorizontalPosition);
 	}
 
-	__applyAutomaticHorizontalPosition(horizontalPosition, positionReference) {
+	__applyAutomaticHorizontalPosition() {
 		let x;
-		switch (horizontalPosition) {
+		switch (this.horizontalPosition) {
 		case HorizontalPosition.centre:
-			x = this.__horizontalPositionForCentreAlignment(positionReference);
+			x = this.__horizontalPositionForCentreAlignment;
 			break;
 		case HorizontalPosition.left:
 			x = this.__marginAroundLegendInPx;
@@ -429,46 +422,22 @@ export default class Main extends GraphicsAtom {
 		case HorizontalPosition.manual:
 			throw new Error('This method must not be called in manual mode');
 		case HorizontalPosition.right:
-			x = this.__horizontalPositionForRightAlignment(positionReference);
+			x = this.__horizontalPositionForRightAlignment;
 			break;
 		default:
-			let message = 'The position "' + horizontalPosition + '" is not known.';
+			let message = 'The position "' + this.horizontalPosition + '" is not known.';
 			throw new Error(message);
 		}
-		this.setXPosition(positionReference, x);
+		this.__setXPosition(x);
 	}
 
-	__horizontalPositionForCentreAlignment(positionReference) {
-		let xRightBorder = this.rightBorderX(positionReference);
-		let rectWidth = Math.floor(Length.toPx(this.__rectSelection.attr('width')));
-		let x = xRightBorder / 2 - rectWidth / 2;
-		return x;
-	}
+	
 
-	__horizontalPositionForRightAlignment(positionReference) {
-		let xRightBorder = this.rightBorderX(positionReference);
-		let rectWidth = Math.floor(Length.toPx(this.__rectSelection.attr('width')));
-		let x = xRightBorder - this.__marginAroundLegendInPx - rectWidth;
-		return x;
-	}
-
-	__rightBorderX(positionReference) {
-		let xRightBorder;		
-		if (positionReference.isPage) {
-			let page = this.__graph.parentAtom;
-			xRightBorder = Math.floor(Length.toPx(page.width));
-		} else {
-			xRightBorder = Math.floor(Length.toPx(this.__graph.data.width));
-		}
-		return xRightBorder;
-	}
-
-	__setXPosition(positionReference, x) {
-		let oldTransform = d3.transform(this.__legendSelection.attr('transform'));
-		let oldY = oldTransform.translate().get(1);
-
+	__setXPosition(x) {
+		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
+		let oldY = oldTransform.translateY;
 		
-		if (positionReference.isPage) {
+		if (this.positionReference.isPage) {
 			let graphMargin = Length.toPx(this.__graph.data.leftMargin);
 			let pageX = x - Math.floor(graphMargin);
 			this.__legendSelection.attr('transform', 'translate(' + pageX + ',' + oldY + ')');
@@ -477,79 +446,52 @@ export default class Main extends GraphicsAtom {
 		}
 	}
 
-	__applyManualVerticalPosition(positionReference) {
-		let y = this.manualVerticalPosition;
-		this.setYPosition(positionReference, y);
+	__applyManualVerticalPosition() {		
+		this.__setYPosition(this.manualVerticalPosition);
 	}
 
-	__applyAutomaticVerticalPosition(verticalPosition, 
-			 positionReference) {
+	__applyAutomaticVerticalPosition() {
 		let y;
-		switch (verticalPosition) {
+		switch (this.verticalPosition) {
 		case VerticalPosition.bottom:
-			y = this.verticalPositionForBottomAlignment(positionReference);
+			y = this.__verticalPositionForBottomAlignment;
 			break;
 		case VerticalPosition.centre:
-			y = this.verticalPositionForCentreAlignment(positionReference);
+			y = this.__verticalPositionForCentreAlignment;
 			break;
 		case VerticalPosition.manual:
 			throw new Error('This method must not be called in manual mode');
-		case TOP:
+		case VerticalPosition.top:
 			y = this.__marginAroundLegendInPx;
 			break;
 		default:
-			let message = 'The position "' + verticalPosition + '" is not known.';
+			let message = 'The position "' + this.verticalPosition + '" is not known.';
 			throw new Error(message);
 		}
-		this.setYPosition(positionReference, y);
-	}
+		this.__setYPosition(y);
+	}	
 
-	__verticalPositionForBottomAlignment(positionReference) {
-		let yBottomBorder = this.bottomBorderY(positionReference);
-		let rectHeight = Math.floor(Length.toPx(rectSelection.attr('height')));
-		let y = yBottomBorder - this.__marginAroundLegendInPx - rectHeight;
-		return y;
-	}
+	__setYPosition(y) {
 
-	__verticalPositionForCentreAlignment(positionReference) {
-		let yBottomBorder = this.bottomBorderY(positionReference);
-		let rectHeight = Math.floor(Length.toPx(this.__rectSelection.attr('height')));
-		let y = yBottomBorder / 2 - rectHeight / 2;
-		return y;
-	}
-
-	__bottomBorderY(positionReference) {
-		let yBottomBorder;		
-		if (positionReference.isPage) {
-			let page = this.__graph.parentAtom;
-			yBottomBorder = Math.floor(Length.toPx(page.height));
-		} else {
-			yBottomBorder = Math.floor(Length.toPx(graph.data.height));
-		}
-		return yBottomBorder;
-	}
-
-	__setYPosition(positionReference, y) {
-
-		let oldTransform = d3.transform(this.__legendSelection.attr('transform'));
-		let oldX = oldTransform.translate().get(0);
+		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
+		let oldX = oldTransform.translateX;
 		
-		if (positionReference.isPage) {
+		if (this.positionReference.isPage) {
 			let graphMargin = Length.toPx(this.__graph.data.topMargin);
 			let pageY = y - Math.floor(graphMargin);
-			legendSelection.attr('transform', 'translate(' + oldX + ',' + pageY + ')');
+			this.__legendSelection.attr('transform', 'translate(' + oldX + ',' + pageY + ')');
 		} else {
-			legendSelection.attr('transform', 'translate(' + oldX + ',' + y + ')');
+			this.__legendSelection.attr('transform', 'translate(' + oldX + ',' + y + ')');
 		}
 	}
 
 	handleDrag(context, d, index) {
 
-		let oldTransform = d3.transform(this.__legendSelection.attr('transform'));
-		let oldX = oldTransform.translate().get(0);
-		let oldY = oldTransform.translate().get(1);
+		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
+		let oldX = oldTransform.translateX;
+		let oldY = oldTransform.translateY;
 
-		let delta = d3.eventAsDCoords();
+		let delta = this.__dTreez.eventAsDCoords();
 		let dX = delta.x();
 		let dY = delta.y();
 
@@ -600,6 +542,73 @@ export default class Main extends GraphicsAtom {
 		}
 
 		this.manualVerticalPosition = intValue;
+	}
+
+	get __legendContributors() {
+		let legendContributors = [];		
+		for (var graphChild of this.__graph.children) {
+			let isLegendContributor = graphChild.addLegendContributors !== undefined;
+			if (isLegendContributor) {				
+				graphChild.addLegendContributors(legendContributors);
+			}
+		}
+		return legendContributors;
+	}
+
+	get __graph(){
+		return this.__legend.parent;
+	}
+
+	get __page(){
+		return this.__graph.parent;
+	}
+
+	get __bottomBorderY() {
+		let yBottomBorder;		
+		if (this.positionReference.isPage) {			
+			yBottomBorder = Math.floor(Length.toPx(this.__page.height));
+		} else {
+			yBottomBorder = Math.floor(Length.toPx(this.__graph.data.height));
+		}
+		return yBottomBorder;
+	}
+
+	get __horizontalPositionForCentreAlignment() {
+		let xRightBorder = this.__rightBorderX;
+		let rectWidth = Math.floor(Length.toPx(this.__rectSelection.attr('width')));
+		let x = xRightBorder / 2 - rectWidth / 2;
+		return x;
+	}
+
+	get __horizontalPositionForRightAlignment() {
+		let xRightBorder = this.__rightBorderX;
+		let rectWidth = Math.floor(Length.toPx(this.__rectSelection.attr('width')));
+		let x = xRightBorder - this.__marginAroundLegendInPx - rectWidth;
+		return x;
+	}
+
+	get __rightBorderX() {
+		let xRightBorder;		
+		if (this.positionReference.isPage) {			
+			xRightBorder = Math.floor(Length.toPx(this.__page.width));
+		} else {
+			xRightBorder = Math.floor(Length.toPx(this.__graph.data.width));
+		}
+		return xRightBorder;
+	}
+
+	get __verticalPositionForBottomAlignment() {
+		let yBottomBorder = this.__bottomBorderY;
+		let rectHeight = Math.floor(Length.toPx(this.__rectSelection.attr('height')));
+		let y = yBottomBorder - this.__marginAroundLegendInPx - rectHeight;
+		return y;
+	}
+
+	get __verticalPositionForCentreAlignment() {
+		let yBottomBorder = this.__bottomBorderY;
+		let rectHeight = Math.floor(Length.toPx(this.__rectSelection.attr('height')));
+		let y = yBottomBorder / 2 - rectHeight / 2;
+		return y;
 	}
 
 

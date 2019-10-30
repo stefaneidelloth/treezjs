@@ -6,7 +6,7 @@ export default class Text extends GraphicsAtom {
 	constructor(){
 		super();
 
-		this.font = 'serif';
+		this.font = 'sans-serif';
 		this.size = 14;
 		this.color = Color.black;
 		this.isItalic = false;
@@ -25,33 +25,42 @@ export default class Text extends GraphicsAtom {
 	
 		var sectionContent = section.append('div');
 
+		let leftWidth = '50px';
+
 		sectionContent.append('treez-font')
 			.label('Font')
+			.labelWidth(leftWidth)
 			.bindValue(this, ()=>this.font);
 
 		sectionContent.append('treez-integer')
 			.label('Size')
+			.labelWidth(leftWidth)
 			.min('0')
 			.bindValue(this, ()=>this.size);
 		
 		sectionContent.append('treez-color')
-			.label('Color mode')	
+			.label('Color')
+			.labelWidth(leftWidth)	
 			.bindValue(this, ()=>this.color);	
 
 		sectionContent.append('treez-check-box')
 			.label('Italic')	
+			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.isItalic);
 		
 		sectionContent.append('treez-check-box')
 			.label('Bold')	
+			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.isBold);
 		
 		sectionContent.append('treez-check-box')
-			.label('Underline')	
+			.label('Underline')
+			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.hasUnderline);
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')	
+			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.isHidden);
 
 	}
@@ -69,8 +78,7 @@ export default class Text extends GraphicsAtom {
 				
 		this.bindFontItalicStyle(()=>this.isItalic, textSelection);
 		this.bindFontBoldStyle(()=>this.isBold, textSelection);
-		this.bindFontUnderline(()=>this.hasUnderline, textSelection);
-		this.bindBooleanToTransparency(()=>this.isHidden, ()=>this.transparency, textSelection);		
+		this.bindFontUnderline(()=>this.hasUnderline, textSelection);		
 
 		var refreshLegend = () => main.refresh();
 		

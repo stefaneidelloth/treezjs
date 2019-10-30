@@ -2,9 +2,10 @@ import Enum from './../enum.js';
 
 export default class SymbolStyle extends Enum {
 
-  constructor(name, index){
+  constructor(name, d3Name, index){
       super(name);
-      this.index=index;
+      this.d3Name = d3Name;
+      this.index = index;
   }
 
   d3Symbol(dTreez){
@@ -16,14 +17,14 @@ export default class SymbolStyle extends Enum {
 if(window.SymbolStyle){
 	SymbolStyle = window.SymbolStyle;
 } else {
-	SymbolStyle.none = new SymbolStyle('none',-1);                    
-	SymbolStyle.circle = new SymbolStyle('circle',0);                    
-	SymbolStyle.cross = new SymbolStyle('cross',1);                    
-	SymbolStyle.diamond = new SymbolStyle('diamond',2);                    
-	SymbolStyle.square = new SymbolStyle('square',3);  
-	SymbolStyle.star = new SymbolStyle('star',4);                   
-	SymbolStyle.triangle = new SymbolStyle('triangle',5);                    
-	SymbolStyle.why = new SymbolStyle('why',6);
+	SymbolStyle.none = new SymbolStyle('none','symbolNone'-1);                    
+	SymbolStyle.circle = new SymbolStyle('circle','symbolCircle',0);                    
+	SymbolStyle.cross = new SymbolStyle('cross','symbolCross',1);                    
+	SymbolStyle.diamond = new SymbolStyle('diamond','symbolDiamond',2);                    
+	SymbolStyle.square = new SymbolStyle('square','symbolSquare',3);  
+	SymbolStyle.star = new SymbolStyle('star','symbolStart',4);                   
+	SymbolStyle.triangle = new SymbolStyle('triangle','symbolTriangle',5);                    
+	SymbolStyle.why = new SymbolStyle('wye','symbolWye',6);
 	
 	window.SymbolStyle = SymbolStyle;
 }

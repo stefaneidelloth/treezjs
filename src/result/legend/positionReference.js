@@ -1,6 +1,12 @@
 import Enum from './../../components/enum.js';
 
-export default class PositionReference extends Enum{}
+export default class PositionReference extends Enum{
+
+
+	get isPage(){
+		return this.name === PositionReference.page.name;
+	}
+}
 
 if(window.PositionReference){
 	PositionReference = window.PositionReference;

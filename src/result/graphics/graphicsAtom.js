@@ -40,6 +40,16 @@ export default class GraphicsAtom extends ComponentAtom {
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, this.__trim);		
 	}	
 
+	bindInteger(lambdaExpressionEncodingPropertyToBind, selection, attributeName){	
+	    var valueConverter = number => '' + number;	    	
+		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, valueConverter);		
+	}
+
+	bindDouble(lambdaExpressionEncodingPropertyToBind, selection, attributeName){	
+	    var valueConverter = number => '' + number;	    	
+		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, valueConverter);		
+	}
+
 	bindColor(lambdaExpressionEncodingPropertyToBind, selection, attributeName){	
 	    var valueConverter = color=>color.hexString;	
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, attributeName, valueConverter);		

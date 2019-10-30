@@ -37,7 +37,7 @@ export default class Legend extends PagedGraphicsAtom {
 		this.treeView = treeView;
 
 		graphSelection //
-				.select('#' + name) //
+				.select('#' + this.name) //
 				.remove();
 
 		this.__legendGroupSelection = graphSelection //
@@ -46,21 +46,21 @@ export default class Legend extends PagedGraphicsAtom {
 		
 		this.bindString(()=>this.name, this.__legendGroupSelection, 'id');
 
-		this.__rectSelection = legendGroupSelection //
+		this.__rectSelection = this.__legendGroupSelection //
 				.append('rect') //
 				.onClick(()=>this.handleMouseClick());
 
-		this.__updatePlot(dTreez);
+		this.updatePlot(dTreez);
 
-		return legendGroupSelection;
+		return this.__legendGroupSelection;
 	}
 
-	__updatePlot(dTreez) {
+	updatePlot(dTreez) {
 		this.__plotWithPages(dTreez);
 	}
 
 	__plotWithPages(dTreez) {
-		for (var factory of this.pageFactories) {
+		for (var factory of this.__pageFactories) {
 			factory.plot(dTreez, this.__legendGroupSelection, this.__rectSelection, this);
 		}
 	}	

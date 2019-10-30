@@ -132,7 +132,7 @@ export default class Xy extends PagedGraphicsAtom {
 
 	addLegendContributors(legendContributors) {
 		if (this.providesLegendEntry) {
-			legendContributors.add(this);
+			legendContributors.push(this);
 		}
 	}
 
@@ -141,7 +141,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get legendText() {
-		return data.legendText;
+		return this.data.legendText;
 	}
 
 	createLegendSymbolGroup(dTreez , parentSelection, symbolLengthInPx, treeView) {

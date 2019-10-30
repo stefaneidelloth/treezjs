@@ -182,7 +182,7 @@ export default class Graph extends PagedGraphicsAtom {
 		this.__plotChildren(Xy, dTreez);	
 		this.__plotChildren(Bar, dTreez);			
 		this.__plotChildren(Tornado, dTreez);
-		//this.__plotChildren(Legend, dTreez);
+		this.__plotChildren(Legend, dTreez);
 		
 	}	
 	
