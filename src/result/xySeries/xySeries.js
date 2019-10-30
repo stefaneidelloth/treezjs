@@ -15,7 +15,7 @@ export default class XySeries extends GraphicsAtom {
 		this.sourceTable = '';	
 		this.domainLabel = '';	
 		this.rangeLabel = '';	
-		this.colorMap = ColorMap.blue;	
+		//this.colorMap = ColorMap.blue;	
 		this.isHidden = false;		
 		
 		this.__seriesGroupSelection;
@@ -53,9 +53,11 @@ export default class XySeries extends GraphicsAtom {
 			.label('Range label')			
 			.bindValue(this, ()=>this.rangeLabel);
 
+		/*
 		sectionContent.append('treez-color-map')
 			.label('Color map')			
 			.bindValue(this, ()=>this.colorMap);
+		*/
 
 		sectionContent.append('treez-check-box')
 			.label('IsHidden')			
