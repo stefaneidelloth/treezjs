@@ -64,7 +64,7 @@ export default class XySeries extends GraphicsAtom {
 	}
 
 	addLegendContributors(legendContributors) {		
-		for (var child of children) {			
+		for (var child of this.children) {			
 			if (child.addLegendContributors) {				
 				child.addLegendContributors(legendContributors);
 			}
@@ -80,7 +80,7 @@ export default class XySeries extends GraphicsAtom {
 			var rangeAxis = this.__updateRangeAxis(foundSourceTable);
 			this.removeAllChildren();
 			this.__createNewXyChildren(this.sourceTable, domainAxis, rangeAxis);
-			//this.__createLegendForParentGraphIfNotExists();
+			this.__createLegendForParentGraphIfNotExists();
 		} else {
 			console.warn('The xy series "' + this.name + '" has no source table.');
 		}
@@ -122,12 +122,11 @@ export default class XySeries extends GraphicsAtom {
 
 	__createLegendForParentGraphIfNotExists() {
 		var graph = this.parent;
-		try {
-			graph.childByClass(Legend);
-		} catch (error) {
-			var legend = new Legend('legend');
+		var legend = graph.childByClass(Legend);
+		if(!legend){
+			legend = new Legend('legend');
 			graph.addChild(legend);
-		}
+		}			
 
 	}
 
@@ -157,7 +156,7 @@ export default class XySeries extends GraphicsAtom {
 		for (var rangeColumnIndex = 1; rangeColumnIndex <= numberOfPlots; rangeColumnIndex++) {
 			var rangeColumnName = columnHeaders[rangeColumnIndex];
 			var rangeColumn = columnFolder.column(rangeColumnName);
-			var rangeLegend = rangeColumn.header;
+			var rangeLegend = rangeColumn.header + ' (' + rangeColumn.legend + ')';
 			var color = seriesColors[rangeColumnIndex - 1];
 			this.__createNewXyChild(sourceTablePath, columnFolderName, domainAxis, domainColumnName, rangeAxis, rangeColumnName, rangeLegend, color);
 		}
@@ -257,7 +256,7 @@ export default class XySeries extends GraphicsAtom {
 
 	__createNewXyChild(
 			 sourceTablePath,
-			 columnsName,
+			 columnFolderName,
 			 domainAxis,
 			 domainColumnName,
 			 rangeAxis,
@@ -267,10 +266,10 @@ export default class XySeries extends GraphicsAtom {
 
 		var xy = new Xy(rangeColumnName);		
 		xy.data.xAxis = domainAxis.treePath;		
-		xy.data.xData = sourceTablePath + '.' + columnsName + '.' + domainColumnName;		
+		xy.data.xData = sourceTablePath + '.' + columnFolderName + '.' + domainColumnName;		
 		xy.data.yAxis = rangeAxis.treePath;	
-		xy.data.yData = sourceTablePath + '.' + columnsName + '.' + rangeColumnName;
-		xy.data.legendText = this.rangeLegend;
+		xy.data.yData = sourceTablePath + '.' + columnFolderName + '.' + rangeColumnName;
+		xy.data.legendText = rangeLegend;
 		xy.line.color = color;
 		xy.symbol.fillColor = color;
 		xy.symbol.isHiddenLine = true;

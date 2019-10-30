@@ -15,6 +15,10 @@ export default class GraphicsView {
 						.attr('id','treez-svg'); 
 	}
 
+	clear(){
+		this.__svgSelection.selectAll('g').remove();			
+	}
+
 	setFocus(){
 		this.__treez.focusGraphicsView();		
 	}

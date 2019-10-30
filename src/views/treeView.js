@@ -79,6 +79,7 @@ export default class TreeView {
 
     	this.clearPropertiesView();
 		this.clearMonitoringView(); 
+		this.clearGraphicsView();	
 
 		 window.scriptLoadedHook = ()=>{
 				window.scriptLoadedHook = undefined;
@@ -97,14 +98,14 @@ export default class TreeView {
 			body.appendChild(script); 
         }); 
 
-        this.refreshPropertiesView();		
+        this.refreshPropertiesView();
+        	
     }
+    
 
-    clearPropertiesView(){
-    	var propertiesView = this.propertiesView;
-    	propertiesView.selectAll('treez-tab-folder').remove();	
-		propertiesView.selectAll('div').remove();
-    };  
+    clearGraphicsView(){
+   		this.graphicsView.clear();   	
+    };
 
     clearMonitoringView(){
     	var progressView = this.__treez.dTreez.select('#treez-progress');    	
@@ -113,6 +114,14 @@ export default class TreeView {
 		var logView = this.__treez.dTreez.select('#treez-log');    	
 		logView.selectAll('div').remove();
     };
+
+    clearPropertiesView(){
+    	var propertiesView = this.propertiesView;
+    	propertiesView.selectAll('treez-tab-folder').remove();	
+		propertiesView.selectAll('div').remove();
+    };  
+
+   
     
     fromTree(){    	
     	var sourceCode = this.model.createCode();    		

@@ -137,7 +137,7 @@ export default class Xy extends PagedGraphicsAtom {
 	}
 
 	get providesLegendEntry() {
-		return this.legendText.length > 0;
+		return this.data.legendText.length > 0;
 	}
 
 	get legendText() {
@@ -246,7 +246,7 @@ export default class Xy extends PagedGraphicsAtom {
 			return [];
 		}
 		var xDataColumn = this.childFromRoot(xDataPath);
-		return xDataColumn.values;
+		return xDataColumn.values;		
 	}
 	
 	get yValues() {
@@ -269,9 +269,22 @@ export default class Xy extends PagedGraphicsAtom {
 		} else {
 			var ordinalValues = xDataColumn.stringValues;
 			var xValues = [];
-			for (var x = 1.0; x <= ordinalValues.length; x++) {
-				xValues.push(x);
-			}
+			
+			if(this.xAxisIsOrdinal){
+				for (var x = 1.0; x <= ordinalValues.length; x++) {
+					xValues.push(x);
+				}
+			} else {
+				for (var ordinalValue of ordinalValues) {
+					try{
+						let number = parseFloat(ordinalValue);
+						xValues.push(number);
+					} catch(error){
+						xValues.push(Number.NaN);
+					}					
+				}
+			}	
+
 			return xValues;
 		}
 	}
@@ -287,9 +300,22 @@ export default class Xy extends PagedGraphicsAtom {
 		} else {
 			var ordinalValues = yDataColumn.stringValues;
 			var yValues = [];
-			for (var y = 1.0; y <= ordinalValues.length; y++) {
-				yValues.push(y);
+
+			if(this.yAxisIsOrdinal){
+				for (var y = 1.0; y <= ordinalValues.length; y++) {
+					yValues.push(y);
+				}
+			} else {
+				for (var ordinalValue of ordinalValues) {
+					try{
+						let number = parseFloat(ordinalValue);
+						yValues.push(number);
+					} catch(error){
+						yValues.push(Number.NaN);
+					}					
+				}
 			}
+			
 			return yValues;
 		}
 	}
