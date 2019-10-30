@@ -1,5 +1,5 @@
 import Study from './../study.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import Sample from './sample.js';
 import DoubleVariable from './../../variable/field/doubleVariable.js';
 import IntegerVariable from './../../variable/field/integerVariable.js';

@@ -2,7 +2,7 @@ import ComponentAtom from './../core/component/componentAtom.js';
 import Model from './../model/model.js';
 import ModelInput from './../model/input/modelInput.js';
 import Monitor from './../core/monitor/monitor.js';
-import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../core/treeView/addChildAtomTreeViewAction.js';
 import PythonExport from './pythonExport/pythonExport.js';
 import Variable from './../variable/variable.js';
 import StudyInfoExport from './studyInfoExport/studyInfoExport.js';

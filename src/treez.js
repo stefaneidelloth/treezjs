@@ -1,4 +1,4 @@
-import DTreez from './core/dtreez/dTreez.js'; 
+import DTreez from './core/dTreez/dTreez.js';
 
 import TreeView from './views/treeView.js';
 import EditorView from './views/editorView.js';

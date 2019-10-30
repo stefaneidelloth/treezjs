@@ -1,7 +1,7 @@
 import Atom from './../atom/atom.js';
 import ComponentAtomCodeAdaption from './componentAtomCodeAdaption.js';
 import ActionSeparator from './../actionSeparator.js';
-import TreeViewAction from './../treeview/treeViewAction.js';
+import TreeViewAction from './../treeView/treeViewAction.js';
 import Monitor from './../monitor/monitor.js';
 import Treez from './../../treez.js';
 

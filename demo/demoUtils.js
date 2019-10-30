@@ -1,6 +1,6 @@
 
 import Treez from '../src/treez.js';
-import DTreez from '../src/core/dtreez/dTreez.js';
+import DTreez from '../src/core/dTreez/dTreez.js';
 import Root from '../src/root/root.js';
 
 export default class DemoUtils {

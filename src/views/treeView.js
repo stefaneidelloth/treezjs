@@ -1,4 +1,4 @@
-import DTreez from './../core/dtreez/dTreez.js';
+import DTreez from './../core/dTreez/dTreez.js';
 import Root from './../root/root.js';
 
 import Treez from './../treez.js'

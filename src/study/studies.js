@@ -1,6 +1,6 @@
 import ComponentAtom from './../core/component/componentAtom.js';
 import Monitor from './../core/monitor/monitor.js';
-import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../core/treeView/addChildAtomTreeViewAction.js';
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import Study from './study.js';
 import Sweep from './sweep/sweep.js';

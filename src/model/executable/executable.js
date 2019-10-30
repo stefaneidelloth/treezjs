@@ -1,5 +1,5 @@
 import Model from './../model.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import InputFileGenerator from './../inputFileGenerator/inputFileGenerator.js';
 
 import InputModification from './inputModification.js';

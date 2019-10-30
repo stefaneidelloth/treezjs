@@ -2,7 +2,7 @@ import NameAndNumber from './../nameAndNumber.js';
 import AtomTreeNodeAdapter from './atomTreeNodeAdapter.js';
 import AtomCodeAdaption from './../code/atomCodeAdaption.js';
 import AtomGraphicsAdaption from './atomGraphicsAdaption.js';
-import TreeViewAction from './../treeview/treeViewAction.js';
+import TreeViewAction from './../treeView/treeViewAction.js';
 import TreeView from './../../views/treeView.js';
 import VariableNameRegistry from './../code/variableNameRegistry.js';
 import Utils from './../utils/utils.js';

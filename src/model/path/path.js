@@ -1,7 +1,7 @@
 
 import Model from './../model.js';
-import TreeViewAction from './../../core/treeview/treeViewAction.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import TreeViewAction from './../../core/treeView/treeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import ActionSeparator from './../../core/actionSeparator.js';
 import Variable from './../../variable/variable.js';
 import FilePathVariable from './../../variable/field/filePathVariable.js';

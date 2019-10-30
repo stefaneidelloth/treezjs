@@ -1,5 +1,5 @@
 import Model from './../model.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import GenericInput from './../genericInput/genericInput.js';
 import SqLiteImporter from './../../data/database/sqlite/sqLiteImporter.js';
 import ColumnBlueprint from './../../data/column/columnBlueprint.js';

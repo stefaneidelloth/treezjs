@@ -1,5 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import Column from './column.js';
 
 export default class ColumnFolder extends ComponentAtom {

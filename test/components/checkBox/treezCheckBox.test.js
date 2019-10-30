@@ -13,7 +13,7 @@ jest.mock('../../../src/components/labeledTreezElement.js', function(){
 	}
 );
 
-import TreezCheckBox from '../../../src/components/checkbox/treezCheckBox.js';
+import TreezCheckBox from '../../../src/components/checkBox/treezCheckBox.js';
 
 import TestUtils from '../../testUtils.js';
 

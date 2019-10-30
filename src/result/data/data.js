@@ -1,5 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import Table from './../../data/table/table.js';
 import SweepProbe from './../probe/sweepProbe.js';
 import PickingProbe from './../probe/pickingProbe.js';

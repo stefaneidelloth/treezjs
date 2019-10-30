@@ -1,5 +1,5 @@
 import CodeModel from './codeModel.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import TableTargetType from './../../data/table/tableTargetType.js';
 
 export default class PythonModel extends CodeModel {  	

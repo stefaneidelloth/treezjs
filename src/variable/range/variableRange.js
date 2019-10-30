@@ -1,6 +1,6 @@
 
 import ComponentAtom from './../../core/component/componentAtom.js';
-import TreeViewAction from './../../core/treeview/treeViewAction.js';
+import TreeViewAction from './../../core/treeView/treeViewAction.js';
 import ColumnType from './../../data/column/columnType.js';
 import VariableRangeCodeAdaption from './variableRangeCodeAdaption.js';
 

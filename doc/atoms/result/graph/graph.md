@@ -2,7 +2,7 @@ import PagedGraphicsAtom  from './../graphics/pagedGraphicsAtom.js';
 import Data from './data.js';
 import Background from './../graphics/background.js';
 import Border from './../graphics/border.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import Axis from './../axis/axis.js';
 import Bar from './../bar/bar.js';
 import Xy from './../xy/xy.js';

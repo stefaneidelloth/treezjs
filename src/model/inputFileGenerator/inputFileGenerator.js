@@ -1,6 +1,6 @@
 import Model from './../model.js';
 import Executable from './../executable/executable.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import InputModification from './../executable/inputModification.js';
 import GenericInput from './../genericInput/genericInput.js';
 import QuantityVariable from './../../variable/field/quantityVariable.js';

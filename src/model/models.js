@@ -1,6 +1,6 @@
 import Model from './model.js';
 
-import AddChildAtomTreeViewAction from './../core/treeview/addChildAtomTreeViewAction.js';
+import AddChildAtomTreeViewAction from './../core/treeView/addChildAtomTreeViewAction.js';
 import Path from './path/path.js';
 import GenericInput from './genericInput/genericInput.js';
 

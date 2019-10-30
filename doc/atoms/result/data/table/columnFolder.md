@@ -1,8 +1,8 @@
 
 import ComponentAtom from './../../core/component/componentAtom.js';
 import ColumnFolder from './../column/columnFolder.js';
-import TreeViewAction from './../../core/treeview/treeViewAction.js';
-import AddChildAtomTreeViewAction from './../../core/treeview/addChildAtomTreeViewAction.js';
+import TreeViewAction from './../../core/treeView/treeViewAction.js';
+import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import TableSource from './tableSource.js';
 import TableCodeAdaption from './tableCodeAdaption.js';
 import Row from './../row/row.js';

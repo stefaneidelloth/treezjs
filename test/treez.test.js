@@ -1,4 +1,4 @@
-import DTreez from '../src/core/dtreez/dTreez.js'; 
+import DTreez from '../src/core/dTreez/dTreez.js';
 
 import TreeView from '../src/views/treeView.js';
 import EditorView from '../src/views/editorView.js';
@@ -7,7 +7,7 @@ import GraphicsView from '../src/views/graphicsView.js';
 
 import Treez from '../src/treez.js';
 
-jest.mock('../src/core/dtreez/dTreez.js',() => {return jest.fn().mockImplementation(
+jest.mock('../src/core/dTreez/dTreez.js',() => {return jest.fn().mockImplementation(
 	function(d3){	
 		return this;
 });});
