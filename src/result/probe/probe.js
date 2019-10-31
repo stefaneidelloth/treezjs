@@ -61,8 +61,9 @@ export default class Probe extends ComponentAtom {
 			table = this.reCreateTable(monitor);
 			continueProbe = true;
 		} catch (error) {
-			var message = 'Could not create the probe table. The probe has been canceled.\n' + error;
-			alert(message);
+			var message = 'Could not create the probe table. The probe has been canceled.\n';
+			console.error(message, error);
+			alert(message + error);
 		}
 
 		if (continueProbe) {			

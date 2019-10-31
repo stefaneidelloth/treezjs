@@ -10,6 +10,10 @@ export default class Variable extends ComponentAtom {
 		this.isDisableable=true;
 		this.columnType = ColumnType.string;
 	}	
+
+	clone(){
+		return new this.constructor(this.name, this.value);
+	}
 	
     createComponentControl(tabFolder){    
      

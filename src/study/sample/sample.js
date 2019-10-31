@@ -1,4 +1,5 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
+import SampleCodeAdaption from './sampleCodeAdaption.js';
 
 export default class Sample extends ComponentAtom {
 
@@ -22,44 +23,62 @@ export default class Sample extends ComponentAtom {
 
 		this.__sectionContent = section.append('div'); 
 		
-		this.__createVariableComponents(this.__sectionContent);
-	}	
+		this.__createVariableComponents();
 
-	__createVariableComponents(sectionContent) {
-		var variableMapIsEmpty = Object.keys(this.__variableMap).length < 1;
-		if (variableMapIsEmpty) {
-			this.__createSampleVariables();	
-		}		
-		
-		if(this.isTimeDependent){
-			this.__createTimeSeriesLabel(sectionContent);
-		}
-		this.__createVariableAtomControls(sectionContent);		
+		this.__createInfoIfNoVariablesAreSelected();
 	}
 
-	__createSampleVariables(){
+	createCodeAdaption() {
+		return new SampleCodeAdaption(this);
+	}	
+
+	__createVariableComponents() {
+		
+		this.__recreateVariableMap();					
+		
+		if(this.isTimeDependent){
+			this.__createTimeSeriesLabel();
+		}
+		this.__createVariableAtomControls();		
+	}
+
+	__createVariableAtomControls(){		
+		for (var variableName in this.__variableMap) {
+			var variableAtom = this.__variableMap[variableName];			
+			variableAtom.createVariableControl(this.__sectionContent, this.treeView.dTreez);
+		}
+	}
+
+	__createInfoIfNoVariablesAreSelected(){
+		if(!this.__hasVariables){
+			this.__sectionContent.append('treez-text-label')
+			.value('No variables selected.<br> Please first select some variables in the study.');
+		}		
+	}	
+
+	__recreateVariableMap(){
 						
 		this.__tempVariableMap = {};		
 		for (var variable of this.study.selectedVariables) {			
 			if (this.isTimeDependent) {			
-				this.__createVariableRange(variable);
+				this.__recreateVariableRange(variable);
 			} else {
-				this.__createVariable(variable);
+				this.__recreateVariable(variable);
 			}			
 		}
 		this.__variableMap = this.__tempVariableMap;
 	}
 
-	__createTimeSeriesLabel(sectionContent) {	
-		sectionContent.append('treez-text-label')
+	__createTimeSeriesLabel() {	
+		this.__sectionContent.append('treez-text-label')
 			.value('' + this.nameOfTimeVariable + ': ');
 
-		sectionContent.append('treez-text-label')
+		this.__sectionContent.append('treez-text-label')
 			.value('[' + this.study.timeRange + ']');	
 
 	}	
 
-	__createVariableRange(variable) {
+	__recreateVariableRange(variable) {
 		var variableRange = variable.createRange();	
 		var name = variable.name;
 		variableRange.name = name;
@@ -67,16 +86,9 @@ export default class Sample extends ComponentAtom {
 		this.__tryToRestoreVariable(name);	
 	}
 	
-	__createVariable(variable) {
-		this.__tempVariableMap[variable.name] = variable.copy();
+	__recreateVariable(variable) {
+		this.__tempVariableMap[variable.name] = variable.clone();
 		this.__tryToRestoreVariable(variable.name);	
-	}
-	
-	__createVariableAtomControls(sectionContent){		
-		for (var variableName in this.__variableMap) {
-			var variableAtom = this.__variableMap[variableName];			
-			variableAtom.createVariableControl(sectionContent, this.treeView.dTreez);
-		}
 	}	
 
 	__tryToRestoreVariable(name){
@@ -97,10 +109,9 @@ export default class Sample extends ComponentAtom {
 	//Sets the (sample-) value for the variable with the given name to the given value. Only specify the name of the
 	// variable, not its full path. The path to the source model has to be specified before using this method.
 	
-	setVariable(variableName, value) {
-		var variableMapIsEmpty = Object.keys(this.__variableMap).length < 1;
-		if (variableMapIsEmpty) {
-			this.__createSampleVariables();	
+	set(variableName, value) {		
+		if (!this.__hasVariables) {
+			this.__recreateVariableMap();	
 		}
 		
 		var variable = this.__variableMap[variableName];
@@ -119,8 +130,16 @@ export default class Sample extends ComponentAtom {
 			variable.value = value;			
 		}		
 	}
+
+	get __hasVariables(){
+		return Object.keys(this.__variableMap).length > 0;
+	}
 	
 	get variableMap() {
+		if(!this.__hasVariables){
+			this.__recreateVariableMap();		
+		}
+		
 		return this.__variableMap;
 	}	
 

@@ -4,8 +4,11 @@ import PickingOutput from './../../study/picking/pickingOutput.js';
 import DomainType from './domainType.js';
 import Column from './../../data/column/column.js';
 import ColumnType from './../../data/column/columnType.js';
+import ColumnBlueprint from './../../data/column/columnBlueprint.js'; 
 import Table from './../../data/table/table.js';
 import Row from './../../data/row/row.js';
+
+
 
 export default class PickingProbe extends Probe {
 	
@@ -14,15 +17,11 @@ export default class PickingProbe extends Probe {
 		this.image = 'pickingProbe.png';		
 		
 		this.domainLabel = 'domain'; 
-		this.domainType = DomainType.sampleIndex;
+		this.domainType = DomainType.sampleIndex;		
 		
-		//The model path to a column that is used to retrieve domain values
-		this.domainColumnPath = ''; 
+		this.domainColumnPath = ''; //The model path to a column that is used to retrieve domain values 		
 		
-		
-		this.studyPath = 'root.studies.picking';			
-	
-		this.probeLabel = 'probe';	
+		this.studyPath = 'root.studies.picking';		
 
 		this.outputPath = 'root.results.data.pickingOutput';
 		this.firstProbeTablePath = 'root.results.data.pikcingOutput.output_1.tableImportOutput';
@@ -78,8 +77,14 @@ export default class PickingProbe extends Probe {
 	
 	__showOrHideComponents(){		
 		
-		this.__domainColumnPathSelection.hide();
-		this.__studyPathSelection.hide();
+		if(this.__domainColumnPathSelection){
+			this.__domainColumnPathSelection.hide();
+		}
+		
+		if(this.__studyPathSelection){
+			this.__studyPathSelection.hide();
+		}
+		
 	
 		if (this.__isTimeSeries) {			
 			
@@ -116,11 +121,11 @@ export default class PickingProbe extends Probe {
 	
 		sectionContent.append('treez-text-field')
 			.label('One based column index')
-			.bindValue(this, ()=>this.columnIndex);
+			.bindValue(this, ()=>this.oneBasedColumnIndex);
 	
 		sectionContent.append('treez-text-field')
 			.label('One based row index')
-			.bindValue(this, ()=>this.rowIndex);
+			.bindValue(this, ()=>this.oneBasedRowIndex);
 	}		
 	
 	
@@ -221,8 +226,8 @@ export default class PickingProbe extends Probe {
 	createColumnBlueprints() {
 		var columnBlueprints = [];			
 		columnBlueprints.push(new ColumnBlueprint(this.domainLabel, this.domainLabel, this.__domainColumnType, null));
-		this.__addVariableColumnBlueprints(columnBlueprints);		
-		this.__addProbeColumnBlueprint(columnBlueprints);
+		this.addVariableColumnBlueprints(columnBlueprints);		
+		this.addProbeColumnBlueprint(columnBlueprints);
 		return columnBlueprints;
 	}
 	

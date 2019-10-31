@@ -64,7 +64,8 @@ export default class Study extends ComponentAtom {
 		
 		this.__sourceModelPathSelection = this.__sectionContent.append('treez-model-path')
 	    	.label('Variable source model (provides variables)')
-	    	.nodeAttr('atomClasses', [Model])	    	
+	    	.nodeAttr('atomClasses', [Model])
+	    	.onChange(() => this.sourceModelPathChanged())	    	
 	    	.bindValue(this, ()=>this.sourceModelPath);
 		
 
@@ -72,6 +73,10 @@ export default class Study extends ComponentAtom {
 			.label('Concurrent execution')
 			.bindValue(this, ()=>this.isConcurrent);
 	    
+    }
+
+    sourceModelPathChanged(){
+    	//can be overridden by inheriting classes
     }
 	
 	appendContextMenuActions(actions, parentSelection, treeView) {
@@ -108,8 +113,10 @@ export default class Study extends ComponentAtom {
 			monitor.clear();
 		}
 		await this.__doExecute(treeView, monitor)
-			  .catch((exception)=> {
-					monitor.error('Could not execute study "' + studyName + '"!', exception);
+			  .catch((error)=> {
+			  		let message = 'Could not execute study "' + studyName + '"!'
+					monitor.error(message, error);
+					console.error(message, error);
 					monitor.cancel();
 			  });
 	}	

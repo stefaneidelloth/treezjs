@@ -61,11 +61,13 @@ export default class LabeledTreezElement extends TreezElement {
 
 	updateLabelWidth(labelWidth){
 		this.updateWidthFor(this.__label, labelWidth);	
-		if(labelWidth){
-			this.__label.style.textAlign = 'right';
-		}	else {
-			this.__label.style.textAlign = '';
-		}
+		if(this.__label){
+			if(labelWidth){
+				this.__label.style.textAlign = 'right';
+			}	else {
+				this.__label.style.textAlign = '';
+			}
+		}		
 	}
 
 	updateWidthFor(element, width){

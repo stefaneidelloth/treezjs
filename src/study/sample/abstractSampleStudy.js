@@ -24,17 +24,23 @@ export default class AbstractSampleStudy extends Study {
 		this.__variableListSelection = sectionContent.append('treez-string-item-list')			
 			.nodeAttr('options', this.availableVariableNames)
 			.onChange(() => this.variableListChanged())
-			.bindValue(this, () => this.variableNames);
+			.bindValue(this, () => this.variableNames);		
 		
-		this.__sourceModelPathSelection.onChange(() => this.__updateAvailableVariableNames());
 	}
+
+	sourceModelPathChanged(){
+    	this.__updateAvailableVariableNames();
+    }
 	
 	variableListChanged(){
 		//can be overridden by inheriting classes		
 	}
 			 
-	updateAvailableVariableNames() {		
-		this.__variableListSelection.nodeAttr('options', this.availableVariableNames);
+	__updateAvailableVariableNames() {
+		if(this.__variableListSelection){
+			this.__variableListSelection.nodeAttr('options', this.availableVariableNames);
+		}		
+		
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {

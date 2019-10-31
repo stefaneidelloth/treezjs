@@ -7,7 +7,7 @@ export default class SensitivityOutput extends OutputAtom {
 	}	
 
 	createOutputAtom(name) {
-		return this.createChild(SensitivityOutput, name);		
+		return this.createChild(SensitivityOutput, name, 'sensitivity.png');
 	}
 
 }

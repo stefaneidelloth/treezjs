@@ -5,6 +5,9 @@ import SweepProbe from './../probe/sweepProbe.js';
 import PickingProbe from './../probe/pickingProbe.js';
 import SensitivityProbe from './../probe/sensitivityProbe.js';
 import SweepOutput from './../../study/sweep/sweepOutput.js';
+import PickingOutput from './../../study/picking/pickingOutput.js';
+import SensitivityOutput from './../../study/sensitivity/sensitivityOutput.js';
+import ProbabilityOutput from './../../study/probability/probabilityOutput.js';
 
 export default class Data extends ComponentAtom {
    
@@ -105,24 +108,37 @@ export default class Data extends ComponentAtom {
 		return this.createChild(Table, name);		
 	}	
 
+	createPickingOutput(name) {
+		return this.createChild(PickingOutput, name);		
+	}
+
+	createProbabilityOutput(name) {
+		return this.createChild(ProbabilityOutput, name);		
+	}
+
+	createSensitivityOutput(name) {
+		return this.createChild(SensitivityOutput, name);		
+	}
+
 	createSweepOutput(name) {
 		return this.createChild(SweepOutput, name);		
 	}
-	
-	createSweepProbe(name) {
-		return this.createChild(SweepProbe, name);		
-	}
-	
+
 	createPickingProbe(name) {
 		return this.createChild(PickingProbe, name);		
 	}
-	
+		
+	createProbabilityProbe(name) {
+		return this.createChild(ProbabilityProbe, name);		
+	}
+
 	createSensitivityProbe(name) {
 		return this.createChild(SensitivityProbe, name);		
 	}
 	
-	createProbabilityProbe(name) {
-		return this.createChild(ProbabilityProbe, name);		
-	}
+	
+	createSweepProbe(name) {
+		return this.createChild(SweepProbe, name);		
+	}	
 
 }

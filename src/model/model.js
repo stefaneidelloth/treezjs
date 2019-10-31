@@ -242,7 +242,7 @@ export default class Model extends ComponentAtom {
     }
 
 	set studyId(studyId) {
-		this._studyId = studyId;
+		this.__studyId = studyId;
         for (var child of this.children) {
             if (child instanceof Model) {
                 child.studyId = studyId;

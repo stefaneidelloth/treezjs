@@ -189,7 +189,7 @@ export default class PickingModelInputGenerator {
 	get modelInputs() {	
 		var samples = this.enabledSamples;
 		if (samples.length > 0) {
-			return picking.isTimeDependent
+			return this.__picking.isTimeDependent
 				?this.__createModelInputsForTimeDependentPicking(samples)
 				:this.__createModelInputsForPicking(samples);							
 		} else {

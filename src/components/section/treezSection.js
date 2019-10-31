@@ -9,8 +9,8 @@ export default class TreezSection extends HTMLElement {
 
     constructor(){
         super();
-        this.__sectionHeader=undefined;
-        this.__isInitiallyExpanded=true;
+        this.__sectionHeader = undefined;
+        this.__isCollapsed = false;
     }            	
 
     connectedCallback() {
@@ -33,10 +33,8 @@ export default class TreezSection extends HTMLElement {
             sectionHeader.onclick = () => this.__toggleExpansion();
             this.insertBefore(sectionHeader, this.firstChild); //first child/content is not created here but must come from
 			                                                  //constructing code; header is just inserted above
-
-            if(!this.__isInitiallyExpanded){
-            	this.__toggleExpansion();
-            }                       
+			this.__updateCollapsedState();
+                                  
         }
     }
 
@@ -46,7 +44,8 @@ export default class TreezSection extends HTMLElement {
 				this.__sectionHeader.innerText= newValue;
 			}
 		} else if(attr==='collapsed'){
-			this.__isInitiallyExpanded = (newValue === null);
+			this.__isCollapsed = (newValue !== null);
+			this.__updateCollapsedState();
 		}
 	}
 
@@ -57,11 +56,17 @@ export default class TreezSection extends HTMLElement {
 	}
 
     expand(){
-    	this.__sectionContent.style.display='block';
-		this.__sectionHeader.classList.remove('collapsed');
+    	this.__isCollapsed = false;
+    	if(this.__sectionContent){
+    		this.__sectionContent.style.display='block';		
+    	}    	
+    	if(this.__sectionHeader){
+    		this.__sectionHeader.classList.remove('collapsed');
+    	}
     }
 
     collapse(){
+    	this.__isCollapsed = true;
     	if(this.__sectionContent){
     		this.__sectionContent.style.display='none';
     	}
@@ -69,6 +74,14 @@ export default class TreezSection extends HTMLElement {
     		this.__sectionHeader.classList.add('collapsed');
     	}
     	
+    }
+
+    __updateCollapsedState(){
+    	if(this.isCollapsed){
+            this.collapse();
+        } else {
+        	this.expand();
+        } 
     }
 
     __toggleExpansion(){
@@ -142,7 +155,7 @@ export default class TreezSection extends HTMLElement {
 	}
 
 	get isCollapsed(){
-		return this.__sectionHeader.classList.contains('collapsed');
+		return this.__isCollapsed;
 	}
 
 
