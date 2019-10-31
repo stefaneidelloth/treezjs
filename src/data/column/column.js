@@ -1,5 +1,6 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import ColumnType from './columnType.js';
+import ColumnCodeAdaption from './columnCodeAdaption.js';
 
 export default class Column extends ComponentAtom {
 
@@ -11,9 +12,9 @@ export default class Column extends ComponentAtom {
 		this.header = name;
 		this.legend = '';
 		this.type = ColumnType.string;
-		this.isNullable = false;
+		this.isNullable = true;
 		this.isPrimaryKey = false;
-		this.defaultValueString = '';
+		this.defaultValueString = 'null';
 		this.isVirtual = false;
 		this.isLinkedToSource = false;
 
@@ -62,6 +63,10 @@ export default class Column extends ComponentAtom {
 							    	.bindValue(this,()=>this.defaultValueString);	
 
 	 }
+
+	 createCodeAdaption() {
+		return new ColumnCodeAdaption(this);
+	}	
 
 	
 

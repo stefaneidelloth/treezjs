@@ -116,19 +116,21 @@ export default class ColumnFolder extends ComponentAtom {
 	createColumn(name, type, legend, isLinkedToSource, isVirtual) {
 		 var column = this.createChild(Column, name);
 		 
-		 if(type!==undefined){
+		 if(type !== undefined){
 			 column.type = type;
 		 }
 		 
-		 if(legend!==undefined){
-			 column.legend = legend;
+		 if(legend === undefined){
+			 column.legend = name;
+		 } else {
+		 	column.legend = legend;
 		 }
 		 
-		 if(isLinkedToSource!==undefined){
+		 if(isLinkedToSource !== undefined){
 			 column.isLinkedToSource = isLinkedToSource;
 		 }
 		 
-		 if(isVirtual!==undefined){
+		 if(isVirtual !== undefined){
 			 column.isVirtual = isVirtual;
 		 }
 		 
@@ -144,7 +146,7 @@ export default class ColumnFolder extends ComponentAtom {
 			column.isPrimaryKey = blueprint.isPrimaryKey;
 		}
 		
-		column.defaultValueString = blueprint.defaultValue === null
+		column.defaultValueString = (blueprint.defaultValue === null || blueprint.defaultValue === undefined)
 										?'null'
 										:'' + blueprint.defaultValue;
 		

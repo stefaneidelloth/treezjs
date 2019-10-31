@@ -122,28 +122,23 @@ export default class AbstractAtomCodeAdaption {
 		var defaultValues = atom.__treezProperties;
 		for (var propertyName of propertyNames) {			
 			var propertyValue = atom[propertyName];
-
-			//continue loop for name property
-			if(propertyName === 'name'){				
-				continue;				
-			}	
-			
-			//continue loop if value equals default value
-			if(defaultValues){
-				if(propertyName in defaultValues){
-					var defaultValue = defaultValues[propertyName];
-					if(!(defaultValue instanceof Atom)){
-						if(propertyValue === defaultValue){
-							continue;
-						}
-					}
-				}
-			}
-			
-			propertyContainer = this.extendCodeForProperty(propertyContainer, propertyName, propertyValue, propertyParentName);			
+			propertyContainer = this.extendCodeContainerForProperty(propertyContainer, propertyName, propertyValue, defaultValues, propertyParentName);
 		}
 		return propertyContainer;
 	}
+
+	extendCodeContainerForProperty(propertyContainer, propertyName, propertyValue, defaultValues, propertyParentName){
+		if(propertyName === 'name'){				
+			return propertyContainer;				
+		}	
+
+		if(this.__propertyValueEqualsDefaultValue(propertyName, propertyValue, defaultValues)){
+			return propertyContainer;
+		}			
+
+		return this.extendCodeForProperty(propertyContainer, propertyName, propertyValue, propertyParentName);		
+	}
+	
 	
 	propertyNames(atom){
 		var propertyNames = Object.getOwnPropertyNames(atom);		
@@ -167,6 +162,20 @@ export default class AbstractAtomCodeAdaption {
 	extendCodeForProperty(propertyContainer, propertyName, propertyValue){
 		throw new Error('Not yet implemented');
 	};
+
+	__propertyValueEqualsDefaultValue(propertyName, propertyValue, defaultValues){
+		if(defaultValues){
+			if(propertyName in defaultValues){
+				var defaultValue = defaultValues[propertyName];
+				if(!(defaultValue instanceof Atom)){
+					if(propertyValue === defaultValue){
+						return true;
+					}
+				}
+			}
+		} 		
+		return false;		
+	}
 
 	__checkIfOptionalContainerHasEmptyBulk(optionalContainer) {
 		if (optionalContainer) {			

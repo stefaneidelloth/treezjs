@@ -36,61 +36,70 @@ import Root from './../../root/root.js';
 		if(!codeContainer){
 			codeContainer = new CodeContainer();
 		}
+		
+		let className = this.className(this.__atom);		
+		let hasParent = this.__atom.hasParent;		
 
-		let name = this.__atom.name;
-		let hasDefaultName = name === this.__atom.__defaultName;
-		let className = this.getClassName(this.__atom);		
-		let hasParent = this.__atom.hasParent;
-
-		let constructorArgs = hasDefaultName
-			?"()"
-			:"('" + name + "')";
+		let constructorArgs = this.constructorArgumentsString(codeContainer);
 		
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + 'let ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
-					+ className + constructorArgs + ";");
+			let codeLine = this.indent + 'let ' + variableName + ' = ' + this.__parentVariableNamePlaceholder + '.create'
+					+ className + constructorArgs + ";"
+
+			codeContainer.extendBulk(codeLine);
 		} else {			
 			
 			if(!this.__atom instanceof Root){
-				throw new Error('The atom "'+ name+'" has no parent atom.');
+				throw new Error('The atom "' + this.__atom.name + '" has no parent atom.');
 			}
 			
 			codeContainer.extendBulkWithEmptyLine();
-			codeContainer.extendBulk(this.indent +	'let ' + variableName + ' = new ' + className + constructorArgs + ";");
-
+			let codeLine = this.indent +	'let ' + variableName + ' = new ' + className + constructorArgs + ";"
+			codeContainer.extendBulk(codeLine);
 		}
+
+
+
 		return codeContainer;
 	}
 	
-	getClassName(atom){
-		return atom.constructor.name;
-	}
+
 
 	buildCreationCodeContainerWithoutVariableName(codeContainer) {
 
 		if(!codeContainer){
 			codeContainer = new CodeContainer();
-		}
+		}				
 
-		let name = this.__atom.name;
-		let hasDefaultName = name === this.__atom.__defaultName;
-
-		let className = this.getClassName(this.__atom);		
+		let className = this.className(this.__atom);		
 		let hasParent = this.__atom.hasParent;
 
-		let constructorArgs = hasDefaultName
-			?"()"
-			:"('" + name + "')";
+		let constructorArgs = this.constructorArgumentsString(codeContainer);
 				
 		if (hasParent) {
-			codeContainer.extendBulk(this.indent + this.__parentVariableNamePlaceholder + '.create' + className + constructorArgs + ";");
+			let codeLine = this.indent + this.__parentVariableNamePlaceholder + '.create' + className + constructorArgs + ";"
+			codeContainer.extendBulk(codeLine);
 		} else {
-			let message = 'The atom "' + name
+			let message = 'The atom "' + this.__atom.name
 					+ '" has no parent atom and no code to create children or set properties. '
 					+ 'Creating it would be useless. If it is a root atom wihout children create a custom code adaption for it.';
 			console.warn(message);
 		}
 		return codeContainer;
+	}
+
+	constructorArgumentsString(){
+
+		let name = this.__atom.name;
+		let hasDefaultName = name === this.__atom.__defaultName;
+
+		return hasDefaultName
+			?"()"
+			:"('" + name + "')";
+	}
+
+	className(atom){
+		return atom.constructor.name;
 	}
 
 	extendCodeForProperty(propertyContainer, propertyName, propertyValue) {
