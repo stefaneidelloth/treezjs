@@ -22,6 +22,15 @@ export default class Utils {
         return fileName;
     }
 
+    static convertNameThatMightIncludeSpacesToCamelCase(name){
+		var parts = name.trim().split(' ');
+		parts[0] = Utils.firstToLowerCase(parts[0]);
+		for(var index = 1; index < parts.length; index++){
+			parts[index] = Utils.firstToUpperCase(parts[index]);
+		}
+		return parts.join('');
+	}	
+
     /**
      * Includes a postFix in front of the last point in a file name
      */

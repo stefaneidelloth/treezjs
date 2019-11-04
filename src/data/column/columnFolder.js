@@ -1,5 +1,6 @@
 import ComponentAtom from './../../core/component/componentAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
+import Utils from './../../core/utils/utils.js';
 import Column from './column.js';
 
 export default class ColumnFolder extends ComponentAtom {
@@ -38,30 +39,14 @@ export default class ColumnFolder extends ComponentAtom {
 		return actions;
 	}
 
-	get columns(){
-		return this.childrenByClass(Column);
-	}
-
 	
-	get headers() {
-		var headers = [];
-		for (var column of this.columns) {			
-			var header = column.header;				
-			if (header) {
-				headers.push(header);
-			} else {
-				throw new Error('Could not read header for column "' + column.name + '"');
-			}
-		}
-		return headers;
-	}
 
 	checkHeaders(expectedHeaders) {
 		var existingHeaders = this.headers;
 		var hasSameLength = (expectedHeaders.length == existingHeaders.length);
 		if (!hasSameLength) {
 			var message = 'The given number of columns is ' + expectedHeaders.length
-					+ ' and the expected numboer of columns is ' + existingHeaders.lengths + '.';
+					+ ' and the expected number of columns is ' + existingHeaders.lengths + '.';
 			console.warn(message);
 			return false;
 		}
@@ -76,20 +61,12 @@ export default class ColumnFolder extends ComponentAtom {
 
 	}
 	
-	column(header) {
+	column(name) {
 		try {
-			return this.child(header);			
+			return this.child(name);			
 		} catch (error) {
-			throw new Error('Could not get column "' + header + '".');
+			throw new Error('Could not get column with name "' + name + '".');
 		}
-	}
-
-	type(header) {
-		return this.column(header).type;
-	}
-
-	legend(header) {
-		return this.column(header).legend;
 	}	
 
 	columnByIndex(columnIndex) {
@@ -104,6 +81,27 @@ export default class ColumnFolder extends ComponentAtom {
 		}
 
 	}
+
+	legend(name) {
+		return this.column(name).legend;
+	}
+	
+
+	type(name) {
+		return this.column(name).type;
+	}	
+
+	get columns(){
+		return this.childrenByClass(Column);
+	}
+
+	get names() {
+		return this.columns.map((column=>column.name));		
+	}
+	
+	get headers() {
+		return this.columns.map((column=>column.header));	
+	}	
 
 	get hasColumns() {			
 		return this.columns.length > 0;		
@@ -139,8 +137,23 @@ export default class ColumnFolder extends ComponentAtom {
 
 	createColumnWithBlueprint(blueprint) {
 		
-		
-		var column = this.createColumn(blueprint.name, blueprint.type, blueprint.legend, blueprint.isLinkedToSource, blueprint.isVirtual);
+		var columnName = blueprint.name;
+		var validationState = this.validateName(columnName);
+		if(!validationState.isValid){
+			columnName = Utils.convertNameThatMightIncludeSpacesToCamelCase(columnName);
+			validationState = this.validateName(columnName);
+			if(!validationState.isValid){
+				let message = 'The column header "' + blueprint.name + '" could not be converted to a valid column name.';
+				throw new Error(message);
+			}
+		}
+
+		var column = this.createColumn(columnName, blueprint.type, blueprint.legend, blueprint.isLinkedToSource, blueprint.isVirtual);
+		if (!blueprint.name === columnName){
+			column.isUsingExplicitHeader = true;
+			column.explicitHeader = blueprint.name;
+		}
+
 		if (!blueprint.isVirtual) {
 			column.isNullable = blueprint.isNullable;
 			column.isPrimaryKey = blueprint.isPrimaryKey;

@@ -29,8 +29,8 @@ export default class Table extends ComponentAtom {
 		this.__maxNumberOfRowsPerPage = 1000;
 		
 		this.__isCaching = false;
-		this.__COLUMN_SEPARATOR = ';';
-		this.__ROW_SEPARATOR = '\n';
+		this.__columnSeparator = ';';
+		this.__rowSeparator = '\n';
 		
 		this.__selectionManager = new SelectionManager(this);
 
@@ -61,7 +61,7 @@ export default class Table extends ComponentAtom {
 			}
 		}		
 		
-		var columnsExist = this.headers.length > 0;
+		var columnsExist = this.columnNames.length > 0;
 		if (columnsExist) {
 			this.__createTableControl(tableContainer, treeView);			
 		} else {
@@ -98,9 +98,9 @@ export default class Table extends ComponentAtom {
 		return new TableCodeAdaption(this);
 	}
 	
-	createColumn(header, type) {
+	createColumn(name, type) {
 		this.__initializeColumns();
-		this.getColumns().createColumn(header, type);
+		this.columnFolder.createColumn(name, type);
 	}
 
 	createColumnFolder(name) {
@@ -126,17 +126,14 @@ export default class Table extends ComponentAtom {
 	}
 	
 	__deleteColumnsIfExist() {
-		removeChildrenByClass(Columns);		
-	}
-	
-	
+		thils.removeChildrenByClass(ColumnFolder);		
+	}	
 	
 	addColumn(newColumn) {
 		this.__createColumnsIfNotExist();
 		var columns = this.getColumns();
 		columns.addChild(newColumn);
 	}
-	
 	
 
 	deleteAllRows() {
@@ -167,12 +164,12 @@ export default class Table extends ComponentAtom {
 	createRow(dataArray) {
 		var row = new Row(this);		
 
-		var headers = this.headers;		
+		var columnNames = this.columnNames;		
 
-		for (var columnIndex = 0; columnIndex < headers.length; columnIndex++) {
-			var header = headers[columnIndex];
+		for (var columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
+			var columnName = columnNames[columnIndex];
 			var value = dataArray[columnIndex];
-			row.setEntryUnchecked(header, value);
+			row.setEntryUnchecked(columnName, value);
 		}
 		this.addRow(row);
 		return row;
@@ -180,7 +177,7 @@ export default class Table extends ComponentAtom {
 
 	addRows(dataMatrix) {
 		for (var rowIndex = 0; rowIndex < dataMatrix.length; rowIndex++) {
-			this.creatRow(dataMatrix[rowIndex]);
+			this.createRow(dataMatrix[rowIndex]);
 		}
 		return this;
 	}
@@ -193,19 +190,19 @@ export default class Table extends ComponentAtom {
 
 		var allDataString = '';
 		
-		var headers = this.getHeaders();
-		var numberOfColumns = headers.length;
+		var columnNames = this.columnNames;
+		var numberOfColumns = columnNames.length;
 
 		for (var row of this.__rows) {			
 			for (var columnIndex = 0; columnIndex < numberOfColumns - 1; columnIndex++) {
-				var header = headers[columnIndex];
-				var entry = row.getEntryAsString(header);
-				allDataString = allDataString + entry + COLUMN_SEPARATOR;
+				var columnName = columnNames[columnIndex];
+				var entry = row.getEntryAsString(columnName);
+				allDataString = allDataString + entry + this.columnSeparator;
 			}
 			
-			var lastHeader = headers[numberOfColumns - 1];
-			var lastEntry = row.getEntryAsString(header);
-			allDataString = allDataString + lastEntry + ROW_SEPARATOR;
+			var lastColumnName = columnNames[numberOfColumns - 1];
+			var lastEntry = row.getEntryAsString(lastColumnName);
+			allDataString = allDataString + lastEntry + this.rowSeparator;
 		}
 		return allDataString;
 	}
@@ -259,8 +256,6 @@ export default class Table extends ComponentAtom {
 			.title((column)=>{	        	
 	        	return column.legend;
 			});			
-		
-		var headers = this.headers;
 	   
 	    this.__recreateTableBody();       
 		
@@ -289,12 +284,28 @@ export default class Table extends ComponentAtom {
 	        .html((cellValue)=>{	        	
 	        	return cellValue;
 	        })	 
-	        .onInput((data, index, parent)=>{
-	        	var a=1;
+	        .onInput((data, oneBasedColumnIndex, cellArrayOfRow)=>{
+	        	var contentDiv = cellArrayOfRow[oneBasedColumnIndex];
+
+	        	var value = contentDiv.innerText;
+
+	        	var td = contentDiv.parentNode;
+	        	var tr = td.parentNode;
+	        	var oneBasedRowIndex = tr.rowIndex;
+
+	        	this.__cellValueChanged(oneBasedRowIndex-1, oneBasedColumnIndex-1, value);
+
 	        })      
 	        .onClick((data, index, parent) => this.__selectionManager.cellClicked(data, index, parent))
 	        .onMouseUp((data, index, parent) => this.__selectionManager.cellMouseUp(data, index, parent))
 	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));
+	}
+
+
+	__cellValueChanged(rowIndex, columnIndex, value){
+		let row = this.rows[rowIndex];
+		let columnName = this.columnNames[columnIndex];
+		row.setEntry(columnName, value);
 	}
 	
 	
@@ -367,12 +378,7 @@ export default class Table extends ComponentAtom {
 			.text(' of ')
 		
 		pageControl.append('treez-text-label')
-			.bindValue(this, ()=>this.__numberOfPages);
-
-
-		
-
-		
+			.bindValue(this, ()=>this.__numberOfPages);		
 			
 			
 	}
@@ -441,8 +447,7 @@ export default class Table extends ComponentAtom {
 		} else {
 			var rowIndex = rowIndices[0];
 			var selectedRow = this.__rows[rowIndex];
-			var newRow = this.createRow(selectedRow.values);
-			this.addRow(newRow);
+			this.createRow(selectedRow.values);			
 		}
 
 		this.__recreateTableBody();
@@ -516,9 +521,7 @@ export default class Table extends ComponentAtom {
 	
 	__optimizeColumnWidth(){
 		
-	}
-	
-	
+	}	
 	
 
 	__reload() {
@@ -655,6 +658,15 @@ export default class Table extends ComponentAtom {
 		}
 	}
 
+
+	get columnNames() {
+		try{
+			return this.columnFolder.names;
+		} catch (error){
+			return [];
+		}
+	}
+
 	get columnFolder() {
 
 		try {
@@ -673,13 +685,13 @@ export default class Table extends ComponentAtom {
 		}
 	}	
 
-	columnType(columnHeader) {
+	columnType(columnName) {
 		if (this.isLinkedToSource) {			
-			return DatabasePageResultLoader.columnType(this.tableSource, columnHeader);
+			return DatabasePageResultLoader.columnType(this.tableSource, columnName);
 		} else {
-			return this.columnFolder.type(columnHeader);			
+			return this.columnFolder.type(columnName);			
 		}
-	}
+	}	
 
 	columnLegend(columnHeader) {
 		return this.columnFolder.columnLegend(columHeader);
@@ -695,9 +707,9 @@ export default class Table extends ComponentAtom {
 		}
 	}	
 
-	setColumnValues(header, columnData) {
+	setColumnValues(columnName, columnData) {
 
-		var associatedClass = this.columnType(header).getAssociatedClass();
+		var associatedClass = this.columnType(columnName).getAssociatedClass();
 
 		
 		for (var rowIndex = 0; rowIndex < columnData.length; rowIndex++) {
@@ -709,13 +721,13 @@ export default class Table extends ComponentAtom {
 			
 			var currentRow = this.__rows[rowIndex];
 						
-			currentRow.setEntry(header, value);
+			currentRow.setEntry(columnName, value);
 		}
 		return this;
 	}	
 	
-	getColumnValues(header){
-		return this.rows.map(row=>row.entry(header));				
+	getColumnValues(columnName){
+		return this.rows.map(row=>row.entry(columnName));				
 	}
 
 	get rows() {		
@@ -744,12 +756,12 @@ export default class Table extends ComponentAtom {
 		return this.__rowIndexOffset;
 	}
 
-	isEditable(header) {
+	isEditable(columnName) {
 		return true;
 	}
 
-	columnDataClass(columnHeader) {
-		var columnType = this.columnType(columnHeader);
+	columnDataClass(columnName) {
+		var columnType = this.columnType(columnName);
 		return columnType.getAssociatedClass();		
 	}
 
@@ -759,11 +771,11 @@ export default class Table extends ComponentAtom {
 	}
 
 	get rowSeparator() {
-		return this.__ROW_SEPARATOR;
+		return this.__rowSeparator;
 	}
 
 	get columnSeparator() {
-		return this.__COLUMN_SEPARATOR;
+		return this.__columnSeparator;
 	}	
 
 	get isCaching() {

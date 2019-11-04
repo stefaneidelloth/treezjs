@@ -26,7 +26,7 @@ export default class VariableNameRegistry {
 
     newVariableName(atom) {    	  	
 	
-		var name = this.__convertNameThatMightIncludeSpacesToCamelCase(atom.name);
+		var name = Utils.convertNameThatMightIncludeSpacesToCamelCase(atom.name);
 
 		if (this.__contains(name)) {
 			//add class name
@@ -57,14 +57,7 @@ export default class VariableNameRegistry {
 		return name;
 	}
 
-	__convertNameThatMightIncludeSpacesToCamelCase(name){
-		var parts = name.trim().split(' ');
-		parts[0] = Utils.firstToLowerCase(parts[0]);
-		for(var index = 1; index < parts.length; index++){
-			parts[index] = Utils.firstToUpperCase(parts[index]);
-		}
-		return parts.join('');
-	}	
+	
     
     __contains(variableName) {
 		return this.__variableNames.has(variableName);	

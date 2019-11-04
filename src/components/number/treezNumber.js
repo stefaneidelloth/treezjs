@@ -151,14 +151,17 @@ export default class TreezNumber extends LabeledTreezElement {
 
     __numberInputChanged(event){
         event.stopPropagation();
-        let value = this.convertFromStringValue(this.__numberInput.value); //yea, value form input element is a string and needs to be converted    
-        let validationState = this.validateValue(value);
-        if(validationState.isValid) {
-            this.__resetErrorState();
-            this.value = value;
-        } else {
-            this.__showErrorState(validationState.errorMessage);
-        }                    	
+        let value = this.convertFromStringValue(this.__numberInput.value); //yea, value form input element is a string and needs to be converted   
+        if(value !== this.value){
+            let validationState = this.validateValue(value);
+            if(validationState.isValid) {
+                this.__resetErrorState();
+                this.value = value;
+            } else {
+                this.__showErrorState(validationState.errorMessage);
+            } 
+        } 
+                           	
     }     
 
     __showErrorState(message){

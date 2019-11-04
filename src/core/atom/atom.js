@@ -14,7 +14,12 @@ export default class Atom {
 	//with the method createChild of its parent atom (or with the static create method).
 	//That work flow includes an initialization routine, that is called after the construction has been finished.
 	//Using the constructur directly would mean that the initialization routine is not called. 
-	constructor(name) {			
+	constructor(name) {	
+
+		let validationState = this.validateName(name);
+		if(!validationState.isValid){
+			throw new Error(validationState.errorMessage);
+		}		
 		
 		/**
 		 * In order to be able to identify an Atom by its tree path, this name should only be used once for all children of the parent
@@ -221,7 +226,13 @@ export default class Atom {
 
 	rename() {
 		var newName = prompt('Please enter the new name:', this.name); 
-		this.name = newName;
+
+		let validationState = this.validateName(newName);
+		if(validationState.isValid){
+			this.name = newName;			
+		} else {
+			alert(validationState.errorMessage);
+		}		
 	}
 
 	addNameChangedConsumer(nameChangedConsumer) {		
@@ -538,6 +549,26 @@ export default class Atom {
     absoluteHelpUrl(relativeUrl){    	
     	return 'https://github.com/stefaneidelloth/treezjs/blob/master/doc/atoms/' + relativeUrl;
     }
+
+    validateName(name){
+
+          try{
+          	eval('(function(){let ' + name + ' = 0;}())');
+
+          	return {
+				isValid: true,
+				errorMessage: undefined
+			};
+
+          } catch(error){
+
+			return {
+				isValid: false,
+				errorMessage: 'The name "' + name + '" is not valid. Please try to avoid spaces, special key words,\nspecial characters and names starting with numbers.'
+			};
+			
+          }
+	}
     
 	
 	__initializeProperties(){

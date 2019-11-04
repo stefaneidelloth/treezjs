@@ -3,7 +3,7 @@ import ColumnType from './columnType.js';
 export default class ColumnBlueprint {
 
 	constructor(
-			name, 
+			name, 			
 			legend=name, 
 			type=ColumnType.string, 
 			defaultValue, 

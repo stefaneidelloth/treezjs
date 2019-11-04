@@ -8,8 +8,8 @@ export default class Column extends ComponentAtom {
 		super(name);		
 		
 		this.image ='column.png';
-		
-		this.header = name;
+		this.isUsingExplicitHeader = false;
+		this.explicitHeader = '';
 		this.legend = '';
 		this.type = ColumnType.string;
 		this.isNullable = true;
@@ -18,7 +18,8 @@ export default class Column extends ComponentAtom {
 		this.isVirtual = false;
 		this.isLinkedToSource = false;
 
-		this.__headerSelection = undefined;
+		
+		this.__explicitHeaderSelection = undefined;
 		this.__typeSelection = undefined;
 		this.__isNullableSelection = undefined;
 		this.__isPrimaryKeySelection = undefined;
@@ -36,19 +37,25 @@ export default class Column extends ComponentAtom {
             .label('Data');       
 
         const sectionContent = section.append('div'); 
+
+        sectionContent.append('treez-text-field')
+						        	.label('Name')
+						        	.nodeAttr('validator', (name)=>this.validateName(name))
+						        	.onChange((event)=>this.__nameChanged(event))
+						        	.bindValue(this,()=>this.name);
+
+		sectionContent.append('treez-check-box')
+						        	.label('IsUsingExplicitHeader')
+						        	.onChange(()=>this.__showOrHideExplicitHeaderTextField())
+						        	.bindValue(this,()=>this.isUsingExplicitHeader);
         
-        this.__headerSelection = sectionContent.append('treez-text-field')
-						        	.label('Header')
-						        	.bindValue(this,()=>this.header);
+        this.__explicitHeaderSelection = sectionContent.append('treez-text-field')
+						        	.label('Explicit header')
+						        	.bindValue(this,()=>this.explicitHeader);
         
         this.__legendSelection = sectionContent.append('treez-text-field')
         							.label('Legend')
-        							.bindValue(this, ()=>this.legend);
-
-		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
-									.label('Type')
-									.nodeAttr('enum', ColumnType)
-									.bindValue(this, ()=>this.type);
+        							.bindValue(this, ()=>this.legend);		
 		
 		this.__isNullableSelection = sectionContent.append('treez-check-box')
 									.label('Nullable')		
@@ -57,18 +64,23 @@ export default class Column extends ComponentAtom {
 		this.__isPrimaryKeySelection = sectionContent.append('treez-check-box')
 									.label('Primary key')		
 									.bindValue(this, ()=>this.isPrimaryKey);
+
+		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
+									.label('Type')
+									.nodeAttr('enum', ColumnType)
+									.bindValue(this, ()=>this.type);
 		
 		this.__defaultValueSelection = sectionContent.append('treez-text-field')
 							    	.label('Default value')
 							    	.bindValue(this,()=>this.defaultValueString);	
 
+		this.__showOrHideExplicitHeaderTextField();
+
 	 }
 
-	 createCodeAdaption() {
+	createCodeAdaption() {
 		return new ColumnCodeAdaption(this);
 	}	
-
-	
 
 	afterCreateControlAdaptionHook() {
 		if (this.isLinkedToSource) {
@@ -82,6 +94,24 @@ export default class Column extends ComponentAtom {
 			this.__isPrimaryKeySelection.enable();
 			this.__defaultValueSelection.enable();
 		}
+	}
+
+	__nameChanged(event){
+		if(this.__explicitHeaderSelection){
+			this.treeView.refresh(this);
+		}	
+		
+	}
+
+	__showOrHideExplicitHeaderTextField(){
+		if(this.__explicitHeaderSelection){
+			if(this.isUsingExplicitHeader){
+				this.__explicitHeaderSelection.show();
+			} else {
+				this.__explicitHeaderSelection.hide();
+			}
+		}
+		
 	}
 
 	__disableAttributes() {
@@ -98,17 +128,12 @@ export default class Column extends ComponentAtom {
 	}
 
 	
-	get values() {			
-		
-		var rows = this.table.rows;
-
-		var values = [];
-		
-		for (var row of rows) {
-			var entry = row.entry(this.header);
-			values.push(entry);
+	get header(){
+		if(this.isUsingExplicitHeader){
+			return this.explicitHeader;
+		} else {
+			return this.name;
 		}
-		return values;
 	}
 
 	get numericValues() {
@@ -127,18 +152,33 @@ export default class Column extends ComponentAtom {
 		}
 	}
 	
+		
+	
+	get isNumeric() {
+		return this.type.isNumeric;
+	}	
+
 	get stringValues() {
 		return this.values.map(element => {
 			return element.toString();
 		});		
 	}	
-	
-	get isNumeric() {
-		return this.type.isNumeric;
-	}		
 
 	get table() {
 		return this.parent.parent;		
+	}
+
+	get values() {			
+		
+		var rows = this.table.rows;
+
+		var values = [];
+		
+		for (var row of rows) {
+			var entry = row.entry(this.header);
+			values.push(entry);
+		}
+		return values;
 	}
 
 }

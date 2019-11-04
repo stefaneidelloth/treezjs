@@ -29,7 +29,8 @@ export default class Variable extends ComponentAtom {
 	
 	    sectionContent.append('treez-text-field')
 	        .label('Name') 
-	        .onChange(()=>this.__treeView.refresh(this))
+	        .nodeAttr('validator', (name)=>this.validateName(name))
+	        .onChange(()=>this.treeView.refresh(this))
 	        .bindValue(this,()=>this.name);   
 	}
     

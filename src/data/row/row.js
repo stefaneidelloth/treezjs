@@ -13,10 +13,11 @@ export default class Row {
 	toString() {
 		let stringItems = [];
 		
-		for(var header of this.headers){
+		for(var columnName of this.columnNames){
 
-			let value = this.entry(header);
-			let columnType = this.__table.columnType(header);
+			let value = this.entry(columnName);
+			let column = this.column(columnName);
+			let columnType = column.type;
 			
 			if(columnType.isString){
 				stringItems.push('"' + value + '"');
@@ -28,39 +29,39 @@ export default class Row {
 		return '[' + stringItems.join(', ') + ']';		
 	}	
 
-	entry(columnHeader) {
-		return this.__entryMap[columnHeader];
+	entry(columnName) {
+		return this.__entryMap[columnName];
 	}
 
-	setEntryUnchecked(columnHeader, value) {
-		this.__entryMap[columnHeader] = value;
+	setEntryUnchecked(columnName, value) {
+		this.__entryMap[columnName] = value;
 	}
 
 	/**
 	 * Sets a value in this row for a given column header. The value is checked to be compatible to the column.
 	 */
-	setEntry(columnHeader, value) {
+	setEntry(columnName, value) {
 
 		var table = this.__table;
 
-		var columnExists = table.headers.indexOf(columnHeader) > -1;
+		var columnExists = table.columnNames.indexOf(columnName) > -1;
 		if (columnExists) {
-			var columnType = table.columnType(columnHeader);			
+			var columnType = table.columnType(columnName);			
 			if (columnType.isCompatible(value)) {
-				this.__entryMap[columnHeader] = value;
+				this.__entryMap[columnName] = value;
 			} else {
 				var message = 'The type "' + (typeof value) + '" of the given value "' + value + '" is not compatible to the ' + 
 				' column type "' + columnType + '"';
 				throw new Error(message);
 			}
 		} else {
-			var message = 'The columnHeader "' + columnHeader + '" does not exist and the value "' + value + '" could not be set.';
+			var message = 'The column name "' + columnName + '" does not exist and the value "' + value + '" could not be set.';
 			throw new Error(message);
 		}
 	}	
 
-	getEntryAsString(header) {
-		var value = this.getEntry(header);
+	getEntryAsString(columnName) {
+		var value = this.getEntry(columnName);
 
 		if (value) {
 			return value.toString();
@@ -71,10 +72,14 @@ export default class Row {
 
 	isNullString(value) {
 		return value === this.__NULL_STRING;		
-	}
+	}	
 
 	get index() {
 		return this.__table.rows.indexOf(this);
+	}
+
+	get columnNames(){
+		return this.__table.columnNames;
 	}
 
 	get headers(){
@@ -82,17 +87,17 @@ export default class Row {
 	}
 
 	get values(){		
-        return this.headers.map(header=>this.__entryMap[header]);
+        return this.columnNames.map(columnName=>this.__entryMap[columnName]);
 	}	
 
 
 	get isEmpty() {
-		var empty = true;
-		for (var header of this.__table.headers) {
-			var entry = this.__entryMap[header];
+		var isEmpty = true;
+		for (var columnName of this.columnNames) {
+			var entry = this.__entryMap[columnName];
 			if (entry instanceof String) {
 				if (entry) {
-					empty = false;
+					isEmpty = false;
 					break;
 				}
 			}
@@ -100,16 +105,13 @@ export default class Row {
 			//TODO: check for other types
 
 		}
-		return empty;
+		return isEmpty;
 	}
 
 	get isLastRow() {
 		var size = this.__table.rows.length;
 		return (this.index === size - 1);
 	}
-
-	
-
 	
 
 }

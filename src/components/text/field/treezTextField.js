@@ -5,7 +5,8 @@ export default class TreezTextField extends LabeledTreezElement {
     constructor(){
         super();                                  
         this.__label = undefined;   
-        this.__textField = undefined;                            
+        this.__textField = undefined; 
+        this.validator = undefined;                           
     }            	
 
     connectedCallback() {
@@ -26,8 +27,10 @@ export default class TreezTextField extends LabeledTreezElement {
     }
     
     updateElements(newValue){
-    	if(this.__textField){                    	
-			this.__textField.value= newValue; 
+    	if(this.__textField){  
+    		if(this.__textField.value !== newValue){
+    			this.__textField.value= newValue;
+    		} 
     	}					    
     }
 
@@ -68,8 +71,41 @@ export default class TreezTextField extends LabeledTreezElement {
     	}
     }
 
-    __textFieldChanged(){
-        this.value = this.__textField.value;
+    validateValue(value){
+    	if(this.validator){
+    		return this.validator(value);
+    	} else {
+    		return {
+				isValid: true,
+				errorMessage: undefined
+			}; 
+    	}
+
+    }
+
+    __textFieldChanged(event){
+    	event.stopPropagation();
+        let value = this.__textField.value;
+        if(value !== this.value){
+        	let validationState = this.validateValue(value);
+			if(validationState.isValid) {
+				this.__resetErrorState();
+				this.value = value;
+			} else {
+				this.__showErrorState(validationState.errorMessage);
+			}  
+        }
+             
+    }    
+
+    __showErrorState(message){
+        this.__textField.style.backgroundColor = 'orange';
+        this.__textField.title = message;
+    }
+
+    __resetErrorState(message){
+        this.__textField.style.backgroundColor = 'white';
+        this.__textField.title = '';
     }
 
     __createTextFieldLabel(){
@@ -85,7 +121,7 @@ export default class TreezTextField extends LabeledTreezElement {
         this.__textField = textField;
         this.appendChild(textField);
         textField.className = 'treez-text-field-field';
-        textField.onchange = () => this.__textFieldChanged();
+        textField.onchange = (event) => this.__textFieldChanged(event);
     }
                           
 }
