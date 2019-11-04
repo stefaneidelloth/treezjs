@@ -93,11 +93,13 @@ export default class Sensitivity extends AbstractSampleStudy {
 	}
 
 	__showOrHideComponents() {
-		if(this.type.isRelative){
-			this.__relationTypeSelection.show();
-		} else {
-			this.__relationTypeSelection.hide();
-		}
+		if(this.__relationTypeSelection){
+			if(this.type.isRelative){
+				this.__relationTypeSelection.show();
+			} else {
+				this.__relationTypeSelection.hide();
+			}
+		}		
 	}
 
 }
