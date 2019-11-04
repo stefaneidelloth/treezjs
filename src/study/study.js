@@ -114,7 +114,7 @@ export default class Study extends ComponentAtom {
 		}
 		await this.__doExecute(treeView, monitor)
 			  .catch((error)=> {
-			  		let message = 'Could not execute study "' + studyName + '"!'
+			  		let message = 'Could not execute study "' + studyName + '"!\n';
 					monitor.error(message, error);
 					console.error(message, error);
 					monitor.cancel();

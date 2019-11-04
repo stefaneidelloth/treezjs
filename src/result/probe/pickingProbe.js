@@ -24,7 +24,7 @@ export default class PickingProbe extends Probe {
 		this.studyPath = 'root.studies.picking';		
 
 		this.outputPath = 'root.results.data.pickingOutput';
-		this.firstProbeTablePath = 'root.results.data.pikcingOutput.output_1.tableImportOutput';
+		this.firstProbeTablePath = 'root.results.data.pickingOutput.output_1.tableImportOutput';
 		
 		this.__domainLabelSelection = undefined;
 		this.__domainColumnPathSelection = undefined;
@@ -89,11 +89,17 @@ export default class PickingProbe extends Probe {
 		if (this.__isTimeSeries) {			
 			
 			if (this.__isTimeSeriesFromPicking) {
-				this.__studyPathSelection.show();
+				if(this.__studyPathSelection){
+					this.__studyPathSelection.show();
+				}
+				
 			}
 			
 			if (this.__isTimeSeriesFromColumn) {
-				this.__domainColumnPathSelection.show();
+				if(this.__domainColumnPathSelection){
+					this.__domainColumnPathSelection.show();
+				}		
+				
 			}
 		} 	
 	}
@@ -135,20 +141,34 @@ export default class PickingProbe extends Probe {
 		monitor.info('Filling probe table...');		
 		
 		if (this.study.isTimeDependent) {
-			if(!this.__isTimeSeries){
-				throw new Error('Type of picking probe does not fit time dependent picking.')
-			}	
-			var columnNames = this.__createColumnNames();
-			this.__fillProbeTableForTimeSeries(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix, this.__domainTimeSeriesRange);
+			if(this.__isTimeSeries){
+				this.__collectProbeDataAndFillTableUsingTimeSeries(table);				
+			} else {
+				this.__collectProbeDataAndFillTableUsingRowIndexInsteadOfTime(table);
+			}			
 		} else {			
-			var columnNames = this.__createColumnNames();
-			this.__fillProbeTable(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix);
+			this.__collectProbeDataAndFillTableUsingSampleIndex(table);
 		}		
 
 		monitor.info("Filled probe table.");
 	}
+
+	__collectProbeDataAndFillTableUsingTimeSeries(table){
+		var columnNames = this.__createColumnNames();
+		this.__fillProbeTableUsingTimeSeries(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix, this.__domainTimeSeriesRange);
+	}
+
+	__collectProbeDataAndFillTableUsingSampleIndex(table){
+		var columnNames = this.__createColumnNames();
+		this.__fillProbeTableUsingSampleIndex(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix);
+	}
+
+	__collectProbeDataAndFillTableUsingRowIndexInsteadOfTime(table){
+		var columnNames = this.__createColumnNames();
+		this.__fillProbeTableUsingRowIndexInsteadOfTime(table, columnNames, this.relativeProbeTablePath, this.probeTablePrefix, this.__domainTimeSeriesRange);
+	}
 	
-	__fillProbeTable(
+	__fillProbeTableUsingSampleIndex(
 			table,			
 			columnNames,			
 			relativeProbeTablePath,
@@ -186,7 +206,44 @@ export default class PickingProbe extends Probe {
 		
 	}
 
-	__fillProbeTableForTimeSeries(
+	__fillProbeTableUsingRowIndexInsteadOfTime(
+			table,			
+			columnNames,			
+			relativeProbeTablePath,
+			prefix,
+			timeRangeValues
+	) {
+				
+		var sample = this.__enabledSamples[0];
+		
+
+		for(var rowIndex = 0; rowIndex < timeRangeValues.length; rowIndex++){
+									
+			var row = new Row(table);
+			
+										
+								
+			row.setEntry(columnNames[0], rowIndex);
+			
+			var variableMap = sample.variableMap;
+			
+			for(var columnIndex = 1; columnIndex < columnNames.length-1; columnIndex++){				
+				var variableName = columnNames[columnIndex];				
+				var rangeVariable = variableMap[variableName];
+				var value = rangeVariable.values[rowIndex];				
+				row.setEntry(variableName, value);
+			}			
+			
+			var tablePath = this.outputPath + '.' + prefix + (rowIndex+1) + '.' + relativeProbeTablePath;
+			var probeValue = this.probeValue(tablePath);
+			var rangeLabel = columnNames[columnNames.length-1];			
+			row.setEntry(rangeLabel, probeValue);
+			
+			table.addRow(row);			
+		}		
+	}	
+
+	__fillProbeTableUsingTimeSeries(
 			table,			
 			columnNames,			
 			relativeProbeTablePath,
@@ -330,7 +387,7 @@ export default class PickingProbe extends Probe {
 				return [];
 			}
 		
-		} else if (this.__isTimeSeriesFromPicking) {			
+		} else {			
 			if (this.studyPath) {
 				var picking =  this.childFromRoot(this.studyPath);
 				return picking.range;				
@@ -339,8 +396,7 @@ export default class PickingProbe extends Probe {
 			}
 			
 		}
-
-		throw new Error('Unknown time series type');
+		
 	}
 
 	
