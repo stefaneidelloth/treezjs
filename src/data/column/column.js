@@ -41,7 +41,7 @@ export default class Column extends ComponentAtom {
         sectionContent.append('treez-text-field')
 						        	.label('Name')
 						        	.nodeAttr('validator', (name)=>this.validateName(name))
-						        	.onChange((event)=>this.__nameChanged(event))
+						        	.onChange(()=>this.__nameChanged())
 						        	.bindValue(this,()=>this.name);
 
 		sectionContent.append('treez-check-box')
@@ -96,7 +96,7 @@ export default class Column extends ComponentAtom {
 		}
 	}
 
-	__nameChanged(event){
+	__nameChanged(){
 		if(this.__explicitHeaderSelection){
 			this.treeView.refresh(this);
 		}	

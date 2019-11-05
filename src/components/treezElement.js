@@ -116,11 +116,19 @@ export default class TreezElement extends HTMLElement {
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
 		if(attr==='value'){                      	                		
-		   if(newStringValue!==oldStringValue){
+		   if(newStringValue !== oldStringValue){
+		   	   
+		   	   let oldValue = oldStringValue;
+		   	   try{
+		   	   		oldValue = this.convertFromStringValue(oldStringValue);
+		   	   } catch(error){
+		   	   }
+		   	   	
 			   let newValue = this.convertFromStringValue(newStringValue);
+			   
 			   this.updateElements(newValue);
 			   this.__updateExternalProperties(newValue);
-			   this.dispatchChangeEvent(); //required for customElementSelection.onChange( () => {..}) to work correctly
+			   this.dispatchChangeEvent(oldValue, newValue); //required for customElementSelection.onChange( () => {..}) to work correctly
 		   }
 		}    
 
@@ -146,14 +154,18 @@ export default class TreezElement extends HTMLElement {
    }		
 
    
-   dispatchChangeEvent(){
-	   let event = new Event(
+   dispatchChangeEvent(oldValue, newValue){
+	   let event = new CustomEvent(
 							 'change', 
 							 {
-							   'bubbles': true,
-							   'cancelable': true
+							   bubbles: true,
+							   cancelable: true,
+							   detail: {
+							   		oldValue: oldValue,
+							   		newValue: newValue
+							   }
 							 }
-							);
+							);	  
 	   this.dispatchEvent(event);
    }
    

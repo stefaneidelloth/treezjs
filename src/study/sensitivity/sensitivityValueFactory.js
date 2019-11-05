@@ -1,5 +1,6 @@
 import SensitivityType from './sensitivityType.js';
 import RelationType from './relationType.js';
+import Utils from './../../core/utils/utils.js';
 
 export default class SensitivityValueFactory {
 
@@ -61,9 +62,9 @@ export default class SensitivityValueFactory {
 					variableInfo += workingPointValue + ', ';
 					workingPointValueIncluded = true;
 				}
-				variableInfo += (workingPointValue * ( 1 + percentage * percent)) + ', ';				
+				variableInfo += Utils.multiply(workingPointValue, 1 + Utils.multiply(percentage,percent)) + ', ';				
 			} else {
-				variableInfo += (workingPointValue * ( 1 + percentage * percent)) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, 1 + Utils.multiply(percentage,percent)) + ', ';
 			}
 		}
 
@@ -100,9 +101,9 @@ export default class SensitivityValueFactory {
 					variableInfo += workingPointValue + ', ';
 					workingPointValueIncluded = true;
 				}
-				variableInfo += (workingPointValue * (1 + factor) ) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, 1 + factor) + ', ';
 			} else {
-				variableInfo += (workingPointValue * (1 + factor) ) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, 1 + factor) + ', ';
 			}
 		}
 
@@ -135,7 +136,7 @@ export default class SensitivityValueFactory {
 		variableInfo += workingPointValue + ', ';
 		
 		for (var exponent of expontents) {		
-			variableInfo += ( workingPointValue * (1 + Math.pow(base, exponent)) )  + ', ';			
+			variableInfo += Utils.multiply(workingPointValue, 1 + Math.pow(base, exponent))  + ', ';			
 		}	
 
 		variableInfo = variableInfo.substring(0, variableInfo.length - 2) + ']';
@@ -187,10 +188,10 @@ export default class SensitivityValueFactory {
 					variableInfo += workingPointValue + ', ';
 					workingPointValueIncluded = true;
 				}
-				variableInfo += (workingPointValue * (percentage * percent)) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, Utils.multiply(percentage,percent)) + ', ';
 
 			} else {
-				variableInfo += (workingPointValue * (percentage * percent)) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, Utils.multiply(percentage,percent)) + ', ';
 			}
 		}
 
@@ -230,10 +231,10 @@ export default class SensitivityValueFactory {
 					variableInfo += workingPointValue + ', ';
 					workingPointValueIncluded = true;
 				}
-				variableInfo += (workingPointValue * factor) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, factor) + ', ';
 
 			} else {
-				variableInfo += (workingPointValue * factor) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, factor) + ', ';
 			}
 		}
 
@@ -273,10 +274,10 @@ export default class SensitivityValueFactory {
 					variableInfo += workingPointValue + ', ';
 					var workingPointValueIncluded = true;
 				}
-				variableInfo += (workingPointValue * Math.pow(base, exponent)) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, Math.pow(base, exponent)) + ', ';
 
 			} else {
-				variableInfo += (workingPointValue * Math.pow(base, exponent)) + ', ';
+				variableInfo += Utils.multiply(workingPointValue, Math.pow(base, exponent)) + ', ';
 			}
 		}
 

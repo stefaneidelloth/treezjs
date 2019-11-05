@@ -204,21 +204,26 @@ export default class InputFileGenerator extends Model  {
 
 	__updateComponents(){
 
-		if(this.isWrappingStrings){
-			this.__stringWrapperComponent.show();
-		} else {
-			this.__stringWrapperComponent.hide();
+		if(this.__stringWrapperComponent){
+			if(this.isWrappingStrings){
+				this.__stringWrapperComponent.show();
+			} else {
+				this.__stringWrapperComponent.hide();
+			}
 		}
+		
 
-
-		if(this.isUsingInputPathProvider){
-			this.__pathOfInputPathProviderComponent.show();
-			this.__inputFilePathComponent.hide();
-			this.inputFilePath = this.__pathFromInputPathProvider();
-		} else {
-			this.__pathOfInputPathProviderComponent.hide();
-			this.__inputFilePathComponent.show();
-		}		
+		if(this.__pathOfInputPathProviderComponent){
+			if(this.isUsingInputPathProvider){
+				this.__pathOfInputPathProviderComponent.show();
+				this.__inputFilePathComponent.hide();
+				this.inputFilePath = this.__pathFromInputPathProvider();
+			} else {
+				this.__pathOfInputPathProviderComponent.hide();
+				this.__inputFilePathComponent.show();
+			}	
+		}
+			
 		this.refreshStatus();	
 	};
 

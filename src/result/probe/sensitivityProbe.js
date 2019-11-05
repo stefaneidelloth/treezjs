@@ -61,11 +61,11 @@ export default class SensitivityProbe extends Probe {
 	
 		sectionContent.append('treez-text-field')
 			.label('One based column index')
-			.bindValue(this, ()=>this.columnIndex);
+			.bindValue(this, ()=>this.oneBasedColumnIndex);
 	
 		sectionContent.append('treez-text-field')
 			.label('One based row index')
-			.bindValue(this, ()=>this.rowIndex);
+			.bindValue(this, ()=>this.oneBasedRowIndex);
 	}		
 	
 	createColumnBlueprints() {

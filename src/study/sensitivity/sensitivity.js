@@ -47,20 +47,24 @@ export default class Sensitivity extends AbstractSampleStudy {
 	__updateVariableInfo(){						
 		var variableMap = new VariableMap(this.selectedVariables);		
 		SensitivityValueFactory.updateVariableInfos(variableMap, this);
-		for(var [variable, info] of variableMap){			
-			this.__variableListSelection.node().info(variable.name, info);
-		}	
+		if(this.__variableListSelection){
+			for(var [variable, info] of variableMap){			
+				this.__variableListSelection.node().info(variable.name, info);
+			}
+		}			
 	}
 	
 	__extendSensitivitySection(sectionContent) {	
 		sectionContent.append('treez-enum-combo-box')
 			.label('Type')
+			.labelWidth('90px')
 			.nodeAttr('enum', SensitivityType)
 			.onChange(() => this.__typeChanged())
 			.bindValue(this, () => this.type);
 		
 		this.__relationTypeSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Relation type')
+			.labelWidth('90px')
 			.nodeAttr('enum', RelationType)
 			.onChange(() => this.__relationTypeChanged())
 			.bindValue(this, () => this.relationType);		

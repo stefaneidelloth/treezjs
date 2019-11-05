@@ -15,6 +15,10 @@ export default class DTreezEvent {
 	get target(){
 		return this.__d3.event.target;
 	}
+
+	get detail(){
+		return this.__d3.event.detail;
+	}
 	
 	preventDefault(){
 		this.__d3.event.preventDefault();

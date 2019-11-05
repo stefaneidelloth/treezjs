@@ -644,6 +644,62 @@ export default class Table extends ComponentAtom {
 			return MySqlImporter.readRow(url, user, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);			
 		}
 	}
+
+	columnType(columnName) {
+		if (this.isLinkedToSource) {			
+			return DatabasePageResultLoader.columnType(this.tableSource, columnName);
+		} else {
+			return this.columnFolder.type(columnName);			
+		}
+	}	
+
+	columnDataClass(columnName) {
+		var columnType = this.columnType(columnName);
+		return columnType.getAssociatedClass();		
+	}
+
+	columnLegend(columnHeader) {
+		return this.columnFolder.columnLegend(columHeader);
+	}	
+
+	row(rowIndex) {
+
+		if (this.isLinkedToSource) {
+			var tableSource = this.getTableSource();
+			return this.__readRowFromTableSource(tableSource, rowIndex);
+		} else {
+			return this.rows[rowIndex];
+		}
+	}	
+
+	setColumnValues(columnName, columnData) {
+
+		var associatedClass = this.columnType(columnName).getAssociatedClass();
+
+		
+		for (var rowIndex = 0; rowIndex < columnData.length; rowIndex++) {
+			var value = columnData[rowIndex];
+						
+			if (rowIndex >= this.__rows.length) {				
+				this.addEmptyRow();
+			} 
+			
+			var currentRow = this.__rows[rowIndex];
+						
+			currentRow.setEntry(columnName, value);
+		}
+		return this;
+	}	
+	
+	getColumnValues(columnName){
+		return this.rows.map(row=>row.entry(columnName));				
+	}
+
+	isEditable(columnName) {
+		return true;
+	}
+
+	
 	
 	//#end region
 	
@@ -685,50 +741,7 @@ export default class Table extends ComponentAtom {
 		}
 	}	
 
-	columnType(columnName) {
-		if (this.isLinkedToSource) {			
-			return DatabasePageResultLoader.columnType(this.tableSource, columnName);
-		} else {
-			return this.columnFolder.type(columnName);			
-		}
-	}	
-
-	columnLegend(columnHeader) {
-		return this.columnFolder.columnLegend(columHeader);
-	}	
-
-	row(rowIndex) {
-
-		if (this.isLinkedToSource) {
-			var tableSource = this.getTableSource();
-			return this.__readRowFromTableSource(tableSource, rowIndex);
-		} else {
-			return this.rows[rowIndex];
-		}
-	}	
-
-	setColumnValues(columnName, columnData) {
-
-		var associatedClass = this.columnType(columnName).getAssociatedClass();
-
-		
-		for (var rowIndex = 0; rowIndex < columnData.length; rowIndex++) {
-			var value = columnData[rowIndex];
-						
-			if (rowIndex >= this.__rows.length) {				
-				this.addEmptyRow();
-			} 
-			
-			var currentRow = this.__rows[rowIndex];
-						
-			currentRow.setEntry(columnName, value);
-		}
-		return this;
-	}	
 	
-	getColumnValues(columnName){
-		return this.rows.map(row=>row.entry(columnName));				
-	}
 
 	get rows() {		
 		return this.__rows;
@@ -756,14 +769,7 @@ export default class Table extends ComponentAtom {
 		return this.__rowIndexOffset;
 	}
 
-	isEditable(columnName) {
-		return true;
-	}
-
-	columnDataClass(columnName) {
-		var columnType = this.columnType(columnName);
-		return columnType.getAssociatedClass();		
-	}
+	
 
 	set rowIndexOffset(rowIndexOffset) {
 		this.__rowIndexOffset = rowIndexOffset;

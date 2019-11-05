@@ -31,6 +31,10 @@ export default class Utils {
 		return parts.join('');
 	}	
 
+	static multiply(a,b){
+		return parseFloat((a*b).toFixed(12)); //avoids issues with decimal places, otherwise for example 1.1 * 100 = 110.00000000000001
+	}
+
     /**
      * Includes a postFix in front of the last point in a file name
      */
@@ -55,9 +59,7 @@ export default class Utils {
         return now.toISOString().substring(0,19).replace('T','_');
     }
 
-    /**
-     * Returns true if the given file path could represent a file (last subString contains a point)
-     */
+
     static isFilePath(outputPath) {
         if(outputPath){
             const outputPathString = outputPath.replace(/\\/g, '/');
@@ -69,5 +71,5 @@ export default class Utils {
         }
     }
 
-//#end region
+
 }

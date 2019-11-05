@@ -10,6 +10,7 @@ export default class TreeView {
 		this.dTreez = treez.dTreez;
 		this.content = undefined;	
 		this.__lastAtomPathShownInPropertiesView = undefined;
+		this.__isRefreshing = false;
 	}
 
 	buildView(){		
@@ -128,12 +129,22 @@ export default class TreeView {
     	this.editor.setText(sourceCode);    	    	
     }
 
-    refresh(){
+    refresh(atom){
+    	if(this.__isRefreshing){
+    		return;
+    	}
+
+    	this.__isRefreshing = true;
     	this.content.selectAll('div').remove(); 
     	this.content.selectAll('details').remove();   	
     	this.model.createTreeNodeAdaption(this.content, this);
 
+		if(atom){
+			this.__lastAtomPathShownInPropertiesView = atom.treePath;
+		}
+		
     	this.refreshPropertiesView();
+    	this.__isRefreshing = false;
     }   
 
     refreshPropertiesView(){

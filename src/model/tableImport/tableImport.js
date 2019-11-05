@@ -214,23 +214,27 @@ export default class TableImport extends Model {
 	}
 
 
-	__showAndHideDependentComponents() {		
-		switch (this.type) {
-		case TableSourceType.csv:
-			this.__showAndHideCompontentsForCsv();
-			break;
-		case TableSourceType.sqLite:
-			this.__showAndHideCompontentsForSqLite();
-			break;
-		case TableSourceType.mySql:
-			this.__showAndHideCompontentsForMySql();
-			break;
-		default:
-			var message = 'The TableSourceType "' + this.type + '" is not yet implemented.';
-			throw new Error(message);
-		}
+	__showAndHideDependentComponents() {	
 
-		this.__showAndHideCustomColumnHeaders();
+		if(this.__typeSelection){
+			switch (this.type) {
+			case TableSourceType.csv:
+				this.__showAndHideCompontentsForCsv();
+				break;
+			case TableSourceType.sqLite:
+				this.__showAndHideCompontentsForSqLite();
+				break;
+			case TableSourceType.mySql:
+				this.__showAndHideCompontentsForMySql();
+				break;
+			default:
+				var message = 'The TableSourceType "' + this.type + '" is not yet implemented.';
+				throw new Error(message);
+			}
+
+			this.__showAndHideCustomColumnHeaders();
+		}	
+		
 	}
 
 	__showAndHideCustomColumnHeaders(){
@@ -365,8 +369,8 @@ export default class TableImport extends Model {
 	}
 
 	async __importTableData() {			
-		switch (this.type) {
-		case TableSourceType.csv:	
+		switch (this.type.name) {
+		case TableSourceType.csv.name:	
 			return await TextImporter.importData(
 				this.sourcePath, 
 				this.numberOfHeaderLinesToSkip, 
@@ -377,7 +381,7 @@ export default class TableImport extends Model {
 				this.rowLimit				
 				);	
 			
-		case TableSourceType.sqLite:
+		case TableSourceType.sqLite.name:
 			var rowOffset = 0;
 			return await SqLiteImporter.importData(
 				this.sourcePath, 
@@ -388,7 +392,7 @@ export default class TableImport extends Model {
 				this.rowLimit,
 				rowOffset);	
 			
-		case TableSourceType.mySql:			
+		case TableSourceType.mySql.name:			
 			var url = this.host + ":" + this.port + "/" + this.schema;
 			var rowOffset = 0;
 			return await MySqlImporter.importData(

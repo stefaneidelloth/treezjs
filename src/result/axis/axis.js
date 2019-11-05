@@ -34,7 +34,7 @@ export default class Axis extends PagedGraphicsAtom {
 	createPageFactories() {
 
         var factories = []
-		this.data = Data.create();
+		this.data = Data.create(this);
 		factories.push(this.data);
 
 		this.axisLine = AxisLine.create();

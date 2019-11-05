@@ -341,8 +341,14 @@ export default class Study extends ComponentAtom {
 
 	async __executeTargetModelOneAfterAnother(treeView, numberOfSimulations, modelInputs, outputAtom, monitor, jobFinishedHook) {
 				
+		
+		var startTime = new Date().valueOf();	
+
 		var model = this.controlledModel;
-		var startTime = new Date().valueOf();		
+		var root = model.root;
+		var shadowRoot = root.copy();		
+		var shadowModelToRun = shadowRoot.childFromRoot(model.treePath);
+			
 		
 		var pythonExport = this.childByClass(PythonExport);
 		
@@ -372,7 +378,7 @@ export default class Study extends ComponentAtom {
 			
 			monitor.description = '=>' + jobTitle;
 
-			var modelOutput = await model.runModel(modelInput, treeView, jobMonitor);
+			var modelOutput = await shadowModelToRun.runModel(modelInput, treeView, jobMonitor);
 			if(modelOutput){
 				var modelOutputName = 'output_' + modelInput.jobId;
 				modelOutput.name = modelOutputName;

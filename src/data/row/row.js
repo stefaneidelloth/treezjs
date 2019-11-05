@@ -15,9 +15,8 @@ export default class Row {
 		
 		for(var columnName of this.columnNames){
 
-			let value = this.entry(columnName);
-			let column = this.column(columnName);
-			let columnType = column.type;
+			let value = this.entry(columnName);			
+			let columnType = this.columnType(columnName);
 			
 			if(columnType.isString){
 				stringItems.push('"' + value + '"');
@@ -28,6 +27,10 @@ export default class Row {
 
 		return '[' + stringItems.join(', ') + ']';		
 	}	
+
+	columnType(columnName){
+		return this.__table.columnType(columnName);
+	}
 
 	entry(columnName) {
 		return this.__entryMap[columnName];
@@ -60,7 +63,7 @@ export default class Row {
 		}
 	}	
 
-	getEntryAsString(columnName) {
+	entryAsString(columnName) {
 		var value = this.getEntry(columnName);
 
 		if (value) {

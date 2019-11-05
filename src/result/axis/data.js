@@ -70,6 +70,14 @@ export default class Data extends GraphicsAtom {
 			.label('General');
 		
 		var sectionContent = section.append('div');
+
+		let axis = this.parent;
+
+		sectionContent.append('treez-text-field')
+			.label('Name')
+			.nodeAttr('validatior', (name)=>this.validateName(name))
+			.onChange(()=>this.__nameChanged())
+			.bindValue(axis,(axis)=>axis.name);
 		
 		sectionContent.append('treez-text-field')
 			.label('Label')
@@ -98,7 +106,12 @@ export default class Data extends GraphicsAtom {
 			.contentWidth('70px')
 			.bindValue(this, ()=>this.isHidden);		
 	}
-	
+
+	__nameChanged(){
+		if(this.__domainSectionSelection){	
+			this.parent.treeView.refresh(this.parent);						
+		}
+	}	
 	
 
 	__createDomainSection(page) {
