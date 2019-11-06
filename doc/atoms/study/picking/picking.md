@@ -16,6 +16,10 @@ For a time dependent picking study, you can imagine walking on a domain path whi
 
 [./src/study/picking/picking.js](../../../../src/study/picking/picking.js)
 
+## Demo
+
+[./demo/study/picking/pickingDemo.ipynb](../../../../demo/study/picking/pickingDemo.ipynb)
+
 ## Construction
 		
 A new ![](../../../../icons/picking.png) Picking atom is created either by: 
