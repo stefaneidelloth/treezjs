@@ -1,4 +1,5 @@
 import Probe from './probe.js';
+import SensitivityProbeType from './sensitivityProbeType.js';
 import Sensitivity from './../../study/sensitivity/sensitivity.js';
 import SensitivityOutput from './../../study/sensitivity/sensitivityOutput.js';
 
@@ -12,7 +13,9 @@ export default class SensitivityProbe extends Probe {
 	
 	constructor(name) {
 		super(name);		
-		this.image = 'sensitivityProbe.png';		
+		this.image = 'sensitivityProbe.png';
+
+		this.probeType = SensitivityProbeType.relativeDistance;	
 						
 		this.studyPath = 'root.studies.sensitivity';			
 		
@@ -48,6 +51,11 @@ export default class SensitivityProbe extends Probe {
 		sectionContent.append('treez-text-field')
 			.label('Probe label')
 			.bindValue(this, ()=>this.probeLabel);
+
+		sectionContent.append('treez-enum-combo-box')
+			.label('Probe type')
+			.nodeAttr('enum', SensitivityProbeType)
+			.bindValue(this, ()=>this.probeType);
 	
 		sectionContent.append('treez-model-path')
 			.label('Sensitivity output')

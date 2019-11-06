@@ -30,7 +30,11 @@ export default class Data extends GraphicsAtom {
 		this.outputBase = 'root.results.data.table.columns.outputBase';
 		this.outputLeft = 'root.results.data.table.columns.outputLeft';
 		this.outputRight = 'root.results.data.table.columns.outputRight';
-		this.outputUnit = '';			
+		this.outputUnit = '';	
+
+		this.__tablePathSelection = undefined;
+		this.__inputSelection = undefined;
+		this.__outputSelection = undefined;		
 
 	}
 
@@ -43,6 +47,7 @@ export default class Data extends GraphicsAtom {
 		this.__createInputSection(page);
 		this.__createOutputSection(page);
 
+		this.__showOrHideComponents();
 	}
 
 	__createGeneralSection(page) {
@@ -55,10 +60,10 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-enum-combo-box')
 			.label('Data mode')
 			.nodeAttr('enum', DataMode)
-			.onChange(()=>this.__dataModeChanged())
+			.onChange(()=>this.__showOrHideComponents())
 			.bindValue(this, ()=>this.dataMode);
 		
-		sectionContent.append('treez-model-path')
+		this.__tablePathSelection = sectionContent.append('treez-model-path')
 			.label('Table')
 			.nodeAttr('atomClasses',[Table])
 			.bindValue(this,()=>this.tablePath);		
@@ -95,21 +100,33 @@ export default class Data extends GraphicsAtom {
 			.min('0')
 			.max('1')
 			.bindValue(this, ()=>this.barFillRatio);
+
+		
 		
 	}
 	
-	__dataModeChanged(){
+	__showOrHideComponents(){
+
+		if(this.__tablePathSelection){
+			if(this.dataMode.name === DataMode.table.name){
+				this.__tablePathSelection.show();
+				this.__inputSelection.hide();
+				this.__outputSelection.hide();
+			} else {
+				this.__tablePathSelection.hide();
+				this.__inputSelection.show();
+				this.__outputSelection.show();
+			}	
+		}			
 		
-		//TODO
-		//dataModeBox.createEnableTarget('enableTablePath', DataMode.TABLE, 'data.general.tablePath');
-		//dataModeBox.createDisableTarget('disableInputColumns', DataMode.TABLE, 'data.input');
-		//dataModeBox.createDisableTarget('disableOutputColumns', DataMode.TABLE, 'data.output');
 	}
 
 	__createInputSection(page) {		
 		
 		var section = page.append('treez-section')
-			.label('Input columns');	
+			.label('Input columns');
+
+		this.__inputSelection = section;	
 		
 		var sectionContent = section.append('div');
 		
@@ -144,6 +161,8 @@ export default class Data extends GraphicsAtom {
 		
 		var section = page.append('treez-section')
 			.label('Output columns');	
+
+		this.__outputSelection = section;
 		
 		var sectionContent = section.append('div');
 		
@@ -329,23 +348,43 @@ export default class Data extends GraphicsAtom {
 	}
 
 	get inputLeftData() {
-		return this.__getValuesWithColumnPath(this.inputLeft);
+		let data = this.__getValuesWithColumnPath(this.inputLeft);
+		if(data.length<1){
+			console.warn('Left data for input of tornado is empty.')
+		}
+		return data;
 	}
 
 	get inputRightData() {
-		return this.__getValuesWithColumnPath(this.inputRight);
+		let data = this.__getValuesWithColumnPath(this.inputRight);
+		if(data.length<1){
+			console.warn('Right data for input of tornado is empty.')
+		}
+		return data;
 	}
 
 	get outputBaseData() {
-		return this.__getValuesWithColumnPath(this.outputBase);
+		let data = this.__getValuesWithColumnPath(this.outputBase);
+		if(data.length<1){
+			console.warn('Base data for output of tornado is empty.')
+		}
+		return data;
 	}
 
 	get outputLeftData() {
-		return this.__getValuesWithColumnPath(this.outputLeft);
+		let data = this.__getValuesWithColumnPath(this.outputLeft);
+		if(data.length<1){
+			console.warn('Left data for output of tornado is empty.')
+		}
+		return data;
 	}
 
 	get outputRightData() {
-		return this.__getValuesWithColumnPath(this.outputRight);
+		let data = this.__getValuesWithColumnPath(this.outputRight);
+		if(data.length<1){
+			console.warn('Right data for output of tornado is empty.')
+		}
+		return data;
 	}
 
 	

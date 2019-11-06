@@ -19,13 +19,10 @@ if(window.RelationType){
 	//points are away, e.g.the absolute distance is 1 => (p-1), {p}, (p+1)
 	SensitivityType.relativePosition = new SensitivityType('relativePosition');
 	
-	//Specify variation using absolute positions of neighboring points e.g. 5, 20 for a working point value of {p=10}
+	//Specify variation using absolute distance of neighboring points e.g. -5, 10 for a working point value of {p=10}
 	// => 5, {p=10}, 20
 	SensitivityType.absoluteDistance = new SensitivityType('absoluteDistance');
-	
-	//Specify variation using absolute positions of neighboring points e.g. 5, 20 for a working point value of {p=10}
-	//=> 5, {p=10}, 20
-	// SensitivityType.absoluteDistance = new SensitivityType('absoluteDistance');  //this is represented by the CustomSensitivity and not relevant for the generalized Sensitivity
+		
 	
 	window.SensitivityType = SensitivityType;
 }
