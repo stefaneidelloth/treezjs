@@ -29,7 +29,7 @@ A new ![](../../../../icons/genericInput.png) GenericInput atom is created eithe
 
 ```javascript
     ...
-    var genericInput = models.createGenericInput();	     
+    let genericInput = models.createGenericInput();	     
 ```
 
 ## Child atoms

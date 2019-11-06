@@ -22,7 +22,7 @@ A new ![](../../../icons/studies.png) Studies atom is created either
 
 ```javascript
     ...
-    var studies = root.createStudies();	     
+    let studies = root.createStudies();	     
 ```
 
 ## Child atoms

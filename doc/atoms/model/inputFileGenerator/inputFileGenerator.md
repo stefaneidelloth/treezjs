@@ -26,7 +26,7 @@ A new ![](../../../../icons/inputFile.png) InputFileGenerator atom is created ei
 
 ```javascript
     ...
-    var inputFileGenerator = models.createInputFileGenerator();	     
+    let inputFileGenerator = models.createInputFileGenerator();	     
 ```
 
 ## Work flow	

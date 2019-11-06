@@ -31,7 +31,7 @@ A new ![](../../../../icons/outputModification.png) OutputModification atom is c
 
 ```javascript
     ...
-    var outputModification = executable.createOutputModification();	     
+    let outputModification = executable.createOutputModification();	     
 ```
 
 ## Sections

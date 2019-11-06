@@ -24,7 +24,7 @@ A new ![](../../../../icons/fileCleanup.png) FileCleanup atom is created either 
 
 ```javascript
     ...
-    var fileCleanup = models.createFileCleanup();	     
+    let fileCleanup = models.createFileCleanup();	     
 ```
 
 ## Work flow	

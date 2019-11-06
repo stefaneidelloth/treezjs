@@ -30,7 +30,7 @@ The **available options** can also be specified in the source code of the [Edito
 
 ```javascript
     ...
-    var programmingLanguage = genericInput.createStringItemVariable('programmingLanguage');
+    let programmingLanguage = genericInput.createStringItemVariable('programmingLanguage');
     programmingLanguage.optionsExpression = '["Python", "JavaScript", "Kotlin", "Julia", "Octave", "R"]';
     programmingLanguage.value = 'Python';
 ```

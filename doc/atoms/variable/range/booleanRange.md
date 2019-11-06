@@ -23,7 +23,7 @@ A new ![](../../../../icons/booleanRange.png) BooleanRange atom atom is created 
 
 ```javascript
     ...
-    var isUsingExtraBoostRange = models.createBooleanRange('root.models.genericInput.isUsingExtraBoost', [true, false]);	     
+    let isUsingExtraBoostRange = models.createBooleanRange('root.models.genericInput.isUsingExtraBoost', [true, false]);	     
 ```						
 		
 ## Sections

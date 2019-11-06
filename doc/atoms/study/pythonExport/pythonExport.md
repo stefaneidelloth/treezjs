@@ -35,7 +35,7 @@ A new ![](../../../../icons/pythonExport.png) PythonExport atom is created eithe
 
 ```javascript
     ...
-    var pythonExport = sweep.createPythonExport();	     
+    let pythonExport = sweep.createPythonExport();	     
 ```
 
 ## Work flow	

@@ -20,7 +20,7 @@ A new ![](../../../icons/results.png) Results atom is created either
 
 ```javascript
     ...
-    var results = root.createResults();	     
+    let results = root.createResults();	     
 ```
 
 ## Child atoms

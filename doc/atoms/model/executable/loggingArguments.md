@@ -23,7 +23,7 @@ A new ![](../../../../icons/loggingArguments.png) LoggingArguments atom is creat
 
 ```javascript
     ...
-    var loggingArguments = executable.createLoggingArguments();	     
+    let loggingArguments = executable.createLoggingArguments();	     
 ```
 
 ## Sections

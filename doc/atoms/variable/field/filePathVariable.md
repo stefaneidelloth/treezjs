@@ -31,7 +31,7 @@ A new ![](../../../../icons/filePathVariable.png) FilePathVariable atom is creat
 
 ```javascript
     ...
-    var path = models.createPath();	   
+    let path = models.createPath();	   
     path.createFilePathVariable('inputFile', '{$workingDirectory$}\input.txt');
 ```
 

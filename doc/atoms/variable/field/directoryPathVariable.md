@@ -31,7 +31,7 @@ A new ![](../../../../icons/directoryPathVariable.png) DirectoryPathVariable ato
 
 ```javascript
     ...
-    var path = models.createPath();	   
+    let path = models.createPath();	   
     path.createDirectoryPathVariable('workingDirectory', 'D:/treez');
     path.createDirectoryPathVariable('iconDirectory', '{$workingDirectory$}/icons');
 ```

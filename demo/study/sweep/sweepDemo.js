@@ -46,7 +46,7 @@ window.createModel = function(){
 	var studies = root.createStudies();
 	
 	//sweep
-	var sweep = studies.createSweep();
+	let sweep = studies.createSweep();
 	sweep.studyId = 'myStudyId';
 	sweep.studyDescription = 'myStudyDescription';
 	sweep.modelToRunModelPath = 'root.models';

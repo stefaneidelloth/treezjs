@@ -21,7 +21,7 @@ A new ![](../../../../icons/fileCopy.png) FileCopy atom is created either by:
 
 ```javascript
     ...
-    var fileCopy = models.createFileCopy();	     
+    let fileCopy = models.createFileCopy();	     
 ```
 
 ## Work flow	

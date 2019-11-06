@@ -26,7 +26,7 @@ A new ![](../../../../icons/path.png) Path atom is created either
 
 ```javascript
     ...
-    var path = models.createPath();	   
+    let path = models.createPath();	   
     path.createDirectoryPathVariable('workingDirectory', 'D:\treez');
     path.createFilePathVariable('inputFile', '{$workingDirectory$}\input.txt');
 ```

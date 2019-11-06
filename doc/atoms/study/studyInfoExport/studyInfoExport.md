@@ -24,7 +24,7 @@ A new ![](../../../../icons/studyInfoExport.png) StudyInfoExport atom is created
 
 ```javascript
     ...
-    var studyInfoExport = sweep.createStudyInfoExport();	     
+    let studyInfoExport = sweep.createStudyInfoExport();	     
 ```
 
 ## Work flow	

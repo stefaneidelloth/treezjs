@@ -25,7 +25,7 @@ A new ![](../../../../icons/run.png) Executable atom is created either by:
 
 ```javascript
     ...
-    var executable = models.createExecutable();	     
+    let executable = models.createExecutable();	     
 ```
 
 ## Child atoms

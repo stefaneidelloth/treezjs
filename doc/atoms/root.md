@@ -23,7 +23,7 @@ Example code for stand-alone installation:
 import Root from './src/root/root.js';
 
 window.createModel = function () {
-    var root = new Root();
+    let root = new Root();
     return root;
 }
 ```
@@ -33,7 +33,7 @@ Example code for Jupyter Notebook extension:
 import Root from './treezjs/src/root/root.js';
 
 window.createModel = function () {
-    var root = new Root();
+    let root = new Root();
     return root;
 }
 ```

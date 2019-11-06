@@ -21,7 +21,7 @@ A new ![](../../../../icons/databaseModifier.png) DatabaseModifier atom is creat
 
 ```javascript
     ...
-    var databaseModifier = models.createDatabaseModifier();	     
+    let databaseModifier = models.createDatabaseModifier();	     
 ```
 
 ## Work flow	

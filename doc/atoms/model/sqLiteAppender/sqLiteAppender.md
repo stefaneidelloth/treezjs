@@ -29,7 +29,7 @@ A new ![](../../../../icons/databaseAppender.png) SqLiteAppender atom is created
 
 ```javascript
     ...
-    var sqLiteAppender = models.createSqLiteAppender();	     
+    let sqLiteAppender = models.createSqLiteAppender();	     
 ```
 
 ## Work flow	

@@ -25,7 +25,7 @@ A new ![](../../../../icons/python.png) PythonModel atom is created either by:
 
 ```javascript
     ...
-    var pythonModel = models.createPythonModel();	     
+    let pythonModel = models.createPythonModel();	     
 ```
 
 ## Work flow	

@@ -26,7 +26,7 @@ A new ![](../../../../icons/quantityVariable.png) QuanityVariable atom is create
 
 ```javascript
     ...
-    var length = genericInput.createQuantityVariable('length');
+    let length = genericInput.createQuantityVariable('length');
     length.number = 2.5;
     length.unit = 'm';
 ```

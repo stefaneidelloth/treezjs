@@ -25,7 +25,7 @@ A new ![](../../../../icons/java.png) JavaExecutable atom is created either by:
 
 ```javascript
     ...
-    var javaExecutable = models.createJavaExecutable();	     
+    let javaExecutable = models.createJavaExecutable();	     
 ```
 
 ## Child atoms

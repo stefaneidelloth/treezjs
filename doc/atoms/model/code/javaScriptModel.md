@@ -22,7 +22,7 @@ A new ![](../../../../icons/javaScript.png) JavaScriptModel atom is created eith
 
 ```javascript
     ...
-    var javaScriptModel = models.createJavaScriptModel();	     
+    let javaScriptModel = models.createJavaScriptModel();	     
 ```
 
 ## Work flow	

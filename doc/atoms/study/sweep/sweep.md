@@ -23,7 +23,7 @@ A new ![](../../../../icons/sweep.png) Sweep atom is created either by:
 
 ```javascript
     ...
-    var sweep = studies.createSweep();	     
+    let sweep = studies.createSweep();	     
 ```
 
 ## Work flow	

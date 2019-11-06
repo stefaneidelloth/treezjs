@@ -23,7 +23,7 @@ A new ![](../../../../icons/stringItemRange.png) StringItemRange atom atom is cr
 
 ```javascript
     ...
-    var ageRange = models.createStringItemRange('root.models.genericInput.simulationType', ['foo', 'baa']);	     
+    let ageRange = models.createStringItemRange('root.models.genericInput.simulationType', ['foo', 'baa']);	     
 ```						
 		
 ## Sections

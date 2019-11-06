@@ -32,7 +32,7 @@ A new ![](../../../../icons/inputModification.png) InputModification atom is cre
 
 ```javascript
     ...
-    var inputModification = executable.createInputModification();	     
+    let inputModification = executable.createInputModification();	     
 ```
 
 ## Sections

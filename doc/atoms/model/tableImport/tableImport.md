@@ -23,7 +23,7 @@ A new ![](../../../../icons/tableImport.png) TableImport atom is created either 
 
 ```javascript
     ...
-    var tableImport = models.createTableImport();	     
+    let tableImport = models.createTableImport();	     
 ```
 		
 ## Work flow	

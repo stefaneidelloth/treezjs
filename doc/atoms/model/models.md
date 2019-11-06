@@ -26,7 +26,7 @@ A new ![](../../../icons/models.png) Models atom is created either
 
 ```javascript
     ...
-    var models = root.createModels();	     
+    let models = root.createModels();	     
 ```
 
 ## Child atoms
