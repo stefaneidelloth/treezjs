@@ -70,23 +70,33 @@ The model that provides the variables that can be varied. Only the variables tha
 
 The variable source model might be the same as the model to run.
 
-## Time dependent picking
+### Type
 
-### Use time series
+In relation to the working point, you can specify the variable values either using
 
-Set this check box to true if you would like to use a time dependent picking.
+* relativeDistance (default): Specify variation using relative distance of neighboring points to working point {p}: specify "how far" the other points are away, e.g. the distance is -10 %, 10 % of the absolute working point value => (p-p*0.1), {p}, (p+p*0.1)
 
-### Time variable
+* relativePosition: Specify variation using positions of neighboring points in relation to the working point {p} : specify "where" the other points are, e.g.the position is 90 %, 110 % of the absolute working point value => (0.9*p), {p}, (1.1*p)
 
-The variable that is used as time (e.g. root.models.genericInput.hour). 
+* absoluteDistance: Specify variation using absolute distance of neighboring points e.g. -5, 10 for a working point value of {p=10} => 5, {p=10}, 20
 
-### Time range
+### Relation type
 
-The values for the time variable (e.g. [1,2,3,4,5,6,7,8,9,10]). 
+If you choose some relative type, you can specify the variable values either using
+
+* percentage (default): Specify values indirectly, in terms of percentages in relation to the working point value, e.g. a percentage of 10 with a working point value of 1000 gives a final value of 1000 * 10/100 = 100.
+
+* factor: Specify values indirectly, in terms of factors in relation to the working point value, e.g. a factor of 0.1 with a working point value of 1000 gives a final value of 0.1 * 1000 = 100.
+	
+* expontent: Specify values indirectly, in terms of a change in exponent (magnitude, order), e.g. an exponent of 2 with a working point value of 100 gives a final value of 10^2 * 1000 = 100.000
 
 ## Variable selection
 
-Select the variables for which you would like to pick some sample values.
+Select the variables you would like to vary. On the right side there is a preview of the considered variable values. The working point is determined by the default values of the model and the working point values are also included in the preview. 
+
+## Values
+
+Enter some numbers that are used to vary the variable values. The interpretation of that numbers depends on the previously selected type and relation type. 
 
 ----
 
