@@ -34,6 +34,10 @@ A new ![](../../../../icons/picking.png) Picking atom is created either by:
 
 ## Work flow	
 
+First define which variables you would like to pick values for, using the [Properties View](../../../views/propertiesView.md) of the Picking study. Then add some ![](../../../../icons/sample.png) [Samples](../sample/sample.md) as children of the Picking study to specify variable values. 
+
+For a time dependent Picking study there is only a single Sample child. That time series Sample contains value arrays for the previously selected variables. 
+
 You can **run** the ![](../../../../icons/picking.png) Picking atom either<br> 
 a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md)<br>
 b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)<br>
@@ -51,11 +55,6 @@ The **samples** for a ![](../../../../icons/picking.png) Picking are defined thr
 
 The samples can be **enabled/disabled** through their context menu. If a sample is disabled it is not included in the ![](../../../../icons/picking.png) Picking. 
 
-## Workflow
-
-First define which variables you would like to pick values for, using the [Properties View](../../../views/propertiesView.md) of the Picking study. Then add some ![](../../../../icons/sample.png) [Samples](../sample/sample.md) as children of the Picking study to specify variable values. 
-
-For a time dependent Picking study there is only a single Sample child. That time series Sample contains value arrays for the previously selected variables.  
 
 ## Sections
 
