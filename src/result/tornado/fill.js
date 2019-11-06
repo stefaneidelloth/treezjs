@@ -311,7 +311,7 @@ export default class Fill extends GraphicsAtom {
 		var defaultBarHeight;
 		if (dataSize > 1) {
 			if (axisIsOrdinal) {
-				defaultBarHeight = graphHeight / dataSize;
+				defaultBarHeight = graphHeight / (dataSize+1);
 			} else {
 				defaultBarHeight = graphHeight - yScale(1);
 			}

@@ -1,5 +1,4 @@
 import Probe from './probe.js';
-import SensitivityProbeType from './sensitivityProbeType.js';
 import Sensitivity from './../../study/sensitivity/sensitivity.js';
 import SensitivityOutput from './../../study/sensitivity/sensitivityOutput.js';
 
@@ -13,9 +12,7 @@ export default class SensitivityProbe extends Probe {
 	
 	constructor(name) {
 		super(name);		
-		this.image = 'sensitivityProbe.png';
-
-		this.probeType = SensitivityProbeType.relativeDistance;	
+		this.image = 'sensitivityProbe.png';		
 						
 		this.studyPath = 'root.studies.sensitivity';			
 		

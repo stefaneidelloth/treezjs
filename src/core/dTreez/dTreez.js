@@ -39,8 +39,20 @@ export default class DTreez {
 		return this.__d3.line();
 	}
 
+	scaleBand(){
+		return this.__d3.scaleBand();
+	}
+
 	scaleLinear(){
 		return this.__d3.scaleLinear();
+	}
+
+	scaleLog(){
+		return this.__d3.scaleLog();
+	}
+
+	scaleOrdinal(){
+		return this.__d3.scaleOrdinal();
 	}
 	
 	select(selector){

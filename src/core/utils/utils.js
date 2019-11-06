@@ -35,6 +35,10 @@ export default class Utils {
 		return parseFloat((a*b).toFixed(12)); //avoids issues with decimal places, otherwise for example 1.1 * 100 = 110.00000000000001
 	}
 
+	static divide(a,b){
+		return parseFloat((a/b).toFixed(12)); //avoids issues with decimal places
+	}
+
     /**
      * Includes a postFix in front of the last point in a file name
      */

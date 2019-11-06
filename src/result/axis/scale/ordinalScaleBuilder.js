@@ -7,22 +7,25 @@ export default class OrdinalScaleBuilder {
 
 	
 	createScale(dTreez, isHorizontal, graphWidthInPx, graphHeightInPx) {
-		this.__scale = dTreez.scaleOrdinal();
+		this.__scale = dTreez.scaleBand();
 		this.__createRange(isHorizontal, graphWidthInPx, graphHeightInPx);
 		this.__updateDomain();
 	}
 
 	__createRange(isHorizontal, graphWidthInPx, graphHeightInPx) {
 		if (isHorizontal) {
-			this.__scale.rangeRoundPoints(0.0, graphWidthInPx, 1);
+			this.__scale.rangeRound([0.0, graphWidthInPx])
+						.padding(1);
 		} else {
-			this.__scale.rangeRoundPoints(graphHeightInPx, 0.0, 1);
+			this.__scale.rangeRound([graphHeightInPx, 0.0])
+						.padding(1);
 		}
 	}
 
 	__updateDomain() {
-		if (this.__scale) {			
-			this.__scale.domain(this.__ordinalValues);
+		if (this.__scale) {	
+		    let domainArray = [... this.__ordinalValues];
+			this.__scale.domain(domainArray);
 		}
 	}
 
@@ -31,7 +34,7 @@ export default class OrdinalScaleBuilder {
 	}
 
 	get numberOfValues() {
-		return this.__scale.domain().sizes()[0];
+		return this.__scale.domain().length;
 	}
 
 	get values() {
