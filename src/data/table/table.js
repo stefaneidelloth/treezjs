@@ -645,6 +645,10 @@ export default class Table extends ComponentAtom {
 		}
 	}
 
+	column(name){
+		return this.columnFolder.column(name);
+	}
+
 	columnType(columnName) {
 		if (this.isLinkedToSource) {			
 			return DatabasePageResultLoader.columnType(this.tableSource, columnName);

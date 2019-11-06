@@ -135,7 +135,7 @@ export default class TreezComboBox extends LabeledTreezElement {
 
   	set value(newValue) {
   		if(newValue === undefined){
-			throw new Error('Value must not be undefined');
+			throw new Error('value must not be undefined');
   		}
   		
   		let stringValue = this.convertToStringValue(newValue);

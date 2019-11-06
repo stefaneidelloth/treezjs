@@ -12,7 +12,7 @@ export default class Data extends GraphicsAtom {
 	constructor(){
 		super();		
 
-		this.dataMode = DataMode.table;
+		this.dataMode = DataMode.sensitivityProbeTable;
 		this.tablePath = 'root.data.table';		
 
 		this.leftLegendText = 'left legend text';
@@ -106,9 +106,7 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-model-path')
 			.label('Label axis')
 			.nodeAttr('atomClasses',[Axis])
-			.bindValue(this,()=>this.labelAxis);		
-
-		
+			.bindValue(this,()=>this.labelAxis);
 
 		sectionContent.append('treez-text-field')
 			.label('Left legend text')
@@ -116,9 +114,7 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-text-field')
 			.label('Right legend text')
-			.bindValue(this, ()=>this.rightLegendText);
-
-				
+			.bindValue(this, ()=>this.rightLegendText);			
 		
 	}
 
@@ -234,15 +230,60 @@ export default class Data extends GraphicsAtom {
 		return parentSelection;
 	}
 
-	__getValuesWithColumnPath(dataPath) {
-		if (!dataPath) {
-			return [];
+	__valuesWithColumnPath(columnPath) {
+
+		let data = [];
+		if (columnPath) {
+			let column = this.childFromRoot(columnPath);
+			if(!column){
+				throw new Error('Could not find column "' + columnPath + '"');
+			}
+			data = column.values;	
+		}		
+
+		if(data.length < 1){
+			console.warn('Column data for column "'+ columnPath +'" is empty.')
 		}
-		let dataColumn = this.childFromRoot(dataPath);
-		if(!dataColumn){
-			throw new Error('Could not find column "' + dataPath + '"');
+		return data;	
+	}
+
+	__valuesWithTablePath(tablePath, columnName) {
+
+		let data = [];
+		if (tablePath) {
+			let table = this.childFromRoot(tablePath);
+			if(!table){
+				throw new Error('Could not find table "' + tablePath + '".');
+			}
+			let column = table.column(columnName);
+			if(!column){
+				throw new Error('Could not find column "' + columnName + '" in table "' + tablePath + '".');
+			}
+
+			data = column.values;	
+		}		
+
+		if(data.length<1){
+			console.warn('Left data for input of tornado is empty.')
 		}
-		return dataColumn.values;		
+		return data;	
+	}
+
+
+	__checkNumberOfSensitivityValues(){
+		let numberOfSensitivityValues = this.__numberOfSensitivityValuesFromSensitivityProbeTable;
+			if (numberOfSensitivityValues !== 2){
+				let message = 'In order to be able to derive a (single) tornato chart, the number of sensitivity values has to be 2 for each input variable. However it is ' + numberOfSensitivityValues + '.';
+				throw new Error(message);
+			}
+	}
+
+	get inputTableAtom(){
+		let table = this.childFromRoot(this.tablePath);
+		if(!table){
+			throw new Error('Could not find input table "' + this.tablePath + '".');
+		}
+		return table;
 	}
 
 	get leftBarDataString() {
@@ -414,51 +455,227 @@ export default class Data extends GraphicsAtom {
 	}
 	
 
-	get inputLabelData() {		
-		return this.__getValuesWithColumnPath(this.inputLabel);
+	get inputLabelData() {	
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.inputLabel);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'label');
+			case DataMode.sensitivityProbeTable:
+				return this.__inputLabelDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
+		}		
+	}
+
+	get __inputLabelDataFromSensitivityProbeTable(){
+		return this.__inputColumnHeadersFromSensitivityProbeTable;		
+	}
+
+	get __inputColumnHeadersFromSensitivityProbeTable(){
+		let table = this.inputTableAtom;
+		let columnHeaders = table.headers;
+		return columnHeaders.slice(0, columnHeaders.length-1);
+	}
+
+	get __probeColumnHeaderFromSensitivityProbeTable(){
+		let table = this.inputTableAtom;
+		let columnHeaders = table.headers;
+		return columnHeaders.pop();
+	}
+
+	get __numberOfSensitivityValuesFromSensitivityProbeTable(){
+		let table = this.inputTableAtom;
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+		let numberOfInputHeaders = inputHeaders.length;
+		let numberOfRows = table.rows.length;
+
+		let numberOfSensitivityRows = numberOfRows-1;
+		return numberOfSensitivityRows/numberOfInputHeaders;
 	}
 
 	get inputBaseData() {
-		return this.__getValuesWithColumnPath(this.inputBase);
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.inputBase);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'input_base');
+			case DataMode.sensitivityProbeTable:
+				return this.__inputBaseDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
+		}		
+	}
+
+	get __inputBaseDataFromSensitivityProbeTable(){
+		let table = this.inputTableAtom;
+		let firstRow = table.rows[0];
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+		let baseValues = inputHeaders.map((header) => firstRow.entry(header));
+		
+		return baseValues;
 	}
 
 	get inputLeftData() {
-		let data = this.__getValuesWithColumnPath(this.inputLeft);
-		if(data.length<1){
-			console.warn('Left data for input of tornado is empty.')
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.inputLeft);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'input_left');
+			case DataMode.sensitivityProbeTable:
+				return this.__inputLeftDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
+		}		
+	}
+
+	get __inputLeftDataFromSensitivityProbeTable(){
+
+		this.__checkNumberOfSensitivityValues();		
+
+		let table = this.inputTableAtom;		
+		let rows = table.rows;
+		
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+
+		let data = [];
+		let rowIndex = 1;
+		for(let columnHeader of inputHeaders){
+			let row = rows[rowIndex];
+			let value = row.entry(columnHeader);
+			data.push(value);
+			rowIndex = rowIndex+2;
 		}
+		
 		return data;
 	}
 
 	get inputRightData() {
-		let data = this.__getValuesWithColumnPath(this.inputRight);
-		if(data.length<1){
-			console.warn('Right data for input of tornado is empty.')
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.inputRight);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'input_right');
+			case DataMode.sensitivityProbeTable:
+				return this.inputRightDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
+		}		
+	}
+
+	get inputRightDataFromSensitivityProbeTable(){
+
+		this.__checkNumberOfSensitivityValues();		
+
+		let table = this.inputTableAtom;		
+		let rows = table.rows;
+		
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+
+		let data = [];
+		let rowIndex = 2;
+		for(let columnHeader of inputHeaders){
+			let row = rows[rowIndex];
+			let value = row.entry(columnHeader);
+			data.push(value);
+			rowIndex = rowIndex+2;
 		}
+		
 		return data;
 	}
 
 	get outputBaseData() {
-		let data = this.__getValuesWithColumnPath(this.outputBase);
-		if(data.length<1){
-			console.warn('Base data for output of tornado is empty.')
-		}
-		return data;
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.outputBase);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'output_base');
+			case DataMode.sensitivityProbeTable:
+				return this.__outputBaseDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
+		}	
+	}
+
+	get __outputBaseDataFromSensitivityProbeTable(){
+		let table = this.inputTableAtom;		
+		let rows = table.rows;
+		let firstRow = rows[0];		
+		let probeHeader = this.__probeColumnHeaderFromSensitivityProbeTable;
+		let otuputBaseValue = firstRow.entry(probeHeader);
+
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+		let numberOfInputHeaders = inputHeaders.length;
+
+		let baseData = Array(numberOfInputHeaders).fill(otuputBaseValue);
+		return baseData;
 	}
 
 	get outputLeftData() {
-		let data = this.__getValuesWithColumnPath(this.outputLeft);
-		if(data.length<1){
-			console.warn('Left data for output of tornado is empty.')
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.outputLeft);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'output_left');
+			case DataMode.sensitivityProbeTable:
+				return this.__outputLeftDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
 		}
+	}
+
+	get __outputLeftDataFromSensitivityProbeTable(){
+		this.__checkNumberOfSensitivityValues();		
+
+		let table = this.inputTableAtom;		
+		let rows = table.rows;
+		
+		let probeHeader = this.__probeColumnHeaderFromSensitivityProbeTable;
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+
+		let data = [];
+		let rowIndex = 1;
+		for(let columnHeader of inputHeaders){
+			let row = rows[rowIndex];
+			let value = row.entry(probeHeader);
+			data.push(value);
+			rowIndex = rowIndex+2;
+		}
+		
 		return data;
 	}
 
 	get outputRightData() {
-		let data = this.__getValuesWithColumnPath(this.outputRight);
-		if(data.length<1){
-			console.warn('Right data for output of tornado is empty.')
+		switch(this.dataMode){
+			case DataMode.individualColumns:
+				return this.__valuesWithColumnPath(this.outputRight);
+			case DataMode.tornadoTable:
+				return this.__valuesWithTablePath(this.tablePath, 'output_right');
+			case DataMode.sensitivityProbeTable:
+				return this.__outputRightDataFromSensitivityProbeTable
+			default:
+				throw new Error('Not yet implemented DataMode ' + this.dataMode);
 		}
+	}
+
+	get __outputRightDataFromSensitivityProbeTable(){
+		this.__checkNumberOfSensitivityValues();		
+
+		let table = this.inputTableAtom;		
+		let rows = table.rows;
+		
+		let probeHeader = this.__probeColumnHeaderFromSensitivityProbeTable;
+		let inputHeaders = this.__inputColumnHeadersFromSensitivityProbeTable;
+
+		let data = [];
+		let rowIndex = 2;
+		for(let columnHeader of inputHeaders){
+			let row = rows[rowIndex];
+			let value = row.entry(probeHeader);
+			data.push(value);
+			rowIndex = rowIndex+2;
+		}
+		
 		return data;
 	}
 
