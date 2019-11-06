@@ -74,7 +74,7 @@ The variable source model might be the same as the model to run.
 
 In relation to the working point, you can specify the variable values either using
 
-* relativeDistance (default): Specify variation using relative distance of neighboring points to working point {p}: specify "how far" the other points are away, e.g. the distance is -10 %, 10 % of the absolute working point value => (p-p*0.1), {p}, (p+p*0.1)
+* '''relativeDistance''' (default): Specify variation using relative distance of neighboring points to working point {p}: specify "how far" the other points are away, e.g. the distance is -10 %, 10 % of the absolute working point value => (p-p*0.1), {p}, (p+p*0.1)
 
 * relativePosition: Specify variation using positions of neighboring points in relation to the working point {p} : specify "where" the other points are, e.g.the position is 90 %, 110 % of the absolute working point value => (0.9*p), {p}, (1.1*p)
 
