@@ -21,10 +21,7 @@ export default class SensitivityProbe extends Probe {
 		
 		this.outputPath = 'root.results.data.sensitivityOutput';
 		this.firstProbeTablePath = 'root.results.data.sensitivityOutput.output_1.tableImportOutput';		
-
-		this.__domainLabel = 'jobId'; 	
-		this.__deltaLabel = 'difference_absolute';
-		this.__relativeDeltaLabel = 'difference_percent';
+		
 		this.__studyPathSelection = undefined;		
 	}
 
@@ -50,12 +47,7 @@ export default class SensitivityProbe extends Probe {
 		
 		sectionContent.append('treez-text-field')
 			.label('Probe label')
-			.bindValue(this, ()=>this.probeLabel);
-
-		sectionContent.append('treez-enum-combo-box')
-			.label('Probe type')
-			.nodeAttr('enum', SensitivityProbeType)
-			.bindValue(this, ()=>this.probeType);
+			.bindValue(this, ()=>this.probeLabel);		
 	
 		sectionContent.append('treez-model-path')
 			.label('Sensitivity output')
@@ -78,29 +70,22 @@ export default class SensitivityProbe extends Probe {
 	
 	createColumnBlueprints() {
 		var columnBlueprints = [];			
-		columnBlueprints.push(new ColumnBlueprint(this.__domainLabel, this.__domainLabel, ColumnType.integer, null));
+		
 		this.addVariableColumnBlueprints(columnBlueprints);		
-		this.addProbeColumnBlueprint(columnBlueprints);
-
-		columnBlueprints.push(new ColumnBlueprint(this.__deltaLabel, this.__deltaLabel, ColumnType.double, null));
-		columnBlueprints.push(new ColumnBlueprint(this.__relativeDeltaLabel, this.__relativeDeltaLabel, ColumnType.double, null));
+		this.addProbeColumnBlueprint(columnBlueprints);	
 
 		return columnBlueprints;
 	}
 	
 	__createColumnNames() {
-		var columnNames = [];
-		
-		columnNames.push(this.__domainLabel);
+		var columnNames = [];		
 		
 		var variables = this.study.selectedVariables;
 		for(var variable of variables){
 			columnNames.push(variable.name);
 		}
 		
-		columnNames.push(this.probeLabel);
-		columnNames.push(this.__deltaLabel);
-		columnNames.push(this.__relativeDeltaLabel);
+		columnNames.push(this.probeLabel);		
 		
 		return columnNames;
 	}	
@@ -124,17 +109,14 @@ export default class SensitivityProbe extends Probe {
 	) {
 				
 		var inputGenerator = this.study.inputGenerator;
-		var modelInputs = inputGenerator.modelInputs;	
-
-		var workingPointValue = undefined;	
+		var modelInputs = inputGenerator.modelInputs;			
 		
 		var rowIndex = 0;
 		for(var modelInput of modelInputs){		
 						
-			var row = new Row(table);			
-			row.setEntry(columnNames[0], modelInput.jobId);
+			var row = new Row(table);	
 						
-			var columnIndex = 1;			
+			var columnIndex = 0;			
 			for(var variablePath of modelInput.all){
 				var name = columnNames[columnIndex];
 				var value = modelInput.get(variablePath);	
@@ -145,28 +127,13 @@ export default class SensitivityProbe extends Probe {
 			var oneBasedOutputIndex = rowIndex+1;
 			var tablePath = this.outputPath + '.' + prefix + oneBasedOutputIndex + '.' + relativeProbeTablePath;
 			var probeValue = this.probeValue(tablePath);
-			var probeLabel = columnNames[columnNames.length-3];			
+			var probeLabel = columnNames[columnNames.length-1];			
 			row.setEntry(probeLabel, probeValue);
-
-			if(rowIndex === 0){
-				workingPointValue = probeValue;
-			}
-
-			var delta = probeValue - workingPointValue;
-			row.setEntry(this.__deltaLabel, delta);
-
-			var deltaInPercent = workingPointValue !== 0
-									?delta/workingPointValue*100
-									:NaN;
-			row.setEntry(this.__relativeDeltaLabel, deltaInPercent);
 			
 			table.addRow(row);
 			
 			rowIndex++;
-		}
-		
-	}
-		
-	
+		}		
+	}	
 
 }
