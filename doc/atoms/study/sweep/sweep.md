@@ -16,6 +16,10 @@ The execution of a model is also called a "model run" or a "job". The model that
 
 [./src/study/sweep/sweep.js](../../../../src/study/sweep/sweep.js)
 
+## Demo
+
+[./demo/study/sweep/sweepDemo.ipynb](../../../../demo/study/sweep/sweepDemo.ipynb)
+
 ## Construction
 		
 A new ![](../../../../icons/sweep.png) Sweep atom is created either by: 
