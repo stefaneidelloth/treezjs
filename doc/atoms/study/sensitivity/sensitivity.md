@@ -8,11 +8,11 @@ The purpose of the ![](../../../../icons/sensitivity.png) Sensitivity study is t
 
 The Sensitivity study starts with a working point in the domain and then deviates from that working point by altering individual variables at a time. This way, the study investigates the sensitivity of the model output in relation to the varied variables. 
 
-In ordert to illustrate the results of a Sensitivity study you might want to use a ![](../../../../icons/tornado.png) [Tornado](../../result/tornado/tornado.md) chart. 
-
 ![](../../../images/sensitivity.png)
 
 While the input of a ![](../../../../icons/sweep.png) [Sweep](../sweep/sweep.md) study can be imagined as a broad rectangular grid in the domain, a ![](../../../../icons/sensitivity.png) Sensitivity study typically investigates only the direct neighborhood of a working point. 
+
+In ordert to illustrate the results of a Sensitivity study you might want to use a ![](../../../../icons/tornado.png) [Tornado](../../result/tornado/tornado.md) chart. 
 
 ## Source code
 
