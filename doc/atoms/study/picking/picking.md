@@ -6,9 +6,11 @@
 		
 The purpose of the ![](../../../../icons/picking.png) Picking study is to execute a model several times while the input parameters are varied according to a list of parameter tubles. 
 
-While the input of a [Sweep](../sweep/sweep.md) can be imagined as a rectangular grid in the domain, a Picking study is able to pick arbitrary points from the domain. This is for example useful if you want to vary the density of points in the domain; one domain region might be more intersting than another. 
+![](../../../images/picking.png)
 
-For a time dependent picking study, you can imagine to walk on a path on the domain while time is passing by. The corresponding output of the model can be understood as a function of time. 
+While the input of a ![](../../../../icons/sweep.png) [Sweep](../sweep/sweep.md) can be imagined as a rigid rectangular grid in the domain, a ![](../../../../icons/picking.png) Picking study allows to pick only specific points from the domain. This is useful if you want to vary the density of selected points in the domain (one domain region might be more interesting than others) or walk through the domain on a curved path. 
+
+For a time dependent picking study, you can imagine walking on a domain path while time is passing by. Then the location on the domain is a function of time and the corresponding model output is a function of time, too. 
 
 ## Source code
 
@@ -35,37 +37,25 @@ c) with the ![](../../../../icons/run.png) run button in the context menu of the
 
 ## Child atoms
 		
-The context menu of the ![](../../../../icons/sweep.png) Sweep atom allows to add child atoms: 
+The context menu of the ![](../../../../icons/picking.png) Picking atom allows to add child atoms: 
 
-* ![](../../../../icons/doubleRange.png) [DoubleRange](../../variable/range/doubleRange.md)
-* ![](../../../../icons/integerRange.png) [IntegerRange](../../variable/range/integerRange.md)
-* ![](../../../../icons/quantityRange.png) [QuantityRange](../../variable/range/quantityRange.md)
-* ![](../../../../icons/booleanRange.png) [BooleanRange](../../variable/range/booleanRange.md)
-* ![](../../../../icons/stringRange.png) [StringRange](../../variable/range/stringRange.md)
-* ![](../../../../icons/stringItemRange.png) [StringItemRange](../../variable/range/stringItemRange.md)
-* ![](../../../../icons/filePathRange.png) [FilePathRange](../../variable/range/filePathRange.md)
-* ![](../../../../icons/directoryPathRange.png) [DirectoryPathRange](../../variable/range/directoryPathRange.md)
+* ![](../../../../icons/sample.png) [Sample](../sample/sample.md)
 * ![](../../../../icons/pythonExport.png) [PythonExport](../pythonExport/pythonExport.md)
 * ![](../../../../icons/studyInfoExport.png) [StudyInfoExport](../studyInfoExport/studyInfoExport.md)
 
-The **ranges** for a ![](../../../../icons/sweep.png) Sweep are defined through those child atoms. 
+The **samples** for a ![](../../../../icons/picking.png) Picking are defined through those child atoms. 
 
-The ranges can be **enabled/disabled** through their context menu. If a range is disabled it is not included in the ![](../../../../icons/sweep.png) Sweep. 
+The samples can be **enabled/disabled** through their context menu. If a sample is disabled it is not included in the ![](../../../../icons/picking.png) Picking. 
 
-## Simulation order
+## Workflow
 
-If there are for example two parameter ranges [10,20,30,40], [100,200], you can imagine a 4 x 2 table or a grid with 8 nodes, where each node represents the input for a job (e.g. {10,100} or {30,200}). The first value of the first range (e.g. 10) is included in the first job. That value is kept constant while the remaining range is varied.
+First define which variables you would like to pick values for, using the [Properties View](../../../views/propertiesView.md) of the Picking study. Then add some ![](../../../../icons/sample.png) [Samples](../sample/sample.md) as children of the Picking study to specify variable values. 
 
-![](../../../images/sweepTable.png)
-
-The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be understood as a tree structure, where the elements of the first range build the main tree nodes, the elements of the second range build sub level tree nodes and so on. Each existing path in the tree (e.g. 10 => 100 or 30 => 200) corresponds to an individual job of the ![](../../../../icons/sweep.png) Sweep study.
-
-![](../../../images/sweepTree.png)
-
+For a time dependent Picking study there is only a single Sample child. That time series Sample contains value arrays for the previously selected variables.  
 
 ## Sections
 
-### Sweep
+### Sensitivity
 
 #### Id
 
@@ -77,15 +67,33 @@ A desription of the study. You might want to explain the purpose of the study, i
 
 #### Model to run
 
-The model that is executed by the Sweep.
+The model that is executed by the Picking.
 
 ### Variable source model
 
-The model that provides the variables that can be varied. Only the variables that are provided by this model and its sub models can be referenced by the variable ranges of the sweep. 
+The model that provides the variables that can be varied. Only the variables that are provided by this model and its sub models can be referenced by the samples of the Picking. 
 
 The variable source model might be the same as the model to run.
 
+## Time dependent picking
+
+### Use time series
+
+Set this check box to true if you would like to use a time dependent picking.
+
+### Time variable
+
+The variable that is used as time (e.g. root.models.genericInput.hour). 
+
+### Time range
+
+The values for the time variable (e.g. [1,2,3,4,5,6,7,8,9,10]). 
+
+## Variable selection
+
+Select the variables for which you would like to pick some sample values.
+
 ----
 
-![](../../../../icons/picking.png) [Picking](../picking/picking.md)
+![](../../../../icons/sensitivity.png) [Sensitivity](../sensitivity/sensitivity.md)
 
