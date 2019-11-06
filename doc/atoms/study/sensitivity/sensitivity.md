@@ -4,7 +4,11 @@
 
 # Sensitivity
 		
-The purpose of the ![](../../../../icons/sensitivity.png) Sensitivity study is to execute a model several times while the input parameters are varied. The Sensitivity study starts with a working point in the domain and then deviates from that working point by altering individual variables at a time. This way, the study investigates the sensitivity of the model output in relation to the varied variables. 
+The purpose of the ![](../../../../icons/sensitivity.png) Sensitivity study is to execute a model several times while the input parameters are varied. 
+
+The Sensitivity study starts with a working point in the domain and then deviates from that working point by altering individual variables at a time. This way, the study investigates the sensitivity of the model output in relation to the varied variables. 
+
+In ordert to illustrate the results of a Sensitivity study you might want to use a [Tornado](../../../../src/result/tornado/tornado.js) chart. 
 
 ![](../../../images/sensitivity.png)
 
