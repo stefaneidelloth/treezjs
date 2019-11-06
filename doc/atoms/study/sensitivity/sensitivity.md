@@ -1,32 +1,90 @@
+![](../../../../icons/studies.png) [Studies](../studies.md)
 
+----
 
-<H2><font color="green">Sensitivity</font></H2>
+# Sensitivity
+		
+The purpose of the ![](../../../../icons/sensitivity.png) Sensitivity study is to execute a model several times while the input parameters are varied. The Sensitivity study starts with a working point in the domain and then deviates from that working point by altering individual variables at a time. This way, the study investigates the sensitivity of the model output in relation to the varied variables. 
 
-<P>
-<H3>Description</H3>
-The atom <b>Models</b> <img src= "images/models.png" align = "top"> is the parent for all model and sub model atoms. A model atom implements 
-the interface <b>org.treez.model.interfaces.Model</b>.
+![](../../../images/sensitivity.png)
 
-<H3>Class name</H3>
-org.treez.model.atom.Models
+While the input of a ![](../../../../icons/sweep.png) [Sweep](../sweep/sweep.md) study can be imagined as a broad rectangular grid in the domain, a ![](../../../../icons/sensitivity.png) Sensitivity study typically investigates only the direct neighborhood of a working point. 
 
-<H3>Construction</H3>
-You can create a new Models atom: 
-<ul>
-	<li>from the context menu of an existing Root atom. 
-	</li>
-	<li>by calling the factory method of an existing Root atom in a text file:	
-	<pre class="prettyprint" style="font-size:12px;font-family:consolas">Root root = new Root("root");</pre>	     
-	</li>
-</ul>
+## Source code
 
-<H3>Context menu</H3>
+[./src/study/sensitivity/sensitivity.js](../../../../src/study/sensitivity/sensitivity.js)
 
-The following context menu actions will add a new child atom to an existing Root atom. Follow the links to get 
-more information about the added child atoms: 
-<ul>
-<li><a href="">Add Models</a></li>
-<li><a href="">Add Studies</a></li>
-<li><a href="">Add Results</a></li>
-</ul>
-</p>
+## Demo
+
+[./demo/study/sensitivity/sensitivityDemo.ipynb](../../../../demo/study/sensitivity/sensitivityDemo.ipynb)
+
+## Construction
+		
+A new ![](../../../../icons/sensitivity.png) Sensitivity atom is created either by: 
+
+* using the context menu of a ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the [Tree View](../../../views/treeView.md) or
+* calling the corresponding factory method of the ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the source code of the [Editor view](../../../views/editorView.md):
+
+```javascript
+    ...
+    let sensitivity = studies.createSensitivity();	     
+```
+
+## Work flow	
+
+You can **run** the ![](../../../../icons/sensitivity.png) Sensitivity atom either<br> 
+a) with the ![](../../../../icons/run.png) run button in the upper right corner of the [Properties View](../../../views/propertiesView.md)<br>
+b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)<br>
+c) with the ![](../../../../icons/run.png) run button in the context menu of the parent ![](../../../../icons/studies.png) [Studies](../studies.md) atom in the [Tree View](../../../views/treeView.md) (runs all studies)<br>
+
+## Child atoms
+		
+The context menu of the ![](../../../../icons/sensitivity.png) Sensitivity atom allows to add child atoms: 
+
+* ![](../../../../icons/pythonExport.png) [PythonExport](../pythonExport/pythonExport.md)
+* ![](../../../../icons/studyInfoExport.png) [StudyInfoExport](../studyInfoExport/studyInfoExport.md)
+
+## Sections
+
+### Sensitivity
+
+#### Id
+
+Please enter a unique studyId that can be used to differentiate results of different studies in a result database.  
+
+#### Description
+
+A desription of the study. You might want to explain the purpose of the study, its assumptions ect. 
+
+#### Model to run
+
+The model that is executed by the Sensitivity.
+
+### Variable source model
+
+The model that provides the variables that can be varied. Only the variables that are provided by this model and its sub models can be referenced by the samples of the Sensitivity. 
+
+The variable source model might be the same as the model to run.
+
+## Time dependent picking
+
+### Use time series
+
+Set this check box to true if you would like to use a time dependent picking.
+
+### Time variable
+
+The variable that is used as time (e.g. root.models.genericInput.hour). 
+
+### Time range
+
+The values for the time variable (e.g. [1,2,3,4,5,6,7,8,9,10]). 
+
+## Variable selection
+
+Select the variables for which you would like to pick some sample values.
+
+----
+
+![](../../../../icons/probability.png) [Probability](../probability/probability.md)
+
