@@ -6,6 +6,8 @@
 
 The <img src="../../icons/root.png"> Root atom is represented by the **first node of the tree** in the [Tree View](../views/treeView.md). The context menu of the Root atom allows to create child atoms, also see below. 
 
+![](../images/root.png)
+
 ## Source code
 
 [/src/root/root.js](../../src/root/root.js)
