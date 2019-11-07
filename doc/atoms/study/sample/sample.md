@@ -10,7 +10,7 @@ you would like to run the controlled model several times.
 
 ![](../../../images/sample.png)
 
-A time dependent Picking study only supports a single Simple, where the time series for the variables
+A time dependent Picking study only supports a single Sample, where the time series for the variables
 are specified as arrays:
 
 ![](../../../images/sampleTimeDependent.png)
