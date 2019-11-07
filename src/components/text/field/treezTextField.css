@@ -11,8 +11,7 @@ treez-text-field {
     margin-bottom:0px;
 }
 
-.treez-text-field-field {
-	display: block;
+.treez-text-field-field {	
 	width: 100%;
     font-family: Consolas;
     font-size: 12px;   

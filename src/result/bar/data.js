@@ -5,8 +5,8 @@ import Direction from './../axis/direction.js';
 
 export default class Data extends GraphicsAtom {
 	
-	constructor(){
-		super();
+	constructor(bar){
+		super(bar);
 		
 		this.barPositions = 'root.data.table.columns.x';	
 		this.barLengths = 'root.data.table.columns.y';	
@@ -20,13 +20,15 @@ export default class Data extends GraphicsAtom {
 		this.verticalAxis = '';
 	}
 
-	createPage(root) {
+	createPage(root, bar) {		
 
 		var page = root.append('treez-tab')
 			.label('Data');
 	
 		var section = page.append('treez-section')
 			.label('Data');	
+
+		bar.createHelpAction(section, 'result/bar/bar.md');
 		
 		var sectionContent = section.append('div');
 

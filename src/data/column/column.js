@@ -34,7 +34,9 @@ export default class Column extends ComponentAtom {
 	            .label('Data');
 			
 		const section = tab.append('treez-section')
-            .label('Data');       
+            .label('Data');  
+
+        this.createHelpAction(section, 'data/column/column.md');		     
 
         const sectionContent = section.append('div'); 
 

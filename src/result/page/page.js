@@ -27,7 +27,9 @@ export default class Page extends GraphicsAtom {
 			.label('Page'); 
 		
 		const section = page.append('treez-section')
-    		.label('Data');		
+    		.label('Data');	
+
+    	this.createHelpAction(section, 'result/page/page.md');	
 		
 		section.append('treez-section-action')
 			.image('run.png')

@@ -34,6 +34,8 @@ export default class SensitivityProbe extends Probe {
 		
 		var section = page.append('treez-section')
 			.label('Probe');
+
+		this.createHelpAction(section, 'result/probe/sensitivityProbe.md');		
 	
 		var sectionContent = section.append('div');
 		

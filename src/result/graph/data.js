@@ -2,8 +2,8 @@ import GraphicsAtom from './../graphics/graphicsAtom.js';
 
 export default class Data extends GraphicsAtom {
 
-	constructor(){
-		super('data');
+	constructor(graph){
+		super(graph);
 		this.leftMargin = '2.5 cm';
 		this.topMargin = '0.5 cm';
 		this.width = '12 cm';
@@ -11,13 +11,15 @@ export default class Data extends GraphicsAtom {
 		this.isHidden = false;
 	}
 	
-	createPage(tabFolder, parent) {
+	createPage(tabFolder, graph) {
 
 		var page = tabFolder.append('treez-tab')
 			.label('Data');
 
 		var section = page.append('treez-section')
 			.label('Data');
+
+		graph.createHelpAction(section, 'result/graph/graph.md');
 
 		var sectionContent = section.append('div');
 

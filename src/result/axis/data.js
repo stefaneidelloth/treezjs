@@ -66,12 +66,17 @@ export default class Data extends GraphicsAtom {
 	}
 
 	__createGeneralSection(page) {
+
+		let axis = this.parent;
+		
 		var section = page.append('treez-section')
 			.label('General');
+
+		axis.createHelpAction(section, 'result/axis/axis.md');
 		
 		var sectionContent = section.append('div');
 
-		let axis = this.parent;
+		
 
 		sectionContent.append('treez-text-field')
 			.label('Name')

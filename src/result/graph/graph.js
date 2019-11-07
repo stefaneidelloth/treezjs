@@ -25,7 +25,7 @@ export default class Graph extends PagedGraphicsAtom {
 	createPageFactories() {
 
 		var pageFactories =  [];
-		this.data = Data.create();
+		this.data = Data.create(this);
 		pageFactories.push(this.data);
 		
 		this.background = Background.create();

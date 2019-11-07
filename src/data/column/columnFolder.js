@@ -21,6 +21,8 @@ export default class ColumnFolder extends ComponentAtom {
 		
 		const section = page.append('treez-section')
     		.label('Columns');
+
+    	this.createHelpAction(section, 'data/column/columnFolder.md');		
 	
 		section.append('treez-text-label')
 			.value('This is a folder for all columns of the table.');		

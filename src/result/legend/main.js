@@ -7,9 +7,8 @@ import Length from './../graphics/length.js';
 export default class Main extends GraphicsAtom {
 	
 	constructor(legend){
-		super();
-
-		this.__legend = legend;		
+		super(legend);
+		
 		this.__dTreez = undefined;
 
 		this.__marginAroundLegendInPx = 20;
@@ -47,20 +46,22 @@ export default class Main extends GraphicsAtom {
 		this.isHidden = false;		
 	}
 	
-	createPage(root) {
+	createPage(root, legend) {
 
 		 var page = root.append('treez-tab')
 			.label('Main');
 
-		 var section = page.append('treez-section')
+		let section = page.append('treez-section')
 			.label('Main');
+
+		legend.createHelpAction(section, 'result/legend/legend.md');
 	
 		var sectionContent = section.append('div');
 
 		let leftWidth = '175px';
 
 		let replotLegend = () => {
-				this.__legend.updatePlot(this.__dTreez);
+				legend.updatePlot(this.__dTreez);
 		};
 	
 
@@ -137,7 +138,7 @@ export default class Main extends GraphicsAtom {
 		this.__dTreez = dTreez;
 		this.__legendSelection = legendSelection;
 		this.__rectSelection = rectSelection;
-		this.__legend = legend;		
+		
 
 		//TODO
 		//Drag drag = this.__dTreez.behavior().drag().onDrag(this);
@@ -256,7 +257,7 @@ export default class Main extends GraphicsAtom {
 				.classed('legend-text', true) //
 				.text(legendText);
 
-		this.__legend.text.formatText(labelSelection, this);
+		this.parent.text.formatText(labelSelection, this);
 
 		return labelSelection;
 	}
@@ -556,7 +557,7 @@ export default class Main extends GraphicsAtom {
 	}
 
 	get __graph(){
-		return this.__legend.parent;
+		return this.parent.parent;
 	}
 
 	get __page(){

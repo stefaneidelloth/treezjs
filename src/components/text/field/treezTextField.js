@@ -7,7 +7,23 @@ export default class TreezTextField extends LabeledTreezElement {
         this.__label = undefined;   
         this.__textField = undefined; 
         this.validator = undefined;                           
-    }            	
+    } 
+
+    static get observedAttributes() {
+		return LabeledTreezElement.observedAttributes.concat(['inline']);
+    } 				           
+
+	attributeChangedCallback(attr, oldStringValue, newStringValue) {
+    	super.attributeChangedCallback(attr, oldStringValue, newStringValue)
+
+		if(attr==='inline'){
+			if(this.__textField){
+				if(newStringValue!==oldStringValue){				  
+				   this.__updateLayout();				  
+			   }				
+			}
+		}		
+	}           	
 
     connectedCallback() {
     	
@@ -24,6 +40,11 @@ export default class TreezTextField extends LabeledTreezElement {
 
        
         this.update();	       
+    }
+
+    update(){
+    	super.update();
+    	this.__updateLayout();
     }
     
     updateElements(newValue){
@@ -83,6 +104,14 @@ export default class TreezTextField extends LabeledTreezElement {
 
     }
 
+    __updateLayout(){
+    	if(this.inline){
+			this.__textField.style.display = 'inline-block';
+    	} else {
+    		this.__textField.style.display = 'block';
+    	}
+    }
+
     __textFieldChanged(event){
     	event.stopPropagation();
         let value = this.__textField.value;
@@ -123,6 +152,19 @@ export default class TreezTextField extends LabeledTreezElement {
         textField.className = 'treez-text-field-field';
         textField.onchange = (event) => this.__textFieldChanged(event);
     }
+
+    get inline() {
+		let stringValue = this.getAttribute('inline')
+	    return  !(stringValue === null);
+	}
+
+	set inline(booleanValue) {
+		if(booleanValue){
+			this.setAttribute('inline','')
+		} else {
+			this.removeAttribute('inline');
+		}	  
+	}  
                           
 }
 

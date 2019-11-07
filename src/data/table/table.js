@@ -40,19 +40,20 @@ export default class Table extends ComponentAtom {
 
 		
 	}	
-	
-	createControlAdaption(parent, treeView) {
-		
-		this.__treeView = treeView;		
-		
-		parent.selectAll('div').remove();
-		parent.selectAll('treez-tab-folder').remove();	
-		
-		const pathInfo = parent.append('div')
-			.className('treez-properties-path-info')
-			.text(this.treePath);	
 
-		const tableContainer = parent.append('div')
+	createComponentControl(tabFolder){    
+	     
+		const page = tabFolder.append('treez-tab')
+			.label('Table'); 
+		
+		const section = page.append('treez-section')
+    		.label('Table');
+
+    	this.createHelpAction(section, 'data/table/table.md');		
+	
+		const sectionContent = section.append('div'); 
+
+		const tableContainer = sectionContent.append('div')
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
 						
 		if (this.isLinkedToSource) {
@@ -63,12 +64,16 @@ export default class Table extends ComponentAtom {
 		
 		var columnsExist = this.columnNames.length > 0;
 		if (columnsExist) {
-			this.__createTableControl(tableContainer, treeView);			
+			this.__createTableControl(tableContainer, this.treeView);			
 		} else {
-			tableContainer.text('This table does not contain any column yet.');			
+			sectionContent.text('This table does not contain any column yet.');			
 		} 	
+
+
+	}	
+
+
 		
-	}		
 
 	createContextMenuActions(selection, parentSelection, treeView) {
 
@@ -315,29 +320,31 @@ export default class Table extends ComponentAtom {
 								.className('treez-table-pagination');
 		
 		pagination.append('treez-text-field')
-			.label('Rows per page')
-			.attr('width','40px')		
+			.label('Rows per page')		
+			.contentWidth('40px')	
+			.attr('inline','')			
 			.bindValue(this, ()=>this.__maxNumberOfRowsPerPage);
+							
 
 		var rowInfo = pagination.append('span')
 			.className('treez-table-pagination-row-info');
 
-		rowInfo.append('span')
+		rowInfo.append('span')			
 			.text('Rows ')
 			
-		rowInfo.append('treez-text-label')
+		rowInfo.append('treez-text-label')			
 			.bindValue(this, ()=>this.__firstRowIndex);
 		
 		rowInfo.append('span')
 			.text('...')
 			
-		rowInfo.append('treez-text-label')
+		rowInfo.append('treez-text-label')			
 			.bindValue(this, ()=>this.__lastRowIndex);
 		
 		rowInfo.append('span')
-		.text(' of ')
+			.text(' of ')
 		
-		rowInfo.append('treez-text-label')
+		rowInfo.append('treez-text-label')			
 			.bindValue(this, ()=>this.__numberOfRows);
 
 		var pageControl = pagination.append('span')
@@ -359,7 +366,8 @@ export default class Table extends ComponentAtom {
 			.onClick(()=>this.__previousPage());
 		
 		pageControl.append('treez-text-field')
-			.attr('width', '40px')
+			.contentWidth('40px')
+			.attr('inline','')
 			.bindValue(this, ()=>this.__pageIndex);
 		
 		pageControl.append('input')

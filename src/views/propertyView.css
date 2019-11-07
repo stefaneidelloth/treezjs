@@ -11,7 +11,7 @@
 
 .treez-table-container {
 	position:absolute;
-	top:15px;
+	top:25px;
 	left:0px;
 	right:0px;
 	bottom:0px;	
@@ -140,10 +140,12 @@
 	background: url(../../icons/resize_width.png) center center no-repeat;	
 }
 
-.treez-table-pagination {
-	position:absolute;
+.treez-table-pagination {	
+	position:absolute;	
 	height: 25px;
-	bottom:0;
+	bottom:10px;
+	left:0;
+	right:0;
 	margin:5px;
 	margin-bottom:0px;
 	font-family: Consolas;
@@ -152,14 +154,18 @@
 
 
 .treez-table-pagination-row-info {
-	
+	display: inline-block;
+}
+
+.treez-table-pagination-row-info .span {
+	display: inline-block;
 }
 
 .treez-table-pagination-page-info {
-	
+	display: inline-block;
 }
 
-.treez-table-pagination input[type=button] {	
+.treez-table-pagination input[type=button] {		
 	border:none;
 	width:16px;
 	height:16px;
@@ -167,6 +173,7 @@
 }
 
 .treez-table-first-button {
+	
 	background: url(../../icons/first.png) center center no-repeat;	
 	vertical-align:middle;	
 }

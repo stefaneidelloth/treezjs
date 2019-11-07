@@ -45,7 +45,9 @@ export default class SweepProbe extends Probe {
 	__createDomainSection(page){
 		
 		var section = page.append('treez-section')
-			.label('Domain');		
+			.label('Domain');
+
+		this.createHelpAction(section, 'result/probe/sweepProbe.md');				
 		
 		section.append('treez-section-action')
             .image('run.png')

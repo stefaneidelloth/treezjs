@@ -5,8 +5,7 @@ import Axis from './../axis/axis.js'
 export default class Data extends GraphicsAtom {
 	
 	constructor(xy){
-		super();
-		this.parent=xy;
+		super(xy);		
 		this.xData = 'root.data.table.columns.x';	
 		this.yData = 'root.data.table.columns.y';	
 		this.legendText = '';	
@@ -17,15 +16,17 @@ export default class Data extends GraphicsAtom {
 		//this.colorMarkers = '';	
 	}
 
-	 createPage(root) {
+	 createPage(root, xy) {
 
-		 var page = root.append('treez-tab')
+		let page = root.append('treez-tab')
 			.label('Data');
 
-		 var section = page.append('treez-section')
+		let section = page.append('treez-section')
 			.label('Data');
+
+		xy.createHelpAction(section, 'result/xy/xy.md');		
 	
-		var sectionContent = section.append('div');
+		let sectionContent = section.append('div');
 		
 		sectionContent.append('treez-model-path')
 			.label('X data')
@@ -66,7 +67,7 @@ export default class Data extends GraphicsAtom {
 		//this page factory does create an own d3 group; the work will be
 		//done by the other property page factories
 
-		var dataChangedConsumer = () => xy.updatePlot(d3);
+		let dataChangedConsumer = () => xy.updatePlot(d3);
 		
 		this.addListener(()=>this.xData, dataChangedConsumer)
 		this.addListener(()=>this.yData, dataChangedConsumer)

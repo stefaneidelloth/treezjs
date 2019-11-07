@@ -9,8 +9,8 @@ import Column from './../../data/column/column.js';
 
 export default class Data extends GraphicsAtom {
 	
-	constructor(){
-		super();		
+	constructor(tornado){
+		super(tornado);		
 
 		this.dataMode = DataMode.sensitivityProbeTable;
 		this.tablePath = 'root.data.table';		
@@ -42,12 +42,12 @@ export default class Data extends GraphicsAtom {
 
 	}
 
-	createPage(root) {
+	createPage(root, torndado) {
 		
 		let page = root.append('treez-tab')
 			.label('Data');
 		
-		this.__createGeneralSection(page);
+		this.__createGeneralSection(page, tornado);
 		this.__createInputSection(page);
 		this.__createOutputSection(page);
 
@@ -55,10 +55,12 @@ export default class Data extends GraphicsAtom {
 		this.__showOrHideTableComponents();
 	}
 
-	__createGeneralSection(page) {
+	__createGeneralSection(page, tornado) {
 		
 		let section = page.append('treez-section')
 			.label('General');	
+
+		tornado.createHelpAction(section, 'result/tornado/tornado.md');		
 		
 		let sectionContent = section.append('div');	
 		

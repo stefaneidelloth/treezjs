@@ -27,7 +27,9 @@ export default class XySeries extends GraphicsAtom {
 			.label('Page'); 
 		
 		const section = page.append('treez-section')
-    		.label('XySeries');		
+    		.label('XySeries');	
+
+    	this.createHelpAction(section, 'result/xySeries/xySeries.md');			
 		
 		section.append('treez-section-action')
 			.image('run.png')
