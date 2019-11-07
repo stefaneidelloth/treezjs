@@ -23,6 +23,8 @@ export default class Results extends ComponentAtom {
 		const section = page.append('treez-section')
     		.label('Results');	
 
+    	this.createHelpAction(section, 'result/results.md');
+
     	section.append('treez-section-action')
             .image('run.png')
             .label('Run results')

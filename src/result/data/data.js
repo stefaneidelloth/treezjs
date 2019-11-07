@@ -25,6 +25,8 @@ export default class Data extends ComponentAtom {
 		const section = page.append('treez-section')
     		.label('Data');
 
+    	this.createHelpAction(section, 'result/data/data.md');
+
     	section.append('treez-section-action')
             .image('run.png')
             .label('Run executable children')
