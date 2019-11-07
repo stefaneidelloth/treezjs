@@ -140,4 +140,4 @@ root.models.genericInput.b: 30
 
 ----
 
-![](../../../../icons/results.png) [Results](../results.md)
+![](../../../../icons/results.png) [Results](../../result/results.md)
