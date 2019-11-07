@@ -5,12 +5,13 @@
 # Sample
 		
 The purpose of the ![](../../../../icons/sample.png) Sample atom is to specify variable values for 
-a ![](../../../../icons/picking.png) [Picking](../picking/picking.md) study.  
+a ![](../../../../icons/picking.png) [Picking](../picking/picking.md) study. Add several samples if
+you would like to run the controlled model several times. 
 
 ![](../../../images/sample.png)
 
 A time dependent Picking study only supports a single Simple, where the time series for the variables
-are specified as arrays.
+are specified as arrays:
 
 ![](../../../images/sampleTimeDependent.png)
 
