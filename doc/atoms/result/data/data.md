@@ -6,7 +6,7 @@
 
 The ![](../../../../icons/data.png) Data atom represents a tree branch for collecting simulation results and for post processing those results.  
 
-![](../../images/data.png)
+![](../../../images/data.png)
 
 ## Source code
 
