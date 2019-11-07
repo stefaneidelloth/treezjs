@@ -4,8 +4,8 @@
 
 # Results
 
-The ![](../../../icons/results.png) Results atom represents the branch for all underlying result atoms. Creating the results is 
-typically the last step in a simulation work flow. The purpose of the Results branch of the tree is to contain data that results from the execution of models and studies. The results branch is also the right place for plots.  
+The ![](../../../icons/results.png) Results atom represents a branch for all underlying result atoms. Creating the results is 
+typically the last step in a simulation work flow. The purpose of the Results branch of the tree is to contain data that results from the execution of models and studies. The results branch is also the right place for create Probes and Graphics.  
 
 ## Source code
 
