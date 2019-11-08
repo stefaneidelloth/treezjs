@@ -28,17 +28,37 @@ A new ![](../../../../icons/page.png) Page is created either by:
     let page = results.createPage();	     
 ```
 
+## Child atoms
+
+The context menu of the ![](../../../../icons/page.png) Page atom allows to add child atoms: 
+
+* ![](../../../icons/axis.png) [Axis](../axis/axis.md)
+* ![](../../../icons/xy.png) [Xy](../xy/xy.md)
+* ![](../../../icons/xySeries.png) [XySeries](../xySeries/xySeries.md)
+* ![](../../../icons/bar.png) [Bar](../bar/bar.md)
+* ![](../../../icons/tornado.png) [Tornado](../tornado/tornado.md)
+* ![](../../../icons/legend.png) [Legend](../legend/legend.md)
+
+
 ## Sections
 
 ### Data
 
 #### Width
 
+The width of the page. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
+
 #### Height
+
+The height of the page. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
 
 #### Color
 
+The background color of the page
+
 #### IsHidden
+
+Enable this checkbox if you would like to hide the page.
 
 ----
 
