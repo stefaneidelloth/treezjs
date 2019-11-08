@@ -4,7 +4,7 @@
 
 # ColumnFolder
 
-The ![](../../../../icons/columns.png) ColumnFolder atom serves as a folder for all columns of a table.   
+The ![](../../../../icons/columnFolder.png) ColumnFolder atom serves as a folder for all columns of a table.   
 
 ![](../../../images/columnFolder.png)
 
