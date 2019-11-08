@@ -8,7 +8,7 @@ The ![](../../../../icons/columnFolder.png) ColumnFolder atom serves as a folder
 
 ![](../../../images/columnFolder.png)
 
-(In future, there might be further child atoms for tables, e.g. for foreign key relations. That is why columns are organized in an extra "folder".)
+(In future, there might be further child atoms for tables, e.g. for foreign key relations. That is why columns are organized in an extra "column folder".)
 
 ## Source code
 
