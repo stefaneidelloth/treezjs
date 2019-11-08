@@ -20,7 +20,7 @@ The toolbar above the table provides follosing actions:
 
 ## Demo
 
-[./demo/data/table/table.ipynb](../../../../demo/data/table/table.ipynb)
+[./demo/data/table/tableDemo.ipynb](../../../../demo/data/table/tableDemo.ipynb)
 
 ## Construction
 
