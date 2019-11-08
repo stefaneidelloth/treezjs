@@ -8,6 +8,8 @@ The ![](../../../../icons/columnFolder.png) ColumnFolder atom serves as a folder
 
 ![](../../../images/columnFolder.png)
 
+(In future, there might be further child atoms for tables, e.g. for foreign key relations. That is why columns are organized in an extra "folder".)
+
 ## Source code
 
 [./src/data/column/columnFolder.js](../../../src/data/column/columnFolder.js)
@@ -16,23 +18,19 @@ The ![](../../../../icons/columnFolder.png) ColumnFolder atom serves as a folder
 
 A new ![](../../../../icons/data.png) ColumnFolder atom is created either 
 
-* from the context menu of an existing ![](../../../../icons/results.png) Results atom in the [Tree View](../../views/treeView.md) or 
-* by calling the corresponding factory method of the ![](../../../../icons/results.png) Results atom in the source code of the [Editor View](../../views/editorView.md):
+* from the context menu of an existing ![](../../../../icons/table.png) Table atom in the [Tree View](../../views/treeView.md) or 
+* by calling the corresponding factory method of the ![](../../../../icons/table.png) Table atom in the source code of the [Editor View](../../views/editorView.md):
 
 ```javascript
     ...
-    let data = results.createData();	     
+    let columns = table.createColumnFolder();	     
 ```
 
 ## Child atoms
 
-The context menu of the ![](../../../../icons/data.png) Data atom allows to add child atoms: 
+The context menu of the ![](../../../../icons/columnFolder.png) ColumnFolder atom allows to add child atoms: 
 
-* ![](../../../../icons/table.png) [Table](../../data/table/table.md)
-* ![](../../../../icons/sweepProbe.png) [SweepProbe](./probe/sweepProbe.md)
-* ![](../../../../icons/pickingProbe.png) [PickingProbe](./probe/pickingProbe.md)
-* ![](../../../../icons/sensitivityProbe.png) [SensitivityProbe](./probe/sensitivityProbe.md)
-
+* ![](../../../../icons/column.png) [Column](./column.md)
 
 ----
-[Table](../../data/table/table.md)
+[Column](./column.md)
