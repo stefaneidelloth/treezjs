@@ -81,7 +81,7 @@ The header for the probe column of the created probe table.
 
 #### Sweep output
 
-The SeepOutput atom, representing the output of a Sweep study.
+The SweepOutput atom, representing the output of a Sweep study.
 
 #### First probe table
 
