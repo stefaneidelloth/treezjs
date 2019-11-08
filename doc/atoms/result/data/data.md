@@ -29,9 +29,9 @@ A new ![](../../../../icons/data.png) Data atom is created either
 The context menu of the ![](../../../../icons/data.png) Data atom allows to add child atoms: 
 
 * ![](../../../../icons/table.png) [Table](../../data/table/table.md)
-* ![](../../../../icons/sweepProbe.png) [SweepProbe](./probe/sweepProbe.md)
-* ![](../../../../icons/pickingProbe.png) [PickingProbe](./probe/pickingProbe.md)
-* ![](../../../../icons/sensitivityProbe.png) [SensitivityProbe](./probe/sensitivityProbe.md)
+* ![](../../../../icons/sweepProbe.png) [SweepProbe](../probe/sweepProbe.md)
+* ![](../../../../icons/pickingProbe.png) [PickingProbe](../probe/pickingProbe.md)
+* ![](../../../../icons/sensitivityProbe.png) [SensitivityProbe](../probe/sensitivityProbe.md)
 
 
 ----
