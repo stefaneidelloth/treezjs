@@ -14,6 +14,10 @@ The ![](../../../../icons/columnFolder.png) ColumnFolder atom serves as a folder
 
 [./src/data/column/columnFolder.js](../../../src/data/column/columnFolder.js)
 
+## Demo
+
+[./demo/data/column/columnFolderDemo.ipynb](../../../../demo/data/column/columnFolderDemo.ipynb)
+
 ## Construction
 
 A new ![](../../../../icons/data.png) ColumnFolder atom is created either 
