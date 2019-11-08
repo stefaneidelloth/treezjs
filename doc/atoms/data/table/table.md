@@ -8,9 +8,19 @@ The ![](../../../../icons/table.png) Table atom represents tabular data.
 
 ![](../../../images/table.png)
 
+The toolbar above the table provides follosing actions:
+* ![](../../../../icons/add.png) Add row
+* ![](../../../../icons/delete.png) Delete row
+* ![](../../../../icons/up.png) Move row up
+* ![](../../../../icons/down.png) Move row down 
+
 ## Source code
 
 [./src/data/table/table.js](../../../src/data/table/table.js)
+
+## Demo
+
+[./demo/data/table/table.ipynb](../../../../demo/data/table/table.ipynb)
 
 ## Construction
 
