@@ -46,11 +46,11 @@ The context menu of the ![](../../../../icons/page.png) Page atom allows to add 
 
 #### Width
 
-The width of the page. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
+The width of the page, e.g. 15 cm. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
 
 #### Height
 
-The height of the page. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
+The height of the page, e.g. 15 cm. For supported svg units see [here](https://www.w3.org/TR/css3-values/#absolute-lengths) and [here](https://www.w3.org/TR/css3-values/#relative-lengths) 
 
 #### Color
 
