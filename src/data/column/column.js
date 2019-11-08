@@ -60,11 +60,11 @@ export default class Column extends ComponentAtom {
         							.bindValue(this, ()=>this.legend);		
 		
 		this.__isNullableSelection = sectionContent.append('treez-check-box')
-									.label('Nullable')		
+									.label('IsNullable')		
 									.bindValue(this, ()=>this.isNullable);
 		
 		this.__isPrimaryKeySelection = sectionContent.append('treez-check-box')
-									.label('Primary key')		
+									.label('IsPrimaryKey')		
 									.bindValue(this, ()=>this.isPrimaryKey);
 
 		this.__typeSelection = sectionContent.append('treez-enum-combo-box')
