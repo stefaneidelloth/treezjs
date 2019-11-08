@@ -34,10 +34,10 @@ The context menu of the ![](../../../../icons/page.png) Page atom allows to add 
 
 * ![](../../../../icons/axis.png) [Axis](../axis/axis.md)
 * ![](../../../../icons/xy.png) [Xy](../xy/xy.md)
-* ![](../../../icons/xySeries.png) [XySeries](../xySeries/xySeries.md)
-* ![](../../../icons/bar.png) [Bar](../bar/bar.md)
-* ![](../../../icons/tornado.png) [Tornado](../tornado/tornado.md)
-* ![](../../../icons/legend.png) [Legend](../legend/legend.md)
+* ![](../../../../icons/xySeries.png) [XySeries](../xySeries/xySeries.md)
+* ![](../../../../icons/bar.png) [Bar](../bar/bar.md)
+* ![](../../../../icons/tornado.png) [Tornado](../tornado/tornado.md)
+* ![](../../../../icons/legend.png) [Legend](../legend/legend.md)
 
 
 ## Sections
