@@ -1,4 +1,4 @@
-![](../../../../icons/results.png) [Results](../results.md)
+![](../../../../icons/table.png) [Table](../table/table.md)
 
 ----
 
