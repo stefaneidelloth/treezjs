@@ -7,8 +7,8 @@
 A ![](../../../../icons/graph.png) Graph is bascially a rectangular region having some position, size and color. 
 A ![](../../../../icons/page.png) Page can include several ![](../../../../icons/graph.png) Graphs and a  ![](../../../../icons/graph.png) Graph can include several plots (e.g. ![](../../../../icons/xy.png) [Xy](../xy/xy.md)). 
 
- ![](../../../images/graphData.png) | ![](../../../images/graphBackground.png) | ![](../../../images/graphBorder.png) 
-
+| ![](../../../images/graphData.png) | ![](../../../images/graphBackground.png) | ![](../../../images/graphBorder.png) |
+|--|--|--|
 
 <table>
 	<thead>
