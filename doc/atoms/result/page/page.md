@@ -4,12 +4,11 @@
 
 # Page
 
-The ![](../../../../icons/page.png) Page atom is the entry point for creating content of the [Graphics View](../../../views/graphicView.md). It represents some rectangular svg region. If you want you can select some background color.
+The ![](../../../../icons/page.png) Page atom is the entry point for creating content of the [Graphics View](../../../views/graphicsView.md). It represents some rectangular svg region. If you want you can select some background color.
 
 If you *double click* on the Page, a file dialog is shown to save the content of the Graphics View as Vector Graphics \*.svg file. Such files can be edited for example with the open source software [Inkscape](https://inkscape.org/).
 
-If you click on an element (e.g. Graph, Axis etc.) in the Graphcis View, the properties of the corresponding child atom are shown in the Properties View  
-
+If you click on an element (e.g. Graph, Axis etc.) in [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
 
 ![](../../../images/page.png)
 
