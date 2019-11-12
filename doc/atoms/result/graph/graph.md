@@ -11,18 +11,18 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 |--|--|--|
 
 <table>
-	<thead>
+	<thead style="vertical-align: top">
 		<tr style="vertical-align: top">
 			<td style="vertical-align: top">
-				<img src="../../../images/graphData.png" style="vertical-align: top">
+				<img src="../../../images/graphData.png" >
 			</td>
 
 			<td style="vertical-align: top">
-				 <img src="../../../images/graphBackground.png" style="vertical-align: top">
+				 <img src="../../../images/graphBackground.png" >
 			</td>
 
 			<td style="vertical-align: top">
-				<img src="../../../images/graphBorder.png" style="vertical-align: top">
+				<img src="../../../images/graphBorder.png" >
 			</td>
 		</tr>
 	</thead>
