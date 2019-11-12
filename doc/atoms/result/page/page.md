@@ -14,7 +14,7 @@ Inside the [Graphics View](../../../views/graphicsView.md), the Page is represen
 
 The svg content of the [Graphics View](../../../views/graphicsView.md) supports mouse actions:
 
-* If you **double click a Page** in the [Graphics View](../../../views/graphicsView.md), a file dialog is shown to save the content as [Scalable Vector Graphics \*.svg file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The exported \*.svg file can be edited with the open source software [Inkscape](https://inkscape.org/).
+* If you **double click on a Page** in the [Graphics View](../../../views/graphicsView.md), a file dialog is shown to save the content as [Scalable Vector Graphics \*.svg file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The exported \*.svg file can be edited with the open source software [Inkscape](https://inkscape.org/).
 
 * If you **click on an element** (e.g. Graph, Axis etc.) in the [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
 
