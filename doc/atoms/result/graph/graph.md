@@ -11,19 +11,21 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 
 
 <table>
-	<th>
-		<td>
-			<img src="../../../images/graphData.png"/>
-		</td>
+	<thead>
+		<tr>
+			<td>
+				<img src="../../../images/graphData.png"/>
+			</td>
 
-		<td>
-			 <img src="../../../images/graphBackground.png"/>
-		</td>
+			<td>
+				 <img src="../../../images/graphBackground.png"/>
+			</td>
 
-		<td>
-			<img src="../../../images/graphBorder.png"/>
-		</td>
-	</th>
+			<td>
+				<img src="../../../images/graphBorder.png"/>
+			</td>
+		</tr>
+	</thead>
 </table>
 
  
