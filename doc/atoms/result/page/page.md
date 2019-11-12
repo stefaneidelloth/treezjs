@@ -4,11 +4,13 @@
 
 # Page
 
-The ![](../../../../icons/page.png) Page atom is the entry point for creating content of the [Graphics View](../../../views/graphicsView.md). It represents some rectangular svg region. If you want you can select some background color.
+The ![](../../../../icons/page.png) Page atom is the entry point for creating content of the [Graphics View](../../../views/graphicsView.md). It represents some rectangular [svg](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) region. If you want you can select some background color.
 
-If you *double click* on the Page, a file dialog is shown to save the content of the Graphics View as Vector Graphics \*.svg file. Such files can be edited for example with the open source software [Inkscape](https://inkscape.org/).
+The svg content of the [Graphics View](../../../views/graphicsView.md) supports some mouse actions:
 
-If you click on an element (e.g. Graph, Axis etc.) in [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
+* If you **double click on the Page** in the [Graphics View](../../../views/graphicsView.md), a file dialog is shown to save the content of the Graphics View as [Scalable Vector Graphics \*.svg file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The exported \*.svg file can be edited for example with the open source software [Inkscape](https://inkscape.org/).
+
+* If you click on an element (e.g. Graph, Axis etc.) in the [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
 
 ![](../../../images/page.png)
 
@@ -58,7 +60,7 @@ The height of the page, e.g. 15 cm. For supported svg units see [here](https://w
 
 #### Color
 
-The background color of the page
+The background/fill color of the page.
 
 #### IsHidden
 
