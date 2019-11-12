@@ -10,7 +10,7 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 | ![](../../../images/graphData.png) | ![](../../../images/graphBackground.png) | ![](../../../images/graphBorder.png) |
 |--|--|--|
 
-<table>
+<table style="vertical-align: top">
 	<thead style="vertical-align: top">
 		<tr style="vertical-align: top">
 			<td style="vertical-align: top">
