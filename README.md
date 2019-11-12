@@ -28,7 +28,7 @@ The treezjs front end can be [installed](./doc/installation/installation.md) as 
 
 # Core features
 
-* The tree model can be **edited** with a [**Tee view**](./doc/views/treeView.md). 
+* The tree model can be **edited** with a [**Tree view**](./doc/views/treeView.md). 
 * The model can also be **exported** to and **imported** from a JavaScript [**Editor view**](./doc/views/editorView.md). Thus, the tree model can also be edited and stored as a text file. 
 * The properties of the atoms are shown in the [**Properties View**](./doc/views/propertiesView.md)
 * Some atoms have a graphical representation (e.g svg content created with d3.js), shown in the [**Graphics view**](./doc/views/graphicsView.md)
