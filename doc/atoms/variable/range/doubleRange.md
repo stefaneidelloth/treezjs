@@ -26,7 +26,7 @@ A new ![](../../../../icons/doubleRange.png) DoubleRange atom atom is created ei
     let weightRange = models.createDoubleRange('root.models.genericInput.weight',[70.0, 70.5, 71.0, 71.5, 72.0]);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

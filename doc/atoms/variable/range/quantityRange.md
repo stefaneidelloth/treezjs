@@ -26,7 +26,7 @@ A new ![](../../../../icons/quantityRange.png) QuantityRange atom atom is create
     let lengthRange = models.createQuantityRange('root.models.genericInput.length', [20.0, 21.0, 22.0], 'm');	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

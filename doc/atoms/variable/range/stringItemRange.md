@@ -26,7 +26,7 @@ A new ![](../../../../icons/stringItemRange.png) StringItemRange atom atom is cr
     let ageRange = models.createStringItemRange('root.models.genericInput.simulationType', ['foo', 'baa']);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

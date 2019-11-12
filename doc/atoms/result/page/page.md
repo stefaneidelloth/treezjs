@@ -46,7 +46,7 @@ The context menu of the ![](../../../../icons/page.png) Page atom allows to add 
 
 * ![](../../../../icons/graph.png) [Graph](../graph/graph.md)
 
-## Sections
+## Properties
 
 ### Data
 

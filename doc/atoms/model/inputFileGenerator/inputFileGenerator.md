@@ -52,7 +52,7 @@ The ![](../../../../icons/inputFile.png) InputFileGenerator:
 
 Please note that the term "input file" might be confusing. In perspective of the ![](../../../../icons/inputFile.png) InputFileGenerator, the "input file" is the generated file or "output". In perspective of an [Executable](../executable/executable.md) atom, the "input file" actually is the input. That is where the name "input file" comes from. 
 			
-## Sections
+## Properties
 
 ### Template
 

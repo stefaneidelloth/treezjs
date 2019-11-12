@@ -54,7 +54,7 @@ If the system command writes text to the console, that text will be shown in the
 
 The jobId of the ![](../../../../icons/run.png) Executable atom is increased by 1 after the execution has been finished.
 			
-## Sections
+## Properties
 
 The total system command is created by concatenation from the individual input fields. A preview for the command is shown as **Resulting command** in the section "Status". 
 

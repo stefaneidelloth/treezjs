@@ -37,7 +37,7 @@ A new ![](../../../../icons/pickingProbe.png) PickingProbe is created either by:
     let pickingProbe = data.createPickingProbe();	     
 ```
 
-## Sections
+## Properties
 
 ### Domain
 

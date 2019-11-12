@@ -39,7 +39,7 @@ A new ![](../../../../icons/probabilityProbe.png) ProbabilityProbe is created ei
     let probabilityProbe = data.createProbabilityProbe();	     
 ```
 
-## Sections
+## Properties
 
 TODO
 

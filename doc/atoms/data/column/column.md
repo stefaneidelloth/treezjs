@@ -29,7 +29,7 @@ A new ![](../../../../icons/column.png) Column atom is created either
     let xColumn = columns.createColumn();	     
 ```
 
-## Sections
+## Properties
 
 ### Data
 

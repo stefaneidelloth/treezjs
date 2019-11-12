@@ -48,7 +48,7 @@ The context menu of the ![](../../../../icons/sensitivity.png) Sensitivity atom 
 * ![](../../../../icons/pythonExport.png) [PythonExport](../pythonExport/pythonExport.md)
 * ![](../../../../icons/studyInfoExport.png) [StudyInfoExport](../studyInfoExport/studyInfoExport.md)
 
-## Sections
+## Properties
 
 ### Sensitivity
 

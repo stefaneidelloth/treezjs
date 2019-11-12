@@ -26,7 +26,7 @@ A new ![](../../../../icons/directoryPathRange.png) DirectoryPathRange atom atom
     let directoryPathRange = models.createDirectoryPathRange('root.models.genericInput.directoryPathVariable', ['C:/foo', 'C:/baa']);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

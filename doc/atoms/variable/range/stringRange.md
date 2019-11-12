@@ -26,7 +26,7 @@ A new ![](../../../../icons/stringRange.png) StringRange atom atom is created ei
     let ageRange = models.createStringRange('root.models.genericInput.description', ['first description', 'second description']);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

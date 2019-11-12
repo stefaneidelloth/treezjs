@@ -34,7 +34,7 @@ a) with the ![](../../../../icons/run.png) run button in the upper right corner 
 b) with the ![](../../../../icons/run.png) run button in the context menu of the atom in the [Tree View](../../../views/treeView.md)<br>
 c) with the ![](../../../../icons/run.png) run button in the context menu of the parent study atom in the [Tree View](../../../views/treeView.md) (runs the study and executes its excutable children)<br>
       
-## Sections
+## Properties
 
 ### Study info export
 

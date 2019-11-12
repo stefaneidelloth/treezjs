@@ -26,7 +26,7 @@ A new ![](../../../../icons/loggingArguments.png) LoggingArguments atom is creat
     let loggingArguments = executable.createLoggingArguments();	     
 ```
 
-## Sections
+## Properties
 
 ### Logging
 

@@ -37,7 +37,7 @@ A new ![](../../../../icons/sweepProbe.png) SweepProbe is created either by:
     let sweepProbe = data.createSweepProbe();	     
 ```
 
-## Sections
+## Properties
 
 ### Domain
 

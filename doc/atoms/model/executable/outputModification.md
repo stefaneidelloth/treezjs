@@ -34,7 +34,7 @@ A new ![](../../../../icons/outputModification.png) OutputModification atom is c
     let outputModification = executable.createOutputModification();	     
 ```
 
-## Sections
+## Properties
 
 ### Output modification
 

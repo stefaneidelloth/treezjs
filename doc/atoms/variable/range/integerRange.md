@@ -26,7 +26,7 @@ A new ![](../../../../icons/integerRange.png) IntegerRange atom atom is created 
     let ageRange = models.createIntegerRange('root.models.genericInput.age', [13, 14, 15]);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

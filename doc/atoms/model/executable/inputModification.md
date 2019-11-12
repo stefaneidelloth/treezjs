@@ -35,7 +35,7 @@ A new ![](../../../../icons/inputModification.png) InputModification atom is cre
     let inputModification = executable.createInputModification();	     
 ```
 
-## Sections
+## Properties
 
 ### Input modification
 

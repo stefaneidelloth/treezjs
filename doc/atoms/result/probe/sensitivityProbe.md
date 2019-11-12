@@ -37,7 +37,7 @@ A new ![](../../../../icons/sensitivityProbe.png) SensitivityProbe is created ei
     let sensitivityProbe = data.createSensitivityProbe();	     
 ```
 
-## Sections
+## Properties
 
 ### Probe
 

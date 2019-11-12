@@ -26,7 +26,7 @@ A new ![](../../../../icons/filePathRange.png) FilePathRange atom atom is create
     let filePathRange = models.createFilePathRange('root.models.genericInput.filePathVariable', ['C:\foo.txt', 'C:\baa.txt']);	     
 ```						
 		
-## Sections
+## Properties
 
 ### Data
 

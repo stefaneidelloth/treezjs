@@ -44,7 +44,7 @@ A ![](../../../../icons/pythonExport.png) PythonExport atom is automatically exe
 
 Once the study has been finished, you can add extra cells to the Python Notebook and access the results structure. 
       
-## Sections
+## Properties
 
 ### Python export
 

@@ -56,7 +56,7 @@ The **samples** for a ![](../../../../icons/picking.png) Picking are defined thr
 The samples can be **enabled/disabled** through their context menu. If a sample is disabled it is not included in the ![](../../../../icons/picking.png) Picking. 
 
 
-## Sections
+## Properties
 
 ### Sensitivity
 

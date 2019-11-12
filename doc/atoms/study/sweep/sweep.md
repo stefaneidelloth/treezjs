@@ -69,7 +69,7 @@ The numbers 1...8 represent the simulation order (="jobId"). A sweep can also be
 ![](../../../images/sweepTree.png)
 
 
-## Sections
+## Properties
 
 ### Sweep
 
