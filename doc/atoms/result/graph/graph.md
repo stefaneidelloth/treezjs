@@ -64,11 +64,11 @@ Distance from the left side of the parent Page, e.g. 1 cm. (For supported svg un
 
 Distance from the top of the parent Page, e.g. 1 cm. 
 
-# Width
+#### Width
 
 The width of the Graph, e.g 12 cm.
 
-# Height
+#### Height
 
 The height of the Graph, e.g 12 cm.
 
@@ -96,11 +96,11 @@ Enable this checkbox (or set Transparency to 1) if you would like to hide the ba
 
 The color of the border.
 
-# Width
+#### Width
 
 The width of the border, e.g. 2. (The default svg unit is px.)
 
-# Style
+#### Style
 
 The line style of the border, e.g. solid or dotted.
 
