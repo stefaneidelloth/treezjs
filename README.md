@@ -6,7 +6,7 @@
 
 Treez originally has been developed as [Eclipse Plugin](https://github.com/stefaneidelloth/treez). This github project provides  a **JavaScript implementation of Treez (= treezjs)** and all further development is done here.
 
-The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to Jupyter Notebooks, to interact with a **Python** kernel as back end, or in standalone mode with its own **Java** based back end. 
+The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to [Jupyter](https://jupyter.org/) notebooks (to interact with a **Python** kernel as back end), or in standalone mode (with its own **Java** based back end). 
 
 # Content
 
@@ -33,7 +33,7 @@ The treezjs front end can be [installed](./doc/installation/installation.md) as 
 * The properties of the atoms are shown in the [**Properties View**](./doc/views/propertiesView.md)
 * Some atoms have a graphical representation (e.g svg content created with d3.js), shown in the [**Graphics view**](./doc/views/graphicsView.md)
 * Some atoms can be executed and the progress of the execution is shown in terms of **progress bars** and **log messages** in the [**Monitor view**](./doc/views/monitorView.md)
-* The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to Jupyter Notebooks, to interact with **Python** as back end, or in standalone mode with its own **Java** based back end. 
+* The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to to [Jupyter](https://jupyter.org/) notebooks (to interact with a **Python** kernel as back end), or in standalone mode (with its own **Java** based back end). 
 
 # Example usage
 
