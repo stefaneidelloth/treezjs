@@ -1,7 +1,7 @@
 # treezjs
 **Treez** is an open source project that helps you to create **tree based Graphical User Interfaces (GUIs)** for (scientific) web applications. The core idea of treez is to provide reusable building blocks (so-called **atoms**) and to organize them in a **tree model**. 
 
-<img align="right" width="650" src="./doc/images/treezjs.png">
+<img width="650" src="./doc/images/treezjs.png">
 
 
 # Content
