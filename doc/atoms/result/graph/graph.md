@@ -13,7 +13,7 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 	<table>
 		<th>
 			<td>
-				<img src="">
+				<img src="../../../images/graphData.png">
 			</td>
 		
 			<td>
