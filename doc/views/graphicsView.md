@@ -4,11 +4,12 @@
 
 #	Graphics View
 
-Some of the Treez Atoms have a graphical representation, for example a plot. The purpose of the Graphics View is to show those graphical representations. 
+Some of the Treez Atoms have a graphical representation, for example a Xy plot. The purpose of the Graphics View is to show those graphical representations. 
 
-The graphics of Treez are based on [d3.js](https://d3js.org/) and can be **interactive**. Try to click for example on the axis of a plot to show the properties of the axis in the [Properties View](./propertiesView.md). 
+The graphics of Treez are based on [d3.js](https://d3js.org/) and can be **interactive**:
 
-Also try to double click on the Graphics View to **export its content** as scalable vector graphics *.svg file. 
+* Click for example on the Axis of a Graph to **show the properties** of that Axis in the [Properties View](./propertiesView.md). 
+* Double click on a Page in the Graphics View to **export it** as [Scalable Vector Graphics \*.svg](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) file. 
 
 <img width="650" src="../images/graphicsView.png">
 
