@@ -10,24 +10,24 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 | ![](../../../images/graphData.png) | ![](../../../images/graphBackground.png) | ![](../../../images/graphBorder.png) |
 |--|--|--|
 
-<table style="vertical-align: top">
-	<thead style="vertical-align: top">
-		<tr style="vertical-align: top">
-			<td style="vertical-align: top">
+<table>
+	
+		<tr>
+			<td>
 				<img src="../../../images/graphData.png" >
 			</td>
 
-			<td style="vertical-align: top">
+			<td>
 				 <img src="../../../images/graphBackground.png" >
-				 <br><br><br><br><br><br><br><br><br>			 
+					 
 			</td>
 
-			<td style="vertical-align: top">
+			<td>
 				<img src="../../../images/graphBorder.png" >
 				<br><br><br><br><br><br><br><br><br><br>				
 			</td>
 		</tr>
-	</thead>
+	
 </table>
 
  
