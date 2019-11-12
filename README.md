@@ -31,7 +31,7 @@ The treezjs front end can be [installed](./doc/installation/installation.md) as 
 * The tree model can be **edited** with a [**Tree view**](./doc/views/treeView.md). 
 * The model can also be **exported** to and **imported** from a JavaScript [**Editor view**](./doc/views/editorView.md). Thus, the tree model can also be edited and stored as a text file. 
 * The properties of the atoms are shown in the [**Properties View**](./doc/views/propertiesView.md)
-* Some atoms have a graphical representation (e.g svg content created with d3.js), shown in the [**Graphics view**](./doc/views/graphicsView.md)
+* Some atoms have a graphical representation ([svg](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) content created with [d3.js](https://d3js.org/)), shown in the [**Graphics view**](./doc/views/graphicsView.md)
 * Some atoms can be executed and the progress of the execution is shown in terms of **progress bars** and **log messages** in the [**Monitor view**](./doc/views/monitorView.md)
 * The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to to [Jupyter](https://jupyter.org/) notebooks (to interact with a **Python** kernel as back end), or in standalone mode (with its own **Java** based back end). 
 
