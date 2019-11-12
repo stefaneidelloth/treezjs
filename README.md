@@ -4,6 +4,8 @@
 
 **Treez** is an open source project that helps you to create **tree based Graphical User Interfaces (GUIs)** for (scientific) web applications. The core idea of treez is to provide reusable building blocks (so-called **atoms**) and to organize them in a **tree model**. 
 
+Treez originally has been developed as [Eclipse Plugin](https://github.com/stefaneidelloth/treez). This github project provides  a **JavaScript implementation of Treez (= treezjs)**. All further development is done here. 
+
 # Content
 
 * [Installation](./doc/installation/installation.md)
@@ -30,9 +32,6 @@
 * Some atoms have a graphical representation (e.g svg content created with d3.js), shown in the [**Graphics view**](./doc/views/graphicsView.md)
 * Some atoms can be executed and the progress of the execution is shown in terms of **progress bars** and **log messages** in the [**Monitor view**](./doc/views/monitorView.md)
 
-# History
-
-Treez originally has been developed as [Eclipse Plugin](https://github.com/stefaneidelloth/treez). This github project provides  a **JavaScript implementation of Treez (= treezjs)**. All further development is done here. 
 
 # Example usage
 
@@ -43,7 +42,4 @@ The [atoms](./doc/atoms.md) that come with treez can be used to model a **common
 If the already existing atoms are not sufficient for you, please feel free to reuse the **input elements** that come with treez (for example file chooser, color picker, ...) to [implement additional atoms]((./doc/atoms/howToImplementAtoms.md)) for **your own tree based GUI**. 
 
 **Please contribute!** If every user of treez creates a single new atom and feeds it back to this open source project, a large **atom library** will arise with time. If you would like to contribute, please create a new issue ticket and describe your atom suggestions. **Bug reports and ideas on how to improve** the already existing atoms are also very welcome.
-
-
-
 
