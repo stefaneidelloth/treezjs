@@ -13,15 +13,15 @@ A ![](../../../../icons/page.png) Page can include several ![](../../../../icons
 	<table>
 		<th>
 			<td>
-				<img src="../../../images/graphData.png">
+				<img src="../../../images/graphData.png"></img>
 			</td>
 		
 			<td>
-				 <img src="../../../images/graphBackground.png">
+				 <img src="../../../images/graphBackground.png"></img>
 			</td>
 			
 			<td>
-				<img src="../../../images/graphBorder.png">
+				<img src="../../../images/graphBorder.png"></img>
 			</td>
 		</th>
 	</table>
