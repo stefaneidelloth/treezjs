@@ -10,7 +10,7 @@ The svg content of the [Graphics View](../../../views/graphicsView.md) supports 
 
 * If you **double click on the Page** in the [Graphics View](../../../views/graphicsView.md), a file dialog is shown to save the content of the Graphics View as [Scalable Vector Graphics \*.svg file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The exported \*.svg file can be edited for example with the open source software [Inkscape](https://inkscape.org/).
 
-* If you click on an element (e.g. Graph, Axis etc.) in the [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
+* If you **click on an element** (e.g. Graph, Axis etc.) in the [Graphics View](../../../views/graphicsView.md), the properties of the corresponding child atom are shown in the [Properties View](../../../views/propertiesView.md).
 
 ![](../../../images/page.png)
 
