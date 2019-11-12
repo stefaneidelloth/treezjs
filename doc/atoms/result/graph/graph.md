@@ -7,8 +7,8 @@
 A ![](../../../../icons/graph.png) Graph is bascially a rectangular region having some position, size and color. 
 A ![](../../../../icons/page.png) Page can include several ![](../../../../icons/graph.png) Graphs and a  ![](../../../../icons/graph.png) Graph can include several plots (e.g. ![](../../../../icons/xy.png) [Xy](../xy/xy.md)). 
 
-<table>
-<tr>
+<table  style="vertical-align: top;">
+<tr style="vertical-align: top;">
 <td style="vertical-align: top;">
 <img src="../../../images/graphData.png" align="top" >
 </td>
