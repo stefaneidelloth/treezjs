@@ -7,21 +7,19 @@
 A ![](../../../../icons/graph.png) Graph is bascially a rectangular region having some position, size and color. 
 A ![](../../../../icons/page.png) Page can include several ![](../../../../icons/graph.png) Graphs and a  ![](../../../../icons/graph.png) Graph can include several plots (e.g. ![](../../../../icons/xy.png) [Xy](../xy/xy.md)). 
 
-<table  >
+<table>
 <tr>
 <td valign="top">
-<img src="../../../images/graphData.png" align="top" >
+<img src="../../../images/graphData.png">
 </td>
 <td valign="top">
-<img src="../../../images/graphBackground.png" align="top">
+<img src="../../../images/graphBackground.png">
 </td>
 <td valign="top">
-<img src="../../../images/graphBorder.png" align="top">		
+<img src="../../../images/graphBorder.png">		
 </td>
 </tr>	
-</table>
-
- 
+</table> 
 
 ## Source code
 
