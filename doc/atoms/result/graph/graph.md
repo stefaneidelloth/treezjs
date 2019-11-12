@@ -4,8 +4,9 @@
 
 # Graph
 
-A ![](../../../../icons/page.png) Page can include several ![](../../../../icons/graph.png) Graphs as children.
 A ![](../../../../icons/graph.png) Graph is bascially a rectangular region having some position, size and color. 
+A ![](../../../../icons/page.png) Page can include several ![](../../../../icons/graph.png) Graphs and a Graph
+can include several plots (e.g. ![](../../../../icons/xy.png) [Xy](../xy/xy.md)). 
 
 ![](../../../images/graph.png)
 
