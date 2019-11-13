@@ -4,8 +4,8 @@
 
 # Axis
 
-The ![](../../../../icons/axis.png) Axis atom represents a plot axis.
-A ![](../../../../icons/graph.png) [Graph](../graph/graph.md) atom should have two Axis children.
+The ![](../../../../icons/axis.png) Axis atom represents a plot axis.<br>
+Each ![](../../../../icons/graph.png) [Graph](../graph/graph.md) atom should have two Axis children.
 
 ## Source code
 
