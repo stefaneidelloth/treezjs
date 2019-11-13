@@ -26,7 +26,7 @@ A ![](../../../../icons/graph.png) [Graph](../graph/graph.md) atom should have t
 </tr>	
 
 <tr>
-<img src="../../../images/tickLabels.png">	
+<img src="../../../images/axisTickLabels.png">	
 </tr>	
 
 <tr>
