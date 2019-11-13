@@ -49,5 +49,5 @@ A new ![](../../../../icons/legend.png) Legend is created either by:
 
 ----
 
-![](../../../../icons/results.png) [Results](../results/results.md)
+![](../../../../icons/results.png) [Results](../results.md)
 
