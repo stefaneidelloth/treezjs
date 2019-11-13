@@ -4,8 +4,7 @@
 
 # XySeries
 
-The ![](../../../../icons/xySeries.png) XySeries atom is used to generate a series of Xy plots from
-a table.<br>
+The ![](../../../../icons/xySeries.png) XySeries atom is used to generate a series of ![](../../../../icons/xy.png) Xy atoms from a table.<br>
 
 <img src="../../../images/xySeries.png">
 
