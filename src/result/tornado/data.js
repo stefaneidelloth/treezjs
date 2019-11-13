@@ -42,7 +42,7 @@ export default class Data extends GraphicsAtom {
 
 	}
 
-	createPage(root, torndado) {
+	createPage(root, tornado) {
 		
 		let page = root.append('treez-tab')
 			.label('Data');

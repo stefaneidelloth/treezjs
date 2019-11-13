@@ -6,8 +6,8 @@ import Length from './../graphics/length.js';
 
 export default class Main extends GraphicsAtom {
 	
-	constructor(legend){
-		super(legend);
+	constructor(){
+		super();
 		
 		this.__dTreez = undefined;
 

@@ -17,16 +17,16 @@ export default class Legend extends PagedGraphicsAtom {
 		
 		var factories = [];
 
-		this.main = new Main(this);
+		this.main = Main.create(this);
 		factories.push(this.main);
 
-		this.text = new Text();
+		this.text = Text.create();
 		factories.push(this.text);
 
-		this.background = new Background();
+		this.background = Background.create();
 		factories.push(this.background);
 
-		this.border = new Border();
+		this.border = Border.create();
 		factories.push(this.border);
 		
 		return factories;
