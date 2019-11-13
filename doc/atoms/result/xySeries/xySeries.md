@@ -28,17 +28,17 @@ A new ![](../../../../icons/xySeries.png) XySeries is created either by:
     let xySeries = graph.createXySeries();	
 ```
 
-# Properties
+## Properties
 
-## XySeries
+### XySeries
 
-### Source table
+#### Source table
 
-### Domain label
+#### Domain label
 
-### Range label
+#### Range label
 
-### IsHidden
+#### IsHidden
 
 ----
 
