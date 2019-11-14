@@ -4,8 +4,8 @@
 
 # Xy
 
-The ![](../../../../icons/xy.png) Xy atom is used to plot points with lines. If wanted, the points or lines
-can be hidden. 
+The ![](../../../../icons/xy.png) Xy atom is used to plot points with lines. If wanted, only points or lines
+can be shown. 
 
 ## Source code
 
