@@ -5,7 +5,7 @@
 # Axis
 
 The ![](../../../../icons/axis.png) Axis atom represents a plot axis.<br>
-Each ![](../../../../icons/graph.png) [Graph](../graph/graph.md) atom should have two Axis children.
+Typically, each ![](../../../../icons/graph.png) [Graph](../graph/graph.md) atom has two Axis children, a horizontal an a vertical one. Furthermore, plots (e.g. ![](../../../../icons/xy.png) [XY](../xy/xy.md)) need to reference those axis. 
 
 ## Source code
 
