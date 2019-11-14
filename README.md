@@ -1,4 +1,4 @@
-# treezjs <img width="20px" src="./icons/tree.png">
+# treezjs <img src="./icons/tree32.png">
  [Content](./README.md#content)
 
 <img width="650" src="./doc/images/treezjs.png">
