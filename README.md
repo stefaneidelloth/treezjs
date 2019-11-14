@@ -9,7 +9,7 @@ Treez originally has been developed as [Eclipse Plugin](https://github.com/stefa
 
 The treezjs front end can be [installed](./doc/installation/installation.md) as an extension to [Jupyter](https://jupyter.org/) notebooks (to interact with a **Python** kernel as back end), or in standalone mode (with its own **Java** based back end).
 
-If you miss some informatino in the following documentatin, please create a [new issue](https://github.com/stefaneidelloth/treezjs/issues/new).
+If you miss some information in the following documentation or have any suggestions, please create a [new issue](https://github.com/stefaneidelloth/treezjs/issues/new).
 
 # Content
 
