@@ -77,6 +77,7 @@ already existing atoms are not sufficient for your needs, you might want to [imp
         * ![](../../icons/xySeries.png) [XySeries](./result/xySeries/xy.md)
         * ![](../../icons/bar.png) [Bar](./result/bar/bar.md)
         * ![](../../icons/tornado.png) [Tornado](./result/tornado/tornado.md)
+        * ![](../../icons/legend.png) [Legend](./result/legend/legend.md)
       
 * [How to implement atoms](./howToImplementAtoms.md)
 
