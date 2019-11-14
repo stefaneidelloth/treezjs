@@ -19,7 +19,7 @@ The treezjs front end can be [installed](./doc/installation/installation.md) as 
   * [Editor](./doc/views/editorView.md)
   * [Graphics](./doc/views/graphicsView.md)
   * [Monitor](./doc/views/monitorView.md)
-* [Atoms](./doc/atoms/atoms.md)
+* [Atoms](./doc/atoms/atoms.md) (overview)
   * ![](./icons/root.png) [Root](./doc/atoms/root.md)
     * ![](./icons/models.png) [Models](./doc/atoms/model/models.md)
     * ![](./icons/studies.png) [Studies](./doc/atoms/study/studies.md)
