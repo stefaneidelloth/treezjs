@@ -7,6 +7,8 @@
 The ![](../../../../icons/xy.png) Xy atom is used to plot points with lines. If wanted, only points or lines
 can be shown. 
 
+<img src="../../../images/xy.png">
+
 ## Source code
 
 [./src/result/xy/xy.js](../../../../src/result/xy/xy.js)
