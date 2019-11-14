@@ -151,11 +151,11 @@ export default class Graph extends PagedGraphicsAtom {
 	updatePlot(dTreez) {
 		this.__clearAutoScaleData();
 		this.__plotWithPages(dTreez);
-		this.__plotChildrenInSpecificOrder(dTreez);
+		this.__plotChildren(dTreez);
 	}
 
 	updatePlotForChangedScales(dTreez) {
-		this.__plotChildrenInSpecificOrder(dTreez);
+		this.__plotChildren(dTreez)
 	}
 
 	__clearAutoScaleData() {
@@ -172,23 +172,11 @@ export default class Graph extends PagedGraphicsAtom {
 		}
 	}
 
-	__plotChildrenInSpecificOrder(dTreez) {
-		
-		this.__plotChildren(Axis, dTreez);
-		
-		
-		//this.__plotChildren(Contour, dTreez);
-		this.__plotChildren(XySeries, dTreez);
-		this.__plotChildren(Xy, dTreez);	
-		this.__plotChildren(Bar, dTreez);			
-		this.__plotChildren(Tornado, dTreez);
-		this.__plotChildren(Legend, dTreez);
-		
-	}	
 	
-	__plotChildren(clazz, dTreez){
+	
+	__plotChildren(dTreez){
 		for (var child of this.children) {			
-			if (child instanceof clazz) {				
+			if (child.plot) {				
 				child.plot(dTreez, this.__graphGroupSelection, this.__rectSelection, this.treeView);
 			}
 		}

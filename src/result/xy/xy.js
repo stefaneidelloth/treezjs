@@ -46,7 +46,7 @@ export default class Xy extends PagedGraphicsAtom {
 
 		//create new axis group
 		this.__xySelection = graphOrXySeriesSelection //
-				.insert('g', '.axis') //
+				.append('g') //
 				.className('xy') //
 				.onClick(()=>this.handleMouseClick());
 		
