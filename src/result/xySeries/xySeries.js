@@ -34,10 +34,15 @@ export default class XySeries extends GraphicsAtom {
 		section.append('treez-section-action')
 			.image('run.png')
 			.label('Build XySeries')
-			.addAction(()=> this.execute(this.__treeView)
-					.catch(error => {
-					   	console.error('Could not build XySeries  "' + this.name + '"!', error);            					   
-				   })
+			.addAction(() => 
+				{
+					try{
+						this.execute(this.treeView);
+						this.treeView.refresh();
+					} catch(error) {
+						console.error('Could not build XySeries  "' + this.name + '"!', error);            					   
+					}
+				}
 			)			
 		
 		var sectionContent = section.append('div');
@@ -75,7 +80,7 @@ export default class XySeries extends GraphicsAtom {
 		}
 	}
 
-	execute(treeView) {		
+	async execute(treeView) {		
 		
 		if (this.sourceTable) {
 			var foundSourceTable = this.childFromRoot(this.sourceTable);
@@ -115,7 +120,7 @@ export default class XySeries extends GraphicsAtom {
 
 		for (var child of this.children) {			
 			if (child instanceof Xy) {			
-				child.plot(dTreez, this.__seriesGroupSelection, null, this.__treeView);
+				child.plot(dTreez, this.__seriesGroupSelection, null, this.treeView);
 			}
 		}
 	}
