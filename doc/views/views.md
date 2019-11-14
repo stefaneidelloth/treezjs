@@ -4,7 +4,7 @@
 
 # Views
 
-The user interface of Treez is organized in several "views" (= windows):
+Treez provides several "views" (= windows):
 
 * [Tree View](./treeView.md)
 * [Properties View](./propertiesView.md)
