@@ -70,7 +70,7 @@ export default class Text extends GraphicsAtom {
 		return legendSelection;
 	}
 
-	formatText(textSelection, main) {
+	formatText(textSelection, layout) {
 
 		this.bindString(()=>this.font, textSelection, 'font-family');
 		this.bindInteger(()=>this.size, textSelection, 'font-size');
@@ -80,7 +80,7 @@ export default class Text extends GraphicsAtom {
 		this.bindFontBoldStyle(()=>this.isBold, textSelection);
 		this.bindFontUnderline(()=>this.hasUnderline, textSelection);		
 
-		var refreshLegend = () => main.refresh();
+		var refreshLegend = () => layout.refresh();
 		
 		this.addListener(()=>this.font, refreshLegend);
 		this.addListener(()=>this.size, refreshLegend);

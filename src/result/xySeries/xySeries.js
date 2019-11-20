@@ -90,7 +90,7 @@ export default class XySeries extends GraphicsAtom {
 		} else {
 			console.warn('The xy series "' + this.name + '" has no source table.');
 		}
-		this.treeView.refresh();
+		treeView.refresh();
 	}
 
 	plot(dTreez, graphSelection, treeView) {

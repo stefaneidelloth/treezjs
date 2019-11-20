@@ -31,13 +31,17 @@ export default class DTreez {
 		return this.__d3.axisBottom(scale);
 	}
 
+	drag(){
+		return this.__d3.drag();
+	}
+
 	format(formatter){
 		return this.__d3.format(formatter);
 	}
 
 	line(){
 		return this.__d3.line();
-	}
+	}	
 
 	scaleBand(){
 		return this.__d3.scaleBand();

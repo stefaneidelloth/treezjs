@@ -4,7 +4,7 @@ import HorizontalPosition from './horizontalPosition.js';
 import VerticalPosition from './verticalPosition.js';
 import Length from './../graphics/length.js';
 
-export default class Main extends GraphicsAtom {
+export default class Layout extends GraphicsAtom {
 	
 	constructor(){
 		super();
@@ -49,10 +49,10 @@ export default class Main extends GraphicsAtom {
 	createPage(root, legend) {
 
 		 var page = root.append('treez-tab')
-			.label('Main');
+			.label('Layout');
 
 		let section = page.append('treez-section')
-			.label('Main');
+			.label('Layout');
 
 		legend.createHelpAction(section, 'result/legend/legend.md');
 	
@@ -60,9 +60,7 @@ export default class Main extends GraphicsAtom {
 
 		let leftWidth = '175px';
 
-		let replotLegend = () => {
-				legend.updatePlot(this.__dTreez);
-		};
+		
 	
 
 		this.__positionReferenceSelection = sectionContent.append('treez-enum-combo-box')
@@ -71,7 +69,7 @@ export default class Main extends GraphicsAtom {
 			.nodeAttr('enum',PositionReference)
 			.onChange(() => {
 				this.__convertManualPositions();
-				replotLegend();
+				this.__propertyChanged(legend);
 			})
 			.bindValue(this, ()=>this.positionReference);
 
@@ -79,51 +77,51 @@ export default class Main extends GraphicsAtom {
 			.label('Horizontal position')
 			.labelWidth(leftWidth)
 			.nodeAttr('enum',HorizontalPosition)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.horizontalPosition);
 
 		this.__verticalPositionSelection = sectionContent.append('treez-enum-combo-box')
 			.label('Vertical position')
 			.labelWidth(leftWidth)
 			.nodeAttr('enum',VerticalPosition)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.verticalPosition);		
 
 
 		this.__manualHorizontalPositionSelection = sectionContent.append('treez-integer')
 			.label('Manual horizontal position')
 			.labelWidth(leftWidth)			
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.manualHorizontalPosition);
 
 		this.__manualVerticalPositionSelection = sectionContent.append('treez-integer')
 			.label('Manual vertical position')
 			.labelWidth(leftWidth)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.manualVerticalPosition);
 
 		this.__marginSizeSelection = sectionContent.append('treez-integer')
 			.label('Margin size')
 			.labelWidth(leftWidth)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.marginSize);
 
 		this.__numberOfColumnsSelection = sectionContent.append('treez-integer')
 			.label('Number of columns')
 			.labelWidth(leftWidth)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.numberOfColumns);
 
 		this.__keyLengthSelection = sectionContent.append('treez-integer')
 			.label('Key length')
 			.labelWidth(leftWidth)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.keyLength);
 
 		this.__isSwappingSymbolSelection = sectionContent.append('treez-check-box')
 			.label('IsSwappingSymbol')
 			.contentWidth(leftWidth)
-			.onChange(replotLegend)
+			.onChange(() => this.__propertyChanged(legend))
 			.bindValue(this, ()=>this.isSwappingSymbol);
 
 		sectionContent.append('treez-check-box')			
@@ -131,18 +129,17 @@ export default class Main extends GraphicsAtom {
 			.contentWidth(leftWidth)
 			.bindValue(this, ()=>this.isHidden);
 
+		this.__showOrHideComponents();
+
 	}
+
+	
 
 	plot(dTreez,  legendSelection, rectSelection, legend) {
 
 		this.__dTreez = dTreez;
 		this.__legendSelection = legendSelection;
-		this.__rectSelection = rectSelection;
-		
-
-		//TODO
-		//Drag drag = this.__dTreez.behavior().drag().onDrag(this);
-		//legendSelection.call(drag);
+		this.__rectSelection = rectSelection;		
 
 		this.__replotLegendContentAndUpdateRect();
 
@@ -150,9 +147,53 @@ export default class Main extends GraphicsAtom {
 
 		return legendSelection;
 	}
+
+	handleDragEvent(x, y){
+
+		this.horizontalPosition = HorizontalPosition.manual;
+		this.verticalPosition = HorizontalPosition.manual;		
+
+		if(this.positionReference.isPage){
+			this.manualHorizontalPosition = Math.floor(x + this.__leftGraphMargin);
+			this.manualVerticalPosition = Math.floor(y + this.__topGraphMargin);
+			console.log('x: ' + this.manualHorizontalPosition );
+			console.log('y: ' + this.manualVerticalPosition );
+
+		} else {
+			this.manualHorizontalPosition = Math.floor(x);
+			this.manualVerticalPosition = Math.floor(y);
+		}		
+	}
 	
 	refresh() {
 		this.__replotLegendContentAndUpdateRect();
+	}
+
+	__propertyChanged(legend){
+
+		this.__showOrHideComponents();
+		legend.updatePlot(this.__dTreez);
+
+	}
+
+	__showOrHideComponents(){
+
+		if(this.__manualHorizontalPositionSelection){
+			if(this.horizontalPosition.isManual){
+				this.__manualHorizontalPositionSelection.show();
+			} else {
+				this.__manualHorizontalPositionSelection.hide();
+			}
+		}
+		
+		if(this.__manualVerticalPositionSelection){
+			if(this.verticalPosition.isManual){
+				this.__manualVerticalPositionSelection.show();
+			} else {
+				this.__manualVerticalPositionSelection.hide();
+			}
+		}
+		
 	}
 	
 
@@ -387,25 +428,24 @@ export default class Main extends GraphicsAtom {
 
 	__convertManualPositions() {
 		let x = this.manualHorizontalPosition;
-		let y = this.manualVerticalPosition;
-
-		let leftGraphMargin = Length.toPx(this.__graph.data.leftMargin);
-		let topGraphMargin = Length.toPx(this.__graph.data.topMargin);
+		let y = this.manualVerticalPosition;	
 		
 		if (this.positionReference.isPage) {
-			let pageX = x + Math.floor(leftGraphMargin);
+			let pageX = x + Math.floor(this.__leftGraphMargin);
 			this.manualHorizontalPosition = pageX;
 
-			let pageY = y + Math.floor(topGraphMargin);
+			let pageY = y + Math.floor(this.__topGraphMargin);
 			this.manualVerticalPosition = pageY;
 		} else {
-			let graphX = x - Math.floor(leftGraphMargin);
+			let graphX = x - Math.floor(this.__leftGraphMargin);
 			this.manualHorizontalPosition = graphX;
 
-			let pageY = y - Math.floor(topGraphMargin);
+			let pageY = y - Math.floor(this.__topGraphMargin);
 			this.manualVerticalPosition = pageY;
 		}
 	}
+
+	
 
 	__applyManualHorizontalPosition() {		
 		this.__setXPosition(this.manualHorizontalPosition);
@@ -438,9 +478,8 @@ export default class Main extends GraphicsAtom {
 		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
 		let oldY = oldTransform.translateY;
 		
-		if (this.positionReference.isPage) {
-			let graphMargin = Length.toPx(this.__graph.data.leftMargin);
-			let pageX = x - Math.floor(graphMargin);
+		if (this.positionReference.isPage) {			
+			let pageX = x - Math.floor(this.__leftGraphMargin);
 			this.__legendSelection.attr('transform', 'translate(' + pageX + ',' + oldY + ')');
 		} else {
 			this.__legendSelection.attr('transform', 'translate(' + x + ',' + oldY + ')');
@@ -477,72 +516,12 @@ export default class Main extends GraphicsAtom {
 		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
 		let oldX = oldTransform.translateX;
 		
-		if (this.positionReference.isPage) {
-			let graphMargin = Length.toPx(this.__graph.data.topMargin);
-			let pageY = y - Math.floor(graphMargin);
+		if (this.positionReference.isPage) {			
+			let pageY = y - Math.floor(this.__topGraphMargin);
 			this.__legendSelection.attr('transform', 'translate(' + oldX + ',' + pageY + ')');
 		} else {
 			this.__legendSelection.attr('transform', 'translate(' + oldX + ',' + y + ')');
 		}
-	}
-
-	handleDrag(context, d, index) {
-
-		let oldTransform = this.__dTreez.transform(this.__legendSelection.attr('transform'));
-		let oldX = oldTransform.translateX;
-		let oldY = oldTransform.translateY;
-
-		let delta = this.__dTreez.eventAsDCoords();
-		let dX = delta.x();
-		let dY = delta.y();
-
-		let x = oldX + dX;
-		let y = oldY + dY;
-
-		if (!x.equals(oldX)) {
-			this.setNewManualXPosition(x);
-		}
-
-		if (!y.equals(oldY)) {
-			this.setNewManualYPosition(y);
-		}
-
-		this.__legendSelection //
-				.attr('transform', 'translate(' + x + ',' + y + ')');
-
-	}
-	
-	handleDragStart(context, d, index) {
-		//not used here
-	}
-
-	handleDragEnd(context, d, index) {
-		//not used here
-	}
-
-	__setNewManualXPosition(x) {
-		this.horizontalPosition = HorizontalPosition.manual;
-		let intValue = Math.floor(x);
-		
-		if (this.positionReference.isPage) {
-			let leftGraphMargin = Length.toPx(this.__graph.data.leftMargin);
-			intValue += Math.floor(leftGraphMargin);
-		}
-
-		this.manualHorizontalPosition = intValue;
-	}
-
-	__setNewManualYPosition(y) {
-		this.verticalPosition = VerticalPosition.manual;
-		
-		let intValue = Math.floor(y);
-		
-		if (this.positionReference.isPage) {
-			let topGraphMargin = Length.toPx(this.__graph.data.topMargin);
-			intValue += Math.floor(topGraphMargin);
-		}
-
-		this.manualVerticalPosition = intValue;
 	}
 
 	get __legendContributors() {
@@ -562,6 +541,14 @@ export default class Main extends GraphicsAtom {
 
 	get __page(){
 		return this.__graph.parent;
+	}
+
+	get __leftGraphMargin(){
+		return Length.toPx(this.__graph.data.leftMargin)
+	}
+
+	get __topGraphMargin(){
+		return Length.toPx(this.__graph.data.topMargin);	
 	}
 
 	get __bottomBorderY() {
@@ -610,6 +597,20 @@ export default class Main extends GraphicsAtom {
 		let rectHeight = Math.floor(Length.toPx(this.__rectSelection.attr('height')));
 		let y = yBottomBorder / 2 - rectHeight / 2;
 		return y;
+	}
+
+	get xTransform(){
+		let transform = this.__legendSelection.attr('transform');
+		let tuble = transform.substring(10, transform.length-1);
+		let items = tuble.split(',');
+		return parseFloat(items[0]);
+	}
+
+	get yTransform(){
+		let transform = this.__legendSelection.attr('transform');
+		let tuble = transform.substring(10, transform.length-1);
+		let items = tuble.split(',');
+		return parseFloat(items[1]);
 	}
 
 

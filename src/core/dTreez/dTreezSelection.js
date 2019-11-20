@@ -79,6 +79,11 @@ export default class DTreezSelection {
 		this.__d3Selection.attr('disabled', null);		
 		return this;
 	}
+
+	filter(method){
+		let selection = this.__d3Selection.filter(method);
+		return new DTreezSelection(selection);
+	}
 	
 	hide(){
 		this.__d3Selection.attr('hidden', '');		
@@ -129,6 +134,11 @@ export default class DTreezSelection {
 			return this.__d3Selection.node()[name];
 		}
 		this.__d3Selection.node()[name] = value;
+		return this;
+	}
+
+	on(key, action){
+		this.__d3Selection.on(key, action);
 		return this;
 	}
 
