@@ -176,7 +176,7 @@ export default class JupyterLabTerminal {
     	    		    	    if(errorHandler){
 									errorHandler(message);
 								}					    
-								reject();
+								resolve();
 								break;
     	    		    	default:
     	    		    	    var message = '[jupyterLabTerminal]: Unknown stream type ' + type;
@@ -187,12 +187,15 @@ export default class JupyterLabTerminal {
 						} 
 						break;   	    		    
     	    		case 'error':
+    	    		    /* //already covered by stream stderr
     	    		    var message = msg.content.evalue;
     	    		    if(errorHandler){
 					    	errorHandler(message);
 					    }					    
-						reject();
+						resolve();
 						break;
+						*/
+						return;
 					case 'execute_result':
 						var result = msg.content;
 						if(messageHandler){

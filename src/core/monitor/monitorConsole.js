@@ -79,7 +79,9 @@ export default class MonitorConsole {
 		
 	__appendMessageToParentSelection(logMessage){
 		if(logMessage.text){
-			var multiLineText = this.__replaceLineBreaksWithHtmlBrElements(logMessage.text);
+			var escapedText = this.__escapeTags(logMessage.text);
+			var multiLineText = this.__replaceLineBreaksWithHtmlBrElements(escapedText);
+			
 			var entry = this.__parentSelection.append('div') //
 				.style('color',logMessage.color)
 				.className('treez-monitor-titled')			
@@ -96,6 +98,10 @@ export default class MonitorConsole {
 		
 			
 	}		
+
+	__escapeTags(text){
+		return text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	}
 
 	__replaceLineBreaksWithHtmlBrElements(message){
 		var result = message.replace(/\r\n/g,'<br>');

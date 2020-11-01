@@ -129,7 +129,7 @@ export default class Executable extends Model {
 					monitor.error(errorTitle + message);
 					monitor.cancel();
 					
-					reject(errorTitle+ message);					
+					resolve();					
 				}
 
 				function finishedHandler(){
