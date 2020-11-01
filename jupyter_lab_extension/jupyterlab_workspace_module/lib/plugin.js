@@ -1,32 +1,13 @@
 require('../style/plugin.css');
+var { ReactWidget } = require('@jupyterlab/apputils');
 
 module.exports = [{
     id: 'jupyterlab_workspace_module',
     autoStart: true,
     activate: function(app) {
-      console.log('JupyterLab extension jupyterlab_workspace_module is activated!');
-      console.log(app.commands);
+      init(app);
     }
 }];
-
-/*
-
-
-require('../style/plugin.css');
-//var { ReactWidget } = require('@jupyterlab/apputils');
-
-var ReactWidget ={};
-
-module.exports = [{
-    id: 'jupyterlab_workspace_module',
-    autoStart: true,
-    activate: function(app) {
-      //init(app);
-    }
-}];
-*/
-
-/*
 
 async function init(app){
 
@@ -95,4 +76,3 @@ async function importScript(src){
 	});
 
 }
-*/

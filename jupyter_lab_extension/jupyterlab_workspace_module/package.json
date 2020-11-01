@@ -19,7 +19,7 @@
   },
   "scripts": {},
   "dependencies": {
-
+    "@jupyterlab/apputils": "^2.2.6"
   },
   "devDependencies": {}
 }

@@ -95,8 +95,14 @@ export default class TreeView {
         this.editor.processText((sourceCode)=>{
 			
 			script.innerHTML = sourceCode + '\n' + 
-							   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 			
-			body.appendChild(script); 
+							   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 
+
+			try {
+				body.appendChild(script); 
+			} catch(excepton){
+				console.warn('Could not process JavaScript code:\n', exception);
+			}		
+			
         }); 
 
         this.refreshPropertiesView();

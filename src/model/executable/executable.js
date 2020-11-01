@@ -116,11 +116,13 @@ export default class Executable extends Model {
 				}						
 					
 				function errorHandler(message){
-					
-					if(message.startsWith('WARNING')){
-						messageHandler(message);
-						return;
+					if(message){
+						if(message.startsWith('WARNING')){
+							messageHandler(message);
+							return;
+						}
 					}
+					
 					
 					const errorTitle = 'Executing system command failed:\n';
 					monitor.description = errorTitle;
@@ -258,7 +260,12 @@ export default class Executable extends Model {
 		let fullExecutablePath = this.fullPath(this.executablePath);
 		let command = '';
 		if(fullExecutablePath){
-			command = command + '"' + fullExecutablePath + '"';
+			if(fullExecutablePath.includes(' ')){
+                command = command + '"' + fullExecutablePath + '"';
+			} else {
+				command = command + fullExecutablePath;
+			}
+			
 		} 
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);

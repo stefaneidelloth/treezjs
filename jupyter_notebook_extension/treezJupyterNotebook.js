@@ -1,4 +1,4 @@
-import Treez from './treez.js'; 
+import Treez from '../src/treez.js'; 
 import JupyterTerminal from './jupyterTerminal.js';
 
 

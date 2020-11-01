@@ -1,10 +1,15 @@
-import TableData from './data/database/tableData.js';
+import TableData from '../src/data/database/tableData.js';
 
 export default class JupyterLabTerminal {
 
-	constructor(jupyter){		
-		this.__notebook = jupyter.notebook;
-		this.__kernel = this.__notebook.kernel;
+	constructor(app){
+		var notebookPanel = this.__getFirstVisibleNotebookPanel(app);	
+		if(notebookPanel){
+			var notebook = notebookPanel.content;
+			var notebookModel = notebook.model;
+			var sessionContext = notebookPanel.sessionContext;				
+			this.__kernel = sessionContext.session.kernel;
+		}			
 	}
 	
 	async browseFilePath(initialDirectory, initialFile){  
@@ -141,52 +146,84 @@ export default class JupyterLabTerminal {
 	__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler){
 		var self=this;
 
-    	new Promise(function(resolve, reject) {  
-			    
-			var callbacks = {
-						shell : {
-							reply : (data)=>{
-								var content = data.content
-								switch(content.status){
-									case 'ok':						
-										resolve();
-										break;
-									case 'error':
-										reject(content.evalue)
-										break;
-									default:
-										throw new Error('Not yet implemented content status "' + content.status + '"');
-								}
-								
-							},
-						},
-			            iopub : {
-			                 output : (data)=>{	
-			                    var content = data.content;
-			                    switch(content.name){
-			                    	case 'stderr':				                    		
-			                    		reject(content.text);
-			                    		break;
-			                    	case 'stdout':
-			                    		if(messageHandler){
-			                    			messageHandler(content.text);	
-			                    		}			                    		
-			                    		break;
-			                    	case undefined:
-			                    		reject(content.ename + ': ' + content.evalue);	
-			                    		break;			                    		
-			                    	default:
-										throw new Error('Not yet implemented content type "' + content.name + '"');
-			                    }
-			                    
-			                 }
-			            },
-			            input: (request) => {
-			            	throw new Error('Considering user input is not yet implemented.');
-			            }
-			};
+    	new Promise(async (resolve, reject) => {  
+            //Also see
+            //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
+            //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
+    	    var feature = self.__kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
+    	    feature.onReply(msg=>{
+    	    	console.log(msg);
+    	    });
+    	    feature.onIOPub = (msg) =>{
+    	    	var msgType = msg.header.msg_type;
+    	    	switch (msgType) {
+    	    		case 'status':
+    	    		    return;
+    	    		case 'execute_input':
+    	    		    return;
+    	    		case 'stream':
+    	    		    var content = msg.content;
+    	    		    var type = content.name;
+    	    		    switch(type){
+    	    		    	case 'stdout':
+    	    		    	    var message = content.text;
+    	    		    	    if(messageHandler){
+									messageHandler(message);
+								}	
+								break;
+    	    		    	case 'stderr':
+    	    		    	    var message = content.text;
+    	    		    	    if(errorHandler){
+									errorHandler(message);
+								}					    
+								reject();
+								break;
+    	    		    	default:
+    	    		    	    var message = '[jupyterLabTerminal]: Unknown stream type ' + type;
+								if(errorHandler){
+									errorHandler(message);
+								}					    
+								reject();
+						} 
+						break;   	    		    
+    	    		case 'error':
+    	    		    var message = msg.content.evalue;
+    	    		    if(errorHandler){
+					    	errorHandler(message);
+					    }					    
+						reject();
+						break;
+					case 'execute_result':
+						var result = msg.content;
+						if(messageHandler){
+						    messageHandler(result);
+						}
+						resolve();
+						break;
+					case 'display_data':
+						var result = msg.content;
+						if(messageHandler){
+						    messageHandler(result);
+						}						
+						break;
+					case 'update_display_data':
+						var result = msg.content;
+						if(messageHandler){
+						    messageHandler(result);
+						}						
+						break;
+					default:
+					    var message = '[jupyterLabTerminal]: Unknown message type ' + msgType;
+					    if(errorHandler){
+					    	errorHandler(message);
+					    }					    
+						reject();
+
+				};
+    	    };
+    	    //await feature.done;
+    	    	
 		 	
-		 	self.__kernel.execute(pythonCode, callbacks);
 		})
 		.catch(errorHandler)
 		.then(finishedHandler);		
@@ -354,5 +391,31 @@ export default class JupyterLabTerminal {
 		resolve(htmlArray);
 		
     }
+
+    __tryToGetFirstNotebookCell(app){
+		var notebookPanel = __getFirstVisibleNotebookPanel(app);
+		if(notebookPanel){
+			var notebook = notebookPanel.content;
+			if(notebook){
+				return notebook.activeCell;
+			}
+		}	
+		return null;
+	}
+
+	__getFirstVisibleNotebookPanel(app){
+		var mainWidgets = app.shell.widgets('main');
+		var widget = mainWidgets.next();
+		while(widget){
+			var type = widget.constructor.name;
+			if(type == 'NotebookPanel'){  //other wigets might be of type DocumentWidget
+				if (widget.isVisible){
+					return widget;
+				}
+			}
+			widget = mainWidgets.next();
+		}
+		return null;
+	}
   
 }

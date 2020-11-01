@@ -1,4 +1,4 @@
-import TableData from './data/database/tableData.js';
+import TableData from '../src/data/database/tableData.js';
 
 export default class JupyterTerminal {
 
