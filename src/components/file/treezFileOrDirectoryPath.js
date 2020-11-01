@@ -102,12 +102,16 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
         if(this.__isFileMode){
             this.__isFileMode = false;
             this.__isFileButton.style.background = 'url("' + this.__urlPrefix + '/icons/directoryToggle.png")';
+            this.__isFileButton.style.backgroundRepeat = 'no-repeat';
             this.__browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browseDirectory.png")';
+            this.__browseButton.style.backgroundRepeat = 'no-repeat';
             this.__browseButton.title='Browse directory path';
         } else {
             this.__isFileMode = true;
             this.__isFileButton.style.background = 'url("' + this.__urlPrefix + '/icons/fileToggle.png")';
+            this.__isFileButton.style.backgroundRepeat = 'no-repeat';
             this.__browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
+            this.__browseButton.style.backgroundRepeat = 'no-repeat';
             this.__browseButton.title='Browse file path';
         }
     }
