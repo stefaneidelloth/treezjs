@@ -39,7 +39,16 @@ window.init_workspace_module = async (app, Widget)=>{
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
 		treezPlugin.title.icon = 'treez-icon-class';   
-		treezPlugin.render = () => {};  
+		treezPlugin.render = () => {
+			console.log("render");
+		};  
+
+		treezPlugin.onActivateRequest =()=>{
+			if(!treezPlugin.hasBeenActivated){
+				__increaseWidthOfLeftSideBar(app);
+				treezPlugin.hasBeenActivated=true;
+			}			
+		};
 
 		var treezView = treezPlugin.node;  		
 
@@ -68,6 +77,24 @@ window.init_workspace_module = async (app, Widget)=>{
 	});
 
 };
+
+function __increaseWidthOfLeftSideBar(app){
+
+	var width = window.innerWidth/2;
+	var leftStack = document.getElementById('treez');	
+	leftStack.style.width = '' + width +'px';
+
+	var leftStack = document.getElementById('jp-left-stack');	
+	leftStack.style.width = '' + width +'px';
+
+	var splitHandle = leftStack.nextSibling;
+	splitHandle.style.left = '' + width +'px';
+
+	var rightStack = splitHandle.nextSibling;
+	rightStack.style.left = '' + (width +1) +'px';
+	rightStack.style.width = '' + (width -1) + 'px';
+	
+}
 
 function __createEditorFactory(app){
     return (handleCreatedEditor) => {			
@@ -160,7 +187,8 @@ function __createGoldenLayout(GoldenLayout, containerElement){
 	var secondColumnUpperRow = {
 		componentName : 'Properties',
 		type : 'component',						
-		isClosable: false
+		isClosable: false,
+		height: 60
 	};
 
 	var secondColumnLowerRow = { 
