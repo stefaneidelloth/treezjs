@@ -2,13 +2,13 @@
   "name": "treezjs",
   "version": "1.0.0",
   "main": "index.js",
-
   "module": "main.js",
   "repository": "https://github.com/stefaneidelloth/treezjs.git",
   "author": "Stefan Eidelloth <schnumbl [at] posteo [dot] de>",
   "license": "MIT",
   "dependencies": {
-    "@jupyterlab/apputils": "^2.2.6"
+    "@jupyterlab/apputils": "^2.2.6",
+    "bower": "^1.8.8"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
