@@ -39,9 +39,7 @@ window.init_workspace_module = async (app, Widget)=>{
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
 		treezPlugin.title.icon = 'treez-icon-class';   
-		treezPlugin.render = () => {
-			console.log("render");
-		};  
+		treezPlugin.render = () => {};  //needs to exist
 
 		treezPlugin.onActivateRequest =()=>{
 			if(!treezPlugin.hasBeenActivated){
@@ -262,7 +260,7 @@ function __registerLayoutCompoments(layout, containerElement){
 
     layout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-tree');
+		element.attr('id','treez-tree');		
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;

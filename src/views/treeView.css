@@ -52,10 +52,11 @@
 }
 
 .treez-context-menu {
-	position: absolute;
-    display: none;    
-    outline: thin solid lightgrey;                         
-    background-color: white;
+	position: fixed;
+	z-index: 100;
+	display: none; 
+	outline: thin solid lightgrey;
+	background-color: white;
 }
 
 .treez-menu-button {
