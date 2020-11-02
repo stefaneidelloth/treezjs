@@ -11,11 +11,11 @@ treez-text-field {
     margin-bottom:0px;
 }
 
-.treez-text-field-field {	
-	width: 100%;
-    font-family: Consolas;
-    font-size: 12px;   
-    resize:vertical;
-    margin-bottom:10px;
-    margin-right:5px;
+.treez-text-field-field {
+	/* width: 100%; */
+	font-family: Consolas;
+	font-size: 12px;
+	resize:vertical;
+	margin-bottom:10px;
+	margin-right:5px;
 }

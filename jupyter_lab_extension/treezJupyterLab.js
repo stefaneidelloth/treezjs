@@ -6,7 +6,7 @@ Treez.config({
 	isSupportingPython: true
 });
 
-window.init_workspace_module = async (app, Widget)=>{
+window.init_workspace_module = async (app, dependencies)=>{
    
 	await Treez.importScript('/bower_components/requirejs/require.js');	
 
@@ -34,8 +34,10 @@ window.init_workspace_module = async (app, Widget)=>{
 		 GoldenLayout,		
 		 d3
 	) {
+
+		var ReactWidget = dependencies['ReactWidget'];
 	  
-		var treezPlugin = new Widget();
+		var treezPlugin = new ReactWidget();
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
 		treezPlugin.title.icon = 'treez-icon-class';   
@@ -56,7 +58,7 @@ window.init_workspace_module = async (app, Widget)=>{
 		var editorFactory = __createEditorFactory(app);
 
 		var terminalFactory = (handleCreatedTerminal)=>{
-			handleCreatedTerminal(new JupyterLabTerminal(app));
+			handleCreatedTerminal(new JupyterLabTerminal(app, dependencies));
 		};
 
 		app.shell.add(treezPlugin, 'left', { rank: 200 });
@@ -89,8 +91,8 @@ function __increaseWidthOfLeftSideBar(app){
 	splitHandle.style.left = '' + width +'px';
 
 	var rightStack = splitHandle.nextSibling;
-	rightStack.style.left = '' + (width +1) +'px';
-	rightStack.style.width = '' + (width -1) + 'px';
+	rightStack.style.left = '' + (width +3) +'px';
+	rightStack.style.width = '' + (width -3) + 'px';
 	
 }
 
@@ -102,7 +104,7 @@ function __createEditorFactory(app){
 				var firstCell = __tryToGetFirstNotebookCell(app);	
 
 				var jupyterText = '%%javascript\n' + code;
-				firstCell.node.textContent = jupyterText;
+				firstCell.editor.doc.setValue(jupyterText);					
 
 				if(finishedHandler){
 					finishedHandler();

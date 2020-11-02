@@ -9,3 +9,4 @@ coverage
 .chrome
 .nyc_output
 /package-lock.json
+/jupyter_lab_extension/jupyterlab_workspace_module/package-lock.json

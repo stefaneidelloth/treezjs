@@ -84,7 +84,9 @@ export default class TreeView {
 
 		 window.scriptLoadedHook = ()=>{
 				window.scriptLoadedHook = undefined;
-				this.model = window.createModel();
+				if(window.createModel){
+					this.model = window.createModel();
+				}				
 				this.refresh(); 			
 		};   
 

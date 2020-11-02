@@ -1,15 +1,73 @@
 require('../style/plugin.css');
+
+var { IMainMenu } = require ('@jupyterlab/mainmenu');
+var { ILayoutRestorer} = require('@jupyterlab/application');
+var { IFileBrowserFactory } = require ('@jupyterlab/filebrowser');
+var { IRenderMimeRegistry } = require ('@jupyterlab/rendermime');
+var { ISettingRegistry } = require ('@jupyterlab/settingregistry');
+var { IDocumentManager } = require ('@jupyterlab/docmanager');
+var { IStatusBar } = require ('@jupyterlab/statusbar');
+
 var { ReactWidget } = require('@jupyterlab/apputils');
+var { FileDialog } = require('@jupyterlab/filebrowser');
 
 module.exports = [{
     id: 'jupyterlab_workspace_module',
     autoStart: true,
-    activate: function(app) {
-      init(app);
+    requires: [
+	    IMainMenu,
+	    ILayoutRestorer,
+	    IFileBrowserFactory,
+	    IRenderMimeRegistry,
+	    ISettingRegistry,
+	    IDocumentManager,
+	    IStatusBar
+    ],
+    activate: function(
+    	app,
+    	mainMenu,
+    	layoutRestorer,
+    	fileBrowserFactory,
+    	renderMimeRegistry,
+    	settingRegistry,
+    	documentManager,
+    	statusBar
+    ) {
+      init(
+      	app,
+      	mainMenu,
+      	layoutRestorer,
+      	fileBrowserFactory,
+      	renderMimeRegistry,
+      	settingRegistry,
+      	documentManager,
+      	statusBar
+      );
     }
 }];
 
-async function init(app){
+async function init(
+	app,
+  	mainMenu,
+  	layoutRestorer,
+  	fileBrowserFactory,
+  	renderMimeRegistry,
+  	settingRegistry,
+  	documentManager,
+  	statusBar
+){
+
+	 var jupyterDependencies = {
+	    'mainMenu': mainMenu,
+	    'layoutRestorer': layoutRestorer,
+	  	'fileBrowserFactory': fileBrowserFactory,
+	  	'renderMimeRegistry': renderMimeRegistry,
+	  	'settingRegistry': settingRegistry,
+	  	'documentManager': documentManager,
+	  	'statusBar': statusBar,
+    	'ReactWidget': ReactWidget,
+    	'FileDialog': FileDialog
+    };
 
 	let url = document.URL;
 	let maxDepth = url.split('/').length;
@@ -28,7 +86,7 @@ async function init(app){
 			.then(async () => {
 				if(window.init_workspace_module){
 				    try{
-				    	await window.init_workspace_module(app, ReactWidget);
+				    	await window.init_workspace_module(app, jupyterDependencies);
 				    } catch(exception){
 				       console.error("[workspace_module]: Error while calling init method 'window.init_workspace_module'", exception);
 				    }

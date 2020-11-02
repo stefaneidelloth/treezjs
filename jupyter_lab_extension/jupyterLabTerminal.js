@@ -2,61 +2,48 @@ import TableData from '../src/data/database/tableData.js';
 
 export default class JupyterLabTerminal {
 
-	constructor(app){
-		var notebookPanel = this.__getFirstVisibleNotebookPanel(app);	
-		if(notebookPanel){
-			var notebook = notebookPanel.content;
+	constructor(app, dependencies){
+		this.__app = app;
+		this.__dependencies = dependencies;
+		this.__notebookPanel = this.__getFirstVisibleNotebookPanel(app);
+		//var documentManager = this.__getDocumentManager(app);	
+		if(this.__notebookPanel){
+			var notebook = this.__notebookPanel.content;
 			var notebookModel = notebook.model;
-			var sessionContext = notebookPanel.sessionContext;				
+			var sessionContext = this.__notebookPanel.sessionContext;				
 			this.__kernel = sessionContext.session.kernel;
 		}			
 	}
 	
-	async browseFilePath(initialDirectory, initialFile){  
+	async browseFilePath(initialDirectory, initialFile){
 
-		var pythonCode = '%%python\n' +
-						 '# -*- coding: utf-8 -*-\n' +
-		                 'import os\n' +
-						 'import tkinter\n' +
-						 'from tkinter import filedialog\n' +
-						 'root = tkinter.Tk()\n' +
-						 'root.withdraw() #use to hide tkinter window\n';
+		var FileDialog = this.__dependencies['FileDialog'];
+		var documentManager = this.__dependencies['documentManager'];
 
-		if(!initialFile){
-			initialFile = '';
+		const dialog = FileDialog.getOpenFiles({manager: documentManager});
+	    const result = await dialog;
+		if(result.button.accept){
+		  let files = result.value;
+		  return files[0].path.trim();
 		}
-
-		if(initialDirectory){
-			pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, initialdir="' + initialDirectory + '", initialfile = "'+ initialFile +'", title="Browse file path")\n';
-		} else {
-				pythonCode +=  'tempdir = filedialog.asksaveasfilename(parent=root, title="Browse file path", initialfile = "' + initialFile + '")\n';			
-		}
-
-		pythonCode = pythonCode + 'print(tempdir)\n';				
-
-		let path =  await this.executePythonCode(pythonCode, true);		 
-		return path.trim();
+		return ''; 
     }	
 
    
     async browseDirectoryPath(initialDirectory){   	
-		var pythonCode = '%%python\n' +
-			'# -*- coding: utf-8 -*-\n' +
-			'import os\n' +
-			'import tkinter\n' +
-			'from tkinter import filedialog\n' +
-			'root = tkinter.Tk()\n' +
-			'root.withdraw() #use to hide tkinter window\n';
+		var FileDialog = this.__dependencies['FileDialog'];
+		var documentManager = this.__dependencies['documentManager'];
 
-		if(initialDirectory){
-			pythonCode +=  'tempdir = filedialog.askdirectory(parent=root, initialdir="' + initialDirectory + '", title="Browse directory path")\n';
-		} else {
-				pythonCode +=  'tempdir = filedialog.askdirectory(parent=root, title="Browse directory path")\n';			
+        //logs some error to the console due to a Jupyterlab bug
+        //also see
+        //https://github.com/jupyterlab/jupyterlab/issues/9263
+		const dialog = FileDialog.getExistingDirectory({manager: documentManager});
+	    const result = await dialog;
+		if(result.button.accept){
+		  let folders = result.value;
+		  return folders[0].path.trim();
 		}
-
-		pythonCode = pythonCode + 'print(tempdir)\n';
-		
-		return await this.executePythonCode(pythonCode, true);	
+		return ''; 	
     }
   
 
@@ -150,7 +137,7 @@ export default class JupyterLabTerminal {
             //Also see
             //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
             //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
-    	    var feature = self.__kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
+    	    var feature = self.__kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});    	   
     	    feature.onReply(msg=>{
     	    	console.log(msg);
     	    });
@@ -223,10 +210,8 @@ export default class JupyterLabTerminal {
 						reject();
 
 				};
-    	    };
-    	    //await feature.done;
-    	    	
-		 	
+    	    }; 
+    	     //await feature.done;   	   		 	
 		})
 		.catch(errorHandler)
 		.then(finishedHandler);		
@@ -300,53 +285,63 @@ export default class JupyterLabTerminal {
 	 	
 	 	var self=this;
 
-    	return new Promise(function(resolve, reject) {  
-    		
-			    
-			var callbacks = {
-					shell : {
-							reply : (data)=>{
-								var content = data.content
-								switch(content.status){
-									case 'ok':			
-									   	if(!isExpectingOutput){
-									   		resolve();
-									   	}										
-										break;
-									case 'error':
-										reject(content.evalue)
-										break;
-									default:
-										throw new Error('Not yet implemented content status "' + content.status + '"');
-								}
-								
-							},
-					},
-			        iopub : {
-			                 output : (data)=>{			                	 
-			                	var content = data.content;
-			                    switch(content.name){
-			                    	case 'stderr':	            		
-			                    		reject(content.text);
-			                    		break;
-			                    	case 'stdout':			                    		
-			                    		resolve(content.text);				                    			                    		
-			                    		break;				                    		
-			                    	case undefined:
-			                    		reject(content.ename + ': ' + content.evalue);	
-			                    		break;		                    			                    		
-			                    	default:
-										throw new Error('Not yet implemented content type "' + content.name + '"');
-			                    }
-			                 }
-			        },
-			        input: (request) => {
-			            	throw new Error('Considering user input is not yet implemented.');
-			            }
-			};                
+    	return await new Promise(async (resolve, reject) => {  
+            //Also see
+            //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
+            //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
+    	    var feature = self.__kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
+    	    feature.onReply(msg=>{
+    	    	console.log(msg);
+    	    });
+    	    feature.onIOPub = (msg) =>{
+    	    	var msgType = msg.header.msg_type;
+    	    	switch (msgType) {
+    	    		case 'status':
+    	    		    return;
+    	    		case 'execute_input':
+    	    		    return;
+    	    		case 'stream':
+    	    		    var content = msg.content;
+    	    		    var type = content.name;
+    	    		    switch(type){
+    	    		    	case 'stdout':
+    	    		    	    var message = content.text;    	    		    	    
+								resolve(message);								
+								break;
+    	    		    	case 'stderr':
+    	    		    	    var message = content.text;    	    		    	    				    
+								reject(message);
+								break;
+    	    		    	default:
+    	    		    	    var message = '[jupyterLabTerminal]: Unknown stream type ' + type;												    
+								reject(message);
+						} 
+						break;   	    		    
+    	    		case 'error':
+    	    		    /* //already covered by stream stderr    	    		   				    
+						reject(message);
+						break;
+						*/
+						return;
+					case 'execute_result':
+						var result = msg.content;						
+						resolve(result);						
+						break;
+					case 'display_data':
+						var result = msg.content;
+						resolve(result);											
+						break;
+					case 'update_display_data':
+						var result = msg.content;
+						resolve(result);											
+						break;
+					default:
+					    var message = '[jupyterLabTerminal]: Unknown message type ' + msgType;					  				    
+						reject(message);
 
-		 	self.__kernel.execute(pythonCode, callbacks);
-		}); 	
+				};
+    	    }; 		 	
+		});	
     }
 	
 	async executePythonCodeWithCell(pythonCode){

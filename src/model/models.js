@@ -71,7 +71,7 @@ export default class Models extends Model {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				Path,
-				'path',
+				'paths',
 				'path.png',
 				parentSelection,
 				this,
