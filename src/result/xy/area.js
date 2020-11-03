@@ -127,6 +127,16 @@ export default class Area extends GraphicsAtom {
 
 	__plotBelowArea(dTreez, parentName, xySelection, xyData, xScale, yScale, interpolationMode) {
 
+        if(!xScale){
+        	console.warn('xScale is missing');
+        	return;
+        }
+
+        if(!yScale){
+        	console.warn('yScale is missing');
+        	return;
+        }
+
 		var id = 'area-below_' + parentName;
 
 		//remove old area group if it already exists
@@ -138,6 +148,8 @@ export default class Area extends GraphicsAtom {
 				.append('g') //
 				.attr('id', id) //
 				.attr('class', 'area-below');
+
+		
 
 		var yMin = yScale(0.0);
 

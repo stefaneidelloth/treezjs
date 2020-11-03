@@ -24,11 +24,8 @@ export default class GraphicsView {
 	}
 	
 	async saveSvg(){
-		var svgElement = this.__svgSelection.node();
-		
-		var svgXml = (new XMLSerializer).serializeToString(svgElement);
-		
-		var filePath = await window.treezTerminal.browseFilePath(null, 'treez.svg');
-		await window.treezTerminal.writeTextFile(filePath, svgXml);
+		var svgElement = this.__svgSelection.node();		
+		var svgXml = (new XMLSerializer).serializeToString(svgElement);		
+		await window.treezTerminal.downloadTextFile('treez.svg', svgXml);
 	}
 }

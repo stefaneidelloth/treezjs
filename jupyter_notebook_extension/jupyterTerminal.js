@@ -85,6 +85,17 @@ export default class JupyterTerminal {
 		return this.executePythonCode(pythonCode, false);
 	}
 
+	async downloadTextFile(fileName, text){
+		const url = `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`;
+        const element = document.createElement('a');
+		element.setAttribute('href', url);
+		element.setAttribute('download', fileName);
+		element.style.display = 'none';
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
+	}
+
 	__escapeSpecialCharacters(text){
 		var textWithSlashes = text.replace(/\\/g,'\\\\');
 		var textWithLineBreaks =  textWithSlashes.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');

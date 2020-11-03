@@ -79,44 +79,48 @@ export default class Xy extends PagedGraphicsAtom {
 
 	__contributeDataForXAxis() {
 		var xScaleChanged = false;	
-		var axis = this.xAxis;			
-		if (axis.isOrdinal) {
-			var oldNumberOfXValues = axis.numberOfValues;			
-			axis.includeOrdinalValuesForAutoScale(this.ordinalXValues);			
-			xScaleChanged = this.numberOfXValues != oldNumberOfXValues;
+		var axis = this.xAxis;	
+		if(axis){		
+			if (axis.isOrdinal) {
+				var oldNumberOfXValues = axis.numberOfValues;			
+				axis.includeOrdinalValuesForAutoScale(this.ordinalXValues);			
+				xScaleChanged = this.numberOfXValues != oldNumberOfXValues;
 
-		} else {
-			var oldXLimits = axis.quantitativeLimits;
-			axis.includeDataForAutoScale(this.quantitativeXValues);
-			var xLimits = axis.quantitativeLimits;
-			if(xLimits[0] !== oldXLimits[0]){
-				xScaleChanged = true;
+			} else {
+				var oldXLimits = axis.quantitativeLimits;
+				axis.includeDataForAutoScale(this.quantitativeXValues);
+				var xLimits = axis.quantitativeLimits;
+				if(xLimits[0] !== oldXLimits[0]){
+					xScaleChanged = true;
+				}
+				if(xLimits[1] !== oldXLimits[1]){
+					xScaleChanged = true;
+				}			
 			}
-			if(xLimits[1] !== oldXLimits[1]){
-				xScaleChanged = true;
-			}			
 		}
 		return xScaleChanged;
 	}
 	
 	__contributeDataForYAxis() {
 		var yScaleChanged = false;
-		var axis = this.yAxis;			
-		if (axis.isOrdinal) {
-			var oldNumberOfYValues = axis.numberOfValues;			
-			axis.includeOrdinalValuesForAutoScale(this.ordinalYValues);			
-			yScaleChanged = this.numberOfYValues != oldNumberOfYValues;
+		var axis = this.yAxis;	
+		if(axis){		
+			if (axis.isOrdinal) {
+				var oldNumberOfYValues = axis.numberOfValues;			
+				axis.includeOrdinalValuesForAutoScale(this.ordinalYValues);			
+				yScaleChanged = this.numberOfYValues != oldNumberOfYValues;
 
-		} else {
-			var oldYLimits = axis.quantitativeLimits;
-			axis.includeDataForAutoScale(this.quantitativeYValues);
-			var yLimits = axis.quantitativeLimits;
-			if(yLimits[0] !== oldYLimits[0]){
-				yScaleChanged = true;
+			} else {
+				var oldYLimits = axis.quantitativeLimits;
+				axis.includeDataForAutoScale(this.quantitativeYValues);
+				var yLimits = axis.quantitativeLimits;
+				if(yLimits[0] !== oldYLimits[0]){
+					yScaleChanged = true;
+				}
+				if(yLimits[1] !== oldYLimits[1]){
+					yScaleChanged = true;
+				}			
 			}
-			if(yLimits[1] !== oldYLimits[1]){
-				yScaleChanged = true;
-			}			
 		}
 		return yScaleChanged;
 	}
