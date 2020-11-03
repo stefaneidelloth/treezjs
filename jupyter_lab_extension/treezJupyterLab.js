@@ -1,10 +1,11 @@
 import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
 
+let home = + '../files/files/treezjs';
 let url = document.URL;
-let startIndex = url.indexOf('/lab');
-let prefix = url.substring(0, startIndex);
-let home = prefix + '/files/treezjs';
+if(url.includes('localhost')){
+    home =  '../files/treezjs';
+}
 
 Treez.config({
 	home: home,
