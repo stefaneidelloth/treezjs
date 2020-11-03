@@ -10,3 +10,6 @@ coverage
 .nyc_output
 /package-lock.json
 /jupyter_lab_extension/jupyterlab_workspace_module/package-lock.json
+.ipynb_checkpoints/treezjs_demo-checkpoint.ipynb
+src/views/.ipynb_checkpoints/treeView-checkpoint.js
+.ipynb_checkpoints/.gitignore-checkpoint
