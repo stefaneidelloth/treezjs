@@ -1,7 +1,7 @@
 import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
 
-let home = + '../files/files/treezjs';
+let home = '../files/files/treezjs';
 let url = document.URL;
 if(url.includes('localhost')){
     home =  '../files/treezjs';
@@ -142,10 +142,14 @@ function __createEditorFactory(app){
 			},
 			processText: function(textHandler){
 				var firstCell = __tryToGetFirstNotebookCell(app);	
-				var jupyterText = firstCell.editor.doc.getValue();						
-				var javaScript = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
+				if(firstCell){
+					var jupyterText = firstCell.editor.doc.getValue();						
+					var javaScript = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
 
-				textHandler(javaScript);
+					textHandler(javaScript);
+				} else {
+					console.warn('In order to import code, first document must by notebook.');
+				}	
 			}
 		};
 
