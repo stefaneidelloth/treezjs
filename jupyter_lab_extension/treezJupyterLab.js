@@ -25,12 +25,13 @@ window.init_workspace_module = async (app, dependencies)=>{
 		},
 	});
 
+    
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');
 	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
 
 	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');		
 	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
-
+   
 
 	require([		
 		'golden-layout', 		
@@ -45,15 +46,16 @@ window.init_workspace_module = async (app, dependencies)=>{
 		var treezPlugin = new ReactWidget();
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
-		treezPlugin.title.icon = 'treez-icon-class';   
-		treezPlugin.render = () => {};  //needs to exist
+		treezPlugin.title.icon = 'treez-icon-class'; 
+		treezPlugin.render = () => {}; //needs to exist 	
 
-		treezPlugin.onActivateRequest =()=>{
-			if(!treezPlugin.hasBeenActivated){
-				__increaseWidthOfLeftSideBar(app);
-				treezPlugin.hasBeenActivated=true;
-			}			
+		treezPlugin.onActivateRequest =()=>{		
+			__increaseWidthOfLeftSideBar(app, treezPlugin);						
 		};
+
+		treezPlugin.onAfterHide = ()=>{
+			__decreaseWidthOfLeftSideBar(app, treezPlugin);
+		}			
 
 		var treezView = treezPlugin.node;  		
 
@@ -83,22 +85,43 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 };
 
-function __increaseWidthOfLeftSideBar(app){
+function __increaseWidthOfLeftSideBar(app, treezPlugin){
 
 	var width = window.innerWidth/2;
-	var leftStack = document.getElementById('treez');	
-	leftStack.style.width = '' + width +'px';
 
-	var leftStack = document.getElementById('jp-left-stack');	
-	leftStack.style.width = '' + width +'px';
+    var leftStack = document.getElementById('jp-left-stack');
+    if(!app.__widthOfLeftSideBarBackup){
+	    app.__widthOfLeftSideBarBackup = parseInt(leftStack.style.width);
+    }
+	leftStack.style.width = '' + (width) +'px';
+		
+	var treezElement = document.getElementById('treez');
+	treezElement.style.width = '' + (width-1) +'px';
 
 	var splitHandle = leftStack.nextSibling;
-	splitHandle.style.left = '' + width +'px';
+	splitHandle.style.left = '' + (width) +'px';	
 
 	var rightStack = splitHandle.nextSibling;
-	rightStack.style.left = '' + (width +3) +'px';
-	rightStack.style.width = '' + (width -3) + 'px';
+	rightStack.style.left = '' + (width +1) +'px';	
 	
+}
+
+function __decreaseWidthOfLeftSideBar(app, treezPlugin){
+
+	var width = app.__widthOfLeftSideBarBackup;    
+
+	if(!width){
+		return;
+	}	
+
+	var leftStack = document.getElementById('jp-left-stack');	
+	leftStack.style.width =  '' + width + 'px';
+
+	var splitHandle = leftStack.nextSibling;
+	splitHandle.style.left = '' + width +'px';		
+
+	var rightStack = splitHandle.nextSibling;
+	rightStack.style.left = '' + (width +1) +'px';		
 }
 
 function __createEditorFactory(app){
