@@ -82,32 +82,71 @@ export default class TreeView {
 		this.clearMonitoringView(); 
 		this.clearGraphicsView();	
 
-		 window.scriptLoadedHook = ()=>{
+		window.scriptLoadedHook = ()=>{
 				window.scriptLoadedHook = undefined;
 				if(window.createModel){
 					this.model = window.createModel();
 				}				
 				this.refresh(); 			
-		};   
+		}; 
 
-		var body = document.getElementsByTagName('body')[0];
-		var script = document.createElement('script');
-		script.type = 'module';   
+		var self = this;
     	 		   	
-        this.editor.processText((sourceCode)=>{
-			
-			script.innerHTML = sourceCode + '\n' + 
-							   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 
+        this.editor.processText(async (sourceCode)=>{
 
-			try {
-				body.appendChild(script); 
-			} catch(excepton){
-				console.warn('Could not process JavaScript code:\n', exception);
-			}		
-			
-        }); 
+        	await new Promise((resolve, reject)=>{               
 
-        this.refreshPropertiesView();
+				var script = document.createElement('script');
+				script.type = 'module';
+				script.innerHTML = sourceCode + '\n' + 
+								   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 
+
+				var windowErrorHandler = (event) =>{
+					event.preventDefault();
+					var error = event.error;
+					error.stack = error.stack + '\n\n' + sourceCode;					
+					window.removeEventListener('error', windowErrorHandler);
+					reject(error);
+				};
+
+				window.addEventListener('error', windowErrorHandler);  
+
+				var rejectHandler = (error) =>{
+					window.removeEventListener('error', windowErrorHandler);
+					reject(error);					
+				};				
+
+				script.addEventListener('error', rejectHandler);
+				//script.onerror = rejectHandler;
+
+				script.addEventListener('abort', rejectHandler);
+				//script.onabort = rejectHandler;
+				             
+
+				var loadedHandler = ()=>{
+					window.removeEventListener('error', windowErrorHandler);
+					resolve();
+				};
+
+                script.addEventListener('load', loadedHandler);
+				script.onload = loadedHandler;
+
+				var body = document.getElementsByTagName('body')[0];
+				try {
+					body.appendChild(script); 
+				} catch(error){
+					reject(error);
+				}				
+
+			})
+			.catch(error => {
+				console.warn('[Treez]: Could not process JavaScript code:\n', error);
+			})
+			.then(()=>{
+				self.refreshPropertiesView();
+			});        			
+			
+        });        
         	
     }
     

@@ -1,8 +1,13 @@
 import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
 
+let url = document.URL;
+let startIndex = url.indexOf('/lab');
+let prefix = url.substring(0, startIndex);
+let home = prefix + '/files/treezjs';
+
 Treez.config({
-	home: '../files/files/treezjs',
+	home: home,
 	isSupportingPython: true
 });
 
