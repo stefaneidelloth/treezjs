@@ -90,10 +90,9 @@ function __increaseWidthOfLeftSideBar(app, treezPlugin){
 
 	var width = window.innerWidth/2;
 
-    var leftStack = document.getElementById('jp-left-stack');
-    if(!app.__widthOfLeftSideBarBackup){
-	    app.__widthOfLeftSideBarBackup = parseInt(leftStack.style.width);
-    }
+    var leftStack = document.getElementById('jp-left-stack');    
+	app.__widthOfLeftSideBarBackup = parseInt(leftStack.style.width);
+    
 	leftStack.style.width = '' + (width) +'px';
 		
 	var treezElement = document.getElementById('treez');
@@ -101,6 +100,7 @@ function __increaseWidthOfLeftSideBar(app, treezPlugin){
 
 	var splitHandle = leftStack.nextSibling;
 	splitHandle.style.left = '' + (width) +'px';	
+    splitHandle.style.backgroundColor = 'blue';
 
 	var rightStack = splitHandle.nextSibling;
 	rightStack.style.left = '' + (width +1) +'px';	

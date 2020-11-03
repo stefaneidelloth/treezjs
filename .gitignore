@@ -13,3 +13,4 @@ coverage
 .ipynb_checkpoints/treezjs_demo-checkpoint.ipynb
 src/views/.ipynb_checkpoints/treeView-checkpoint.js
 .ipynb_checkpoints/.gitignore-checkpoint
+jupyter_lab_extension/.ipynb_checkpoints/jupyterLabTerminal-checkpoint.js
