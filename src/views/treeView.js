@@ -111,16 +111,16 @@ export default class TreeView {
 
 				window.addEventListener('error', windowErrorHandler);  
 
-				var rejectHandler = (error) =>{
+				var rejectHandler = (event) =>{
+					console.log(event);
 					window.removeEventListener('error', windowErrorHandler);
-					reject(error);					
+					var message = 'Please check the import statements:\n'+sourceCode;
+					reject(message);						
 				};				
 
-				script.addEventListener('error', rejectHandler);
-				//script.onerror = rejectHandler;
+				script.addEventListener('error', rejectHandler);				
 
-				script.addEventListener('abort', rejectHandler);
-				//script.onabort = rejectHandler;
+				script.addEventListener('abort', rejectHandler);			
 				             
 
 				var loadedHandler = ()=>{
