@@ -20,7 +20,8 @@
   "scripts": {},
   "dependencies": {
     "@jupyterlab/apputils": "^2.2.6",
-    "@jupyterlab/filebrowser": "^2.2.5"
+    "@jupyterlab/filebrowser": "^2.2.5",
+    "@jupyterlab/notebook": "^2.2.7"
   },
   "devDependencies": {}
 }

@@ -43,6 +43,11 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			}
 
 			//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
+
+			//There is a known issue with double cursors, also see
+            //https://stackoverflow.com/questions/58526378/how-to-avoid-double-cursor-caret-in-codemirror-textfield
+
+
 			await this.initializeCodeMirror();
 
 			var self = this; 

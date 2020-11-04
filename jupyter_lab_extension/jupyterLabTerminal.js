@@ -87,7 +87,7 @@ export default class JupyterLabTerminal {
 		element.click();
 		document.body.removeChild(element);
 	}
-	
+
 
 	__escapeSpecialCharacters(text){
 		var textWithSlashes = text.replace(/\\/g,'\\\\');
@@ -360,18 +360,47 @@ export default class JupyterLabTerminal {
 	 	
 	 	var self=this;
 
-    	return new Promise(function(resolve, reject) {  
-    		
-			var cell = self.__notebook.insert_cell_below();
-			cell.element[0].style.display = 'none';
-			cell.set_text(pythonCode);
-			cell.events.on('finished_execute.CodeCell', (event, data) => self.__codeCellExecutionFinished(cell, data.cell, resolve));
+	 	var NotebookActions = this.__dependencies['NotebookActions'];
 
-			try{
-				cell.execute();
-			} catch(error){
-				reject(error);
-			} 
+    	return new Promise(async (resolve, reject) => {
+
+    		if(self.__notebookPanel){
+				var notebook = self.__notebookPanel.content;
+				var notebookModel = notebook.model;
+				var sessionContext = self.__notebookPanel.sessionContext;	
+				
+				var options = {	};
+				var cellModel = notebookModel.contentFactory.createCell('code',options);				
+				cellModel.value.text = pythonCode;
+
+				const activeCellIndexBackup = notebook.activeCellIndex;
+
+				
+				var newCellIndex = notebookModel.cells.length;
+				notebookModel.cells.insert(newCellIndex, cellModel);				
+				notebook.activeCellIndex = newCellIndex;
+
+				var cell = notebook.activeCell;
+				
+				try{
+					await NotebookActions.run(notebook, sessionContext);
+				} catch(error){
+					reject(error);
+				} 
+				
+				var htmlArray = [];
+
+				for(var output of cell.outputArea.node.children){								
+					htmlArray.push(output.innerHTML);
+				}					
+			   
+			    await NotebookActions.deleteCells(notebook);
+				
+				notebook.activeCellIndex = activeCellIndexBackup;
+
+				resolve(htmlArray);		
+
+			}				
     		
 		}); 	
     }
