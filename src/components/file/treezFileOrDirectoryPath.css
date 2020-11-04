@@ -1,9 +1,11 @@
 treez-file-or-directory-path {	
-      
+  position: relative;   
+  width: 100%;  
 }
 
 .treez-file-or-directory-path-container {
-    display:'inline-block';
+	position: relative;   
+    width: 100%;    
     white-space: nowrap;    
 }
 
@@ -13,21 +15,39 @@ treez-file-or-directory-path {
     font-size: 12px;   
 }
 
+.treez-file-or-directory-path-text-field-container {
+	position: relative; 
+    margin-right: 90px;   
+}
+
+.treez-file-or-directory-path-text-field {    
+    width: 100%;
+    margin-right:4px;
+    margin-left:0;
+    vertical-align: middle;    
+	font-family: Consolas;
+	font-size: 12px;
+}
+
 .treez-file-or-directory-path-is-file-button {	
+    position: absolute;
+    top: 2px;
+    right: 30px;
+    width:33px;	
+	height:15px;
 	background-repeat: no-repeat;
 	border: none;
-	width:33px;	
-	height:15px;	
+		
 	color:transparent;
 	margin-right:4px;
 	vertical-align: middle;	
 }
 
-.treez-file-or-directory-path-left-span {
-	
-}
 
 .treez-file-or-directory-path-browse-button {	
+    position: absolute;
+    top: 2px;
+    right: 10px;
 	background-repeat: no-repeat;	
 	border: none;
 	width:17px;
@@ -37,18 +57,13 @@ treez-file-or-directory-path {
 }
 
 .treez-file-or-directory-path-play-button {	
+    position: absolute;
+    top: 2px;
+    right: 0px;  
+    width:5px;
 	background-repeat: no-repeat;	
-	border: none;
-	width:16px;
+	border: none;	
 	color:transparent;
 	vertical-align: middle;
 }
 
-.treez-file-or-directory-path-text-field {    
-    margin-right:4px;
-    margin-left:0;
-    vertical-align: middle;
-    width:84%;
-	font-family: Consolas;
-	font-size: 12px;
-}

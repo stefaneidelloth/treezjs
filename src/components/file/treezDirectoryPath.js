@@ -21,7 +21,8 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             container.className = 'treez-directory-path-container';
             this.appendChild(container);  
 
-            var leftSpan = document.createElement('span');
+            var leftSpan = document.createElement('div');
+            leftSpan.className='treez-directory-path-text-field-container';  
             container.appendChild(leftSpan);                    
 
             var textField = document.createElement('input');
@@ -31,9 +32,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             textField.onchange = ()=>this.textFieldChanged();    
             textField.title = this.fullPath;   
             leftSpan.appendChild(textField);
-
-            var rightSpan = document.createElement('span');
-            container.appendChild(rightSpan);
+     
 
 		    var browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;	
@@ -43,7 +42,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
 		    browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browseDirectory.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseDirectoryPath();				   
-            rightSpan.appendChild(browseButton);   
+            container.appendChild(browseButton);   
 
             var executeButton = document.createElement('input');
             this.__executeButton = executeButton;
@@ -53,7 +52,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             executeButton.style.background = 'url("' + this.__urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
-            rightSpan.appendChild(executeButton);                    		
+            container.appendChild(executeButton);                    		
         }
         
         this.update();

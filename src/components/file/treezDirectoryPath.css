@@ -1,9 +1,12 @@
 treez-directory-path {   
-    
+  position: relative;   
+  width: 100%;
 }
 
 .treez-directory-path-container {   
-    white-space: nowrap;   
+  position: relative;   
+  width: 100%;   
+  white-space: nowrap;  
 }
 
 .treez-directory-path-label { 
@@ -12,28 +15,39 @@ treez-directory-path {
     font-size: 12px;
 }
 
+.treez-directory-path-text-field-container {
+	position: relative; 
+    margin-right: 55px;   
+}
+
+.treez-directory-path-text-field {   
+    width: 100%;
+    vertical-align: middle;
+    font-family: Consolas;
+    font-size: 12px;
+}
+
 .treez-directory-path-browse-button {	
-	background-repeat: no-repeat;	
-	border: none;
-	width:16px;
+	position: absolute;
+    top: 2px;
+    right: 10px;
+    width:16px;
+	background-repeat: no-repeat;
+	border: none;	
 	color:transparent;
 	margin-right:4px;
 	vertical-align: middle;
 }
 
 .treez-directory-path-play-button {	
-    background-repeat: no-repeat;	
-	border: none;
-	width:16px;
+    position: absolute;
+    top: 2px;
+    right: 0px;  
+    width:5px;	  
+	background-repeat: no-repeat;
+	border: none;	
 	color:transparent;
 	vertical-align: middle;
 }
 
-.treez-directory-path-text-field {   
-    width: 90%;      
-    margin-right:4px;
-    margin-left:0;
-    vertical-align: middle;
-	font-family: Consolas;
-	font-size: 12px;
-}
+

@@ -23,8 +23,8 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             container.className ='treez-file-or-directory-path-container';                       
             this.appendChild(container);  
 
-            let leftSpan = document.createElement('span');
-            leftSpan.className = 'treez-file-or-directory-path-left-span';
+            let leftSpan = document.createElement('div');
+            leftSpan.className = 'treez-file-or-directory-path-text-field-container';
             container.appendChild(leftSpan);
           
             let textField = document.createElement('input');
@@ -33,11 +33,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             textField.className='treez-file-or-directory-path-text-field';
             textField.onchange = () => this.textFieldChanged();
             textField.title = this.fullPath;
-            leftSpan.appendChild(textField);
-
-            let rightSpan = document.createElement('span');
-            rightSpan.style.verticalAlign = 'middle';
-            container.appendChild(rightSpan); 
+            leftSpan.appendChild(textField);           
 
             let isFileButton = document.createElement('input');
             this.__isFileButton = isFileButton;
@@ -47,7 +43,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 			isFileButton.className='treez-file-or-directory-path-is-file-button';	
 			isFileButton.style.background = 'url("' + this.__urlPrefix + '/icons/fileToggle.png")';
 			isFileButton.style.backgroundRepeat = 'no-repeat';
-			rightSpan.appendChild(isFileButton);
+			container.appendChild(isFileButton);
 
 		    let browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;						   
@@ -57,7 +53,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 		    browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFileOrDirectoryPath();				   
-            rightSpan.appendChild(browseButton);   
+            container.appendChild(browseButton);   
             
             let executeButton = document.createElement('input');
             this.__executeButton = executeButton;
@@ -67,7 +63,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             executeButton.style.background = 'url("' + this.__urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
-            rightSpan.appendChild(executeButton); 
+            container.appendChild(executeButton); 
         }
 
         this.update();

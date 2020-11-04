@@ -21,7 +21,8 @@ export default class TreezFilePath extends TreezAbstractPath {
             container.className= 'treez-file-path-container';                       
             this.appendChild(container);  
 
-            let leftSpan = document.createElement('span');
+            let leftSpan = document.createElement('div');
+            leftSpan.className='treez-file-path-text-field-container'; 
             container.appendChild(leftSpan);                    
 
             let textField = document.createElement('input');
@@ -32,8 +33,8 @@ export default class TreezFilePath extends TreezAbstractPath {
             textField.title = this.fullPath;
             leftSpan.appendChild(textField);
 
-            let rightSpan = document.createElement('span');
-            container.appendChild(rightSpan);                    
+            //let rightSpan = document.createElement('span');
+            //container.appendChild(rightSpan);                    
 
 		    let browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;	
@@ -43,7 +44,7 @@ export default class TreezFilePath extends TreezAbstractPath {
 		    browseButton.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
 		    browseButton.style.backgroundRepeat = 'no-repeat';
 		    browseButton.onclick = ()=>this.__browseFilePath();				   
-            rightSpan.appendChild(browseButton);   
+            container.appendChild(browseButton);   
 
             let executeButton = document.createElement('input');
             this.__executeButton = executeButton;
@@ -53,7 +54,7 @@ export default class TreezFilePath extends TreezAbstractPath {
             executeButton.style.background = 'url("' + this.__urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
-            rightSpan.appendChild(executeButton);                    		
+            container.appendChild(executeButton);                    		
         }
 
         this.update();
