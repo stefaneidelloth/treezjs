@@ -6,15 +6,15 @@ treez-section {
     font-size: 12px;
     margin-top:1px;
     margin-bottom:3px;
-    border-style: none;
-    /* display: block; */
+    border-style: none;   
 }
 
-treez-section div {
-  padding-left: 1px;
-  padding-right: 1px;
+treez-section > div {
   border-style:none;
   padding-bottom: 5px;
+  padding-left: 2px;
+  padding-right: 4px;
+ 
 }
 
 treez-section-header {

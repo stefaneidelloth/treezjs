@@ -106,11 +106,7 @@ export default class CodeModel extends Model {
 	        				   })
 	        );  
 
-        const sectionContent = section.append('div'); 
-
-        //there is a known issue with double cursors, also see
-        //https://stackoverflow.com/questions/58526378/how-to-avoid-double-cursor-caret-in-codemirror-textfield
-
+        const sectionContent = section.append('div');   
         sectionContent.append('treez-code-area') 
         	.attr('mode', this.mode)          
             .onChange(()=>this.refreshStatus())           
