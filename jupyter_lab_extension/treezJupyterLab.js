@@ -51,11 +51,11 @@ window.init_workspace_module = async (app, dependencies)=>{
 		treezPlugin.render = () => {}; //needs to exist 	
 
 		treezPlugin.onActivateRequest =()=>{		
-			__increaseWidthOfLeftSideBar(app, treezPlugin);						
+			//__increaseWidthOfLeftSideBar(app, treezPlugin);						
 		};
 
 		treezPlugin.onAfterHide = ()=>{
-			__decreaseWidthOfLeftSideBar(app, treezPlugin);
+			//__decreaseWidthOfLeftSideBar(app, treezPlugin);
 		}			
 
 		var treezView = treezPlugin.node;  		

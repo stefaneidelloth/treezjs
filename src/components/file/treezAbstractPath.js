@@ -51,9 +51,8 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     	this.value = TreezAbstractPath.replacePathSeparators(this.__textField.value.trim());                	             	
     }
 
-    execute(){
-    	let command = this.fullPath;
-    	window.treezTerminal.executeWithoutWait(command, undefined, (message) => {
+    execute(){    	
+    	window.treezTerminal.openPath(this.fullPath, (message) => {
     			console.error(message);
     			alert(message);
     		}

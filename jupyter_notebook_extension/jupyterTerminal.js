@@ -139,6 +139,24 @@ export default class JupyterTerminal {
 		this.__executePythonCode(pythonCode, undefined, errorHandler, finishedHandler);		
 	}
 
+	async openPath(path, errorHandler, finishedHandler){        
+       
+        var url = document.URL + '/tree/' + path;
+        try{
+        	var win = window.open(url, '_blank');
+            win.focus();
+        } catch(error){
+        	console.error("Could not open path '" + path + "'.\n", error);
+        	if(errorHandler){
+        		errorHandler(error);
+        	}
+        }        
+
+        if(finishedHandler){
+        	finishedHandler(url);
+        }        
+	}
+
 
 	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
 			

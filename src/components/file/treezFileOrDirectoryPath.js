@@ -63,7 +63,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             this.__executeButton = executeButton;
             executeButton.type = 'button';
             executeButton.className='treez-file-or-directory-path-play-button';	
-            executeButton.title = 'Open (or execute) file or directory';
+            executeButton.title = 'Open file or directory';
             executeButton.style.background = 'url("' + this.__urlPrefix + '/icons/run_triangle.png")';
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   

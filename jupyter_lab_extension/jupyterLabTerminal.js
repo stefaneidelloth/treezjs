@@ -120,16 +120,36 @@ export default class JupyterLabTerminal {
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	
 
-	openDirectory(directoryPath, errorHandler, finishedHandler){
+	async openDirectory(directoryPath, errorHandler, finishedHandler){
+        var fileBrowser = this.__app.shell.widgets('left').next();
+        var fileBrowserModel = fileBrowser.model; 
+        await fileBrowserModel.cd(directoryPath);
+        this.__app.shell.activateById(fileBrowser.id);
+        if(finishedHandler){
+        	finishedHandler();
+        }        
+	}
 
-		let path = directoryPath.replace(/\//g, "\\");
-			
-		var pythonCode = '%%python\n' +
-						 '# -*- coding: utf-8 -*-\n' +
-					     'from subprocess import Popen\n' +		                
-                         'Popen(\'cmd /k start ' + path + '\')';	
+	async openPath(path, errorHandler, finishedHandler){  
 
-		this.__executePythonCode(pythonCode, undefined, errorHandler, finishedHandler);		
+        var url = document.URL + '/tree/' + path;
+	    if(!path.includes('.ipynb')){
+            url = document.URL + '/../files/' + path;
+	    }      
+       
+        
+        try{
+    	    window.open(url, '_blank');
+        } catch(error){
+        	console.error("Could not open path '" + path + "'.\n", error);
+        	if(errorHandler){
+        		errorHandler(error);
+        	}
+        }        
+
+        if(finishedHandler){
+        	finishedHandler(url);
+        }        
 	}
 
 
@@ -368,7 +388,7 @@ export default class JupyterLabTerminal {
 				var notebook = self.__notebookPanel.content;
 				var notebookModel = notebook.model;
 				var sessionContext = self.__notebookPanel.sessionContext;	
-				
+
 				var options = {	};
 				var cellModel = notebookModel.contentFactory.createCell('code',options);				
 				cellModel.value.text = pythonCode;
@@ -405,31 +425,7 @@ export default class JupyterLabTerminal {
 		}); 	
     }
 
-    __codeCellExecutionFinished(cell, finishedCell, resolve){
-	
-		if(finishedCell !== cell){
-			return;
-		}
-
-		var htmlArray = [];
-		
-		var outputContainer = cell.output_area.element[0];
-		for(var outputArea of outputContainer.children){
-			outputArea.children[0].style.display = 'none';	
-			outputArea.children[1].style.display = 'none';				
-			htmlArray.push(outputArea.innerHTML);
-		}	
-
-		var cells = this.__notebook.get_cells();
-		var cellIndex = cells.indexOf(finishedCell);
-
-		if(cellIndex>-1){
-			this.__notebook.delete_cell(cellIndex);
-		}				
-
-		resolve(htmlArray);
-		
-    }
+   
 
     __tryToGetFirstNotebookCell(app){
 		var notebookPanel = __getFirstVisibleNotebookPanel(app);
