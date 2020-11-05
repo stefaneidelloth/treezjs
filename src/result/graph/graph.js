@@ -8,6 +8,7 @@ import Bar from './../bar/bar.js';
 import Xy from './../xy/xy.js';
 import XySeries from './../xySeries/xySeries.js';
 import Tornado from './../tornado/tornado.js';
+import Chord from './../chord/chord.js';
 import Legend from './../legend/legend.js';
 
 
@@ -89,6 +90,17 @@ export default class Graph extends PagedGraphicsAtom {
 				Tornado,
 				'tornado',
 				'tornado.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
+
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				Chord,
+				'chord',
+				'chord.png',
 				parentSelection,
 				this,
 				treeView
@@ -204,6 +216,10 @@ export default class Graph extends PagedGraphicsAtom {
 
 	createLegend(name) {
 		return this.createChild(Legend, name);
+	}
+
+	createChord(name) {
+		return this.createChild(Chord, name);
 	}
 
 	createContour(name) {

@@ -64,10 +64,20 @@ export default class DTreezSelection {
 		var selection = this.__d3Selection.data(data, callBack);
 		return new DTreezSelection(selection);
 	}
+
+	datum(datum){
+		var selection = this.__d3Selection.datum(datum);
+		return new DTreezSelection(selection);
+	}
 	
 	disable(){
 		this.__d3Selection.attr('disabled', '');		
 		return this;
+	}
+
+	each(method){
+		var selection = this.__d3Selection.each(method);
+		return new DTreezSelection(selection);
 	}
 	
 	enter(){

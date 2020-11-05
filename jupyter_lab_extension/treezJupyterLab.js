@@ -15,8 +15,7 @@ Treez.config({
 window.init_workspace_module = async (app, dependencies)=>{
    
 	await Treez.importScript('/bower_components/requirejs/require.js');	
-	Treez.importCssStyleSheet('/jupyter_lab_extension/treezJupyterLab.css');
-
+	
 	require.config({
 		baseUrl : treezConfig.home,
 		paths : {

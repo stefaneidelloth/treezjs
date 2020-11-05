@@ -11,6 +11,10 @@ export default class DTreez {
 		this.event = new DTreezEvent(d3);
 	}
 
+	arc(){
+		return this.__d3.arc();
+	}
+
 	area(){
 		return this.__d3.area();
 	}
@@ -31,6 +35,10 @@ export default class DTreez {
 		return this.__d3.axisBottom(scale);
 	}
 
+	chord(){
+		return this.__d3.chord();
+	}
+
 	drag(){
 		return this.__d3.drag();
 	}
@@ -42,6 +50,14 @@ export default class DTreez {
 	line(){
 		return this.__d3.line();
 	}	
+
+	range(start, end, step){
+		return this.__d3.range(start, end, step);
+	}
+
+	ribbon(){
+		return this.__d3.ribbon();
+	}
 
 	scaleBand(){
 		return this.__d3.scaleBand();
@@ -121,6 +137,10 @@ export default class DTreez {
 		scaleX: scaleX,
 		scaleY: scaleY
 	  };
+	}
+
+	get descending(){
+		return this.__d3.descending;
 	}
 
 	get symbols(){
