@@ -1,3 +1,7 @@
 .treez-icon-class {
 	background-image: url("tree32.png");
 }
+
+.treez-plugin-class {
+    min-width: 50vw !important;    
+}

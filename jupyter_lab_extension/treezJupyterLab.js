@@ -15,6 +15,7 @@ Treez.config({
 window.init_workspace_module = async (app, dependencies)=>{
    
 	await Treez.importScript('/bower_components/requirejs/require.js');	
+	Treez.importCssStyleSheet('/jupyter_lab_extension/treezJupyterLab.css');
 
 	require.config({
 		baseUrl : treezConfig.home,
@@ -48,15 +49,8 @@ window.init_workspace_module = async (app, dependencies)=>{
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
 		treezPlugin.title.icon = 'treez-icon-class'; 
-		treezPlugin.render = () => {}; //needs to exist 	
-
-		treezPlugin.onActivateRequest =()=>{		
-			//__increaseWidthOfLeftSideBar(app, treezPlugin);						
-		};
-
-		treezPlugin.onAfterHide = ()=>{
-			//__decreaseWidthOfLeftSideBar(app, treezPlugin);
-		}			
+		treezPlugin.node.classList.add('treez-plugin-class'); 
+		treezPlugin.render = () => {}; //needs to exist 				
 
 		var treezView = treezPlugin.node;  		
 
@@ -85,45 +79,6 @@ window.init_workspace_module = async (app, dependencies)=>{
 	});
 
 };
-
-function __increaseWidthOfLeftSideBar(app, treezPlugin){
-
-	var width = window.innerWidth/2;
-
-    var leftStack = document.getElementById('jp-left-stack');    
-	app.__widthOfLeftSideBarBackup = parseInt(leftStack.style.width);
-    
-	leftStack.style.width = '' + (width) +'px';
-		
-	var treezElement = document.getElementById('treez');
-	treezElement.style.width = '' + (width-1) +'px';
-
-	var splitHandle = leftStack.nextSibling;
-	splitHandle.style.left = '' + (width) +'px';	
-    splitHandle.style.backgroundColor = 'blue';
-
-	var rightStack = splitHandle.nextSibling;
-	rightStack.style.left = '' + (width +1) +'px';	
-	
-}
-
-function __decreaseWidthOfLeftSideBar(app, treezPlugin){
-
-	var width = app.__widthOfLeftSideBarBackup;    
-
-	if(!width){
-		return;
-	}	
-
-	var leftStack = document.getElementById('jp-left-stack');	
-	leftStack.style.width =  '' + width + 'px';
-
-	var splitHandle = leftStack.nextSibling;
-	splitHandle.style.left = '' + width +'px';		
-
-	var rightStack = splitHandle.nextSibling;
-	rightStack.style.left = '' + (width +1) +'px';		
-}
 
 function __createEditorFactory(app){
     return (handleCreatedEditor) => {			
