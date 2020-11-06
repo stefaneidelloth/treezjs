@@ -69,7 +69,7 @@ export default class TickLabels extends GraphicsAtom {
 		sectionContent.append('treez-combo-box')
 			.label('Rotation')
 			.labelWidth('55px')
-			.attr('options','["-180","-135","-90","-45","0","45","90","135","180"]')
+			.attr('options',"['-180','-135','-90','-45','0','45','90','135','180']")
 			.bindValue(this, ()=>this.rotation);
 	
 		sectionContent.append('treez-double')
@@ -84,7 +84,37 @@ export default class TickLabels extends GraphicsAtom {
 
 	}
 
-	plot(dTreez, axisSelection, rectSelection, axis) {
+	plot(dTreez, chordContainer, rectSelection, chord) {
+
+		var outerRadius = Length.toPx(chord.nodes.outerRadius);
+
+		chord.nodeGroups.selectAll('.group-tick-label')
+		    .selectAll('.chord-tick-label')
+		    .remove();   
+		
+		chord.nodeGroups
+		  .selectAll('.group-tick-label')
+		  .data(nodeGroup => chord.groupTicks(dTreez, nodeGroup, 25))
+		  .enter()
+		  .filter(function(d) { return d.value % 25 === 0; })
+		  .append('g')
+		  .className('chord-tick-label')
+		  .attr('transform', nodeGroup => 
+			    'rotate(' + (nodeGroup.angle * 180 / Math.PI - 90) + ') ' +
+			    'translate(' + outerRadius + ',0)'
+		  )
+		  .append('text')
+			.attr('x', 8)
+			.attr('dy', '.35em')
+			.attr('transform', function(d) { return d.angle > Math.PI ? 'rotate(180) translate(-16)' : null; })
+			.style('text-anchor', function(d) { return d.angle > Math.PI ? 'end' : null; })
+			.text(function(d) { return d.value })
+			.style('font-size', 9)
+
+
+		
+
+		/*
 
 		//Hint: The major ticks already have been created with the axis (see Data).
 		//Here only the properties of the tick labels need to be applied.
@@ -124,6 +154,8 @@ export default class TickLabels extends GraphicsAtom {
 		geometryConsumer();		
 
 		return axisSelection;
+
+		*/
 	}
 
 	__updateLabelGeometry(tickLabels, isHorizontal) {

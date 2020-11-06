@@ -1,4 +1,5 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
+import Length from './../graphics/length.js';
 import Color from './../../components/color/color.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
 
@@ -18,7 +19,7 @@ export default class MajorTicks extends GraphicsAtom {
 	createPage(root) {
 		
 		var page = root.append('treez-tab')
-			.label('Major ticks');
+			.label('Ticks');
 		
 		var section = page.append('treez-section')
 			.label('Ticks');
@@ -66,7 +67,29 @@ export default class MajorTicks extends GraphicsAtom {
 
 	}
 
-	plot(dTreez, axisSelection, rectSelection, axis) {
+	plot(dTreez, chordContainer, rectSelection, chord) {
+
+        var outerRadius = Length.toPx(chord.nodes.outerRadius); 
+
+        chord.nodeGroups.selectAll('.group-tick')
+            .selectAll('.chord-tick')
+		    .remove();  
+		
+		chord.nodeGroups
+		  .selectAll('.group-tick')
+		  .data(nodeGroup => chord.groupTicks(dTreez, nodeGroup, 25)) // Controls the number of ticks: one tick each 25 here.
+		  .enter()
+		  .append('g')
+		  .className('chord-tick')
+		  .attr('transform', nodeGroup => 
+			  'rotate(' + (nodeGroup.angle * 180 / Math.PI - 90) + ') '+
+			  'translate(' + outerRadius + ',0)'
+		  )
+		  .append('line')               // By default, x1 = y1 = y2 = 0, so no need to specify it.
+			.attr('x2', 6)
+			.attr('stroke', 'black')
+
+		/*
 
 		//Hint: The major tick lines already have been created with the axis (see Data).
 		//Here only the properties of the ticks need to be applied.
@@ -114,6 +137,8 @@ export default class MajorTicks extends GraphicsAtom {
 		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, majorTickLines);		
 
 		return axisSelection;
+
+		*/
 	}
 
 	

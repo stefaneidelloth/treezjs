@@ -1,6 +1,7 @@
 .treez-color-container { 
     vertical-align: top;  
     margin-bottom: -1px; 
+    margin-bottom:10px;
 }
 
 .treez-color-label {
@@ -17,4 +18,5 @@
     margin-left: 3px;
     margin-bottom: 0px;
     vertical-align: middle;
+
 }

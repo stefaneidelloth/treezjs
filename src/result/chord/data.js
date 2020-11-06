@@ -8,9 +8,7 @@ export default class Data extends GraphicsAtom {
 		this.sourceData = 'root.data.table.columns.source';	
 		this.targetData = 'root.data.table.columns.target';	
 		this.valueData = 'root.data.table.columns.value';	
-		this.legendText = '';	
-		this.outerRadius = '4 cm';	
-		this.innerRadius = '3.8 cm';	
+		this.legendText = '';			
 	}
 
 	 createPage(root, xy) {
@@ -42,16 +40,7 @@ export default class Data extends GraphicsAtom {
 		
 		sectionContent.append('treez-text-field')
 			.label('Legend text')
-			.bindValue(this, ()=>this.legendText);	
-
-		sectionContent.append('treez-text-field')
-			.label('Outer radius')
-			.bindValue(this, ()=>this.outerRadius);
-
-		sectionContent.append('treez-text-field')
-			.label('Inner radius')
-			.bindValue(this, ()=>this.innerRadius);
-		
+			.bindValue(this, ()=>this.legendText);
 
 	}
 

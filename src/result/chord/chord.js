@@ -1,7 +1,11 @@
 import PagedGraphicsAtom from './../graphics/pagedGraphicsAtom.js';
 import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
+import Length from './../graphics/length.js';
 import Data from './data.js';
+import Nodes from './nodes.js';
 import Links from './links.js';
+import Ticks from './ticks.js';
+import TickLabels from './tickLabels.js';
 import Graph from './../graph/graph.js';
 import ChordNode from './chordNode.js';
 
@@ -9,8 +13,9 @@ export default class Chord extends PagedGraphicsAtom {
 
 	constructor(name){
 		super(name);
-		this.image = 'chord.png';
-		this.__chordSelection = undefined;		
+		this.image = 'chord.png';			
+		this.chordDatum	= undefined;
+		this.__chordContainer = undefined;
 	}
 	
 	createPageFactories() {
@@ -18,10 +23,19 @@ export default class Chord extends PagedGraphicsAtom {
 		var factories = [];
 		
 		this.data = Data.create(this);
-		factories.push(this.data);	
+		factories.push(this.data);
+
+		this.nodes = Nodes.create(this);
+		factories.push(this.nodes);	
 
 		this.links = Links.create(this);
-		factories.push(this.links);		
+		factories.push(this.links);	
+
+		this.ticks = Ticks.create(this);
+		factories.push(this.ticks);	
+
+		this.tickLabels = TickLabels.create(this);
+		factories.push(this.tickLabels);	
 		
 		return factories;
 	}
@@ -47,31 +61,146 @@ export default class Chord extends PagedGraphicsAtom {
 		
 		this.treeView = treeView;
 
-		//remove old group if it already exists
+		var chordSelection = this.__recreateChordSelection(graphSelection);	
+
+		this.__chordContainer = this.__createCenteredContainer(chordSelection);			         
+		
+		this.updatePlot(dTreez);
+
+		return this.__chordContainer;
+	}
+
+	updatePlot(dTreez) {	
+	    
+
+	    var paddingAngle = this.nodes.paddingAngle;	
+        var matrix = this.__createChordMatrix(); 
+		this.chordDatum = dTreez.chord()
+					.padAngle(paddingAngle)     
+					//.sortSubgroups(dTreez.descending)
+					(matrix); 
+
+		this.__chordContainer.selectAll('g')
+		    .remove();
+		
+		this.nodeGroups = this.__chordContainer
+		  .datum(this.chordDatum)
+		  .append('g')
+		  .selectAll('g')
+		  .data(d => d.groups)
+		  .enter()  
+		  	
+		this.__plotWithPages(dTreez);
+	}
+	
+	groupTicks(dTreez, nodeGroup, step) {
+	  var k = (nodeGroup.endAngle - nodeGroup.startAngle) / nodeGroup.value;
+	  return dTreez
+	      .range(0, nodeGroup.value, step)
+	      .map(value => {
+	      	return {value: value, angle: value * k + nodeGroup.startAngle}
+	      });
+	}
+	
+	__createChordMatrix(){	
+
+		var ids = this.__uniqueNodeIds;
+		var size = ids.length;
+
+		var matrix = this.__zeros(size, size);
+
+		var idToIndexMap = this.__idToIndexMap;
+
+		for(var row of this.chordData){
+			var sourceIndex = idToIndexMap[row[0]];
+			var targetIndex = idToIndexMap[row[1]];
+			var value = parseFloat(row[2]);
+			matrix[sourceIndex][targetIndex] = value;
+			matrix[targetIndex][sourceIndex] = value;
+		}
+				
+		return matrix;
+	}
+
+	__zeros(numberOfRows, numberOfColumns){
+		var rowArray = Array(numberOfRows)
+		return Array.from(rowArray, () => new Array(numberOfColumns).fill(0));
+	}
+
+	get __uniqueNodeIds(){
+
+		var ids = new Set();
+		for(var row of this.chordData){
+			var sourceId = row[0];
+			var targetId = row[1];
+            ids.add(sourceId);
+            ids.add(targetId);
+		}
+		return Array.from(ids);
+	}
+
+	get __idToIndexMap(){
+		var ids = this.__uniqueNodeIds;
+		var map = {};
+		var chordNodes = this.childrenByClass(ChordNode);
+		var index = 0;
+		//order defined by chordNode children has higher priority
+		for(var chordNode of chordNodes){
+			var id = chordNode.name;
+			if(ids.includes(id)){
+				map[chordNode.name] = index;
+			    index++;
+			}			
+		}
+		//derive remaining order from chord data
+		for(var id of ids){
+			if(map[id] === undefined){
+				map[id] = index;
+				index++;
+			}
+		}
+		return map;
+	}
+
+	get nodeIds(){
+		var nodeMap = this.__idToIndexMap;
+		var numberOfIds = Object.keys(nodeMap).length;
+		var nodeIds = new Array(numberOfIds);
+		for(var id of Object.keys(nodeMap)){
+           var index = nodeMap[id];
+           nodeIds[index]=id;
+		}
+       return nodeIds;
+	}
+
+	__recreateChordSelection(graphSelection){
+       
 		graphSelection //
 				.select('#' + this.name) //
 				.remove();
 
-		//create new group
-		this.__chordSelection = graphSelection //
+		
+		return graphSelection //
 				.append('g') //
 				.className('chord') //
 				.onClick(()=>this.handleMouseClick());
-		
-		this.bindString(()=>this.name, this.__chordSelection, 'id');
-		
-		this.updatePlot(dTreez);
-
-		return this.__chordSelection;
 	}
 
-	updatePlot(dTreez) {		
-		this.__plotWithPages(dTreez);
+	__createCenteredContainer(chordSelection){
+        var graphWidth = Length.toPx(this.graph.data.width);
+		var graphHeight = Length.toPx(this.graph.data.height);
+
+		var chordContainer = chordSelection.append('g')
+		    .attr('transform','translate('+ graphWidth/2+ ',' + graphHeight/2 +')');
+
+		this.bindString(() => this.name, chordContainer, 'id');
+
+		return chordContainer;
 	}
 
 	__plotWithPages(dTreez) {
 		for (var pageFactory of this.__pageFactories) {
-			pageFactory.plot(dTreez, this.__chordSelection, null, this);
+			pageFactory.plot(dTreez, this.__chordContainer, null, this);
 		}
 	}
 

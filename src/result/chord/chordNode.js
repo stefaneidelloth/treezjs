@@ -7,7 +7,7 @@ export default class ChordNode extends GraphicsAtom {
 		this.image = 'chordNode.png';
 		this.description = '';
 		this.color = 'red';
-		this.svg = '<svg><circle r="10" fill="red"/></svg>';
+		this.svg = '<svg with="16" height="16">\n</svg>';
 		this.__chordNodeSelection = undefined;		
 	}
 	
@@ -25,7 +25,7 @@ export default class ChordNode extends GraphicsAtom {
 		let sectionContent = section.append('div');
 
 		sectionContent.append('treez-text-field')
-			.label('name')		
+			.label('Name')		
 			.onChange(()=>this.__nameChanged())	
 			.bindValue(this, ()=>this.name);
 		
@@ -37,7 +37,7 @@ export default class ChordNode extends GraphicsAtom {
 			.label('Color')			
 			.bindValue(this, ()=>this.color);
 
-		sectionContent.append('treez-text-area')
+		sectionContent.append('treez-svg')
 			.label('Svg image')			
 			.bindValue(this, ()=>this.svg);		
 

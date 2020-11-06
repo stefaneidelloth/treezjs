@@ -21,9 +21,10 @@ export default class GraphicsAtom extends ComponentAtom {
 		addNameModificationListener((newName) => selection.attr("id", newName));
 	}
 	
-	handleMouseClick() {		
-		this.__treeView.setFocus(this);
-	}
+	handleMouseClick(dTreez) {
+		dTreez.event.preventDefault();		
+		this.parent.__treeView.setFocus(this.parent);	
+	}	
 	
 	addListenerAndRun(lambdaExpressionEncodingPropertyToBind, listener){
 		this.addListener(lambdaExpressionEncodingPropertyToBind, listener);

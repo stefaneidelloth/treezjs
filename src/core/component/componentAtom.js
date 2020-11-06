@@ -50,7 +50,9 @@ import TreezSymbolStyle from './../../components/symbolStyle/treezSymbolStyle.js
 import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;
 
 import TreezTabFolder from './../../components/tabs/treezTabFolder.js';
+
 import TreezCodeArea from './../../components/text/code/treezCodeArea.js';
+import TreezSvg from './../../components/text/code/treezSvg.js';
 import TreezTextArea from './../../components/text/area/treezTextArea.js';
 import TreezTextField from './../../components/text/field/treezTextField.js';
 import TreezTextLabel from './../../components/text/label/treezTextLabel.js';

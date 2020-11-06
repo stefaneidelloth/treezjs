@@ -25,6 +25,10 @@ export default class PagedGraphicsAtom extends GraphicsAtom {
 		return new PagedGraphicsAtomCodeAdaption(this);
 	}
 
+	handleMouseClick() {	
+		this.__treeView.setFocus(this);	
+	}
+
 	__initializeProperties(){		
 				
 

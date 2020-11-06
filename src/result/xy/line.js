@@ -35,7 +35,7 @@ export default class Line extends GraphicsAtom {
 		//line.createCheckBox(bezierJoin, this).setLabel('Bezier join');
 		
 		sectionContent.append('treez-color')
-			.label('Color mode')
+			.label('Color')
 			.labelWidth('120px')			
 			.bindValue(this, ()=>this.color);	
 		

@@ -29,19 +29,19 @@ export default class Label extends GraphicsAtom {
 
 		/*
 
-		ComboBox horzPosComboBox = label.createComboBox(horizontalPosition, this, "right, centre, left", "centre");
-		horzPosComboBox.setLabel("Horz position");
+		ComboBox horzPosComboBox = label.createComboBox(horizontalPosition, this, 'right, centre, left', 'centre');
+		horzPosComboBox.setLabel('Horz position');
 
-		ComboBox vertPosComboBox = label.createComboBox(verticalPosition, this, "top, centre, bottom", "centre");
-		vertPosComboBox.setLabel("Vert position");
+		ComboBox vertPosComboBox = label.createComboBox(verticalPosition, this, 'top, centre, bottom', 'centre');
+		vertPosComboBox.setLabel('Vert position');
 
-		label.createTextField(angle, this, "0");
+		label.createTextField(angle, this, '0');
 
-		label.createFont(font, "font");
+		label.createFont(font, 'font');
 
-		label.createSize(fontSize, this, "14pt").setLabel("Size");
+		label.createSize(fontSize, this, '14pt').setLabel('Size');
 
-		label.createColorChooser(color, this, "black");
+		label.createColorChooser(color, this, 'black');
 
 		label.createCheckBox(italic, this);
 
@@ -56,7 +56,7 @@ export default class Label extends GraphicsAtom {
 
 	plot(dTreez, graphSelection, rectSelection, parent) {
 
-		//parent.bindStringAttribute(selection, "x", leftMargin);
+		//parent.bindStringAttribute(selection, 'x', leftMargin);
 
 		return graphSelection;
 	}

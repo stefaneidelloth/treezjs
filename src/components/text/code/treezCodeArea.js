@@ -5,8 +5,9 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
     constructor(){
         super();
-        this.__label = undefined;
+        this.__label = undefined;       
         this.__container = undefined;
+        this.__codeMirrorPlaceHolder = undefined;
         this.__codeMirror = undefined;      
     }   
 
@@ -28,26 +29,23 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
 		if(!this.__container){
 
-			var container = document.createElement('div');
-			container.className = 'treez-code-area-container';
+			var container = document.createElement('div');			
 			this.__container = container;
+			this.appendChild(container); 
 
-			this.appendChild(container);   
+			var codeMirrorContainer = document.createElement('div');
+			codeMirrorContainer.className = 'treez-code-area-container';
+			container.appendChild(codeMirrorContainer)
 
-			if(!this.mode){
-				this.mode = 'javascript';
-			}
-
-			if(!this.value){
-				this.value = '';
-			}
+			this.initializeMode();  
+			this.initializeValue(); 			
 
 			//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config	
 
 			await this.initializeCodeMirror();
 
 			var self = this; 
-			this.__codeMirror = window.CodeMirror(container,  
+			this.__codeMirror = window.CodeMirror(codeMirrorContainer,  
 			  {
 				value: self.value,
 				mode: self.mode,
@@ -58,14 +56,32 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			  }
 			);            
 
-			this.__codeMirror.on('change', function(codeMirror, change){ 
-			   var newValue = codeMirror.getValue();               
-			   self.value = newValue; 
-			});
+			this.__codeMirror.on('change', 
+			    (codeMirror, change) => this.codeMirrorChanged(codeMirror, change) 
+			);
 		}        
 
 		this.update();
 		      
+    }
+
+    initializeMode(){  
+		if(!this.mode){
+			this.mode = 'javascript';
+		}
+    }
+
+    initializeValue(){
+        if(!this.value){
+			this.value = '';
+		}    	
+    }		
+
+			
+
+    codeMirrorChanged(codeMirror, change){
+    	var newValue = codeMirror.getValue();               
+	    this.value = newValue; 
     }
 
     async initializeCodeMirror(){
@@ -93,7 +109,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
 					'codemirror/lib/codemirror',						
 					'codemirror/mode/sql/sql',
 					'codemirror/mode/javascript/javascript',
-					'codemirror/mode/python/python'		
+					'codemirror/mode/python/python',	
+					'codemirror/mode/htmlmixed/htmlmixed'			
 				], function(
 					 CodeMirror
 				) {	
