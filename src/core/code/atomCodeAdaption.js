@@ -175,7 +175,7 @@ import Root from './../../root/root.js';
 	}
 
 	__createValueStringForEnum(enumValue) {	
-		return enumValue.constructor.name + '.' + enumValue.name;			
+		return enumValue.constructor.name + '.' + enumValue.toString();			
 	}
 	
 	__createValueStringForArray(array) {
