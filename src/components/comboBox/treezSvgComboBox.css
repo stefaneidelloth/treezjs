@@ -1,0 +1,79 @@
+.treez-svg-combo-box-container {  
+    vertical-align: top;  
+    margin-bottom:10px; 
+}
+
+.treez-svg-combo-box-display { 
+  padding:0px;	
+  margin:0px;
+}
+
+.treez-svg-combo-box-label {	
+	padding:0px;
+	margin:0px;
+	margin-top:2px;		
+	vertical-align: top;
+	display:inline-block;
+	font-family: Consolas;
+	font-size: 12px;
+}
+
+.treez-svg-combo-box {
+	display:inline-block;
+	vertical-align: middle;
+	border: 1px solid lightgrey;
+	margin-left:5px;
+
+	padding-left:2px;
+	padding-right:2px;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+
+.treez-svg-combo-box:hover {	
+	border: 1px solid grey;	
+}
+
+.treez-svg-combo-box-image-label {
+	display: inline-block;
+	height: 15px;	
+	padding:0px;	
+	margin-top:1px;
+	margin-bottom:1px;
+	margin-left:4px;
+	vertical-align: middle;
+	background-color: blue;
+}
+
+.treez-svg-combo-box-button {	
+	padding-left:3px;
+	margin:0px;
+	vertical-align: middle;
+}
+
+.treez-svg-combo-box-option-panel {	
+    position: absolute;
+    z-index: 1000;
+	align-items: center;
+	
+}
+
+.treez-svg-combo-box-option {
+	height: 17px;	
+	align-items: center;
+	padding-top:2px;
+	padding-left: 4px;
+	padding-bottom:0px;
+	margin:0px;
+	margin-right:6px;
+}
+
+.treez-svg-combo-box-option:hover {
+	background-color: #3297FD; 
+}
+
+.treez-svg-combo-box-option-image {	
+	padding-left:4px;
+	padding-top:4px;
+	margin:0px;
+}

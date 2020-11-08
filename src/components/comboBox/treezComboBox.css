@@ -1,6 +1,7 @@
 .treez-combo-box-container {   
     with: auto; 
     vertical-align: top; 
+    margin-bottom: 10px;
 }
 
 .treez-combo-box-label {  

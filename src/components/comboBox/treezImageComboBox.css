@@ -1,5 +1,6 @@
 .treez-image-combo-box-container {  
-    vertical-align: top;   
+    vertical-align: top;  
+    margin-bottom: 10px; 
 }
 
 .treez-image-combo-box-display { 
@@ -35,6 +36,7 @@
 .treez-image-combo-box-image-label {
 	padding-left:2px;
 	margin:0px;
+	vertical-align: middle;
 }
 
 .treez-image-combo-box-button {
@@ -51,6 +53,7 @@
 	align-items: center;
 	padding:0px;
 	margin:0px;
+	margin-right: 4px;
 }
 
 .treez-image-combo-box-option:hover {

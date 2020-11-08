@@ -1,19 +1,28 @@
-import TreezEnumImageComboBox from '../comboBox/treezEnumImageComboBox.js';
+import TreezSvgComboBox from '../comboBox/treezSvgComboBox.js';
 import ColorMap from './colorMap.js';
 
-export default class TreezColorMap extends TreezEnumImageComboBox {
+export default class TreezColorMap extends TreezSvgComboBox {
        	
     constructor(){
         super();                     
     }
 
     beforeConnectedCallbackHook(){
-        this.enum = ColorMap;
+        var options = {};
+
+        for(var colorMap of ColorMap.values){
+        	options[colorMap.name] = this.__createColorMapSvg(colorMap);
+        }
+        this.options = options;
     }
 
-    get imageFolderPath(){
-		return 'colorMap';
-	}
+    __createColorMapSvg(colorMap){
+    	return '<svg width="50px" height="15px">\n' +
+    	           '<rect width="50px" height="15px" fill="red"/>'
+    	       '</svg>';
+    }
+
+    
                          
 }
 window.customElements.define('treez-color-map', TreezColorMap); 

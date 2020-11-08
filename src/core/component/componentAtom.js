@@ -45,6 +45,7 @@ import TreezSection from './../../components/section/treezSection.js';
 import TreezSize from './../../components/size/treezSize.js';  
 import TreezStringList from './../../components/list/treezStringList.js';
 import TreezStringItemList from './../../components/list/treezStringItemList.js';
+import TreezSvgComboBox from '../../components/comboBox/treezSvgComboBox.js';
 
 import TreezSymbolStyle from './../../components/symbolStyle/treezSymbolStyle.js';
 import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;
@@ -85,8 +86,10 @@ export default class ComponentAtom extends Atom {
     	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    
     	Treez.importCssStyleSheet('/src/components/comboBox/treezImageComboBox.css');
+
     	
     	Treez.importCssStyleSheet('/src/components/list/treezStringList.css');
+    	Treez.importCssStyleSheet('/src/components/comboBox/treezSvgComboBox.css');
 		
 		Treez.importCssStyleSheet('/src/components/modelPath/treezModelPath.css');
 

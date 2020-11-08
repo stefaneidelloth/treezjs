@@ -8,13 +8,12 @@
 .treez-check-box-input {
 	display:inline-block;
 	vertical-align: middle;
-	width: 20px;
-	padding-bottom: -3px;	
+	width: 20px;		
 }
 
 .treez-check-box-label {  
 	display:inline-block;	
-	vertical-align: sub;	
+	
  	padding-left:0px;
  	margin:0px;		
  	
