@@ -19,7 +19,7 @@ window.init_workspace_module = async (app, dependencies)=>{
 	require.config({
 		baseUrl : treezConfig.home,
 		paths : {
-			'd3' : 'bower_components/d3/d3.min',				
+			'd3' : 'bower_components/d3/d3.min',			
 			'jquery' : 'bower_components/jquery/dist/jquery.min',
 			'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min',
 			'codemirror' : 'bower_components/codemirror'					
@@ -32,7 +32,6 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');		
 	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
-   
 
 	require([		
 		'golden-layout', 		

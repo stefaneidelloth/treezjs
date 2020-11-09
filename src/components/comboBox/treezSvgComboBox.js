@@ -100,7 +100,8 @@ export default class TreezSvgComboBox extends TreezComboBox {
     	let imageSvg = this.__selectedImageSvg;
     	
 		if(imageSvg){
-			this.__imageLabel.innerHTML = imageSvg;							
+			this.__imageLabel.innerHTML = imageSvg;	
+			this.__imageLabel.title = this.value;						
 		}
     }
 
@@ -129,7 +130,8 @@ export default class TreezSvgComboBox extends TreezComboBox {
 
 				self.__optionPanel.appendChild(optionElement);					 					 	
 
-				optionElement.onclick = ()=>{
+				optionElement.onclick = (event)=>{
+					var title = optionElement.getAttribute('title');
 					this.__comboBoxChanged(title);		 		
 					self.__collapseComboBox();
 				};
@@ -159,6 +161,8 @@ export default class TreezSvgComboBox extends TreezComboBox {
 			this.setAttribute('value', this.options[firstTitle]);
 		}	
 	}  
+
+
 
 	get __selectedImageSvg(){
 		let value = this.getAttribute('value');

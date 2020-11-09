@@ -12,7 +12,7 @@ export default class Nodes extends GraphicsAtom {
 		this.outerRadius = '4 cm';		
         this.innerRadius = '3.8 cm';
         this.paddingAngle = 0.05;
-        this.colorMap = ColorMap.spectrum;
+        this.colorMap = ColorMap.Turbo;
         this.strokeWidth = '1';
 
         /*
