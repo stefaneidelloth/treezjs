@@ -3,8 +3,8 @@ import Length from './../graphics/length.js';
 
 export default class AxisLabel extends GraphicsAtom {
 
-	constructor(){	
-		super();	
+	constructor(){
+		super();
 		this.font = 'sans-serif';
 		this.size = 22;
 		this.color = 'black';
@@ -16,23 +16,23 @@ export default class AxisLabel extends GraphicsAtom {
 		this.labelOffset = 4;
 		this.position = 'centre';
 		this.isHidden = false;
-	}	
+	}
 
 	createPage(root, parent) {
 
 		var page = root.append('treez-tab')
 			.label('Axis label');
-		
+
 		var section = page.append('treez-section')
 			.label('Axis label');
 
 		var sectionContent = section.append('div');
-		
+
 		sectionContent.append('treez-font')
 			.label('Font')
 			.labelWidth('80px')
 			.bindValue(this, ()=>this.font);
-		
+
 		sectionContent.append('treez-double')
 			.label('Size')
 			.labelWidth('80px')
@@ -43,17 +43,17 @@ export default class AxisLabel extends GraphicsAtom {
 			.label('Color')
 			.labelWidth('80px')
 			.bindValue(this, ()=>this.color);
-		
+
 		sectionContent.append('treez-check-box')
 			.label('Italic')
 			.contentWidth('80px')
 			.bindValue(this, ()=>this.isItalic);
-		
+
 		sectionContent.append('treez-check-box')
 			.label('Bold')
 			.contentWidth('80px')
 			.bindValue(this, ()=>this.isBold);
-		
+
 		sectionContent.append('treez-check-box')
 			.label('Has underline')
 			.contentWidth('80px')
@@ -63,20 +63,20 @@ export default class AxisLabel extends GraphicsAtom {
 			.label('IsHidden')
 			.contentWidth('80px')
 			.bindValue(this, ()=>this.isHidden);
-		
+
 		//sectionContent.append('treez-check-box')
 		//	.label('At edge')
 		//	.bindValue(this, ()=>this.isAtEdge);
-					
+
 		sectionContent.append('treez-combo-box')
 			.label('Rotation')
 			.labelWidth('80px')
 			.attr('options','["-180","-135","-90","-45","0","45","90","135","180"]')
 			.bindValue(this, ()=>this.rotation);
-		
+
 		sectionContent.append('treez-double')
-			.label('Label offset')	
-			.labelWidth('80px')	
+			.label('Label offset')
+			.labelWidth('80px')
 			.bindValue(this, ()=>this.labelOffset);
 
 		sectionContent.append('treez-combo-box')
@@ -106,28 +106,28 @@ export default class AxisLabel extends GraphicsAtom {
 		this.addListener(()=>this.position, geometryConsumer);
 		this.addListener(()=>this.rotation, geometryConsumer);
 		this.addListener(()=>this.labelOffset, geometryConsumer);
-		
+
 		geometryConsumer();
 
 		var data = axis.data;
-		
+
 		data.bindText(()=>data.label, labelSelection);
-		
+
 		this.bindString(()=>this.font, labelSelection, 'font-family');
 		this.bindString(()=>this.size, labelSelection, 'font-size');
-		this.bindString(()=>this.color, labelSelection, 'fill');
-		
+		this.bindColor(()=>this.color, labelSelection, 'fill');
+
 		this.bindFontItalicStyle(()=>this.isItalic, labelSelection);
 		this.bindFontBoldStyle(()=>this.isBold, labelSelection);
 		this.bindFontUnderline(()=>this.hasUnderline, labelSelection);
-		this.bindBooleanToTransparency(()=>this.isHidden, null, labelSelection);		
+		this.bindBooleanToTransparency(()=>this.isHidden, null, labelSelection);
 
 		return axisSelection;
 	}
 
 	__updateLabelGeometry(axis, labelSelection, graph) {
 
-		
+
 		this.__setTextAnchor(labelSelection);
 
 		var rotation = this.__parseRotation();
@@ -159,12 +159,12 @@ export default class AxisLabel extends GraphicsAtom {
 	}
 
 	__parseRotation() {
-		
+
 		var rotation = 0.0;
 		try {
 			rotation = -parseFloat(this.rotation);
 		} catch (error) {
-			
+
 		}
 		return rotation;
 	}
@@ -224,6 +224,6 @@ export default class AxisLabel extends GraphicsAtom {
 		var transformString = 'translate(' + x + ',' + y + ') rotate(' + rotation + ')';
 		tickLabels.attr('transform', transformString);
 	}
-	
+
 
 }

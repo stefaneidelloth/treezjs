@@ -95,7 +95,7 @@ export default class Line extends GraphicsAtom {
 
 		//bind attributes
 		this.bindBooleanToNegatingDisplay(()=>this.isHidden, lines);
-		this.bindString(()=>this.color,lines, 'stroke');
+		this.bindColor(()=>this.color,lines, 'stroke');
 		this.bindString(()=>this.width,lines, 'stroke-width');
 		this.bindLineTransparency(()=>this.transparency, lines)
 		this.bindLineStyle(()=>this.style, lines);
@@ -120,7 +120,7 @@ export default class Line extends GraphicsAtom {
 
 		//bind attributes
 		this.bindBooleanToNegatingDisplay(()=>this.isHidden, legendLine);
-		this.bindString(()=>this.color,legendLine, 'stroke');
+		this.bindColor(()=>this.color,legendLine, 'stroke');
 		this.bindString(()=>this.width,legendLine, 'stroke-width');
 		this.bindLineTransparency(()=>this.transparency, legendLine)
 		this.bindLineStyle(()=>this.style, legendLine);		

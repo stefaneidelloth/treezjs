@@ -61,7 +61,7 @@ export default class AxisLine extends GraphicsAtom {
 				.style('stroke-linecap', 'butt'); //
 				//.style('shape-rendering', 'geometricPrecision');
 
-		this.bindString(()=>this.color, axisDomainLine, 'stroke');
+		this.bindColor(()=>this.color, axisDomainLine, 'stroke');
 		this.bindString(()=>this.width, axisDomainLine, 'stroke-width');
 		this.bindLineStyle(()=>this.style, axisDomainLine);		
 		this.bindLineTransparency(()=>this.transparency, axisDomainLine);

@@ -35,7 +35,8 @@ export default class Links extends GraphicsAtom {
 		    .remove(); 
 
 		var ribbonGenerator = dTreez.ribbonArrow()
-			  .radius(innerRadius);
+			  .radius(innerRadius)
+			  .headRadius(3);
 		
 		chordContainer
 		  .datum(chord.chordDatum)

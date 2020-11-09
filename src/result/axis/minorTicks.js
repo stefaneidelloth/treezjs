@@ -109,7 +109,7 @@ export default class MinorTicks extends GraphicsAtom {
 										     .style('stroke-linecap', 'butt'); //
 											 //.style('shape-rendering', 'geometricPrecistion');
 		
-		this.bindString(()=>this.color, allMinorTickLines, 'stroke');
+		this.bindColor(()=>this.color, allMinorTickLines, 'stroke');
 		this.bindString(()=>this.width, allMinorTickLines, 'stroke-width');
 		this.bindLineStyle(()=>this.style, allMinorTickLines);
 		this.bindLineTransparency(()=>this.transparency, allMinorTickLines);

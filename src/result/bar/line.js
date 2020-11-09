@@ -60,7 +60,7 @@ export default class Line extends GraphicsAtom {
 				.select(".bar-rects") //
 				.selectAll("rect");
 
-		this.bindString(()=>this.color,rectsSelection, 'stroke');
+		this.bindColor(()=>this.color,rectsSelection, 'stroke');
 		this.bindString(()=>this.width,rectsSelection, 'stroke-width');		
 		this.bindLineStyle(()=>this.style, rectsSelection);
 		this.bindLineTransparency(()=>this.transparency, rectsSelection)
@@ -71,7 +71,7 @@ export default class Line extends GraphicsAtom {
 
 	formatLegendSymbolLine(symbolSelection, legend) {
 		
-		this.bindString(()=>this.color,symbolSelection, 'stroke');
+		this.bindColor(()=>this.color,symbolSelection, 'stroke');
 		this.bindString(()=>this.width,symbolSelection, 'stroke-width');		
 		this.bindLineStyle(()=>this.style, symbolSelection);
 		this.bindLineTransparency(()=>this.transparency, symbolSelection)

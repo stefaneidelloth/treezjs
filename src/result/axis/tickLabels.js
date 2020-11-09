@@ -110,7 +110,7 @@ export default class TickLabels extends GraphicsAtom {
 		//bind attributes
 		this.bindString(()=>this.font, tickLabels, 'font-family');
 		this.bindString(()=>this.size, tickLabels, 'font-size');
-		this.bindString(()=>this.color, tickLabels, 'fill');			
+		this.bindColor(()=>this.color, tickLabels, 'fill');			
 		this.bindFontItalicStyle(()=>this.isItalic, tickLabels);
 		this.bindFontBoldStyle(()=>this.isBold, tickLabels);
 		this.bindFontUnderline(()=>this.hasUnderline, tickLabels);

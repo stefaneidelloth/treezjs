@@ -149,7 +149,7 @@ export default class Labels extends GraphicsAtom {
 		
 		this.bindString(()=>this.font, textSelection, 'font-family');
 		this.bindString(()=>this.size, textSelection, 'font-size');
-		this.bindString(()=>this.color, textSelection, 'fill');			
+		this.bindColor(()=>this.color, textSelection, 'fill');			
 		this.bindFontItalicStyle(()=>this.isItalic, textSelection);
 		this.bindFontBoldStyle(()=>this.isBold, textSelection);
 		this.bindFontUnderline(()=>this.hasUnderline, textSelection);

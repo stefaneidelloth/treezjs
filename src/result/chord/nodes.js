@@ -102,7 +102,7 @@ export default class Nodes extends GraphicsAtom {
 
 		//bind attributes
 		this.bindBooleanToNegatingDisplay(()=>this.isHidden, legendLine);
-		this.bindString(()=>this.color,legendLine, 'stroke');
+		this.bindColor(()=>this.color,legendLine, 'stroke');
 		this.bindString(()=>this.width,legendLine, 'stroke-width');
 		this.bindLineTransparency(()=>this.transparency, legendLine)
 		this.bindLineStyle(()=>this.style, legendLine);		

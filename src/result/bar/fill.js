@@ -229,7 +229,7 @@ export default class Fill extends GraphicsAtom {
 		symbolSelection.attr('width', symbolSize);
 		symbolSelection.attr('height', '10');
 
-		this.bindString(()=>this.color, symbolSelection, 'fill');
+		this.bindColor(()=>this.color, symbolSelection, 'fill');
 		this.bindTransparency(()=>this.transparency, symbolSelection);
 		this.bindBooleanToTransparency(()=>this.hide, ()=>this.transparency, symbolSelection);		
 

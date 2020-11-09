@@ -130,7 +130,7 @@ export default class MajorTicks extends GraphicsAtom {
 			}
 		});
 
-		this.bindString(()=>this.color, majorTickLines, 'stroke');
+		this.bindColor(()=>this.color, majorTickLines, 'stroke');
 		this.bindString(()=>this.width, majorTickLines, 'stroke-width');
 		this.bindLineStyle(()=>this.style, majorTickLines);
 		this.bindLineTransparency(()=>this.transparency, majorTickLines);
