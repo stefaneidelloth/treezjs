@@ -13,17 +13,7 @@ export default class Nodes extends GraphicsAtom {
         this.innerRadius = '3.8 cm';
         this.paddingAngle = 0.05;
         this.colorMap = ColorMap.Turbo;
-        this.strokeWidth = '1';
-
-        /*
-		this.interpolationMode = InterpolationMode.linear;
-		//this.bezierJoin = false;
-		this.color = Color.black;
-		this.width = 3;
-		this.style = LineStyle.solid;
-		this.transparency = 0;
-		this.isHidden = false;
-		*/
+        this.strokeWidth = '1';       
 	}
 	
 	createPage(root) {
@@ -54,47 +44,7 @@ export default class Nodes extends GraphicsAtom {
 
 		sectionContent.append('treez-text-field')
 			.label('Stroke width')
-			.bindValue(this, ()=>this.strokeWidth);
-
-		/*
-		
-		sectionContent.append('treez-enum-combo-box')
-			.label('Interpolation mode')
-			.labelWidth('120px')
-			.nodeAttr('enum', InterpolationMode)
-			.bindValue(this, ()=>this.interpolationMode);		
-
-		//line.createCheckBox(bezierJoin, this).setLabel('Bezier join');
-		
-		sectionContent.append('treez-color')
-			.label('Color mode')
-			.labelWidth('120px')			
-			.bindValue(this, ()=>this.color);	
-		
-		sectionContent.append('treez-double')
-			.label('Width')	
-			.labelWidth('120px')
-			.min('0')
-			.bindValue(this, ()=>this.width);	
-		
-		sectionContent.append('treez-line-style')
-			.label('Style')	
-			.labelWidth('120px')
-			.bindValue(this, ()=>this.style);
-		
-		sectionContent.append('treez-double')
-			.label('Transparency')	
-			.labelWidth('120px')
-			.min('0')
-			.max('1')
-			.bindValue(this, ()=>this.transparency);
-		
-		sectionContent.append('treez-check-box')
-			.label('IsHidden')	
-			.contentWidth('120px')
-			.bindValue(this, ()=>this.isHidden);
-
-		*/
+			.bindValue(this, ()=>this.strokeWidth);		
 		
 	}
 
@@ -127,41 +77,7 @@ export default class Nodes extends GraphicsAtom {
 		this.bindString(()=>this.strokeWidth, nodeSelection, 'stroke-width');
 
 		
-        var ids = chord.nodeIds;
-
-		chord.nodeGroups.selectAll('.chord-node-label')
-		    .remove();
-
-		chord.nodeGroups.append('svg:text')
-		  .className('chord-node-label')
-		  .each(nodeGroup => { nodeGroup.angle = (nodeGroup.startAngle + nodeGroup.endAngle) / 2; })
-		  .attr('dy', '.35em')		  	
-		  .attr('text-anchor', nodeGroup => { return nodeGroup.angle > Math.PI ? 'end' : null; })
-		  .attr('transform', nodeGroup => {
-				return 'rotate(' + (nodeGroup.angle * 180 / Math.PI - 90) + ')'
-				+ 'translate(' + (innerRadius+40) + ')'
-				+ (nodeGroup.angle > Math.PI ? 'rotate(180)' : '');
-		  })     
-		  .text((d,i) => ids[i]);  
-
-		/*
-		//plot new lines
-		var lines = linesSelection //
-				.append('path') //
-				.attr('d', linePathGenerator(xy.xyData))
-				.attr('fill', 'none');
-
-		//bind attributes
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, lines);
-		this.bindString(()=>this.color,lines, 'stroke');
-		
-		this.bindLineTransparency(()=>this.transparency, lines)
-		this.bindLineStyle(()=>this.style, lines);
-		
-		this.addListener(()=>this.interpolationMode, ()=>xy.updatePlot(dTreez));
-
-		*/
-
+       
         this.addListener(()=>this.outerRadius, ()=>chord.updatePlot(dTreez));
         this.addListener(()=>this.innerRadius, ()=>chord.updatePlot(dTreez));
 		this.addListener(()=>this.paddingAngle, ()=>chord.updatePlot(dTreez));
@@ -205,7 +121,5 @@ export default class Nodes extends GraphicsAtom {
 		}
 		return colors.concat([ 'red', 'blue', 'green', 'yellow','orange']);
 	}	
-
-
 
 }

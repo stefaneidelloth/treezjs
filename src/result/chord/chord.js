@@ -3,6 +3,7 @@ import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeVi
 import Length from './../graphics/length.js';
 import Data from './data.js';
 import Nodes from './nodes.js';
+import NodeLabels from './nodeLabels.js';
 import Links from './links.js';
 import Ticks from './ticks.js';
 import TickLabels from './tickLabels.js';
@@ -14,7 +15,7 @@ export default class Chord extends PagedGraphicsAtom {
 	constructor(name){
 		super(name);
 		this.image = 'chord.png';			
-		this.chordDatum	= undefined;
+		this.__chordDatum	= undefined;
 		this.__chordContainer = undefined;
 	}
 	
@@ -27,6 +28,9 @@ export default class Chord extends PagedGraphicsAtom {
 
 		this.nodes = Nodes.create(this);
 		factories.push(this.nodes);	
+
+		this.nodeLabels = NodeLabels.create(this);
+		factories.push(this.nodeLabels);
 
 		this.links = Links.create(this);
 		factories.push(this.links);	
@@ -75,7 +79,7 @@ export default class Chord extends PagedGraphicsAtom {
 
 	    var paddingAngle = this.nodes.paddingAngle;	
         var matrix = this.__createChordMatrix(); 
-		this.chordDatum = dTreez.chord()
+		this.__chordDatum = dTreez.chord()
 					.padAngle(paddingAngle)     
 					//.sortSubgroups(dTreez.descending)
 					(matrix); 
@@ -83,7 +87,7 @@ export default class Chord extends PagedGraphicsAtom {
 		this.__chordContainer.selectAll('g')
 		    .remove();
 		
-		this.nodeGroups = this.__chordContainer
+		this.__nodeGroups = this.__chordContainer
 		  .datum(this.chordDatum)
 		  .append('g')
 		  .selectAll('g')
@@ -162,6 +166,14 @@ export default class Chord extends PagedGraphicsAtom {
 		return map;
 	}
 
+	get chordDatum(){
+		return this.__chordDatum;
+	}
+
+	get nodeGroups(){
+		return this.__nodeGroups;
+	}
+
 	get nodeIds(){
 		var nodeMap = this.__idToIndexMap;
 		var numberOfIds = Object.keys(nodeMap).length;
@@ -171,6 +183,22 @@ export default class Chord extends PagedGraphicsAtom {
            nodeIds[index]=id;
 		}
        return nodeIds;
+	}
+
+	get nodeSvgs(){
+		var nodeMap = this.__idToIndexMap;
+		var numberOfIds = Object.keys(nodeMap).length;
+		var nodeSvgs = new Array(numberOfIds).fill('');
+
+		var chordNodes = this.childrenByClass(ChordNode);
+
+		for(var chordNode of chordNodes){
+		   var id = chordNode.name;
+           var index = nodeMap[id];
+           var svg = chordNode.svg;
+           nodeSvgs[index]=svg;
+		}
+       return nodeSvgs;
 	}
 
 	__recreateChordSelection(graphSelection){

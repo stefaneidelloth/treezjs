@@ -92,6 +92,15 @@ export default class GraphicsAtom extends ComponentAtom {
 		}		
 		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'stroke-opacity', valueConverter);
 	}
+
+	bindBooleanToDisplay(lambdaExpressionEncodingPropertyToBind, selection){
+		var valueConverter = value => {
+			return value
+				?'inline'
+				:'none';			
+		}		
+		this.__bind(lambdaExpressionEncodingPropertyToBind, selection, 'display', valueConverter);
+	}
 	
 	bindBooleanToNegatingDisplay(lambdaExpressionEncodingPropertyToBind, selection){
 		var valueConverter = value => {
