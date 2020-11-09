@@ -2,10 +2,10 @@ import DTreez from './../dTreez/dTreez.js';
 import ActionSeparator from './../actionSeparator.js';
 import Treez from './../../treez.js';
 
-export default class AtomTreeNodeAdapter {	
+export default class AtomTreeNodeAdapter {
 
-	static createTreeNode(parentSelection,treeView,atom){		
-		
+	static createTreeNode(parentSelection,treeView,atom){
+
 		if(atom.hasChildren){
             return this.createExpandableNodeWithChildren(parentSelection,treeView,atom);
 		} else {
@@ -25,56 +25,54 @@ export default class AtomTreeNodeAdapter {
 			expandableNode.attr('open', null);
 		}
 
-		expandableNode.onDoubleClick(()=>{
+		expandableNode.onDoubleClick((event)=>{
 
-			var event = treeView.dTreez.event;
 			event.stopPropagation();
-
 
 			var isOpen = expandableNode.attr('open') === '';
 			if(isOpen){
-				atom.collapseAll();				
+				atom.collapseAll();
 			} else {
-				atom.expandAll();				
+				atom.expandAll();
 			}
-			treeView.refresh();			
-			
+			treeView.refresh();
+
 		});
-		
-		expandableNode.onToggle(()=>{			
+
+		expandableNode.onToggle(()=>{
 			var isExpanded = expandableNode.attr('open') === '';
 			atom.isExpanded=isExpanded;
-		})		
-			
+		})
+
 		if(atom.parent){
 			expandableNode.classed('treez-indent',true);
 		}
-			
+
 		var summary = expandableNode.append('summary')
 			.className('treez-summary')
 			.onClick(()=>{
 				this.showProperties(treeView,atom);
-			});				
+			});
 
-		this.createIconAndLabel(summary, atom);	
-		this.createContextMenu(summary, parentSelection, atom, treeView);			
+		this.createIconAndLabel(summary, atom);
+		this.createContextMenu(summary, parentSelection, atom, treeView);
 
-		atom.children.forEach(child=>{				
+		atom.children.forEach(child=>{
 			child.createTreeNodeAdaption(expandableNode, treeView);
 		});
-		
+
 		return expandableNode;
 	}
 
 	static crateLeafeNode(parentSelection,treeView,atom){
-		var leafNode = parentSelection.append('div')			
+		var leafNode = parentSelection.append('div')
 			.className('treez-leaf-node')
 			.attr('id', atom.treePath)
 			.title(atom.constructor.name);
 
 		leafNode.onClick(()=>{
 			this.showProperties(treeView,atom);
-		});				
+		});
 
 		this.createIconAndLabel(leafNode, atom);
 		this.createContextMenu(leafNode, parentSelection, atom, treeView);
@@ -88,45 +86,45 @@ export default class AtomTreeNodeAdapter {
 		var iconFolder = parentSelection.append('span')
 							.className('treez-node-icon-folder');
 
-		iconFolder.append('img')	
-			.className('treez-node-icon')		
+		iconFolder.append('img')
+			.className('treez-node-icon')
 			.attr('src', Treez.imagePath(atom.image));
 
 		if(atom.overlayImage){
-			iconFolder.append('img')	
-			.className('treez-node-overlay-icon')		
+			iconFolder.append('img')
+			.className('treez-node-overlay-icon')
 			.attr('src', Treez.imagePath(atom.overlayImage));
-		}		
+		}
 
 		var label = parentSelection.append('label')
-			.className('treez-node-label')								
-			.text(atom.name);		
+			.className('treez-node-label')
+			.text(atom.name);
 	}
 
 	static createContextMenu(selection, parentSelection, atom, treeView){
-		
+
 		var dTreez = treeView.dTreez;
 
         var menu = selection.append('div')
-          	.className('treez-context-menu');          	
+          	.className('treez-context-menu');
 
         var menuItems = atom.createContextMenuActions(selection, parentSelection, treeView);
         var self=this;
         menuItems.forEach(function(item){
         	self.createContextMenuItemOrSeparator(selection, dTreez, menu,item);
         });
-         
+
 
 		// hide context menu when clicking outside context menu
         dTreez.select('body')
-		  .onMouseDown(function () {
-				 var target = dTreez.select(dTreez.event.target);
+		  .onMouseDown(function (event) {
+				 var target = dTreez.select(event.target);
 				 if (!target.classed('treez-context-menu')){
 					 dTreez.selectAll('.treez-context-menu') //
-					       .style('display','none');			 	
+					       .style('display','none');
 				 }
-		    });	
-    
+		    });
+
     }
 
     static createContextMenuItemOrSeparator(parentSelection, dTreez, menu, item){
@@ -135,48 +133,48 @@ export default class AtomTreeNodeAdapter {
              this.createContextMenuSeparator(menu);
     	 } else {
     	 	this.createContextMenuItem(parentSelection, dTreez, menu, item)
-    	 }    	
-    } 
+    	 }
+    }
 
     static createContextMenuSeparator(menu){
     	menu.append('div')
     	.className('treez-menu-separator');
-    }  
+    }
 
-    static createContextMenuItem(parentSelection, dTreez, menu, item){    	
+    static createContextMenuItem(parentSelection, dTreez, menu, item){
 
-    	 var button = menu.append('div')    	 
+    	 var button = menu.append('div')
     	     .append('button')
-    	     .className('treez-menu-button') 
+    	     .className('treez-menu-button')
           	 .onMouseDown(() => item.action());
-    	 
+
     	 var iconFolder = button.append('span')
 			.className('treez-node-icon-folder');
-          
+
           var imageName = item.image? item.image: 'error.png';
-          
+
           iconFolder.append('img')
-          	.className('treez-menu-button-icon')          	
+          	.className('treez-menu-button-icon')
           	.src(Treez.imagePath(imageName));
-          
+
           if(item.overlayImage){
         	  iconFolder.append('img')
-            	.className('treez-menu-button-overlay-icon')          	
+            	.className('treez-menu-button-overlay-icon')
             	.src(Treez.imagePath(item.overlayImage));
           }
 
           button.append('label')
-          	.className('treez-menu-button-label')          	
+          	.className('treez-menu-button-label')
           	.text(item.label);
 
-          parentSelection.onContextMenu(function () {
-        	   dTreez.event.preventDefault();   	      
-			   menu.style('display', 'block'); 
+          parentSelection.onContextMenu(function (event) {
+        	   event.preventDefault();
+			   menu.style('display', 'block');
 			});
-    }   
+    }
 
-    static showProperties(treeView,atom){ 
+    static showProperties(treeView,atom){
     	treeView.showProperties(atom);
-    }   
-     
+    }
+
 }

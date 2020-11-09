@@ -12,11 +12,18 @@ export default class NodeLabels extends GraphicsAtom {
 
         this.textDistance = '30 px'; 
         this.textAngleOffset = 0.0;
+        this.font = 'sans-serif';
+		this.size = 15;
+		this.color = 'black';
+		this.isItalic = false;
+		this.isBold = false;
+		this.hasUnderline = false;
         this.isShowingTextLabels = true; 
         this.isAzimuthal = false;
 
         this.imageDistance = '10 px'; 
-        this.imageAngleOffset = 0.0;
+        this.imageAngleOffset = 0;
+        this.imageRotation = 0;
         this.isShowingImageLabels = true;
 		this.isAutoFlippingImageLabels = true;         
 	}
@@ -46,6 +53,37 @@ export default class NodeLabels extends GraphicsAtom {
 			.label('Angle offset')
 			.bindValue(this, ()=>this.textAngleOffset);
 
+		sectionContent.append('treez-font')
+			.label('Font')
+			.labelWidth('55px')
+			.bindValue(this, ()=>this.font);
+		
+		sectionContent.append('treez-double')
+			.label('Size')
+			.labelWidth('55px')
+			.min('0')
+			.bindValue(this, ()=>this.size);
+	
+		sectionContent.append('treez-color')
+			.label('Color')
+			.labelWidth('55px')
+			.bindValue(this, ()=>this.color);		
+		
+		sectionContent.append('treez-check-box')
+			.label('Italic')
+			.contentWidth('55px')
+			.bindValue(this, ()=>this.isItalic);
+		
+		sectionContent.append('treez-check-box')
+			.label('Bold')
+			.contentWidth('55px')
+			.bindValue(this, ()=>this.isBold);
+		
+		sectionContent.append('treez-check-box')
+			.label('Has underline')
+			.contentWidth('55px')
+			.bindValue(this, ()=>this.hasUnderline);
+
 		sectionContent.append('treez-check-box')
 			.label('Show text labels')
 			.bindValue(this, ()=>this.isShowingTextLabels);	
@@ -63,12 +101,16 @@ export default class NodeLabels extends GraphicsAtom {
 		var sectionContent = section.append('div');
 
 		sectionContent.append('treez-text-field')
-			.label('Image distance')
+			.label('Distance')
 			.bindValue(this, ()=>this.imageDistance);	
 
 		sectionContent.append('treez-double')
 			.label('Angle offset')
-			.bindValue(this, ()=>this.imageAngleOffset);	
+			.bindValue(this, ()=>this.imageAngleOffset);
+
+		sectionContent.append('treez-double')
+			.label('Rotation')
+			.bindValue(this, ()=>this.imageRotation);	
 
 		sectionContent.append('treez-check-box')
 			.label('Show image labels')
@@ -139,10 +181,18 @@ export default class NodeLabels extends GraphicsAtom {
               .attr('transform', group => this.__transformTextLabel(group, labelRadius))
 			  .attr('text-anchor', group => { return group.angle > Math.PI ? 'end' : null; })			    
 			  .attr('dy','0.35em');  
-	    }	
+	    }	    
 	    				
 		this.addListener(()=>this.textDistance, ()=>chord.updatePlot(dTreez));
 		this.addListener(()=>this.textAngleOffset, ()=>chord.updatePlot(dTreez));
+
+		this.bindString(()=>this.font, textLabels, 'font-family');
+		this.bindString(()=>this.size, textLabels, 'font-size');
+		this.bindColor(()=>this.color, textLabels, 'fill');			
+		this.bindFontItalicStyle(()=>this.isItalic, textLabels);
+		this.bindFontBoldStyle(()=>this.isBold, textLabels);
+		this.bindFontUnderline(()=>this.hasUnderline, textLabels);
+		
 		this.bindBooleanToDisplay(()=>this.isShowingTextLabels, textLabels);
 		this.addListener(()=>this.isAzimuthal, ()=>chord.updatePlot(dTreez));
 	}	
@@ -156,10 +206,9 @@ export default class NodeLabels extends GraphicsAtom {
         } 
         if(this.isAzimuthal){
         	extraRotation = 'rotate(90)';
-        }			
-
-		var angle = group.angle + this.textAngleOffset;
-		var rotation = (angle * 180 / Math.PI - 90);
+        }	
+		
+		var rotation = group.angle * 180 / Math.PI + this.textAngleOffset - 90;
 
 		var transform =  'rotate(' + rotation + ') '
 			+ 'translate(' + labelRadius + ') '
@@ -191,13 +240,13 @@ export default class NodeLabels extends GraphicsAtom {
         this.addListener(()=>this.isAutoFlippingImageLabels, ()=>chord.updatePlot(dTreez));		
 		this.addListener(()=>this.imageDistance, ()=>chord.updatePlot(dTreez));
 		this.addListener(()=>this.imageAngleOffset, ()=>chord.updatePlot(dTreez));
+		this.addListener(()=>this.imageRotation, ()=>chord.updatePlot(dTreez));
 	}
 
-	__transformImageLabel(group, index, elements, imageRadius){	
-		
+	__transformImageLabel(group, index, elements, imageRadius){		
 
-		var angle = group.angle + this.imageAngleOffset;
-		var rotation = (angle * 180 / Math.PI - 90);
+		
+		var rotation = group.angle * 180 / Math.PI + this.imageAngleOffset - 90;
 
 		var element = elements[index];
 	    var bounds = element.childNodes[0].getBoundingClientRect();
@@ -213,12 +262,14 @@ export default class NodeLabels extends GraphicsAtom {
 				+ 'translate(' + imageRadius + ') '
 				+ 'rotate(180) '	
 				+ 'translate(0,-'+ svgHeight/2 + ') '
-				+ 'translate(-' + svgWidth + ')';
+				+ 'translate(-' + svgWidth + ') '
+				+ 'rotate('+ this.imageRotation +' ' + svgWidth/2 + ' ' +svgHeight/2+ ')';
 								
 		} else {
 			transform =  'rotate(' + rotation + ') '
 				+ 'translate(' + imageRadius + ') '
-				+ 'translate(0, -'+ svgHeight/2 + ')';
+				+ 'translate(0, -'+ svgHeight/2 + ')'
+				+ 'rotate('+ this.imageRotation +' ' + svgWidth/2 + ' ' +svgHeight/2+ ')';
 		}		
 
 		return transform;

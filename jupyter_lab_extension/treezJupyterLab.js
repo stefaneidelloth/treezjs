@@ -13,48 +13,48 @@ Treez.config({
 });
 
 window.init_workspace_module = async (app, dependencies)=>{
-   
-	await Treez.importScript('/bower_components/requirejs/require.js');	
-	
+
+	await Treez.importScript('/node_modules/requirejs/require.js');
+
 	require.config({
 		baseUrl : treezConfig.home,
 		paths : {
-			'd3' : 'bower_components/d3/d3.min',			
-			'jquery' : 'bower_components/jquery/dist/jquery.min',
-			'golden-layout' : 'bower_components/golden-layout/dist/goldenlayout.min',
-			'codemirror' : 'bower_components/codemirror'					
+			'd3' : 'node_modules/d3/dist/d3.min',
+			'jquery' : 'node_modules/jquery/dist/jquery.min',
+			'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min',
+			'codemirror' : 'node_modules/codemirror'
 		},
 	});
 
-    
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-base.css');
-	Treez.importCssStyleSheet('/bower_components/golden-layout/src/css/goldenlayout-light-theme.css');
 
-	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');		
+	Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-base.css');
+	Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-light-theme.css');
+
+	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
 	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
 
-	require([		
-		'golden-layout', 		
-		'd3'		
-	], function(		
-		 GoldenLayout,		
+	require([
+		'golden-layout',
+		'd3'
+	], function(
+		 GoldenLayout,
 		 d3
 	) {
 
 		var ReactWidget = dependencies['ReactWidget'];
-	  
+
 		var treezPlugin = new ReactWidget();
 		treezPlugin.id = 'treez',
 		treezPlugin.title.caption = 'Treez';
-		treezPlugin.title.icon = 'treez-icon-class'; 
-		treezPlugin.node.classList.add('treez-plugin-class'); 
-		treezPlugin.render = () => {}; //needs to exist 				
+		treezPlugin.title.icon = 'treez-icon-class';
+		treezPlugin.node.classList.add('treez-plugin-class');
+		treezPlugin.render = () => {}; //needs to exist
 
-		var treezView = treezPlugin.node;  		
+		var treezView = treezPlugin.node;
 
 		var layoutContainer = __createLayoutContainer(treezView);
-		var layout = __createGoldenLayout(GoldenLayout, layoutContainer); 
-		var focusManager = __registerLayoutCompoments(layout, layoutContainer);	
+		var layout = __createGoldenLayout(GoldenLayout, layoutContainer);
+		var focusManager = __registerLayoutCompoments(layout, layoutContainer);
 		var editorFactory = __createEditorFactory(app);
 
 		var terminalFactory = (handleCreatedTerminal)=>{
@@ -63,30 +63,30 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 		app.shell.add(treezPlugin, 'left', { rank: 200 });
 
-		let resizeObserver = new ResizeObserver( () => {            
+		let resizeObserver = new ResizeObserver( () => {
             if(!layout.isInitialised){
-            	 // this is here because initialization needs to be done after 
-            	 // widget is part of DOM            	 
-            	 layout.init();	
-            	 Treez.initialize(d3, focusManager, editorFactory, terminalFactory); 
-            }  
-            __updateGoldenLayout(layout, layoutContainer);         
+            	 // this is here because initialization needs to be done after
+            	 // widget is part of DOM
+            	 layout.init();
+            	 Treez.initialize(d3, focusManager, editorFactory, terminalFactory);
+            }
+            __updateGoldenLayout(layout, layoutContainer);
         });
-        resizeObserver.observe(layoutContainer);		
+        resizeObserver.observe(layoutContainer);
 
 	});
 
 };
 
 function __createEditorFactory(app){
-    return (handleCreatedEditor) => {			
+    return (handleCreatedEditor) => {
 
 		var editor = {
 			setText: function(code, finishedHandler){
-				var firstCell = __tryToGetFirstNotebookCell(app);	
+				var firstCell = __tryToGetFirstNotebookCell(app);
 
 				var jupyterText = '%%javascript\n' + code;
-				firstCell.editor.doc.setValue(jupyterText);					
+				firstCell.editor.doc.setValue(jupyterText);
 
 				if(finishedHandler){
 					finishedHandler();
@@ -94,15 +94,15 @@ function __createEditorFactory(app){
 
 			},
 			processText: function(textHandler){
-				var firstCell = __tryToGetFirstNotebookCell(app);	
+				var firstCell = __tryToGetFirstNotebookCell(app);
 				if(firstCell){
-					var jupyterText = firstCell.editor.doc.getValue();						
+					var jupyterText = firstCell.editor.doc.getValue();
 					var javaScript = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
 
 					textHandler(javaScript);
 				} else {
 					console.warn('In order to import code, first document must by notebook.');
-				}	
+				}
 			}
 		};
 
@@ -123,7 +123,7 @@ function __tryToGetFirstNotebookCell(app){
     	if(notebook){
     		return notebook.activeCell;
     	}
-    }	
+    }
 	return null;
 }
 
@@ -153,7 +153,7 @@ function __createLayoutContainer(parentElement){
 	style.right = 0;
 
 	style.padding = 0;
-	style.margin = 0;	
+	style.margin = 0;
 
 	style.backgroundColor = 'red'; //for debugging layout issues
 	parentElement.appendChild(container);
@@ -161,10 +161,10 @@ function __createLayoutContainer(parentElement){
 }
 
 function __createGoldenLayout(GoldenLayout, containerElement){
-	//Also see http://golden-layout.com/docs/Config.html	
+	//Also see http://golden-layout.com/docs/Config.html
 
-	var firstColumn = { 
-		componentName : 'Tree',		
+	var firstColumn = {
+		componentName : 'Tree',
 		type : 'component',
 		isClosable: false,
 		width: 25
@@ -172,16 +172,16 @@ function __createGoldenLayout(GoldenLayout, containerElement){
 
 	var secondColumnUpperRow = {
 		componentName : 'Properties',
-		type : 'component',						
+		type : 'component',
 		isClosable: false,
 		height: 60
 	};
 
-	var secondColumnLowerRow = { 
+	var secondColumnLowerRow = {
 		type : 'stack',
-		content : 
+		content :
 		[
-			
+
 			{
 				componentName : 'Graphics',
 				type : 'component',
@@ -190,18 +190,18 @@ function __createGoldenLayout(GoldenLayout, containerElement){
 			},
 			{
 				title : 'Monitor',
-				type : 'column',						
+				type : 'column',
 				id: 'monitor',
 				isClosable: false,
 				content : [
 					{
 						componentName : 'Progress',
-						type : 'component',								
+						type : 'component',
 						isClosable: false
 					},
 					{
 						componentName : 'Log',
-						type : 'component',								
+						type : 'component',
 						isClosable: false
 					}
 				]
@@ -212,19 +212,19 @@ function __createGoldenLayout(GoldenLayout, containerElement){
 
 	var secondColumn =  {
 		type: 'column',
-		content: [ 
-		    secondColumnUpperRow, 
+		content: [
+		    secondColumnUpperRow,
 		    secondColumnLowerRow
 		]
-	};	
-			 
+	};
+
 
 	var goldenLayoutConfig = {
-		content : 
-		[ 
+		content :
+		[
 		    {
-			    type : 'row',			
-			    content : [ 
+			    type : 'row',
+			    content : [
                    firstColumn,
                    secondColumn
 			     ]
@@ -244,21 +244,21 @@ Defines container DOM elements that are used/filled by Treez:
 #treez-progress,
 #treez-log
 */
-function __registerLayoutCompoments(layout, containerElement){	
+function __registerLayoutCompoments(layout, containerElement){
 
     layout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-tree');		
+		element.attr('id','treez-tree');
 
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
 		layoutSettings.showPopoutIcon = false;
-	});	
+	});
 
 	layout.registerComponent('Properties', function(container) {
 		var element = container.getElement();
 		element.attr('id','treez-properties')
-	});		
+	});
 
 	var focusManager = {
 		__graphicsContainer: undefined,
@@ -268,13 +268,13 @@ function __registerLayoutCompoments(layout, containerElement){
 	focusManager['focusGraphicsView'] = ()=>{
 		var graphics = focusManager.__graphicsContainer.parent;
 		graphics.parent.setActiveContentItem(graphics);
-	};		
+	};
 
 	layout.registerComponent('Graphics', function(container) {
 		focusManager.__graphicsContainer = container;
 		var element = container.getElement();
-		element.attr('id','treez-graphics');		
-	});		
+		element.attr('id','treez-graphics');
+	});
 
 	layout.registerComponent('Progress', function(container) {
 		var element = container.getElement();
@@ -283,7 +283,7 @@ function __registerLayoutCompoments(layout, containerElement){
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
 		layoutSettings.showPopoutIcon = false;
-	});	
+	});
 
 	layout.registerComponent('Log', function(container) {
 		var element = container.getElement();
@@ -292,7 +292,7 @@ function __registerLayoutCompoments(layout, containerElement){
 		var layoutSettings = container.layoutManager.config.settings;
 		layoutSettings.showMaximiseIcon = false;
 		layoutSettings.showPopoutIcon = false;
-	});		
+	});
 
 	return focusManager;
 }

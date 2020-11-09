@@ -32,11 +32,11 @@ describe('TreezCodeArea', ()=>{
         page = await TestUtils.createBrowserPage();
         await TestUtils.importScript(page, '../../node_modules/requirejs/require.js');
         /*
-        await TestUtils.importScript(page, '../../bower_components/jquery/dist/jquery.min.js');
-        await TestUtils.importScript(page, '../../bower_components/codemirror/lib/codemirror.js');
-        await TestUtils.importScript(page, '../../bower_components/codemirror/mode/sql/sql.js');
-        await TestUtils.importScript(page, '../../bower_components/codemirror/mode/javascript/javascript.js');
-        await TestUtils.importScript(page, '../../bower_components/codemirror/mode/python/python.js');
+        await TestUtils.importScript(page, '../../node_modules/jquery/dist/jquery.min.js');
+        await TestUtils.importScript(page, '../../node_modules/codemirror/lib/codemirror.js');
+        await TestUtils.importScript(page, '../../node_modules/codemirror/mode/sql/sql.js');
+        await TestUtils.importScript(page, '../../node_modules/codemirror/mode/javascript/javascript.js');
+        await TestUtils.importScript(page, '../../node_modules/codemirror/mode/python/python.js');
         */
 
 

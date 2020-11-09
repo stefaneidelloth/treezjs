@@ -7,8 +7,13 @@
   "author": "Stefan Eidelloth <schnumbl [at] posteo [dot] de>",
   "license": "MIT",
   "dependencies": {
-    "@jupyterlab/apputils": "^2.2.6",
-    "bower": "^1.8.8"
+    "@jupyterlab/apputils": "2.2.6",
+    "codemirror": "5.58.2",
+    "d3": "6.2.0",
+    "d3-scale-chromatic": "2.0.0",
+    "golden-layout": "1.5.9",
+    "jquery": "3.5.1",
+    "requirejs": "2.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -20,8 +25,7 @@
     "jest-cli": "^24.8.0",
     "jest-puppeteer": "^4.3.0",
     "puppeteer": "^1.19.0",
-    "puppeteer-to-istanbul": "^1.2.2",
-    "requirejs": "2.3.6"
+    "puppeteer-to-istanbul": "^1.2.2"
   },
   "scripts": {
     "test": "jest --runInBand",

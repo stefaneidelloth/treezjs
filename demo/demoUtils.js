@@ -14,14 +14,14 @@ export default class DemoUtils {
 
         Treez.importCssStyleSheet('/src/views/propertyView.css');
 
-        let d3 = await Treez.importScript('/bower_components/d3/d3.min.js','d3')
+        let d3 = await Treez.importScript('/node_modules/d3/d3.min.js','d3')
                     .catch(error => {
                         console.log(error);
                         throw error;
                     });
 
         let dTreez = new DTreez(d3);
-        let treeView = { dTreez: dTreez };       
+        let treeView = { dTreez: dTreez };
 
         let propertiesView = dTreez.select('#treez-properties');
 

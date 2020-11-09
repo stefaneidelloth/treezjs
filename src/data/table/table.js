@@ -11,69 +11,69 @@ import SelectionManager from './selectionManager.js';
 
 
 export default class Table extends ComponentAtom {
-	
-	constructor(name) {	
+
+	constructor(name) {
 		super(name);
-		this.image='table.png';	
+		this.image='table.png';
 		this.isExpanded=false;
 		this.__rows = [];
 		this.__pagedRows = undefined;
 		this.__rowIndexOffset = 0;
-		
+
 		this.__firstRowIndex = 1;
 		this.__lastRowIndex = 1;
 		this.__numberOfRows = 1;
-		
+
 		this.__pageIndex = 1;
 		this.__numberOfPages = 1;
 		this.__maxNumberOfRowsPerPage = 1000;
-		
+
 		this.__isCaching = false;
 		this.__columnSeparator = ';';
 		this.__rowSeparator = '\n';
-		
+
 		this.__selectionManager = new SelectionManager(this);
 
-		
+
 		this.__tableSelection = undefined;
-		
 
-		
-	}	
 
-	createComponentControl(tabFolder){    
-	     
+
+	}
+
+	createComponentControl(tabFolder){
+
 		const page = tabFolder.append('treez-tab')
-			.label('Table'); 
-		
+			.label('Table');
+
 		const section = page.append('treez-section')
     		.label('Table');
 
-    	this.createHelpAction(section, 'data/table/table.md');		
-	
-		const sectionContent = section.append('div'); 
+    	this.createHelpAction(section, 'data/table/table.md');
+
+		const sectionContent = section.append('div');
 
 		const tableContainer = sectionContent.append('div')
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
-						
+
 		if (this.isLinkedToSource) {
 			if (!this.hasColumns) {
 				this.reload();
 			}
-		}		
-		
+		}
+
 		var columnsExist = this.columnNames.length > 0;
 		if (columnsExist) {
-			this.__createTableControl(tableContainer, this.treeView);			
+			this.__createTableControl(tableContainer, this.treeView);
 		} else {
-			sectionContent.text('This table does not contain any column yet.');			
-		} 	
+			sectionContent.text('This table does not contain any column yet.');
+		}
 
 
-	}	
+	}
 
 
-		
+
 
 	createContextMenuActions(selection, parentSelection, treeView) {
 
@@ -86,23 +86,23 @@ export default class Table extends ComponentAtom {
 							parentSelection,
 							this,
 							treeView
-					 ));	
-        
-        actions.push(new TreeViewAction(				
+					 ));
+
+        actions.push(new TreeViewAction(
 							'Delete',
 							'delete.png',
 							this,
 							treeView,
 							() => this.delete(treeView)
-					 ));      
+					 ));
 
 		return actions;
 	}
-	
+
 	createCodeAdaption(){
 		return new TableCodeAdaption(this);
 	}
-	
+
 	createColumn(name, type) {
 		this.__initializeColumns();
 		this.columnFolder.createColumn(name, type);
@@ -115,61 +115,61 @@ export default class Table extends ComponentAtom {
 	__createColumnFolderIfNotExist() {
 		if(!this.columnFolder){
 			this.createColumnFolder();
-		}		
+		}
 	}
 
 	createTableSource(name) {
-		return this.createChild(TableSource, name);		
+		return this.createChild(TableSource, name);
 	}
-		
+
 	createColumns(columnBlueprints) {
-		this.__createColumnFolderIfNotExist()		
+		this.__createColumnFolderIfNotExist()
 		var columnFolder = this.columnFolder;
 		for (var columnBlueprint of columnBlueprints) {
 			columnFolder.createColumnWithBlueprint(columnBlueprint);
 		}
 	}
-	
+
 	__deleteColumnsIfExist() {
-		thils.removeChildrenByClass(ColumnFolder);		
-	}	
-	
+		thils.removeChildrenByClass(ColumnFolder);
+	}
+
 	addColumn(newColumn) {
 		this.__createColumnsIfNotExist();
 		var columns = this.getColumns();
 		columns.addChild(newColumn);
 	}
-	
+
 
 	deleteAllRows() {
 		this.__rows = [];
 		return this;
 	}
-	
+
 	checkHeaders(expectedHeaders) {
-		try {			
+		try {
 			return this.columnFolder.checkHeaders(expectedHeaders);
 		} catch (error) {
 			return false;
 		}
 	}
-	
-	
-	
-	addRow(row) {		
+
+
+
+	addRow(row) {
 		this.__rows.push(row);
 		return this;
 	}
-	
-	addEmptyRow() {		
+
+	addEmptyRow() {
 		this.__rows.push(new Row(this));
 		return this;
 	}
-	
-	createRow(dataArray) {
-		var row = new Row(this);		
 
-		var columnNames = this.columnNames;		
+	createRow(dataArray) {
+		var row = new Row(this);
+
+		var columnNames = this.columnNames;
 
 		for (var columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
 			var columnName = columnNames[columnIndex];
@@ -186,49 +186,49 @@ export default class Table extends ComponentAtom {
 		}
 		return this;
 	}
-	
+
 	resetCache() {
 		this.__isCaching = false;
-	}	
-	
+	}
+
 	toString() {
 
 		var allDataString = '';
-		
+
 		var columnNames = this.columnNames;
 		var numberOfColumns = columnNames.length;
 
-		for (var row of this.__rows) {			
+		for (var row of this.__rows) {
 			for (var columnIndex = 0; columnIndex < numberOfColumns - 1; columnIndex++) {
 				var columnName = columnNames[columnIndex];
 				var entry = row.getEntryAsString(columnName);
 				allDataString = allDataString + entry + this.columnSeparator;
 			}
-			
+
 			var lastColumnName = columnNames[numberOfColumns - 1];
 			var lastEntry = row.getEntryAsString(lastColumnName);
 			allDataString = allDataString + lastEntry + this.rowSeparator;
 		}
 		return allDataString;
 	}
-	
+
 	__createTableControl(parent, treeView){
-		
+
 		this.__createToolbar(parent, treeView);
-		
+
 		const tableContent = parent.append('div')
-			.className('treez-table-content');		
+			.className('treez-table-content');
 		this.__createTableView(tableContent, treeView);
-		
+
 		this.__createPagination(parent, treeView);
-		
-	}	
-	
+
+	}
+
 	__createToolbar(parent, treeView){
-		
+
 		var toolbar = parent.append('div')
-							.className('treez-table-toolbar');		
-		
+							.className('treez-table-toolbar');
+
 		this.__createAddButton(toolbar, treeView);
 
 		this.__createDeleteButton(toolbar, treeView);
@@ -239,31 +239,31 @@ export default class Table extends ComponentAtom {
 
 		//this.__createColumnWidthButton(toolbar, treeView);
 	}
-	
+
 	__createTableView(parent, treeView){
-		
+
 		var tableSelection = parent.append('table')
 									.className('treez-table');
-		
+
 		this.__tableSelection = tableSelection;
-		
+
 		var displayColumns = [{header:'&emsp;'}].concat(this.columns);
-				
-		tableSelection.append('thead')			
+
+		tableSelection.append('thead')
 			.append('tr')
 	        .selectAll('th')
 	        .data(displayColumns).enter()
-			.append('th')	
-			.append('div')       
-	        .html((column)=>{	        	
+			.append('th')
+			.append('div')
+	        .html((column)=>{
 	        	return column.header;
 			})
-			.title((column)=>{	        	
+			.title((column)=>{
 	        	return column.legend;
-			});			
-	   
-	    this.__recreateTableBody();       
-		
+			});
+
+	    this.__recreateTableBody();
+
 	}
 
 	__recreateTableBody(){
@@ -275,20 +275,20 @@ export default class Table extends ComponentAtom {
 		this.__tableSelection.append('tbody')
 	        .selectAll('tr')
 	        .data(this.pagedRows).enter()
-	        .append('tr')	
+	        .append('tr')
 	        .onClick((data, index, parent) => this.__selectionManager.rowClicked(data, index, parent))
 	        .selectAll('td')
 	        .data(function(row, index) {
 	        	var displayRow = [index+1].concat(row.values);
-	        	return displayRow;	        		            	            
+	        	return displayRow;
 	        })
 	        .enter()
-	        .append('td')	
-	        .append('div')     
-	        .attr('contenteditable',true)  	        
-	        .html((cellValue)=>{	        	
+	        .append('td')
+	        .append('div')
+	        .attr('contenteditable',true)
+	        .html((cellValue)=>{
 	        	return cellValue;
-	        })	 
+	        })
 	        .onInput((data, oneBasedColumnIndex, cellArrayOfRow)=>{
 	        	var contentDiv = cellArrayOfRow[oneBasedColumnIndex];
 
@@ -300,10 +300,10 @@ export default class Table extends ComponentAtom {
 
 	        	this.__cellValueChanged(oneBasedRowIndex-1, oneBasedColumnIndex-1, value);
 
-	        })      
-	        .onClick((data, index, parent) => this.__selectionManager.cellClicked(data, index, parent))
-	        .onMouseUp((data, index, parent) => this.__selectionManager.cellMouseUp(data, index, parent))
-	        .onMouseOver((data, index, parent) => this.__selectionManager.cellMouseOver(data, index, parent));
+	        })
+	        .onClick((event, value) => this.__selectionManager.cellClicked(event, value))
+	        .onMouseUp((event, value) => this.__selectionManager.cellMouseUp(event, value))
+	        .onMouseOver((event, value) => this.__selectionManager.cellMouseOver(event, value));
 	}
 
 
@@ -312,108 +312,108 @@ export default class Table extends ComponentAtom {
 		let columnName = this.columnNames[columnIndex];
 		row.setEntry(columnName, value);
 	}
-	
-	
-	
+
+
+
 	__createPagination(parent, treeView){
 		var pagination = parent.append('div')
 								.className('treez-table-pagination');
-		
+
 		pagination.append('treez-text-field')
-			.label('Rows per page')		
-			.contentWidth('40px')	
-			.attr('inline','')			
+			.label('Rows per page')
+			.contentWidth('40px')
+			.attr('inline','')
 			.bindValue(this, ()=>this.__maxNumberOfRowsPerPage);
-							
+
 
 		var rowInfo = pagination.append('span')
 			.className('treez-table-pagination-row-info');
 
-		rowInfo.append('span')			
+		rowInfo.append('span')
 			.text('Rows ')
-			
-		rowInfo.append('treez-text-label')			
+
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__firstRowIndex);
-		
+
 		rowInfo.append('span')
 			.text('...')
-			
-		rowInfo.append('treez-text-label')			
+
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__lastRowIndex);
-		
+
 		rowInfo.append('span')
 			.text(' of ')
-		
-		rowInfo.append('treez-text-label')			
+
+		rowInfo.append('treez-text-label')
 			.bindValue(this, ()=>this.__numberOfRows);
 
 		var pageControl = pagination.append('span')
 			.className('treez-table-pagination-page-info');
-		
+
 		pageControl.append('span')
 			.html('&nbsp;&nbsp;&nbsp;Page&nbsp;')
-		
+
 		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-first-button')
 			.title('First')
 			.onClick(()=>this.__firstPage());
-		
+
 		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-previous-button')
 			.title('Previous')
 			.onClick(()=>this.__previousPage());
-		
+
 		pageControl.append('treez-text-field')
 			.contentWidth('40px')
 			.attr('inline','')
 			.bindValue(this, ()=>this.__pageIndex);
-		
+
 		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-next-button')
 			.title('Next')
 			.onClick(()=>this.__nextPage());
-	
+
 		pageControl.append('input')
 			.attr('type','button')
 			.className('treez-table-last-button')
 			.title('Last')
 			.onClick(()=>this.__lastPage());
-		
+
 		pageControl.append('span')
 			.text(' of ')
-		
+
 		pageControl.append('treez-text-label')
-			.bindValue(this, ()=>this.__numberOfPages);		
-			
-			
+			.bindValue(this, ()=>this.__numberOfPages);
+
+
 	}
-	
+
 	__firstPage(){
-		
+
 	}
-	
+
 	__previousPage(){
-		
+
 	}
-	
+
 	__nextPage(){
-		
+
 	}
-	
+
 	__lastPage(){
-		
+
 	}
-	
-	__createAddButton(toolbar, treeView){		
+
+	__createAddButton(toolbar, treeView){
 		toolbar.append('input')
 			.attr('type','button')
 			.className('treez-table-add-button')
 			.title('Add')
-			.onClick(()=>this.__addRow());		
-			
+			.onClick(()=>this.__addRow());
+
 	}
 
 	__createDeleteButton(toolbar, treeView){
@@ -421,7 +421,7 @@ export default class Table extends ComponentAtom {
 		.attr('type','button')
 		.className('treez-table-delete-button')
 		.title('Delete')
-		.onClick(()=>this.__deleteRow());	
+		.onClick(()=>this.__deleteRow());
 	}
 
 	__createUpButton(toolbar, treeView){
@@ -429,7 +429,7 @@ export default class Table extends ComponentAtom {
 		.attr('type','button')
 		.className('treez-table-up-button')
 		.title('Move up')
-		.onClick(()=>this.__moveRowUp());	
+		.onClick(()=>this.__moveRowUp());
 	}
 
 	__createDownButton(toolbar, treeView){
@@ -437,7 +437,7 @@ export default class Table extends ComponentAtom {
 		.attr('type','button')
 		.className('treez-table-down-button')
 		.title('Move down')
-		.onClick(()=>this.__moveRowDown());	
+		.onClick(()=>this.__moveRowDown());
 	}
 
 	__createColumnWidthButton(toolbar, treeView){
@@ -445,9 +445,9 @@ export default class Table extends ComponentAtom {
 		.attr('type','button')
 		.className('treez-table-width-button')
 		.title('Optimize column width')
-		.onClick(()=>this.__optimizeColumnWidth());	
-	}	
-		
+		.onClick(()=>this.__optimizeColumnWidth());
+	}
+
 	__addRow(){
 		var rowIndices = this.__selectionManager.highlightedRowIndices;
 		if(rowIndices.length < 1){
@@ -455,13 +455,13 @@ export default class Table extends ComponentAtom {
 		} else {
 			var rowIndex = rowIndices[0];
 			var selectedRow = this.__rows[rowIndex];
-			this.createRow(selectedRow.values);			
+			this.createRow(selectedRow.values);
 		}
 
 		this.__recreateTableBody();
-		
+
 	}
-	
+
 	__deleteRow(){
 		var rowIndices = this.__selectionManager.highlightedRowIndices;
 		if(rowIndices.length < 1){
@@ -469,13 +469,13 @@ export default class Table extends ComponentAtom {
 			return;
 		} else {
 			var rowIndex = rowIndices[0];
-			this.__rows.splice(rowIndex,1);	
-			this.__selectionManager.resetSelectionAndHighlighting();		
+			this.__rows.splice(rowIndex,1);
+			this.__selectionManager.resetSelectionAndHighlighting();
 		}
 
 		this.__recreateTableBody();
 	}
-	
+
 	__moveRowUp(){
 		var rowIndices = this.__selectionManager.highlightedRowIndices;
 		if(rowIndices.length < 1){
@@ -494,13 +494,13 @@ export default class Table extends ComponentAtom {
 				this.__rows.push(tempRow);
 				this.__selectionManager.resetSelectionAndHighlighting();
 				this.__selectionManager.highlightRow(this.__rows.length-1);
-			}			
-					
+			}
+
 		}
 
 		this.__recreateTableBody();
 	}
-	
+
 	__moveRowDown(){
 		var rowIndices = this.__selectionManager.highlightedRowIndices;
 		if(rowIndices.length < 1){
@@ -520,17 +520,17 @@ export default class Table extends ComponentAtom {
 				this.__rows.splice(0,0,tempRow);
 				this.__selectionManager.resetSelectionAndHighlighting();
 				this.__selectionManager.highlightRow(0);
-			}			
-					
+			}
+
 		}
 
 		this.__recreateTableBody();
 	}
-	
+
 	__optimizeColumnWidth(){
-		
-	}	
-	
+
+	}
+
 
 	__reload() {
 		this.__resetCache();
@@ -561,11 +561,11 @@ export default class Table extends ComponentAtom {
 				break;
 			default:
 				throw new Error('Not yet implemented for source type ' + sourceType);
-		}		
+		}
 
 	}
 
-	
+
 
 	__readTableStructureForSqLiteTable(tableSource) {
 		var sqLiteFilePath = tableSource.filePath;
@@ -595,16 +595,16 @@ export default class Table extends ComponentAtom {
 		var password = tableSource.password;
 
 		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
-		if (isUsingCustomQuery) {			
-			return  MySqlImporter.readTableStructureWithCustomQuery(url, user, password, tableSource.customQuery, tableSource.jobId);			
-		} else {			
-			return  MySqlImporter.readTableStructure(url, user, password, tableSource.tableName);			
+		if (isUsingCustomQuery) {
+			return  MySqlImporter.readTableStructureWithCustomQuery(url, user, password, tableSource.customQuery, tableSource.jobId);
+		} else {
+			return  MySqlImporter.readTableStructure(url, user, password, tableSource.tableName);
 		}
 	}
 
-	
 
-	__readRowFromTableSource(tableSource, rowIndex) {		
+
+	__readRowFromTableSource(tableSource, rowIndex) {
 		switch(tableSource.type){
 			case TableSourceType.SQLITE:
 				return this.__readRowFromSqLiteTable(tableSource, rowIndex);
@@ -613,8 +613,8 @@ export default class Table extends ComponentAtom {
 				return this.__readRowFromMySqlTable(tableSource, rowIndex);
 				break;
 			default:
-				throw new Error('not yet implemented for source type ' + tableSource.type);			
-		};		
+				throw new Error('not yet implemented for source type ' + tableSource.type);
+		};
 	}
 
 	__readRowFromSqLiteTable(tableSource, rowIndex) {
@@ -626,9 +626,9 @@ export default class Table extends ComponentAtom {
 		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
 		if (isUsingCustomQuery) {
 			var customQuery = tableSource.customQuery;
-			return SqLiteImporter.readRowWithCustomQuery(sqLiteFilePath, password, customQuery, jobId, rowIndex, this);			
+			return SqLiteImporter.readRowWithCustomQuery(sqLiteFilePath, password, customQuery, jobId, rowIndex, this);
 		} else {
-			return SqLiteImporter.readRow(sqLiteFilePath, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);			
+			return SqLiteImporter.readRow(sqLiteFilePath, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);
 		}
 	}
 
@@ -647,9 +647,9 @@ export default class Table extends ComponentAtom {
 		if (isUsingCustomQuery) {
 			var customQuery = tableSource.customQuery;
 			return MySqlImporter.readRowWithCustomQuery(url, user, password, customQuery, jobId, rowIndex, this);
-			
-		} else {			
-			return MySqlImporter.readRow(url, user, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);			
+
+		} else {
+			return MySqlImporter.readRow(url, user, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);
 		}
 	}
 
@@ -658,21 +658,21 @@ export default class Table extends ComponentAtom {
 	}
 
 	columnType(columnName) {
-		if (this.isLinkedToSource) {			
+		if (this.isLinkedToSource) {
 			return DatabasePageResultLoader.columnType(this.tableSource, columnName);
 		} else {
-			return this.columnFolder.type(columnName);			
+			return this.columnFolder.type(columnName);
 		}
-	}	
+	}
 
 	columnDataClass(columnName) {
 		var columnType = this.columnType(columnName);
-		return columnType.getAssociatedClass();		
+		return columnType.getAssociatedClass();
 	}
 
 	columnLegend(columnHeader) {
 		return this.columnFolder.columnLegend(columHeader);
-	}	
+	}
 
 	row(rowIndex) {
 
@@ -682,41 +682,41 @@ export default class Table extends ComponentAtom {
 		} else {
 			return this.rows[rowIndex];
 		}
-	}	
+	}
 
 	setColumnValues(columnName, columnData) {
 
 		var associatedClass = this.columnType(columnName).getAssociatedClass();
 
-		
+
 		for (var rowIndex = 0; rowIndex < columnData.length; rowIndex++) {
 			var value = columnData[rowIndex];
-						
-			if (rowIndex >= this.__rows.length) {				
+
+			if (rowIndex >= this.__rows.length) {
 				this.addEmptyRow();
-			} 
-			
+			}
+
 			var currentRow = this.__rows[rowIndex];
-						
+
 			currentRow.setEntry(columnName, value);
 		}
 		return this;
-	}	
-	
+	}
+
 	getColumnValues(columnName){
-		return this.rows.map(row=>row.entry(columnName));				
+		return this.rows.map(row=>row.entry(columnName));
 	}
 
 	isEditable(columnName) {
 		return true;
 	}
 
-	
-	
+
+
 	//#end region
-	
-	
-	//#region ACCESSORS	
+
+
+	//#region ACCESSORS
 
 	get headers() {
 		try{
@@ -738,24 +738,24 @@ export default class Table extends ComponentAtom {
 	get columnFolder() {
 
 		try {
-			return this.childByClass(ColumnFolder);			
+			return this.childByClass(ColumnFolder);
 		} catch (error) {
 
 			if (this.isLinkedToSource) {
 				this.reload();
 				try {
-					return this.childByClass(ColumnFolder);					
+					return this.childByClass(ColumnFolder);
 				} catch (error) {
 					return null;
 				}
 			}
 			return null;
 		}
-	}	
+	}
 
-	
 
-	get rows() {		
+
+	get rows() {
 		return this.__rows;
 	}
 
@@ -781,7 +781,7 @@ export default class Table extends ComponentAtom {
 		return this.__rowIndexOffset;
 	}
 
-	
+
 
 	set rowIndexOffset(rowIndexOffset) {
 		this.__rowIndexOffset = rowIndexOffset;
@@ -794,25 +794,25 @@ export default class Table extends ComponentAtom {
 
 	get columnSeparator() {
 		return this.__columnSeparator;
-	}	
+	}
 
 	get isCaching() {
 		return this.__isCaching;
 	}
-	
+
 	set isCaching(isCaching) {
 		this.__isCaching = isCaching;
 	}
 
-	
+
 	get isLinkedToSource() {
 		return this.tableSource
 			?true
-			:false;			
+			:false;
 	}
-	
+
 	get hasColumns(){
-		try {			
+		try {
 			return this.columnFolder.hasColumns;
 		} catch (error) {
 			return false;
@@ -820,21 +820,21 @@ export default class Table extends ComponentAtom {
 	}
 
 	get columns(){
-		try {			
+		try {
 			return this.columnFolder.columns;
 		} catch (error) {
 			return [];
 		}
 	}
-	
+
 	get numberOfColumns() {
 		try {
-			return this.columnFolder.numberOfColumns;			
+			return this.columnFolder.numberOfColumns;
 		} catch (error) {
 			return 0;
 		}
 	}
-	
+
 	get tableSelection(){
 		return this.__tableSelection;
 	}
@@ -842,5 +842,5 @@ export default class Table extends ComponentAtom {
 	get dTreez(){
 		return this.__treeView.dTreez;
 	}
-	
+
 }

@@ -33,6 +33,9 @@ export default class Links extends GraphicsAtom {
 
 		chordContainer.selectAll('.chord-link')
 		    .remove(); 
+
+		var ribbonGenerator = dTreez.ribbonArrow()
+			  .radius(innerRadius);
 		
 		chordContainer
 		  .datum(chord.chordDatum)
@@ -42,9 +45,7 @@ export default class Links extends GraphicsAtom {
 		  .data(nodeGroup => nodeGroup)
 		  .enter()
 		  .append('path')
-			.attr('d', dTreez.ribbon()
-			  .radius(innerRadius)
-		  )
+		  .attr('d', ribbonGenerator)
 		  .style('fill', nodeGroup => this.__determineFillColor(nodeGroup,colors) )
 		  .style('stroke', 'black');
 		

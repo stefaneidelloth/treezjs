@@ -5,15 +5,15 @@
 		<link type="text/css" rel="stylesheet" href="../../../src/components/text/code/treezCodeArea.css" />
 		<script src="../../../node_modules/requirejs/require.js"></script>
 
-		<script>			
+		<script>
 			window.treezConfig = {
 				home: '..'
 			}
 
 			requirejs.config({
 					baseUrl : '.',
-					paths : {			
-						'codemirror' : '../../../bower_components/codemirror'						
+					paths : {
+						'codemirror' : '../../../node_modules/codemirror'
 					}
 			});
 		</script>
@@ -21,21 +21,21 @@
 
 	<body>
 		<treez-code-area id="codeArea" >
-			
-		</treez-code-area>	
 
-		
+		</treez-code-area>
+
+
 
 		<script type="module">
 			import TreezCodeArea from '../../../src/components/text/code/treezCodeArea.js';
-			
+
             var codeArea = document.getElementById('codeArea');
-            codeArea.width= '400px';           
+            codeArea.width= '400px';
             codeArea.label = 'Code area:';
             codeArea.value = 'alert("Hello world!");';
 
-            
+
 		</script>
-		
+
 	</body>
 </html>

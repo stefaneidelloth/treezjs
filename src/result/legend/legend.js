@@ -8,16 +8,16 @@ export default class Legend extends PagedGraphicsAtom {
 
 	constructor(name){
 		super(name);
-		this.image = 'legend.png';		
+		this.image = 'legend.png';
 
-		this.__legendGroupSelection = undefined;	
-		this.__rectSelection = undefined;	
+		this.__legendGroupSelection = undefined;
+		this.__rectSelection = undefined;
 
-			
+
 	}
 
 	createPageFactories() {
-		
+
 		var factories = [];
 
 		this.layout = Layout.create(this);
@@ -31,12 +31,12 @@ export default class Legend extends PagedGraphicsAtom {
 
 		this.border = Border.create(this);
 		factories.push(this.border);
-		
+
 		return factories;
 	}
 
 	plot(dTreez, graphSelection, graphRectSelection, treeView) {
-		
+
 		this.treeView = treeView;
 
 		graphSelection //
@@ -52,30 +52,30 @@ export default class Legend extends PagedGraphicsAtom {
 		var dragDeltaY = 0;
 
 		let dragMethod = dTreez.drag()
-							.on('start', () =>{
-								dragDeltaX = this.layout.xTransform - dTreez.event.x;
-								dragDeltaY = this.layout.yTransform - dTreez.event.y;
+							.on('start', (event) =>{
+								dragDeltaX = this.layout.xTransform - event.x;
+								dragDeltaY = this.layout.yTransform - event.y;
 
 							})
-							.on('drag', () => {
-								let x = dTreez.event.x + dragDeltaX;
-								let y = dTreez.event.y + dragDeltaY;
-								this.layout.handleDragEvent(x, y);	
+							.on('drag', (event) => {
+								let x = event.x + dragDeltaX;
+								let y = event.y + dragDeltaY;
+								this.layout.handleDragEvent(x, y);
 							});
 
-		dragMethod(this.__legendGroupSelection);		
-		
+		dragMethod(this.__legendGroupSelection);
+
 		this.bindString(()=>this.name, this.__legendGroupSelection, 'id');
 
 		this.__rectSelection = this.__legendGroupSelection //
 				.append('rect') //
-				.onClick(()=>this.handleMouseClick());
+				.onClick((event)=>this.handleMouseClick(event));
 
 		this.updatePlot(dTreez);
 
 		return this.__legendGroupSelection;
 	}
-	
+
 	updatePlot(dTreez) {
 		this.__plotWithPages(dTreez);
 	}
@@ -84,6 +84,6 @@ export default class Legend extends PagedGraphicsAtom {
 		for (var factory of this.__pageFactories) {
 			factory.plot(dTreez, this.__legendGroupSelection, this.__rectSelection, this);
 		}
-	}	
+	}
 
 }

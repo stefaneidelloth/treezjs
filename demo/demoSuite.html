@@ -1,24 +1,24 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="../bower_components/jquery/dist/jquery.js"></script>     
-		<link rel="stylesheet" href="./demoSuite.css"></link>     
+		<script src="../node_modules/jquery/dist/jquery.js"></script>
+		<link rel="stylesheet" href="./demoSuite.css"></link>
 	</head>
 
-	<body>	
-	
-		<div id = "root"> 
+	<body>
+
+		<div id = "root">
 			<div id ="navigation"></div>
 			<div id ="demo-window">Loading demo Suite...</div>
 		</div>
 
 		<script type = "module">
-		    
-		    import StandAloneTerminal from '../src/standAloneTerminal.js'; 
+
+		    import StandAloneTerminal from '../src/standAloneTerminal.js';
 		    var terminal = new StandAloneTerminal();
 
 		    createContentNavigation();
-		    
+
 
 		    async function createContentNavigation(){
 
@@ -29,16 +29,16 @@
 		    	 	 demoDir = currentDirectory + '/demo';
 		    	});
 
-				var paths = undefined;		
+				var paths = undefined;
 		    	await executePromise('cd ' + demoDir + ' && tree /A /F').then(message => {
 		    		paths = getPaths(message);
-		    	});		
+		    	});
 
 		    	var navigation = document.getElementById('navigation');
 
 		    	var parentPath = demoDir;
 		    	var parentContent = navigation;
-		    	var parentLevel = -1;    	
+		    	var parentLevel = -1;
 
 				for(var relativePath of paths){
 					var isDirectory = relativePath.indexOf('html') === -1;
@@ -49,10 +49,10 @@
 						var directory = parts.pop();
 
 						if(level>parentLevel){
-							parentContent = createFolderNode(parentContent, directory, level);							
-						} else {							
+							parentContent = createFolderNode(parentContent, directory, level);
+						} else {
 							parentContent = getParentContent(parentContent, parentLevel, level);
-							parentContent = createFolderNode(parentContent, directory, level);							
+							parentContent = createFolderNode(parentContent, directory, level);
 						}
 						parentLevel = level;
 
@@ -60,14 +60,14 @@
 					} else {
 						createDemoNode(demoDir, relativePath, parentContent);
 					}
-					
+
 				}
 
 				var demoWindow = document.getElementById('demo-window');
 				demoWindow.innerText = 'Loading finished. Please select some *.html file from the navigation.'
 
 				console.log('initial loading finished');
-		    } 
+		    }
 
 		    function getParentContent(parentContent, parentLevel, level){
                 var currentLevel = level
@@ -81,10 +81,10 @@
 
 		    function createFolderNode(parentContent, directory, level){
 		    	var details = document.createElement('details');
-				details.open = true;		    	
+				details.open = true;
 				parentContent.appendChild(details);
 
-				var summary = document.createElement('summary');		    			    	
+				var summary = document.createElement('summary');
 				summary.innerText = directory;
 				details.className = 'level' + level;
 				details.appendChild(summary);
@@ -108,7 +108,7 @@
 				});
 			}
 
-		   
+
 			function createDemoNode(parentPath, relativePath, contentDiv){
 
 				var parts = parentPath.split('/demo/');
@@ -116,14 +116,14 @@
 				var url = parentUrl + '/' + relativePath;
 
 				var htmlFile = relativePath.split('/').pop();
-		    	
+
 		    	var div = document.createElement('div');
 		    	contentDiv.appendChild(div);
 
 		    	var button = document.createElement('button');
 		    	button.className = 'demo-button';
 		    	button.innerText = htmlFile;
-		    	button.onclick = ()=>{		    		
+		    	button.onclick = ()=>{
 		    		$('#demo-window').load(url, ()=>{
 		    			console.log('loaded demo ' + url);
 		    		},error=>{
@@ -131,9 +131,9 @@
 		    		});
 		    	};
 		    	div.appendChild(button);
-		    	
+
 		    }
-			
+
 			function getPaths(message){
 		    	var paths = [];
 		    	var lines = message.split('\n')
@@ -141,11 +141,11 @@
 
 		    	var parentPath = '';
 		    	var parentLevel = 0;
-		    	
+
 		    	for(var line of lines){
 		    		var directoryIndex = line.indexOf('---');
 		    		var isDirectory = directoryIndex > -1;
-		    		
+
 		    		if(isDirectory){
 						var level = directoryLevel(directoryIndex);
 						var directory = getDirectory(line);
@@ -179,9 +179,9 @@
 							if(file.indexOf('.html')>-1){
 								paths.push(trimFirstChar(parentPath) + '/' + file);
 							}
-		    			}						
-		    		} 
-		    		
+		    			}
+		    		}
+
 		    	}
 		    	return paths;
 		    }
@@ -207,10 +207,10 @@
 							default:
 								throw new Error('Unknown directory level');
 				}
-		    }        
-            
-			
+		    }
+
+
 		</script>
-		
+
 	</body>
 </html>

@@ -2,13 +2,11 @@
 //* adds additional functionality
 
 import DTreezSelection from './dTreezSelection.js'
-import DTreezEvent from './dTreezEvent.js';
  
 export default class DTreez {
 	
 	constructor(d3){
-		this.__d3 = d3;
-		this.event = new DTreezEvent(d3);
+		this.__d3 = d3;		
 	}
 
 	arc(){
@@ -55,8 +53,12 @@ export default class DTreez {
 		return this.__d3.range(start, end, step);
 	}
 
-	ribbon(){
-		return this.__d3.ribbon();
+	ribbon(headRadius){
+		return this.__d3.ribbon(headRadius);
+	}
+
+	ribbonArrow(){
+		return this.__d3.ribbonArrow();
 	}
 
 	scaleBand(){
