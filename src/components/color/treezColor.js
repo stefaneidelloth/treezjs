@@ -25,12 +25,12 @@ export default class TreezColor extends LabeledTreezElement {
 			label.innerText = this.label;                                            
 			container.appendChild(label);             
 
-			var colorPicker = document.createElement('input');                       
+			var colorPicker = document.createElement('input'); 
+			colorPicker.type='color';     
+			colorPicker.className = 'treez-color-input'; 
+			colorPicker.onchange = () => this.__colorChanged();                  
 			this.__colorPicker = colorPicker;		
-			container.appendChild(colorPicker); 
-			colorPicker.className = 'treez-color-input';
-			colorPicker.type='color';  
-			colorPicker.onchange = () => this.__colorChanged();
+			container.appendChild(colorPicker); 		
 			          		
         }
         
@@ -43,7 +43,7 @@ export default class TreezColor extends LabeledTreezElement {
 
     updateElements(color){
     	if(this.__colorPicker){                    	
-			this.__colorPicker.value= color.hexString; 
+			this.__colorPicker.value= color.hexString.substring(0,7); 
 			this.__colorPicker.title = color.name;
     	}
     }
