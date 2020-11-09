@@ -60,13 +60,13 @@ export default class Nodes extends GraphicsAtom {
 				
         var nodeSelection = chordContainer
 		  .datum(chord.chordDatum)
-		  .append('g')	
+		  .append('g')			  
 		  .className('chord-node')		  	  	  
 		  .selectAll('g')
 		  .data(d => d.groups)
 		  .enter()
 		  .append('g')          
-		  .append('path')
+		  .append('path')		   
 			.style('fill', (d,i) => colors[i])
 			.style('stroke', 'black')			
 			.attr('d', dTreez.arc()			  
