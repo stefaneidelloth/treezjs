@@ -162,8 +162,18 @@ export default class DTreezSelection {
 		return this;
 	}
 
+	onMouseDown(action){
+		this.__d3Selection.on('mousedown', action);
+		return this;
+	}
+
 	onMouseOver(action){
 		this.__d3Selection.on('mouseover', action);
+		return this;
+	}
+
+	onMouseOut(action){
+		this.__d3Selection.on('mouseout', action);
 		return this;
 	}
 
@@ -192,10 +202,7 @@ export default class DTreezSelection {
 		return this;
 	}
 	
-	onMouseDown(action){
-		this.__d3Selection.on('mousedown', action);
-		return this;
-	}
+	
 	
 	remove(){
 		this.__d3Selection.remove();
@@ -216,7 +223,7 @@ export default class DTreezSelection {
 		this.__d3Selection.attr('hidden', null);		
 		return this;
 	}
-	
+
 	step(step){
 		this.__d3Selection.attr('step', step);		
 		return this;

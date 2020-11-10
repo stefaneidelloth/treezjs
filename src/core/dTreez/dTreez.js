@@ -45,6 +45,157 @@ export default class DTreez {
 		return this.__d3.format(formatter);
 	}
 
+	interpolateTurbo(values) {
+		return this.__d3.interpolateTurbo(values);
+	}
+
+	interpolateSinebow(values) {
+		return this.__d3.interpolateSinebow(values);
+	}
+
+	interpolateRainbow(values) {
+		return this.__d3.interpolateRainbow(values);
+	}
+	interpolateSpectral(values) {
+		return this.__d3.interpolateSpectral(values);
+	}
+
+	interpolateCubehelixDefault(values) {
+		return this.__d3.interpolateCubehelixDefault(values);
+	}
+
+	interpolateCividis(values) {
+		return this.__d3.interpolateCividis(values);
+	}
+
+	interpolateInferno(values) {
+		return this.__d3.interpolateInferno(values);
+	}
+
+	interpolateMagma(values) {
+		return this.__d3.interpolateMagma(values);
+	}
+
+	interpolatePlasma(values) {
+		return this.__d3.interpolatePlasma(values);
+	}
+
+	interpolateViridis(values) {
+		return this.__d3.interpolateViridis(values);
+	}
+
+	interpolateWarm(values) {
+		return this.__d3.interpolateWarm(values);
+	}
+
+	interpolateCool(values) {
+		return this.__d3.interpolateCool(values);
+	}
+
+	interpolatePRGn(values) {
+		return this.__d3.interpolatePRGn(values);
+	}
+
+	interpolatePuOr(values) {
+		return this.__d3.interpolatePuOr(values);
+	}
+
+	interpolatePuRd(values) {
+		return this.__d3.interpolatePuRd(values);
+	}
+
+	interpolateReds(values) {
+		return this.__d3.interpolateReds(values);
+	}
+
+	interpolateOranges(values) {
+		return this.__d3.interpolateOranges(values);
+	}
+
+	interpolateOrRd(values) {
+		return this.__d3.interpolateOrRd(values);
+	}
+
+	interpolateYlOrRd(values) {
+		return this.__d3.interpolateYlOrRd(values);
+	}
+
+	interpolateYlOrBr(values) {
+		return this.__d3.interpolateYlOrBr(values);
+	}
+
+	interpolateYlGn(values) {
+		return this.__d3.interpolateYlGn(values);
+	}
+
+	interpolateGreens(values) {
+		return this.__d3.interpolateGreens(values);
+	}
+
+	interpolateBuGn(values) {
+		return this.__d3.interpolateBuGn(values);
+	}
+
+	interpolatePuBuGn(values) {
+		return this.__d3.interpolatePuBuGn(values);
+	}
+
+	interpolateBrBG(values) {
+		return this.__d3.interpolateBrBG(values);
+	}
+
+	interpolatePiYG(values) {
+		return this.__d3.interpolatePiYG(values);
+	}
+
+	interpolateRdYlGn(values) {
+		return this.__d3.interpolateRdYlGn(values);
+	}
+
+	interpolateRdYlBu(values) {
+		return this.__d3.interpolateRdYlBu(values);
+	}
+
+	interpolateRdBu(values) {
+		return this.__d3.interpolateRdBu(values);
+	}
+
+	interpolateRdGy(values) {
+		return this.__d3.interpolateRdGy(values);
+	}
+
+	interpolateGreys(values) {
+		return this.__d3.interpolateGreys(values);
+	}
+
+	interpolateYlGnBu(values) {
+		return this.__d3.interpolateYlGnBu(values);
+	}
+
+	interpolateGnBu(values) {
+		return this.__d3.interpolateGnBu(values);
+	}
+
+	interpolatePuBu(values) {
+		return this.__d3.interpolatePuBu(values);
+	}
+
+	interpolateBlues(values) {
+		return this.__d3.interpolateBlues(values);
+	}
+
+	interpolatePurples(values) {
+		return this.__d3.interpolatePurples(values);
+	}
+
+	interpolateBuPu(values) {
+		return this.__d3.interpolateBuPu(values);
+	}
+
+	interpolateRdPu(values) {
+		return this.__d3.interpolateRdPu(values);
+	}
+
 	line(){
 		return this.__d3.line();
 	}	
@@ -75,6 +226,10 @@ export default class DTreez {
 
 	scaleOrdinal(){
 		return this.__d3.scaleOrdinal();
+	}
+
+	scaleSequential(method){
+		return this.__d3.scaleSequential(method);
 	}
 	
 	select(selector){

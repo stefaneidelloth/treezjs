@@ -78,7 +78,13 @@ export default class TreezSvgComboBox extends TreezComboBox {
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__comboButton){                   		
+    	if(this.__comboButton){ 
+    	    if(booleanValue){
+    	    	this.__comboBox.classList.add('treez-svg-combo-box-disabled');  
+    	    } else {
+    	    	this.__comboBox.classList.remove('treez-svg-combo-box-disabled'); 
+    	    }
+    	                    		
     		this.__comboButton.disabled = booleanValue;                		
     	}
     }	
@@ -106,7 +112,9 @@ export default class TreezSvgComboBox extends TreezComboBox {
     }
 
 	__expandComboBox(){
-		this.__optionPanel.style.display = 'block';
+		if(!this.disabled){
+			this.__optionPanel.style.display = 'block';
+		}		
 	}	
 
 	__collapseComboBox(){

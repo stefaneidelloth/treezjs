@@ -19,7 +19,7 @@ export default class TreezColorMap extends TreezSvgComboBox {
     __createColorMapSvg(colorMap){
         var width = 150;
         var colors = colorMap.colors;
-        var id = 'treez-color-map-' + colorMap;
+        var id = 'treez-color-map-' + this.__randomString() +'-' + colorMap;
         var svgText = '<svg width="'+ width +'px" height="15px">\n' +
         '    <defs>\n' +
         '        <linearGradient id="' + id + '" x1="0%" y1="0%" x2="100%" y2="0%">\n';
@@ -33,6 +33,11 @@ export default class TreezColorMap extends TreezSvgComboBox {
         '    <rect width="'+ width +'px" height="15px" fill="url(#' + id + ')"/>\n';
         '</svg>'; 
         return svgText; 
+    }
+
+    __randomString(){
+        var randomNumber = new Date().getMilliseconds()*Math.random();
+        return ('' + randomNumber).replace('.','');
     }
 
     

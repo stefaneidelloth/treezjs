@@ -73,12 +73,16 @@ export default class Nodes extends GraphicsAtom {
 			.bindValue(this, ()=>this.strokeWidth);		
 	}
 
-	plot(dTreez, chordContainer, rectSelection, chord) {			
+	plot(dTreez, chordContainer, rectSelection, chord) {	
+
+	    this.__dTreez = dTreez;		
 
 		var outerRadius = Length.toPx(this.outerRadius);
 		var innerRadius = Length.toPx(this.innerRadius);       
 
 		var colors = this.nodeColors;
+
+		var nodeIds = chord.nodeIds;
 
 		chordContainer.selectAll('.chord-node')
 		    .remove();
@@ -99,51 +103,57 @@ export default class Nodes extends GraphicsAtom {
 			  .innerRadius(innerRadius)
 			);
 
+		nodeSelection.append('title')
+		  .text(group => this.nodeTitle(group, nodeIds));
+
         this.bindTransparency(()=>this.fillTransparency, nodeSelection);
 		this.bindString(()=>this.strokeWidth, nodeSelection, 'stroke-width');		
        
         this.addListener(()=>this.outerRadius, ()=>chord.updatePlot(dTreez));
         this.addListener(()=>this.innerRadius, ()=>chord.updatePlot(dTreez));
 		this.addListener(()=>this.paddingAngle, ()=>chord.updatePlot(dTreez));
+		this.addListener(()=>this.colorMap, ()=>chord.updatePlot(dTreez));
 
 		return chordContainer;
 	}
 
-	plotLegendLine(dTreez, parentSelection, length) {
-
-		/*
-
-		var linePathGenerator = dTreez //				
-				.line();
-
-		var path = linePathGenerator([[0, 0],[length, 0]]);
-
-		var legendLine = parentSelection //
-				.append('path') //
-				.classed('legend-line', true)
-				.attr('d', path)
-				.attr('fill', 'none');
-
-		//bind attributes
-		this.bindBooleanToNegatingDisplay(()=>this.isHidden, legendLine);
-		this.bindColor(()=>this.color,legendLine, 'stroke');
-		this.bindString(()=>this.width,legendLine, 'stroke-width');
-		this.bindLineTransparency(()=>this.transparency, legendLine)
-		this.bindLineStyle(()=>this.style, legendLine);		
-
-		*/
-
-		return parentSelection;
+	nodeTitle(group, nodeIds){
+		var id = nodeIds[group.index];
+		return id + ': ' + group.value;
 	}
 
 	get nodeColors(){
 
+		var nodeIds = this.parent.nodeIds;
+		var numberOfNodes = nodeIds.length;
+
 		var colors = [];
 		var chordNodes = this.parent.childrenByClass(ChordNode);
-		for(var chordNode of chordNodes){
-			colors.push(chordNode.color.toString());
+		
+
+		if(chordNodes.length > 0){
+			for(var chordNode of chordNodes){
+			    colors.push(chordNode.color.toString());
+		    }
+		    if(colors.length < numberOfNodes){
+		    	console.warn('There are less chord node children than nodes');
+		    }
 		}
-		return colors.concat([ 'red', 'blue', 'green', 'yellow','orange']);
+
+        var numberOfExtraColors = numberOfNodes - colors.length;
+        if(numberOfExtraColors > 0){        	
+            var interpolateColor = this.__dTreez['interpolate' + this.colorMap];
+
+            var distance = 1/numberOfExtraColors;
+            for(var index = 0; index < numberOfExtraColors; index++){
+            	var extraColor = interpolateColor.call(this.__dTreez, index*distance);
+            	colors.push(extraColor);
+            }
+            
+        }
+        
+
+		return colors;
 	}	
 
 }

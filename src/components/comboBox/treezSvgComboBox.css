@@ -3,6 +3,11 @@
     margin-bottom:10px; 
 }
 
+
+.treez-svg-combo-box-disabled {
+	background-color: lightgrey;
+}
+
 .treez-svg-combo-box-display { 
   padding:0px;	
   margin:0px;
@@ -50,6 +55,8 @@
 	margin:0px;
 	vertical-align: middle;
 }
+
+
 
 .treez-svg-combo-box-option-panel {	
     position: absolute;

@@ -146,7 +146,7 @@ export default class NodeLabels extends GraphicsAtom {
 		var textDistance = Length.toPx(this.textDistance);
 		var labelRadius = outerRadius + textDistance;
 					
-        var ids = chord.nodeIds;		
+        var nodeIds = chord.nodeIds;		
 	
 		var textLabels = labelGroups		  
 		    .append('text');
@@ -169,7 +169,7 @@ export default class NodeLabels extends GraphicsAtom {
                 .attr('xlink:href', (d, i) => '#treez-chord-label-path-' + i)
                 .attr('startOffset', '25%')               
                 .attr('text-anchor','middle')            
-                .text((d,i) => ids[i]);
+                .text((d,i) => nodeIds[i]);
 
 
 	    }	else {
@@ -177,11 +177,14 @@ export default class NodeLabels extends GraphicsAtom {
 		      .each(group => { 
 		          group.angle = (group.startAngle + group.endAngle) / 2;		         
 		      })
-              .text((d,i) => ids[i])
+              .text((d,i) => nodeIds[i])
               .attr('transform', group => this.__transformTextLabel(group, labelRadius))
 			  .attr('text-anchor', group => { return group.angle > Math.PI ? 'end' : null; })			    
 			  .attr('dy','0.35em');  
-	    }	    
+	    }
+
+	    textLabels.append('title')
+		  .text(group => chord.nodes.nodeTitle(group, nodeIds));	    
 	    				
 		this.addListener(()=>this.textDistance, ()=>chord.updatePlot(dTreez));
 		this.addListener(()=>this.textAngleOffset, ()=>chord.updatePlot(dTreez));
@@ -234,7 +237,12 @@ export default class NodeLabels extends GraphicsAtom {
 			  .each(group => { group.angle = (group.startAngle + group.endAngle) / 2; })
 			  .attr('transform', (group, index, elements) => 
 			  	this.__transformImageLabel(group, index, elements, imageRadius)
-			  );  
+			  ); 
+
+		var nodeIds = chord.nodeIds;
+
+	    imageLabels.append('title')
+		  .text(group => chord.nodes.nodeTitle(group, nodeIds)); 
 		
 		this.bindBooleanToDisplay(()=>this.isShowingImageLabels, imageLabels);
         this.addListener(()=>this.isAutoFlippingImageLabels, ()=>chord.updatePlot(dTreez));		
@@ -249,7 +257,12 @@ export default class NodeLabels extends GraphicsAtom {
 		var rotation = group.angle * 180 / Math.PI + this.imageAngleOffset - 90;
 
 		var element = elements[index];
-	    var bounds = element.childNodes[0].getBoundingClientRect();
+		var svgElement = element.childNodes[0];
+		if(!svgElement){
+			return '';
+		}
+
+	    var bounds = svgElement.getBoundingClientRect();
 	    var svgWidth = bounds.width;
 	    var svgHeight = bounds.height;
 

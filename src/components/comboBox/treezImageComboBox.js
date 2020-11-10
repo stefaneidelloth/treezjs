@@ -17,8 +17,7 @@ export default class TreezImageComboBox extends TreezComboBox {
 			var container = document.createElement('div');    
 			this.__container = container;
 			container.setAttribute('class','treez-image-combo-box-container');
-			this.appendChild(container);      
-	
+			this.appendChild(container); 
 			
 			var label = document.createElement('label');
 			this.__label = label;
