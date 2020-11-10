@@ -7,10 +7,10 @@ export default class MajorTicks extends GraphicsAtom {
 	
 	constructor(){	
 		super();	
-		this.number = 6; 
+		this.tickInterval = 5; 
 		this.color = Color.black;
-		this.width = 2
-		this.length = 10;
+		this.width = 1
+		this.length = 5;
 		this.style = LineStyle.solid;
 		this.transparency = 0;
 		this.isHidden = false;
@@ -27,10 +27,10 @@ export default class MajorTicks extends GraphicsAtom {
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-integer')
-			.label('Number')
+			.label('Interval')
 			.labelWidth('90px')
 			.min('0')
-			.bindValue(this, ()=>this.number);
+			.bindValue(this, ()=>this.tickInterval);
 		
 		sectionContent.append('treez-color')
 			.label('Color')
@@ -53,11 +53,9 @@ export default class MajorTicks extends GraphicsAtom {
 			.labelWidth('90px')
 			.bindValue(this, ()=>this.style);
 		
-		sectionContent.append('treez-double')
+		sectionContent.append('treez-unit-interval')
 			.label('Transparency')
-			.labelWidth('90px')
-			.min('0')
-			.max('1')
+			.labelWidth('90px')			
 			.bindValue(this, ()=>this.transparency);
 		
 		sectionContent.append('treez-check-box')
@@ -72,109 +70,40 @@ export default class MajorTicks extends GraphicsAtom {
         var outerRadius = Length.toPx(chord.nodes.outerRadius); 
 
         chord.nodeGroups.selectAll('.group-tick')
-            .selectAll('.chord-tick')
-		    .remove();  
+            .selectAll('.treez-chord-tick')
+		    .remove();  		
 		
-		chord.nodeGroups
+		var tickLines = chord.nodeGroups
 		  .selectAll('.group-tick')
-		  .data(nodeGroup => chord.groupTicks(dTreez, nodeGroup, 25)) // Controls the number of ticks: one tick each 25 here.
+		  .data(group => chord.groupTicks(dTreez, group, this.tickIntervalAimedFor)) // Controls the number of ticks: one tick each 25 here.
 		  .enter()
 		  .append('g')
-		  .className('chord-tick')
-		  .attr('transform', nodeGroup => 
-			  'rotate(' + (nodeGroup.angle * 180 / Math.PI - 90) + ') '+
+		  .className('treez-chord-tick')
+		  .attr('transform', group => 
+			  'rotate(' + (group.angle * 180 / Math.PI - 90) + ') '+
 			  'translate(' + outerRadius + ',0)'
 		  )
 		  .append('line')               // By default, x1 = y1 = y2 = 0, so no need to specify it.
-			.attr('x2', 6)
+			.attr('x2', '' + this.length + 'px')
 			.attr('stroke', 'black')
-
-		/*
-
-		//Hint: The major tick lines already have been created with the axis (see Data).
-		//Here only the properties of the ticks need to be applied.
-
-		var primary = axisSelection //
-				.selectAll('.primary');
-
-		var secondary = axisSelection //
-				.selectAll('.secondary');
-
-		this.__markMajorTicksWithCssClass(axis, primary, secondary);
-
-		var primaryMajorTickLines = primary //
-				.selectAll('.major') //
-				.selectAll('line');
-
-		var secondaryMajorTickLines = secondary //
-				.selectAll('.major') //
-				.selectAll('line');				
-
-		var majorTickLines = axisSelection //
-				.selectAll('g') //
-				.selectAll('.major') //
-				.selectAll('line')
-				.style('stroke-linecap', 'butt'); //
-				//.style('shape-rendering', 'geometricPrecision');;
+			.style('stroke-linecap', 'butt'); 				
+		  //.style('shape-rendering', 'geometricPrecision');
 		
-		this.addListener(()=>this.number, () => axis.updatePlot(dTreez))
+		this.addListener(()=>this.tickInterval, () => chord.updatePlot(dTreez))
+		this.addListener(()=>this.length, () => chord.updatePlot(dTreez))		
 
-		this.addListenerAndRun(()=>this.length, () => {
-			var isHorizontal = axis.data.direction.isHorizontal;
-			if (isHorizontal) {
-				primaryMajorTickLines.attr('y2', '-' + this.length);
-				secondaryMajorTickLines.attr('y2', '' + this.length);
-			} else {
-				primaryMajorTickLines.attr('x2', this.length);
-				secondaryMajorTickLines.attr('x2', '-' + this.length);
-			}
-		});
+		this.bindColor(()=>this.color, tickLines, 'stroke');
+		this.bindString(()=>this.width, tickLines, 'stroke-width');
+		this.bindLineStyle(()=>this.style, tickLines);
+		this.bindLineTransparency(()=>this.transparency, tickLines);
+		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, tickLines);		
 
-		this.bindColor(()=>this.color, majorTickLines, 'stroke');
-		this.bindString(()=>this.width, majorTickLines, 'stroke-width');
-		this.bindLineStyle(()=>this.style, majorTickLines);
-		this.bindLineTransparency(()=>this.transparency, majorTickLines);
-		this.bindBooleanToLineTransparency(()=>this.isHidden, ()=>this.transparency, majorTickLines);		
-
-		return axisSelection;
-
-		*/
+		return chordContainer;		
 	}
-
 	
-
-	__markMajorTicksWithCssClass(axis, primary, secondary) {
-
-		if (axis.data.isQuantitative) {
-			var isLog = axis.data.isLog;
-			if (isLog) {
-
-				primary.selectAll('.tick:nth-child(1)') //
-						.classed('major', true);
-
-				primary.selectAll('.tick:nth-child(9n+1)') //
-						.classed('major', true);
-
-				secondary.selectAll('.tick:nth-child(1)') //
-						.classed('major', true);
-
-				secondary.selectAll('.tick:nth-child(9n+1)') //
-						.classed('major', true);
-				return;
-			}
-		}
-
-		primary.selectAll('.tick') //
-				.classed('major', true);
-
-		secondary.selectAll('.tick') //
-				.classed('major', true);
-
-	}
-
-	get numberOfTicksAimedFor() {		
+	get tickIntervalAimedFor() {		
 		try {
-			return parseInt(this.number);
+			return parseInt(this.tickInterval);
 		} catch (error) {
 			return 0;	
 		}		

@@ -6,18 +6,14 @@ export default class TickLabels extends GraphicsAtom {
 	constructor(){
 		super();
 		this.font = 'sans-serif';
-		this.size = 22;
+		this.size = 10;
 		this.color = 'black';
 		this.format = ''
 		this.isItalic = false;
 		this.isBold = false;
-		this.hasUnderline = false;
-		this.rotation = '0';
-		this.offset = 4;
+		this.hasUnderline = false;		
+		this.offset = 6;
 		this.isHidden= false;
-		
-		this.tickLabelHeight = 0.0;
-		this.tickLabelWidth = 0.0;
 	}	
 
 	createPage(root) {
@@ -64,13 +60,7 @@ export default class TickLabels extends GraphicsAtom {
 		sectionContent.append('treez-check-box')
 			.label('Has underline')
 			.contentWidth('55px')
-			.bindValue(this, ()=>this.hasUnderline);		
-
-		sectionContent.append('treez-combo-box')
-			.label('Rotation')
-			.labelWidth('55px')
-			.attr('options',"['-180','-135','-90','-45','0','45','90','135','180']")
-			.bindValue(this, ()=>this.rotation);
+			.bindValue(this, ()=>this.hasUnderline);			
 	
 		sectionContent.append('treez-double')
 			.label('Offset')
@@ -88,56 +78,32 @@ export default class TickLabels extends GraphicsAtom {
 
 		var outerRadius = Length.toPx(chord.nodes.outerRadius);
 
+		var className = 'treez-chord-tick-label';
+
+		var interval = chord.ticks.tickIntervalAimedFor;
+
 		chord.nodeGroups.selectAll('.group-tick-label')
-		    .selectAll('.chord-tick-label')
+		    .selectAll('.' + className)
 		    .remove();   
 		
-		chord.nodeGroups
+		var tickLabels = chord.nodeGroups
 		  .selectAll('.group-tick-label')
-		  .data(nodeGroup => chord.groupTicks(dTreez, nodeGroup, 25))
+		  .data(group => chord.groupTicks(dTreez, group, interval))
 		  .enter()
-		  .filter(function(d) { return d.value % 25 === 0; })
+		  .filter((d) => d.value % interval === 0)
 		  .append('g')
-		  .className('chord-tick-label')
-		  .attr('transform', nodeGroup => 
-			    'rotate(' + (nodeGroup.angle * 180 / Math.PI - 90) + ') ' +
+		  .className(className)
+		  .attr('transform', group => 
+			    'rotate(' + (group.angle * 180 / Math.PI - 90) + ') ' +
 			    'translate(' + outerRadius + ',0)'
 		  )
 		  .append('text')
-			.attr('x', 8)
+			.attr('x', this.offset)
 			.attr('dy', '.35em')
-			.attr('transform', function(d) { return d.angle > Math.PI ? 'rotate(180) translate(-16)' : null; })
-			.style('text-anchor', function(d) { return d.angle > Math.PI ? 'end' : null; })
-			.text(function(d) { return d.value })
-			.style('font-size', 9)
+			.attr('transform', group => group.angle > Math.PI ? 'rotate(180) translate(-16)' : null)
+			.style('text-anchor', group => group.angle > Math.PI ? 'end' : null)
+			.text(group => group.value);
 
-
-		
-
-		/*
-
-		//Hint: The major ticks already have been created with the axis (see Data).
-		//Here only the properties of the tick labels need to be applied.
-
-		//get tick labels
-		var tickLabels = axisSelection.selectAll('.primary') //
-							.selectAll('.tick') //
-							.selectAll('text');
-
-		//remove default shift		
-		var isHorizontal = axis.data.isHorizontal;
-		if (isHorizontal) {
-			tickLabels.attr('dy', '0');
-		}
-
-		//update label geometry
-		var geometryConsumer = () => {
-			this.__updateLabelGeometry(tickLabels, isHorizontal);
-		};
-		
-		
-
-		//bind attributes
 		this.bindString(()=>this.font, tickLabels, 'font-family');
 		this.bindString(()=>this.size, tickLabels, 'font-size');
 		this.bindColor(()=>this.color, tickLabels, 'fill');			
@@ -146,72 +112,14 @@ export default class TickLabels extends GraphicsAtom {
 		this.bindFontUnderline(()=>this.hasUnderline, tickLabels);
 		this.bindBooleanToTransparency(()=>this.isHidden, null, tickLabels);
 
-		this.addListener(()=>this.format, ()=>axis.updatePlot(dTreez));		
-		this.addListener(()=>this.rotation, geometryConsumer);
-		this.addListener(()=>this.offset, geometryConsumer);
-		this.addListener(()=>this.size, geometryConsumer);		
-
-		geometryConsumer();		
-
-		return axisSelection;
-
-		*/
-	}
-
-	__updateLabelGeometry(tickLabels, isHorizontal) {
-		var tickOffset = Length.toPx(this.offset);
+		this.addListener(()=>this.format, ()=> chord.updatePlot(dTreez));
+		this.addListener(()=>this.offset, ()=> chord.updatePlot(dTreez));		
 		
-		var rotation = 0;
-		try {
-			rotation = -parseFloat(this.rotation);
-		} catch (error) {
-			
-		}
+		return chordContainer;
 
-		//initial transform
-		this.__applyTransformation(tickLabels, 0, 0, rotation);
-
-		//get actual text geometry and update transformation
-		var x = 0;
-		var y = 0;
-
-		if (isHorizontal) {
-			this.tickLabelHeight = this.__determineTickLabelHeight(tickLabels);
-			y += this.tickLabelHeight + tickOffset;
-		} else {
-
-			var firstNode = tickLabels.node();			
-			if (firstNode != null) {							
-				var boundingBox = firstNode.getBBox();
-				this.tickLabelWidth = boundingBox.width;
-				var xMax = boundingBox.x + boundingBox.width;				
-				x -= (xMax + tickOffset);
-			}
-
-		}
-
-		this.__applyTransformation(tickLabels, x, y, rotation);
 	}
 
-	__determineTickLabelHeight(tickLabels) {
-		var firstNode = tickLabels.node();
-		if (firstNode == null) {
-			return 0.0;
-		}
-		var boundingBox = firstNode.getBBox();
-		var svgTickLabelHeight = boundingBox.height;
-		var fontName = this.font;
-		
-		var fontSize = parseInt(this.size);
-		var awtTextHeight = fontSize; //TODO AbstractGraphicsAtom.estimateTextHeight(fontName, fontSize);
-
-		var height = Math.max(svgTickLabelHeight, awtTextHeight);
-		return height;
-	}
-
-	__applyTransformation(tickLabels, x, y, rotation) {
-		var transformString = 'translate(' + x + ',' + y + ') rotate(' + rotation + ')';
-		tickLabels.attr('transform', transformString);
-	}	
+	
+	
 
 }

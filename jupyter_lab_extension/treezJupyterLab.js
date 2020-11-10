@@ -33,6 +33,8 @@ window.init_workspace_module = async (app, dependencies)=>{
 	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
 	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
 
+    Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icon.min.css');
+    
 	require([
 		'golden-layout',
 		'd3'
