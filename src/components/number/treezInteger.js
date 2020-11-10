@@ -4,13 +4,12 @@ export default class TreezInteger extends TreezNumber {
             	            	
     constructor(){
         super();               
-    }            	
+    } 
 
     connectedCallback() {
-        super.connectedCallback();
-        let numberInput = this.__numberInput;
-        numberInput.step = '1';    	
-    }
+        super.connectedCallback();        
+        this.step = '1';        
+    }     
 
     validateValue(value){
         let superValidationState = super.validateValue(value);

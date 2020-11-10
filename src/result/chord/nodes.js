@@ -11,9 +11,10 @@ export default class Nodes extends GraphicsAtom {
 		super();
 		this.outerRadius = '4 cm';		
         this.innerRadius = '3.8 cm';
-        this.paddingAngle = 0.05;
+        this.paddingAngle = 2;
         this.colorMap = ColorMap.Turbo;
-        this.strokeWidth = '1';       
+        this.fillTransparency = 0.2;
+        this.strokeWidth = '0';       
 	}
 	
 	createPage(root) {
@@ -21,8 +22,15 @@ export default class Nodes extends GraphicsAtom {
 		var tab = root.append('treez-tab')
 			.label('Nodes');
 
+        this.__createShapeSection(tab);
+        this.__createFillSection(tab);
+        this.__createStrokeSection(tab);	
+		
+	}
+
+	__createShapeSection(tab){
 		var section = tab.append('treez-section')
-			.label('Nodes');	
+			.label('Shape');	
 		
 		var sectionContent = section.append('div');
 
@@ -37,15 +45,32 @@ export default class Nodes extends GraphicsAtom {
 		sectionContent.append('treez-double')
 			.label('Padding angle')
 			.bindValue(this, ()=>this.paddingAngle);
+	}
+
+	__createFillSection(tab){
+		var section = tab.append('treez-section')
+			.label('Fill');	
+		
+		var sectionContent = section.append('div');
 
 		sectionContent.append('treez-color-map')
 			.label('Color map')
 			.bindValue(this, ()=>this.colorMap);
 
-		sectionContent.append('treez-text-field')
-			.label('Stroke width')
-			.bindValue(this, ()=>this.strokeWidth);		
+		sectionContent.append('treez-unit-interval')
+			.label('Transparency')
+			.bindValue(this, ()=>this.fillTransparency);
+	}
+
+	__createStrokeSection(tab){
+		var section = tab.append('treez-section')
+			.label('Stroke');	
 		
+		var sectionContent = section.append('div');
+
+		sectionContent.append('treez-text-field')
+			.label('Width')
+			.bindValue(this, ()=>this.strokeWidth);		
 	}
 
 	plot(dTreez, chordContainer, rectSelection, chord) {			
@@ -74,9 +99,8 @@ export default class Nodes extends GraphicsAtom {
 			  .innerRadius(innerRadius)
 			);
 
-		this.bindString(()=>this.strokeWidth, nodeSelection, 'stroke-width');
-
-		
+        this.bindTransparency(()=>this.fillTransparency, nodeSelection);
+		this.bindString(()=>this.strokeWidth, nodeSelection, 'stroke-width');		
        
         this.addListener(()=>this.outerRadius, ()=>chord.updatePlot(dTreez));
         this.addListener(()=>this.innerRadius, ()=>chord.updatePlot(dTreez));

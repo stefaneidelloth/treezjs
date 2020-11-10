@@ -10,7 +10,7 @@ export default class TreezNumber extends LabeledTreezElement {
     }  
     
     static get observedAttributes() {
-		return LabeledTreezElement.observedAttributes.concat(['min','max']);                    
+		return LabeledTreezElement.observedAttributes.concat(['min','max','step']);                    
     }  
 
     connectedCallback() {
@@ -29,6 +29,7 @@ export default class TreezNumber extends LabeledTreezElement {
             numberInput.type = 'number'; 
             numberInput.min = this.min;
             numberInput.max = this.max;
+            numberInput.step = this.step;
             numberInput.className = 'treez-number-input';                
             numberInput.onchange = (event)=> this.__numberInputChanged(event);
             this.appendChild(numberInput);
@@ -40,7 +41,7 @@ export default class TreezNumber extends LabeledTreezElement {
 
         if(Number.isNaN(this.max)){
             this.max = Number.MAX_SAFE_INTEGER; 
-        }
+        }    
         
         this.update();
     }    			        
@@ -57,6 +58,12 @@ export default class TreezNumber extends LabeledTreezElement {
         if(attr==='max'){
         	if(this.__numberInput){
         		 this.__numberInput.max = newStringValue;   
+        	}                                           
+        }
+
+        if(attr==='step'){
+        	if(this.__numberInput){
+        		 this.__numberInput.step = newStringValue;   
         	}                                           
         }
        
@@ -180,7 +187,7 @@ export default class TreezNumber extends LabeledTreezElement {
 
     set min(newValue) {
         this.setAttribute('min', this.convertToStringValue(newValue));	
-    } 
+    }     
 
     get max() {
         return this.convertFromStringValue(this.getAttribute('max'));
@@ -189,7 +196,14 @@ export default class TreezNumber extends LabeledTreezElement {
     set max(newValue) {
         this.setAttribute('max', this.convertToStringValue(newValue));	
     }
-   
+
+    get step() {
+        return this.getAttribute('step');
+    }
+
+    set step(newValue) {
+        this.setAttribute('step', newValue);	
+    }    
                           
 }
 

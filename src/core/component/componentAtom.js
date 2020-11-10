@@ -58,6 +58,8 @@ import TreezTextArea from './../../components/text/area/treezTextArea.js';
 import TreezTextField from './../../components/text/field/treezTextField.js';
 import TreezTextLabel from './../../components/text/label/treezTextLabel.js';
 
+import TreezUnitInterval from './../../components/number/treezUnitInterval.js';
+
 
 export default class ComponentAtom extends Atom {
 

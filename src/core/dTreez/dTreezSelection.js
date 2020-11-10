@@ -217,6 +217,11 @@ export default class DTreezSelection {
 		return this;
 	}
 	
+	step(step){
+		this.__d3Selection.attr('step', step);		
+		return this;
+	}
+	
 	style(key, value){
 		if (value === undefined){
 			return this.__d3Selection.style(key);

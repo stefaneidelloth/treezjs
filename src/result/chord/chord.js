@@ -77,11 +77,10 @@ export default class Chord extends PagedGraphicsAtom {
 	updatePlot(dTreez) {	
 	    
 
-	    var paddingAngle = this.nodes.paddingAngle;	
+	    var paddingAngle = this.nodes.paddingAngle * Math.PI/180;	
         var matrix = this.__createChordMatrix(); 
 		this.__chordDatum = dTreez.chord()
-					.padAngle(paddingAngle)     
-					//.sortSubgroups(dTreez.descending)
+					.padAngle(paddingAngle) 
 					(matrix); 
 
 		this.__chordContainer.selectAll('g')
@@ -92,7 +91,13 @@ export default class Chord extends PagedGraphicsAtom {
 		  .append('g')
 		  .selectAll('g')
 		  .data(d => d.groups)
-		  .enter()  
+		  .enter() 
+
+		this.__chordContainer.selectAll('defs')
+		    .remove(); 
+
+		this.__chordDefs = this.__chordContainer
+		    .append('defs');
 		  	
 		this.__plotWithPages(dTreez);
 	}
@@ -172,6 +177,10 @@ export default class Chord extends PagedGraphicsAtom {
 
 	get nodeGroups(){
 		return this.__nodeGroups;
+	}
+
+	get chordDefs(){
+		return this.__chordDefs;
 	}
 
 	get nodeIds(){
