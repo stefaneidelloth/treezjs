@@ -6,6 +6,8 @@
 
 .treez-svg-combo-box-disabled {
 	background-color: lightgrey;
+	opacity: 0.5;
+	border: none !important;
 }
 
 .treez-svg-combo-box-display { 
