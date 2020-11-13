@@ -3,18 +3,20 @@ import Length from './../graphics/length.js';
 import Color from './../../components/color/color.js';
 import ColorMap from './../../components/colorMap/colorMap.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
-import ChordNode from './chordNode.js';
+import SankeyNode from './sankeyNode.js';
 
 export default class Nodes extends GraphicsAtom {
 	
 	constructor(){
 		super();
-		this.outerRadius = '4 cm';		
-        this.innerRadius = '3.8 cm';
-        this.paddingAngle = 2;
+		
+		this.margin = '10 px';
+		this.nodeWidth = '15 px';		
+        this.nodePadding = '50 px';
+       
         this.colorMap = ColorMap.Turbo;
         this.fillTransparency = 0.2;
-        this.strokeWidth = '0';       
+        this.strokeWidth = 1;       
 	}
 	
 	createPage(root) {
@@ -22,29 +24,30 @@ export default class Nodes extends GraphicsAtom {
 		var tab = root.append('treez-tab')
 			.label('Nodes');
 
-        this.__createShapeSection(tab);
+        this.__createLayoutSection(tab);
         this.__createFillSection(tab);
         this.__createStrokeSection(tab);	
 		
 	}
 
-	__createShapeSection(tab){
+	__createLayoutSection(tab){
 		var section = tab.append('treez-section')
-			.label('Shape');	
+			.label('Layout');	
 		
-		var sectionContent = section.append('div');
+		var sectionContent = section.append('div');	
 
 		sectionContent.append('treez-text-field')
-			.label('Outer radius')
-			.bindValue(this, ()=>this.outerRadius);
+			.label('Margin')
+			.bindValue(this, ()=>this.margin);	
 
 		sectionContent.append('treez-text-field')
-			.label('Inner radius')
-			.bindValue(this, ()=>this.innerRadius);
+			.label('Node width')
+			.bindValue(this, ()=>this.nodeWidth);
 
-		sectionContent.append('treez-double')
-			.label('Padding angle')
-			.bindValue(this, ()=>this.paddingAngle);
+		sectionContent.append('treez-text-field')
+			.label('Node padding')
+			.bindValue(this, ()=>this.nodePadding);
+		
 	}
 
 	__createFillSection(tab){
@@ -68,59 +71,112 @@ export default class Nodes extends GraphicsAtom {
 		
 		var sectionContent = section.append('div');
 
-		sectionContent.append('treez-text-field')
+		sectionContent.append('treez-double')
 			.label('Width')
+			.min('0')
 			.bindValue(this, ()=>this.strokeWidth);		
 	}
 
-	plot(dTreez, chordContainer, rectSelection, chord) {	
+	plot(dTreez, sankeyContainer, rectSelection, sankey) {	
 
-	    this.__dTreez = dTreez;		
+	    this.__dTreez = dTreez;		         	
 
-		var outerRadius = Length.toPx(this.outerRadius);
-		var innerRadius = Length.toPx(this.innerRadius);       
+		var colors = this.nodeColors;	   	    		
 
-		var colors = this.nodeColors;
+		var nodeSelection = sankeyContainer.append("g")		    
+		    .selectAll("rect")
+		    .data(sankey.nodeData)
+		    .join("rect")
+		    .attr('id', node => node.id)
+		    .attr("x", node => node.x0)
+		    .attr("y", node => node.y0)
+		    .attr("height", node => node.y1 - node.y0)
+		    .attr("width", node => node.x1 - node.x0)
+		    .attr("fill", (node, index) => colors[index])
+		    .attr('stroke', 'black');
 
-		var nodeIds = chord.nodeIds;
+		this.__enableDragAndDrop(dTreez, nodeSelection, sankey);	     
 
-		chordContainer.selectAll('.chord-node')
-		    .remove();
-				
-        var nodeSelection = chordContainer
-		  .datum(chord.chordDatum)
-		  .append('g')			  
-		  .className('chord-node')		  	  	  
-		  .selectAll('g')
-		  .data(d => d.groups)
-		  .enter()
-		  .append('g')          
-		  .append('path')		   
-			.style('fill', (d,i) => colors[i])
-			.style('stroke', 'black')			
-			.attr('d', dTreez.arc()			  
-			  .outerRadius(outerRadius)
-			  .innerRadius(innerRadius)
-			);
-
-		nodeSelection.append('title')
-		  .text(group => this.nodeTitle(group, nodeIds));
-
+        nodeSelection.append("title")
+		    .text(node => `${node.id}: ${node.value}`);
+	
         this.bindTransparency(()=>this.fillTransparency, nodeSelection);
-		this.bindString(()=>this.strokeWidth, nodeSelection, 'stroke-width');		
+				
        
-        this.addListener(()=>this.outerRadius, ()=>chord.updatePlot(dTreez));
-        this.addListener(()=>this.innerRadius, ()=>chord.updatePlot(dTreez));
-		this.addListener(()=>this.paddingAngle, ()=>chord.updatePlot(dTreez));
-		this.addListener(()=>this.colorMap, ()=>chord.updatePlot(dTreez));
+        this.addListener(()=>this.margin, ()=>this.__layoutChanged(dTreez, sankey));
+        this.addListener(()=>this.nodeWidth, ()=>this.__layoutChanged(dTreez, sankey));
+		this.addListener(()=>this.nodePadding, ()=>this.__layoutChanged(dTreez, sankey));
 
-		return chordContainer;
+		this.addListener(()=>this.colorMap, ()=>sankey.updatePlot(dTreez));
+        this.bindDouble(()=>this.strokeWidth, nodeSelection, 'stroke-width');
+		
+
+		return sankeyContainer;
 	}
 
-	nodeTitle(group, nodeIds){
-		var id = nodeIds[group.index];
-		return id + ': ' + group.value;
+	__layoutChanged(dTreez, sankey){
+		sankey.resetSankeyGenerator();
+		sankey.updatePlot(dTreez);
 	}
+
+	__enableDragAndDrop(dTreez, nodeSelection, sankey){
+	  
+	   var dragDeltaX = 0;
+	   var dragDeltaY = 0;  	  
+
+	   var drag = dTreez.drag()		              
+			.on('start', (event, node) => {	 
+			    dragDeltaX = node.x0 - event.x;
+				dragDeltaY = node.y0 - event.y;
+				var element = event.sourceEvent.srcElement;	 
+				element.parentNode.appendChild(element);
+			})
+			.on('drag', (event, node) => {				    
+			    var element = event.sourceEvent.srcElement;
+			    if(element.id !== node.id){
+			    	return;
+			    }	
+			   		   
+				var x0 = event.x + dragDeltaX;
+				var y0 = event.y + dragDeltaY;
+				
+				this.__updateLayout(dTreez, sankey, element, node, x0, y0);
+			});
+
+	    nodeSelection.call(drag);	  
+	}
+
+	__updateLayout(dTreez, sankey, element, node, x0, y0){ 
+
+        var graphWidth = Length.toPx(sankey.graph.width);
+        var graphHeight = Length.toPx(sankey.graph.height);
+	    var margin = Length.toPx(this.margin);
+
+	    var width = node.x1 - node.x0;
+	    var height = node.y1 - node.y0;
+
+	    var x0Max = graphWidth-margin-width;
+	    var y0Max = graphHeight-margin-height;	
+
+	    if(x0 < margin || x0 > x0Max){
+	    	return;
+	    }  
+
+	    if(y0 < margin || y0 > y0Max){
+	    	return;
+	    }  	    
+	           		
+        dTreez.select(element)
+            .attr('x', x0)
+            .attr('y', y0);
+
+        node.x0 = x0;
+        node.x1 = x0 + width;
+
+	    node.y0 = y0;
+	    node.y1 = y0 + height;
+        sankey.updateLinksAfterDrag(dTreez);
+	}	
 
 	get nodeColors(){
 
@@ -128,15 +184,15 @@ export default class Nodes extends GraphicsAtom {
 		var numberOfNodes = nodeIds.length;
 
 		var colors = [];
-		var chordNodes = this.parent.childrenByClass(ChordNode);
+		var sankeyNodes = this.parent.childrenByClass(SankeyNode);
 		
 
-		if(chordNodes.length > 0){
-			for(var chordNode of chordNodes){
-			    colors.push(chordNode.color.toString());
+		if(sankeyNodes.length > 0){
+			for(var sankeyNode of sankeyNodes){
+			    colors.push(sankeyNode.color.hexString);
 		    }
 		    if(colors.length < numberOfNodes){
-		    	console.warn('There are less chord node children than nodes');
+		    	console.warn('There are less sankey node children than nodes');
 		    }
 		}
 

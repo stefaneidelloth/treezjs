@@ -114,6 +114,11 @@ export default class DTreezSelection {
 		let selection = this.__d3Selection.insert(foo, baa);	
 		return new DTreezSelection(selection);
 	}
+
+	join(selector){
+		var selection = this.__d3Selection.join(selector);
+		return new DTreezSelection(selection);
+	}
 	
 	label(label){
 		this.__d3Selection.attr('label', label);		
@@ -181,9 +186,21 @@ export default class DTreezSelection {
 		this.__d3Selection.on('mouseup', action);
 		return this;
 	}
-	
+
 	onChange(action){
 		this.__d3Selection.on('change', action);
+		return this;
+	}
+	
+	onActualChange(action){
+		this.__d3Selection.on('change', (event)=>{
+			var detail = event.detail;
+			if(detail){
+				if (detail.oldValue != detail.newValue){
+					action(event);
+				}
+			} 			
+		});
 		return this;
 	}
 

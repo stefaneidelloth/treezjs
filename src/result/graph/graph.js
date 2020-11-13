@@ -10,6 +10,7 @@ import XySeries from './../xySeries/xySeries.js';
 import Tornado from './../tornado/tornado.js';
 import Chord from './../chord/chord.js';
 import Legend from './../legend/legend.js';
+import Sankey from './../sankey/sankey.js';
 
 
 export default class Graph extends PagedGraphicsAtom {
@@ -101,6 +102,17 @@ export default class Graph extends PagedGraphicsAtom {
 				Chord,
 				'chord',
 				'chord.png',
+				parentSelection,
+				this,
+				treeView
+			)
+		);
+
+		actions.push(
+			new AddChildAtomTreeViewAction(
+				Sankey,
+				'sankey',
+				'sankey.png',
 				parentSelection,
 				this,
 				treeView
@@ -222,8 +234,20 @@ export default class Graph extends PagedGraphicsAtom {
 		return this.createChild(Chord, name);
 	}
 
+	createSankey(name) {
+		return this.createChild(Sankey, name);
+	}
+
 	createContour(name) {
 		return this.createChild(Contour, name);
+	}
+
+	get width(){
+		return this.data.width;
+	}
+
+	get height(){
+		return this.data.height;
 	}
 
 }

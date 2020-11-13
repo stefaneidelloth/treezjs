@@ -10,8 +10,9 @@
     "@jupyterlab/apputils": "2.2.6",
     "codemirror": "5.58.2",
     "d3": "6.2.0",
+    "d3-sankey": "0.12.3",
     "d3-scale-chromatic": "2.0.0",
-    "flag-icon-css": "^3.5.0",
+    "flag-icon-css": "3.5.0",
     "golden-layout": "1.5.9",
     "jquery": "3.5.1",
     "requirejs": "2.3.6"

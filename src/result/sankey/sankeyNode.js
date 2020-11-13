@@ -1,18 +1,21 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 
-export default class ChordNode extends GraphicsAtom {
+export default class SankeyNode extends GraphicsAtom {
 
 	constructor(name){
 		super(name);
-		this.image = 'chordNode.png';
+		this.image = 'sankeyNode.png';
 		this.description = '';
 		this.color = 'red';
-		this.svg = '<svg with="16" height="16">\n</svg>';
-		this.__chordNodeSelection = undefined;		
+		this.x = NaN;
+		this.y = NaN;
+		this.svg = '<svg with="16" height="16">\n</svg>';		
 	}
 	
 
 	createComponentControl(tabFolder){  
+
+	    this.__isInitializing = true;	
 
 		const tab = tabFolder.append('treez-tab')
 	            .label('Data');
@@ -20,45 +23,49 @@ export default class ChordNode extends GraphicsAtom {
 		let section = tab.append('treez-section')
 			.label('Data');
 
-		this.createHelpAction(section, 'result/chord/chordNode.md');		
+		this.createHelpAction(section, 'result/sankey/sankeyNode.md');		
 	
 		let sectionContent = section.append('div');
 
 		sectionContent.append('treez-text-field')
-			.label('Name')		
-			.onChange(()=>this.__nameChanged())	
-			.bindValue(this, ()=>this.name);
+			.label('Name')						
+			.bindValue(this, ()=>this.name)
+			.onActualChange(()=>this.__nameChanged());
 		
 		sectionContent.append('treez-text-field')
-			.label('Description')			
-			.bindValue(this, ()=>this.description);
+			.label('Description')						
+			.bindValue(this, ()=>this.description)
+			.onActualChange(()=>this.__optionChanged());
 
 		sectionContent.append('treez-color')
-			.label('Color')			
-			.bindValue(this, ()=>this.color);
+			.label('Color')	
+			.bindValue(this, ()=>this.color)
+			.onActualChange(()=>this.__optionChanged());
+
+		sectionContent.append('treez-integer')
+			.label('X')				
+			.bindValue(this, ()=>this.x)
+			.onActualChange(()=>this.__optionChanged());
+
+		sectionContent.append('treez-integer')
+			.label('Y')				
+			.bindValue(this, ()=>this.y)
+			.onActualChange(()=>this.__optionChanged());
 
 		sectionContent.append('treez-svg')
-			.label('Svg image')			
-			.bindValue(this, ()=>this.svg);		
-
+			.label('Svg image')				
+			.bindValue(this, ()=>this.svg)
+			.onActualChange(()=>this.__optionChanged());
 	}
-
-	plot(dTreez, chordSelection, rectSelection, chord) {
-
-		//this page factory does create an own d3 group; the work will be
-		//done by the other property page factories
-
-		let dataChangedConsumer = () => chord.updatePlot(d3);
 		
-		this.addListener(()=>this.sourceData, dataChangedConsumer)
-		this.addListener(()=>this.targetData, dataChangedConsumer)
-		this.addListener(()=>this.valueData, dataChangedConsumer)
-
-		return chordSelection;
-	}	
 
 	__nameChanged(){		
-		this.treeView.refresh(this);				
+		this.treeView.refresh(this);
+		this.__optionChanged();				
+	}
+
+	__optionChanged(){		
+		this.parent.sankeyNodeChanged(this);
 	}
 
 }

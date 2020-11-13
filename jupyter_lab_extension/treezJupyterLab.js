@@ -15,11 +15,15 @@ Treez.config({
 window.init_workspace_module = async (app, dependencies)=>{
 
 	await Treez.importScript('/node_modules/requirejs/require.js');
-
+	
 	require.config({
 		baseUrl : treezConfig.home,
-		paths : {
+		paths : {			
 			'd3' : 'node_modules/d3/dist/d3.min',
+			'd3-array' : 'node_modules/d3-array/dist/d3-array.min',
+			'd3-path' : 'node_modules/d3-path/dist/d3-path.min',
+			'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
+			'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',			
 			'jquery' : 'node_modules/jquery/dist/jquery.min',
 			'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min',
 			'codemirror' : 'node_modules/codemirror'
@@ -37,11 +41,18 @@ window.init_workspace_module = async (app, dependencies)=>{
     
 	require([
 		'golden-layout',
-		'd3'
+		'd3',
+		'd3-sankey', //needs to be loded after its dependencies		
 	], function(
 		 GoldenLayout,
-		 d3
+		 d3,
+		 d3Sankey		
 	) {
+       
+        for(var name of Object.keys(d3Sankey)){
+        	d3[name] = d3Sankey[name];
+        };
+	
 
 		var ReactWidget = dependencies['ReactWidget'];
 
@@ -66,15 +77,17 @@ window.init_workspace_module = async (app, dependencies)=>{
 		app.shell.add(treezPlugin, 'left', { rank: 200 });
 
 		let resizeObserver = new ResizeObserver( () => {
-            if(!layout.isInitialised){
-            	 // this is here because initialization needs to be done after
-            	 // widget is part of DOM
-            	 layout.init();
-            	 Treez.initialize(d3, focusManager, editorFactory, terminalFactory);
-            }
-            __updateGoldenLayout(layout, layoutContainer);
-        });
-        resizeObserver.observe(layoutContainer);
+			if(!layout.isInitialised){
+				 // this is here because initialization needs to be done after
+				 // widget is part of DOM
+				 layout.init();
+				 Treez.initialize(d3, focusManager, editorFactory, terminalFactory);
+			}
+			__updateGoldenLayout(layout, layoutContainer);
+		});
+		resizeObserver.observe(layoutContainer);
+
+		
 
 	});
 

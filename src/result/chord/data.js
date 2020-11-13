@@ -11,7 +11,7 @@ export default class Data extends GraphicsAtom {
 		this.legendText = '';			
 	}
 
-	 createPage(root, xy) {
+	 createPage(root, chord) {
 
 		let tab = root.append('treez-tab')
 			.label('Data');
@@ -19,7 +19,7 @@ export default class Data extends GraphicsAtom {
 		let section = tab.append('treez-section')
 			.label('Data');
 
-		xy.createHelpAction(section, 'result/chord/chord.md');		
+		chord.createHelpAction(section, 'result/chord/chord.md');		
 	
 		let sectionContent = section.append('div');
 		

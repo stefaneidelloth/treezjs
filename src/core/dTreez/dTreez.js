@@ -212,6 +212,14 @@ export default class DTreez {
 		return this.__d3.ribbonArrow();
 	}
 
+	sankey(){
+		return this.__d3.sankey();
+	}
+
+	sankeyLinkHorizontal(...args){
+		return this.__d3.sankeyLinkHorizontal(...args);
+	}
+
 	scaleBand(){
 		return this.__d3.scaleBand();
 	}

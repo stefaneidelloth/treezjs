@@ -2,17 +2,16 @@ import GraphicsAtom from './../graphics/graphicsAtom.js';
 import Color from './../../components/color/color.js';
 import ColorMap from './../../components/colorMap/colorMap.js';
 import Length from './../graphics/Length.js';
-import ChordMode from './chordMode.js';
+import SankeyMode from './sankeyMode.js';
 
 export default class Links extends GraphicsAtom {
 	
 	constructor(){
-		super();		
+		super();			
 		
-		this.radius = '3.4 cm';	
 		this.isUsingArrowHeads = true;		
 
-		this.fillMode = ChordMode.sourceAndTarget;	
+		this.fillMode = SankeyMode.sourceAndTarget;	
 		this.fillColorMap = ColorMap.Reds;
 		this.fillTransparency = 0.2;
 
@@ -23,6 +22,7 @@ export default class Links extends GraphicsAtom {
 
 		this.__fillColorMapSelection = undefined;
 		this.__colorScale = undefined;
+		this.__linkSelection = undefined;
 		
 	}
 
@@ -40,11 +40,7 @@ export default class Links extends GraphicsAtom {
 		var section = tab.append('treez-section')
 			.label('Shape');
 	
-		var sectionContent = section.append('div');
-
-		sectionContent.append('treez-text-field')
-			.label('Radius')
-			.bindValue(this, ()=>this.radius);
+		var sectionContent = section.append('div');		
 		
 		sectionContent.append('treez-check-box')
 			.label('Use arrow heads')
@@ -59,7 +55,7 @@ export default class Links extends GraphicsAtom {
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Mode')			
-			.nodeAttr('enum', ChordMode)
+			.nodeAttr('enum', SankeyMode)
 			.bindValue(this, ()=>this.fillMode);
 
 		this.__fillColorMapSelection = sectionContent
@@ -76,7 +72,7 @@ export default class Links extends GraphicsAtom {
 	}
 
 	__fillModeChanged(){
-		var isValueFillMode = this.fillMode === ChordMode.value;
+		var isValueFillMode = this.fillMode === SankeyMode.value;
 
 		if(isValueFillMode){
 			this.__fillColorMapSelection.enable();
@@ -110,25 +106,111 @@ export default class Links extends GraphicsAtom {
 	}
 	
 
-	plot(dTreez, chordContainer, rectSelection, chord) {
+	plot(dTreez, sankeyContainer, rectSelection, sankey) {
+
+
+
+		var edgeColor = "input"; //"path"; //input, output, none
+		var align = "left"; //right, center, justify
+
+		var color = ()=>'blue';
+
+		sankeyContainer.selectAll('.treez-sankey-link')
+		    .remove();
+	
+        const linkGroup = sankeyContainer
+          .append("g")
+          .className('treez-sankey-link')		 
+		  .attr("stroke-opacity", 0.5)
+		  .selectAll("g")
+		  .data(sankey.linkData)
+		  .join("g")
+		  //.style("mix-blend-mode", "multiply");
+
+		  /*
+
+		if (edgeColor === "path") {
+			const gradient = link.append("linearGradient")
+				.attr("id", d => d.id)
+				.attr("gradientUnits", "userSpaceOnUse")
+				.attr("x1", d => d.source.x1)
+				.attr("x2", d => d.target.x0);
+
+			gradient.append("stop")
+				.attr("offset", "0%")
+				.attr("stop-color", d => color(d.source));
+
+			gradient.append("stop")
+				.attr("offset", "100%")
+				.attr("stop-color", d => color(d.target));
+		 }
+
+		*/
+
+	  linkGroup.append("path")
+		  .attr("d", dTreez.sankeyLinkHorizontal())	 
+		  .attr('stroke','blue')
+		  .attr('fill','none')
+		  .attr("stroke-width", d => Math.max(1, d.width));
+
+/*
+		  .attr("stroke", d => edgeColor === "none" ? "#aaa"
+			  : edgeColor === "path" ? d.uid 
+			  : edgeColor === "input" ? color(d.source) 
+			  : color(d.target))
+			  */
+
+        linkGroup.append("title")
+		  .text(d => `${d.source.id} → ${d.target.id}\n${d.value}`);
+	  
+
+	  
+ 
+		
+
+		/*
+
+		// add in the links
+		var link = sankeyContainer
+			  .append("g")
+			  .selectAll(".link")
+			  .data(linkData)
+			  .enter()
+			  .append("path")
+			  .attr("class", "link")
+			  .attr("d", links)
+			  .style("stroke-width", function(d) { return Math.max(1, d.dy); });
+			  //.sort(function(a, b) { return b.dy - a.dy; });
+
+		
+
+				
+
+		// add the link titles
+		  link.append("title")
+				.text(function(d) {
+					return d.source.name + " → " + 
+						d.target.name + "\n" + format(d.value); });
+
+		
 		
 		var radius = Length.toPx(this.radius); 
 
-		chordContainer.selectAll('.chord-link')
+		sankeyContainer.selectAll('.sankey-link')
 		    .remove();
 		
 		var ribbonGenerator = this.__createRibbonGenerator(dTreez, radius);
 
-        if(this.fillMode === ChordMode.value){
-        	this.__fillColorScale = this.__createFillColorScale(dTreez, chord);
+        if(this.fillMode === SankeyMode.value){
+        	this.__fillColorScale = this.__createFillColorScale(dTreez, sankey);
         }
 
-        var nodeIds = chord.nodeIds;
+        var nodeIds = sankey.nodeIds;
 				
-		var linkSelection = chordContainer
-		  .datum(chord.chordDatum)
+		var linkSelection = sankeyContainer
+		  .datum(sankey.sankeyDatum)
 		  .append('g')
-		  .className('chord-link')	
+		  .className('sankey-link')	
 		  .selectAll('path')
 		  .data(group => group)
 		  .enter()
@@ -136,15 +218,15 @@ export default class Links extends GraphicsAtom {
 		  .onMouseOver((event, group)=>this.__mouseOver(event, group))
 		  .onMouseOut((event, group)=>this.__mouseOut(event, group))
 		  .attr('d', ribbonGenerator)
-		  .style('fill', (group, index, elements) => this.__createFill(group, index, elements, chord));
+		  .style('fill', (group, index, elements) => this.__createFill(group, index, elements, sankey));
 
 		linkSelection.append('title')
 		  .text(group => this.__title(group, nodeIds));	
 
-         this.addListener(()=>this.radius, ()=>chord.updatePlot(dTreez));
-		 this.addListener(()=>this.isUsingArrowHeads, ()=>chord.updatePlot(dTreez));
-		 this.addListener(()=>this.fillMode, ()=>chord.updatePlot(dTreez));
-		 this.addListener(()=>this.fillColorMap, ()=>chord.updatePlot(dTreez));
+         this.addListener(()=>this.radius, ()=>sankey.updatePlot(dTreez));
+		 this.addListener(()=>this.isUsingArrowHeads, ()=>sankey.updatePlot(dTreez));
+		 this.addListener(()=>this.fillMode, ()=>sankey.updatePlot(dTreez));
+		 this.addListener(()=>this.fillColorMap, ()=>sankey.updatePlot(dTreez));
 
 		 this.bindTransparency(()=>this.fillTransparency, linkSelection); 
 
@@ -153,7 +235,10 @@ export default class Links extends GraphicsAtom {
 		 this.bindLineTransparency(()=>this.strokeTransparency, linkSelection);
 		 this.bindBooleanToLineTransparency(()=>this.strokeIsHidden, ()=>this.strokeTransparency, linkSelection);
 		
-		return chordContainer;
+		*/
+		return sankeyContainer;
+
+
 	}	
 
 	__mouseOver(event, group){
@@ -200,31 +285,31 @@ export default class Links extends GraphicsAtom {
 	    }	
 	}
 
-	__createFill(group, index, elements, chord){
+	__createFill(group, index, elements, sankey){
 
-		var colors = chord.nodes.nodeColors;
+		var colors = sankey.nodes.nodeColors;
 
 		switch(this.fillMode){
-			case ChordMode.source:
+			case SankeyMode.source:
 			    return colors[group.source.index];
-			case ChordMode.target:
+			case SankeyMode.target:
 			    return colors[group.target.index];
-			case ChordMode.sourceAndTarget:
-			    return this.__createFillGradient(group, index, elements, chord, colors);
-			case ChordMode.value:
+			case SankeyMode.sourceAndTarget:
+			    return this.__createFillGradient(group, index, elements, sankey, colors);
+			case SankeyMode.value:
 			    return this.__determineFillColorByValue(group, colors);
 			default:
-			    throw new Error('Chord mode ' + this.fillMode + ' is not yet implemented.');
+			    throw new Error('Sankey mode ' + this.fillMode + ' is not yet implemented.');
 		}
 		
 	}
 
-	__createFillGradient(group, index, elements, chord, colors){
+	__createFillGradient(group, index, elements, sankey, colors){
 		
         var source =  group.source;
         var target =  group.target;
 
-        var id = 'treez-chord-gradient-' + source.index + '-' + target.index;
+        var id = 'treez-sankey-gradient-' + source.index + '-' + target.index;
         var radius = Length.toPx(this.radius); 
 
         var sourceAngle = (source.startAngle + source.endAngle)/2 - Math.PI/2;
@@ -236,7 +321,7 @@ export default class Links extends GraphicsAtom {
         var x2 = radius * Math.cos(targetAngle);
         var y2 = radius * Math.sin(targetAngle);       
         
-        var gradient = chord.chordDefs            
+        var gradient = sankey.sankeyDefs            
             .append('linearGradient')			
 			.attr('id', id)			
 			.attr('gradientUnits', 'userSpaceOnUse')			
@@ -258,11 +343,11 @@ export default class Links extends GraphicsAtom {
         return 'url(#' + id + ')';
 	}
 
-	__createFillColorScale(dTreez, chord){
+	__createFillColorScale(dTreez, sankey){
 		var colorMap = this.fillColorMap;
 		var interpolateColor = dTreez['interpolate' + colorMap];
 		var interpolator = value => interpolateColor.call(dTreez, value);
-		var values = chord.valueValues;
+		var values = sankey.valueValues;
 		var min = Math.min.apply(null, values);
 		var max = Math.max.apply(null, values);
 		var colorScale = dTreez.scaleSequential(interpolator)
@@ -270,8 +355,8 @@ export default class Links extends GraphicsAtom {
 		return colorScale;
 	}
 
-	__determineFillColorByValue(nodeGroup, colors){
-		var value = nodeGroup.source.value;
+	__determineFillColorByValue(group, colors){
+		var value = group.source.value;
 		return this.__fillColorScale(value);
 
 	}

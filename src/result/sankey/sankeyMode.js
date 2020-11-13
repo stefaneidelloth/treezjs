@@ -1,14 +1,14 @@
 import Enum from '../../components/enum.js';
 
-export default class ChordMode extends Enum {}
+export default class SankeyMode extends Enum {}
 
-if(window.ChordMode){
-	ChordMode = window.ChordMode;
+if(window.SankeyMode){
+	SankeyMode = window.SankeyMode;
 } else {
-	ChordMode.source = new ChordMode('source');
-	ChordMode.target = new ChordMode('target');
-	ChordMode.sourceAndTarget = new ChordMode('sourceAndTarget');
-	ChordMode.value = new ChordMode('value');	
+	SankeyMode.source = new SankeyMode('source');
+	SankeyMode.target = new SankeyMode('target');
+	SankeyMode.sourceAndTarget = new SankeyMode('sourceAndTarget');
+	SankeyMode.value = new SankeyMode('value');	
 	
-	window.ChordMode = ChordMode;
+	window.SankeyMode = SankeyMode;
 }

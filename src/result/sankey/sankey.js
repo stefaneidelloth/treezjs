@@ -5,18 +5,17 @@ import Data from './data.js';
 import Nodes from './nodes.js';
 import NodeLabels from './nodeLabels.js';
 import Links from './links.js';
-import Ticks from './ticks.js';
-import TickLabels from './tickLabels.js';
 import Graph from './../graph/graph.js';
-import ChordNode from './chordNode.js';
+import SankeyNode from './sankeyNode.js';
 
-export default class Chord extends PagedGraphicsAtom {
+export default class Sankey extends PagedGraphicsAtom {
 
 	constructor(name){
 		super(name);
-		this.image = 'chord.png';			
-		this.__chordDatum	= undefined;
-		this.__chordContainer = undefined;
+		this.image = 'sankey.png';	
+		this.__sankeyContainer = undefined;
+		this.__sankeyGenerator = undefined;
+		this.__isUpdatingSankeyNodes = false;
 	}
 	
 	createPageFactories() {
@@ -33,13 +32,7 @@ export default class Chord extends PagedGraphicsAtom {
 		factories.push(this.nodeLabels);
 
 		this.links = Links.create(this);
-		factories.push(this.links);	
-
-		this.ticks = Ticks.create(this);
-		factories.push(this.ticks);	
-
-		this.tickLabels = TickLabels.create(this);
-		factories.push(this.tickLabels);	
+		factories.push(this.links);			
 		
 		return factories;
 	}
@@ -49,138 +42,291 @@ export default class Chord extends PagedGraphicsAtom {
 				
 		actions.push(
 			new AddChildAtomTreeViewAction(
-				ChordNode,
-				'chordNode',
-				'chordNode.png',
+				SankeyNode,
+				'sankeyNode',
+				'sankeyNode.png',
 				parentSelection,
 				this,
 				treeView
 			)
 		);
-
 		return actions;	
 	}
 
 	plot(dTreez, graphSelection, graphRectSelection, treeView) {
-		
+
 		this.treeView = treeView;
 
-		var chordSelection = this.__recreateChordSelection(graphSelection);	
+		this.__sankeyGenerator = undefined;
 
-		this.__chordContainer = this.__createCenteredContainer(chordSelection);			         
+		this.__sankeyContainer = this.__recreateSankeyContainer(graphSelection);						         
 		
 		this.updatePlot(dTreez);
 
-		return this.__chordContainer;
+		this.__initSankeyNodes();
+
+		return this.__sankeyContainer;
 	}
 
-	updatePlot(dTreez) {	
-	    
+	updateLinksAfterDrag(dTreez){		
+        this.__updateSankeyData();
+		this.__updateSankeyNodes();
+		this.links.plot(dTreez, this.__sankeyContainer, null, this);
+	}
 
-	    var paddingAngle = this.nodes.paddingAngle * Math.PI/180;	
-        var matrix = this.__createChordMatrix(); 
-		this.__chordDatum = dTreez.chord()
-					.padAngle(paddingAngle) 
-					(matrix); 
+	resetSankeyGenerator(){
+		this.__sankeyGenerator = undefined;
+		this.__nodeData = undefined;
+		this.__linkData = undefined;
+	}	
 
-		this.__chordContainer.selectAll('g')
-		    .remove();
+	updatePlot(dTreez) {  
+
+        //re-creating the sankey generator might cause
+	    //partial loss of (manual) node positioning
+	    //=>only do it if sankey generator does not
+	    //yet exist 
+	    if(!this.__sankeyGenerator){	    	
+	    	this.__sankeyGenerator = this.__createSankeyGenerator(dTreez);
+	    }  
 		
-		this.__nodeGroups = this.__chordContainer
-		  .datum(this.chordDatum)
-		  .append('g')
-		  .selectAll('g')
-		  .data(d => d.groups)
-		  .enter() 
+		this.__updateSankeyData();        
 
-		this.__chordContainer.selectAll('defs')
+		this.__sankeyContainer.selectAll('g')
+		    .remove();
+
+		this.__sankeyContainer.selectAll('defs')
 		    .remove(); 
 
-		this.__chordDefs = this.__chordContainer
+		this.__sankeyDefs = this.__sankeyContainer
 		    .append('defs');
 		  	
-		this.__plotWithPages(dTreez);
-	}
-	
-	groupTicks(dTreez, nodeGroup, step) {
-	  var k = (nodeGroup.endAngle - nodeGroup.startAngle) / nodeGroup.value;
-	  return dTreez
-	      .range(0, nodeGroup.value, step)
-	      .map(value => {
-	      	return {value: value, angle: value * k + nodeGroup.startAngle}
-	      });
-	}
-	
-	__createChordMatrix(){	
+		this.__plotWithPages(dTreez);		
+	}	
 
-		var ids = this.__uniqueNodeIds;
-		var size = ids.length;
+	sankeyNodeChanged(sankeyNode){
+	    if(this.__isUpdatingSankeyNodes){
+	    	return;
+	    }
 
-		var matrix = this.__zeros(size, size);
+		if(this.__sankeyContainer){
+			var sankeyNodes = this.childrenByClass(SankeyNode);
+			var index = sankeyNodes.indexOf(sankeyNode);	  
+			
+			var nodeDatum = this.__nodeData[index];
 
-		var idToIndexMap = this.__idToIndexMap;
+			var hasChange = false;
 
-		for(var row of this.chordData){
-			var sourceIndex = idToIndexMap[row[0]];
-			var targetIndex = idToIndexMap[row[1]];
-			var value = parseFloat(row[2]);
-			matrix[sourceIndex][targetIndex] = value;
-			matrix[targetIndex][sourceIndex] = value;
-		}
-				
-		return matrix;
-	}
-
-	__zeros(numberOfRows, numberOfColumns){
-		var rowArray = Array(numberOfRows)
-		return Array.from(rowArray, () => new Array(numberOfColumns).fill(0));
-	}
-
-	get __uniqueNodeIds(){
-
-		var ids = new Set();
-		for(var row of this.chordData){
-			var sourceId = row[0];
-			var targetId = row[1];
-            ids.add(sourceId);
-            ids.add(targetId);
-		}
-		return Array.from(ids);
-	}
-
-	get __idToIndexMap(){
-		var ids = this.__uniqueNodeIds;
-		var map = {};
-		var chordNodes = this.childrenByClass(ChordNode);
-		var index = 0;
-		//order defined by chordNode children has higher priority
-		for(var chordNode of chordNodes){
-			var id = chordNode.name;
-			if(ids.includes(id)){
-				map[chordNode.name] = index;
-			    index++;
-			}			
-		}
-		//derive remaining order from chord data
-		for(var id of ids){
-			if(map[id] === undefined){
-				map[id] = index;
-				index++;
+			if(nodeDatum.x0 !== sankeyNode.x){
+				this.__mergeXPosittion(sankeyNode, nodeDatum);
+				hasChange = true;
 			}
+
+			if(nodeDatum.y0 !== sankeyNode.y){
+				this.__mergeYPosition(sankeyNode, nodeDatum);
+				hasChange = true;
+			}		
+
+			if(hasChange){
+				this.__updateSankeyData();			    
+			}	
+			this.updatePlot(this.treeView.dTreez);			
+		}		
+	}
+
+	
+	addLegendContributors(legendContributors) {
+		if (this.providesLegendEntry) {
+			legendContributors.push(this);
 		}
-		return map;
 	}
 
-	get chordDatum(){
-		return this.__chordDatum;
+	createLegendSymbolGroup(dTreez , parentSelection, symbolLengthInPx, treeView) {
+		var symbolSelection = parentSelection //
+				.append('g') //
+				.classed('sankey-legend-entry-symbol', true);
+
+		this.line.plotLegendLine(dTreez, symbolSelection, symbolLengthInPx);
+		this.symbol.plotLegendSymbol(dTreez, symbolSelection, symbolLengthInPx / 2, treeView);
+
+		return symbolSelection;
 	}
 
-	get nodeGroups(){
-		return this.__nodeGroups;
+	createSankeyNode(name) {
+		return this.createChild(SankeyNode, name);
+	}	
+
+	__initSankeyNodes(){
+		var sankeyNodes = this.childrenByClass(SankeyNode);
+		for(var nodeData of this.__nodeData){
+            var sankeyNode = sankeyNodes[nodeData.index];
+            if(isNaN(sankeyNode.x)){
+            	sankeyNode.x = parseInt(nodeData.x0);
+            }
+
+            if(isNaN(sankeyNode.y)){
+            	sankeyNode.y = parseInt(nodeData.y0);
+            } 
+		}
 	}
 
-	get chordDefs(){
-		return this.__chordDefs;
+	__updateSankeyData(){
+
+		var sankeyData = undefined;
+		if(this.__nodeData){
+			var sankeyData = {nodes: this.__nodeData, links: this.__linkData};
+			sankeyData = this.__sankeyGenerator.update(sankeyData);
+		} else {
+			sankeyData = this.__sankeyGenerator();
+			sankeyData = this.__applyPositionsFromSankeyNodes(sankeyData);
+			sankeyData = this.__sankeyGenerator.update(sankeyData);
+		}
+		
+		
+		this.__nodeData = sankeyData.nodes;
+		this.__linkData = sankeyData.links;
+	}
+
+	__updateSankeyNodes(){
+		this.__isUpdatingSankeyNodes = true;
+
+		var sankeyNodes = this.childrenByClass(SankeyNode);
+		for(var nodeData of this.__nodeData){
+            var sankeyNode = sankeyNodes[nodeData.index];
+            sankeyNode.x = parseInt(nodeData.x0);             
+            sankeyNode.y = parseInt(nodeData.y0);  
+		}
+
+		this.__isUpdatingSankeyNodes = false;
+	}
+
+	__applyPositionsFromSankeyNodes(sankeyData){
+		var sankeyNodes = this.childrenByClass(SankeyNode);
+		var nodeData = sankeyData.nodes;
+		var index = 0;
+		for(var sankeyNode of sankeyNodes){
+
+			var nodeDatum = nodeData[index];
+
+            if(!isNaN(sankeyNode.x)){
+            	this.__mergeXPosition(sankeyNode, nodeDatum);            	
+            }
+
+            if(!isNaN(sankeyNode.y)){
+            	this.__mergeYPosition(sankeyNode, nodeDatum);
+            }
+            index++;
+             
+		}
+		return sankeyData;
+	}
+
+	__mergeXPosition(sankeyNode, nodeDatum){
+		
+		var graphWidth = Length.toPx(this.graph.width);	  
+        var margin = Length.toPx(this.nodes.margin);
+		var width = nodeDatum.x1 - nodeDatum.x0;
+
+		var x0 = sankeyNode.x;
+		var x1 = x0 + width;
+
+		if(x0 > margin && x1 < graphWidth - margin){
+            nodeDatum.x0 = x0;
+		    nodeDatum.x1 = x1;
+		} else {
+			sankeyNode.x = parseInt(nodeDatum.x0);
+		}
+		
+	}
+
+	__mergeYPosition(sankeyNode, nodeDatum){		
+	    var graphHeight = Length.toPx(this.graph.height);
+        var margin = Length.toPx(this.nodes.margin);
+		var height = nodeDatum.y1 - nodeDatum.y0;
+
+		
+		var y0 = sankeyNode.y;
+		var y1 = y0 + height;
+
+		if(y0 > margin && y1 < graphHeight - margin){
+            nodeDatum.y0 = y0;
+		    nodeDatum.y1 = y1;
+		} else {
+			sankeyNode.y = parseInt(nodeDatum.y0);
+		}
+	}
+
+
+	__createSankeyGenerator(dTreez){
+
+		const nodes = this.nodeIds.map(id => ({id: id}));
+
+	    const links = this.sankeyData.map(row => {
+	    	return {source: row[0], target: row[1], value: row[2]};
+	    });
+
+	    var graphWidth = Length.toPx(this.graph.width);
+	    var graphHeight = Length.toPx(this.graph.height);
+        var margin = Length.toPx(this.nodes.margin);
+
+	    var nodeWidth = Length.toPx(this.nodes.nodeWidth);
+	    var nodePadding = Length.toPx(this.nodes.nodePadding);
+
+        //Documentaiton of d3-sankey: 
+        //https://github.com/d3/d3-sankey
+
+		var sankeyGenerator = dTreez.sankey()
+		    .nodes(nodes)
+			.links(links)
+		    .nodeId(d => d.id)
+		    .extent([
+		        [margin, margin], 
+		        [graphWidth - margin, graphHeight - margin]
+		    ])
+			.nodeWidth(nodeWidth)
+			.nodePadding(nodePadding);
+
+		return sankeyGenerator;
+	}
+
+	__plotWithPages(dTreez) {
+		for (var pageFactory of this.__pageFactories) {
+			pageFactory.plot(dTreez, this.__sankeyContainer, null, this);
+		}
+	}
+
+	__recreateSankeyContainer(graphSelection){
+       
+		graphSelection //
+				.select('#' + this.name) //
+				.remove();
+
+		
+		var sankeyContainer =  graphSelection //
+				.append('g') //
+				.className('sankey') //
+				.onClick(()=>this.handleMouseClick());
+
+		this.bindString(() => this.name, sankeyContainer, 'id');
+		return sankeyContainer;
+
+	}
+	
+    get graph() {		
+		if (this.parent instanceof Graph) {
+			return this.parent;
+		} else {
+			var grandParent = this.parent.parent;
+			return grandParent;
+		}
+	}
+
+	get linkData(){
+		return this.__linkData;
+	}
+
+	get nodeData(){
+		return this.__nodeData;
 	}
 
 	get nodeIds(){
@@ -199,83 +345,26 @@ export default class Chord extends PagedGraphicsAtom {
 		var numberOfIds = Object.keys(nodeMap).length;
 		var nodeSvgs = new Array(numberOfIds).fill('');
 
-		var chordNodes = this.childrenByClass(ChordNode);
+		var sankeyNodes = this.childrenByClass(SankeyNode);
 
-		for(var chordNode of chordNodes){
-		   var id = chordNode.name;
+		for(var sankeyNode of sankeyNodes){
+		   var id = sankeyNode.name;
            var index = nodeMap[id];
-           var svg = chordNode.svg;
+           var svg = sankeyNode.svg;
            nodeSvgs[index]=svg;
 		}
        return nodeSvgs;
-	}
+	}		
 
-	__recreateChordSelection(graphSelection){
-       
-		graphSelection //
-				.select('#' + this.name) //
-				.remove();
-
-		
-		return graphSelection //
-				.append('g') //
-				.className('chord') //
-				.onClick(()=>this.handleMouseClick());
-	}
-
-	__createCenteredContainer(chordSelection){
-        var graphWidth = Length.toPx(this.graph.data.width);
-		var graphHeight = Length.toPx(this.graph.data.height);
-
-		var chordContainer = chordSelection.append('g')
-		    .attr('transform','translate('+ graphWidth/2+ ',' + graphHeight/2 +')');
-
-		this.bindString(() => this.name, chordContainer, 'id');
-
-		return chordContainer;
-	}
-
-	__plotWithPages(dTreez) {
-		for (var pageFactory of this.__pageFactories) {
-			pageFactory.plot(dTreez, this.__chordContainer, null, this);
-		}
-	}
-
-	get graph() {		
-		if (this.parent instanceof Graph) {
-			return this.parent;
-		} else {
-			var grandParent = this.parent.parent;
-			return grandParent;
-		}
-	}
-
-	addLegendContributors(legendContributors) {
-		if (this.providesLegendEntry) {
-			legendContributors.push(this);
-		}
+	get legendText() {
+		return this.data.legendText;
 	}
 
 	get providesLegendEntry() {
 		return this.data.legendText.length > 0;
 	}
 
-	get legendText() {
-		return this.data.legendText;
-	}
-
-	createLegendSymbolGroup(dTreez , parentSelection, symbolLengthInPx, treeView) {
-		var symbolSelection = parentSelection //
-				.append('g') //
-				.classed('chord-legend-entry-symbol', true);
-
-		this.line.plotLegendLine(dTreez, symbolSelection, symbolLengthInPx);
-		this.symbol.plotLegendSymbol(dTreez, symbolSelection, symbolLengthInPx / 2, treeView);
-
-		return symbolSelection;
-	}
-
-	get chordData() {
+	get sankeyData() {
 
 		var sourceDataValues = this.sourceValues;
 		var targetDataValues = this.targetValues;
@@ -305,6 +394,10 @@ export default class Chord extends PagedGraphicsAtom {
 		return rowList;
 	}	
 
+	get sankeyDefs(){
+		return this.__sankeyDefs;
+	}
+
 	get sourceValues() {
 		var sourceDataPath = this.data.sourceData;
 		if (!sourceDataPath) {
@@ -332,8 +425,41 @@ export default class Chord extends PagedGraphicsAtom {
 		return valueDataColumn.values;		
 	}
 
-	createChordNode(name) {
-		return this.createChild(ChordNode, name);
+	get __uniqueNodeIds(){
+
+		var ids = new Set();
+		for(var row of this.sankeyData){
+			var sourceId = row[0];
+			var targetId = row[1];
+            ids.add(sourceId);
+            ids.add(targetId);
+		}
+		return Array.from(ids);
+	}
+
+	get __idToIndexMap(){
+		var ids = this.__uniqueNodeIds;
+		var map = {};
+		var sankeyNodes = this.childrenByClass(SankeyNode);
+		var index = 0;
+		//order defined by sankeyNode children has higher priority
+		for(var sankeyNode of sankeyNodes){
+			var id = sankeyNode.name;
+			if(ids.includes(id)){
+				map[sankeyNode.name] = index;
+			    index++;
+			}			
+		}
+		//derive remaining order from sankey data
+		for(var id of ids){
+			if(map[id] === undefined){
+				map[id] = index;
+				index++;
+			}
+		}
+		return map;
 	}	
+
+	
 
 }

@@ -3,29 +3,24 @@ import Length from './../graphics/length.js';
 import Color from './../../components/color/color.js';
 import ColorMap from './../../components/colorMap/colorMap.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
-import ChordNode from './chordNode.js';
+import SankeyNode from './sankeyNode.js';
 
 export default class NodeLabels extends GraphicsAtom {
 	
 	constructor(){
 		super(); 
 
-        this.textDistance = '30 px'; 
-        this.textAngleOffset = 0.0;
+        this.textDistance = '30 px';        
         this.font = 'sans-serif';
 		this.size = 15;
 		this.color = 'black';
 		this.isItalic = false;
 		this.isBold = false;
 		this.hasUnderline = false;
-        this.isShowingTextLabels = true; 
-        this.isAzimuthal = false;
+        this.isShowingTextLabels = true;        
 
-        this.imageDistance = '10 px'; 
-        this.imageAngleOffset = 0;
-        this.imageRotation = 0;
-        this.isShowingImageLabels = true;
-		this.isAutoFlippingImageLabels = true;         
+        this.imageDistance = '10 px';  
+        this.isShowingImageLabels = true;		     
 	}
 	
 	createPage(root) {
@@ -48,11 +43,7 @@ export default class NodeLabels extends GraphicsAtom {
 		sectionContent.append('treez-text-field')
 			.label('Distance')
 			.bindValue(this, ()=>this.textDistance);
-
-		sectionContent.append('treez-double')
-			.label('Angle offset')
-			.bindValue(this, ()=>this.textAngleOffset);
-
+	
 		sectionContent.append('treez-font')
 			.label('Font')
 			.labelWidth('55px')
@@ -86,11 +77,7 @@ export default class NodeLabels extends GraphicsAtom {
 
 		sectionContent.append('treez-check-box')
 			.label('Show text labels')
-			.bindValue(this, ()=>this.isShowingTextLabels);	
-
-		sectionContent.append('treez-check-box')
-			.label('Azimuthal')
-			.bindValue(this, ()=>this.isAzimuthal);					
+			.bindValue(this, ()=>this.isShowingTextLabels);							
 
 	}
 
@@ -102,92 +89,94 @@ export default class NodeLabels extends GraphicsAtom {
 
 		sectionContent.append('treez-text-field')
 			.label('Distance')
-			.bindValue(this, ()=>this.imageDistance);	
-
-		sectionContent.append('treez-double')
-			.label('Angle offset')
-			.bindValue(this, ()=>this.imageAngleOffset);
-
-		sectionContent.append('treez-double')
-			.label('Rotation')
-			.bindValue(this, ()=>this.imageRotation);	
-
+			.bindValue(this, ()=>this.imageDistance);
+		
 		sectionContent.append('treez-check-box')
 			.label('Show image labels')
-			.bindValue(this, ()=>this.isShowingImageLabels);
-
-		sectionContent.append('treez-check-box')
-			.label('Auto flip image labels')
-			.bindValue(this, ()=>this.isAutoFlippingImageLabels);	
+			.bindValue(this, ()=>this.isShowingImageLabels);		
 		
 	}
 
-	plot(dTreez, chordContainer, rectSelection, chord) {
+	plot(dTreez, sankeyContainer, rectSelection, sankey) {
 
-		chordContainer.selectAll('.chord-node-label')
+		sankeyContainer.selectAll('.sankey-node-label')
 		    .remove();
 
-		var labelGroups = chordContainer
-		  .datum(chord.chordDatum)
+		var graphWidth = Length.toPx(sankey.graph.width);
+	    var graphHeight = Length.toPx(sankey.graph.height);
+
+	    /*
+
+		sankeyContainer.append("g")
+		  .attr("font-family", "sans-serif")
+		  .attr("font-size", 10)
+		  .selectAll("text")
+		  .data(sankey.nodeData)
+		  .join("text")
+		  .className('.sankey-node-label')
+		  .attr("x", d => d.x0 < graphWidth / 2 ? d.x1 + 6 : d.x0 - 6)
+		  .attr("y", d => (d.y1 + d.y0) / 2)
+		  .attr("dy", "0.35em")
+		  .attr("text-anchor", d => d.x0 < graphWidth / 2 ? "start" : "end")
+		  .text(d => d.id);
+
+        */
+
+        
+		    /*
+
+		    // add in the title for the nodes
+		  node.append("text")
+			  .attr("x", -6)
+			  .attr("y", function(d) { return d.dy / 2; })
+			  .attr("dy", ".35em")
+			  .attr("text-anchor", "end")
+			  .attr("transform", null)
+			  .text(function(d) { return d.name; })
+			.filter(function(d) { return d.x < width / 2; })
+			  .attr("x", 6 + sankey.nodeWidth())
+			  .attr("text-anchor", "start");
+
+		var labelGroups = sankeyContainer
+		  .datum(sankey.sankeyDatum)
 		  .append('g')
-		  .className('chord-node-label')	
+		  .className('sankey-node-label')	
 		  .selectAll('g')
 		  .data(d => d.groups)
 		  .enter();
 	    
-	    this.__plotImageLabels(dTreez, labelGroups, chord);
-	    this.__plotTextLabels(dTreez, labelGroups, chord);		      
+	    this.__plotImageLabels(dTreez, labelGroups, sankey);
+	    this.__plotTextLabels(dTreez, labelGroups, sankey);		
 
-		return chordContainer;
+	    */      
+
+		return sankeyContainer;
 	}
 
-	__plotTextLabels(dTreez, labelGroups, chord){
-		var outerRadius = Length.toPx(chord.nodes.outerRadius);	
+	__plotTextLabels(dTreez, labelGroups, sankey){
+			
 		var textDistance = Length.toPx(this.textDistance);
-		var labelRadius = outerRadius + textDistance;
-					
-        var nodeIds = chord.nodeIds;		
+
+		/*
+							
+        var nodeIds = sankey.nodeIds;		
 	
 		var textLabels = labelGroups		  
 		    .append('text');
 
-	    if(this.isAzimuthal){ 
-
-	        labelGroups.selectAll('dev')
-		        .remove();
-
-	       var alignmentNodes = labelGroups	          
-			  .append('dev')          
-			  .append('path')
-			  .attr('id',(d,i) => 'treez-chord-label-path-' + i)			  					
-			  .attr('d', dTreez.arc()			  
-						  .outerRadius(labelRadius)
-						  .innerRadius(labelRadius)
-			  );	        	                                 
-
-			textLabels.append('textPath')
-                .attr('xlink:href', (d, i) => '#treez-chord-label-path-' + i)
-                .attr('startOffset', '25%')               
-                .attr('text-anchor','middle')            
-                .text((d,i) => nodeIds[i]);
-
-
-	    }	else {
-            textLabels              
-		      .each(group => { 
-		          group.angle = (group.startAngle + group.endAngle) / 2;		         
-		      })
-              .text((d,i) => nodeIds[i])
-              .attr('transform', group => this.__transformTextLabel(group, labelRadius))
-			  .attr('text-anchor', group => { return group.angle > Math.PI ? 'end' : null; })			    
-			  .attr('dy','0.35em');  
-	    }
+	    
+		textLabels  
+		  .text((d,i) => nodeIds[i])
+		  .attr('transform', group => this.__transformTextLabel(group, labelRadius))
+		  .attr('text-anchor', group => { return group.angle > Math.PI ? 'end' : null; })			    
+		  .attr('dy','0.35em');  
+	    
 
 	    textLabels.append('title')
-		  .text(group => chord.nodes.nodeTitle(group, nodeIds));	    
+		  .text(group => sankey.nodes.nodeTitle(group, nodeIds));	    
 	    				
-		this.addListener(()=>this.textDistance, ()=>chord.updatePlot(dTreez));
-		this.addListener(()=>this.textAngleOffset, ()=>chord.updatePlot(dTreez));
+		this.addListener(()=>this.textDistance, ()=>sankey.updatePlot(dTreez));
+		this.addListener(()=>this.textAngleOffset, ()=>sankey.updatePlot(dTreez));
 
 		this.bindString(()=>this.font, textLabels, 'font-family');
 		this.bindString(()=>this.size, textLabels, 'font-size');
@@ -197,97 +186,44 @@ export default class NodeLabels extends GraphicsAtom {
 		this.bindFontUnderline(()=>this.hasUnderline, textLabels);
 		
 		this.bindBooleanToDisplay(()=>this.isShowingTextLabels, textLabels);
-		this.addListener(()=>this.isAzimuthal, ()=>chord.updatePlot(dTreez));
+		this.addListener(()=>this.isAzimuthal, ()=>sankey.updatePlot(dTreez));
+
+		*/
 	}	
 
-	__transformTextLabel(group, labelRadius){		
+	__plotImageLabels(dTreez, labelGroups, sankey){       
        
-		var isBackAngle = group.angle > Math.PI;
-        var extraRotation = '';
-        if(isBackAngle) {
-        	extraRotation = 'rotate(180)';
-        } 
-        if(this.isAzimuthal){
-        	extraRotation = 'rotate(90)';
-        }	
-		
-		var rotation = group.angle * 180 / Math.PI + this.textAngleOffset - 90;
-
-		var transform =  'rotate(' + rotation + ') '
-			+ 'translate(' + labelRadius + ') '
-			+ extraRotation;
-		return transform;
-	}
-
-	__plotImageLabels(dTreez, labelGroups, chord){
-       
-        var outerRadius = Length.toPx(chord.nodes.outerRadius);	
 		var imageDistance = Length.toPx(this.imageDistance);
-		var imageRadius = outerRadius + imageDistance;
+		
+		var svgs = sankey.nodeSvgs;
 
-		var svgs = chord.nodeSvgs;
+		/*
 
-		labelGroups.selectAll('.chord-node-image-label')
+		labelGroups.selectAll('.sankey-node-image-label')
 		    .remove();
 
 		var imageLabels = labelGroups
 		      .append('g')
-			  .className('chord-node-image-label')
+			  .className('sankey-node-image-label')
 			  .html((d,i) => svgs[i])
 			  .each(group => { group.angle = (group.startAngle + group.endAngle) / 2; })
 			  .attr('transform', (group, index, elements) => 
 			  	this.__transformImageLabel(group, index, elements, imageRadius)
 			  ); 
 
-		var nodeIds = chord.nodeIds;
+		var nodeIds = sankey.nodeIds;
 
 	    imageLabels.append('title')
-		  .text(group => chord.nodes.nodeTitle(group, nodeIds)); 
+		  .text(group => sankey.nodes.nodeTitle(group, nodeIds)); 
 		
 		this.bindBooleanToDisplay(()=>this.isShowingImageLabels, imageLabels);
-        this.addListener(()=>this.isAutoFlippingImageLabels, ()=>chord.updatePlot(dTreez));		
-		this.addListener(()=>this.imageDistance, ()=>chord.updatePlot(dTreez));
-		this.addListener(()=>this.imageAngleOffset, ()=>chord.updatePlot(dTreez));
-		this.addListener(()=>this.imageRotation, ()=>chord.updatePlot(dTreez));
+        this.addListener(()=>this.isAutoFlippingImageLabels, ()=>sankey.updatePlot(dTreez));		
+		this.addListener(()=>this.imageDistance, ()=>sankey.updatePlot(dTreez));
+		this.addListener(()=>this.imageAngleOffset, ()=>sankey.updatePlot(dTreez));
+		this.addListener(()=>this.imageRotation, ()=>sankey.updatePlot(dTreez));
+
+		*/
 	}
-
-	__transformImageLabel(group, index, elements, imageRadius){		
-
-		
-		var rotation = group.angle * 180 / Math.PI + this.imageAngleOffset - 90;
-
-		var element = elements[index];
-		var svgElement = element.childNodes[0];
-		if(!svgElement){
-			return '';
-		}
-
-	    var bounds = svgElement.getBoundingClientRect();
-	    var svgWidth = bounds.width;
-	    var svgHeight = bounds.height;
-
-	    var transform = '';
-
-	    var isBackAngle = group.angle > Math.PI;
-
-		if(isBackAngle && this.isAutoFlippingImageLabels){				
-			transform =  'rotate(' + rotation + ') '
-				+ 'translate(' + imageRadius + ') '
-				+ 'rotate(180) '	
-				+ 'translate(0,-'+ svgHeight/2 + ') '
-				+ 'translate(-' + svgWidth + ') '
-				+ 'rotate('+ this.imageRotation +' ' + svgWidth/2 + ' ' +svgHeight/2+ ')';
-								
-		} else {
-			transform =  'rotate(' + rotation + ') '
-				+ 'translate(' + imageRadius + ') '
-				+ 'translate(0, -'+ svgHeight/2 + ')'
-				+ 'rotate('+ this.imageRotation +' ' + svgWidth/2 + ' ' +svgHeight/2+ ')';
-		}		
-
-		return transform;
-	}
-
 
 
 }

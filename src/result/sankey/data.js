@@ -3,15 +3,15 @@ import Column from './../../data/column/column.js';
 
 export default class Data extends GraphicsAtom {
 	
-	constructor(chord){
-		super(chord);		
+	constructor(sankey){
+		super(sankey);		
 		this.sourceData = 'root.data.table.columns.source';	
 		this.targetData = 'root.data.table.columns.target';	
 		this.valueData = 'root.data.table.columns.value';	
 		this.legendText = '';			
 	}
 
-	 createPage(root, xy) {
+	 createPage(root, sankey) {
 
 		let tab = root.append('treez-tab')
 			.label('Data');
@@ -19,7 +19,7 @@ export default class Data extends GraphicsAtom {
 		let section = tab.append('treez-section')
 			.label('Data');
 
-		xy.createHelpAction(section, 'result/chord/chord.md');		
+		sankey.createHelpAction(section, 'result/sankey/sankey.md');		
 	
 		let sectionContent = section.append('div');
 		
@@ -44,18 +44,18 @@ export default class Data extends GraphicsAtom {
 
 	}
 
-	plot(dTreez, chordSelection, rectSelection, chord) {
+	plot(dTreez, sankeySelection, rectSelection, sankey) {
 
 		//this page factory does create an own d3 group; the work will be
 		//done by the other property page factories
 
-		let dataChangedConsumer = () => chord.updatePlot(d3);
+		let dataChangedConsumer = () => sankey.updatePlot(d3);
 		
 		this.addListener(()=>this.sourceData, dataChangedConsumer)
 		this.addListener(()=>this.targetData, dataChangedConsumer)
 		this.addListener(()=>this.valueData, dataChangedConsumer)
 
-		return chordSelection;
+		return sankeySelection;
 	}	
 
 }

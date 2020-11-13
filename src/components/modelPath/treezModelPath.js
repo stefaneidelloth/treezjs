@@ -15,7 +15,9 @@ export default class TreezModelPath extends LabeledTreezElement {
 
     connectedCallback() {
     	
-        if(!this.__label){  
+        if(!this.__label){ 
+
+            this.className = 'treez-model-path'; 
 
             let label = document.createElement('label');  
             this.__label = label;                     
