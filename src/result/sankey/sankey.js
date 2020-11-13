@@ -118,7 +118,7 @@ export default class Sankey extends PagedGraphicsAtom {
 			var hasChange = false;
 
 			if(nodeDatum.x0 !== sankeyNode.x){
-				this.__mergeXPosittion(sankeyNode, nodeDatum);
+				this.__mergeXPosition(sankeyNode, nodeDatum);
 				hasChange = true;
 			}
 
@@ -146,8 +146,8 @@ export default class Sankey extends PagedGraphicsAtom {
 				.append('g') //
 				.classed('sankey-legend-entry-symbol', true);
 
-		this.line.plotLegendLine(dTreez, symbolSelection, symbolLengthInPx);
-		this.symbol.plotLegendSymbol(dTreez, symbolSelection, symbolLengthInPx / 2, treeView);
+		//this.line.plotLegendLine(dTreez, symbolSelection, symbolLengthInPx);
+		//this.symbol.plotLegendSymbol(dTreez, symbolSelection, symbolLengthInPx / 2, treeView);
 
 		return symbolSelection;
 	}
@@ -275,6 +275,11 @@ export default class Sankey extends PagedGraphicsAtom {
         //Documentaiton of d3-sankey: 
         //https://github.com/d3/d3-sankey
 
+        var sankeyAlignment = (...args) =>{
+        	var method = dTreez['sankey' + this.nodes.alignment];
+        	return method.call(dTreez, ...args);
+        }; 
+
 		var sankeyGenerator = dTreez.sankey()
 		    .nodes(nodes)
 			.links(links)
@@ -284,7 +289,8 @@ export default class Sankey extends PagedGraphicsAtom {
 		        [graphWidth - margin, graphHeight - margin]
 		    ])
 			.nodeWidth(nodeWidth)
-			.nodePadding(nodePadding);
+			.nodePadding(nodePadding)		
+			.nodeAlign(sankeyAlignment);
 
 		return sankeyGenerator;
 	}

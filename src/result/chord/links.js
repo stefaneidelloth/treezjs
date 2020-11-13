@@ -224,7 +224,7 @@ export default class Links extends GraphicsAtom {
         var source =  group.source;
         var target =  group.target;
 
-        var id = 'treez-chord-gradient-' + source.index + '-' + target.index;
+        var id = 'treez-chord-gradient-' + source.index + '-' + target.index + '-' + this.uniqueId();
         var radius = Length.toPx(this.radius); 
 
         var sourceAngle = (source.startAngle + source.endAngle)/2 - Math.PI/2;

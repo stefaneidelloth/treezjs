@@ -216,6 +216,22 @@ export default class DTreez {
 		return this.__d3.sankey();
 	}
 
+	sankeyLeft(...args){
+		return this.__d3.sankeyLeft(...args);
+	}
+
+	sankeyCenter(...args){
+		return this.__d3.sankeyCenter(...args);
+	}
+
+	sankeyRight(...args){
+		return this.__d3.sankeyRight(...args);
+	}
+
+	sankeyJustify(...args){
+		return this.__d3.sankeyJustify(...args);
+	}
+
 	sankeyLinkHorizontal(...args){
 		return this.__d3.sankeyLinkHorizontal(...args);
 	}

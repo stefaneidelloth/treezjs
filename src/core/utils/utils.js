@@ -1,5 +1,10 @@
 export default class Utils {
 
+	static uniqueId(){
+		var randomNumber = new Date().getMilliseconds()*Math.random();
+        return ('' + randomNumber).replace('.','');
+	}
+
     static firstToUpperCase(text){
         return text.charAt(0).toUpperCase() + text.slice(1);
     }

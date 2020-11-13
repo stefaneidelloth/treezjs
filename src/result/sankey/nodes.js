@@ -4,6 +4,7 @@ import Color from './../../components/color/color.js';
 import ColorMap from './../../components/colorMap/colorMap.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
 import SankeyNode from './sankeyNode.js';
+import SankeyAlignment from './sankeyAlignment.js';
 
 export default class Nodes extends GraphicsAtom {
 	
@@ -13,6 +14,7 @@ export default class Nodes extends GraphicsAtom {
 		this.margin = '10 px';
 		this.nodeWidth = '15 px';		
         this.nodePadding = '50 px';
+        this.alignment = SankeyAlignment.Justify;
        
         this.colorMap = ColorMap.Turbo;
         this.fillTransparency = 0.2;
@@ -47,6 +49,11 @@ export default class Nodes extends GraphicsAtom {
 		sectionContent.append('treez-text-field')
 			.label('Node padding')
 			.bindValue(this, ()=>this.nodePadding);
+
+		sectionContent.append('treez-enum-combo-box')
+			.label('Alignment')			
+			.nodeAttr('enum', SankeyAlignment)
+			.bindValue(this, ()=>this.alignment);
 		
 	}
 
@@ -106,6 +113,7 @@ export default class Nodes extends GraphicsAtom {
         this.addListener(()=>this.margin, ()=>this.__layoutChanged(dTreez, sankey));
         this.addListener(()=>this.nodeWidth, ()=>this.__layoutChanged(dTreez, sankey));
 		this.addListener(()=>this.nodePadding, ()=>this.__layoutChanged(dTreez, sankey));
+        this.addListener(()=>this.alignment, ()=>this.__layoutChanged(dTreez, sankey));
 
 		this.addListener(()=>this.colorMap, ()=>sankey.updatePlot(dTreez));
         this.bindDouble(()=>this.strokeWidth, nodeSelection, 'stroke-width');
@@ -140,13 +148,13 @@ export default class Nodes extends GraphicsAtom {
 				var x0 = event.x + dragDeltaX;
 				var y0 = event.y + dragDeltaY;
 				
-				this.__updateLayout(dTreez, sankey, element, node, x0, y0);
+				this.__updateLayoutForDrag(dTreez, sankey, element, node, x0, y0);
 			});
 
 	    nodeSelection.call(drag);	  
 	}
 
-	__updateLayout(dTreez, sankey, element, node, x0, y0){ 
+	__updateLayoutForDrag(dTreez, sankey, element, node, x0, y0){ 
 
         var graphWidth = Length.toPx(sankey.graph.width);
         var graphHeight = Length.toPx(sankey.graph.height);

@@ -550,6 +550,10 @@ export default class Atom {
     	return 'https://github.com/stefaneidelloth/treezjs/blob/master/doc/atoms/' + relativeUrl;
     }
 
+    uniqueId(){
+		return Utils.uniqueId();
+	}
+
     validateName(name){
 
           try{

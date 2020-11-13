@@ -35,7 +35,7 @@ export default class TreezModelPath extends LabeledTreezElement {
             relativeRootLabel.style.display='none';
             container.appendChild(relativeRootLabel);  
             
-			let uniqueOptionsId = 'options' + new Date().valueOf() + Math.random();
+			let uniqueOptionsId = 'options-' + this.uniqueId();
 
             let comboBox = document.createElement('select');
             this.__comboBox = comboBox;

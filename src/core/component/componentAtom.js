@@ -269,7 +269,7 @@ export default class ComponentAtom extends Atom {
 
 	absolutePath(relativeOrAbsolutePath){
 		return TreezAbstractPath.convertToAbsolutePathIfRelative(relativeOrAbsolutePath);
-	}
+	}	
 	
 	get isEnabled(){
 		return this.__isEnabled;

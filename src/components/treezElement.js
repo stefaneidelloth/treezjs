@@ -1,3 +1,5 @@
+import Utils from '../core/utils/utils.js';
+
 export default class TreezElement extends HTMLElement {
 	
 	constructor(){
@@ -176,7 +178,9 @@ export default class TreezElement extends HTMLElement {
 	   }
    }
 
-	
+   uniqueId(){
+		return Utils.uniqueId();
+   }	
     
     __updateExternalProperties(newValue){
  	   for(let listener of this.__listeners){
