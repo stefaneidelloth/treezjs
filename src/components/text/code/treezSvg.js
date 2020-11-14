@@ -32,6 +32,11 @@ export default class TreezSvg extends TreezCodeArea {
     	}    	
     } 
 
+    download(){
+    	var svgText = this.value.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+        window.treezTerminal.downloadTextFile(this.fileName, svgText);
+    }
+
     initializeMode(){  
 		//overrides super method to do nothing
     }
@@ -45,9 +50,15 @@ export default class TreezSvg extends TreezCodeArea {
 		}    	
     }    
 
+    
+
     get mode() {
 		 return 'htmlmixed';
 	}   
+
+	get fileExtension(){
+    	return '.svg';
+    }
                               
 }
 

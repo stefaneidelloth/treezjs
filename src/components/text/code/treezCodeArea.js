@@ -9,6 +9,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
         this.__container = undefined;
         this.__codeMirrorPlaceHolder = undefined;
         this.__codeMirror = undefined;
+        this.__isSettingValue = false;
     }
 
     static get observedAttributes() {
@@ -32,6 +33,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			var container = document.createElement('div');
 			this.__container = container;
 			this.appendChild(container);
+
+			this.__createToolbar(container);
 
 			var codeMirrorContainer = document.createElement('div');
 			codeMirrorContainer.className = 'treez-code-area-container';
@@ -57,12 +60,89 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			);
 
 			this.__codeMirror.on('change',
-			    (codeMirror, change) => this.codeMirrorChanged(codeMirror, change)
+			    codeMirror => this.codeMirrorChanged(codeMirror)
 			);
 		}
 
 		this.update();
 
+    }
+
+    __createToolbar(container){
+    	var toolbar = document.createElement('div');
+		toolbar.className = 'treez-code-area-toolbar';
+		container.appendChild(toolbar);
+
+		var openButton = document.createElement('input');
+		openButton.type='button';
+		openButton.title = 'Open file from server';
+		openButton.className = 'treez-code-area-open-button';
+		openButton.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
+		openButton.style.backgroundRepeat = 'no-repeat';
+		openButton.onclick = () => this.__openFile();
+		container.appendChild(openButton);
+
+		
+		var uploadButton = document.createElement('input');
+		uploadButton.type='button';
+		uploadButton.title = 'Open file from client';
+		uploadButton.className = 'treez-code-area-upload-button';
+		uploadButton.style.background = 'url("' + this.__urlPrefix + '/icons/upload.png")';
+		uploadButton.style.backgroundRepeat = 'no-repeat';
+		uploadButton.onclick = (event) => this.__uploadFile(event);
+		container.appendChild(uploadButton);
+
+		var downloadButton = document.createElement('input');
+		downloadButton.type='button';
+		downloadButton.title = 'Download';
+		downloadButton.className = 'treez-code-area-download-button';
+		downloadButton.style.background = 'url("' + this.__urlPrefix + '/icons/download.png")';
+		downloadButton.style.backgroundRepeat = 'no-repeat';
+		downloadButton.onclick = () => this.download();
+		container.appendChild(downloadButton);
+    }
+
+    __openFile(){
+	 window.treezTerminal.browseFilePath()
+	     .then(async (filePath)=>{
+		    if(filePath){	
+	            var text = await window.treezTerminal.readTextFile(filePath);
+	            this.value = text;			   
+		    }  
+	  }); 
+    }
+
+    __uploadFile(event){
+    	const element = document.createElement('input');
+		element.type = 'file';
+		element.onchange = (event)=>{
+			var content = event.srcElement.value;
+			document.body.removeChild(element);
+			if(content){
+				this.value = content;
+			}			
+		};
+		document.body.appendChild(element);		
+		element.click(); 
+    }
+
+    download(){
+        window.treezTerminal.downloadTextFile(this.fileName, this.value);
+    }
+
+    get fileName(){
+    	return 'download' + this.fileExtension;
+    }
+
+    get fileExtension(){
+    	switch(this.mode){
+    		case 'javascript':
+    		    return '.js';
+    		case 'python':
+    		    return '.py';
+    		default:
+    		    return '.txt';
+    	}; 
     }
 
     initializeMode(){
@@ -77,11 +157,14 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		}
     }
 
-
-
-    codeMirrorChanged(codeMirror, change){
+    codeMirrorChanged(codeMirror){
+    	if(this.__isSettingValue){
+    		return;
+    	}
     	var newValue = codeMirror.getValue();
-	    this.value = newValue;
+    	if(this.value.trim() !== newValue.trim()){
+    		this.value = newValue;
+    	}	    
     }
 
     async initializeCodeMirror(){
@@ -137,8 +220,11 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
 	updateElements(newValue){
     	if(this.__codeMirror){
-    		if(this.__codeMirror.getValue() !== newValue) {
+    		var oldValue = this.__codeMirror.getValue();
+    		if(oldValue !== newValue) {
+    			this.__isSettingValue = true;
     			this.__codeMirror.setValue(newValue);
+    			this.__isSettingValue = false;
     		}
     	}
     }
@@ -182,6 +268,12 @@ export default class TreezCodeArea extends LabeledTreezElement {
     		LabeledTreezElement.hide(this.__container, booleanValue);
     	}
     }
+
+    get __urlPrefix(){
+		return window.treezConfig
+			?window.treezConfig.home
+			:'';
+	}
 
 
     get mode() {

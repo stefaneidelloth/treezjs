@@ -86,8 +86,7 @@ export default class JupyterLabTerminal {
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
-	}
-
+	}	
 
 	__escapeSpecialCharacters(text){
 		var textWithSlashes = text.replace(/\\/g,'\\\\');

@@ -13,6 +13,34 @@
     overflow: auto !important;   
 }
 
+.treez-code-area-toolbar {
+
+}
+
+.treez-code-area-open-button {    
+    border: none;
+    width: 16px;
+    color: transparent;
+    margin-right: 4px;
+	vertical-align: middle;
+}
+
+.treez-code-area-upload-button {
+    border: none;
+    width:16px;
+    color:transparent;
+    margin-right:4px;
+	vertical-align: middle;
+}
+
+.treez-code-area-download-button {	
+    border: none;
+    width:16px;
+    color:transparent;
+    margin-right:4px;
+	vertical-align: middle;
+}
+
 
 .CodeMirror {
 	height: auto !important;
