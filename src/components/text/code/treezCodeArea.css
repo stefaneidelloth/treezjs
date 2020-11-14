@@ -14,17 +14,7 @@
 }
 
 
-.treez-code-area-container .CodeMirror pre {
-    height:18px;
-    caret-color: white;
-    cursor: text;
-    text-align:top;
-     font-family: Consolas;
-    font-size: 12px;   
-}
-
-.treez-code-area-container .CodeMirror-cursor {
-	
-	margin-left:1px;	
-	
+.CodeMirror {
+	height: auto !important;
+	font-family: var(--jp-code-font-family);
 }
