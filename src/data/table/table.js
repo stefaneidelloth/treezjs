@@ -9,9 +9,6 @@ import Row from './../row/row.js';
 import Treez from './../../treez.js';
 import SelectionManager from './selectionManager.js';
 import Xlsx from './../../core/utils/xlsx.js';
-import Csv from './../../core/utils/csv.js';
-import Ods from './../../core/utils/ods.js';
-
 
 export default class Table extends ComponentAtom {
 
@@ -219,6 +216,14 @@ export default class Table extends ComponentAtom {
 
 	__createToolbar(parent, treeView){
 
+		var fileToolbar = parent.append('div')
+							.className('treez-table-toolbar');
+
+		this.__createOpenButton(fileToolbar, treeView);
+		this.__createSaveButton(fileToolbar, treeView);
+		this.__createUploadButton(fileToolbar, treeView);
+		this.__createDownloadButton(fileToolbar, treeView);
+
 		var toolbar = parent.append('div')
 							.className('treez-table-toolbar');
 
@@ -228,10 +233,7 @@ export default class Table extends ComponentAtom {
 		this.__createDownButton(toolbar, treeView);
 		//this.__createColumnWidthButton(toolbar, treeView);
 
-		this.__createOpenButton(toolbar, treeView);
-		this.__createSaveButton(toolbar, treeView);
-		this.__createUploadButton(toolbar, treeView);
-		this.__createDownloadButton(toolbar, treeView);
+
 	}
 
 	__createTableView(parent, treeView){
@@ -475,27 +477,34 @@ export default class Table extends ComponentAtom {
     }
 
     __open(){
-        window.treezTerminal.browseFilePath()
-	     .then(async (filePath)=>{
-		    if(filePath){	
-	            var text = await window.treezTerminal.readTextFile(filePath);
-	            this.value = text;			   
+        window.treezTerminal.browseFile()
+	     .then(async (file)=>{
+		    if(file){	
+	           var data = await Xlsx.readFile(file);
+               this.__importData(data);	   
 		    }  
 	  }); 
     }
 
     __save(){
-    	
-    }
+    	window.treezTerminal.inputDialog('export.csv','Save as...')
+    	    .then(async (filePath) => {
+    	    	if(filePath){
+    	    	    var blob = await Xlsx.createBlob(filePath, this.data);
+    	    	    window.treezTerminal.saveBlob(filePath, blob);
+    	    	}
+    	});
+    }   
 
     __upload(){
     	const element = document.createElement('input');
 		element.type = 'file';
-		element.onchange = (event)=>{
+		element.onchange = async (event) => {
 			var file = event.srcElement.files[0];
 			document.body.removeChild(element);
 			if(file){
-				this.__importFile(file);
+				var data = await Xlsx.readFile(file);
+                this.__importData(data);
 			}			
 		};
 		document.body.appendChild(element);		
@@ -503,46 +512,13 @@ export default class Table extends ComponentAtom {
     }
 
     __download(){
-    	window.treezTerminal.downloadTextFile(this.fileName, this.value);
-    }
-
-    get fileName(){
-    	return 'table.csv';
-    }
-
-    __importFile(file){
-    	var extension = file.name.split('.').pop();
-    	switch(extension){
-    		case 'xlsx':
-    		    this.__importExcelFile(file);
-    		    break;
-    		case 'csv':
-    		    this.__importCsvFile(file);
-    		    break;
-    		case 'ods':
-    		    this.__importOdsFile(file);
-    		    break;
-    		default:
-    		    var message = 'The file extension ' + extension + ' is not yet implemented.';
-    		    console.warn(message);
-    		    alert(message);
-    	}
-    }
-
-    async __importExcelFile(file){
-        var data = await Xlsx.readFile(file);
-        this.__importData(data);
-    }
-    
-    async __importCsvFile(file){
-        var data = await Csv.readFile(file);
-        this.__importData(data);
-    }
-
-    async __importOdsFile(file){
-        var data = await Ods.readFile(file);
-        this.__importData(data);
-    }
+    	window.treezTerminal.inputDialog('export.csv','File name:')
+    	    .then(async (filePath) => {
+    	    	if(filePath){
+    	    	    Xlsx.downloadFile(filePath, this.data);
+    	    	}
+    	});    	    	
+    }    
 
     __importData(data){
     	var foo =1;
@@ -851,6 +827,15 @@ export default class Table extends ComponentAtom {
 			}
 			return null;
 		}
+	}
+
+	get data(){
+		var data = [this.headers];
+		var rows = this.rows;
+		for(var row of rows){
+            data.push(row.values);
+		}
+		return data;
 	}
 
 

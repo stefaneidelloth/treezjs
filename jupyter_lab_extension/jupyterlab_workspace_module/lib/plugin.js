@@ -8,10 +8,9 @@ var { ISettingRegistry } = require ('@jupyterlab/settingregistry');
 var { IDocumentManager } = require ('@jupyterlab/docmanager');
 var { IStatusBar } = require ('@jupyterlab/statusbar');
 
-
 var { FileDialog } = require('@jupyterlab/filebrowser');
 var { NotebookActions } = require("@jupyterlab/notebook");
-var { ReactWidget } = require('@jupyterlab/apputils');
+var { InputDialog, ReactWidget } = require('@jupyterlab/apputils');
 
 module.exports = [{
     id: 'jupyterlab_workspace_module',
@@ -67,6 +66,7 @@ async function init(
 	  	'settingRegistry': settingRegistry,
 	  	'documentManager': documentManager,
 	  	'statusBar': statusBar,
+	  	'InputDialog': InputDialog,
     	'FileDialog': FileDialog,
     	'NotebookActions': NotebookActions,
     	'ReactWidget': ReactWidget

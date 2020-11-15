@@ -1,6 +1,50 @@
 import Treez from '../../treez.js';
 
-export default class Xlsx {
+export default class Xlsx {	
+
+	static async downloadFile(fileName, data){
+		var blob = await this.createBlob(fileName, data);	
+		this.__downloadBlob(fileName, blob);
+	}	
+
+	static async createBlob(filePath, data){
+
+		await this.__initializeXlsxJs();
+
+        var workbook = XLSX.utils.book_new();
+        var worksheet = XLSX.utils.aoa_to_sheet(data);
+        workbook.SheetNames.push('Tabelle1')
+        workbook.Sheets['Tabelle1'] = worksheet;
+
+		var extension = filePath.split('.').pop();
+		
+		var options = {
+			bookType: extension, 
+			FS: ";", //separator used for *.csv files
+			type: "binary"
+		};		
+		var binary = XLSX.write(workbook, options);
+		return new Blob([this.__binaryStringToArrayBuffer(binary)], { type: "application/octet-stream" });
+	}
+
+	static async __downloadBlob(fileName, blob){
+		var a = document.createElement('a');
+        a.download = fileName
+        a.href = window.URL.createObjectURL(blob)
+
+        var event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click');
+        a.dispatchEvent(event);		
+	}
+
+	static __binaryStringToArrayBuffer(s) { 
+		var buffer = new ArrayBuffer(s.length); //convert s to arrayBuffer
+		var view = new Uint8Array(buffer);  //create uint8array as viewer
+		for (var i=0; i<s.length; i++){
+			view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+		} 
+		return buffer;    
+    }
 
     static async readFile(file){
         

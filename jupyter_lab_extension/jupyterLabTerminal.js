@@ -26,8 +26,89 @@ export default class JupyterLabTerminal {
 		  let files = result.value;
 		  return files[0].path.trim();
 		}
-		return ''; 
+		return null; 
     }	
+
+    async inputDialog(initialValue, title){
+
+		var InputDialog = this.__dependencies['InputDialog'];
+		var documentManager = this.__dependencies['documentManager'];
+	   
+        var options = { 
+            title: title,
+            text: initialValue
+        };
+		const dialog = InputDialog.getText(options);
+	    const result = await dialog;
+		if(result.button.accept){
+		  return result.value;		 
+		}
+		return null; 
+    }	
+
+    async browseFile(initialDirectory, initialFile){
+
+    	var FileDialog = this.__dependencies['FileDialog'];
+		var documentManager = this.__dependencies['documentManager'];
+		const dialog = FileDialog.getOpenFiles({manager: documentManager});
+		const result = await dialog;
+
+    	return await new Promise(async (resolve, reject)=>{	
+			if(result.button.accept){
+			  let files = result.value;
+			  let file = files[0];
+			  let url = document.URL + '/../files/' + file.path;			 
+			  await fetch(url)
+				  .then(async (result) => {					 
+				      var blob = await result.blob();
+					  resolve(blob);
+				  })
+				  .catch(error =>{
+                        reject(error);
+				  })
+			  
+			} else {
+				resolve(null);
+			}
+			
+    	});
+		
+    }	
+
+    async saveBlob(filePath, blob){    	
+    	var serviceManager = this.__app.serviceManager;
+    	var items = filePath.split('/');
+    	var fileName = items.pop();
+    	var directoryPath = items.join('/');
+    	var extension = fileName.split('.').pop();
+    	var options = {
+    	  path: directoryPath,
+          type: 'file',
+          ext: extension,
+          name: fileName
+    	};
+
+        var blobConversionReader = new FileReader();
+        blobConversionReader.onload = async () => {
+			var dataUrl = blobConversionReader.result;
+			var base64 = dataUrl.split(',')[1];
+
+			var file = await serviceManager.contents.newUntitled(options);
+			var tempFilePath = file.path;
+			    	
+			file.content = base64; 
+			file.name = fileName;
+			file.path = filePath;
+			file.format = 'base64';
+			serviceManager.contents.save(filePath, file);
+			
+            await serviceManager.contents.delete(tempFilePath);  
+
+		};
+		blobConversionReader.readAsDataURL(blob); 
+
+			
+    }
 
    
     async browseDirectoryPath(initialDirectory){   	
