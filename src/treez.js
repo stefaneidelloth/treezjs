@@ -44,6 +44,7 @@ export default class Treez {
 		Treez.importCssStyleSheet('/src/views/treeView.css');
 		Treez.importCssStyleSheet('/src/views/editorView.css');
 		Treez.importCssStyleSheet('/src/views/propertyView.css');
+		Treez.importCssStyleSheet('/src/data/table/table.css');   
 		Treez.importCssStyleSheet('/src/views/monitorView.css');
 		Treez.importCssStyleSheet('/src/views/graphicsView.css');
 	}

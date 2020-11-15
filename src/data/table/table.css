@@ -1,0 +1,199 @@
+.treez-table-container {
+	position:absolute;
+	top:25px;
+	left:0px;
+	right:0px;
+	bottom:0px;	
+	background-color:white;	
+}
+
+.treez-table-content {
+	position:absolute;
+	top:15px;
+	left:0px;
+	right:0px;
+	bottom:30px;
+	overflow:auto;
+}
+
+.treez-table {
+	border: 1px solid #B0CBEF;
+	border-width: 1px 0px 0px 1px;
+	font-size: 11pt;
+	font-family: Calibri;
+	font-weight: 100;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	margin: 10px;	
+}
+
+.treez-table TR:first-child {
+	background-color: #e0e8f1;
+	font-weight: normal;
+	font-size: 14px;	
+	height: 17px;
+	border: 1px solid #9EB6CE;
+	border-width: 0px 1px 1px 0px;
+}
+
+.treez-table TR:first-child TH {
+	padding-left: 3px;
+	padding-right: 3px;
+	border: 1px solid #9EB6CE;
+	border-width: 0px 1px 1px 0px;
+}
+
+.treez-table TR:first-child TH :hover {
+	resize:horizontal;
+	overflow:auto;
+}
+
+
+.treez-table TR:first-child TH.highlighted {
+	background-color: #ccd9e8;
+}
+
+
+.treez-table TR:first-child TH:first-child {
+		
+}
+
+
+
+.treez-table TD {
+	border: 0px;
+	background-color: white;
+	padding: 0px 4px 0px 2px;
+	border: 1px solid #D0D7E5;
+	border-width: 0px 1px 1px 0px;
+}
+
+.treez-table TD.highlighted {
+	/* background-color: lightgreen; */
+}
+
+.treez-table TD.highlighted.selected {
+	background-color: lightblue;
+}
+
+.treez-table TD B {
+	border: 10px;
+	background-color: white;
+	font-weight: bold;
+}
+
+
+.treez-table TR TD:first-child {
+	background-color: #E4ECF7;
+	text-align: center;
+	border: 1px solid #9EB6CE;
+	border-width: 0px 1px 1px 0px;
+}
+
+.treez-table TR.highlighted TD:first-child {
+		background-color: #ccd9e8;
+}
+
+.treez-table-toolbar {	
+	
+}
+
+.treez-table-toolbar input[type=button] {	
+	border:none;
+	width:16px;
+	height:16px;
+	margin:1px;
+}
+
+.treez-table-toolbar input[type=button]:hover {	
+		
+}
+
+.treez-table-add-button {		
+	background: url(../../../icons/add.png) center center no-repeat;	
+}
+
+.treez-table-delete-button {	
+	background: url(../../../icons/delete.png) center center no-repeat;	
+}
+
+.treez-table-up-button {	
+	background: url(../../../icons/up.png) center center no-repeat;	
+}
+
+.treez-table-down-button {	
+	background: url(../../../icons/down.png) center center no-repeat;	
+}
+
+.treez-table-width-button {	
+	background: url(../../../icons/resize_width.png) center center no-repeat;	
+}
+
+.treez-table-open-button {
+    background: url(../../../icons/browse.png) center center no-repeat;
+}
+
+.treez-table-save-button {
+    background: url(../../../icons/save.png) center center no-repeat;
+}
+
+.treez-table-upload-button {
+    background: url(../../../icons/upload.png) center center no-repeat;
+}
+
+.treez-table-download-button {
+    background: url(../../../icons/download.png) center center no-repeat;
+}
+
+.treez-table-pagination {	
+	position:absolute;	
+	height: 25px;
+	bottom:10px;
+	left:0;
+	right:0;
+	margin:5px;
+	margin-bottom:0px;
+	font-family: Consolas;
+    font-size: 12px; 
+}
+
+
+.treez-table-pagination-row-info {
+	display: inline-block;
+}
+
+.treez-table-pagination-row-info .span {
+	display: inline-block;
+}
+
+.treez-table-pagination-page-info {
+	display: inline-block;
+}
+
+.treez-table-pagination input[type=button] {		
+	border:none;
+	width:16px;
+	height:16px;
+	margin:2px;
+}
+
+.treez-table-first-button {
+	
+	background: url(../../../icons/first.png) center center no-repeat;	
+	vertical-align:middle;	
+}
+
+.treez-table-previous-button {
+	background: url(../../../icons/previous.png) center center no-repeat;	
+	vertical-align:middle;	
+}
+
+.treez-table-next-button {
+	background: url(../../../icons/next.png) center center no-repeat;	
+	vertical-align:middle;	
+}
+
+.treez-table-last-button {
+	background: url(../../../icons/last.png) center center no-repeat;	
+	vertical-align:middle;	
+}

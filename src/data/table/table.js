@@ -8,6 +8,9 @@ import TableCodeAdaption from './tableCodeAdaption.js';
 import Row from './../row/row.js';
 import Treez from './../../treez.js';
 import SelectionManager from './selectionManager.js';
+import Xlsx from './../../core/utils/xlsx.js';
+import Csv from './../../core/utils/csv.js';
+import Ods from './../../core/utils/ods.js';
 
 
 export default class Table extends ComponentAtom {
@@ -34,11 +37,7 @@ export default class Table extends ComponentAtom {
 
 		this.__selectionManager = new SelectionManager(this);
 
-
 		this.__tableSelection = undefined;
-
-
-
 	}
 
 	createComponentControl(tabFolder){
@@ -69,11 +68,7 @@ export default class Table extends ComponentAtom {
 			sectionContent.text('This table does not contain any column yet.');
 		}
 
-
 	}
-
-
-
 
 	createContextMenuActions(selection, parentSelection, treeView) {
 
@@ -154,8 +149,6 @@ export default class Table extends ComponentAtom {
 		}
 	}
 
-
-
 	addRow(row) {
 		this.__rows.push(row);
 		return this;
@@ -230,14 +223,15 @@ export default class Table extends ComponentAtom {
 							.className('treez-table-toolbar');
 
 		this.__createAddButton(toolbar, treeView);
-
 		this.__createDeleteButton(toolbar, treeView);
-
 		this.__createUpButton(toolbar, treeView);
-
 		this.__createDownButton(toolbar, treeView);
-
 		//this.__createColumnWidthButton(toolbar, treeView);
+
+		this.__createOpenButton(toolbar, treeView);
+		this.__createSaveButton(toolbar, treeView);
+		this.__createUploadButton(toolbar, treeView);
+		this.__createDownloadButton(toolbar, treeView);
 	}
 
 	__createTableView(parent, treeView){
@@ -302,6 +296,7 @@ export default class Table extends ComponentAtom {
 
 	        })
 	        .onClick((event, value) => this.__selectionManager.cellClicked(event, value))
+	        .onMouseDown((event, value) => this.__selectionManager.cellMouseDown(event, value))
 	        .onMouseUp((event, value) => this.__selectionManager.cellMouseUp(event, value))
 	        .onMouseOver((event, value) => this.__selectionManager.cellMouseOver(event, value));
 	}
@@ -413,40 +408,145 @@ export default class Table extends ComponentAtom {
 			.className('treez-table-add-button')
 			.title('Add')
 			.onClick(()=>this.__addRow());
-
 	}
 
 	__createDeleteButton(toolbar, treeView){
 		toolbar.append('input')
-		.attr('type','button')
-		.className('treez-table-delete-button')
-		.title('Delete')
-		.onClick(()=>this.__deleteRow());
+			.attr('type','button')
+			.className('treez-table-delete-button')
+			.title('Delete')
+			.onClick(()=>this.__deleteRow());
 	}
 
 	__createUpButton(toolbar, treeView){
 		toolbar.append('input')
-		.attr('type','button')
-		.className('treez-table-up-button')
-		.title('Move up')
-		.onClick(()=>this.__moveRowUp());
+			.attr('type','button')
+			.className('treez-table-up-button')
+			.title('Move up')
+			.onClick(()=>this.__moveRowUp());
 	}
 
 	__createDownButton(toolbar, treeView){
 		toolbar.append('input')
-		.attr('type','button')
-		.className('treez-table-down-button')
-		.title('Move down')
-		.onClick(()=>this.__moveRowDown());
+			.attr('type','button')
+			.className('treez-table-down-button')
+			.title('Move down')
+			.onClick(()=>this.__moveRowDown());
 	}
 
 	__createColumnWidthButton(toolbar, treeView){
 		toolbar.append('input')
-		.attr('type','button')
-		.className('treez-table-width-button')
-		.title('Optimize column width')
-		.onClick(()=>this.__optimizeColumnWidth());
+			.attr('type','button')
+			.className('treez-table-width-button')
+			.title('Optimize column width')
+			.onClick(()=>this.__optimizeColumnWidth());
 	}
+
+    __createOpenButton(toolbar, treeView){
+        toolbar.append('input')
+			.attr('type','button')
+			.className('treez-table-open-button')
+			.title('Open')
+			.onClick(()=>this.__open());
+    }
+
+	__createSaveButton(toolbar, treeView){
+        toolbar.append('input')
+			.attr('type','button')
+			.className('treez-table-save-button')
+			.title('Save')
+			.onClick(()=>this.__save());
+    }
+    
+	__createUploadButton(toolbar, treeView){
+        toolbar.append('input')
+			.attr('type','button')
+			.className('treez-table-upload-button')
+			.title('Upload')
+			.onClick(()=>this.__upload());
+    }
+    
+	__createDownloadButton(toolbar, treeView){
+        toolbar.append('input')
+			.attr('type','button')
+			.className('treez-table-download-button')
+			.title('Download')
+			.onClick(()=>this.__download());
+    }
+
+    __open(){
+        window.treezTerminal.browseFilePath()
+	     .then(async (filePath)=>{
+		    if(filePath){	
+	            var text = await window.treezTerminal.readTextFile(filePath);
+	            this.value = text;			   
+		    }  
+	  }); 
+    }
+
+    __save(){
+    	
+    }
+
+    __upload(){
+    	const element = document.createElement('input');
+		element.type = 'file';
+		element.onchange = (event)=>{
+			var file = event.srcElement.files[0];
+			document.body.removeChild(element);
+			if(file){
+				this.__importFile(file);
+			}			
+		};
+		document.body.appendChild(element);		
+		element.click(); 
+    }
+
+    __download(){
+    	window.treezTerminal.downloadTextFile(this.fileName, this.value);
+    }
+
+    get fileName(){
+    	return 'table.csv';
+    }
+
+    __importFile(file){
+    	var extension = file.name.split('.').pop();
+    	switch(extension){
+    		case 'xlsx':
+    		    this.__importExcelFile(file);
+    		    break;
+    		case 'csv':
+    		    this.__importCsvFile(file);
+    		    break;
+    		case 'ods':
+    		    this.__importExcelFile(file);
+    		    break;
+    		default:
+    		    var message = 'The file extension ' + extension + ' is not yet implemented.';
+    		    console.warn(message);
+    		    alert(message);
+    	}
+    }
+
+    async __importExcelFile(file){
+        var data = await Xlsx.readFile(file);
+        this.__importData(data);
+    }
+    
+    __importCsvFile(file){
+        var data = Csv.readFile(file);
+        this.__importData(data);
+    }
+
+    __importOdsFile(file){
+        var data = Ods.readFile(file);
+        this.__importData(data);
+    }
+
+    __importData(data){
+    	var foo =1;
+    }
 
 	__addRow(){
 		var rowIndices = this.__selectionManager.highlightedRowIndices;

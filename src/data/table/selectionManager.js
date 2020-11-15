@@ -7,6 +7,8 @@ export default class SelectionManager {
 
 		this.__isSelecting = false;
 		this.__ctrlIsPressed = false;
+		this.__startRowIndex = undefined;
+		this.__startCellIndex = undefined;
 
 		this.__selectedCells = [];
 		this.__highlightedColumns = [];
@@ -16,26 +18,79 @@ export default class SelectionManager {
 	cellClicked(event, value){
 		this.__isSelecting = true;
 		this.__updateCtrlState(event);
-		var cell = event.srcElement.parentNode;
+		
 		if(!this.__ctrlIsPressed){
 			this.resetSelectionAndHighlighting();
 		}
+
+		var cell = event.srcElement.parentNode;		
+		var index = cell.cellIndex;
 
 		this.__selectCell(cell);
 		this.__highlightColumn(index);
 
 	}
 
+	cellMouseDown(event, value){
+        this.__isSelecting = true;
+		this.__updateCtrlState(event);
+
+		var cell = event.srcElement.parentNode;		
+		this.__startCellIndex = cell.cellIndex;
+
+		var row = cell.parentNode;
+		this.__startRowIndex = row.rowIndex-1;
+	}
+
 	cellMouseUp(event, value){
 		this.__isSelecting = false;
 		this.__updateCtrlState(event);
+		this.__startRowIndex = undefined;
+		this.__startCellIndex = undefined;
 	}
 
 	cellMouseOver(event, value){
+		if(!this.__isSelecting){
+			return;
+		}
+
+		this.resetSelectionAndHighlighting();
+
+		var currentCell = event.srcElement.parentNode;	
+		var currentRow = currentCell.parentNode;
+		var table = currentRow.parentNode;
+		    
+		var currentCellIndex = currentCell.cellIndex;
+		var currentRowIndex = currentRow.rowIndex-1;
+
+		var rowStart = this.__startRowIndex;
+		var rowEnd = currentRowIndex;
+		if (currentRowIndex < this.__startRowIndex) {
+			rowStart = currentRowIndex;
+			rowEnd = this.__startRowIndex;
+		} 
+
+		var cellStart = this.__startCellIndex;
+		var cellEnd = currentCellIndex;
+		if (currentCellIndex < this.__startCellIndex) {
+			cellStart = currentCellIndex;
+			cellEnd = this.__startCellIndex;
+		}       
+
+		for (var rowIndex = rowStart; rowIndex <= rowEnd; rowIndex++) {	
+		    var row = table.childNodes[rowIndex];
+		    this.highlightRow(rowIndex);		
+			for (var cellIndex = cellStart; cellIndex <= cellEnd; cellIndex++) {
+				this.__highlightColumn(cellIndex);
+				var cell = row.childNodes[cellIndex];
+				this.__selectCell(cell);
+			}        
+		}
 
 	}
 
 	rowClicked(event, row){
+		this.__isSelecting=false;
 		this.highlightRow(row.index);
 	}
 

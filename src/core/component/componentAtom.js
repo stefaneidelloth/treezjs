@@ -88,7 +88,6 @@ export default class ComponentAtom extends Atom {
     	Treez.importCssStyleSheet('/src/components/file/treezFilePath.css');  
 	    
     	Treez.importCssStyleSheet('/src/components/comboBox/treezImageComboBox.css');
-
     	
     	Treez.importCssStyleSheet('/src/components/list/treezStringList.css');
     	Treez.importCssStyleSheet('/src/components/comboBox/treezSvgComboBox.css');
@@ -97,8 +96,8 @@ export default class ComponentAtom extends Atom {
 
 		Treez.importCssStyleSheet('/src/components/number/treezNumber.css');
        
-    	Treez.importCssStyleSheet('/src/components/section/treezSection.css');
-      
+    	Treez.importCssStyleSheet('/src/components/section/treezSection.css');    	  
+    	 
     	Treez.importCssStyleSheet('/src/components/tabs/treezTabFolder.css');
     	Treez.importCssStyleSheet('/src/components/text/code/treezCodeArea.css');
     	Treez.importCssStyleSheet('/src/components/text/area/treezTextArea.css');
