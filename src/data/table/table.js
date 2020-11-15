@@ -520,7 +520,7 @@ export default class Table extends ComponentAtom {
     		    this.__importCsvFile(file);
     		    break;
     		case 'ods':
-    		    this.__importExcelFile(file);
+    		    this.__importOdsFile(file);
     		    break;
     		default:
     		    var message = 'The file extension ' + extension + ' is not yet implemented.';
@@ -534,13 +534,13 @@ export default class Table extends ComponentAtom {
         this.__importData(data);
     }
     
-    __importCsvFile(file){
-        var data = Csv.readFile(file);
+    async __importCsvFile(file){
+        var data = await Csv.readFile(file);
         this.__importData(data);
     }
 
-    __importOdsFile(file){
-        var data = Ods.readFile(file);
+    async __importOdsFile(file){
+        var data = await Ods.readFile(file);
         this.__importData(data);
     }
 

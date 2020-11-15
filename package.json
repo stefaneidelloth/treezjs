@@ -12,12 +12,11 @@
     "d3": "6.2.0",
     "d3-sankey": "0.12.3",
     "d3-scale-chromatic": "2.0.0",
-    "exceljs": "^4.2.0",
     "flag-icon-css": "3.5.0",
     "golden-layout": "1.5.9",
     "jquery": "3.5.1",
     "requirejs": "2.3.6",
-    "sheetjs": "^2.0.0"
+    "xlsx": "^0.16.8"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
