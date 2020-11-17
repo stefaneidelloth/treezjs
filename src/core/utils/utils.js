@@ -13,6 +13,19 @@ export default class Utils {
         return text.charAt(0).toLowerCase() + text.slice(1);
     }
 
+    static isString(value){
+    	return typeof value === 'string' || value instanceof String;
+    }
+
+    static numberToLetters(number) {
+		let letters = ''
+		while (number >= 0) {
+			letters = 'abcdefghijklmnopqrstuvwxyz'[number % 26] + letters
+			number = Math.floor(number / 26) - 1
+		}
+		return letters
+	}
+
     static extractParentFolder(path) {
         const fileName = Utils.extractFileName(path);
         const endIndex = path.length - fileName.length - 1;

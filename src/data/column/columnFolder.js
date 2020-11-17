@@ -167,6 +167,11 @@ export default class ColumnFolder extends ComponentAtom {
 		
 
 		return column;
-	}	
+	}
+
+    clear(){
+    	this.removeChildrenByClass(Column);	
+    }
+	
 
 }

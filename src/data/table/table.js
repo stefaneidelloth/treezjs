@@ -1,6 +1,7 @@
 
 import ComponentAtom from './../../core/component/componentAtom.js';
 import ColumnFolder from './../column/columnFolder.js';
+import Column from './../column/column.js';
 import TreeViewAction from './../../core/treeView/treeViewAction.js';
 import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeViewAction.js';
 import TableSource from './tableSource.js';
@@ -9,6 +10,7 @@ import Row from './../row/row.js';
 import Treez from './../../treez.js';
 import SelectionManager from './selectionManager.js';
 import Xlsx from './../../core/utils/xlsx.js';
+import Utils from './../../core/utils/utils.js';
 
 export default class Table extends ComponentAtom {
 
@@ -62,7 +64,7 @@ export default class Table extends ComponentAtom {
 		if (columnsExist) {
 			this.__createTableControl(tableContainer, this.treeView);
 		} else {
-			sectionContent.text('This table does not contain any column yet.');
+			this.__createEmptyTableControl(tableContainer, this.treeView);					
 		}
 
 	}
@@ -96,8 +98,8 @@ export default class Table extends ComponentAtom {
 	}
 
 	createColumn(name, type) {
-		this.__initializeColumns();
-		this.columnFolder.createColumn(name, type);
+		this.__createColumnFolderIfNotExist();
+		return this.columnFolder.createColumn(name, type);
 	}
 
 	createColumnFolder(name) {
@@ -108,6 +110,7 @@ export default class Table extends ComponentAtom {
 		if(!this.columnFolder){
 			this.createColumnFolder();
 		}
+		return this.columnFolder;
 	}
 
 	createTableSource(name) {
@@ -214,6 +217,17 @@ export default class Table extends ComponentAtom {
 
 	}
 
+	__createEmptyTableControl(parent, treeView){
+
+		this.__createToolbarForEmptyTable(parent, treeView);
+
+		parent.append('div')
+		    .text('This table does not contain any column yet.');	
+
+		
+
+	}
+
 	__createToolbar(parent, treeView){
 
 		var fileToolbar = parent.append('div')
@@ -233,6 +247,16 @@ export default class Table extends ComponentAtom {
 		this.__createDownButton(toolbar, treeView);
 		//this.__createColumnWidthButton(toolbar, treeView);
 
+
+	}
+
+	__createToolbarForEmptyTable(parent, treeView){
+
+		var fileToolbar = parent.append('div')
+							.className('treez-table-toolbar');
+
+		this.__createOpenButton(fileToolbar, treeView);		
+		this.__createUploadButton(fileToolbar, treeView);
 
 	}
 
@@ -449,7 +473,7 @@ export default class Table extends ComponentAtom {
 			.attr('type','button')
 			.className('treez-table-open-button')
 			.title('Open')
-			.onClick(()=>this.__open());
+			.onClick(()=>this.__open(treeView));
     }
 
 	__createSaveButton(toolbar, treeView){
@@ -465,7 +489,7 @@ export default class Table extends ComponentAtom {
 			.attr('type','button')
 			.className('treez-table-upload-button')
 			.title('Upload')
-			.onClick(()=>this.__upload());
+			.onClick(()=>this.__upload(treeView));
     }
     
 	__createDownloadButton(toolbar, treeView){
@@ -476,12 +500,13 @@ export default class Table extends ComponentAtom {
 			.onClick(()=>this.__download());
     }
 
-    __open(){
+    __open(treeView){
         window.treezTerminal.browseFile()
 	     .then(async (file)=>{
 		    if(file){	
 	           var data = await Xlsx.readFile(file);
-               this.__importData(data);	   
+               this.__importData(data);	
+               treeView.refresh();   
 		    }  
 	  }); 
     }
@@ -496,7 +521,7 @@ export default class Table extends ComponentAtom {
     	});
     }   
 
-    __upload(){
+    __upload(treeView){
     	const element = document.createElement('input');
 		element.type = 'file';
 		element.onchange = async (event) => {
@@ -505,6 +530,7 @@ export default class Table extends ComponentAtom {
 			if(file){
 				var data = await Xlsx.readFile(file);
                 this.__importData(data);
+                treeView.refresh();   
 			}			
 		};
 		document.body.appendChild(element);		
@@ -521,7 +547,54 @@ export default class Table extends ComponentAtom {
     }    
 
     __importData(data){
-    	var foo =1;
+    	this.clear();
+    	var firstRow = data.shift();
+    	if(firstRow){
+    		var isHeaderRow = this.__isHeaderRow(firstRow);
+			if(isHeaderRow){
+				this.__createColumnsFromHeaders(firstRow);
+			} else {
+				this.__createColumnsByNumber(firstRow.length);
+				this.createRow(firstRow);
+			}
+			for(var row of data){
+				this.createRow(row);
+			}
+    	}
+    	
+    }
+
+    __isHeaderRow(rowData){
+    	for(var value of rowData){
+    		if (!Utils.isString(value)){
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+
+    __createColumnsFromHeaders(headers){
+        for(var header of headers){
+        	var columnName = header.replace(/ /g,'').trim();
+        	columnName = Utils.firstToLowerCase(columnName);
+        	var column = this.createColumn(columnName);
+        	column.legend = header;
+        }
+    }
+
+    __createColumnsByNumber(numberOfColumns){
+        for(var index=0; index<numberOfColumns;index++){        	
+        	var columnName =  Utils.numberToLetters(index);     	
+        	this.createColumn(columnName);        	
+        }
+    }
+
+    clear(){
+    	this.__rows = [];
+    	var columnFolder = this.childByClass(ColumnFolder);
+    	if(columnFolder){
+    		columnFolder.clear();
+    	}    	
     }
 
 	__addRow(){
