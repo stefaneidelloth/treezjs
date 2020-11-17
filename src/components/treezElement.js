@@ -31,6 +31,20 @@ export default class TreezElement extends HTMLElement {
 	convertToStringValue(value){
 		return value;
 	}
+
+	handleDrop(event){
+		event.preventDefault();
+		var files = event.dataTransfer.files;
+		if(files.length >0){
+			var file = files[0];
+			this.handleFileDrop(file); 
+		}
+	}
+
+    
+	async handleFileDrop(file){
+        //can be overridden by inheriting atoms
+	}
 	
 	//Should be overridden by inheriting classes.
 	//This method is called after the string-html-attribute of the html element has been changed.
