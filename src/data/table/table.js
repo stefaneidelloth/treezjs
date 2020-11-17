@@ -53,8 +53,9 @@ export default class Table extends ComponentAtom {
 
 		const tableContainer = sectionContent.append('div')
 		    .on('dragover', event => event.preventDefault())
-		    .on('drop', event => this.handleDrop(event, this.treeView)) //allows to drop files
+		    .on('drop', event => this.handleDrop(event, this.treeView)) 
 		    .on('dragenter', event => event.preventDefault())
+		    .on('paste', event => this.__handleContainerPaste(event, this.treeView))
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
         
 
@@ -71,6 +72,12 @@ export default class Table extends ComponentAtom {
 			this.__createEmptyTableControl(tableContainer, this.treeView);					
 		}
 
+	}
+
+	async __handleContainerPaste(event, treeView){
+		if(event.srcElement.className.includes('treez-table')){
+			this.handlePaste(event, treeView);
+		}		
 	}
 
 	async handleFileDrop(file, treeView){		
@@ -342,22 +349,26 @@ export default class Table extends ComponentAtom {
 	        .html((cellValue)=>{
 	        	return cellValue;
 	        })
-	        .onInput((data, oneBasedColumnIndex, cellArrayOfRow)=>{
-	        	var contentDiv = cellArrayOfRow[oneBasedColumnIndex];
-
-	        	var value = contentDiv.innerText;
-
-	        	var td = contentDiv.parentNode;
-	        	var tr = td.parentNode;
-	        	var oneBasedRowIndex = tr.rowIndex;
-
-	        	this.__cellValueChanged(oneBasedRowIndex-1, oneBasedColumnIndex-1, value);
-
-	        })
+	        .onInput((event, value) => this.__cellInput(event, value))
 	        .onClick((event, value) => this.__selectionManager.cellClicked(event, value))
 	        .onMouseDown((event, value) => this.__selectionManager.cellMouseDown(event, value))
 	        .onMouseUp((event, value) => this.__selectionManager.cellMouseUp(event, value))
 	        .onMouseOver((event, value) => this.__selectionManager.cellMouseOver(event, value));
+	}
+
+	__cellInput(event, value){		
+
+		var contentDiv = event.srcElement;
+
+		var value = contentDiv.innerText;
+
+		var td = contentDiv.parentNode;
+		var oneBasedColumnIndex = td.cellIndex;
+		
+		var tr = td.parentNode;
+		var oneBasedRowIndex = tr.rowIndex;
+
+		this.__cellValueChanged(oneBasedRowIndex-1, oneBasedColumnIndex-1, value);
 	}
 
 

@@ -184,13 +184,37 @@ export default class Atom {
 		}		
 	}
 
+	handlePaste(event, treeView){
+		event.preventDefault();
+
+		var files = event.clipboardData.files;
+		if(files.length >0){	
+		    for(var file of files){
+			    this.handleFilePaste(file, treeView); 
+		    }			
+		} else {
+			var items = event.clipboardData.items;			
+			this.handleItemsPaste(items, treeView); 		    			
+		}		
+	}
+
+	
+
     
 	async handleFileDrop(file, treeView){
         console.warn('handleFileDrop not yet implemented'); //can be overridden by inheriting atoms
 	}
 
-	async handleItemDrop(item, treeView){
+	async handleItemsDrop(items, treeView){
 		console.warn('handleItemDrop not yet implemented'); //can be overridden by inheriting atoms
+	}
+
+	async handleFilePaste(file, treeView){
+        this.handleFileDrop(file, treeView); //can be overridden by inheriting atoms
+	}
+
+	async handleItemsPaste(items, treeView){
+		this.handleItemsDrop(items, treeView); //can be overridden by inheriting atoms
 	}
 
 	/**

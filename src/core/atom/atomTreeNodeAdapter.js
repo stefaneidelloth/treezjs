@@ -52,6 +52,7 @@ export default class AtomTreeNodeAdapter {
 			.className('treez-summary')
 			.on('dragover', event => event.preventDefault())
 		    .on('drop', event => atom.handleDrop(event, treeView)) //allows to drop files
+		    .on('paste', event => atom.handlePaste(event, treeView)) //allows to paste files
 		    .on('dragenter', event => event.preventDefault())
 			.onClick(()=>{
 				this.showProperties(treeView,atom);
