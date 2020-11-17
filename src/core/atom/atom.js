@@ -174,15 +174,23 @@ export default class Atom {
 	handleDrop(event, treeView){
 		event.preventDefault();
 		var files = event.dataTransfer.files;
-		if(files.length >0){
-			var file = files[0];
-			this.handleFileDrop(file, treeView); 
-		}
+		if(files.length >0){	
+		    for(var file of files){
+			    this.handleFileDrop(file, treeView); 
+		    }			
+		} else {
+			var items = event.dataTransfer.items;			
+			this.handleItemsDrop(items, treeView); 		    			
+		}		
 	}
 
     
 	async handleFileDrop(file, treeView){
-        //can be overridden by inheriting atoms
+        console.warn('handleFileDrop not yet implemented'); //can be overridden by inheriting atoms
+	}
+
+	async handleItemDrop(item, treeView){
+		console.warn('handleItemDrop not yet implemented'); //can be overridden by inheriting atoms
 	}
 
 	/**

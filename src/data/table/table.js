@@ -53,7 +53,7 @@ export default class Table extends ComponentAtom {
 
 		const tableContainer = sectionContent.append('div')
 		    .on('dragover', event => event.preventDefault())
-		    .on('drop', event => this.__dropHandler(event)) //allows to drop files
+		    .on('drop', event => this.handleDrop(event, this.treeView)) //allows to drop files
 		    .on('dragenter', event => event.preventDefault())
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
         
@@ -73,17 +73,31 @@ export default class Table extends ComponentAtom {
 
 	}
 
-	async __dropHandler(event){
-		event.preventDefault();
-		var files = event.dataTransfer.files;
-		if(files.length >0){
-			var file = files[0];
-			this.handleFileDrop(file, this.treeView);			
-		}
+	async handleFileDrop(file, treeView){		
+		var data = await Xlsx.readFile(file);
+        this.__importData(data);
+        treeView.refresh(); 
 	}
 
-	async handleFileDrop(file, treeView){
-		var data = await Xlsx.readFile(file);
+	async handleItemsDrop(dataTransferItems, treeView){
+		
+		var data = [];
+		for(var item of dataTransferItems){
+			await new Promise((resolve,reject)=>{
+				item.getAsString(text => {					
+					var rows = text.split('\n');
+					for(var row of rows){
+						var separator = ';';
+						if(!row.includes(separator)){
+							separator = '\t';
+						}
+						var entries = row.split(separator);
+						data.push(entries);
+					}	
+					resolve();		    
+				});		
+			})	
+		}
         this.__importData(data);
         treeView.refresh(); 
 	}
