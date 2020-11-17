@@ -9,7 +9,7 @@ export default class SankeyNode extends GraphicsAtom {
 		this.color = 'red';
 		this.x = NaN;
 		this.y = NaN;
-		this.svg = '<svg with="16" height="16">\n</svg>';		
+		this.svg = '<svg width="16" height="16">\n</svg>';		
 	}
 	
 

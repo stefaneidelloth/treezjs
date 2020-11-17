@@ -7,7 +7,7 @@ export default class ChordNode extends GraphicsAtom {
 		this.image = 'chordNode.png';
 		this.description = '';
 		this.color = 'red';
-		this.svg = '<svg with="16" height="16">\n</svg>';
+		this.svg = '<svg width="16" height="16">\n</svg>';
 		this.__chordNodeSelection = undefined;		
 	}
 	

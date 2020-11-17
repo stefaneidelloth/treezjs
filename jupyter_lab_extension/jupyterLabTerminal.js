@@ -105,11 +105,13 @@ export default class JupyterLabTerminal {
             await serviceManager.contents.delete(tempFilePath);  
 
 		};
-		blobConversionReader.readAsDataURL(blob); 
-
-			
+		blobConversionReader.readAsDataURL(blob); 			
     }
 
+    async saveTextFile(filePath, text){ 
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        await this.saveBlob(filePath, blob);
+    } 
    
     async browseDirectoryPath(initialDirectory){   	
 		var FileDialog = this.__dependencies['FileDialog'];

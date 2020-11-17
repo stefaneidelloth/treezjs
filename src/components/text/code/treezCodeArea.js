@@ -73,33 +73,61 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		toolbar.className = 'treez-code-area-toolbar';
 		container.appendChild(toolbar);
 
-		var openButton = document.createElement('input');
-		openButton.type='button';
-		openButton.title = 'Open file from server';
-		openButton.className = 'treez-code-area-open-button';
-		openButton.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
-		openButton.style.backgroundRepeat = 'no-repeat';
-		openButton.onclick = () => this.__openFile();
-		container.appendChild(openButton);
+		this.__createOpenButton(container);
+		this.__createSaveButton(container);
+		this.__createUploadButton(container);
+		this.__createDownloadButton(container);
 
 		
-		var uploadButton = document.createElement('input');
-		uploadButton.type='button';
-		uploadButton.title = 'Open file from client';
-		uploadButton.className = 'treez-code-area-upload-button';
-		uploadButton.style.background = 'url("' + this.__urlPrefix + '/icons/upload.png")';
-		uploadButton.style.backgroundRepeat = 'no-repeat';
-		uploadButton.onclick = (event) => this.__uploadFile(event);
-		container.appendChild(uploadButton);
 
-		var downloadButton = document.createElement('input');
-		downloadButton.type='button';
-		downloadButton.title = 'Download';
-		downloadButton.className = 'treez-code-area-download-button';
-		downloadButton.style.background = 'url("' + this.__urlPrefix + '/icons/download.png")';
-		downloadButton.style.backgroundRepeat = 'no-repeat';
-		downloadButton.onclick = () => this.download();
-		container.appendChild(downloadButton);
+		
+		
+
+		
+    }
+
+    __createOpenButton(container){
+        var button = document.createElement('input');
+		button.type='button';
+		button.title = 'Open';
+		button.className = 'treez-code-area-button';
+		button.style.background = 'url("' + this.__urlPrefix + '/icons/browse.png")';
+		button.style.backgroundRepeat = 'no-repeat';
+		button.onclick = () => this.__openFile();
+		container.appendChild(button);
+    }
+
+    __createSaveButton(container){
+    	var button = document.createElement('input');
+		button.type='button';
+		button.title = 'Save';
+		button.className = 'treez-code-area-button';
+		button.style.background = 'url("' + this.__urlPrefix + '/icons/save.png")';
+		button.style.backgroundRepeat = 'no-repeat';
+		button.onclick = () => this.__saveFile();
+		container.appendChild(button);
+    }
+
+    __createUploadButton(container){
+    	var button = document.createElement('input');
+		button.type='button';
+		button.title = 'Upload';
+		button.className = 'treez-code-area-button';
+		button.style.background = 'url("' + this.__urlPrefix + '/icons/upload.png")';
+		button.style.backgroundRepeat = 'no-repeat';
+		button.onclick = (event) => this.__uploadFile(event);
+		container.appendChild(button);
+    }
+
+    __createDownloadButton(container){
+    	var button = document.createElement('input');
+		button.type='button';
+		button.title = 'Download';
+		button.className = 'treez-code-area-button';
+		button.style.background = 'url("' + this.__urlPrefix + '/icons/download.png")';
+		button.style.backgroundRepeat = 'no-repeat';
+		button.onclick = () => this.download();
+		container.appendChild(button);
     }
 
     __openFile(){
@@ -111,6 +139,15 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		    }  
 	  }); 
     }
+
+    __saveFile(){
+    	window.treezTerminal.inputDialog('export.svg','Save as...')
+    	    .then(async (filePath) => {
+    	    	if(filePath){    	    	   
+    	    	    window.treezTerminal.saveTextFile(filePath, this.value);
+    	    	}
+    	});
+    }   
 
     __uploadFile(event){
     	const element = document.createElement('input');

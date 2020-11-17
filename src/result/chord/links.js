@@ -1,7 +1,7 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import Color from './../../components/color/color.js';
 import ColorMap from './../../components/colorMap/colorMap.js';
-import Length from './../graphics/Length.js';
+import Length from './../graphics/length.js';
 import ChordMode from './chordMode.js';
 
 export default class Links extends GraphicsAtom {
