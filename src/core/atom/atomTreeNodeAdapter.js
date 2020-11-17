@@ -50,6 +50,9 @@ export default class AtomTreeNodeAdapter {
 
 		var summary = expandableNode.append('summary')
 			.className('treez-summary')
+			.on('dragover', event => event.preventDefault())
+		    .on('drop', event => atom.handleDrop(event, treeView)) //allows to drop files
+		    .on('dragenter', event => event.preventDefault())
 			.onClick(()=>{
 				this.showProperties(treeView,atom);
 			});

@@ -8,6 +8,7 @@ import SweepOutput from './../../study/sweep/sweepOutput.js';
 import PickingOutput from './../../study/picking/pickingOutput.js';
 import SensitivityOutput from './../../study/sensitivity/sensitivityOutput.js';
 import ProbabilityOutput from './../../study/probability/probabilityOutput.js';
+import Utils from './../../core/utils/utils.js';
 
 export default class Data extends ComponentAtom {
    
@@ -19,10 +20,13 @@ export default class Data extends ComponentAtom {
 	
 	createComponentControl(tabFolder){    
 	     
-		const page = tabFolder.append('treez-tab')
+		const tab = tabFolder.append('treez-tab')
+		    .on('dragover', event => event.preventDefault())
+		    .on('drop', event => this.handleDrop(event, this.treeView)) //allows to drop files
+		    .on('dragenter', event => event.preventDefault())
 			.label('Data'); 
 		
-		const section = page.append('treez-section')
+		const section = tab.append('treez-section')
     		.label('Data');
 
     	this.createHelpAction(section, 'result/data/data.md');
@@ -30,7 +34,7 @@ export default class Data extends ComponentAtom {
     	section.append('treez-section-action')
             .image('run.png')
             .label('Run executable children')
-            .addAction(()=>this.execute(this.__treeView)
+            .addAction(()=>this.execute(this.treeView)
             				   .catch(error => {
             					   	console.error('Could not execute  ' + this.constructor.name + ' "' + this.name + '"!', error);            					   
             				   })
@@ -105,6 +109,18 @@ export default class Data extends ComponentAtom {
 		
 
 	}	
+
+	async handleFileDrop(file, treeView){
+		var name = 'table';
+		if(file.name){
+            name = Utils.removeFileExtension(file.name);
+		}
+		if(this.childByName(name)){
+			name = this.createChildNameStartingWith(name);
+		}		
+		var table = this.createTable(name);
+		await table.handleFileDrop(file, treeView);
+	}
 
 	createTable(name) {
 		return this.createChild(Table, name);		

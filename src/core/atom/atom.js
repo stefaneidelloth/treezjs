@@ -171,6 +171,20 @@ export default class Atom {
 		return actions;
 	}
 
+	handleDrop(event, treeView){
+		event.preventDefault();
+		var files = event.dataTransfer.files;
+		if(files.length >0){
+			var file = files[0];
+			this.handleFileDrop(file, treeView); 
+		}
+	}
+
+    
+	async handleFileDrop(file, treeView){
+        //can be overridden by inheriting atoms
+	}
+
 	/**
 	 * Moves the atom up in the children of the parent atom
 	 */

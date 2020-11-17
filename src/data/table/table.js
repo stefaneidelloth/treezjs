@@ -52,7 +52,11 @@ export default class Table extends ComponentAtom {
 		const sectionContent = section.append('div');
 
 		const tableContainer = sectionContent.append('div')
+		    .on('dragover', event => event.preventDefault())
+		    .on('drop', event => this.__dropHandler(event)) //allows to drop files
+		    .on('dragenter', event => event.preventDefault())
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
+        
 
 		if (this.isLinkedToSource) {
 			if (!this.hasColumns) {
@@ -67,6 +71,21 @@ export default class Table extends ComponentAtom {
 			this.__createEmptyTableControl(tableContainer, this.treeView);					
 		}
 
+	}
+
+	async __dropHandler(event){
+		event.preventDefault();
+		var files = event.dataTransfer.files;
+		if(files.length >0){
+			var file = files[0];
+			this.handleFileDrop(file, this.treeView);			
+		}
+	}
+
+	async handleFileDrop(file, treeView){
+		var data = await Xlsx.readFile(file);
+        this.__importData(data);
+        treeView.refresh(); 
 	}
 
 	createContextMenuActions(selection, parentSelection, treeView) {

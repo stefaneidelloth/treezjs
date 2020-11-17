@@ -40,6 +40,12 @@ export default class Utils {
         return fileName;
     }
 
+    static removeFileExtension(fileName){
+    	var parts = fileName.split('.');
+    	parts.pop();
+    	return parts.join('.');
+    }
+
     static convertNameThatMightIncludeSpacesToCamelCase(name){
 		var parts = name.trim().split(' ');
 		parts[0] = Utils.firstToLowerCase(parts[0]);
