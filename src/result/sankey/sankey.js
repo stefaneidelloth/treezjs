@@ -28,11 +28,13 @@ export default class Sankey extends PagedGraphicsAtom {
 		this.nodes = Nodes.create(this);
 		factories.push(this.nodes);	
 
+		this.links = Links.create(this);
+		factories.push(this.links);		
+
 		this.nodeLabels = NodeLabels.create(this);
 		factories.push(this.nodeLabels);
 
-		this.links = Links.create(this);
-		factories.push(this.links);			
+			
 		
 		return factories;
 	}

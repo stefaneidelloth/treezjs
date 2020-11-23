@@ -12,7 +12,7 @@ export default class Nodes extends GraphicsAtom {
 		super();
 		
 		this.margin = '10 px';
-		this.nodeWidth = '15 px';		
+		this.nodeWidth = '20 px';		
         this.nodePadding = '50 px';
         this.alignment = SankeyAlignment.Justify;
        
@@ -105,7 +105,7 @@ export default class Nodes extends GraphicsAtom {
 		this.__enableDragAndDrop(dTreez, nodeSelection, sankey);	     
 
         nodeSelection.append("title")
-		    .text(node => `${node.id}: ${node.value}`);
+		    .text(node => this.nodeTitle(node));
 	
         this.bindTransparency(()=>this.fillTransparency, nodeSelection);
 				
@@ -120,6 +120,10 @@ export default class Nodes extends GraphicsAtom {
 		
 
 		return sankeyContainer;
+	}
+
+	nodeTitle(node){
+		return node.id + ': ' + node.value;
 	}
 
 	__layoutChanged(dTreez, sankey){
