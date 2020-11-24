@@ -70,7 +70,10 @@ export default class RModel extends CodeModel {
 					}
 				}
 
-				var resultString = await window.treezTerminal.executePythonCode('%%R\ncat(result)');
+				var resultString = await window.treezTerminal.executePythonCode('%%R\ncat(result)')
+				    .catch(error=>{
+				    	//result is optional
+				    });
 				if(resultString){
 					var table = Table.createFromJson(resultString);
 					return table;

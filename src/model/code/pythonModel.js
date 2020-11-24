@@ -58,7 +58,10 @@ export default class PythonModel extends CodeModel {
 				}
     		}
 
-    		var resultString = await window.treezTerminal.executePythonCode('print(result)');
+    		var resultString = await window.treezTerminal.executePythonCode('print(result)')
+    		    .catch(error=>{
+				   	//result is optional
+				});
     		if(resultString){
     			var table = Table.createFromJson(resultString);
     			return table;
