@@ -30,14 +30,16 @@ window.init_workspace_module = async (app, dependencies)=>{
 		},
 	});
 
+	await Treez.importCssStyleSheet('/jupyter_lab_extension/treezJupyterLab.css');
 
-	Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-base.css');
-	Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-light-theme.css');
 
-	Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
-	Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
+	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-base.css');
+	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-light-theme.css');
 
-    Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icon.min.css');
+	await Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
+	await Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
+
+    await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icon.min.css');
     
 	require([
 		'golden-layout',
