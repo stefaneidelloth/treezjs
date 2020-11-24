@@ -38,8 +38,8 @@ export default class Sweep extends Study {
 		actions.push(
 			new AddChildAtomTreeViewAction(
 				IntegerRange,
-				'integerrange',
-				'integerrange.png',
+				'integerRange',
+				'integerRange.png',
 				parentSelection,
 				this,
 				treeView
