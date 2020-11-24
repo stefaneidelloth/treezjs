@@ -171,6 +171,10 @@ export default class Atom {
 		return actions;
 	}
 
+	async handleDragStart(event, treeView){
+		event.dataTransfer.items.add(this.treePath,'treez-path');		
+	}
+
 	handleDrop(event, treeView){
 		event.preventDefault();
 		var files = event.dataTransfer.files;
@@ -202,19 +206,37 @@ export default class Atom {
 
     
 	async handleFileDrop(file, treeView){
-        console.warn('handleFileDrop not yet implemented'); //can be overridden by inheriting atoms
+		//can be overridden by inheriting atoms
+        console.warn('handleFileDrop not yet implemented'); 
 	}
 
 	async handleItemsDrop(items, treeView){
-		console.warn('handleItemDrop not yet implemented'); //can be overridden by inheriting atoms
+		//can be overridden by inheriting atoms
+		for(var item of items){
+			if(item.type === 'treez-path'){
+				await new Promise(resolve=>{
+					item.getAsString(atomPath=>{
+						this.handleAtomDrop(atomPath);
+						resolve();
+					});
+				});				
+			}
+		}		
+	}
+
+	handleAtomDrop(atomPath){
+		//can be overridden by inheriting atoms
+        console.warn('handleAtomDrop not yet implemented'); 
 	}
 
 	async handleFilePaste(file, treeView){
-        this.handleFileDrop(file, treeView); //can be overridden by inheriting atoms
+		//can be overridden by inheriting atoms
+        this.handleFileDrop(file, treeView); 
 	}
 
 	async handleItemsPaste(items, treeView){
-		this.handleItemsDrop(items, treeView); //can be overridden by inheriting atoms
+		//can be overridden by inheriting atoms
+		this.handleItemsDrop(items, treeView); 
 	}
 
 	/**

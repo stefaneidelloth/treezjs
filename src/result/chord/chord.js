@@ -110,6 +110,13 @@ export default class Chord extends PagedGraphicsAtom {
 	      	return {value: value, angle: value * k + nodeGroup.startAngle}
 	      });
 	}
+
+	handleAtomDrop(atomPath){
+		var droppedAtom = this.childFromRoot(atomPath);
+		if(droppedAtom instanceof Table){
+			this.data.assignTableAsSource(droppedAtom);
+		} 
+	}
 	
 	__createChordMatrix(){	
 

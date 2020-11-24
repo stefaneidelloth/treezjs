@@ -62,6 +62,13 @@ export default class Xy extends PagedGraphicsAtom {
 		this.__plotWithPages(dTreez);
 	}
 
+	handleAtomDrop(atomPath){
+		var droppedAtom = this.childFromRoot(atomPath);
+		if(droppedAtom instanceof Table){
+			this.data.assignTableAsSource(droppedAtom);
+		} 
+	}
+
 	__plotWithPages(dTreez) {
 		for (var pageFactory of this.__pageFactories) {
 			pageFactory.plot(dTreez, this.__xySelection, null, this);

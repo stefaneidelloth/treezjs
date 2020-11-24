@@ -56,6 +56,15 @@ export default class Data extends GraphicsAtom {
 		this.addListener(()=>this.valueData, dataChangedConsumer)
 
 		return sankeySelection;
+	}
+
+	assignTableAsSource(table){		
+		var columns = table.columns;
+		if(columns.length>2){
+			this.sourceData = columns[0].treePath;
+			this.targetData = columns[1].treePath;
+			this.valueData = columns[2].treePath;
+		}		
 	}	
 
 }

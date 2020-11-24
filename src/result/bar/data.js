@@ -91,6 +91,14 @@ export default class Data extends GraphicsAtom {
 		this.addListener(()=>this.verticalAxis, dataChangedConsumer);		
 
 		return xySelection;
-	}	
+	}
+
+	assignTableAsSource(table){		
+		var columns = table.columns;
+		if(columns.length>1){
+			this.barPositions = columns[0].treePath;
+			this.barLengths = columns[1].treePath;			
+		}		
+	}		
 
 }

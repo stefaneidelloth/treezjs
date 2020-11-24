@@ -7,6 +7,7 @@ import NodeLabels from './nodeLabels.js';
 import Links from './links.js';
 import Graph from './../graph/graph.js';
 import SankeyNode from './sankeyNode.js';
+import Table from './../../data/table/table.js';
 
 export default class Sankey extends PagedGraphicsAtom {
 
@@ -136,6 +137,13 @@ export default class Sankey extends PagedGraphicsAtom {
 		}		
 	}
 
+	handleAtomDrop(atomPath){
+		var droppedAtom = this.childFromRoot(atomPath);
+		if(droppedAtom instanceof Table){
+			this.data.assignTableAsSource(droppedAtom);
+		} 
+	}
+
 	
 	addLegendContributors(legendContributors) {
 		if (this.providesLegendEntry) {
@@ -157,6 +165,8 @@ export default class Sankey extends PagedGraphicsAtom {
 	createSankeyNode(name) {
 		return this.createChild(SankeyNode, name);
 	}	
+
+	
 
 	__initSankeyNodes(){
 		var sankeyNodes = this.childrenByClass(SankeyNode);

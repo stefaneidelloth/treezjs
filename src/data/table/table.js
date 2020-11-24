@@ -234,12 +234,12 @@ export default class Table extends ComponentAtom {
 		for (var row of this.__rows) {
 			for (var columnIndex = 0; columnIndex < numberOfColumns - 1; columnIndex++) {
 				var columnName = columnNames[columnIndex];
-				var entry = row.getEntryAsString(columnName);
+				var entry = row.entryAsString(columnName);
 				allDataString = allDataString + entry + this.columnSeparator;
 			}
 
 			var lastColumnName = columnNames[numberOfColumns - 1];
-			var lastEntry = row.getEntryAsString(lastColumnName);
+			var lastEntry = row.entryAsString(lastColumnName);
 			allDataString = allDataString + lastEntry + this.rowSeparator;
 		}
 		return allDataString;

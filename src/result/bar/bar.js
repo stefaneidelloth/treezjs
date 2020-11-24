@@ -55,6 +55,13 @@ export default class Bar extends PagedGraphicsAtom {
 		return this.__barSelection;
 	}
 
+	handleAtomDrop(atomPath){
+		var droppedAtom = this.childFromRoot(atomPath);
+		if(droppedAtom instanceof Table){
+			this.data.assignTableAsSource(droppedAtom);
+		} 
+	}
+
 	__updatePlot(dTreez) {
 		this.__contributeDataForAutoScale(dTreez);
 		this.__plotWithPages(dTreez);

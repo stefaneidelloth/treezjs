@@ -58,6 +58,13 @@ export default class Tornado extends PagedGraphicsAtom {
 	updatePlot(dTreez) {
 		this.__plotWithPages(dTreez);
 	}
+
+	handleAtomDrop(atomPath){
+		var droppedAtom = this.childFromRoot(atomPath);
+		if(droppedAtom instanceof Table){
+			this.data.assignTableAsSource(droppedAtom);
+		} 
+	}
 	
 	__plotWithPages(dTreez) {
 		for (var pageFactory of this.__pageFactories) {

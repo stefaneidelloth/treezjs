@@ -55,6 +55,17 @@ export default class Data extends GraphicsAtom {
 		this.__showOrHideTableComponents();
 	}
 
+	assignTableAsSource(table){	
+	    console.warn('Not yet implemented');	
+	    /*
+		var columns = table.columns;
+		if(columns.length>1){
+			this.xData = columns[0].treePath;
+			this.yData = columns[1].treePath;			
+		}
+		*/		
+	}	
+
 	__createGeneralSection(page, tornado) {
 		
 		let section = page.append('treez-section')
