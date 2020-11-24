@@ -185,6 +185,7 @@ export default class TreeView {
     	this.content.selectAll('div').remove(); 
     	this.content.selectAll('details').remove();  
     	if(!this.model){
+    		this.__isRefreshing = false;
     		return;
     	} 	
     	this.model.createTreeNodeAdaption(this.content, this);

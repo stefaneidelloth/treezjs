@@ -16,7 +16,7 @@ export default class rootCodeAdaption extends ComponentAtomCodeAdaption {
 
         var name = this.__atom.name;
         let hasDefaultName = name === this.__atom.__defaultName;
-        var className = this.getClassName(this.__atom);
+        var className = this.className(this.__atom);
         var hasParent = this.__atom.hasParent;
 
         let constructorArgs = hasDefaultName
