@@ -39,7 +39,7 @@ export default class Models extends Model {
         this.createHelpAction(section, 'model/models.md');        
 		
 		section.append('treez-section-action')
-	        .image('resetjobId.png')
+	        .image('resetJobId.png')
 	        .label('Reset jobId to 1')
 	        .addAction(()=>this.resetJobId());
 

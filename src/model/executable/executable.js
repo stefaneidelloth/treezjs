@@ -165,7 +165,7 @@ export default class Executable extends Model {
         this.createHelpAction(section, 'model/executable/executable.md#executable-1');
 
 		section.append('treez-section-action')
-	        .image('resetjobId.png')
+	        .image('resetJobId.png')
 	        .label('Reset jobId to 1')
 	        .addAction(()=>this.resetJobId());
 

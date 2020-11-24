@@ -93,7 +93,7 @@ export default class CodeModel extends Model {
         this.createHelpAction(section, 'model/code/' + this.atomType + '.md#code');
         
         section.append('treez-section-action')
-	        .image('resetjobId.png')
+	        .image('resetJobId.png')
 	        .label('Reset jobId to 1')
 	        .addAction(()=>this.resetJobId());
         

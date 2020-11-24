@@ -167,7 +167,7 @@ export default class InputFileGenerator extends Model  {
         this.createHelpAction(section, 'model/inputFileGenerator/inputFileGenerator.md#target');
 
 	    section.append('treez-section-action')
-	        .image('resetjobId.png')
+	        .image('resetJobId.png')
 	        .label('Reset jobId to 1')
 	        .addAction(()=>this.__resetJobId());
 

@@ -20,7 +20,7 @@ export default class JavaExecutable extends Executable {
 	        this.createHelpAction(section, 'model/executable/javaExecutable.md#java-executable');
 
 	        section.append('treez-section-action')
-	            .image('resetjobId.png')
+	            .image('resetJobId.png')
 	            .label('Reset jobId to 1')
 	            .addAction(()=>this.__resetJobId());
 
