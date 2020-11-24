@@ -18,8 +18,11 @@ export default class Table extends ComponentAtom {
 		//Expects json in a format that corresponds to
 		//format of pandas DataFrame.to_json(), e.g.
 		//'{"x":{"0":0,"1":2},"y":{"0":0,"1":1}}'
-		//
-		//Single values are also allowed, e.g. '0'.
+		//or
+		//R dataframe format, e.g.
+		//"{"x":[0,2],"y":[0,1]}"
+		//Single values are also allowed, e.g. 
+		//'0'.
 		//
 		//#If you face memory issues, this method could be improved
 		//#to support a different data format, e.g. with "split" mode:
@@ -30,14 +33,14 @@ export default class Table extends ComponentAtom {
 
 		var jsonResult = undefined;
 		try{
-			jsonResult = JSON.parse(resultString);
+			jsonResult = JSON.parse(jsonString);
 		} catch(error){
 			table.createColumn('value');
 			table.createRow([jsonString]);
 			return table;   				
 		}   			
 		
-throw Error();
+
 		if(jsonResult instanceof Object){
 			var columnNames = Object.keys(jsonResult);
 
@@ -47,7 +50,8 @@ throw Error();
 
 			var firstEntry = jsonResult[columnNames[0]];
             if(firstEntry instanceof Array){
-                for(var rowIndex; rowIndex < firstEntry.length; rowIndex++){
+            	//R dataframe format
+                for(var rowIndex=0; rowIndex < firstEntry.length; rowIndex++){
                     var rowValues = [];
                     for(var columnName of columnNames){
                         var entry = jsonResult[columnName][rowIndex];
@@ -56,6 +60,7 @@ throw Error();
                     table.createRow(rowValues);
                 }
             } else {
+            	//Python Pandas dataframe format
                 var rowIndices = Object.keys(firstEntry);
 
                 for(var rowIndex of rowIndices){
@@ -64,6 +69,7 @@ throw Error();
                         var entry = jsonResult[columnName][rowIndex];
                         rowValues.push(entry);
                     }
+                    console.log(rowValues);
                     table.createRow(rowValues);
                 }
             }

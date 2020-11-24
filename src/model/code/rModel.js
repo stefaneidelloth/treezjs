@@ -43,6 +43,8 @@ export default class RModel extends CodeModel {
     		}  	
 
     		var rIsSupported = true;
+
+    		window.Table = Table;
 			
 			await window.treezTerminal.executePythonCode('%load_ext rpy2.ipython')
 					.catch(error=>{

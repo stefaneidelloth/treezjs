@@ -64,7 +64,7 @@ export default class Row {
 	}	
 
 	entryAsString(columnName) {
-		var value = this.getEntry(columnName);
+		var value = this.entry(columnName);
 
 		if (value) {
 			return value.toString();
