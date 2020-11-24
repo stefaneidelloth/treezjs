@@ -58,11 +58,11 @@ export default class CodeModel extends Model {
 		monitor.worked(1);			
 		
 		//monitor.info('Executing "' + code + '"');		
-		await this.executeCode(code, monitor);
+		var table = await this.executeCode(code, monitor);
 		
 		monitor.done();				
 
-		return null;
+		return table;
     }  
     
     async executeCode(code, monitor){

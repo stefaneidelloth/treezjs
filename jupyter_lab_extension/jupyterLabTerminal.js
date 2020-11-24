@@ -431,12 +431,11 @@ export default class JupyterLabTerminal {
 								reject(message);
 						} 
 						break;   	    		    
-    	    		case 'error':
-    	    		    /* //already covered by stream stderr    	    		   				    
+    	    		case 'error':    
+    	    		    //stderr does not yield output for all errors	    
+    	    		    var message = msg.content.ename + '\n' + msg.content.evalue;		   	    		   				    
 						reject(message);
-						break;
-						*/
-						return;
+						break;						
 					case 'execute_result':
 						var result = msg.content;						
 						resolve(result);						

@@ -14,6 +14,57 @@ import Utils from './../../core/utils/utils.js';
 
 export default class Table extends ComponentAtom {
 
+	static createFromJson(jsonString){
+		//Expects json in a format that corresponds to
+		//format of pandas DataFrame.to_json(), e.g.
+		//'{"x":{"0":0,"1":2},"y":{"0":0,"1":1}}'
+		//
+		//Single values are also allowed, e.g. '0'.
+		//
+		//#If you face memory issues, this method could be improved
+		//#to support a different data format, e.g. with "split" mode:
+		//#df.to_json(orient="split")
+		
+
+		var table = new Table();
+
+		var jsonResult = undefined;
+		try{
+			jsonResult = JSON.parse(resultString);
+		} catch(error){
+			table.createColumn('value');
+			table.createRow([jsonString]);
+			return table;   				
+		}   			
+		
+
+		if(jsonResult instanceof Object){
+			var columnNames = Object.keys(jsonResult);
+
+			columnNames.forEach(columnName=>{
+				table.createColumn(columnName);
+			});       
+
+			var firstEntry = jsonResult[columnNames[0]];
+			var rowIndices = Object.keys(firstEntry);
+
+			for(var rowIndex of rowIndices){
+				var rowValues = [];
+				for(var columnName of columnNames){
+					var entry = jsonResult[columnName][rowIndex];
+					rowValues.push(entry);
+				}
+				table.createRow(rowValues);
+			}
+			return table;
+		} else {
+			table.createColumn('value');
+			table.createRow([jsonResult]);
+			return table;
+		}  
+		
+	}
+
 	constructor(name) {
 		super(name);
 		this.image='table.png';
@@ -212,6 +263,8 @@ export default class Table extends ComponentAtom {
 		this.addRow(row);
 		return row;
 	}
+
+	
 
 	addRows(dataMatrix) {
 		for (var rowIndex = 0; rowIndex < dataMatrix.length; rowIndex++) {

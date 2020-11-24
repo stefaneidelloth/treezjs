@@ -3,13 +3,13 @@ import AddChildAtomTreeViewAction from './../../core/treeView/addChildAtomTreeVi
 import TableTargetType from './../../data/table/tableTargetType.js';
 import Table from './../../data/table/table.js';
 
-export default class PythonModel extends CodeModel {  	
+export default class RModel extends CodeModel {  	
 
 	constructor(name) {		
 		super(name);
-		this.image = 'python.png';		
+		this.image = 'r.png';		
         
-        this.code = "print('Hello World!')";
+        this.code = "cat('Hello World!')";
         
         this.__outputSelection = undefined;        
 	}	
@@ -40,35 +40,49 @@ export default class PythonModel extends CodeModel {
     		if(this.__outputSelection){
     			this.__outputSelection.selectAll('div').remove();
     		    this.__outputSelection.html('');
-    		}  		
-    		
-    		
-    		var htmlArray = [];
-    		try {
-    		    htmlArray= await window.treezTerminal.executePythonCodeWithCell(code, false);
-    		} catch(error){
-    			console.error('Could not execute python code.', error);
-    		}
+    		}  	
 
-    		if(this.__outputSelection){
+    		var rIsSupported = true;
+			
+			await window.treezTerminal.executePythonCode('%load_ext rpy2.ipython')
+					.catch(error=>{
+						rIsSupported = false;
+						var message = 'Executiong R code is not supported. ' +
+						'Please check if R kernel and rpy2 are installed.\n';
+						console.warn(message, error);
+					});	
 
-				for(var htmlOutput of htmlArray){
-					this.__outputSelection.append('div')
-						.html(htmlOutput);
+			if(rIsSupported){
+				var rCode = '%%R\n' + code;    		
+    		
+				var htmlArray = [];
+				try {
+					htmlArray= await window.treezTerminal.executePythonCodeWithCell(rCode, false);
+				} catch(error){
+					console.error('Could not execute R code.', error);
 				}
-    		}
 
-    		var resultString = await window.treezTerminal.executePythonCode('print(result)');
-    		if(resultString){
-    			var table = Table.createFromJson(resultString);
-    			return table;
-    		} else {
-    			return null;
-    		}     		
+				if(this.__outputSelection){
+
+					for(var htmlOutput of htmlArray){
+						this.__outputSelection.append('div')
+							.html(htmlOutput);
+					}
+				}
+
+				var resultString = await window.treezTerminal.executePythonCode('%%R\ncat(result)');
+				if(resultString){
+					var table = Table.createFromJson(resultString);
+					return table;
+				}    		
+			}					
     		
     	} else {
-    		console.warn('Executing python code is not supported.');
+    		console.warn('Executing R code is not supported.');
     	}
+
+    	return null;    	    	
+
     }     
     
     __createOutputSection(page){    	

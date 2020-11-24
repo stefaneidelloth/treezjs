@@ -18,6 +18,7 @@ import SqLiteAppender from './sqLiteAppender/sqLiteAppender.js';
 import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import JavaScriptModel from './code/javaScriptModel.js';
 import PythonModel from './code/pythonModel.js';
+import RModel from './code/rModel.js';
 
 export default class Models extends Model {
 
@@ -188,6 +189,17 @@ export default class Models extends Model {
 					treeView
 				)
 			);
+
+			actions.push(
+				new AddChildAtomTreeViewAction(
+					RModel,
+					'rModel',
+					'r.png',
+					parentSelection,
+					this,
+					treeView
+				)
+			);
 		}
 
 		return actions;
@@ -244,5 +256,9 @@ export default class Models extends Model {
 	createPythonModel(name) {
 		return this.createChild(PythonModel, name);
 	}	
+
+	createRModel(name) {
+		return this.createChild(RModel, name);
+	}
 
 }
