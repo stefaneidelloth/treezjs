@@ -37,7 +37,7 @@ export default class Table extends ComponentAtom {
 			return table;   				
 		}   			
 		
-
+throw Error();
 		if(jsonResult instanceof Object){
 			var columnNames = Object.keys(jsonResult);
 
@@ -46,16 +46,28 @@ export default class Table extends ComponentAtom {
 			});       
 
 			var firstEntry = jsonResult[columnNames[0]];
-			var rowIndices = Object.keys(firstEntry);
+            if(firstEntry instanceof Array){
+                for(var rowIndex; rowIndex < firstEntry.length; rowIndex++){
+                    var rowValues = [];
+                    for(var columnName of columnNames){
+                        var entry = jsonResult[columnName][rowIndex];
+                        rowValues.push(entry);
+                    }
+                    table.createRow(rowValues);
+                }
+            } else {
+                var rowIndices = Object.keys(firstEntry);
 
-			for(var rowIndex of rowIndices){
-				var rowValues = [];
-				for(var columnName of columnNames){
-					var entry = jsonResult[columnName][rowIndex];
-					rowValues.push(entry);
-				}
-				table.createRow(rowValues);
-			}
+                for(var rowIndex of rowIndices){
+                    var rowValues = [];
+                    for(var columnName of columnNames){
+                        var entry = jsonResult[columnName][rowIndex];
+                        rowValues.push(entry);
+                    }
+                    table.createRow(rowValues);
+                }
+            }
+			
 			return table;
 		} else {
 			table.createColumn('value');
