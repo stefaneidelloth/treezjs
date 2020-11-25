@@ -1,6 +1,8 @@
-treez-directory-path {   
+treez-directory-path { 
+  display: block;  
   position: relative;   
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .treez-directory-path-container {   

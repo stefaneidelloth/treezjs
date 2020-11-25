@@ -35,9 +35,23 @@ export default class StringItemVariable extends Variable {
 	createVariableControl(parent, dTreez){
 		this.__comboBox = parent.append('treez-combo-box')
 			.label(this.name)
-			.nodeAttr('enum', this.options)
+			.attr('options', this.__arrayToString(this.options))
 			.bindValue(this, ()=>this.value);
     }
+
+    createRange(name){
+    	return new StringItemRange(name);
+    }
+
+    __arrayToString(stringArray){
+		let optionsString = '[]';
+		if(stringArray){
+			if(stringArray.length > 0){
+				optionsString = '["' + stringArray.join('","') + '"]';
+			}
+		}
+		return optionsString;
+	}
 
     __optionsChanged(){
     	var oldValue = this.value;
@@ -45,7 +59,7 @@ export default class StringItemVariable extends Variable {
         var options = this.options;
 
         if(this.__comboBox){
-        	this.__comboBox.nodeAttr('options', options);
+        	this.__comboBox.attr('options', options);
         }
         
         if(!(oldValue in options)){
@@ -58,9 +72,7 @@ export default class StringItemVariable extends Variable {
     	
     }
     
-	createRange(name){
-    	return new StringItemRange(name);
-    }
+	
 	
 	get options(){
 		try {

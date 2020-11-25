@@ -1,6 +1,8 @@
 treez-file-path {  
+    display: block;
     position: relative;   
     width: 100%;
+    margin-bottom: 10px;
 }
 
 .treez-file-path-container {    

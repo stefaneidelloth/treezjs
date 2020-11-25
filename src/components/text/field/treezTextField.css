@@ -1,6 +1,7 @@
 treez-text-field {
 	clear: both;	
-	width: 100%;	
+	width: 100%;
+	margin-bottom: 10px;	
 }
 
 .treez-text-field-label {

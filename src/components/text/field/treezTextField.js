@@ -6,7 +6,8 @@ export default class TreezTextField extends LabeledTreezElement {
         super();                                  
         this.__label = undefined;   
         this.__textField = undefined; 
-        this.validator = undefined;                           
+        this.validator = undefined; 
+                                  
     } 
 
     static get observedAttributes() {
@@ -58,18 +59,7 @@ export default class TreezTextField extends LabeledTreezElement {
     updateContentWidth(width){
         this.updateWidthFor(this.__textField, width);
     }  
-
-    updateWidth(width){
-    	super.updateWidth(width);
-    	if(!this.labelWidth){
-    		this.updateLabelWidth(width);
-    	}
-
-    	if(!this.contentWidth){
-    		this.updateContentWidth(width);
-    	}    	
-        
-    }                 
+            
 
     disableElements(newValue){
 		if(this.__textField){                    	
