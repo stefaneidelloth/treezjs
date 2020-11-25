@@ -142,7 +142,7 @@ export default class JupyterLabTerminal {
 
     	filePath = filePath.replace(/\\/g,'\\\\');
     	
-		var pythonCode = '%%python\n' +
+		var pythonCode = 
 		    '# -*- coding: utf-8 -*-\n' +
 			'file = open("' + filePath + '", "r", encoding="utf-8")\n' +
             'print(file.read())\n';	
@@ -156,7 +156,7 @@ export default class JupyterLabTerminal {
 
 		filePath = filePath.replace(/\\/g,'\\\\');	
 
-		var pythonCode = '%%python\n' +
+		var pythonCode = 
 			'# -*- coding: utf-8 -*-\n' +
 			'file = open("' + filePath + '", "w", encoding="utf-8")\n' +
             'file.write("' + textString + '")\n' +
@@ -184,7 +184,7 @@ export default class JupyterLabTerminal {
 	}
 
     async deleteFile(filePath){	
-		var pythonCode = '%%python\n' +
+		var pythonCode = 
 		    '# -*- coding: utf-8 -*-\n' +
 			'import os\n' +
 			'if os.path.exists("' + filePath +'"):\n' +
@@ -195,7 +195,7 @@ export default class JupyterLabTerminal {
 	
 	async execute(command, messageHandler, errorHandler, finishedHandler){	
 			
-		var pythonCode = '%%python\n' +
+		var pythonCode = 
 						 '# -*- coding: utf-8 -*-\n' +
 		                 'from subprocess import Popen, PIPE, CalledProcessError\n' +
 						 'with Popen(\'' + command + '\', stdout=PIPE, bufsize=1, shell=True, encoding="utf8") as process:\n' +
@@ -353,7 +353,7 @@ export default class JupyterLabTerminal {
 
 		if(isExpectingOutput){
 
-			var pythonCode = '%%python\n' +
+			var pythonCode = 
 				'# -*- coding: utf-8 -*-\n' +
 				'import sqlite3\n' +
 				'import pandas\n'	+
@@ -369,7 +369,7 @@ export default class JupyterLabTerminal {
 			return TableData.parseTableTextTo2DArray(text, '|', true);
 		} else {
 
-			var pythonCode = '%%python\n' +
+			var pythonCode = 
 				'# -*- coding: utf-8 -*-\n' +
 				'import sqlite3\n' +
 				'import pandas\n'	+
@@ -387,7 +387,7 @@ export default class JupyterLabTerminal {
 
 	async sqLiteQueryTypes(connectionString, query) {
 
-		var pythonCode = '%%python\n'
+		var pythonCode =
 			+ '# -*- coding: utf-8 -*-\n'
 			+ 'import sqlite3\n'
 			+ 'import pandas\n'	
