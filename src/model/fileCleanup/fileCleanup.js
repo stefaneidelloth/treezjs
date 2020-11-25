@@ -43,7 +43,12 @@ export default class FileCleanup extends Model {
             				   })
             );  
 
-        const sectionContent = section.append('div');      
+        const sectionContent = section.append('div');  
+
+        sectionContent.append('treez-enum-combo-box')
+            .label('Mode')
+            .nodeAttr('enum', DirectoryCleanupMode)
+            .bindValue(this, ()=>this.mode);    
 
         sectionContent.append('treez-check-box')
         	.label('Use path provider')
@@ -78,6 +83,10 @@ export default class FileCleanup extends Model {
 	}	
 
 	__updateComponents(){
+		if(!this.__modeComponent){
+			return;
+		}
+
 		if(this.isUsingPathProvider){
 			this.__pathOfPathProviderComponent.show();
 			this.__fileOrDirectoryPathComponent.disable();
@@ -95,6 +104,9 @@ export default class FileCleanup extends Model {
 	};
 
 	__outputPathFromProvider(){
+		if(!this.pathOfPathProvider){
+			return null;
+		}
 		var PathProvider = this.childFromRoot(this.pathOfPathProvider);
 		
 		return PathProvider
@@ -111,22 +123,34 @@ export default class FileCleanup extends Model {
 		const totalWork = 1;
 		monitor.totalWork = totalWork;
 
-		const command = this.__buildCommand();		
+		const command = await this.__buildCommand();		
 		await this.__executeCommand(command, monitor);		
 		
 		monitor.done();
 		
     } 
 
-    __buildCommand(){ 
-    	var prefix = 'chcp 65001 & '; //enables utf8 encoding to correctly handle umlauts, as ö in "Datei wurde gelöscht - D:\outputDir\foo.txt"
-        if(this.isFile){
-			var filePath = this.path;
-			return prefix + this.__buildFileCleanupCommand(this.path);
-        } else {
-        	return prefix +this.__buildDirectoryCleanupCommand(this.path);        	
-        }		
+    async __buildCommand(){ 
+        var os = await window.treezTerminal.operationSystem();
+        switch(os){
+        	case 'Windows':
+        	    return this.__buildWindowsCommand();
+        	case 'Linux':
+        	    return this.__buildLinuxCommand();
+        	default:
+        	    throw new Error('Not yet implemented for operation system ' + os);  
+        }
+    		
 	} 
+
+	__buildWindowsCommand(){
+		var prefix = 'chcp 65001 & '; //enables utf8 encoding to correctly handle umlauts, as ö in "Datei wurde gelöscht - D:\outputDir\foo.txt"
+		if(this.isFile){			
+			return prefix + this.__buildFileCleanupCommand(this.path);
+		} else {
+			return prefix +this.__buildDirectoryCleanupCommand(this.path);        	
+		}	
+	}
 
 	__buildFileCleanupCommand(filePath){
 		return 'del "' + filePath + '"';
@@ -141,6 +165,31 @@ export default class FileCleanup extends Model {
 			case DirectoryCleanupMode.deleteFilesAndSubDirectories:
 				return 'del /S /Q "' + directoryPath + '\\*.*" & ' +
 				       'for /d %i in ("' + directoryPath + '\\*.*") do @rmdir /S /Q "%i"';
+			default:
+				throw Error('Not yet implemented');
+		}
+	}	
+
+	__buildLinuxCommand(){
+		if(this.isFile){		
+			return this.__buildLinuxFileCleanupCommand(this.path);
+		} else {
+			return this.__buildLinuxDirectoryCleanupCommand(this.path);        	
+		}	
+	}
+
+	__buildLinuxFileCleanupCommand(filePath){
+		return 'rm ' + filePath + '';
+	}
+
+	__buildLinuxDirectoryCleanupCommand(directoryPath){
+		switch(this.mode){
+			case DirectoryCleanupMode.deleteFiles:
+				return "rm '" + directoryPath + "/*.*'";
+			case DirectoryCleanupMode.deleteDirectory:
+				return "rm -r '" + directoryPath + "'";
+			case DirectoryCleanupMode.deleteFilesAndSubDirectories:
+				return "rm -rf '" + directoryPath + "'/*";
 			default:
 				throw Error('Not yet implemented');
 		}
@@ -193,6 +242,9 @@ export default class FileCleanup extends Model {
 				?path.replace(/\//g, '\\\\')
 				:'';			
 		} else {
+			if(!this.fileOrDirectoryPath){
+				return '';
+			}
 			return this.fileOrDirectoryPath.replace(/\//g, '\\\\');
 		}		
 	}	

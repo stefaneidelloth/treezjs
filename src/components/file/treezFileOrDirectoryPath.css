@@ -31,25 +31,11 @@ treez-file-or-directory-path {
 	font-size: 12px;
 }
 
-.treez-file-or-directory-path-is-file-button {	
-    position: absolute;
-    top: 2px;
-    right: 30px;
-    width:33px;	
-	height:15px;
-	background-repeat: no-repeat;
-	border: none;
-		
-	color:transparent;
-	margin-right:4px;
-	vertical-align: middle;	
-}
-
 
 .treez-file-or-directory-path-browse-button {	
     position: absolute;
     top: 2px;
-    right: 10px;
+    right: 40px;
 	background-repeat: no-repeat;	
 	border: none;
 	width:17px;
@@ -61,11 +47,25 @@ treez-file-or-directory-path {
 .treez-file-or-directory-path-play-button {	
     position: absolute;
     top: 2px;
-    right: 0px;  
+    right: 35px;  
     width:5px;
 	background-repeat: no-repeat;	
 	border: none;	
 	color:transparent;
 	vertical-align: middle;
+}
+
+.treez-file-or-directory-path-is-file-button {	
+    position: absolute;
+    top: 2px;
+    right: 0px;
+    width:20px;	
+	height:15px;
+	background-repeat: no-repeat;
+	border: none;
+		
+	color:transparent;
+	margin-right:4px;
+	vertical-align: middle;	
 }
 

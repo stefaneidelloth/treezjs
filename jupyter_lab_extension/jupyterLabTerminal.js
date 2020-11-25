@@ -14,6 +14,11 @@ export default class JupyterLabTerminal {
 			this.__kernel = sessionContext.session.kernel;
 		}			
 	}
+
+	async operationSystem(){
+		var system = await this.executePythonCode('import platform\nprint(platform.system())');
+		return system.trim();
+	}
 	
 	async browseFilePath(initialDirectory, initialFile){
 

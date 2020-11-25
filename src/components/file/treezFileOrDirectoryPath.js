@@ -33,17 +33,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             textField.className='treez-file-or-directory-path-text-field';
             textField.onchange = () => this.textFieldChanged();
             textField.title = this.fullPath;
-            leftSpan.appendChild(textField);           
-
-            let isFileButton = document.createElement('input');
-            this.__isFileButton = isFileButton;
-			isFileButton.type='button';
-			isFileButton.onclick = () => this.__isFileChanged();
-			isFileButton.title='toggle file <=> directory';
-			isFileButton.className='treez-file-or-directory-path-is-file-button';	
-			isFileButton.style.background = 'url("' + this.__urlPrefix + '/icons/fileToggle.png")';
-			isFileButton.style.backgroundRepeat = 'no-repeat';
-			container.appendChild(isFileButton);
+            leftSpan.appendChild(textField);                   
 
 		    let browseButton = document.createElement('input');
 		    this.__browseButton = browseButton;						   
@@ -64,6 +54,16 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             executeButton.style.backgroundRepeat = 'no-repeat';
             executeButton.onclick = ()=>this.execute();   
             container.appendChild(executeButton); 
+
+            let isFileButton = document.createElement('input');
+            this.__isFileButton = isFileButton;
+			isFileButton.type='button';
+			isFileButton.onclick = () => this.__isFileChanged();
+			isFileButton.title='Toggle file <=> directory';
+			isFileButton.className='treez-file-or-directory-path-is-file-button';	
+			isFileButton.style.background = 'url("' + this.__urlPrefix + '/icons/fileToggle.png")';
+			isFileButton.style.backgroundRepeat = 'no-repeat';
+			container.appendChild(isFileButton);
         }
 
         this.update();
@@ -71,7 +71,9 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
 
     disableElements(booleanValue){
     	super.disableElements(booleanValue);
-        TreezAbstractPath.hide(this.__isFileButton, booleanValue);
+    	if(this.__isFileButton){
+    		TreezAbstractPath.hide(this.__isFileButton, booleanValue);
+    	}        
     }
 
     __browseFileOrDirectoryPath(){  
