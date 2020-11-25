@@ -193,7 +193,7 @@ export default class JupyterLabTerminal {
 		return this.executePythonCode(pythonCode, false);		
 	}	
 	
-	execute(command, messageHandler, errorHandler, finishedHandler){	
+	async execute(command, messageHandler, errorHandler, finishedHandler){	
 			
 		var pythonCode = '%%python\n' +
 						 '# -*- coding: utf-8 -*-\n' +
@@ -204,7 +204,7 @@ export default class JupyterLabTerminal {
 						 'if process.returncode != 0:\n' +
 						 '    raise CalledProcessError(process.returncode, process.args)';
 
-		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
+		await this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	
 
 	async openDirectory(directoryPath, errorHandler, finishedHandler){
@@ -249,10 +249,10 @@ export default class JupyterLabTerminal {
 		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
 	}	
 
-	__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler){
+	async __executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler){
 		var self=this;
 
-    	new Promise(async (resolve, reject) => {  
+    	await new Promise(async (resolve, reject) => {  
             //Also see
             //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
             //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
@@ -276,12 +276,13 @@ export default class JupyterLabTerminal {
     	    		    	    if(messageHandler){
 									messageHandler(message);
 								}	
+								resolve();
 								break;
     	    		    	case 'stderr':
     	    		    	    var message = content.text;
     	    		    	    if(errorHandler){
 									errorHandler(message);
-								}					    
+								}													    
 								resolve();
 								break;
     	    		    	default:
@@ -306,7 +307,7 @@ export default class JupyterLabTerminal {
 						var result = msg.content;
 						if(messageHandler){
 						    messageHandler(result);
-						}
+						}						
 						resolve();
 						break;
 					case 'display_data':

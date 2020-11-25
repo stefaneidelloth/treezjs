@@ -22,7 +22,7 @@ export default class FileCopy extends Model {
         this.__pathOfOutputPathProviderComponent = undefined;
         this.__inputFilePathComponent = undefined;
         this.__outputDirectoryPathComponent = undefined;
-        this.__modeComponent = undefined;	   	       
+         	       
 	}
 	
 
@@ -89,6 +89,10 @@ export default class FileCopy extends Model {
 	}	
 
 	__updateComponents(){
+		if(!this.__outputDirectoryPathComponent){
+			return;
+		}
+
 		if(this.isUsingInputPathProvider){
 			this.__pathOfInputPathProviderComponent.show();
 			this.__inputFilePathComponent.disable();
@@ -142,28 +146,62 @@ export default class FileCopy extends Model {
 		monitor.info(startMessage);
 		
 		const totalWork = 1;
-		monitor.totalWork = totalWork;
+		monitor.totalWork = totalWork;	
 
-		const command = this.__buildCommand();		
-		await this.__executeCommand(command, monitor);		
+		var os = await window.treezTerminal.operationSystem();
+		switch(os){
+			case 'Windows':
+			    await this.__windowsCopyFile(monitor);
+			    break;
+			case 'Linux':
+			    await this.__linuxCopyFile(monitor);
+			    break;
+			default:
+			    throw new Error('Not yet implemented for operation system ' + os);
+		}			
 		
-		monitor.done();
-		
+		monitor.done();		
     } 
 
-    __buildCommand(){ 
+    async __windowsCopyFile(monitor){
+    	const directoryCommand = '(if not exist "' + this.outputPath + '"' +
+		                         ' (mkdir "' + this.outputPath + '")' +
+		                         ') & cd'; //produces some output, so that command returns
+        await this.__executeCommand(directoryCommand, monitor);        
+
+		const copyCommand = this.__buildWindowsCopyCommand();		
+		await this.__executeCommand(copyCommand, monitor);	
+    }
+
+    __buildWindowsCopyCommand(){ 
         var fileName = Utils.extractFileName(this.inputPath);
-    	return 'if not exist "' + this.outputPath + '" mkdir "' + this.outputPath + '" &' 
-    	+ ' copy /Y "' + this.inputPath + '" "' + this.outputPath + '\\\\' + fileName + '"';    		
+    	return  'copy /Y "' + this.inputPath + '" "' + this.outputPath + '\\\\' + fileName + '"';    		
 	} 	
+
+    async __linuxCopyFile(monitor){
+    	const directoryCommand = '(if not exist "' + this.outputPath + '"' +
+		                         ' (mkdir "' + this.outputPath + '")' +
+		                         ') & cd'; //produces some output, so that command returns
+        await this.__executeCommand(directoryCommand, monitor);        
+
+		const copyCommand = this.__buildLinuxCopyCommand();		
+		await this.__executeCommand(copyCommand, monitor);	
+    }
+
+    __buildLinuxCopyCommand(){ 
+        var fileName = Utils.extractFileName(this.inputPath);
+    	return  'cp "' + this.inputPath + '" "' + this.outputPath + '/' + fileName + '"';    		
+	}
+
+  
     
     async __executeCommand(command, monitor){
 
     	var self = this;
 
-    	return await new Promise(function(resolve, reject){
+    	return await new Promise(async(resolve, reject) => {
 	    	try {				
-				window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
+				await window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
 
 				function messageHandler(message){
 					monitor.info(message);

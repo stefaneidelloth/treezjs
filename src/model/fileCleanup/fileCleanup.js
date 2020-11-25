@@ -199,9 +199,9 @@ export default class FileCleanup extends Model {
 
     	var self = this;
 
-    	return await new Promise(function(resolve, reject){
+    	return await new Promise(async (resolve, reject) => {
 	    	try {				
-				window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
+				await window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
 
 				function messageHandler(message){
 					monitor.info(message);
