@@ -195,7 +195,7 @@ export default class JupyterLabTerminal {
 	
 	async execute(command, messageHandler, errorHandler, finishedHandler){	
 
-	    command = command.replace(/'/g,"\'")
+	    command = command.replace(/'/g,"\\'")
 			
 		var pythonCode = 
 						 '# -*- coding: utf-8 -*-\n' +
