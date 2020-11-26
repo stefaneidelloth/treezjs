@@ -64,6 +64,7 @@ export default class DatabaseModifier extends CodeModel {
     					monitor.error(error);
     					monitor.cancel();
     				});
+    			monitor.done();
     			break;
     		case TableTargetType.mySql:
     			throw new Error('Not yet implemented');
@@ -113,6 +114,9 @@ export default class DatabaseModifier extends CodeModel {
 	}  
 
 	__showAndHideComponents(){
+		if(!this.__targetFilePathSelection){
+	    	return;
+	    }
 		switch(this.targetType){
 			case TableTargetType.sqLite:
 				this.__showAndHideComponentsForSqLite();
@@ -125,7 +129,7 @@ export default class DatabaseModifier extends CodeModel {
 		}
 	}
 
-	__showAndHideComponentsForSqLite(){		
+	__showAndHideComponentsForSqLite(){	
 		this.__hostSelection.hide();		
 		this.__portSelection.hide();	
 		this.__userSelection.hide();	

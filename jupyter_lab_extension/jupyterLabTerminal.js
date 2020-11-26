@@ -377,13 +377,15 @@ export default class JupyterLabTerminal {
 				'import pandas\n'	+
 				'with sqlite3.connect("' + connectionString + '") as connection:\n' +
 				'    cursor = connection.cursor()\n' +
-				'    cursor.executescript("' + query + '")\n';
+				'    cursor.executescript("' + query + '")\n' +
+				'print("finished")\n';
 			
-			return this.executePythonCode(pythonCode, false)
+			await this.executePythonCode(pythonCode, false)
 				.catch(error=>{
 						console.error("Could not execute python code.", error);
 						throw error;
 					});;
+			return null;
 		}
 	}
 
