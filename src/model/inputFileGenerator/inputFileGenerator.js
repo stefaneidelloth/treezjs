@@ -126,9 +126,9 @@ export default class InputFileGenerator extends Model  {
 			.bindValue(this,()=>this.valueExpression);
 
 		sectionContent.append('treez-check-box')
-			.label('Wrap string values')
-			.onChange(()=>this.__updateComponents())
-			.bindValue(this,()=>this.isWrappingStrings);
+			.label('Wrap string values')			
+			.bindValue(this,()=>this.isWrappingStrings)
+			.onChange(()=>this.__updateComponents());
 
 		this.__stringWrapperComponent = sectionContent.append('treez-text-field')
 			.label('String wrapper (= "quotation mark for string values")')			
@@ -184,21 +184,21 @@ export default class InputFileGenerator extends Model  {
 	    var sectionContent = section.append('div'); 
 
 	    sectionContent.append('treez-check-box')
-        	.label('Use input path provider')
-        	.onChange(()=>this.__updateComponents())
-        	.bindValue(this, ()=>this.isUsingInputPathProvider);
+        	.label('Use input path provider')        	
+        	.bindValue(this, ()=>this.isUsingInputPathProvider)
+        	.onChange(()=>this.__updateComponents());
 
 		this.__pathOfInputPathProviderComponent = sectionContent.append('treez-model-path')
-            .label('Input path provider')           
-            .onChange(()=>this.__updateComponents())    
+            .label('Input path provider') 
             .nodeAttr('atomFunctionNames', ['provideInputPath'])
-            .bindValue(this,()=>this.pathOfInputPathProvider);
+            .bindValue(this,()=>this.pathOfInputPathProvider)
+            .onChange(()=>this.__updateComponents()) ;
 
         this.__inputFilePathComponent = sectionContent.append('treez-file-path')
-	    	.label('Input file to generate (=target)')	    	
-	    	.onChange(()=>this.refreshStatus())	
+	    	.label('Input file to generate (=target)')
 	    	.nodeAttr('pathMapProvider', this)
-	    	.bindValue(this,()=>this.inputFilePath);    
+	    	.bindValue(this,()=>this.inputFilePath)
+	    	.onChange(()=>this.refreshStatus())	;    
 
 	}
 
@@ -228,6 +228,9 @@ export default class InputFileGenerator extends Model  {
 	};
 
 	__pathFromInputPathProvider(){
+		if(!this.pathOfInputPathProvider){
+			return null;
+		}
 		var inputPathProvider = this.childFromRoot(this.pathOfInputPathProvider);
 		
 		return inputPathProvider
@@ -361,11 +364,11 @@ export default class InputFileGenerator extends Model  {
 	}
 
 	 __deleteRowsWithUnassignedPlaceHolders(resultString) {
-		var generalPlaceHolderExpression = this.nameExpression.replace('{', '\\{');
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('}', '\\}');
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('$', '\\$');
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('<name>', '.*');
-		generalPlaceHolderExpression = generalPlaceHolderExpression.replace('<label>', '.*');
+		var generalPlaceHolderExpression = this.nameExpression.replace(/\{/g, '\\{');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace(/\}/g, '\\}');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace(/\$/g, '\\$');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace(/<name>/g, '.*');
+		generalPlaceHolderExpression = generalPlaceHolderExpression.replace(/<label>/g, '.*');
 
 		if (generalPlaceHolderExpression === '.*') {
 			var message = 'The deletion of rows with unassigned placeholders is not yet implemented for placeholders'
@@ -380,15 +383,14 @@ export default class InputFileGenerator extends Model  {
 		var removedLines = [];
 		var newLines = [];
 
-		var pattern = Pattern.compile(generalPlaceHolderExpression);
+		var pattern = new RegExp(generalPlaceHolderExpression,'g');
 
 		lines.forEach((line)=>{
-			var matcher = pattern.matcher(line);
-			var containsUnassignedPlaceHolder = matcher.find();
-			if (containsUnassignedPlaceHolder) {
-				removedLines.add(line);
+			var matches = line.match(pattern);		
+			if (matches) {
+				removedLines.push(line);
 			} else {
-				newLines.add(line);
+				newLines.push(line);
 			}
 		});
 

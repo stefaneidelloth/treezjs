@@ -190,7 +190,7 @@ export default class JupyterLabTerminal {
 			'if os.path.exists("' + filePath +'"):\n' +
 			'    os.remove("' + filePath + '")\n';           
 		
-		return this.executePythonCode(pythonCode, false);		
+		return await this.executePythonCode(pythonCode, false);		
 	}	
 	
 	async execute(command, messageHandler, errorHandler, finishedHandler){	
@@ -421,7 +421,12 @@ export default class JupyterLabTerminal {
     	    	var msgType = msg.header.msg_type;
     	    	switch (msgType) {
     	    		case 'status':
-    	    		    return;
+    	    		   if(!isExpectingOutput){
+    	    		   	if(msg.content.execution_state === 'idle'){
+    	    		   		resolve();
+    	    		   	}
+    	    		   }
+    	    		   return;
     	    		case 'execute_input':
     	    		    return;
     	    		case 'stream':
