@@ -64,7 +64,11 @@ export default class SqLiteImporter extends Importer {
 		
 		var tableNames= data.map(row => row[0]);
 
-		tableNames.shift();  //removes header row
+        //remove table name "header"
+		tableNames.shift(); 
+
+		//remove table names for internal sqlite tables
+		tableNames = tableNames.filter(name=>name.substring(0,7) !== 'sqlite_');
 
 		return tableNames;
 		
@@ -89,7 +93,7 @@ export default class SqLiteImporter extends Importer {
 		for(var line of data){
 			var name = line[nameIndex]; //available columns: cid, name, type, notnull, dflt_value, pk
 			var type = SqLiteColumnTypeConverter.convert(line[nameIndex+1]);
-			var isNullable = line[nameIndex+2] !== '0';			
+			var isNullable = line[nameIndex+2] === '0';			
 			var defaultValueString = line[nameIndex+3];
 			if(defaultValueString === 'NULL'){
 				defaultValueString = null;
@@ -369,7 +373,11 @@ export default class SqLiteImporter extends Importer {
 				if(blueprint.isString){
 					cellValues.push("'" + value + "'");
 				} else {
-					cellValues.push(value);
+					if(value === ''){
+						cellValues.push('null');
+					} else {
+						cellValues.push(value);
+					}					
 				}
 			}
 			rowValues.push("(" + cellValues.join(", ") + ")")
