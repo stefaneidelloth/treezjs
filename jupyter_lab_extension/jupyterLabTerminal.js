@@ -195,7 +195,11 @@ export default class JupyterLabTerminal {
 	
 	async execute(command, messageHandler, errorHandler, finishedHandler){	
 
-	    command = command.replace(/'/g,"\\'")
+	    command = command.replace(/'/g,"\\'");
+	    var os = await this.operationSystem();
+	    if(os === 'Windows'){
+	    	command = command.replace(/\//g,"\\")
+	    }
 			
 		var pythonCode = 
 						 '# -*- coding: utf-8 -*-\n' +
@@ -219,13 +223,32 @@ export default class JupyterLabTerminal {
         }        
 	}
 
-	async openPath(path, errorHandler, finishedHandler){  
+	async openPath(path, errorHandler, finishedHandler){
 
-        var url = document.URL + '/tree/' + path;
+		if(!path){
+			return;
+		}  
+
+		if(this.isRunningLocally){
+			await this.__locallyOpenOrExecutePath(path, errorHandler, finishedHandler);
+		} else {
+			this.__openPathInBrowser(path, errorHandler, finishedHandler);
+		}
+	}
+
+	async __openPathInBrowser(path, errorHandler, finishedHandler){
+
+	    var url = document.URL + '/tree/';
 	    if(!path.includes('.ipynb')){
-            url = document.URL + '/../files/' + path;
-	    }      
-       
+            url = document.URL + '/../files/';
+	    }    
+
+		if(path.substring(0,1) === '.'){
+			var currentDirectory = await this.__currentServerDirectory();
+			url += currentDirectory + '/'
+		}
+
+		url += path;  
         
         try{
     	    window.open(url, '_blank');
@@ -241,15 +264,53 @@ export default class JupyterLabTerminal {
         }        
 	}
 
+	async __locallyOpenOrExecutePath(path, errorHandler, finishedHandler){		      
+        
+        try{
+    	    var pythonCode = '!' + path.replace(/\//g, "\\");
+		    this.__executePythonCode(pythonCode, null, errorHandler, finishedHandler);
+        } catch(error){
+        	console.error("Could not open path '" + path + "'.\n", error);
+        	if(errorHandler){
+        		errorHandler(error);
+        	}
+        }        
 
-	executeWithoutWait(command, messageHandler, errorHandler, finishedHandler){	
-			
-		
-        var pythonCode = '!' + command.replace(/\//g, "\\");
-						
+        if(finishedHandler){
+        	finishedHandler();
+        }   
+	}
 
-		this.__executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler);		
-	}	
+	async __currentServerDirectory(){
+		var notebookPanel = this.__firstVisibleNotebookPanel;
+		var urlResolver = notebookPanel.context.urlResolver;
+		return await urlResolver.resolveUrl('.');		
+	}
+
+	get isRunningLocally(){
+        return (location.hostname === "localhost" || location.hostname === "127.0.0.1");
+	}
+
+	async __serverIP(){
+		var code = 'import socket\n'+
+                   'print(socket.gethostbyname(socket.gethostname()))';
+		return await executePythonCode(code);		
+	}
+
+	get __firstVisibleNotebookPanel(){
+		var mainWidgets = this.__app.shell.widgets('main');
+		var widget = mainWidgets.next();
+		while(widget){
+			var type = widget.constructor.name;
+			if(type == 'NotebookPanel'){  //other wigets might be of type DocumentWidget
+				if (widget.isVisible){
+					return widget;
+				}
+			}
+			widget = mainWidgets.next();
+		}
+		return null;
+	}		
 
 	async __executePythonCode(pythonCode, messageHandler, errorHandler, finishedHandler){
 		var self=this;

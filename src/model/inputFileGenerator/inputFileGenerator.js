@@ -66,9 +66,13 @@ export default class InputFileGenerator extends Model  {
 				monitor.error(error);
 			 });;	
 
+	   // var foo = await window.treezTerminal.executePythonCode('import os\nprint(os.getcwd())');
+
+
 		var template = '';
 		if(this.templatePath){
-			template = await window.treezTerminal.readTextFile(this.fullPath(this.templatePath)) //
+			var path = this.fullPath(this.templatePath);
+			template = await window.treezTerminal.readTextFile(path) //
 							 .catch((error)=>{
 								monitor.error(error);
 							 });
@@ -418,13 +422,9 @@ export default class InputFileGenerator extends Model  {
 	get inputPath(){
 		if(this.isUsingInputPathProvider){
 			var path = this.__pathFromInputPathProvider();
-			return path
-				?path.replace(/\//g, '\\\\')
-				:'';			
+			return path;			
 		} else {
-			return this.inputFilePath
-				?this.inputFilePath.replace(/\//g, '\\\\')
-				:'';
+			return this.inputFilePath;
 		}		
 	}	
 

@@ -259,13 +259,8 @@ export default class Executable extends Model {
 	__buildCommand(){
 		let fullExecutablePath = this.fullPath(this.executablePath);
 		let command = '';
-		if(fullExecutablePath){
-			if(fullExecutablePath.includes(' ')){
-                command = command + '"' + fullExecutablePath + '"';
-			} else {
-				command = command + fullExecutablePath;
-			}
-			
+		if(fullExecutablePath){			
+           command = command + '"' + fullExecutablePath + '"';
 		} 
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);
