@@ -71,10 +71,10 @@ export default class StudyInfoExport extends Model {
         const sectionContent = section.append('div'); 
 
         sectionContent.append('treez-enum-combo-box')
-            .label('Type')           
-            .onChange(() => this.__showAndHideDependentComponents())	            
+            .label('Type')  
             .nodeAttr('enum', StudyInfoExportType)
-            .bindValue(this,()=>this.targetType);
+            .bindValue(this,()=>this.targetType)
+            .onChange(() => this.__showAndHideDependentComponents());
 
         this.__filePathSelection = sectionContent.append('treez-file-path')
             .label('File path')  

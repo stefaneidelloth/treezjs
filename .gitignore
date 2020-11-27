@@ -14,3 +14,5 @@ coverage
 src/views/.ipynb_checkpoints/treeView-checkpoint.js
 .ipynb_checkpoints/.gitignore-checkpoint
 jupyter_lab_extension/.ipynb_checkpoints/jupyterLabTerminal-checkpoint.js
+/demo/study/pythonExport/.ipynb_checkpoints/pythonExportDemo-checkpoint.ipynb
+/demo/study/sweep/.ipynb_checkpoints/sweepDemo-checkpoint.ipynb

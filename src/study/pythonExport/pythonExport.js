@@ -36,10 +36,10 @@ export default class PythonExport extends ComponentAtom {
 	}
     
     async deleteStructureFromPythonContextIfExists(){
-    	if(window.treezTerminal.executePythonCode){
+    	if(window.treezTerminal.executePythonCodeWithCell){
 	    	var pythonCode = 'if "' + this.structureName + '" in locals():\n'
 	    	               + '    del ' + this.structureName + '\n';
-	    	await window.treezTerminal.executePythonCode(pythonCode, false);
+	    	await window.treezTerminal.executePythonCodeWithCell(pythonCode);
     	} else {
     		console.warn('Deletion of python structure "' + this.structureName + '" has been skipped because python is not supported.');
     	}    	
@@ -57,7 +57,7 @@ export default class PythonExport extends ComponentAtom {
 	}    
     
     async __exportTableToPythonContext(modelInput, table){
-    	if(window.treezTerminal.executePythonCode){
+    	if(window.treezTerminal.executePythonCodeWithCell){
     		
     		var studyVariables = modelInput.all;			
     		
@@ -123,7 +123,7 @@ export default class PythonExport extends ComponentAtom {
     			              
     		}
     		
-    		await window.treezTerminal.executePythonCode(pythonCode, false);
+    		await window.treezTerminal.executePythonCodeWithCell(pythonCode, false);
     		
     		
     	} else {
