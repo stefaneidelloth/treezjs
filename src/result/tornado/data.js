@@ -78,16 +78,16 @@ export default class Data extends GraphicsAtom {
 		sectionContent.append('treez-enum-combo-box')
 			.label('Data mode')
 			.labelWidth('95px')
-			.nodeAttr('enum', DataMode)
-			.onChange(()=>this.__showOrHideTableComponents())
-			.bindValue(this, ()=>this.dataMode);
+			.nodeAttr('enum', DataMode)			
+			.bindValue(this, ()=>this.dataMode)
+			.onChange(()=>this.__showOrHideTableComponents());
 
 		sectionContent.append('treez-enum-combo-box')
 			.label('Output type')
 			.labelWidth('95px')
-			.nodeAttr('enum', OutputType)
-			.onChange(()=>this.__showOrHideUnitComponents())
-			.bindValue(this, ()=>this.outputType);
+			.nodeAttr('enum', OutputType)			
+			.bindValue(this, ()=>this.outputType)
+			.onChange(()=>this.__showOrHideUnitComponents());
 
 		sectionContent.append('treez-enum-combo-box')
 			.label('Sorting mode')

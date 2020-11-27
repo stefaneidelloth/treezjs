@@ -1,5 +1,6 @@
 import GraphicsAtom from './../graphics/graphicsAtom.js';
 import Length from './../graphics/length.js';
+import Color from './../../components/color/color.js';
 
 export default class TickLabels extends GraphicsAtom {
 	
@@ -7,7 +8,7 @@ export default class TickLabels extends GraphicsAtom {
 		super();
 		this.font = 'sans-serif';
 		this.size = 22;
-		this.color = 'black';
+		this.color = Color.black;
 		this.format = ''
 		this.isItalic = false;
 		this.isBold = false;
