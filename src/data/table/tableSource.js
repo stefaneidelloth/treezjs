@@ -6,7 +6,7 @@ export default class TableSource extends ComponentAtom  {
 	constructor(name) {		
 		super(name);
 		this.__isRunnable=true;
-		this.image = 'source.png';
+		this.image = 'tableSource.png';
 		
 		this.type = TableSourceType.sqLite;
 		this.filePath = 'C:\database.sqlite';
@@ -14,7 +14,7 @@ export default class TableSource extends ComponentAtom  {
 		this.host = 'localhost';
 		this.port = '8080';
 		this.user = 'user';
-		this.password = 'password';
+		this.password = '';
 		this.schema = 'my_schema';
 		this.tableName = 'Sheet1';
 		this.isFilteringForJob = false;
@@ -34,9 +34,7 @@ export default class TableSource extends ComponentAtom  {
 		this.__jobIdSelection = undefined;		
 		this.__isUsingCustomQuerySelection = undefined;			
 		this.__customQuerySelection = undefined;		
-	}
-	
-	
+	}	
 	
 	createComponentControl(tabFolder){    
 	     
@@ -51,18 +49,23 @@ export default class TableSource extends ComponentAtom  {
 		
 		var section = page.append('treez-section')
 			.label('Source type');
+
+	    /*
 		
 		section.append('treez-section-action')
+		    .image('run.png')
 			.label('Import data')
-			.action(()=>this.execute(this.__treeView));
+			.addAction(()=>this.execute(this.__treeView));
+
+		*/
 			
 		var sectionContent = section.append('div');
 		
 		sectionContent.append('treez-enum-combo-box')
 			.label('Source type')
-			.options(TableSourceType)
-			.onChange(()=> this.showAndHideDependentComponents())
-			.bindValue(this, ()=>this.type);		
+			.nodeAttr('enum', TableSourceType)			
+			.bindValue(this, ()=>this.type)
+			.onChange(()=> this.__showAndHideDependentComponents());		
 
 	}
 
@@ -107,18 +110,18 @@ export default class TableSource extends ComponentAtom  {
 			.bindValue(this,()=>this.tableName);
 		
 		this.__isFilteringForJobSelection = sectionContent.append('treez-check-box')
-			.label('Filter rows with JobId')
-			.onChange(()=>this.showAndHideJobComponents())
-			.bindValue(this, this.isFilteringForJob);
+			.label('Filter rows with JobId')			
+			.bindValue(this, ()=>this.isFilteringForJob)
+			.onChange(()=>this.__showAndHideJobComponents());
 		
 		this.__jobIdSelection = sectionContent.append('treez-text-field')
 			.label('JobId')
 			.bindValue(this,()=>this.jobId);
 	
 		this.__isUsingCustomQuerySelection = sectionContent.append('treez-check-box')
-			.label('Use custom query')
-			.onChange(()=>this.showAndHideJobComponents())
-			.bindValue(this, this.isUsingCustomQuery);		
+			.label('Use custom query')			
+			.bindValue(this, ()=>this.isUsingCustomQuery)
+			.onChange(()=>this.__showAndHideQueryComponents());		
 			
 		this.__customQuerySelection = sectionContent.append('treez-text-area')
 			.label('Custom query')
@@ -149,68 +152,66 @@ export default class TableSource extends ComponentAtom  {
 
 	__showAndHideJobComponents() {	
 		if (this.isFilteringForJob) {
-			this.__jobIdSelection.enable();
+			this.__jobIdSelection.show();
 		} else {
-			this.__jobIdSelection.disable();
+			this.__jobIdSelection.hide();
 		}
 	}
 
-	__showAndHideQueryComponents() {
-		
+	__showAndHideQueryComponents() {		
 		if (this.isUsingCustomQuery) {
-			this.__customQuerySelection.enable();
-			this.__tableNameSelection.disable();
-			this.__filterForJobSelection.disable();
-			this.__jobIdSelection.enable();
+			this.__customQuerySelection.show();
+			this.__tableNameSelection.hide();
+			this.__isFilteringForJobSelection.hide();
+			this.__jobIdSelection.hide();
 		} else {
-			this.__customQuerySelection.disable();
-			this.__tableNameSelection.enable();
-			this.__filterForJobSelection.enable();
-			showAndHideJobComponents();
+			this.__customQuerySelection.hide();
+			this.__tableNameSelection.show();
+			this.__isFilteringForJobSelection.show();
+			this.__showAndHideJobComponents();
 		}
 	}
 
 	__showAndHideElementsForCsv() {
-
-		this.__hostSelection.disable();
-		this.__portSelection.disable();
-		this.__userSelection.disable();
-		this.__passwordSelection.disable();
-		this.__schemaSelection.disable();
-		this.__tableNameSelection.disable();
-		this.__filterForJobSelection.disable();
-		this.__jobIdSelection.disable();
-		this.__useCustomQuerySelection.disable();
-		this.__customQuerySelection.disable();
+		this.__filePathSelection.show();
+		this.__columnSeperatorSelection.show();
+		this.__hostSelection.hide();
+		this.__portSelection.hide();
+		this.__userSelection.hide();
+		this.__passwordSelection.hide();
+		this.__schemaSelection.hide();
+		this.__tableNameSelection.hide();
+		this.__isFilteringForJobSelection.hide();
+		this.__jobIdSelection.hide();
+		this.__isUsingCustomQuerySelection.hide();
+		this.__customQuerySelection.hide();
 	}
 
 	__showAndHideElementsForSqLite() {
-
-		this.__columnSeparatorSelection.disable();
-		this.__hostSelection.disable();
-		this.__portSelection.disable();
-		this.__userSelection.disable();
-		this.__passwordSelection.enable();
-		this.__schemaSelection.disable();
-		this.__tableNameSelection.enable();
-		this.__filterForJobSelection.enable();
-		this.__useCustomQuerySelection.enable();
-		showAndHideQueryComponents();
+		this.__columnSeperatorSelection.hide();
+		this.__hostSelection.hide();
+		this.__portSelection.hide();
+		this.__userSelection.hide();
+		this.__passwordSelection.show();
+		this.__schemaSelection.hide();
+		this.__tableNameSelection.show();
+		this.__isFilteringForJobSelection.show();
+		this.__isUsingCustomQuerySelection.show();
+		this.__showAndHideQueryComponents();
 	}
 
 	__showAndHideElementsForMySql() {
-
-		this.__filePathSelection.disable();
-		this.__columnSeparatoSelectionr.disable();
-		this.__hostSelection.enable();
-		this.__portSelection.enable();
-		this.__userSelection.enable();
-		this.__passwordSelection.enable();
-		this.__schemaSelection.enable();
-		this.__tableNameSelection.enable();
-		this.__filterForJobSelection.enable();
-		this.__useCustomQuerySelection.enable();
-		showAndHideQueryComponents();
+		this.__filePathSelection.hide();
+		this.__columnSeperatorSelection.hide();
+		this.__hostSelection.show();
+		this.__portSelection.show();
+		this.__userSelection.show();
+		this.__passwordSelection.show();
+		this.__schemaSelection.show();
+		this.__tableNameSelection.show();
+		this.__isFilteringForJobSelection.show();
+		this.__isUsingCustomQuerySelection.show();
+		this.__showAndHideQueryComponents();
 	}
 	
 

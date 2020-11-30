@@ -192,6 +192,15 @@ export default class Table extends ComponentAtom {
 							treeView
 					 ));
 
+		actions.push(new AddChildAtomTreeViewAction(
+							TableSource,
+							'tableSource',
+							'tableSource.png',
+							parentSelection,
+							this,
+							treeView
+					 ));
+
         actions.push(new TreeViewAction(
 							'Delete',
 							'delete.png',
