@@ -73,6 +73,10 @@
 	/* background-color: lightgreen; */
 }
 
+.treez-table TD.selected {
+	background-color: lightblue;
+}
+
 .treez-table TD.highlighted.selected {
 	background-color: lightblue;
 }

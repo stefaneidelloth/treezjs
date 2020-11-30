@@ -9,6 +9,7 @@ export default class SelectionManager {
 		this.__ctrlIsPressed = false;
 		this.__startRowIndex = undefined;
 		this.__startCellIndex = undefined;
+		this.__startHeaderIndex = undefined;
 
 		this.__selectedCells = [];
 		this.__highlightedColumns = [];
@@ -23,12 +24,12 @@ export default class SelectionManager {
 			this.resetSelectionAndHighlighting();
 		}
 
-		var cell = event.srcElement.parentNode;		
-		var index = cell.cellIndex;
+		var cell = event.srcElement.parentNode;	
+			
+		var cellIndex = cell.cellIndex;
 
 		this.__selectCell(cell);
-		this.__highlightColumn(index);
-
+		this.__highlightColumn(cellIndex);	
 	}
 
 	cellMouseDown(event, value){
@@ -75,7 +76,11 @@ export default class SelectionManager {
 		if (currentCellIndex < this.__startCellIndex) {
 			cellStart = currentCellIndex;
 			cellEnd = this.__startCellIndex;
-		}       
+		}   
+
+		if(cellEnd===0){
+			cellEnd = currentRow.childNodes.length-1;
+		}    
 
 		for (var rowIndex = rowStart; rowIndex <= rowEnd; rowIndex++) {	
 		    var row = table.childNodes[rowIndex];
@@ -89,9 +94,93 @@ export default class SelectionManager {
 
 	}
 
+	headerClicked(event, value){
+		this.resetSelectionAndHighlighting();
+		var th = event.srcElement.parentNode;
+		var tr = th.parentNode;
+		var thead = tr.parentNode;
+		var table = thead.parentNode;
+
+		var cellIndex = th.cellIndex;
+		this.__highlightColumn(cellIndex);
+		this.__selectColumn(cellIndex, table);
+	}
+
+	headerMouseDown(event, value){
+        this.__isSelecting = true;
+		this.__updateCtrlState(event);
+
+		var header = event.srcElement.parentNode;		
+		this.__startHeaderIndex = header.cellIndex;		
+	}
+
+	headerMouseUp(event, value){
+		this.__isSelecting = false;
+		this.__updateCtrlState(event);	
+		this.__startHeaderIndex = undefined;
+	}
+
+	headerMouseOver(event, value){
+		if(!this.__isSelecting){
+			return;
+		}
+
+		this.resetSelectionAndHighlighting();
+
+		var source = event.srcElement;
+	    var th = source;
+	    if(th.constructor.name !== 'HTMLTableCellElement'){
+	    	th = source.parentNode;
+	    }
+       
+		var tr = th.parentNode;	
+		var thead = tr.parentNode;
+		var table = thead.parentNode;
+		    
+		var currentCellIndex = th.cellIndex;		
+		
+		var cellStart = this.__startHeaderIndex;
+		var cellEnd = currentCellIndex;
+		if (currentCellIndex < cellStart) {
+			cellStart = currentCellIndex;
+			cellEnd = this.__startHeaderIndex;
+		}       
+
+				
+		for (var cellIndex = cellStart; cellIndex <= cellEnd; cellIndex++) {
+			this.__highlightColumn(cellIndex);
+			this.__selectColumn(cellIndex, table);			
+		}  
+
+	}
+
 	rowClicked(event, row){
 		this.__isSelecting=false;
 		this.highlightRow(row.index);
+		var td =  event.srcElement.parentNode;
+		if(td.cellIndex === 0){
+			var tr = td.parentNode;		
+		    this.__selectRow(tr);
+		}	
+		
+	}
+
+	
+
+	__selectRow(rowElement){
+		var numberOfColumns = rowElement.childNodes.length;
+		for (var cellIndex = 1; cellIndex < numberOfColumns; cellIndex++) {				
+			var cell = rowElement.childNodes[cellIndex];
+			this.__selectCell(cell);
+		} 
+	}
+
+	__selectColumn(cellIndex, table){
+		var tbody = table.childNodes[1];
+		for(var row of tbody.childNodes){
+			var cell = row.childNodes[cellIndex];
+			this.__selectCell(cell);
+		}
 	}
 
 	highlightRow(index){
@@ -116,6 +205,10 @@ export default class SelectionManager {
 
 	__highlightColumn(index){
 
+		if(index === undefined){
+			return;
+		}
+
 		this.__highlightedColumns.push(index);
 
 		this.tableSelection //
@@ -128,6 +221,10 @@ export default class SelectionManager {
 	}
 
 	__unHighlightColumn(index){
+
+		if(index === undefined){
+			return;
+		}
 
 		this.tableSelection //
 			.select('thead th:nth-child(' + (index+1) + ')') //

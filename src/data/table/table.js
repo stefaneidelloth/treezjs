@@ -124,6 +124,7 @@ export default class Table extends ComponentAtom {
 		    .on('dragover', event => event.preventDefault())
 		    .on('drop', event => this.handleDrop(event, this.treeView)) 
 		    .on('dragenter', event => event.preventDefault())
+		    .on('dragstart', event => event.preventDefault())
 		    .on('paste', event => this.__handleContainerPaste(event, this.treeView))
 			.className('treez-table-container'); //css styles for table are defined in src/views/propertyView.css
         
@@ -384,7 +385,13 @@ export default class Table extends ComponentAtom {
 			.append('tr')
 	        .selectAll('th')
 	        .data(displayColumns).enter()
-			.append('th')
+			.append('th')			
+			.onClick((event, value)=> this.__selectionManager.headerClicked(event, value))
+			.onMouseDown((event, value) => this.__selectionManager.headerMouseDown(event, value))
+	        .onMouseUp((event, value) => this.__selectionManager.headerMouseUp(event, value))
+	        .onMouseOver((event, value) => this.__selectionManager.headerMouseOver(event, value))
+	        .on('dragenter', event => event.preventDefault())
+	        .on('dragstart', event => event.preventDefault())
 			.append('div')
 	        .html((column)=>{
 	        	return column.header;
@@ -407,7 +414,7 @@ export default class Table extends ComponentAtom {
 	        .selectAll('tr')
 	        .data(this.pagedRows).enter()
 	        .append('tr')
-	        .onClick((data, index, parent) => this.__selectionManager.rowClicked(data, index, parent))
+	        .onClick((event, value) => this.__selectionManager.rowClicked(event, value))
 	        .selectAll('td')
 	        .data(function(row, index) {
 	        	var displayRow = [index+1].concat(row.values);
