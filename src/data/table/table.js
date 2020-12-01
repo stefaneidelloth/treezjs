@@ -12,6 +12,8 @@ import SelectionManager from './selectionManager.js';
 import Xlsx from './../../core/utils/xlsx.js';
 import Utils from './../../core/utils/utils.js';
 
+import TableConnection from './tableConnection.js';
+
 export default class Table extends ComponentAtom {
 
 	static createFromJson(jsonString){
@@ -108,7 +110,7 @@ export default class Table extends ComponentAtom {
 		this.__tableSelection = undefined;
 	}
 
-	createComponentControl(tabFolder){
+	async createComponentControl(tabFolder){
 
 		const page = tabFolder.append('treez-tab')
 			.label('Table');
@@ -131,13 +133,13 @@ export default class Table extends ComponentAtom {
 
 		if (this.isLinkedToSource) {
 			if (!this.hasColumns) {
-				this.reload();
+				await this.__reload();
 			}
 		}
 
 		var columnsExist = this.columnNames.length > 0;
 		if (columnsExist) {
-			this.__createTableControl(tableContainer, this.treeView);
+			await this.__createTableControl(tableContainer, this.treeView);
 		} else {
 			this.__createEmptyTableControl(tableContainer, this.treeView);					
 		}
@@ -236,7 +238,7 @@ export default class Table extends ComponentAtom {
 		return this.createChild(TableSource, name);
 	}
 
-	createColumns(columnBlueprints) {
+	createColumnsFromBlueprints(columnBlueprints) {
 		this.__createColumnFolderIfNotExist()
 		var columnFolder = this.columnFolder;
 		for (var columnBlueprint of columnBlueprints) {
@@ -244,8 +246,8 @@ export default class Table extends ComponentAtom {
 		}
 	}
 
-	__deleteColumnsIfExist() {
-		thils.removeChildrenByClass(ColumnFolder);
+	deleteColumnsIfExist() {
+		this.removeChildrenByClass(ColumnFolder);
 	}
 
 	addColumn(newColumn) {
@@ -301,7 +303,7 @@ export default class Table extends ComponentAtom {
 		return this;
 	}
 
-	resetCache() {
+	__resetCache() {
 		this.__isCaching = false;
 	}
 
@@ -326,27 +328,22 @@ export default class Table extends ComponentAtom {
 		return allDataString;
 	}
 
-	__createTableControl(parent, treeView){
+	async __createTableControl(parent, treeView){
 
 		this.__createToolbar(parent, treeView);
 
 		const tableContent = parent.append('div')
 			.className('treez-table-content');
-		this.__createTableView(tableContent, treeView);
+		await this.__createTableView(tableContent, treeView);
 
 		this.__createPagination(parent, treeView);
 
 	}
 
 	__createEmptyTableControl(parent, treeView){
-
 		this.__createToolbarForEmptyTable(parent, treeView);
-
 		parent.append('div')
-		    .text('This table does not contain any column yet.');	
-
-		
-
+		    .text('This table does not contain any column yet.');
 	}
 
 	__createToolbar(parent, treeView){
@@ -367,21 +364,17 @@ export default class Table extends ComponentAtom {
 		this.__createUpButton(toolbar, treeView);
 		this.__createDownButton(toolbar, treeView);
 		//this.__createColumnWidthButton(toolbar, treeView);
-
-
 	}
 
 	__createToolbarForEmptyTable(parent, treeView){
-
 		var fileToolbar = parent.append('div')
 							.className('treez-table-toolbar');
 
 		this.__createOpenButton(fileToolbar, treeView);		
 		this.__createUploadButton(fileToolbar, treeView);
-
 	}
 
-	__createTableView(parent, treeView){
+	async __createTableView(parent, treeView){
 
 		var tableSelection = parent.append('table')
 									.className('treez-table');
@@ -409,19 +402,21 @@ export default class Table extends ComponentAtom {
 	        	return column.legend;
 			});
 
-	    this.__recreateTableBody();
+	    await this.__recreateTableBody();
 
 	}
 
-	__recreateTableBody(){
+	async __recreateTableBody(){
 
 		this.__tableSelection
 			.selectAll('tbody')
 			.remove();
 
+		var pagedRows = await this.pagedRows();
+
 		this.__tableSelection.append('tbody')
 	        .selectAll('tr')
-	        .data(this.pagedRows).enter()
+	        .data(pagedRows).enter()
 	        .append('tr')
 	        .onClick((event, value) => this.__selectionManager.rowClicked(event, value))
 	        .selectAll('td')
@@ -458,14 +453,11 @@ export default class Table extends ComponentAtom {
 		this.__cellValueChanged(oneBasedRowIndex-1, oneBasedColumnIndex-1, value);
 	}
 
-
 	__cellValueChanged(rowIndex, columnIndex, value){
-		let row = this.rows[rowIndex];
+		let row = this.row(rowIndex);
 		let columnName = this.columnNames[columnIndex];
 		row.setEntry(columnName, value);
 	}
-
-
 
 	__createPagination(parent, treeView){
 		var pagination = parent.append('div')
@@ -812,126 +804,16 @@ export default class Table extends ComponentAtom {
 	}
 
 
-	__reload() {
+	async __reload() {
 		this.__resetCache();
-		this.__loadTableStructureIfLinkedToSource();
-		this.__refresh();
+		await this.__loadTableStructureIfLinkedToSource();		
 	}
 
-	__loadTableStructureIfLinkedToSource() {
+	async __loadTableStructureIfLinkedToSource() {
 		if (this.isLinkedToSource) {
-			this.__loadTableStructureFromSource();
+			await TableConnection.loadTableStructureFromSource(this, this.tableSource);
 		}
-	}
-
-	__loadTableStructureFromSource() {
-		var tableSource = this.getTableSource();
-		var sourceType = tableSource.type;
-
-		switch(sourceType){
-			case TableSourceType.sqLite:
-				this.__deleteColumnsIfExist();
-				var tableStructure = this.__readTableStructureForSqLiteTable(tableSource);
-				this.__createColumns(tableStructure);
-				break;
-			case TableSourceType.mySql:
-				this.deleteColumnsIfExist();
-				var tableStructure = this.__readTableStructureForMySqlTable(tableSource);
-				this.__createColumns(tableStructure);
-				break;
-			default:
-				throw new Error('Not yet implemented for source type ' + sourceType);
-		}
-
-	}
-
-
-
-	__readTableStructureForSqLiteTable(tableSource) {
-		var sqLiteFilePath = tableSource.filePath;
-		var password = tableSource.password;
-
-		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
-		if (isUsingCustomQuery) {
-			var customQuery = tableSource.customQuery;
-			var jobId = tableSource.jobId;
-			var tableStructure = SqLiteImporter.readTableStructureWithCustomQuery(sqLiteFilePath, password, customQuery, jobId);
-			return tableStructure;
-		} else {
-			var tableName = tableSource.tableName;
-			var tableStructure = SqLiteImporter.readTableStructure(sqLiteFilePath, password, tableName);
-			return tableStructure;
-		}
-
-	}
-
-	__readTableStructureForMySqlTable(tableSource) {
-		var host = tableSource.host;
-		var port = tableSource.port;
-		var schema = tableSource.schema;
-		var url = host + ":" + port + "/" + schema;
-
-		var user = tableSource.user;
-		var password = tableSource.password;
-
-		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
-		if (isUsingCustomQuery) {
-			return  MySqlImporter.readTableStructureWithCustomQuery(url, user, password, tableSource.customQuery, tableSource.jobId);
-		} else {
-			return  MySqlImporter.readTableStructure(url, user, password, tableSource.tableName);
-		}
-	}
-
-
-
-	__readRowFromTableSource(tableSource, rowIndex) {
-		switch(tableSource.type){
-			case TableSourceType.SQLITE:
-				return this.__readRowFromSqLiteTable(tableSource, rowIndex);
-				break;
-			case TableSourceType.MYSQL:
-				return this.__readRowFromMySqlTable(tableSource, rowIndex);
-				break;
-			default:
-				throw new Error('not yet implemented for source type ' + tableSource.type);
-		};
-	}
-
-	__readRowFromSqLiteTable(tableSource, rowIndex) {
-		var sqLiteFilePath = tableSource.filePath;
-
-		var password = tableSource.password;
-		var jobId = tableSource.jobId;
-
-		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
-		if (isUsingCustomQuery) {
-			var customQuery = tableSource.customQuery;
-			return SqLiteImporter.readRowWithCustomQuery(sqLiteFilePath, password, customQuery, jobId, rowIndex, this);
-		} else {
-			return SqLiteImporter.readRow(sqLiteFilePath, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);
-		}
-	}
-
-	__readRowFromMySqlTable(tableSource, rowIndex) {
-		var host = tableSource.host;
-		var port = tableSource.port;
-		var schema = tableSource.schema;
-		var url = host + ":" + port + "/" + schema;
-
-		var user = tableSource.user;
-		var password = tableSource.password;
-
-		var jobId = tableSource.jobId;
-
-		var isUsingCustomQuery = tableSource.isUsingCustomQuery;
-		if (isUsingCustomQuery) {
-			var customQuery = tableSource.customQuery;
-			return MySqlImporter.readRowWithCustomQuery(url, user, password, customQuery, jobId, rowIndex, this);
-
-		} else {
-			return MySqlImporter.readRow(url, user, password, tableSource.tableName, tableSource.isFilteringForJob, jobId, rowIndex, this);
-		}
-	}
+	}	
 
 	column(name){
 		return this.columnFolder.column(name);
@@ -954,13 +836,12 @@ export default class Table extends ComponentAtom {
 		return this.columnFolder.columnLegend(columHeader);
 	}
 
-	row(rowIndex) {
+	async row(rowIndex) {
 
-		if (this.isLinkedToSource) {
-			var tableSource = this.getTableSource();
-			return this.__readRowFromTableSource(tableSource, rowIndex);
+		if (this.isLinkedToSource) {			
+			return await TableConnection.readRowFromTableSource(this.tableSource, rowIndex);
 		} else {
-			return this.rows[rowIndex];
+			return this.__rows[rowIndex];
 		}
 	}
 
@@ -984,11 +865,37 @@ export default class Table extends ComponentAtom {
 	}
 
 	getColumnValues(columnName){
-		return this.rows.map(row=>row.entry(columnName));
+		return this.__rows.map(row=>row.entry(columnName));
 	}
 
 	isEditable(columnName) {
 		return true;
+	}
+
+	async pagedRows() {
+		if (this.__pagedRows) {
+			return this.__pagedRows;
+		} else {
+			return await this.rows();
+		}
+	}
+
+	setPagedRows(pagedRows) {
+		this.__pagedRows = pagedRows;
+		return this;
+	}
+
+	async rows() {
+		if (this.isLinkedToSource) {			
+			return await TableConnection.readRowsFromTableSource(this, this.tableSource);
+		} else {
+			return this.__rows;
+		}		
+	}
+
+	setRows(rows) {
+		this.__rows = rows;
+		return this;
 	}
 
 
@@ -1022,7 +929,7 @@ export default class Table extends ComponentAtom {
 		} catch (error) {
 
 			if (this.isLinkedToSource) {
-				this.reload();
+				this.__reload();
 				try {
 					return this.childByClass(ColumnFolder);
 				} catch (error) {
@@ -1040,36 +947,11 @@ export default class Table extends ComponentAtom {
             data.push(row.values);
 		}
 		return data;
-	}
-
-
-
-	get rows() {
-		return this.__rows;
-	}
-
-	set rows(rows) {
-		this.__rows = rows;
-		return this;
-	}
-
-	get pagedRows() {
-		if (this.__pagedRows) {
-			return this.__pagedRows;
-		} else {
-			return this.__rows;
-		}
-	}
-
-	set pagedRows(pagedRows) {
-		this.__pagedRows = pagedRows;
-		return this;
-	}
+	}	
 
 	get rowIndexOffset() {
 		return this.__rowIndexOffset;
 	}
-
 
 
 	set rowIndexOffset(rowIndexOffset) {
@@ -1126,6 +1008,10 @@ export default class Table extends ComponentAtom {
 
 	get tableSelection(){
 		return this.__tableSelection;
+	}
+
+	get tableSource(){
+		return this.childByClass(TableSource);
 	}
 
 	get dTreez(){

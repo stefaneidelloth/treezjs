@@ -264,10 +264,12 @@ export default class JupyterLabTerminal {
         }        
 	}
 
-	async __locallyOpenOrExecutePath(path, errorHandler, finishedHandler){		      
+	async __locallyOpenOrExecutePath(path, errorHandler, finishedHandler){	
+
+	    path = await this.__absolutePath(path);
         
         try{
-    	    var pythonCode = '!' + path.replace(/\//g, "\\");
+    	    var pythonCode = '!' + path;
 		    this.__executePythonCode(pythonCode, null, errorHandler, finishedHandler);
         } catch(error){
         	console.error("Could not open path '" + path + "'.\n", error);
@@ -281,10 +283,46 @@ export default class JupyterLabTerminal {
         }   
 	}
 
+	async __absolutePath(path){
+		if(path.substring(0,1) === '.'){
+       	 var currentDirectory = await this.__currentServerDirectory();
+	     path = currentDirectory + path;
+       }
+      
+       var serverRootDirectory = await this.__serverRootDirectory();
+       path = serverRootDirectory + path;
+	  
+       var os = await this.operationSystem();
+	   if(os === 'Windows'){
+	       path = path.replace(/\//g,'\\\\');
+	   }  
+	   return path;	  
+	}
+
+	async __serverRootDirectory(){
+		var workingDirectory = await this.__currentWorkingDirectory();
+		var serverDirectory = await this.__currentServerDirectory();
+		var endIndex = workingDirectory.indexOf(serverDirectory);
+		if(endIndex >-1){
+			return workingDirectory.substring(0, endIndex);
+		} else {
+			return workingDirectory;
+		}
+
+	}
+
 	async __currentServerDirectory(){
 		var notebookPanel = this.__firstVisibleNotebookPanel;
 		var urlResolver = notebookPanel.context.urlResolver;
-		return await urlResolver.resolveUrl('.');		
+		return await urlResolver.resolveUrl('.') + '/';		
+	}
+
+	async __currentWorkingDirectory(){
+		var code = 'import os\n' +
+		           'print(os.getcwd())\n';		
+		var workingDir =  await this.executePythonCode(code);	
+		workingDir = workingDir.replace(/\\/g,'/').trim() + '/';
+		return workingDir;	
 	}
 
 	get isRunningLocally(){
@@ -411,8 +449,12 @@ export default class JupyterLabTerminal {
 		});
 	}
 
+	
 
-	async sqLiteQuery(connectionString, query, isExpectingOutput) {			
+
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {	
+
+        connectionString = await this.__absolutePath(connectionString);
 
 		if(isExpectingOutput){
 
