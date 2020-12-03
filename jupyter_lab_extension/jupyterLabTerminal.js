@@ -264,13 +264,19 @@ export default class JupyterLabTerminal {
         }        
 	}
 
-	async __locallyOpenOrExecutePath(path, errorHandler, finishedHandler){	
-
-	    path = await this.__absolutePath(path);
+	async __locallyOpenOrExecutePath(path, errorHandler, finishedHandler){		      
         
         try{
-    	    var pythonCode = '!' + path;
-		    this.__executePythonCode(pythonCode, null, errorHandler, finishedHandler);
+    	    var pythonCode = '!"' + path + '"';
+		    await this.executePythonCodeWithCell(pythonCode)
+		        .catch(error=>{
+		        	if(errorHandler){
+		        		errorHandler(error);
+		        	}
+		        });
+		    if(finishedHandler){
+		    	finishedHandler();
+		    }
         } catch(error){
         	console.error("Could not open path '" + path + "'.\n", error);
         	if(errorHandler){
@@ -283,46 +289,10 @@ export default class JupyterLabTerminal {
         }   
 	}
 
-	async __absolutePath(path){
-		if(path.substring(0,1) === '.'){
-       	 var currentDirectory = await this.__currentServerDirectory();
-	     path = currentDirectory + path;
-       }
-      
-       var serverRootDirectory = await this.__serverRootDirectory();
-       path = serverRootDirectory + path;
-	  
-       var os = await this.operationSystem();
-	   if(os === 'Windows'){
-	       path = path.replace(/\//g,'\\\\');
-	   }  
-	   return path;	  
-	}
-
-	async __serverRootDirectory(){
-		var workingDirectory = await this.__currentWorkingDirectory();
-		var serverDirectory = await this.__currentServerDirectory();
-		var endIndex = workingDirectory.indexOf(serverDirectory);
-		if(endIndex >-1){
-			return workingDirectory.substring(0, endIndex);
-		} else {
-			return workingDirectory;
-		}
-
-	}
-
 	async __currentServerDirectory(){
 		var notebookPanel = this.__firstVisibleNotebookPanel;
 		var urlResolver = notebookPanel.context.urlResolver;
-		return await urlResolver.resolveUrl('.') + '/';		
-	}
-
-	async __currentWorkingDirectory(){
-		var code = 'import os\n' +
-		           'print(os.getcwd())\n';		
-		var workingDir =  await this.executePythonCode(code);	
-		workingDir = workingDir.replace(/\\/g,'/').trim() + '/';
-		return workingDir;	
+		return await urlResolver.resolveUrl('.');		
 	}
 
 	get isRunningLocally(){
@@ -449,12 +419,8 @@ export default class JupyterLabTerminal {
 		});
 	}
 
-	
 
-
-	async sqLiteQuery(connectionString, query, isExpectingOutput) {	
-
-        connectionString = await this.__absolutePath(connectionString);
+	async sqLiteQuery(connectionString, query, isExpectingOutput) {			
 
 		if(isExpectingOutput){
 
