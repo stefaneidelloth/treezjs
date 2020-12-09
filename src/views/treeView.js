@@ -221,8 +221,8 @@ export default class TreeView {
 		newWindow.focus();    	
     }
 
-    async showProperties(atom){ 
-    	await atom.createControlAdaption(this.propertiesView, this);
+    showProperties(atom){ 
+    	atom.createControlAdaption(this.propertiesView, this);
     	this.__lastAtomPathShownInPropertiesView=atom.treePath;
     }  
     

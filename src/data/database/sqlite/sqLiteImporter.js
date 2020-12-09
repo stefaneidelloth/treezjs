@@ -2,7 +2,6 @@ import Importer from './../importer.js';
 import ColumnBlueprint from './../../column/columnBlueprint.js';
 import TableData from './../tableData.js';
 import SqLiteColumnTypeConverter from './sqLiteColumnTypeConverter.js';
-import Row from './../../row/row.js';
 
 export default class SqLiteImporter extends Importer {
 
@@ -301,41 +300,8 @@ export default class SqLiteImporter extends Importer {
 		}
 
 		dataQuery += " LIMIT 1 OFFSET " + rowIndex + ";";
-		return await this.__readRow(filePath, password, dataQuery, table);
+		return this.__readRow(filePath, password, dataQuery, table);
 	}
-
-	static async readRows(
-		 filePath,
-		 password,
-		 tableName,
-		 filterRowsByJobId,
-		 jobId,		 
-		 table,
-		 startIndex,
-		 endIndex
-	) {
-		
-		var dataQuery = "SELECT * FROM '" + tableName + "'";
-
-		var applyFilter = filterRowsByJobId && jobId != null;
-		if (applyFilter) {
-			dataQuery += " WHERE job_id = '" + jobId + "'";
-		}
-
-		if(startIndex !== undefined){
-			if(endIndex !== undefined){
-				var limit = endIndex-startIndex+1;
-                dataQuery += ' LIMIT ' + limit + ' OFFSET ' + startIndex + ';';
-			} else {
-                dataQuery += ' OFFSET ' + startIndex + ';';
-			}
-			
-		}
-
-		
-		return await this.__readRows(filePath, password, dataQuery, table);
-	}
-
 
 	static async readRowWithCustomQuery(
 		filePath,
@@ -354,38 +320,7 @@ export default class SqLiteImporter extends Importer {
 		dataQuery = this.__injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
 		dataQuery += " LIMIT 1 OFFSET " + rowIndex + ";";
 
-		return await this.__readRow(filePath, password, dataQuery, table);
-	}
-
-	static async readRowsWithCustomQuery(
-		filePath,
-		password,
-		customQuery,
-		jobId,		
-		table,
-		startIndex,
-		endIndex
-	) {
-				
-		if (customQuery.length < 1) {
-			throw new Error('Custom query must not be empty');
-		}
-
-		var dataQuery = this.__removeTrailingSemicolon(customQuery);
-		dataQuery = this.__injectJobIdIfIncludesPlaceholder(dataQuery, jobId);
-
-
-		if(startIndex !== undefined){
-			if(endIndex !== undefined){
-				var limit = endIndex-startIndex+1;
-                dataQuery += ' LIMIT ' + limit + ' OFFSET ' + startIndex + ';';
-			} else {
-                dataQuery += ' OFFSET ' + startIndex + ';';
-			}
-			
-		}
-
-		return await this.__readRows(filePath, password, dataQuery, table);
+		return this.__readRow(filePath, password, dataQuery, table);
 	}
 
 	static async __readRow(filePath, password, dataQuery, table) {
@@ -393,37 +328,13 @@ export default class SqLiteImporter extends Importer {
 
 		var data = await window.treezTerminal.sqLiteQuery(filePath, dataQuery, true);
 
-		var headers = data[0];
-		var columnCount = headers.length;
-
 		for (var columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-					var columnName = headers[columnIndex];
+					var columnName = data[0][columnIndex];
 					var value = data[1][columnIndex];
 					row.setEntry(columnName, value);
 		}		
 
 		return row;
-	}	
-
-	static async __readRows(filePath, password, dataQuery, table) {
-		
-
-		var data = await window.treezTerminal.sqLiteQuery(filePath, dataQuery, true);
-
-		var headers = data[0];
-		var columnCount = headers.length;
-
-		var rowCount = data.length;
-
-		var rows =[];
-
-		for(var rowIndex =1; rowIndex < rowCount; rowIndex++){			
-			var rowData = data[rowIndex];
-			var row = table.createRow(rowData);
-			rows.push(row);
-		}			
-
-		return rows;
 	}	
 
 	static async createTableIfNotExists(filePath, password, tableName, columnBlueprints){
