@@ -24,6 +24,6 @@ jupyter labextension install .
 #E. Create a file "workspace.js" in your worspace folder, including a single line to
 import "treezJupyterLab.js":
 
-import './treezjs/src/treezJupyterLab.js';
+import './treezjs/jupter_lab_extension/treezJupyterLab.js';
 
 #H. Start JupyterLab. The left Sidebar should have a new button with the treez icon.
