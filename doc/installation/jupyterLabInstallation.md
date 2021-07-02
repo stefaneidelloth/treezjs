@@ -47,13 +47,6 @@ D:\WinPython\notebooks\treezjs
 
 )
 
-## Install bower
-The javascript dependencies of treez are managed with [bower](https://bower.io/). Download and install node.js
-from https://nodejs.org as a prerequisite and then install bower with the package manager
-of nodejs, using following console command:
-
->npm install -g bower
-
 ## Install javascript dependencies
 
 * Open a console window (Press keys Win + R, enter "cmd" and click OK) 
@@ -63,13 +56,11 @@ of nodejs, using following console command:
 >d:<br>
 >cd D:\WinPython\notebooks\treezjs
 
-* Install the javscript dependencies using bower with following console command:
+* Install the javscript dependencies using npm with following console command:
 
->bower install
+>npm install
 
-That command creates a sub folder "bower_components" and downloads the JavaScript dependencies.
-If the download fails because you are behind a firewall please also see 
-https://stackoverflow.com/questions/21705091/bower-behind-a-proxy
+That command creates a sub folder "node_modules" and downloads the JavaScript dependencies.
 
 ## Install Google Chrome 
 
