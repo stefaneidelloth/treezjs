@@ -97,7 +97,7 @@ export default class TreeView {
         	await new Promise((resolve, reject)=>{               
 
 				var script = document.createElement('script');
-				script.type = 'module';
+				script.type = 'module';				
 				script.innerHTML = sourceCode + '\n' + 
 								   'if(window.scriptLoadedHook){window.scriptLoadedHook();}'; 
 
@@ -112,9 +112,9 @@ export default class TreeView {
 				window.addEventListener('error', windowErrorHandler);  
 
 				var rejectHandler = (event) =>{
-					console.log(event);
+					//console.log(event);
 					window.removeEventListener('error', windowErrorHandler);
-					var message = 'Please check the import statements:\n'+sourceCode;
+					var message = 'Please check the import statements to use /tree instead of /notebooks :\n'+sourceCode;
 					reject(message);						
 				};				
 
@@ -129,7 +129,7 @@ export default class TreeView {
 				};
 
                 script.addEventListener('load', loadedHandler);
-				script.onload = loadedHandler;
+				//script.onload = loadedHandler;
 
 				var body = document.getElementsByTagName('body')[0];
 				try {
@@ -149,7 +149,8 @@ export default class TreeView {
         });        
         	
     }
-    
+
+   
 
     clearGraphicsView(){
    		this.graphicsView.clear();   	
