@@ -1,4 +1,4 @@
-# jupyterlab_treez
+# jupyterlab_workspace_module
 
 Looks for a JavaScript file 'workspace.js' in the workspace folder (=notebook-dir) and
 tries to load it as ES6 module. You can adapt the content of 'workspace.js' to your needs.
