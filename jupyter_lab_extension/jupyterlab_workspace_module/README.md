@@ -13,7 +13,7 @@ tries to load it as ES6 module. You can adapt the content of 'workspace.js' to y
 To install using pip:
 
 ```bash
-jupyter labextension install jupyterlab_workspace_module
+jupyter labextension install @treezjs/workspace_module
 ```
 
 ## Development

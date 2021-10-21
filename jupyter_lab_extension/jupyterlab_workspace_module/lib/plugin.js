@@ -12,6 +12,10 @@ var { FileDialog } = require('@jupyterlab/filebrowser');
 var { NotebookActions } = require("@jupyterlab/notebook");
 var { InputDialog, ReactWidget } = require('@jupyterlab/apputils');
 
+//var { Events } = require('@jupyterlab/events');
+
+'base/js/events'
+
 module.exports = [{
     id: 'jupyterlab_workspace_module',
     autoStart: true,
@@ -69,7 +73,8 @@ async function init(
 	  	'InputDialog': InputDialog,
     	'FileDialog': FileDialog,
     	'NotebookActions': NotebookActions,
-    	'ReactWidget': ReactWidget
+    	'ReactWidget': ReactWidget//,
+    	//'Events': Events
     };
 
 	let url = document.URL;
