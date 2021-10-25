@@ -10,7 +10,7 @@ tries to load it as ES6 module. You can adapt the content of 'workspace.js' to y
 
 ## Installation
 
-To install using pip:
+To install using python package manager:
 
 ```bash
 jupyter labextension install @treezjs/workspace_module

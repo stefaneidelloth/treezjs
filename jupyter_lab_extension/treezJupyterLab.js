@@ -1,5 +1,6 @@
 import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
+import NotebookObserver from './notebookObserver.js';
 
 let home = '../files/files/treezjs';
 let url = document.URL;
@@ -72,6 +73,10 @@ window.init_workspace_module = async (app, dependencies)=>{
 		var focusManager = __registerLayoutCompoments(layout, layoutContainer);
 		var editorFactory = __createEditorFactory(app);
 
+		let notebook = __tryToGetNotebook(app);
+		let observer = new NotebookObserver();
+		//observer.observe(notebook, dependencies);
+
 		var terminalFactory = (handleCreatedTerminal)=>{
 			handleCreatedTerminal(new JupyterLabTerminal(app, dependencies));
 		};
@@ -100,7 +105,7 @@ function __createEditorFactory(app){
 
 		var editor = {
 			setText: function(code, finishedHandler){
-				var firstCell = __tryToGetFirstNotebookCell(app);
+				var firstCell = __tryToGetNotebookCell(app);
 
 				var jupyterText = '%%javascript\n' + code;
 				firstCell.editor.doc.setValue(jupyterText);
@@ -111,12 +116,12 @@ function __createEditorFactory(app){
 
 			},
 			processText: function(textHandler){
-				var firstCell = __tryToGetFirstNotebookCell(app);
+				var firstCell = __tryToGetNotebookCell(app);
 				if(firstCell){
 					var jupyterText = firstCell.editor.doc.getValue();
 					var javaScript = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
 
-					textHandler(javaScript);
+					textHandler(javaScript);					
 				} else {
 					console.warn('In order to import code, first document must by notebook.');
 				}
@@ -128,21 +133,21 @@ function __createEditorFactory(app){
 
 }
 
-function __updateGoldenLayout(layout, layoutContainer){
-	var rect = layoutContainer.getBoundingClientRect();
-	layout.updateSize(rect.width, rect.height);
+
+function __tryToGetNotebookCell(app){   
+	var notebook = __tryToGetNotebook(app);
+	return notebook
+		?notebook.activeCell
+		:null;    	
 }
 
-function __tryToGetFirstNotebookCell(app){
-    var notebookPanel = __getFirstVisibleNotebookPanel(app);
-    if(notebookPanel){
-    	var notebook = notebookPanel.content;
-    	if(notebook){
-    		return notebook.activeCell;
-    	}
-    }
-	return null;
+function __tryToGetNotebook(app){
+	var notebookPanel = __getFirstVisibleNotebookPanel(app);
+    return notebookPanel
+        ?notebookPanel.content
+        :null;
 }
+
 
 function __getFirstVisibleNotebookPanel(app){
 	var mainWidgets = app.shell.widgets('main');
@@ -157,6 +162,11 @@ function __getFirstVisibleNotebookPanel(app){
 		widget = mainWidgets.next();
 	}
 	return null;
+}
+
+function __updateGoldenLayout(layout, layoutContainer){
+	var rect = layoutContainer.getBoundingClientRect();
+	layout.updateSize(rect.width, rect.height);
 }
 
 

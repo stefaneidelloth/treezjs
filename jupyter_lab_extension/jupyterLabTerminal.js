@@ -607,8 +607,8 @@ export default class JupyterLabTerminal {
 		var mainWidgets = app.shell.widgets('main');
 		var widget = mainWidgets.next();
 		while(widget){
-			var type = widget.constructor.name;
-			if(type == 'NotebookPanel'){  //other wigets might be of type DocumentWidget
+			var type = widget.sessionContext.type;
+			if(type == 'notebook'){  //other wigets might be of type DocumentWidget
 				if (widget.isVisible){
 					return widget;
 				}
