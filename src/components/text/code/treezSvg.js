@@ -1,6 +1,6 @@
-import TreezCodeArea from './treezCodeArea.js';
+import TreezCodeMirrorArea from './treezCodeMirrorArea.js';
 
-export default class TreezSvg extends TreezCodeArea {    
+export default class TreezSvg extends TreezCodeMirrorArea {    
 
    	constructor(){
    		super();

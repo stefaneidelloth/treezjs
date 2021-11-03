@@ -19,6 +19,7 @@ import RegionsAtomCodeAdaption from './../core/code/regionsAtomCodeAdaption.js';
 import JavaScriptModel from './code/javaScriptModel.js';
 import PythonModel from './code/pythonModel.js';
 import RModel from './code/rModel.js';
+import StarBoardModel from './code/starBoardModel.js';
 
 export default class Models extends Model {
 
@@ -200,6 +201,19 @@ export default class Models extends Model {
 					treeView
 				)
 			);
+
+			actions.push(
+				new AddChildAtomTreeViewAction(
+					StarBoardModel,
+					'starBoardModel',
+					'starBoard.png',
+					parentSelection,
+					this,
+					treeView
+				)
+			);
+
+
 		}
 
 		return actions;
@@ -259,6 +273,10 @@ export default class Models extends Model {
 
 	createRModel(name) {
 		return this.createChild(RModel, name);
+	}
+
+	createStarBoardModel(name) {
+		return this.createChild(StarBoardModel, name);
 	}
 
 }

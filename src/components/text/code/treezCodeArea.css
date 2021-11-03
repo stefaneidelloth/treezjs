@@ -11,6 +11,7 @@
    
     resize: vertical;
     overflow: auto !important;   
+    min-height: 100px;
 }
 
 .treez-code-area-toolbar {

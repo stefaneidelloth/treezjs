@@ -78,9 +78,15 @@ async function init(
     };
 
 	let url = document.URL;
+	let labIndex = url.indexOf('/lab');
+	let urlPrefix = url.substring(0, labIndex);
+
 	let maxDepth = url.split('/').length;
 
-	let workspacePath = 'files/workspace.js';
+	let workspacePath = urlPrefix + '/tree/workspace.js';
+
+	//TODO: needs to be tested after installtion of jupyterlab plugins is
+	//fixed on windows
 
 	console.log('[workspace_module] Trying to load "' + workspacePath + '"');
 

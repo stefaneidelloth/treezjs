@@ -106,13 +106,18 @@ export default class CodeModel extends Model {
 	        				   })
 	        );  
 
-        const sectionContent = section.append('div');   
-        sectionContent.append('treez-code-area') 
+         
+        this.createCodeArea(section)
+		          
+	} 
+
+	createCodeArea(section){
+		const sectionContent = section.append('div');  
+		sectionContent.append('treez-code-mirror-area') 
         	.attr('mode', this.mode)          
             .onChange(()=>this.refreshStatus())           
             .bindValue(this,()=>this.code);
-		          
-	}   	
+	}  	
 
 	createStatusSection(page) {
 		const section = page.append('treez-section')

@@ -39,7 +39,9 @@ import TreezInteger from './../../components/number/treezInteger.js';
 import TreezLineStyle from './../../components/lineStyle/treezLineStyle.js';
 import LineStyle from './../../components/lineStyle/lineStyle.js';
 
+
 import TreezModelPath from './../../components/modelPath/treezModelPath.js';
+import TreezNotebookArea from './../../components/text/code/treezNotebookArea.js';
 
 import TreezSection from './../../components/section/treezSection.js';
 import TreezSize from './../../components/size/treezSize.js';  
@@ -52,7 +54,7 @@ import SymbolStyle from './../../components/symbolStyle/symbolStyle.js';;
 
 import TreezTabFolder from './../../components/tabs/treezTabFolder.js';
 
-import TreezCodeArea from './../../components/text/code/treezCodeArea.js';
+import TreezCodeMirrorArea from './../../components/text/code/treezCodeArea.js';
 import TreezSvg from './../../components/text/code/treezSvg.js';
 import TreezTextArea from './../../components/text/area/treezTextArea.js';
 import TreezTextField from './../../components/text/field/treezTextField.js';
@@ -116,9 +118,10 @@ export default class ComponentAtom extends Atom {
 			.text(this.treePath);	
 
 		const tabFolderElement = document.createElement('treez-tab-folder');
+		parent.appendChild(tabFolderElement);
 		const tabFolder = treeView.dTreez.select(tabFolderElement);
 		this.createComponentControl(tabFolder);				
-		parent.appendChild(tabFolderElement);					
+							
 	
         this.afterCreateControlAdaptionHook();
  		

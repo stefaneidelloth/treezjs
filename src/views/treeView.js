@@ -104,7 +104,10 @@ export default class TreeView {
 				var windowErrorHandler = (event) =>{
 					event.preventDefault();
 					var error = event.error;
-					error.stack = error.stack + '\n\n' + sourceCode;					
+					if(error){
+						error.stack = error.stack + '\n\n' + sourceCode;	
+					}
+									
 					window.removeEventListener('error', windowErrorHandler);
 					reject(error);
 				};

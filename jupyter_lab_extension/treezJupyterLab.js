@@ -2,11 +2,11 @@ import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
 import NotebookObserver from './notebookObserver.js';
 
-let home = '../files/files/treezjs';
 let url = document.URL;
-if(url.includes('localhost')){
-    home =  '../files/treezjs';
-}
+let labIndex = url.indexOf('/lab');
+let urlPrefix = url.substring(0, labIndex);
+
+let home = urlPrefix + '/tree/treezjs';
 
 Treez.config({
 	home: home,

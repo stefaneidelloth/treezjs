@@ -7,8 +7,8 @@ export default class TreezCodeArea extends LabeledTreezElement {
         super();
         this.__label = undefined;
         this.__container = undefined;
-        this.__codeMirrorPlaceHolder = undefined;
-        this.__codeMirror = undefined;
+        this.__editorPlaceHolder = undefined;
+        this.__editor = undefined;
         this.__isSettingValue = false;
     }
 
@@ -18,7 +18,6 @@ export default class TreezCodeArea extends LabeledTreezElement {
 
     async connectedCallback() {
 
-
 		if(!this.__label){
 			var label = document.createElement('label');
 			this.__label = label;
@@ -27,45 +26,45 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			this.appendChild(label);
 		}
 
-
 		if(!this.__container){
-
 			var container = document.createElement('div');
 			this.__container = container;
 			this.appendChild(container);
 
 			this.__createToolbar(container);
-
-			var codeMirrorContainer = document.createElement('div');
-			codeMirrorContainer.className = 'treez-code-area-container';
-			container.appendChild(codeMirrorContainer)
-
-			this.initializeMode();
-			this.initializeValue();
-
-			//Doc on CodeMirror options: https://codemirror.net/doc/manual.html#config
-
-			await this.initializeCodeMirror();
-
-			var self = this;
-			this.__codeMirror = window.CodeMirror(codeMirrorContainer,
-			  {
-				value: self.value,
-				mode: self.mode,
-				lineNumbers: false,
-				matchBrackets: true,
-				continueComments: "Enter",
-				extraKeys: {"Ctrl-Q": "toggleComment"}
-			  }
-			);
-
-			this.__codeMirror.on('change',
-			    codeMirror => this.codeMirrorChanged(codeMirror)
-			);
+			
+			await this.__createCodeArea(container);			
 		}
 
 		this.update();
+    }
+    
+    async __createCodeArea(container){
+        var codeAreaContainer = document.createElement('div');
+        codeAreaContainer.className = 'treez-code-area-container';
+        container.appendChild(codeAreaContainer)
 
+        this.initializeMode();
+        this.initializeValue();
+
+        this.__editor = await this.createEditor(codeAreaContainer);
+
+        this.__editor.on('change', editor => this.editorChanged(editor)
+        );
+    }
+
+     editorChanged(editor){
+    	if(this.__isSettingValue){
+    		return;
+    	}
+    	var newValue = editor.getValue();
+    	if(this.value.trim() !== newValue.trim()){
+    		this.value = newValue;
+    	}	    
+    }
+
+    async createEditor(codeAreaContainer){
+        throw new Error('Needs to be overridden by inheriting class');
     }
 
     __createToolbar(container){
@@ -77,12 +76,6 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		this.__createSaveButton(container);
 		this.__createUploadButton(container);
 		this.__createDownloadButton(container);
-
-		
-
-		
-		
-
 		
     }
 
@@ -152,8 +145,13 @@ export default class TreezCodeArea extends LabeledTreezElement {
     __uploadFile(event){
     	const element = document.createElement('input');
 		element.type = 'file';
-		element.onchange = (event)=>{
-			var content = event.srcElement.value;
+		element.onchange = async (event)=>{
+			if(event.srcElement.files.length < 1){
+				return
+			}
+			let file = event.srcElement.files[0];
+			let content = await file.text();
+			
 			document.body.removeChild(element);
 			if(content){
 				this.value = content;
@@ -194,73 +192,24 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		}
     }
 
-    codeMirrorChanged(codeMirror){
-    	if(this.__isSettingValue){
-    		return;
-    	}
-    	var newValue = codeMirror.getValue();
-    	if(this.value.trim() !== newValue.trim()){
-    		this.value = newValue;
-    	}	    
-    }
+   
 
-    async initializeCodeMirror(){
-    	if(!window.requirejs){
-        	 window.requirejs = await Treez.importScript('/node_modules/requirejs/require.js','require')
-                    .catch(error => {
-                        console.log(error);
-                        throw error;
-                    });
-
-			window.requirejs.config({
-				baseUrl : '..',
-				paths : {
-					'codemirror' : 'node_modules/codemirror'
-				}
-			});
-        }
-
-        if(!window.CodeMirror){
-
-        	Treez.importCssStyleSheet('/node_modules/codemirror/lib/codemirror.css');
-
-        	await new Promise((resolve, reject) => {
-				window.requirejs([
-					'codemirror/lib/codemirror',
-					'codemirror/mode/sql/sql',
-					'codemirror/mode/javascript/javascript',
-					'codemirror/mode/python/python',
-					'codemirror/mode/htmlmixed/htmlmixed'
-				], function(
-					 CodeMirror
-				) {
-					window.CodeMirror=CodeMirror;
-					resolve();
-				}, function(error){
-					console.log(error);
-					reject(error);
-				});
-			});
-
-		}
-    }
-
-	attributeChangedCallback(attr, oldStringValue, newStringValue) {
+    attributeChangedCallback(attr, oldStringValue, newStringValue) {
 		super.attributeChangedCallback(attr, oldStringValue, newStringValue)
 
 		if(attr==='mode'){
-			if(this.__codeMirror){
-				this.__codeMirror.setOption('mode', newStringValue);
+			if(this.__editor){
+				this.__editor.setOption('mode', newStringValue);
 			}
 		}
 	}
 
 	updateElements(newValue){
-    	if(this.__codeMirror){
-    		var oldValue = this.__codeMirror.getValue();
+    	if(this.__editor){
+    		var oldValue = this.__editor.getValue();
     		if(oldValue !== newValue) {
     			this.__isSettingValue = true;
-    			this.__codeMirror.setValue(newValue);
+    			this.__editor.setValue(newValue);
     			this.__isSettingValue = false;
     		}
     	}
@@ -269,8 +218,9 @@ export default class TreezCodeArea extends LabeledTreezElement {
     updateContentWidth(width){
 		super.updateWidth(width);
 		this.updateWidthFor(this.__container, width);
-    	if(this.__codeMirror){
-    		this.__codeMirror.setSize(width, null);
+    	if(this.__editor){
+    		//TODO
+    		//this.__editor.setSize(width, null);
     	}
     }
 
@@ -282,10 +232,10 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__codeMirror){
-    		this.__codeMirror.options.disableInput = booleanValue;
+    	if(this.__editor){
+    		this.__editor.options.disableInput = booleanValue;
 
-    		let parentDiv = this.__codeMirror.getScrollerElement().parentNode;
+    		let parentDiv = this.__editor.getScrollerElement().parentNode;
 
     		if(booleanValue){
 				parentDiv.style.backgroundColor = '#ebebeb';
@@ -300,7 +250,7 @@ export default class TreezCodeArea extends LabeledTreezElement {
 		if(booleanValue === undefined){
 			throw Error('This method expects a boolean argument');
 		}
-    	if(this.__codeMirror){
+    	if(this.__editor){
     		LabeledTreezElement.hide(this.__label, booleanValue);
     		LabeledTreezElement.hide(this.__container, booleanValue);
     	}
@@ -311,7 +261,6 @@ export default class TreezCodeArea extends LabeledTreezElement {
 			?window.treezConfig.home
 			:'';
 	}
-
 
     get mode() {
 		 return this.getAttribute('mode');
