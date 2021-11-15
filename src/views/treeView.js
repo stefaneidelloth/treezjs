@@ -143,7 +143,7 @@ export default class TreeView {
 
 			})
 			.catch(error => {
-				console.warn('[Treez]: Could not process JavaScript code:\n', error);
+				console.log('[Treez]: Could not process JavaScript code:\n', error);
 			})
 			.then(()=>{
 				self.refreshPropertiesView();

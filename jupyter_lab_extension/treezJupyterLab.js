@@ -73,7 +73,7 @@ window.init_workspace_module = async (app, dependencies)=>{
 		var focusManager = __registerLayoutCompoments(layout, layoutContainer);
 		var editorFactory = __createEditorFactory(app);
 
-		let notebook = __tryToGetNotebook(app);
+		let notebook = __tryToGetActiveNotebook(app);
 		let observer = new NotebookObserver();
 		//observer.observe(notebook, dependencies);
 
@@ -105,7 +105,7 @@ function __createEditorFactory(app){
 
 		var editor = {
 			setText: function(code, finishedHandler){
-				var firstCell = __tryToGetNotebookCell(app);
+				var firstCell = __tryToGetActiveNotebookCell(app);
 
 				var jupyterText = '%%javascript\n' + code;
 				firstCell.editor.doc.setValue(jupyterText);
@@ -116,7 +116,7 @@ function __createEditorFactory(app){
 
 			},
 			processText: function(textHandler){
-				var firstCell = __tryToGetNotebookCell(app);
+				var firstCell = __tryToGetActiveNotebookCell(app);
 				if(firstCell){
 					var jupyterText = firstCell.editor.doc.getValue();
 					var javaScript = jupyterText.replace('%%javascript\n','').replace('%%js\n','');
@@ -134,31 +134,34 @@ function __createEditorFactory(app){
 }
 
 
-function __tryToGetNotebookCell(app){   
-	var notebook = __tryToGetNotebook(app);
+function __tryToGetActiveNotebookCell(app){   
+	var notebook = __tryToGetActiveNotebook(app);
 	return notebook
 		?notebook.activeCell
 		:null;    	
 }
 
-function __tryToGetNotebook(app){
-	var notebookPanel = __getFirstVisibleNotebookPanel(app);
+function __tryToGetActiveNotebook(app){
+	var notebookPanel = __getActiveNotebookPanel(app);
     return notebookPanel
         ?notebookPanel.content
         :null;
 }
 
 
-function __getFirstVisibleNotebookPanel(app){
+function __getActiveNotebookPanel(app){
 	var mainWidgets = app.shell.widgets('main');
 	var widget = mainWidgets.next();
 	while(widget){
-		var type = widget.sessionContext.type;
-		if(type == 'notebook'){  //other wigets might be of type DocumentWidget
-			if (widget.isVisible){
-				return widget;
+		if(widget.sessionContext){
+			var type = widget.sessionContext.type;
+			if(type == 'notebook'){  //other wigets might be of type DocumentWidget
+				if (widget.isVisible){
+					return widget;
+				}
 			}
 		}
+		
 		widget = mainWidgets.next();
 	}
 	return null;

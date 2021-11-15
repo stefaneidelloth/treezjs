@@ -8,20 +8,21 @@ If you want to use treezjs with JupyterLab please follow following steps:
 * The target of the shortcut might for example be:
 %COMSPEC% /C ".\WinPython\Jupyter Labk.exe"  --notebook-dir=%cd%\workspace
 
-If you do not want to creae that shortcut you can also use the default workspace (=notebook-dir)
+If you do not want to create that shortcut you can also use the default workspace (=notebook-dir)
 
 #C. Clone treez to a sub folder "treezjs" of your workspace folder, e.g.
 
 .\workspace\treezjs
 
-#D. Install the JupyterLab extension "jupyterlab_workspace_module":
+#D. Install the JupyterLab extension "@treezjs/workspace_module":
 
-Navigate to treezjs\jupyter_lab_extension\jupyterlab_workspace_module.
-Run
+jupyter labextension install @treezjs/workspace_module
 
-jupyter labextension install .
+Source code of this extension is available at
 
-#E. Create a file "workspace.js" in your worspace folder, including a single line to
+https://github.com/stefaneidelloth/workspace_module
+
+#E. Create a file "workspace.js" in your workspace folder, including a single line to
 import "treezJupyterLab.js":
 
 import './treezjs/jupter_lab_extension/treezJupyterLab.js';

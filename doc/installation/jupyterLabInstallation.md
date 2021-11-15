@@ -15,7 +15,7 @@ As an alternative to the [Anaconda](https://www.anaconda.com/distribution/) dist
 
 ## Install workspace_module
 
-The JupyterLab extension workspace_module allows to extend JupyterLab with code that is located in the JupyterLab workspace.
+The JupyterLab extension workspace_module allows extending JupyterLab with code that is located in the JupyterLab workspace.
 
 * Open a console window (Press keys Win + R, enter "cmd" and click OK) 
 
@@ -25,9 +25,9 @@ The JupyterLab extension workspace_module allows to extend JupyterLab with code 
 
 Trouble shooting:
 
-* If pip.exe can not be found, please ensure that pip.exe is incluclued in the windows system environmenat variable PATH or navigate to the Scripts folder of you python installation first
+* If pip.exe can not be found, please ensure that pip.exe is included in the Windows system environment variable PATH or navigate to the Scripts folder of you python installation first
 
-* If you are behind a firewall, please ensure to set the right proxy before running pip.exe, e.g. with following console command:
+* If you are behind a firewall, please ensure to set the right proxy before running pip.exe, for example with following console command:
 
 >SET HTTPS_PROXY=153.33.222.111:3128
 
@@ -56,7 +56,7 @@ D:\WinPython\notebooks\treezjs
 >d:<br>
 >cd D:\WinPython\notebooks\treezjs
 
-* Install the javscript dependencies using npm with following console command:
+* Install the javascript dependencies using npm with following console command:
 
 >npm install
 

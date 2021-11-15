@@ -607,12 +607,15 @@ export default class JupyterLabTerminal {
 		var mainWidgets = app.shell.widgets('main');
 		var widget = mainWidgets.next();
 		while(widget){
-			var type = widget.sessionContext.type;
-			if(type == 'notebook'){  //other wigets might be of type DocumentWidget
-				if (widget.isVisible){
-					return widget;
+			if(widget.sessionContext){
+				var type = widget.sessionContext.type;
+				if(type == 'notebook'){  //other wigets might be of type DocumentWidget
+					if (widget.isVisible){
+						return widget;
+					}
 				}
 			}
+			
 			widget = mainWidgets.next();
 		}
 		return null;
