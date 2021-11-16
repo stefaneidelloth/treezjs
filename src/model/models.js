@@ -20,6 +20,7 @@ import JavaScriptModel from './code/javaScriptModel.js';
 import PythonModel from './code/pythonModel.js';
 import RModel from './code/rModel.js';
 import StarBoardModel from './code/starBoardModel.js';
+import JupyterModel from './executable/jupyterModel.js';
 
 export default class Models extends Model {
 
@@ -204,6 +205,17 @@ export default class Models extends Model {
 
 			actions.push(
 				new AddChildAtomTreeViewAction(
+					JupyterModel,
+					'jupyterModel',
+					'jupyter.png',
+					parentSelection,
+					this,
+					treeView
+				)
+			);
+
+			actions.push(
+				new AddChildAtomTreeViewAction(
 					StarBoardModel,
 					'starBoardModel',
 					'starBoard.png',
@@ -273,6 +285,10 @@ export default class Models extends Model {
 
 	createRModel(name) {
 		return this.createChild(RModel, name);
+	}
+
+	createJupyterModel(name) {
+		return this.createChild(JupyterModel, name);
 	}
 
 	createStarBoardModel(name) {
