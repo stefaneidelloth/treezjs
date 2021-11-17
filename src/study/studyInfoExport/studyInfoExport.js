@@ -367,7 +367,7 @@ export default class StudyInfoExport extends Model {
 			case StudyInfoExportType.textFile:
 				throw new Error('Text file should not need a connection string.')
 			case StudyInfoExportType.sqLite:				
-				return this.fullPath(this.filePath);
+				return this.resolvedPath(this.filePath);
 			case StudyInfoExportType.mySql:
 				return this.host + ':' + this.port; //TODO check this
 			default:

@@ -16,12 +16,12 @@ export default class AbstractPathVariable extends Variable {
 		}
 	}
 
-	get fullPath(){
+	get resolvedPath(){
     	
-    	var fullPath = this.value;
+    	var resolvedPath = this.value;
 
-    	if(!fullPath){
-    		return fullPath;
+    	if(!resolvedPath){
+    		return resolvedPath;
     	}
     	
     	var pathMap = this.__pathMapProvider
@@ -31,14 +31,14 @@ export default class AbstractPathVariable extends Variable {
     	for(var entry of pathMap.reverse()){
     		var placeHolder = '{$' + entry.name + '$}';
     		var path = entry.value;
-    		fullPath = fullPath.replace(placeHolder, path);
+    		resolvedPath = resolvedPath.replace(placeHolder, path);
     	}
     	
-    	if(fullPath.includes('{$')){
-    		console.warn('File path including unknown path variable: "' + fullPath + '"');
+    	if(resolvedPath.includes('{$')){
+    		console.warn('File path including unknown path variable: "' + resolvedPath + '"');
     	}
     	
-    	return fullPath;
+    	return resolvedPath;
     }
 	
 	

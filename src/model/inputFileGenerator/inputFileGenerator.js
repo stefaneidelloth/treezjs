@@ -71,13 +71,13 @@ export default class InputFileGenerator extends Model  {
 
 		var template = '';
 		if(this.templatePath){
-			var path = this.fullPath(this.templatePath);
+			var path = this.resolvedPath(this.templatePath);
 			template = await window.treezTerminal.readTextFile(path) //
 							 .catch((error)=>{
 								monitor.error(error);
 							 });
 			if(!template){
-				throw new Error('Could not read template at ' + this.fullPath(this.templatePath));
+				throw new Error('Could not read template at ' + this.resolvedPath(this.templatePath));
 			}
 		} else {
 			if(!this.isForcingInjection){

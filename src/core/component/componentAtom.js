@@ -265,13 +265,34 @@ export default class ComponentAtom extends Atom {
 		}
 	}
 	
-	fullPath(pathIncludingVariables){
+	resolvedPath(pathIncludingVariables){
 		return  TreezAbstractPath.replacePathVariables(pathIncludingVariables, this.pathMap);		
 	}
 
 	absolutePath(relativeOrAbsolutePath){
 		return TreezAbstractPath.convertToAbsolutePathIfRelative(relativeOrAbsolutePath);
-	}	
+	}
+
+	documentPath(url){		
+        let labIndex = url.indexOf('/lab');
+        let documentPath = url.substring(labIndex+10);
+        return documentPath;
+	}
+
+	relativePath(path, url){
+        let documentPath = this.documentPath(url);
+        let items = documentPath.split('/')
+        let lastItem = items[items.length-1];
+        let isFile = lastItem.indexOf('.') > 0;
+
+        let levels = isFile
+                        ?items.length-1
+                        :items.length;
+        for(let index=0;index<levels;index++){
+        	path = '../' + path;
+        }
+        return path;
+	}		
 	
 	get isEnabled(){
 		return this.__isEnabled;

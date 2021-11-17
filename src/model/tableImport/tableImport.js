@@ -424,7 +424,7 @@ export default class TableImport extends Model {
 	}
 
 	get sourcePath() {		
-		return this.fullPath(this.filePath);				
+		return this.resolvedPath(this.filePath);				
 	}
 
 

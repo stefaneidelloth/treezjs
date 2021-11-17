@@ -78,7 +78,7 @@ export default class SqLiteAppender extends Model {
 
 		var tableNames = this.isAppendingExplicitTables
 			?this.explicitTableNames
-			:await SqLiteImporter.tableNames(this.fullPath(this.sourceFilePath), this.password);	
+			:await SqLiteImporter.tableNames(this.resolvedPath(this.sourceFilePath), this.password);	
 				
 		monitor.totalWork = tableNames.length;			
 		
@@ -105,16 +105,16 @@ export default class SqLiteAppender extends Model {
     
     async __appendTable(tableName){
 
-    	var columnBlueprints = await SqLiteImporter.readTableStructure(this.fullPath(this.sourceFilePath), this.password, tableName);
+    	var columnBlueprints = await SqLiteImporter.readTableStructure(this.resolvedPath(this.sourceFilePath), this.password, tableName);
     	this.__disablePrimaryKeys(columnBlueprints);
 		columnBlueprints = this.__insertStudyIdAndJobIdColumns(columnBlueprints);
     	
-    	await SqLiteImporter.createTableIfNotExists(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints);
+    	await SqLiteImporter.createTableIfNotExists(this.resolvedPath(this.targetFilePath), this.password, tableName, columnBlueprints);
 
-    	var tableData = await SqLiteImporter.importData(this.fullPath(this.sourceFilePath), this.password, tableName);
+    	var tableData = await SqLiteImporter.importData(this.resolvedPath(this.sourceFilePath), this.password, tableName);
     	tableData = this.__insertStudyIdAndJobId(tableData);
 
-    	await SqLiteImporter.appendData(this.fullPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);    	
+    	await SqLiteImporter.appendData(this.resolvedPath(this.targetFilePath), this.password, tableName, columnBlueprints, tableData);    	
     }
 
     __disablePrimaryKeys(columnBlueprints){

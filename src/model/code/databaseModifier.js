@@ -57,7 +57,7 @@ export default class DatabaseModifier extends CodeModel {
     	
     	switch(this.targetType){
     		case TableTargetType.sqLite:
-    			var connectionString = this.fullPath(this.targetFilePath);    			
+    			var connectionString = this.resolvedPath(this.targetFilePath);    			
     			let singleLineQuery = query.replace(/\n/g,'')
     			await window.treezTerminal.sqLiteQuery(connectionString, singleLineQuery, false)
     				.catch((error)=>{

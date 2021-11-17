@@ -257,7 +257,7 @@ export default class Executable extends Model {
 	}	
 
 	__buildCommand(){
-		let fullExecutablePath = this.fullPath(this.executablePath);
+		let fullExecutablePath = this.resolvedPath(this.executablePath);
 		let command = '';
 		if(fullExecutablePath){			
            command = command + '"' + fullExecutablePath + '"';
@@ -326,7 +326,7 @@ export default class Executable extends Model {
 		
 		return inputModification
 			?inputModification.getModifiedPath(this)
-			:this.fullPath(this.inputPath);		
+			:this.resolvedPath(this.inputPath);		
 	}
 
 	__getModifiedOutputPath() {
@@ -338,7 +338,7 @@ export default class Executable extends Model {
 		
 		return outputModification
 			?outputModification.getModifiedPath(this)
-			:this.fullPath(this.outputPath);		
+			:this.resolvedPath(this.outputPath);		
 	}
 
 	__addOutputArguments(commandToExtend){

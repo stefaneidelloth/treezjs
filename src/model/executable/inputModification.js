@@ -82,7 +82,7 @@ export default class InputModification extends ComponentAtom {
 	
 	getModifiedPath(executable){	
 
-		let inputPath = executable.fullPath(executable.inputPath);
+		let inputPath = executable.resolvedPath(executable.inputPath);
 		
 		let items = inputPath.split('/');
 

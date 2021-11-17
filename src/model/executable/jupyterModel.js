@@ -11,7 +11,7 @@ export default class JupyterModel extends Model {
 		this.isRunnable=true;	
         
 		this.inputPath = 'notebook.ipynb';  
-        this.outputPath = '';     
+        //this.outputPath = '';     
         
         this.treeView=undefined;
 	}	
@@ -22,7 +22,7 @@ export default class JupyterModel extends Model {
             .label('Data');
 
 		this.__createInputSection(page); 		
-        this.__createOutputSection(page);       
+        //this.__createOutputSection(page);       
 	}
 
 	providePath() {
@@ -30,8 +30,10 @@ export default class JupyterModel extends Model {
 	}	
 
 	extendContextMenuActions(actions, parentSelection, treeView) {
-		
+				
 		this.treeView=treeView;	
+
+		/*
 		
 		actions.push(new AddChildAtomTreeViewAction(
 				OutputModification,
@@ -41,6 +43,8 @@ export default class JupyterModel extends Model {
 				this,
 				treeView));	
 
+		*/
+
 		return actions;
 	}	
 
@@ -48,21 +52,25 @@ export default class JupyterModel extends Model {
     	    	    	
 		const startMessage = 'Running ' + this.constructor.name + ' "' + this.name + '".';
 		monitor.info(startMessage);
-	
-		const totalWork = 2;
+
+		const totalWork = 1;
 		monitor.totalWork = totalWork;	
-		
-		monitor.description = 'Executing system command.';
-		const command = this.__buildCommand();
+		monitor.description = 'Running notebook.';
 
-		monitor.worked(1);		
-		
-		monitor.info('Executing ' + command);
-		await this.__executeCommand(command, monitor);
+		let path = this.inputPath;
+		await window.treezTerminal.runNotebook(path)
+		.catch(error=>{
+			monitor.error(error);
+			monitor.cancel();
+		});
 
-		this.increaseJobId();		
-		
 		monitor.done();
+		this.increaseJobId();
+
+		/*	
+		const command = this.__buildCommand();
+		await this.__executeCommand(command, monitor);		
+		*/		
 		
     }  
     
@@ -162,13 +170,19 @@ export default class JupyterModel extends Model {
 	
 
 	__buildCommand(){
-		let fullExecutablePath = this.fullPath(this.inputPath);
-		let command = '';
-		if(fullExecutablePath){			
-           command = command + '"' + fullExecutablePath + '"';
+
+		let url = document.URL;		
+		let path = this.resolvedPath(this.inputPath);	
+		let relativePath = this.relativePath(path, url);		
+
+		let command = 'jupyter-nbconvert --to notebook --execute ';
+		if(path){			
+           command = command + relativePath;
 		} 		
-		command = this.__addOutputArguments(command);		
+		command = this.__addOutputPath(command, relativePath);		
 		return command;
+		//return 'jupyter-nbconvert --to notebook --execute ../../../../treezjs/demo/model/modelsDemo.ipynb'
+		//return 'dir'
 	}	
 	
 
@@ -181,14 +195,21 @@ export default class JupyterModel extends Model {
 		
 		return outputModification
 			?outputModification.getModifiedPath(this)
-			:this.fullPath(this.outputPath);		
+			:this.resolvedPath(this.outputPath);		
 	}
 
-	__addOutputArguments(commandToExtend){
+	__addOutputPath(commandToExtend, inputPath){
+
 		let command = commandToExtend;		
 
+		command += ' --output-dir .';	
+
 		if (this.outputPath) {
-			command += ' ' + this.__getModifiedOutputPath();
+			let url = document.URL;		
+			let outputPath = this.relativePath(this.__getModifiedOutputPath(), url);
+			command += ' --output ' + outputPath ;
+		} else {
+			command +=  ' --output ' + inputPath ;
 		}
 		return command;
 	}	

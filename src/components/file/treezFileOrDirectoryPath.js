@@ -32,7 +32,7 @@ export default class TreezFileOrDirectoryPath extends TreezAbstractPath {
             textField.type='text'  
             textField.className='treez-file-or-directory-path-text-field';
             textField.onchange = () => this.textFieldChanged();
-            textField.title = this.fullPath;
+            textField.title = this.resolvedPath;
             leftSpan.appendChild(textField);                   
 
 		    let browseButton = document.createElement('input');

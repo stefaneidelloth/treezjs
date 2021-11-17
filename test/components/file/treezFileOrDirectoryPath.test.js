@@ -228,7 +228,7 @@ describe('TreezFileOrDirectoryPath', ()=>{
                     element.value = 'c:/qux/foo.txt';
                     console.log('filePath before: ' + element.value);
     
-                    element.pathMapProvider = {pathMap: [{name: 'workingDir', fullPath: 'c:/foo'}]};
+                    element.pathMapProvider = {pathMap: [{name: 'workingDir', resolvedPath: 'c:/foo'}]};
 
                     element.__isFileMode = true;
     
@@ -269,8 +269,8 @@ describe('TreezFileOrDirectoryPath', ()=>{
                     window.treezTerminal = terminalMock;
     
                     element.pathMapProvider = {pathMap: [
-                            {name: 'workingDir', value: 'c:/foo', fullPath: 'c:/foo'},
-                            {name: 'libDir', value: 'c:/lib', fullPath: 'c:/lib'}
+                            {name: 'workingDir', value: 'c:/foo', resolvedPath: 'c:/foo'},
+                            {name: 'libDir', value: 'c:/lib', resolvedPath: 'c:/lib'}
                         ]
                     };
     

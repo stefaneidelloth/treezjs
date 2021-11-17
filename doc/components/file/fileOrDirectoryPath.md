@@ -66,7 +66,7 @@ from directory names to directory paths, e.g.
 
 If you select a path that includes a path from the pathMap (e.g. 'C:/'), the corresponding name (e.g. 'workingDir') is injected and thus, a relative path will be shown (e.g. '{$workingDir$}/test.txt').  
 
-### fullPath
+### resolvedPath
 
 Returns the full/absolute path (the 'value' attribute might contain a relative path).
 

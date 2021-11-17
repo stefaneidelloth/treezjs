@@ -76,7 +76,7 @@ export default class OutputModification extends ComponentAtom {
    
    getModifiedPath(executable) {
 
-   		let outputPath = executable.fullPath(executable.outputPath);
+   		let outputPath = executable.resolvedPath(executable.outputPath);
 		
 		let items = outputPath.split('/');
 

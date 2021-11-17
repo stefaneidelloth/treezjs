@@ -81,8 +81,8 @@ describe('TreezAbstractPath', ()=>{
                     
                     let isSetAfter = element.__textField.value === 'newValue';
 
-                    console.log('full path: ' + element.fullPath);
-                    let titleIsSetAter = textField.title === '' + element.fullPath;
+                    console.log('full path: ' + element.resolvedPath);
+                    let titleIsSetAter = textField.title === '' + element.resolvedPath;
     
                     return isNotSetBefore &&
                         titleIsNotSetBefore &&
@@ -238,7 +238,7 @@ describe('TreezAbstractPath', ()=>{
 
                 element.value = 'commandMock';
 
-                console.log('full path: ' + element.fullPath);
+                console.log('full path: ' + element.resolvedPath);
 
                 element.execute();
 
@@ -292,7 +292,7 @@ describe('TreezAbstractPath', ()=>{
                     let success = await page.evaluate(({id})=>{
                         let element = document.getElementById(id);
                         element.label = 'myPath';
-                        let pathMap = [{name: 'projectDir', fullPath: 'c:/foo'},{name: 'myPath', fullPath: 'd:/baa'}];
+                        let pathMap = [{name: 'projectDir', resolvedPath: 'c:/foo'},{name: 'myPath', resolvedPath: 'd:/baa'}];
                         element.__pathMapProvider = {pathMap: pathMap};
 
                         let path = 'c:/foo/baa';
@@ -310,7 +310,7 @@ describe('TreezAbstractPath', ()=>{
                     let success = await page.evaluate(({id})=>{
                         let element = document.getElementById(id);
 
-                        let pathMap = [{name: 'projectDir', fullPath: 'c:/foo'},{name: 'myPath', fullPath: 'c:/foo/baa'}];
+                        let pathMap = [{name: 'projectDir', resolvedPath: 'c:/foo'},{name: 'myPath', resolvedPath: 'c:/foo/baa'}];
                         element.__pathMapProvider = {pathMap: pathMap};
 
                         let path = 'c:/foo/baa/qux';
@@ -327,7 +327,7 @@ describe('TreezAbstractPath', ()=>{
 
                     let success = await page.evaluate(({id})=>{
                         let element = document.getElementById(id);
-                        let pathMap = [{name: 'projectDir', fullPath: 'c:/qux'}];
+                        let pathMap = [{name: 'projectDir', resolvedPath: 'c:/qux'}];
                         element.__pathMapProvider = {pathMap: pathMap};
 
                         let path = 'c:/foo/baa';
@@ -418,7 +418,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = null;
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullDirectory === null; 
     
@@ -432,7 +432,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullDirectory === 'c:/foo/baa'; 
     
@@ -446,7 +446,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullDirectory === 'c:/foo/baa'; 
     
@@ -460,7 +460,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/qux.txt';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullDirectory === 'c:/foo/baa'; 
     
@@ -478,7 +478,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = null;
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullParentDirectory === null; 
     
@@ -492,7 +492,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullParentDirectory === 'c:/foo'; 
     
@@ -506,7 +506,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullParentDirectory === 'c:/foo'; 
     
@@ -520,7 +520,7 @@ describe('TreezAbstractPath', ()=>{
                 let success = await page.evaluate(({id})=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo/baa/qux.txt';
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
 
                     return element.fullParentDirectory === 'c:/foo/baa'; 
     
@@ -574,7 +574,7 @@ describe('TreezAbstractPath', ()=>{
 
                 let path = '{$workingDir$}/foo';
                 element.value = path;
-                console.log('full path: ' + element.fullPath);
+                console.log('full path: ' + element.resolvedPath);
 
                 let providerIsUndefinedBefore = element.__pathMapProvider === undefined;
                 let titleIsPathBefore = element.__textField.title === path;
@@ -584,7 +584,7 @@ describe('TreezAbstractPath', ()=>{
                 }
                 element.pathMapProvider = pathMapProviderMock;
 
-                console.log('full path with provider: ' + element.fullPath);
+                console.log('full path with provider: ' + element.resolvedPath);
 
                 let providerIsSetAfter = element.__pathMapProvider === pathMapProviderMock;
                 let titleIsUpdated = element.__textField.title === 'c:/baa/foo';
@@ -597,7 +597,7 @@ describe('TreezAbstractPath', ()=>{
 
         }); 
 
-        describe('get fullPath', ()=>{
+        describe('get resolvedPath', ()=>{
         
             it('without path map provider', async ()=>{
 
@@ -605,7 +605,7 @@ describe('TreezAbstractPath', ()=>{
                     let element = document.getElementById(id);
                     element.value = 'c:/foo';
     
-                    return element.fullPath === element.value;
+                    return element.resolvedPath === element.value;
     
                 },{id});
                 expect(success).toBe(true);
@@ -623,9 +623,9 @@ describe('TreezAbstractPath', ()=>{
                     };
                     element.__pathMapProvider = pathMapProviderMock;
 
-                    console.log('full path: ' + element.fullPath);
+                    console.log('full path: ' + element.resolvedPath);
                         
-                    return element.fullPath === 'c:/foo/baa';
+                    return element.resolvedPath === 'c:/foo/baa';
     
                 },{id});
                 expect(success).toBe(true);

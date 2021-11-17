@@ -100,7 +100,7 @@ export default class JavaExecutable extends Executable {
 	__buildCommand(){
 
 		//''cmd.exe /C start /b /wait /low "''
-		let command = '"' + this.fullPath(this.executablePath) + '"';
+		let command = '"' + this.resolvedPath(this.executablePath) + '"';
 		command = this.__addJavaArguments(command);
 		command = this.__addInputArguments(command);
 		command = this.__addOutputArguments(command);

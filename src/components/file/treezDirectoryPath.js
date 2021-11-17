@@ -30,7 +30,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
             textField.type='text' 
             textField.className='treez-directory-path-text-field'             
             textField.onchange = ()=>this.textFieldChanged();    
-            textField.title = this.fullPath;   
+            textField.title = this.resolvedPath;   
             leftSpan.appendChild(textField);
      
 
@@ -60,7 +60,7 @@ export default class TreezDirectoryPath extends TreezAbstractPath {
     }
 
     execute(){    	
-    	window.treezTerminal.openDirectory(this.fullPath, (message) => {
+    	window.treezTerminal.openDirectory(this.resolvedPath, (message) => {
     			console.error(message);
     			alert(message);
     		}

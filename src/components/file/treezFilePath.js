@@ -30,7 +30,7 @@ export default class TreezFilePath extends TreezAbstractPath {
             textField.type='text' 
             textField.className='treez-file-path-text-field'; 
             textField.onchange = ()=>this.textFieldChanged();  
-            textField.title = this.fullPath;
+            textField.title = this.resolvedPath;
             leftSpan.appendChild(textField);
 
             //let rightSpan = document.createElement('span');

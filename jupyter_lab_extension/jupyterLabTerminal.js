@@ -223,17 +223,44 @@ export default class JupyterLabTerminal {
         }        
 	}
 
+	async runNotebook(path){
+
+		await this.__app.commands.execute(
+		    'docmanager:open', // list of commands: this.__app.commands.listCommands()
+		    {'path': path}
+		  )
+
+		let notebookPanel = this.__getNotebookPanel(path);
+		let notebook = notebookPanel.content;
+		let sessionContext = notebookPanel.sessionContext;
+
+		var NotebookActions = this.__dependencies['NotebookActions'];
+		await NotebookActions.run(notebook, sessionContext);
+
+	}
+
 	async openPath(path, errorHandler, finishedHandler){
 
 		if(!path){
 			return;
 		}  
 
-		if(this.isRunningLocally){
-			await this.__locallyOpenOrExecutePath(path, errorHandler, finishedHandler);
-		} else {
-			this.__openPathInBrowser(path, errorHandler, finishedHandler);
-		}
+		
+		this.__app.commands
+		  .execute(
+		    'docmanager:open', // list of commands: this.__app.commands.listCommands()
+		    {'path': path}
+		  )
+		  .catch(error=>{
+		  	if(errorHandler){
+		  		errorHandler(error);
+		  	}
+		  })
+		  .then((document) => {
+			if(finishedHandler){
+				finishedHandler(document);
+			}
+		  });
 	}
 
 	async __openPathInBrowser(path, errorHandler, finishedHandler){
@@ -268,14 +295,14 @@ export default class JupyterLabTerminal {
         
         try{
     	    var pythonCode = '!"' + path + '"';
-		    await this.executePythonCodeWithCell(pythonCode)
+		    let result = await this.executePythonCodeWithCell(pythonCode)
 		        .catch(error=>{
 		        	if(errorHandler){
 		        		errorHandler(error);
 		        	}
 		        });
 		    if(finishedHandler){
-		    	finishedHandler();
+		    	finishedHandler(result);
 		    }
         } catch(error){
         	console.error("Could not open path '" + path + "'.\n", error);
@@ -568,7 +595,10 @@ export default class JupyterLabTerminal {
 				var cell = notebook.activeCell;
 				
 				try{
-					await NotebookActions.run(notebook, sessionContext);
+					await NotebookActions.run(notebook, sessionContext)
+					.catch(error=>{
+						reject(error);
+					});
 				} catch(error){
 					reject(error);
 				} 
@@ -600,6 +630,24 @@ export default class JupyterLabTerminal {
 				return notebook.activeCell;
 			}
 		}	
+		return null;
+	}
+
+	__getNotebookPanel(path){
+		var mainWidgets = this.__app.shell.widgets('main');
+		var widget = mainWidgets.next();
+		while(widget){
+			if(widget.sessionContext){
+				var type = widget.sessionContext.type;
+				if(type == 'notebook'){  //other wigets might be of type DocumentWidget
+					if (widget.context.path == path){
+						return widget;
+					}
+				}
+			}
+			
+			widget = mainWidgets.next();
+		}
 		return null;
 	}
 

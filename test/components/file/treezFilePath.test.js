@@ -171,7 +171,7 @@ describe('TreezFilePath', ()=>{
                 element.value = 'c:/qux/foo.txt';
                 console.log('filePath before: ' + element.value);
 
-                element.pathMapProvider = {pathMap: [{name: 'workingDir', fullPath: 'c:/foo'}]};
+                element.pathMapProvider = {pathMap: [{name: 'workingDir', resolvedPath: 'c:/foo'}]};
 
                 element.__browseFilePath();
 

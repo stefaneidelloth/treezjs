@@ -164,7 +164,7 @@ describe('TreezDirectoryPath', ()=>{
 
                 element.value = 'commandMock';
 
-                console.log('full path: ' + element.fullPath);
+                console.log('full path: ' + element.resolvedPath);
 
                 element.execute();
 
@@ -216,8 +216,8 @@ describe('TreezDirectoryPath', ()=>{
                 window.treezTerminal = terminalMock;
 
                 element.pathMapProvider = {pathMap: [
-                        {name: 'workingDir', value: 'c:/foo', fullPath: 'c:/foo'},
-                        {name: 'libDir', value: 'c:/lib', fullPath: 'c:/lib'}
+                        {name: 'workingDir', value: 'c:/foo', resolvedPath: 'c:/foo'},
+                        {name: 'libDir', value: 'c:/lib', resolvedPath: 'c:/lib'}
                     ]
                 };
 

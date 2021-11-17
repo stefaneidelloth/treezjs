@@ -19,7 +19,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
             }  else {
             	this.__textField.value = '';
             }	
-            this.__textField.title = this.fullPath;										
+            this.__textField.title = this.resolvedPath;										
 		}					    
     }
 
@@ -52,7 +52,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     }
 
     execute(){    	
-    	window.treezTerminal.openPath(this.fullPath, (message) => {
+    	window.treezTerminal.openPath(this.resolvedPath, (message) => {
     			console.error(message);
     			alert(message);
     		}
@@ -75,9 +75,9 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 					continue;
 			}
 			
-			if (path.includes(entry.fullPath)){
+			if (path.includes(entry.resolvedPath)){
 				if(entryToInject){
-					if(entryToInject.fullPath.length < entry.fullPath.length){
+					if(entryToInject.resolvedPath.length < entry.resolvedPath.length){
 						entryToInject = entry;
 					}
 				} else {
@@ -87,7 +87,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 		}
 		
 		return entryToInject
-				?path.replace(entryToInject.fullPath, '{$' + entryToInject.name + '$}')
+				?path.replace(entryToInject.resolvedPath, '{$' + entryToInject.name + '$}')
 				:path;		
 		
     }
@@ -104,18 +104,18 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     		return pathIncludingVariables;
 		}
 		
-		let fullPath = pathIncludingVariables;
+		let resolvedPath = pathIncludingVariables;
     	for(let entry of pathMap.reverse()){
     		let placeHolder = '{$' + entry.name + '$}';
     		let path = entry.value;
-    		fullPath = fullPath.replace(placeHolder, path);
+    		resolvedPath = resolvedPath.replace(placeHolder, path);
     	}
     	
-    	if(fullPath.includes('{$')){
-    		console.warn('File path including unknown path variable: "' + fullPath + '"');
+    	if(resolvedPath.includes('{$')){
+    		console.warn('File path including unknown path variable: "' + resolvedPath + '"');
     	}
     	
-    	return fullPath;
+    	return resolvedPath;
 	}
 
 	static convertToAbsolutePathIfRelative(path){
@@ -149,8 +149,8 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 	}
 	
 	//the stored element value might inlclude variable expressions/relative paths, e.g. {$workingDir}
-	//the fullPath does not include variable expressions but the absolute path
-	get fullPath(){
+	//the resolvedPath does not include variable expressions but the resolved path
+	get resolvedPath(){
 		if(!this.__pathMapProvider){
 			return this.value;
 		}
@@ -160,34 +160,34 @@ export default class TreezAbstractPath extends LabeledTreezElement {
 
         
     get fullDirectory(){
-       let fullPath = this.fullPath;
-       if(!fullPath){
+       let resolvedPath = this.resolvedPath;
+       if(!resolvedPath){
        		return null;
 	   }   
        
 	   if(this.isFile){	
-		    return this.directoryFromFilePath(fullPath);
+		    return this.directoryFromFilePath(resolvedPath);
 	   } else {
-			if(fullPath.endsWith('/')){
-				return fullPath.slice(0, fullPath.length-1);
+			if(resolvedPath.endsWith('/')){
+				return resolvedPath.slice(0, resolvedPath.length-1);
 	       	} else {
-				return fullPath;
+				return resolvedPath;
 			}			
 	   }       
        
 	} 
 
 	get fullParentDirectory(){
-		let fullPath = this.fullPath;
-		if(!fullPath){
+		let resolvedPath = this.resolvedPath;
+		if(!resolvedPath){
 			return null;
 		}	                                      
 		
-		if(fullPath.endsWith('/')){
-			fullPath = fullPath.slice(0, fullPath.length-1);
+		if(resolvedPath.endsWith('/')){
+			resolvedPath = resolvedPath.slice(0, resolvedPath.length-1);
 		} 
 
-		let items = fullPath.split('/');
+		let items = resolvedPath.split('/');
 		let parentItemArray = items.slice(0, items.length-1);
 		return parentItemArray.join('/'); 
 	 } 
@@ -205,7 +205,7 @@ export default class TreezAbstractPath extends LabeledTreezElement {
     set pathMapProvider(provider){
     	this.__pathMapProvider = provider;
     	if(this.__textField){
-    	    this.__textField.title = this.fullPath;
+    	    this.__textField.title = this.resolvedPath;
     	}
     }
     
