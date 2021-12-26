@@ -1,0 +1,9 @@
+export declare const StarboardLogo: import("../../../../../types").IconTemplate;
+export declare const AssetsAddedIcon: import("../../../../../types").IconTemplate;
+export declare const DeleteIcon: import("../../../../../types").IconTemplate;
+export declare const BooleanIcon: import("../../../../../types").IconTemplate;
+export declare const ClockIcon: import("../../../../../types").IconTemplate;
+export declare const PlayCircleIcon: import("../../../../../types").IconTemplate;
+export declare const TextEditIcon: import("../../../../../types").IconTemplate;
+export declare const GearsIcon: import("../../../../../types").IconTemplate;
+export declare const LockClosedIcon: import("../../../../../types").IconTemplate;

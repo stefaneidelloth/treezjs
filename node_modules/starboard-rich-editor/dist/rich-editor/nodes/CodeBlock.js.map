@@ -1,0 +1,1 @@
+{"version":3,"file":"CodeBlock.js","sourceRoot":"","sources":["../../../src/rich-editor/nodes/CodeBlock.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,SAAU,SAAQ,SAAS;IAC9C,IAAI,IAAI;QACN,OAAO,YAAY,CAAC;IACtB,CAAC;IAED,IAAI,aAAa;QACf,OAAO,YAAY,CAAC;IACtB,CAAC;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"bufferMock.js","sourceRoot":"","sources":["../../../../src/content/exporters/bufferMock.ts"],"names":[],"mappings":";AAAA;;+DAE+D;AAE/D,6EAA6E;AAE7E,IAAI,CAAE,UAAkB,CAAC,MAAM,EAAE;IAC9B,UAAkB,CAAC,MAAM,GAAG;QAC3B,QAAQ,EAAE,GAAG,EAAE,CAAC,KAAK;KACtB,CAAC;CACH"}

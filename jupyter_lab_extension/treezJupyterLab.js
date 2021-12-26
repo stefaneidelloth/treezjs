@@ -15,24 +15,41 @@ Treez.config({
 
 window.init_workspace_module = async (app, dependencies)=>{
 
-	await Treez.importScript('/node_modules/requirejs/require.js');
+	window.$ = window.jQuery = dependencies['jquery'];
+
+    var require = window.require
+    if(!require){
+    	require = window.requirejs
+    }
+    if(!require){
+    	await Treez.importScript('/node_modules/requirejs/require.js')
+    	require = window.require;
+    }    
+
+    var paths = {			
+		'd3' : 'node_modules/d3/dist/d3.min',
+		'd3-array' : 'node_modules/d3-array/dist/d3-array.min',
+		'd3-path' : 'node_modules/d3-path/dist/d3-path.min',
+		'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
+		'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',	
+		'jquery-library': 'jquery-library',
+		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min',
+		'codemirror' : 'node_modules/codemirror'
+	}
+
+	var require_map = {
+		  '*': { 'jquery': 'jquery-library' },			 
+	}
 	
-	require.config({
-		baseUrl : treezConfig.home,
-		paths : {			
-			'd3' : 'node_modules/d3/dist/d3.min',
-			'd3-array' : 'node_modules/d3-array/dist/d3-array.min',
-			'd3-path' : 'node_modules/d3-path/dist/d3-path.min',
-			'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
-			'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',			
-			'jquery' : 'node_modules/jquery/dist/jquery.min',
-			'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min',
-			'codemirror' : 'node_modules/codemirror'
-		},
-	});
+    var config =  {
+		baseUrl : treezConfig.home,			
+		paths : paths,		
+		map: require_map
+	}
+	
+	require.config(config);	
 
 	await Treez.importCssStyleSheet('/jupyter_lab_extension/treezJupyterLab.css');
-
 
 	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-base.css');
 	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-light-theme.css');
@@ -42,25 +59,25 @@ window.init_workspace_module = async (app, dependencies)=>{
 
     await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icon.min.css');
     
-	require([
-		'golden-layout',
+	require([	 
+	    'golden-layout',	
 		'd3',
 		'd3-sankey', //needs to be loded after its dependencies		
-	], function(
-		 GoldenLayout,
+	], function(   
+	     GoldenLayout,
 		 d3,
 		 d3Sankey		
-	) {
+	) {		
        
         for(var name of Object.keys(d3Sankey)){
         	d3[name] = d3Sankey[name];
         };
 	
-
+        
 		var ReactWidget = dependencies['ReactWidget'];
 
 		var treezPlugin = new ReactWidget();
-		treezPlugin.id = 'treez',
+		treezPlugin.id = 'treez';
 		treezPlugin.title.caption = 'Treez';
 		treezPlugin.title.icon = 'treez-icon-class';
 		treezPlugin.node.classList.add('treez-plugin-class');
@@ -92,11 +109,9 @@ window.init_workspace_module = async (app, dependencies)=>{
 			}
 			__updateGoldenLayout(layout, layoutContainer);
 		});
-		resizeObserver.observe(layoutContainer);
+		resizeObserver.observe(layoutContainer);		
 
-		
-
-	});
+	});	
 
 };
 
