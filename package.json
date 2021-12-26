@@ -17,7 +17,7 @@
     "starboard-notebook": "0.14.2",
     "starboard-observable": "^0.1.7",
     "starboard-wrap": "^0.4.1",
-    "xlsx": "0.16.9"
+    "xlsx": "0.17.0"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
