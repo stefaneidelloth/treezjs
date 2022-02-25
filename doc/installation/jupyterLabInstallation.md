@@ -80,6 +80,6 @@ and set its content to:
 >import './treezjs/jupter_lab_extension/treezJupyterLab.js';
 
 ----
-[User interaction](./userInteraction.md)
+[User interaction](https://github.com/stefaneidelloth/treezjs/blob/master/doc/userInteraction.md)
 
 
