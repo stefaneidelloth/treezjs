@@ -43,13 +43,13 @@ export default class TreezModelPath extends LabeledTreezElement {
             comboBox.className='treez-model-path-select';                                            
             container.appendChild(comboBox);           
            
-        }
+        }        
         
-        this.__updateOptionsAndRelativeRoot(); 
         this.update();	       
     }
     
     updateElements(newValue){
+		this.__updateOptionsAndRelativeRoot(); 
     	if(this.__comboBox){ 
     		if(newValue){ 
     		    let comboBoxValue = this.convertToStringValue(newValue);

@@ -14,10 +14,9 @@ export default class LabeledTreezElement extends TreezElement {
 
 	attributeChangedCallback(attr, oldStringValue, newStringValue) {
     	super.attributeChangedCallback(attr, oldStringValue, newStringValue)
-
 		if(attr==='label'){
 			if(this.__label){
-				this.__label.innerText= newStringValue;
+				this.__label.innerText= newStringValue;				
 			}
 		}
 

@@ -11,7 +11,7 @@
    
     resize: vertical;
     overflow: auto !important;   
-    min-height: 100px;
+    height: 100px;
 }
 
 .treez-code-area-toolbar {
@@ -25,7 +25,6 @@
 	vertical-align: middle;
 }
 
-.CodeMirror {
-	height: auto !important;
+.treez-code-area-container .CodeMirror {	
 	font-family: var(--jp-code-font-family);
 }

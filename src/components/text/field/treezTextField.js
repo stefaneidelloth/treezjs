@@ -53,7 +53,8 @@ export default class TreezTextField extends LabeledTreezElement {
     		if(this.__textField.value !== newValue){
     			this.__textField.value= newValue;
     		} 
-    	}					    
+    	}	
+		this.hideElements(this.hidden)
     }
 
     updateContentWidth(width){
