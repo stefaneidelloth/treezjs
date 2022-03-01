@@ -15,7 +15,8 @@ Treez.config({
 
 window.init_workspace_module = async (app, dependencies)=>{
 
-	window.$ = window.jQuery = dependencies['jquery'];
+	window.$ = window.jQuery = dependencies['jQuery'];
+	window.CodeMirror = dependencies['codeMirror'];	
 
     var require = window.require
     if(!require){
@@ -33,8 +34,7 @@ window.init_workspace_module = async (app, dependencies)=>{
 		'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
 		'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',	
 		'jquery-library': 'jquery-library',
-		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min',
-		'codemirror' : 'node_modules/codemirror'
+		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min'		
 	}
 
 	var require_map = {

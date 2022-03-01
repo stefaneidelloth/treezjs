@@ -5,13 +5,8 @@
      margin:0px;
 }
 
-.treez-code-area-container {
-   
-    border: 1px solid lightgrey;
-   
-    resize: vertical;
-    overflow: auto !important;   
-    height: 100px;
+.treez-code-area-container {   
+    border: 1px solid lightgrey; 
 }
 
 .treez-code-area-toolbar {
@@ -27,4 +22,6 @@
 
 .treez-code-area-container .CodeMirror {	
 	font-family: var(--jp-code-font-family);
+	resize: vertical;
+    height: 100px;
 }
