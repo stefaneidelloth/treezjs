@@ -1,9 +1,0 @@
-Type: Jupyter Notebook Extension
-Name: Workspace module
-Description: Looks for a JavaScript file "workspace.js" in the workspace folder (=notebook-dir) and tries to load it as ES6 module. You can adapt the content of "workspace.js" to your needs.
-Link: README.md
-Icon: icon.png
-Main: main.js
-Compatibility: 5.x
-Parameters:
-- none

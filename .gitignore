@@ -2,3 +2,4 @@ node_modules
 .ipynb_checkpoints
 .idea
 package-lock.json
+/coverage
