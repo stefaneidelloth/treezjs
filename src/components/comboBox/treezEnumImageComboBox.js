@@ -22,6 +22,10 @@ export default class TreezEnumImageComboBox extends TreezImageComboBox {
 			return this.__enumClass.values[0];
 		}
 
+		if(stringValue === null){
+			return this.__enumClass.values[0];
+		}
+
 		return this.__enumClass.forName(stringValue);
 
 	}
