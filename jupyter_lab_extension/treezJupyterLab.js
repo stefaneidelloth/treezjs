@@ -15,8 +15,8 @@ Treez.config({
 
 window.init_workspace_module = async (app, dependencies)=>{
 
-	window.$ = window.jQuery = dependencies['jQuery'];
-	window.CodeMirror = dependencies['codeMirror'];	
+	  window.$ = window.jQuery = dependencies['jQuery'];
+	  window.CodeMirror = dependencies['codeMirror'];
 
     var require = window.require
     if(!require){
@@ -34,8 +34,8 @@ window.init_workspace_module = async (app, dependencies)=>{
 		'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
 		'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',	
 		'jquery-library': 'jquery-library',
-		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min'		
-	}
+		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min'
+}
 
 	var require_map = {
 		  '*': { 'jquery': 'jquery-library' },			 
@@ -57,14 +57,14 @@ window.init_workspace_module = async (app, dependencies)=>{
 	await Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
 	await Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
 
-    await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icon.min.css');
+    await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icons.min.css');
     
 	require([	 
-	    'golden-layout',	
+	  'golden-layout',
 		'd3',
-		'd3-sankey', //needs to be loded after its dependencies		
+		'd3-sankey', //needs to be loaded after its dependencies
 	], function(   
-	     GoldenLayout,
+	   GoldenLayout,
 		 d3,
 		 d3Sankey		
 	) {		
@@ -87,7 +87,7 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 		var layoutContainer = __createLayoutContainer(treezView);
 		var layout = __createGoldenLayout(GoldenLayout, layoutContainer);
-		var focusManager = __registerLayoutCompoments(layout, layoutContainer);
+		var focusManager = __registerLayoutComponents(layout, layoutContainer);
 		var editorFactory = __createEditorFactory(app);
 
 		let notebook = __tryToGetActiveNotebook(app);
@@ -289,7 +289,7 @@ Defines container DOM elements that are used/filled by Treez:
 #treez-progress,
 #treez-log
 */
-function __registerLayoutCompoments(layout, containerElement){
+function __registerLayoutComponents(layout, containerElement){
 
     layout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
