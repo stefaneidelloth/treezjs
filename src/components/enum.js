@@ -22,6 +22,11 @@ export default class Enum {
 				return type;
 			}
 		}
+
+		if (type.name === "null"){
+			return this.values[0]
+		}
+		
 		throw new Error('Unknown value "' + name + '"');
 	}
 
