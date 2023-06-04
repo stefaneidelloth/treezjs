@@ -97,16 +97,16 @@ export default class Xy extends PagedGraphicsAtom {
 				var oldXLimits = axis.quantitativeLimits;
 				axis.includeDataForAutoScale(this.quantitativeXValues);
 				var xLimits = axis.quantitativeLimits;
-				if(xLimits[0] !== oldXLimits[0]){
+				if(!this.__are_equal(xLimits[0], oldXLimits[0])){
 					xScaleChanged = true;
 				}
-				if(xLimits[1] !== oldXLimits[1]){
+				if(!this.__are_equal(xLimits[1], oldXLimits[1])){
 					xScaleChanged = true;
 				}			
 			}
 		}
 		return xScaleChanged;
-	}
+	}	
 	
 	__contributeDataForYAxis() {
 		var yScaleChanged = false;
@@ -121,15 +121,19 @@ export default class Xy extends PagedGraphicsAtom {
 				var oldYLimits = axis.quantitativeLimits;
 				axis.includeDataForAutoScale(this.quantitativeYValues);
 				var yLimits = axis.quantitativeLimits;
-				if(yLimits[0] !== oldYLimits[0]){
+				if(!this.__are_equal(yLimits[0], oldYLimits[0])){
 					yScaleChanged = true;
 				}
-				if(yLimits[1] !== oldYLimits[1]){
+				if(!this.__are_equal(yLimits[1], oldYLimits[1])){
 					yScaleChanged = true;
 				}			
 			}
 		}
 		return yScaleChanged;
+	}
+
+	__are_equal(left, right){
+		return Object.is(left, right);
 	}
 
 	get graph() {		
@@ -257,6 +261,9 @@ export default class Xy extends PagedGraphicsAtom {
 			return [];
 		}
 		var xDataColumn = this.childFromRoot(xDataPath);
+		if (!xDataColumn) {
+			return [];
+		}
 		return xDataColumn.values;		
 	}
 	
@@ -266,6 +273,9 @@ export default class Xy extends PagedGraphicsAtom {
 			return [];
 		}
 		var yDataColumn = this.childFromRoot(yDataPath);
+		if (!yDataColumn) {
+			return [];
+		}
 		return yDataColumn.values;
 	}	
 
@@ -274,7 +284,10 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!xDataPath) {
 			return [];
 		}
-		var xDataColumn = this.childFromRoot(xDataPath);	
+		var xDataColumn = this.childFromRoot(xDataPath);
+		if(!xDataColumn){
+			return [];
+		}
 		if (xDataColumn.isNumeric) {
 			return xDataColumn.numericValues;			
 		} else {
@@ -305,7 +318,10 @@ export default class Xy extends PagedGraphicsAtom {
 		if (!yDataPath) {
 			return [];
 		}
-		var yDataColumn = this.childFromRoot(yDataPath);		
+		var yDataColumn = this.childFromRoot(yDataPath);
+		if (!yDataColumn) {
+			return [];
+		}
 		if (yDataColumn.isNumeric) {
 			return yDataColumn.numericValues;			
 		} else {
