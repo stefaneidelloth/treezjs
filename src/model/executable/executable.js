@@ -139,6 +139,7 @@ export default class Executable extends Model {
 			} catch (exception) {
 				let errorTitle  = 'Could not execute "' + self.name + '"\n';
 				monitor.cancel();
+				console.warn(excetpion);
 				reject(exception.toString());
 			}	
     	});	
