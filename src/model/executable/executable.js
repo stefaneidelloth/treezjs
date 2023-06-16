@@ -107,9 +107,9 @@ export default class Executable extends Model {
 
     	var self = this;
 
-    	return await new Promise(function(resolve, reject){
+    	return await new Promise(async function(resolve, reject){
 	    	try {				
-				window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
+				await window.treezTerminal.execute(command, messageHandler, errorHandler, finishedHandler);
 
 				function messageHandler(message){
 					monitor.info(message);
@@ -138,9 +138,8 @@ export default class Executable extends Model {
 				
 			} catch (exception) {
 				let errorTitle  = 'Could not execute "' + self.name + '"\n';
-				monitor.error(errorTitle, exception);
 				monitor.cancel();
-				reject(errorTitle + exception.toString());
+				reject(exception.toString());
 			}	
     	});	
     }

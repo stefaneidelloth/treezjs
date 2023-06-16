@@ -6,13 +6,14 @@ export default class JupyterLabTerminal {
 		this.__app = app;
 		this.__dependencies = dependencies;
 		this.__notebookPanel = this.__getFirstVisibleNotebookPanel(app);
-		//var documentManager = this.__getDocumentManager(app);	
 		if(this.__notebookPanel){
 			var notebook = this.__notebookPanel.content;
 			var notebookModel = notebook.model;
 			var sessionContext = this.__notebookPanel.sessionContext;				
 			this.__kernel = sessionContext.session.kernel;
-		}			
+		} else {
+			console.warn('Could not find a notebook. Please open a notebook file.')
+		}	
 	}
 
 	async operationSystem(){
@@ -509,7 +510,14 @@ export default class JupyterLabTerminal {
             //Also see
             //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
             //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
-    	    var feature = self.__kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
+
+			const kernel = self.__kernel;
+			if(!kernel){
+				reject('No kernel available. (A notebook file needs to openend in JupyterLab.)');
+				return;
+			}
+			
+    	    var feature = kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
     	    feature.onReply(msg=>{
     	    	console.log(msg);
     	    });
