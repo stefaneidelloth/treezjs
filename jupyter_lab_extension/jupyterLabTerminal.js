@@ -4,20 +4,32 @@ export default class JupyterLabTerminal {
 
 	constructor(app, dependencies){
 		this.__app = app;
-		this.__dependencies = dependencies;
-		this._initializeNotebookPanelAndKernel();		
+		this.__dependencies = dependencies;		
 	}
 
-	_initializeNotebookPanelAndKernel(){
-		this.__notebookPanel = this.__getFirstVisibleNotebookPanel(this.__app);
-		if(this.__notebookPanel){
-			var notebook = this.__notebookPanel.content;
-			var notebookModel = notebook.model;
-			var sessionContext = this.__notebookPanel.sessionContext;				
-			this.__kernel = sessionContext.session.kernel;
-		} else {
-			console.warn('Could not find a notebook. Please open a notebook file.')
-		}	
+	async _initializeNotebookPanelAndGetKernel(){
+		const notebookPanel = await this._initializeNotebookPanel(this.__app)
+		const kernel = await this._getKernel(notebookPanel);
+		return kernel;
+	}
+
+	async _initializeNotebookPanel(app){
+		let notebookPanel = this.__getFirstVisibleNotebookPanel(this.__app);
+		if(!notebookPanel){
+			await this.__createNotebookPanel(this.__app);
+			notebookPanel = this.__getFirstVisibleNotebookPanel(this.__app);
+		}
+		return notebookPanel;
+	}
+
+	async _getKernel(notebookPanel){
+		const notebook = notebookPanel.content;
+		const notebookModel = notebook.model;
+		const sessionContext = notebookPanel.sessionContext;
+		await sessionContext.ready;
+		const session = sessionContext.session;		
+		const kernel = session.kernel;
+		return kernel
 	}
 
 	async operationSystem(){
@@ -181,12 +193,7 @@ export default class JupyterLabTerminal {
 		document.body.removeChild(element);
 	}	
 
-	__escapeSpecialCharacters(text){
-		var textWithSlashes = text.replace(/\\/g,'\\\\');
-		var textWithLineBreaks =  textWithSlashes.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
-		var textWithQuotationMarks = textWithLineBreaks.replace(/"/g, '\\"');
-		return textWithQuotationMarks;
-	}
+	
 
     async deleteFile(filePath){	
 		var pythonCode = 
@@ -268,6 +275,18 @@ export default class JupyterLabTerminal {
 		  });
 	}
 
+	get isRunningLocally(){
+        return (location.hostname === "localhost" || location.hostname === "127.0.0.1");
+	}
+
+
+	__escapeSpecialCharacters(text){
+		var textWithSlashes = text.replace(/\\/g,'\\\\');
+		var textWithLineBreaks =  textWithSlashes.replace(/\r\n/g,'\\n').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
+		var textWithQuotationMarks = textWithLineBreaks.replace(/"/g, '\\"');
+		return textWithQuotationMarks;
+	}
+
 	async __openPathInBrowser(path, errorHandler, finishedHandler){
 
 	    var url = document.URL + '/tree/';
@@ -327,10 +346,7 @@ export default class JupyterLabTerminal {
 		return await urlResolver.resolveUrl('.');		
 	}
 
-	get isRunningLocally(){
-        return (location.hostname === "localhost" || location.hostname === "127.0.0.1");
-	}
-
+	
 	async __serverIP(){
 		var code = 'import socket\n'+
                    'print(socket.gethostbyname(socket.gethostname()))';
@@ -360,15 +376,7 @@ export default class JupyterLabTerminal {
             //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
             //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
 
-			const kernel = self.__kernel;
-			if(!kernel){
-				self._initializeNotebookPanelAndKernel();
-				const kernel = self.__kernel;
-				if(!kernel){
-					reject('No kernel available. (A notebook file needs to openend in JupyterLab.)');
-					return;
-				}
-			}
+			const kernel = await self._initializeNotebookPanelAndGetKernel();			
 			
     	    var feature = kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});    	   
     	    feature.onReply(msg=>{
@@ -526,15 +534,7 @@ export default class JupyterLabTerminal {
             //https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute
             //https://github.com/jupyterlab/extension-examples/tree/master/advanced/kernel-messaging
 
-			const kernel = self.__kernel;
-			if(!kernel){
-				self._initializeNotebookPanelAndKernel();
-				const kernel = self.__kernel;
-				if(!kernel){
-					reject('No kernel available. (A notebook file needs to openend in JupyterLab.)');
-					return;
-				}
-			}
+			const kernel = await self._initializeNotebookPanelAndGetKernel();			
 			
     	    var feature = kernel.requestExecute({ 'code': pythonCode, 'stop_on_error' : true});
     	    feature.onReply(msg=>{
@@ -603,46 +603,47 @@ export default class JupyterLabTerminal {
 
     	return new Promise(async (resolve, reject) => {
 
-    		if(self.__notebookPanel){
-				var notebook = self.__notebookPanel.content;
-				var notebookModel = notebook.model;
-				var sessionContext = self.__notebookPanel.sessionContext;	
+			const noteboookPanel = await self._initializeNotebookPanel(self.__app)
+    		
+			var notebook = notebookPanel.content;
+			var notebookModel = notebook.model;
+			var sessionContext = notebookPanel.sessionContext;	
 
-				var options = {	};
-				var cellModel = notebookModel.contentFactory.createCell('code',options);				
-				cellModel.value.text = pythonCode;
+			var options = {	};
+			var cellModel = notebookModel.contentFactory.createCell('code',options);				
+			cellModel.value.text = pythonCode;
 
-				const activeCellIndexBackup = notebook.activeCellIndex;
+			const activeCellIndexBackup = notebook.activeCellIndex;
 
-				
-				var newCellIndex = notebookModel.cells.length;
-				notebookModel.cells.insert(newCellIndex, cellModel);				
-				notebook.activeCellIndex = newCellIndex;
+			
+			var newCellIndex = notebookModel.cells.length;
+			notebookModel.cells.insert(newCellIndex, cellModel);				
+			notebook.activeCellIndex = newCellIndex;
 
-				var cell = notebook.activeCell;
-				
-				try{
-					await NotebookActions.run(notebook, sessionContext)
-					.catch(error=>{
-						reject(error);
-					});
-				} catch(error){
+			var cell = notebook.activeCell;
+			
+			try{
+				await NotebookActions.run(notebook, sessionContext)
+				.catch(error=>{
 					reject(error);
-				} 
-				
-				var htmlArray = [];
+				});
+			} catch(error){
+				reject(error);
+			} 
+			
+			var htmlArray = [];
 
-				for(var output of cell.outputArea.node.children){								
-					htmlArray.push(output.innerHTML);
-				}					
-			   
-			    await NotebookActions.deleteCells(notebook);
-				
-				notebook.activeCellIndex = activeCellIndexBackup;
+			for(var output of cell.outputArea.node.children){								
+				htmlArray.push(output.innerHTML);
+			}					
+		   
+			await NotebookActions.deleteCells(notebook);
+			
+			notebook.activeCellIndex = activeCellIndexBackup;
 
-				resolve(htmlArray);		
+			resolve(htmlArray);		
 
-			}				
+						
     		
 		}); 	
     }
@@ -695,5 +696,33 @@ export default class JupyterLabTerminal {
 		}
 		return null;
 	}
-  
+
+	async __createNotebookPanel(app){
+		
+	    const notebookPanel = await app.commands.execute(
+	      'docmanager:new-untitled',
+	      {
+			  path: '.', 
+			  type: 'notebook'
+		  }
+	    );
+
+		await this.__setPythonKernel(notebookPanel, app);
+		return notebookPanel;
+		
+	    
+	}
+
+	async __setPythonKernel(notebookPanel, app){
+		await app.commands.execute(
+	      'docmanager:open',
+	      {
+	        path: notebookPanel.path,
+	        factory: 'Notebook',
+	        kernel: {
+	          name: 'python3'
+	        }
+	      }
+	    );
+	}
 }
