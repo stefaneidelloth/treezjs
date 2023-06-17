@@ -87,6 +87,8 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 		var layoutContainer = __createLayoutContainer(treezView);
 		var layout = __createGoldenLayout(GoldenLayout, layoutContainer);
+
+		
 		var focusManager = __registerLayoutComponents(layout, layoutContainer);
 		var editorFactory = __createEditorFactory(app);
 
@@ -208,31 +210,64 @@ function __createLayoutContainer(parentElement){
 function __createGoldenLayout(GoldenLayout, containerElement){
 	//Also see http://golden-layout.com/docs/Config.html
 
-	var firstColumn = {
+	const firstColumn = _createFirstColumn();
+	const secondColumn = _createSecondColumn();
+
+	var goldenLayoutConfig = {
+		content :
+		[
+		    {
+			    type : 'column',
+			    content : [ 
+				   firstColumn,
+				   secondColumn,
+			     ]
+	        }
+	    ]
+	 };
+
+	return new GoldenLayout(goldenLayoutConfig, containerElement);
+}
+
+function _createFirstColumn(){
+	var column = {
 		componentName : 'Tree',
 		type : 'component',
-		isClosable: false,
-		width: 25
+		isClosable: false		
 	};
+	return column;
+}
 
-	var secondColumnUpperRow = {
+function _createSecondColumn(){
+
+	var firstRow = _createFirstRowOfSecondColumn();
+	var secondRow = _createSecondRowOfSecondColumn();
+
+	var column =  {
+		type: 'column',
+		content: [	
+			firstRow,
+			secondRow,
+		],		
+	};
+	return column;
+
+}
+
+function _createFirstRowOfSecondColumn(){
+	return {
 		componentName : 'Properties',
 		type : 'component',
-		isClosable: false,
-		height: 60
+		isClosable: false		
 	};
+}
 
-	var secondColumnLowerRow = {
+function _createSecondRowOfSecondColumn(){
+	const row = {
 		type : 'stack',
 		content :
 		[
-
-			{
-				componentName : 'Graphics',
-				type : 'component',
-
-				isClosable: false
-			},
+						
 			{
 				title : 'Monitor',
 				type : 'column',
@@ -250,36 +285,18 @@ function __createGoldenLayout(GoldenLayout, containerElement){
 						isClosable: false
 					}
 				]
+			},    
+			{
+				componentName : 'Graphics',
+				type : 'component',
+				isClosable: false,			
 			},
+   
 
 	    ]
 	};
-
-	var secondColumn =  {
-		type: 'column',
-		content: [
-		    secondColumnUpperRow,
-		    secondColumnLowerRow
-		]
-	};
-
-
-	var goldenLayoutConfig = {
-		content :
-		[
-		    {
-			    type : 'row',
-			    content : [
-                   firstColumn,
-                   secondColumn
-			     ]
-	        }
-	    ]
-	 };
-
-	return new GoldenLayout(goldenLayoutConfig, containerElement);
+    return row;
 }
-
 
 /*
 Defines container DOM elements that are used/filled by Treez:
