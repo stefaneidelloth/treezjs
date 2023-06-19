@@ -16,7 +16,8 @@ export default class TreeView {
 	buildView(){		
 		var parentSelection = this.__treez.dTreez.select('#treez-tree');
 		this.buildToolBar(parentSelection);
-		this.buildContent(parentSelection);		
+		this.buildContent(parentSelection);	
+		this.createRoot();
 	}	
 
     buildToolBar(parentSelection){
@@ -73,6 +74,9 @@ export default class TreeView {
 
     createRoot(){    	
     	this.model = new Root();
+		this.model.createModels();
+		this.model.createStudies();
+		this.model.createResults();
 		this.refresh();
     }
 
