@@ -1,6 +1,9 @@
 import Treez from '../src/treez.js';
 import JupyterLabTerminal from './jupyterLabTerminal.js';
 import NotebookObserver from './notebookObserver.js';
+import { GoldenLayout } from '../lib/golden-layout/golden-layout.min.js'
+
+
 
 let url = document.URL;
 let labIndex = url.indexOf('/lab');
@@ -33,9 +36,8 @@ window.init_workspace_module = async (app, dependencies)=>{
 		'd3-path' : 'node_modules/d3-path/dist/d3-path.min',
 		'd3-shape' : 'node_modules/d3-shape/dist/d3-shape.min',
 		'd3-sankey' : 'node_modules/d3-sankey/dist/d3-sankey.min',	
-		'jquery-library': 'jquery-library',
-		'golden-layout' : 'node_modules/golden-layout/dist/goldenlayout.min'
-}
+		'jquery-library': 'lib/jquery-library'
+	}
 
 	var require_map = {
 		  '*': { 'jquery': 'jquery-library' },			 
@@ -51,20 +53,20 @@ window.init_workspace_module = async (app, dependencies)=>{
 
 	await Treez.importCssStyleSheet('/jupyter_lab_extension/treezJupyterLab.css');
 
-	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-base.css');
-	await Treez.importCssStyleSheet('/node_modules/golden-layout/src/css/goldenlayout-light-theme.css');
+	await Treez.importCssStyleSheet('/node_modules/golden-layout/dist/css/goldenlayout-base.css');
+	await Treez.importCssStyleSheet('/node_modules/golden-layout/dist/css/themes/goldenlayout-light-theme.css');
 
-	await Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
-	await Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
+	//await Treez.importStaticCssStyleSheet('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css');
+	//await Treez.importStaticScript('https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js');
 
-    await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icons.min.css');
+  await Treez.importCssStyleSheet('/node_modules/flag-icon-css/css/flag-icons.min.css');
     
-	require([	 
-	  'golden-layout',
+	require([
+	  //'golden-layout',
 		'd3',
 		'd3-sankey', //needs to be loaded after its dependencies
-	], function(   
-	   GoldenLayout,
+	], function(
+	   //goldenLayout,
 		 d3,
 		 d3Sankey		
 	) {		
@@ -84,32 +86,36 @@ window.init_workspace_module = async (app, dependencies)=>{
 		treezPlugin.render = () => {}; //needs to exist
 
 		var treezView = treezPlugin.node;
-
-		var layoutContainer = __createLayoutContainer(treezView);
-		var layout = __createGoldenLayout(GoldenLayout, layoutContainer);
+		var layoutContainer = __createLayoutContainer(treezView);	
 
 		
-		var focusManager = __registerLayoutComponents(layout, layoutContainer);
-		var editorFactory = __createEditorFactory(app);
-
+		var goldenLayout = new GoldenLayout(layoutContainer);		
+		const focusManager = __registerLayoutComponents(goldenLayout, layoutContainer);
+		
+		const layoutConfig = __createGoldenLayoutConfiguration();		
+		goldenLayout.loadLayout(layoutConfig);
+		
+		const editorFactory = __createEditorFactory(app);
 		let notebook = __tryToGetActiveNotebook(app);
 		let observer = new NotebookObserver();
 		//observer.observe(notebook, dependencies);
 
-		var terminalFactory = (handleCreatedTerminal)=>{
+		const terminalFactory = (handleCreatedTerminal)=>{
 			handleCreatedTerminal(new JupyterLabTerminal(app, dependencies));
 		};
 
+				
+
 		app.shell.add(treezPlugin, 'left', { rank: 200 });
 
-		let resizeObserver = new ResizeObserver( () => {
-			if(!layout.isInitialised){
-				 // this is here because initialization needs to be done after
-				 // widget is part of DOM
-				 layout.init();
-				 Treez.initialize(d3, focusManager, editorFactory, terminalFactory);
+		let isInitialized=false;
+
+		let resizeObserver = new ResizeObserver( () => {	
+			if(!isInitialized){
+				Treez.initialize(d3, focusManager, editorFactory, terminalFactory);
+				isInitialized=true;
 			}
-			__updateGoldenLayout(layout, layoutContainer);
+			__updateGoldenLayout(goldenLayout, layoutContainer);
 		});
 		resizeObserver.observe(layoutContainer);		
 
@@ -207,33 +213,37 @@ function __createLayoutContainer(parentElement){
 	return container;
 }
 
-function __createGoldenLayout(GoldenLayout, containerElement){
+function __createGoldenLayoutConfiguration(){
 	//Also see http://golden-layout.com/docs/Config.html
 
 	const firstColumn = _createFirstColumn();
 	const secondColumn = _createSecondColumn();
 
 	var goldenLayoutConfig = {
-		content :
-		[
-		    {
-			    type : 'column',
-			    content : [ 
-				   firstColumn,
-				   secondColumn,
-			     ]
-	        }
-	    ]
-	 };
-
-	return new GoldenLayout(goldenLayoutConfig, containerElement);
+		settings: {		
+			//showCloseIcon: false,
+			showPopoutIcon: false
+		},
+		root : {
+			type : 'row',
+			content : [ 
+			   firstColumn,
+			   secondColumn,
+			 ]
+		}
+	    
+	 };	
+	
+	return goldenLayoutConfig;
 }
 
 function _createFirstColumn(){
 	var column = {
 		componentName : 'Tree',
 		type : 'component',
-		isClosable: false		
+		componentType: 'Tree',		
+		isClosable: false,
+		width: 25
 	};
 	return column;
 }
@@ -244,7 +254,7 @@ function _createSecondColumn(){
 	var secondRow = _createSecondRowOfSecondColumn();
 
 	var column =  {
-		type: 'column',
+		type: 'column',		
 		content: [	
 			firstRow,
 			secondRow,
@@ -256,41 +266,51 @@ function _createSecondColumn(){
 
 function _createFirstRowOfSecondColumn(){
 	return {
-		componentName : 'Properties',
-		type : 'component',
-		isClosable: false		
-	};
+		type: 'stack',
+		content: [
+			{
+				componentName : 'Properties',
+				type : 'component',
+				componentType: 'Properties',
+				isClosable: false,
+			},
+			{
+				componentName : 'Graphics',
+				type : 'component',
+				componentType: 'Graphics',
+				isClosable: false,
+			},
+		]
+		
+	} ;
 }
 
 function _createSecondRowOfSecondColumn(){
 	const row = {
-		type : 'stack',
+		type : 'row',
 		content :
 		[
-						
 			{
 				title : 'Monitor',
-				type : 'column',
-				id: 'monitor',
-				isClosable: false,
+				type : 'column',				
+				id: 'monitor',				
 				content : [
 					{
 						componentName : 'Progress',
 						type : 'component',
+						componentType: 'Progress',
 						isClosable: false
 					},
 					{
 						componentName : 'Log',
 						type : 'component',
+						componentType: 'Log',
 						isClosable: false
-					}
+					}					
 				]
-			},    
-			{
-				componentName : 'Graphics',
-				type : 'component',
-				isClosable: false,			
-			},
+			},  	
+					  
+			
    
 
 	    ]
@@ -310,16 +330,12 @@ function __registerLayoutComponents(layout, containerElement){
 
     layout.registerComponent('Tree', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-tree');
-
-		var layoutSettings = container.layoutManager.config.settings;
-		layoutSettings.showMaximiseIcon = false;
-		layoutSettings.showPopoutIcon = false;
+		element.setAttribute('id','treez-tree');		
 	});
 
 	layout.registerComponent('Properties', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-properties')
+		element.setAttribute('id','treez-properties')
 	});
 
 	var focusManager = {
@@ -335,25 +351,17 @@ function __registerLayoutComponents(layout, containerElement){
 	layout.registerComponent('Graphics', function(container) {
 		focusManager.__graphicsContainer = container;
 		var element = container.getElement();
-		element.attr('id','treez-graphics');
+		element.setAttribute('id','treez-graphics');
 	});
 
 	layout.registerComponent('Progress', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-progress');
-
-		var layoutSettings = container.layoutManager.config.settings;
-		layoutSettings.showMaximiseIcon = false;
-		layoutSettings.showPopoutIcon = false;
+		element.setAttribute('id','treez-progress');		
 	});
 
 	layout.registerComponent('Log', function(container) {
 		var element = container.getElement();
-		element.attr('id','treez-log');
-
-		var layoutSettings = container.layoutManager.config.settings;
-		layoutSettings.showMaximiseIcon = false;
-		layoutSettings.showPopoutIcon = false;
+		element.setAttribute('id','treez-log');		
 	});
 
 	return focusManager;
